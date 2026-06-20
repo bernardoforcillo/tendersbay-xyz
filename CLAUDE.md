@@ -34,6 +34,9 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, shared libraries in
 
 ## Conventions
 
+Frontend app structure (the `~` alias, `/<name>/index.tsx` modules, kebab-case names)
+is documented in @.claude/rules/frontend.md.
+
 - Use **pnpm only** — never npm or yarn. Add root dev deps with `pnpm add -Dw <pkg>`;
   add to a workspace with `pnpm add <pkg> --filter <workspace>`.
 - A new app goes in `apps/<name>/` and a new library in `packages/<name>/`, each with
