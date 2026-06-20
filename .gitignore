@@ -7,6 +7,12 @@ build/
 out/
 .next/
 
+# Keep the platform embed placeholder: Go //go:embed needs a tracked file in dist/.
+# Re-include the dir (excluded by `dist/` above), ignore built contents, keep .gitkeep.
+!apps/platform/dist/
+apps/platform/dist/*
+!apps/platform/dist/.gitkeep
+
 # Turborepo
 .turbo/
 
@@ -33,3 +39,7 @@ Thumbs.db
 
 # Claude Code (keep shared config, ignore personal overrides)
 .claude/settings.local.json
+
+# Superpowers scratch (design specs, implementation plans, SDD ledger) — not tracked
+docs/superpowers/
+.superpowers/
