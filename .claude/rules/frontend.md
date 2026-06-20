@@ -18,6 +18,23 @@ import '~/index.css';                   // bare `~` resolves to src itself
   - `vite.config.ts` → `resolve.alias` (`'~': fileURLToPath(new URL('./src', import.meta.url))`).
 - Cross-package imports still use the package name (`@tendersbay/components`), never `~`.
 
+## `/<name>/index.ts(x)` module structure
+
+Every module — a screen, a feature, a component, a group of hooks — is a **folder** with
+an `index.ts`/`index.tsx` entry point, so the import targets the folder, not a file:
+
+```
+src/
+  app/
+    index.tsx          // import { App } from '~/app'
+  tenders/
+    index.ts           // import { TenderCard } from '~/tenders'
+    use-tenders.ts     // helpers, hooks, styles, and tests co-located in the folder
+```
+
+Co-locate a module's helpers, hooks, styles, and tests inside its own folder. Components
+additionally follow the atomic-design layout below.
+
 ## Feature-based + atomic-design components
 
 Components are organized **by feature first, then by atomic-design tier**. Each module
