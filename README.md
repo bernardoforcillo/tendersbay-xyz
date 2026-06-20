@@ -14,6 +14,8 @@ A pnpm monorepo managed with Turborepo.
 
 - Node `>=24` (see `.nvmrc`)
 - pnpm `11.8.0` (pinned via `packageManager`; run `corepack enable` to match)
+- Go `1.26` (for `apps/platform`)
+- Air (`go install github.com/air-verse/air@latest`) for Go hot reload in dev
 
 ## Getting started
 
@@ -26,8 +28,12 @@ This installs dependencies and sets up git hooks (`prepare` → `husky`).
 ## Layout
 
 ```
-apps/        # applications (empty)
-packages/    # shared libraries (empty)
+apps/
+  platform/  # Vite + React frontend, embedded into & served by a Go server (Air in dev)
+packages/
+  tsconfig/   # @tendersbay/tsconfig — shared TypeScript configs
+  tailwind/   # @tendersbay/tailwind — shared Tailwind v4 theme
+  components/ # @tendersbay/components — shared React components
 ```
 
 Add a new app/package by creating a directory with its own `package.json`;
