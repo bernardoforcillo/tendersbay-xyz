@@ -9,6 +9,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    emptyOutDir: true,
+    // Keep emptyOutDir off so the committed dist/.gitkeep placeholder (which
+    // //go:embed all:dist needs to compile on a clean checkout) survives builds.
+    emptyOutDir: false,
   },
 });
