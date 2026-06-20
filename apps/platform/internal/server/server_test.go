@@ -29,12 +29,20 @@ func TestServesStaticAsset(t *testing.T) {
 	if res.StatusCode != http.StatusOK {
 		t.Fatalf("got %d, want 200", res.StatusCode)
 	}
+	body, _ := io.ReadAll(res.Body)
+	if !strings.Contains(string(body), "console.log('hi')") {
+		t.Fatalf("expected app.js body, got %q", body)
+	}
 }
 
 func TestServesIndexAtRoot(t *testing.T) {
 	res := get(t, New(testFS()), "/")
 	if res.StatusCode != http.StatusOK {
 		t.Fatalf("got %d, want 200", res.StatusCode)
+	}
+	body, _ := io.ReadAll(res.Body)
+	if !strings.Contains(string(body), "<title>app</title>") {
+		t.Fatalf("expected index.html body, got %q", body)
 	}
 }
 
