@@ -48,6 +48,9 @@ is documented in @.claude/rules/frontend.md.
   The `commit-msg` hook rejects non-conforming messages. Use the `/commit` skill to draft them.
 - Declare per-package tasks (`build`, `dev`, `lint`, `check`, `test`) as scripts so Turbo
   can orchestrate them; wire cross-package ordering via `dependsOn` in `turbo.json`.
+- Design specs (`docs/superpowers/specs/`) and implementation plans
+  (`docs/superpowers/plans/`) are local-only working docs — kept on disk, never
+  committed (they are gitignored).
 - Go code lives in `apps/platform`. Format with `gofmt`, vet with `go vet ./...`
   (wired as the app's `lint`); run tests with `go test ./...` (the app's `test`).
 - The Go binary embeds the Vite build with `//go:embed all:dist` — run `vite build`
