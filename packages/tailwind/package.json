@@ -1,0 +1,15 @@
+{
+  "name": "@tendersbay/tailwind",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "theme.css"
+  ],
+  "exports": {
+    ".": "./theme.css"
+  },
+  "style": "./theme.css",
+  "dependencies": {
+    "tailwindcss": "^4.1.0"
+  }
+}
