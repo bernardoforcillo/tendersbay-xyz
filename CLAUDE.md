@@ -1,7 +1,13 @@
 # tendersbay-xyz
 
 A pnpm + Turborepo monorepo. Applications live in `apps/`, shared libraries in
-`packages/` (both currently empty).
+`packages/`.
+
+- `apps/platform` — Vite + React + TypeScript frontend embedded into and served by a
+  Go static server (`//go:embed`); Air provides hot reload in dev.
+- `packages/tsconfig` (`@tendersbay/tsconfig`) — shared TypeScript configs.
+- `packages/tailwind` (`@tendersbay/tailwind`) — shared Tailwind v4 theme.
+- `packages/components` (`@tendersbay/components`) — shared React components.
 
 ## Commands
 
@@ -21,8 +27,15 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, shared libraries in
 - **Commits:** Conventional Commits, enforced by commitlint
 - **Git hooks:** Husky 9 — `pre-commit` runs `pnpm lint`, `commit-msg` runs commitlint
 - **Node:** `>=24` (see `.nvmrc`)
+- **Backend:** Go `1.26` — `apps/platform` serves the embedded frontend via `net/http`
+- **Go hot reload:** Air — `pnpm dev` runs Vite + Air concurrently (install once with
+  `go install github.com/air-verse/air@latest`; ensure `air` is on `PATH`)
+- **Frontend:** Vite 6 + React 19 + Tailwind CSS v4 (`@tailwindcss/vite`)
 
 ## Conventions
+
+Frontend app structure (the `~` alias, `/<name>/index.tsx` modules, kebab-case names)
+is documented in @.claude/rules/frontend.md.
 
 - Use **pnpm only** — never npm or yarn. Add root dev deps with `pnpm add -Dw <pkg>`;
   add to a workspace with `pnpm add <pkg> --filter <workspace>`.
@@ -35,3 +48,12 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, shared libraries in
   The `commit-msg` hook rejects non-conforming messages. Use the `/commit` skill to draft them.
 - Declare per-package tasks (`build`, `dev`, `lint`, `check`, `test`) as scripts so Turbo
   can orchestrate them; wire cross-package ordering via `dependsOn` in `turbo.json`.
+- Design specs (`docs/superpowers/specs/`) and implementation plans
+  (`docs/superpowers/plans/`) are local-only working docs — kept on disk, never
+  committed (they are gitignored).
+- Go code lives in `apps/platform`. Format with `gofmt`, vet with `go vet ./...`
+  (wired as the app's `lint`); run tests with `go test ./...` (the app's `test`).
+- The Go binary embeds the Vite build with `//go:embed all:dist` — run `vite build`
+  before `go build` (the app's `build` script does both in order). A committed
+  `apps/platform/dist/.gitkeep` keeps the embed compiling before the first build.
+- Biome does not lint Go and its CSS linter is disabled (Tailwind owns CSS semantics).

@@ -1,0 +1,15 @@
+{
+  "name": "@tendersbay/tsconfig",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "base.json",
+    "react.json",
+    "vite.json"
+  ],
+  "exports": {
+    "./base": "./base.json",
+    "./react": "./react.json",
+    "./vite": "./vite.json"
+  }
+}

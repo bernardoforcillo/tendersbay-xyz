@@ -20,6 +20,11 @@
       "preset": "recommended"
     }
   },
+  "css": {
+    "linter": {
+      "enabled": false
+    }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "single"

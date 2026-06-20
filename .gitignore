@@ -6,7 +6,6 @@ dist/
 build/
 out/
 .next/
-
 # Turborepo
 .turbo/
 
@@ -33,3 +32,8 @@ Thumbs.db
 
 # Claude Code (keep shared config, ignore personal overrides)
 .claude/settings.local.json
+
+# Design specs & implementation plans (docs/superpowers/) and SDD scratch
+# (.superpowers/) are local-only working docs — kept on disk, NEVER committed.
+docs/superpowers/
+.superpowers/

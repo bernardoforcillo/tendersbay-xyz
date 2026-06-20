@@ -13,6 +13,9 @@
       "Bash(pnpm exec *)",
       "Bash(turbo run *)",
       "Bash(biome *)",
+      "Bash(go *)",
+      "Bash(gofmt *)",
+      "Bash(air *)",
       "Bash(git status)",
       "Bash(git diff *)",
       "Bash(git log *)"

@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+/* Shared design tokens (colors, fonts, radii) are added here as the theme
+   grows, via an @theme { … } block. */

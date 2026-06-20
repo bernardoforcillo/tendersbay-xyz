@@ -1,0 +1,10 @@
+{
+  "extends": "@tendersbay/tsconfig/vite",
+  "compilerOptions": {
+    "paths": {
+      "~": ["./src"],
+      "~/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}
