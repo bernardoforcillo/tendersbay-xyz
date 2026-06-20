@@ -1,0 +1,10 @@
+{
+  "extends": "@tendersbay/tsconfig/base",
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": ["vite.config.ts"]
+}

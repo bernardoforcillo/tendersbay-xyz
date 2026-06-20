@@ -1,0 +1,30 @@
+{
+  "name": "platform",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n vite,air -c green,cyan \"vite\" \"air\"",
+    "build": "vite build && go build -o ./bin/platform .",
+    "lint": "gofmt -l . && go vet ./...",
+    "check": "tsc --noEmit",
+    "test": "go test ./..."
+  },
+  "dependencies": {
+    "@tendersbay/components": "workspace:*",
+    "@tendersbay/tailwind": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "@tendersbay/tsconfig": "workspace:*",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "concurrently": "^9.0.0",
+    "typescript": "^5.7.0",
+    "vite": "^6.0.0"
+  }
+}
