@@ -38,12 +38,15 @@ additionally follow the atomic-design layout below.
 ## Feature-based + atomic-design components
 
 Components are organized **by feature first, then by atomic-design tier**. Each module
-is a folder with an `index.ts(x)` entry point, so the import is the folder, not a file:
+is a folder with an `index.ts(x)` entry point, so the import is the folder, not a file.
+In **apps** the feature root is `src/feature/<feature>/`; in the **shared library** it is
+`src/<feature>/` (no `feature/` wrapper):
 
 ```
 src/
-  <feature>/
-    index.ts                       // feature barrel: re-exports each tier
+  feature/                         // apps only; the shared library omits this level
+    <feature>/
+      index.ts                     // feature barrel: re-exports each tier
     components/
       atoms/
         <name>/index.tsx           // a component (folder = module)
@@ -65,9 +68,11 @@ src/
 
 - **`@tendersbay/components`** holds cross-app components under `src/<feature>/…`. Import
   them per-feature: `import { TenderCard } from '@tendersbay/components/tenders'`.
-- **An app** holds its own components under `src/<feature>/…`, imported via the `~` alias
-  (`import { TenderCard } from '~/tenders'`). Cross-package imports always use the package
-  name, never `~`.
+- **An app** holds its own components under `src/feature/<feature>/…`, imported via the
+  `~` alias (`import { TenderCard } from '~/feature/tenders'`). Infra that is not a
+  feature (TanStack routes in `src/routes/`, i18n in `src/i18n/`, translation files in
+  `src/assets/locales/<locale>/common.json`) stays outside `feature/`. Cross-package
+  imports always use the package name, never `~`.
 
 ## Generating components — `pnpm gen`
 
@@ -77,8 +82,10 @@ Scaffold a component with the Turborepo generator instead of hand-creating folde
 pnpm gen   # prompts: target (shared lib | app) → feature → tier → name
 ```
 
-It creates `<base>/<feature>/components/<tier>/<name>/index.tsx` (an `FC<Props>` stub) and
-updates the tier and feature barrels. It refuses `pages` for the shared library.
+It creates `<base>/feature/<feature>/components/<tier>/<name>/index.tsx` for apps (or
+`<base>/<feature>/components/<tier>/<name>/index.tsx` for the shared library) — an
+`FC<Props>` stub — and updates the tier and feature barrels. It refuses `pages` for the
+shared library.
 
 ## Lowercase kebab-case names
 
