@@ -11,6 +11,7 @@
     "test": "vitest run && go test ./..."
   },
   "dependencies": {
+    "@tanstack/react-router": "^1.170.16",
     "@tendersbay/components": "workspace:*",
     "@tendersbay/tailwind": "workspace:*",
     "i18next": "^26.3.1",
