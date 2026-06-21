@@ -8,7 +8,7 @@ Import from an app's own `src/` with the `~` alias instead of long relative path
 
 ```ts
 import { App } from '~/app';            // -> src/app
-import { TenderCard } from '~/tenders';  // feature barrel -> src/tenders
+import { TenderCard } from '~/features/tenders';  // feature barrel -> src/features/tenders
 import '~/index.css';                   // bare `~` resolves to src itself
 ```
 
@@ -47,14 +47,14 @@ src/
   features/                        // apps only; the shared library omits this level
     <feature>/
       index.ts                     // feature barrel: re-exports each tier
-    components/
-      atoms/
-        <name>/index.tsx           // a component (folder = module)
-        index.ts                   // tier barrel: re-exports its components
-      molecules/
-      organisms/
-      templates/
-      pages/                       // apps only — see below
+      components/
+        atoms/
+          <name>/index.tsx           // a component (folder = module)
+          index.ts                   // tier barrel: re-exports its components
+        molecules/
+        organisms/
+        templates/
+        pages/                       // apps only — see below
 ```
 
 - **Tiers:** `atoms`, `molecules`, `organisms`, `templates`. `pages` is **app-only**
