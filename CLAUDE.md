@@ -43,9 +43,9 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, shared libraries in
 Frontend app structure (the `~` alias, `/<name>/index.tsx` modules, kebab-case names)
 is documented in @.claude/rules/frontend.md.
 
-- App components live under `src/feature/<name>/…`; the shared `@tendersbay/components`
+- App components live under `src/features/<name>/…`; the shared `@tendersbay/components`
   library keeps `src/<feature>/…`. App routing/i18n infra (`src/routes/`, `src/i18n/`,
-  `src/assets/locales/`) stays outside `feature/`.
+  `src/assets/locales/`) stays outside `features/`.
 
 Branching and the canary release policy (`feature → dev → main`, and the Docker
 image tags each branch publishes) are documented in @.claude/rules/git-flow.md.

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from '~/feature/landing/components/molecules';
+import { LanguageSwitcher } from '~/features/landing/components/molecules';
 
 export function LandingPage() {
   const { t } = useTranslation();

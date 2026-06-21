@@ -39,12 +39,12 @@ additionally follow the atomic-design layout below.
 
 Components are organized **by feature first, then by atomic-design tier**. Each module
 is a folder with an `index.ts(x)` entry point, so the import is the folder, not a file.
-In **apps** the feature root is `src/feature/<feature>/`; in the **shared library** it is
-`src/<feature>/` (no `feature/` wrapper):
+In **apps** the feature root is `src/features/<feature>/`; in the **shared library** it is
+`src/<feature>/` (no `features/` wrapper):
 
 ```
 src/
-  feature/                         // apps only; the shared library omits this level
+  features/                        // apps only; the shared library omits this level
     <feature>/
       index.ts                     // feature barrel: re-exports each tier
     components/
@@ -68,10 +68,10 @@ src/
 
 - **`@tendersbay/components`** holds cross-app components under `src/<feature>/…`. Import
   them per-feature: `import { TenderCard } from '@tendersbay/components/tenders'`.
-- **An app** holds its own components under `src/feature/<feature>/…`, imported via the
-  `~` alias (`import { TenderCard } from '~/feature/tenders'`). Infra that is not a
+- **An app** holds its own components under `src/features/<feature>/…`, imported via the
+  `~` alias (`import { TenderCard } from '~/features/tenders'`). Infra that is not a
   feature (TanStack routes in `src/routes/`, i18n in `src/i18n/`, translation files in
-  `src/assets/locales/<locale>/common.json`) stays outside `feature/`. Cross-package
+  `src/assets/locales/<locale>/common.json`) stays outside `features/`. Cross-package
   imports always use the package name, never `~`.
 
 ## Generating components — `pnpm gen`
@@ -82,7 +82,7 @@ Scaffold a component with the Turborepo generator instead of hand-creating folde
 pnpm gen   # prompts: target (shared lib | app) → feature → tier → name
 ```
 
-It creates `<base>/feature/<feature>/components/<tier>/<name>/index.tsx` for apps (or
+It creates `<base>/features/<feature>/components/<tier>/<name>/index.tsx` for apps (or
 `<base>/<feature>/components/<tier>/<name>/index.tsx` for the shared library) — an
 `FC<Props>` stub — and updates the tier and feature barrels. It refuses `pages` for the
 shared library.

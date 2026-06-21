@@ -82,15 +82,15 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
           '`pages` is not a shared component tier — scaffold pages into an app target instead.',
         );
       }
-      // Apps nest features under `src/feature/<name>/`; the shared library keeps
-      // `src/<feature>/` (no `feature/` wrapper).
+      // Apps nest features under `src/features/<name>/`; the shared library keeps
+      // `src/<feature>/` (no `features/` wrapper).
       const featureDir =
-        base === SHARED_BASE ? path.join(base, feature) : path.join(base, 'feature', feature);
+        base === SHARED_BASE ? path.join(base, feature) : path.join(base, 'features', feature);
       const tierDir = path.join(featureDir, 'components', tier);
 
       return [
         // The component: <featureDir>/components/<tier>/<name>/index.tsx
-        // (apps: <base>/feature/<feature>/...; shared lib: <base>/<feature>/...)
+        // (apps: <base>/features/<feature>/...; shared lib: <base>/<feature>/...)
         {
           type: 'add',
           path: `${tierDir}/${name}/index.tsx`,
