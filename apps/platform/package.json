@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.0",
+    "@tanstack/router-plugin": "^1.168.18",
     "@tendersbay/tsconfig": "workspace:*",
     "@types/node": "^24.0.0",
     "@types/react": "^19.0.0",

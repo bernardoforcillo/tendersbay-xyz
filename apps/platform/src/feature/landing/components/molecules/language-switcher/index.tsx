@@ -20,7 +20,7 @@ export function LanguageSwitcher() {
       return;
     }
     writeLocaleCookie(next);
-    void navigate({ to: '/$locale/', params: { locale: next } });
+    void navigate({ to: '/$locale', params: { locale: next } });
   }
 
   return (
