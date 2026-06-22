@@ -1,6 +1,78 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
+  "app": { "title": "tendersbay platform", "subtitle": "Vite + React, served by Go." },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Vinci la tua prossima gara in Europa",
+      "description": "Un team di agenti AI che scova, prepara e vince le gare pubbliche europee per le PMI."
+    },
+    "nav": { "problem": "Il problema", "agents": "Gli agenti", "vision": "Vision" },
+    "hero": {
+      "eyebrow": "Un team di agenti AI",
+      "titleLead": "Vinci la tua prossima gara",
+      "titleHighlight": "in Europa",
+      "subtitle": "tendersbay è un insieme di agenti AI che scovano la gara giusta in tutta Europa, gestiscono la burocrazia documentale al posto tuo e ti accompagnano fino alla vittoria.",
+      "ctaPrimary": "Scopri come",
+      "ctaSecondary": "Guarda la vision",
+      "trust": ["27 paesi", "un team di agenti AI", "0 scartoffie a mano"]
+    },
+    "problem": {
+      "eyebrow": "Il problema",
+      "title": "Le gare europee sono un labirinto",
+      "items": [
+        {
+          "title": "Frammentate su 27 paesi",
+          "body": "Le gare giuste sono sparse su decine di portali nazionali, in lingue e formati diversi."
+        },
+        {
+          "title": "Burocrazia documentale pesante",
+          "body": "Requisiti, certificati e scadenze: un labirinto documentale facile da sbagliare."
+        },
+        {
+          "title": "Nessun ufficio gare",
+          "body": "Le PMI non hanno un ufficio gare: vincere richiede tempo e competenze che mancano."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Gli agenti",
+      "title": "Un team di agenti AI che lavora per te",
+      "items": [
+        {
+          "title": "Scova",
+          "body": "Gli agenti scovano la gara giusta in tutta Europa, su misura per la tua impresa."
+        },
+        {
+          "title": "Prepara",
+          "body": "Preparano la burocrazia documentale al posto tuo: requisiti, certificati, scadenze."
+        },
+        {
+          "title": "Vinci",
+          "body": "Ti accompagnano fino all'offerta, per le migliori chance di vittoria."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Per chi è",
+      "title": "Pensato per PMI e imprenditori",
+      "body": "Per chi vuole competere oltre confine senza un ufficio gare dedicato. tendersbay ti dà la stessa potenza di fuoco delle grandi aziende."
+    },
+    "vision": {
+      "eyebrow": "Vision",
+      "title": "Le gare europee, aperte a tutti",
+      "body": "Ogni anno in Europa si muovono centinaia di miliardi in appalti pubblici, ma restano fuori portata per chi non ha tempo, lingua o competenze. tendersbay usa gli agenti AI per cambiare questo — e dare a ogni PMI una vera occasione.",
+      "note": "Stiamo costruendo. Torna presto."
+    },
+    "footer": {
+      "tagline": "Le gare di tutta Europa, vinte da un team di agenti AI.",
+      "contactLabel": "Scrivici",
+      "copyright": "© Bernardo Forcillo — Tutti i diritti riservati"
+    },
+    "tenderCard": { "value": "Valore", "deadline": "Scadenza", "daysLeft": "{{count}} giorni" },
+    "agentLabels": {
+      "scout": "Agente Scout",
+      "docs": "Agente Documenti",
+      "strategy": "Agente Strategia",
+      "scoutStat": "{{count}} gare trovate"
+    }
   }
 }
