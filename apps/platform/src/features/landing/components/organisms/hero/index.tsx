@@ -10,11 +10,11 @@ import {
 import { SAMPLE_TENDERS } from './sample-tenders';
 import { useRotatingTenders } from './use-rotating-tenders';
 
-const AGENTS: Array<{ icon: IconName; labelKey: string; status: string }> = [
-  { icon: 'search', labelKey: 'landing.agentLabels.scout', status: '' },
-  { icon: 'document', labelKey: 'landing.agentLabels.docs', status: 'fascicolo' },
-  { icon: 'trophy', labelKey: 'landing.agentLabels.strategy', status: 'offerta' },
-];
+const AGENTS = [
+  { icon: 'search' as IconName, labelKey: 'landing.agentLabels.scout', status: '' },
+  { icon: 'document' as IconName, labelKey: 'landing.agentLabels.docs', status: 'fascicolo' },
+  { icon: 'trophy' as IconName, labelKey: 'landing.agentLabels.strategy', status: 'offerta' },
+] as const satisfies ReadonlyArray<{ icon: IconName; labelKey: string; status: string }>;
 
 function AgentChip({ icon, label, status }: { icon: IconName; label: string; status: string }) {
   return (

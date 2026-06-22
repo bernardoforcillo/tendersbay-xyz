@@ -16,7 +16,8 @@ export function LanguageSwitcher() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
 
-  function onChange(key: Key) {
+  function onChange(key: Key | null) {
+    if (key === null) return;
     const next = String(key);
     if (!isSupportedLocale(next)) {
       return;
