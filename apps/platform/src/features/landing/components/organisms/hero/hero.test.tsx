@@ -1,0 +1,20 @@
+import { screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { renderWithI18n } from '~/test/utils';
+import { Hero } from './index';
+
+describe('Hero', () => {
+  it('renders the headline, both CTAs and the trust line', () => {
+    renderWithI18n(<Hero />, 'en-ie');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Win your next tender');
+    expect(screen.getByRole('link', { name: /see how it works/i })).toHaveAttribute(
+      'href',
+      '#agents',
+    );
+    expect(screen.getByRole('link', { name: /see the vision/i })).toHaveAttribute(
+      'href',
+      '#vision',
+    );
+    expect(screen.getByText('27 countries')).toBeInTheDocument();
+  });
+});
