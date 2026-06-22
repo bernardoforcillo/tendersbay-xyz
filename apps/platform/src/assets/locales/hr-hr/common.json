@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Pobijedite sljedeći natječaj u Europi",
+      "description": "Tim AI agenata koji pronalaze, pripremaju i osvajaju europske javne natječaje za MSP-ove."
+    },
+    "nav": { "problem": "Problem", "agents": "Agenti", "vision": "Vizija" },
+    "hero": {
+      "eyebrow": "Tim AI agenata",
+      "titleLead": "Pobijedite sljedeći natječaj",
+      "titleHighlight": "u Europi",
+      "subtitle": "tendersbay je tim AI agenata koji pronalaze pravi natječaj diljem Europe, obrađuju papirologiju umjesto vas i vode vas sve do pobjede.",
+      "ctaPrimary": "Pogledajte kako funkcionira",
+      "ctaSecondary": "Pogledajte viziju",
+      "trust": ["27 zemalja", "tim AI agenata", "0 ručne papirologije"]
+    },
+    "problem": {
+      "eyebrow": "Problem",
+      "title": "Europski natječaji su labirint",
+      "items": [
+        {
+          "title": "Raspršeni u 27 zemalja",
+          "body": "Prave prilike rasute su po desecima nacionalnih portala, na različitim jezicima i u različitim formatima."
+        },
+        {
+          "title": "Teška dokumentacijska birokracija",
+          "body": "Uvjeti, certifikati i rokovi — dokumentacijski labirint u kojemu se lako pogriješiti."
+        },
+        {
+          "title": "Nema namjenskog tima za ponude",
+          "body": "MSP-ovi nemaju odjel za nabavu — pobjeda zahtijeva vrijeme i stručnost koje nemaju."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agenti",
+      "title": "Tim AI agenata koji radi za vas",
+      "items": [
+        {
+          "title": "Pronađi",
+          "body": "Agenti pronalaze pravi natječaj diljem Europe, prilagođen vašem poslovanju."
+        },
+        {
+          "title": "Pripremi",
+          "body": "Oni obrađuju dokumentacijsku birokraciju umjesto vas: uvjete, certifikate, rokove."
+        },
+        {
+          "title": "Pobijedi",
+          "body": "Vode vas sve do ponude, za što bolju šansu za pobjedu."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Za koga je namijenjeno",
+      "title": "Stvoreno za MSP-ove i poduzetnike",
+      "body": "Za one koji žele se natjecati preko granica bez namjenskog tima za ponude. tendersbay vam daje istu vatru kao i veliki igrači."
+    },
+    "vision": {
+      "eyebrow": "Vizija",
+      "title": "Europski natječaji, otvoreni za sve",
+      "body": "Svake godine stotine milijardi prolaze kroz europske javne nabave, no ostaju nedostupne onima bez vremena, jezika ili stručnosti. tendersbay koristi AI agente da to promijeni — i da svakom MSP-u pruži pravu šansu.",
+      "note": "Gradimo. Svratite uskoro."
+    },
+    "footer": {
+      "tagline": "Europski natječaji, koje osvaja tim AI agenata.",
+      "contactLabel": "Kontaktirajte nas",
+      "copyright": "© Bernardo Forcillo — Sva prava pridržana"
+    },
+    "tenderCard": { "value": "Vrijednost", "deadline": "Rok", "daysLeft": "{{count}} dana" },
+    "agentLabels": {
+      "scout": "Agent izviđač",
+      "docs": "Agent dokumentacije",
+      "strategy": "Agent strategije",
+      "scoutStat": "{{count}} pronađenih natječaja"
+    }
   }
 }

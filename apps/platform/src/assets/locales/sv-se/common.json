@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Vinn nästa upphandling i Europa",
+      "description": "Ett team av AI-agenter som hittar, förbereder och vinner europeiska offentliga upphandlingar för SMF."
+    },
+    "nav": { "problem": "Problemet", "agents": "Agenterna", "vision": "Vision" },
+    "hero": {
+      "eyebrow": "Ett team av AI-agenter",
+      "titleLead": "Vinn nästa upphandling",
+      "titleHighlight": "i Europa",
+      "subtitle": "tendersbay är ett team av AI-agenter som hittar rätt upphandling i hela Europa, sköter pappersarbetet åt dig och leder dig hela vägen till vinst.",
+      "ctaPrimary": "Se hur det fungerar",
+      "ctaSecondary": "Se visionen",
+      "trust": ["27 länder", "ett team av AI-agenter", "0 manuellt pappersarbete"]
+    },
+    "problem": {
+      "eyebrow": "Problemet",
+      "title": "Europeiska upphandlingar är en labyrint",
+      "items": [
+        {
+          "title": "Utspridda i 27 länder",
+          "body": "Rätt möjligheter finns spridda över dussintals nationella portaler, på olika språk och i olika format."
+        },
+        {
+          "title": "Tung dokumentbyråkrati",
+          "body": "Krav, certifikat och deadlines — en dokumentlabyrint där det är lätt att göra fel."
+        },
+        {
+          "title": "Inget dedikerat anbudsteam",
+          "body": "SMF har ingen upphandlingsavdelning — att vinna kräver tid och kompetens de inte har."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agenterna",
+      "title": "Ett team av AI-agenter som arbetar för dig",
+      "items": [
+        {
+          "title": "Hitta",
+          "body": "Agenterna hittar rätt upphandling i hela Europa, anpassad till ditt företag."
+        },
+        {
+          "title": "Förbered",
+          "body": "De sköter dokumentbyråkratin åt dig: krav, certifikat, deadlines."
+        },
+        {
+          "title": "Vinn",
+          "body": "De leder dig hela vägen till anbudet, för bästa möjliga chans att vinna."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Vem det är till för",
+      "title": "Byggt för SMF och entreprenörer",
+      "body": "För dem som vill konkurrera över gränserna utan ett dedikerat anbudsteam. tendersbay ger dig samma eldkraft som de stora aktörerna."
+    },
+    "vision": {
+      "eyebrow": "Vision",
+      "title": "Europeiska upphandlingar, öppna för alla",
+      "body": "Varje år rör sig hundratals miljarder genom europeiska offentliga upphandlingar, men de förblir utom räckhåll för dem utan tid, språk eller kompetens. tendersbay använder AI-agenter för att förändra det — och ge varje SMF en riktig chans.",
+      "note": "Vi bygger. Kom tillbaka snart."
+    },
+    "footer": {
+      "tagline": "Europas upphandlingar, vunna av ett team av AI-agenter.",
+      "contactLabel": "Kontakta oss",
+      "copyright": "© Bernardo Forcillo — Alla rättigheter förbehållna"
+    },
+    "tenderCard": { "value": "Värde", "deadline": "Deadline", "daysLeft": "{{count}} dagar" },
+    "agentLabels": {
+      "scout": "Spaningsagent",
+      "docs": "Dokumentagent",
+      "strategy": "Strategiagent",
+      "scoutStat": "{{count}} upphandlingar hittade"
+    }
   }
 }

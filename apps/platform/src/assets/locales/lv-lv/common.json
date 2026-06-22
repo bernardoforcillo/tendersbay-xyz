@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Uzvariet nākamajā iepirkumā Eiropā",
+      "description": "Mākslīgā intelekta aģentu komanda, kas atrod, sagatavo un uzvar Eiropas publiskos iepirkumus MVU."
+    },
+    "nav": { "problem": "Problēma", "agents": "Aģenti", "vision": "Vīzija" },
+    "hero": {
+      "eyebrow": "MI aģentu komanda",
+      "titleLead": "Uzvariet nākamajā iepirkumā",
+      "titleHighlight": "Eiropā",
+      "subtitle": "tendersbay ir mākslīgā intelekta aģentu komanda, kas atrod pareizo iepirkumu visā Eiropā, kārto dokumentus jūsu vietā un vada jūs līdz uzvarai.",
+      "ctaPrimary": "Skatiet, kā tas darbojas",
+      "ctaSecondary": "Skatiet vīziju",
+      "trust": ["27 valstis", "MI aģentu komanda", "0 manuāla dokumentācija"]
+    },
+    "problem": {
+      "eyebrow": "Problēma",
+      "title": "Eiropas iepirkumi ir labirints",
+      "items": [
+        {
+          "title": "Izkaisīti 27 valstīs",
+          "body": "Pareizās iespējas ir izkliedētas pa desmitiem nacionālo portālu, dažādās valodās un formātos."
+        },
+        {
+          "title": "Smaga dokumentu birokrātija",
+          "body": "Prasības, sertifikāti un termiņi — dokumentāls labirints, kurā viegli kļūdīties."
+        },
+        {
+          "title": "Nav īpašas piedāvājumu komandas",
+          "body": "MVU nav iepirkumu nodaļas — uzvarai nepieciešams laiks un zināšanas, kuru nav."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Aģenti",
+      "title": "MI aģentu komanda, kas strādā jūsu labā",
+      "items": [
+        {
+          "title": "Atrast",
+          "body": "Aģenti atrod pareizo iepirkumu visā Eiropā, pielāgotu jūsu uzņēmumam."
+        },
+        {
+          "title": "Sagatavot",
+          "body": "Viņi kārto dokumentu birokrātiju jūsu vietā: prasības, sertifikātus, termiņus."
+        },
+        {
+          "title": "Uzvarēt",
+          "body": "Viņi vada jūs līdz piedāvājumam, lai jums būtu vislabākās izredzes uzvarēt."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Kam tas paredzēts",
+      "title": "Veidots MVU un uzņēmējiem",
+      "body": "Tiem, kas vēlas konkurēt pāri robežām bez īpašas piedāvājumu komandas. tendersbay dod jums tādu pašu spēku kā lielajiem spēlētājiem."
+    },
+    "vision": {
+      "eyebrow": "Vīzija",
+      "title": "Eiropas iepirkumi, atvērti visiem",
+      "body": "Katru gadu simtiem miljardu plūst caur Eiropas publiskajiem iepirkumiem, bet tie paliek nesasniedzami tiem, kuriem nav laika, valodu zināšanu vai pieredzes. tendersbay izmanto MI aģentus, lai to mainītu — un dotu katram MVU īstu iespēju.",
+      "note": "Mēs veidojam. Atgriezieties drīz."
+    },
+    "footer": {
+      "tagline": "Eiropas iepirkumi, ko uzvar MI aģentu komanda.",
+      "contactLabel": "Sazinieties ar mums",
+      "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas"
+    },
+    "tenderCard": { "value": "Vērtība", "deadline": "Termiņš", "daysLeft": "{{count}} dienas" },
+    "agentLabels": {
+      "scout": "Izlūkaģents",
+      "docs": "Dokumentu aģents",
+      "strategy": "Stratēģijas aģents",
+      "scoutStat": "{{count}} atrasti iepirkumi"
+    }
   }
 }

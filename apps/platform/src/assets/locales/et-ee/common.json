@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Võitke oma järgmine hange Euroopas",
+      "description": "Tehisintellekti agentide meeskond, kes leiab, valmistab ette ja võidab Euroopa avalikud hanked VKEdele."
+    },
+    "nav": { "problem": "Probleem", "agents": "Agendid", "vision": "Visioon" },
+    "hero": {
+      "eyebrow": "Tehisintellekti agentide meeskond",
+      "titleLead": "Võitke oma järgmine hange",
+      "titleHighlight": "Euroopas",
+      "subtitle": "tendersbay on tehisintellekti agentide meeskond, kes leiab õige hange üle kogu Euroopa, haldab teie eest paberimajandust ja juhib teid kuni võiduni.",
+      "ctaPrimary": "Vaadake, kuidas see toimib",
+      "ctaSecondary": "Vaadake visiooni",
+      "trust": ["27 riiki", "tehisintellekti agentide meeskond", "0 käsitsi paberimajandust"]
+    },
+    "problem": {
+      "eyebrow": "Probleem",
+      "title": "Euroopa hanked on labürint",
+      "items": [
+        {
+          "title": "Hajutatud 27 riiki",
+          "body": "Õiged võimalused on laiali kümnetes riiklikes portaalides, erinevates keeltes ja formaatides."
+        },
+        {
+          "title": "Raske dokumentatsioonibürokraatia",
+          "body": "Nõuded, sertifikaadid ja tähtajad — dokumentaalne labürint, kus on kerge eksida."
+        },
+        {
+          "title": "Puudub spetsiaalne pakkumismeeskond",
+          "body": "VKEdel pole hankeosakonda — võitmine nõuab aega ja oskusi, mida neil pole."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agendid",
+      "title": "Tehisintellekti agentide meeskond, kes töötab teie heaks",
+      "items": [
+        {
+          "title": "Leia",
+          "body": "Agendid leiavad õige hange üle kogu Euroopa, kohandatuna teie ettevõttele."
+        },
+        {
+          "title": "Valmista ette",
+          "body": "Nad haldavad teie eest dokumentatsioonibürokraatiat: nõuded, sertifikaadid, tähtajad."
+        },
+        {
+          "title": "Võida",
+          "body": "Nad juhivad teid kuni pakkumiseni, et teil oleks parim võimalus võita."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Kellele see mõeldud on",
+      "title": "Loodud VKEdele ja ettevõtjatele",
+      "body": "Neile, kes soovivad konkureerida üle piiride ilma spetsiaalse pakkumismeeskonnata. tendersbay annab teile sama võimsuse kui suurtel mängijatel."
+    },
+    "vision": {
+      "eyebrow": "Visioon",
+      "title": "Euroopa hanked, avatud kõigile",
+      "body": "Igal aastal liigub Euroopa riigihangetes sadu miljardeid, kuid need jäävad kättesaamatuks neile, kellel pole aega, keeleoskust ega ekspertiisi. tendersbay kasutab tehisintellekti agente selle muutmiseks — ja annab igale VKEle tõelise võimaluse.",
+      "note": "Me ehitame. Tulge peagi tagasi."
+    },
+    "footer": {
+      "tagline": "Euroopa hanked, mille võidab tehisintellekti agentide meeskond.",
+      "contactLabel": "Võtke ühendust",
+      "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud"
+    },
+    "tenderCard": { "value": "Väärtus", "deadline": "Tähtaeg", "daysLeft": "{{count}} päeva" },
+    "agentLabels": {
+      "scout": "Luureagent",
+      "docs": "Dokumentide agent",
+      "strategy": "Strateegia agent",
+      "scoutStat": "{{count}} leitud hanget"
+    }
   }
 }

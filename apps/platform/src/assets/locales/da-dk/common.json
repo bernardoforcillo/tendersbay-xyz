@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Vind dit næste udbud i Europa",
+      "description": "Et team af AI-agenter, der finder, forbereder og vinder europæiske offentlige udbud for SMV'er."
+    },
+    "nav": { "problem": "Problemet", "agents": "Agenterne", "vision": "Vision" },
+    "hero": {
+      "eyebrow": "Et team af AI-agenter",
+      "titleLead": "Vind dit næste udbud",
+      "titleHighlight": "i Europa",
+      "subtitle": "tendersbay er et team af AI-agenter, der finder det rette udbud i hele Europa, håndterer papirarbejdet for dig og guider dig hele vejen til sejren.",
+      "ctaPrimary": "Se hvordan det virker",
+      "ctaSecondary": "Se visionen",
+      "trust": ["27 lande", "et team af AI-agenter", "0 manuelt papirarbejde"]
+    },
+    "problem": {
+      "eyebrow": "Problemet",
+      "title": "Europæiske udbud er en labyrint",
+      "items": [
+        {
+          "title": "Spredt over 27 lande",
+          "body": "De rette muligheder er fordelt over snesevis af nationale portaler på forskellige sprog og i forskellige formater."
+        },
+        {
+          "title": "Tung dokumentbureaukrati",
+          "body": "Krav, certifikater og frister — en dokumentarisk labyrint, hvor det er let at begå fejl."
+        },
+        {
+          "title": "Intet dedikeret tilbudsteam",
+          "body": "SMV'er har ingen indkøbsafdeling — at vinde kræver tid og ekspertise, de ikke har."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agenterne",
+      "title": "Et team af AI-agenter, der arbejder for dig",
+      "items": [
+        {
+          "title": "Find",
+          "body": "Agenterne finder det rette udbud i hele Europa, skræddersyet til din virksomhed."
+        },
+        {
+          "title": "Forbered",
+          "body": "De håndterer dokumentbureaukratiet for dig: krav, certifikater, frister."
+        },
+        {
+          "title": "Vind",
+          "body": "De guider dig hele vejen til buddet for den bedste chance for sejr."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Hvem det er til",
+      "title": "Bygget til SMV'er og iværksættere",
+      "body": "For dem, der ønsker at konkurrere på tværs af grænser uden et dedikeret tilbudsteam. tendersbay giver dig samme styrke som de store spillere."
+    },
+    "vision": {
+      "eyebrow": "Vision",
+      "title": "Europæiske udbud, åbne for alle",
+      "body": "Hvert år bevæger hundredvis af milliarder sig gennem europæiske offentlige udbud, men de er uden for rækkevidde for dem uden tid, sprog eller ekspertise. tendersbay bruger AI-agenter til at ændre det — og give enhver SMV en reel chance.",
+      "note": "Vi bygger løsningen. Vend tilbage snart."
+    },
+    "footer": {
+      "tagline": "Europas udbud, vundet af et team af AI-agenter.",
+      "contactLabel": "Kontakt os",
+      "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes"
+    },
+    "tenderCard": { "value": "Værdi", "deadline": "Frist", "daysLeft": "{{count}} dage" },
+    "agentLabels": {
+      "scout": "Spejderagent",
+      "docs": "Dokumentagent",
+      "strategy": "Strategiagent",
+      "scoutStat": "{{count}} udbud fundet"
+    }
   }
 }

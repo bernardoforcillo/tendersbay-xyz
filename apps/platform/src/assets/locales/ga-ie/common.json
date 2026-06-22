@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Bain amach do thairiscint eile san Eoraip",
+      "description": "Foireann gníomhairí AI a aimsíonn, a ullmhaíonn agus a bhuaineann conarthaí poiblí Eorpacha do FBManna."
+    },
+    "nav": { "problem": "An Fhadhb", "agents": "Na Gníomhairí", "vision": "Fís" },
+    "hero": {
+      "eyebrow": "Foireann gníomhairí AI",
+      "titleLead": "Bain amach do thairiscint eile",
+      "titleHighlight": "san Eoraip",
+      "subtitle": "Is foireann gníomhairí AI é tendersbay a aimsíonn an conradh ceart ar fud na hEorpa, a dhéanann an obair pháipéir ar do shon, agus a threorann thú ar aghaidh go dtí an bua.",
+      "ctaPrimary": "Féach conas a oibríonn sé",
+      "ctaSecondary": "Féach ar an bhfís",
+      "trust": ["27 tír", "foireann gníomhairí AI", "0 obair pháipéir láimhe"]
+    },
+    "problem": {
+      "eyebrow": "An Fhadhb",
+      "title": "Lúbán í córas tairiscintí na hEorpa",
+      "items": [
+        {
+          "title": "Scaipthe ar fud 27 tír",
+          "body": "Tá na deiseanna cearta scaipthe ar fud na ndoirsiní náisiúnta, i dteangacha agus i bhformáidí éagsúla."
+        },
+        {
+          "title": "Maorlathas trom doiciméad",
+          "body": "Riachtanais, teastais agus spriocdhálacha — lúbán doiciméadach ina bhfuil sé éasca earráidí a dhéanamh."
+        },
+        {
+          "title": "Gan foireann tiomnaithe tairisceana",
+          "body": "Níl aon roinn soláthair ag FBManna — teastaíonn am agus saineolas uathu chun bua a fháil nach bhfuil acu."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Na Gníomhairí",
+      "title": "Foireann gníomhairí AI ag obair ar do shon",
+      "items": [
+        {
+          "title": "Aimsigh",
+          "body": "Aimsíonn na gníomhairí an conradh ceart ar fud na hEorpa, oiriúnaithe do do ghnó."
+        },
+        {
+          "title": "Ullmhaigh",
+          "body": "Déanann siad an maorlathas doiciméad ar do shon: riachtanais, teastais, spriocdhálacha."
+        },
+        {
+          "title": "Buaigh",
+          "body": "Treorann siad thú chomh fada leis an tairiscint, ar mhaithe leis an seans is fearr bua a fháil."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Cé dó a bhfuil sé",
+      "title": "Tógtha d'FBManna agus d'fhiontraithe",
+      "body": "Dóibh siúd ar mian leo iomaíocht thar theorainneacha gan foireann tiomnaithe tairisceana. Tugann tendersbay an cumhacht chéanna duit agus atá ag na himreoirí móra."
+    },
+    "vision": {
+      "eyebrow": "Fís",
+      "title": "Tairiscintí Eorpacha, oscailte do chách",
+      "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí Eorpach, ach fanann sé as láimh do dhaoine gan am, teanga nó saineolas. Úsáideann tendersbay gníomhairí AI chun sin a athrú — agus chun seans fíor a thabhairt do gach FBM.",
+      "note": "Táimid ag tógáil. Fill ar ais go luath."
+    },
+    "footer": {
+      "tagline": "Tairiscintí na hEorpa, buaite ag foireann gníomhairí AI.",
+      "contactLabel": "Déan teagmháil linn",
+      "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint"
+    },
+    "tenderCard": { "value": "Luach", "deadline": "Spriocdháta", "daysLeft": "{{count}} lá" },
+    "agentLabels": {
+      "scout": "Gníomhaire fionnachtana",
+      "docs": "Gníomhaire doiciméad",
+      "strategy": "Gníomhaire straitéise",
+      "scoutStat": "{{count}} conradh aimsithe"
+    }
   }
 }

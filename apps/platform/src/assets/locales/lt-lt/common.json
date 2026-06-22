@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Laimėkite kitą viešąjį pirkimą Europoje",
+      "description": "Dirbtinio intelekto agentų komanda, kuri randa, parengia ir laimi Europos viešuosius pirkimus MVĮ."
+    },
+    "nav": { "problem": "Problema", "agents": "Agentai", "vision": "Vizija" },
+    "hero": {
+      "eyebrow": "DI agentų komanda",
+      "titleLead": "Laimėkite kitą viešąjį pirkimą",
+      "titleHighlight": "Europoje",
+      "subtitle": "tendersbay – tai dirbtinio intelekto agentų komanda, kuri suranda tinkamą pirkimą visoje Europoje, tvarko dokumentus už jus ir veda iki pergalės.",
+      "ctaPrimary": "Sužinokite, kaip tai veikia",
+      "ctaSecondary": "Žiūrėkite viziją",
+      "trust": ["27 šalys", "DI agentų komanda", "0 rankinio dokumentų tvarkymo"]
+    },
+    "problem": {
+      "eyebrow": "Problema",
+      "title": "Europos viešieji pirkimai yra labirintas",
+      "items": [
+        {
+          "title": "Išsibarstę 27 šalyse",
+          "body": "Tinkamos galimybės išsibarsčiusios dešimtyse nacionalinių portalų, skirtingomis kalbomis ir formatais."
+        },
+        {
+          "title": "Sunki dokumentų biurokratija",
+          "body": "Reikalavimai, sertifikatai ir terminai — dokumentų labirintas, kuriame lengva suklysti."
+        },
+        {
+          "title": "Nėra skirto pasiūlymų rengimo skyriaus",
+          "body": "MVĮ neturi viešųjų pirkimų skyriaus — laimėti reikia laiko ir kompetencijos, kurių jos neturi."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agentai",
+      "title": "DI agentų komanda, dirbanti jūsų labui",
+      "items": [
+        {
+          "title": "Raskite",
+          "body": "Agentai suranda tinkamą pirkimą visoje Europoje, pritaikytą jūsų verslui."
+        },
+        {
+          "title": "Paruoškite",
+          "body": "Jie tvarko dokumentų biurokratiją už jus: reikalavimus, sertifikatus, terminus."
+        },
+        {
+          "title": "Laimėkite",
+          "body": "Jie veda jus iki pasiūlymo, kad turėtumėte geriausią šansą laimėti."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Kam skirta",
+      "title": "Sukurta MVĮ ir verslininkams",
+      "body": "Tiems, kurie nori konkuruoti per sienas be skirto pasiūlymų rengimo skyriaus. tendersbay suteikia jums tokią pat galią kaip ir dideliems žaidėjams."
+    },
+    "vision": {
+      "eyebrow": "Vizija",
+      "title": "Europos viešieji pirkimai, atviri visiems",
+      "body": "Kiekvienais metais šimtai milijardų juda per Europos viešuosius pirkimus, tačiau jie lieka nepasiekiami tiems, kurie neturi laiko, kalbos žinių ar kompetencijos. tendersbay naudoja DI agentus tam pakeisti — ir suteikti kiekvienai MVĮ realią galimybę.",
+      "note": "Mes kuriame. Grįžkite netrukus."
+    },
+    "footer": {
+      "tagline": "Europos viešieji pirkimai, kuriuos laimi DI agentų komanda.",
+      "contactLabel": "Susisiekite su mumis",
+      "copyright": "© Bernardo Forcillo — Visos teisės saugomos"
+    },
+    "tenderCard": { "value": "Vertė", "deadline": "Terminas", "daysLeft": "{{count}} dienos" },
+    "agentLabels": {
+      "scout": "Žvalgybos agentas",
+      "docs": "Dokumentų agentas",
+      "strategy": "Strategijos agentas",
+      "scoutStat": "{{count}} rastų pirkimų"
+    }
   }
 }

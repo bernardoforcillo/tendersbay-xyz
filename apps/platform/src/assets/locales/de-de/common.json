@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Gewinnen Sie Ihre nächste Ausschreibung in Europa",
+      "description": "Ein Team von KI-Agenten, das europäische öffentliche Ausschreibungen für KMU findet, vorbereitet und gewinnt."
+    },
+    "nav": { "problem": "Das Problem", "agents": "Die Agenten", "vision": "Vision" },
+    "hero": {
+      "eyebrow": "Ein Team von KI-Agenten",
+      "titleLead": "Gewinnen Sie Ihre nächste Ausschreibung",
+      "titleHighlight": "in Europa",
+      "subtitle": "tendersbay ist ein Team von KI-Agenten, das die richtige Ausschreibung in ganz Europa findet, den Papierkram für Sie erledigt und Sie bis zum Sieg begleitet.",
+      "ctaPrimary": "So funktioniert es",
+      "ctaSecondary": "Vision ansehen",
+      "trust": ["27 Länder", "ein Team von KI-Agenten", "0 manueller Papierkram"]
+    },
+    "problem": {
+      "eyebrow": "Das Problem",
+      "title": "Europäische Ausschreibungen sind ein Labyrinth",
+      "items": [
+        {
+          "title": "Verteilt auf 27 Länder",
+          "body": "Die richtigen Chancen sind über Dutzende nationaler Portale in verschiedenen Sprachen und Formaten verstreut."
+        },
+        {
+          "title": "Schwere Dokumentenbürokratie",
+          "body": "Anforderungen, Zertifikate und Fristen — ein dokumentarisches Labyrinth, in dem man leicht Fehler macht."
+        },
+        {
+          "title": "Kein dediziertes Angebotsteam",
+          "body": "KMU haben keine Beschaffungsabteilung — Gewinnen erfordert Zeit und Fachkenntnisse, die sie nicht haben."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Die Agenten",
+      "title": "Ein Team von KI-Agenten, das für Sie arbeitet",
+      "items": [
+        {
+          "title": "Finden",
+          "body": "Die Agenten finden die richtige Ausschreibung in ganz Europa, zugeschnitten auf Ihr Unternehmen."
+        },
+        {
+          "title": "Vorbereiten",
+          "body": "Sie erledigen die Dokumentenbürokratie für Sie: Anforderungen, Zertifikate, Fristen."
+        },
+        {
+          "title": "Gewinnen",
+          "body": "Sie begleiten Sie bis zum Angebot, für die beste Chance auf einen Sieg."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Für wen es ist",
+      "title": "Entwickelt für KMU und Unternehmer",
+      "body": "Für diejenigen, die grenzüberschreitend konkurrieren wollen, ohne ein dediziertes Angebotsteam. tendersbay gibt Ihnen dieselbe Schlagkraft wie den großen Akteuren."
+    },
+    "vision": {
+      "eyebrow": "Vision",
+      "title": "Europäische Ausschreibungen, offen für alle",
+      "body": "Jedes Jahr fließen hunderte Milliarden durch europäische öffentliche Beschaffungen, bleiben aber für diejenigen unerreichbar, die keine Zeit, Sprache oder Fachkenntnis haben. tendersbay nutzt KI-Agenten, um das zu ändern — und jedem KMU eine echte Chance zu geben.",
+      "note": "Wir bauen gerade. Schauen Sie bald wieder vorbei."
+    },
+    "footer": {
+      "tagline": "Europas Ausschreibungen, gewonnen von einem Team von KI-Agenten.",
+      "contactLabel": "Kontakt aufnehmen",
+      "copyright": "© Bernardo Forcillo — Alle Rechte vorbehalten"
+    },
+    "tenderCard": { "value": "Wert", "deadline": "Frist", "daysLeft": "{{count}} Tage" },
+    "agentLabels": {
+      "scout": "Scout-Agent",
+      "docs": "Dokumenten-Agent",
+      "strategy": "Strategie-Agent",
+      "scoutStat": "{{count}} gefundene Ausschreibungen"
+    }
   }
 }

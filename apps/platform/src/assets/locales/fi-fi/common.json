@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Voita seuraava tarjouskilpailu Euroopassa",
+      "description": "Tekoälyagenttien tiimi, joka löytää, valmistelee ja voittaa eurooppalaiset julkiset hankinnat pk-yrityksille."
+    },
+    "nav": { "problem": "Ongelma", "agents": "Agentit", "vision": "Visio" },
+    "hero": {
+      "eyebrow": "Tekoälyagenttien tiimi",
+      "titleLead": "Voita seuraava tarjouskilpailu",
+      "titleHighlight": "Euroopassa",
+      "subtitle": "tendersbay on tekoälyagenttien tiimi, joka löytää oikean hankinnan kaikkialta Euroopasta, hoitaa paperityöt puolestasi ja ohjaa sinut voittoon asti.",
+      "ctaPrimary": "Katso, miten se toimii",
+      "ctaSecondary": "Katso visio",
+      "trust": ["27 maata", "tekoälyagenttien tiimi", "0 manuaalista paperityötä"]
+    },
+    "problem": {
+      "eyebrow": "Ongelma",
+      "title": "Euroopan hankinnat ovat labyrintti",
+      "items": [
+        {
+          "title": "Hajautettuna 27 maahan",
+          "body": "Oikeat mahdollisuudet ovat hajallaan kymmenissä kansallisissa portaaleissa eri kielillä ja muodoissa."
+        },
+        {
+          "title": "Raskas asiakirjabyrokraatia",
+          "body": "Vaatimukset, sertifikaatit ja määräajat — asiakirjalabyrintti, jossa on helppo tehdä virheitä."
+        },
+        {
+          "title": "Ei omistettua tarjoustiimiä",
+          "body": "Pk-yrityksillä ei ole hankintaosastoa — voittaminen vaatii aikaa ja osaamista, joita heillä ei ole."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agentit",
+      "title": "Tekoälyagenttien tiimi, joka työskentelee puolestasi",
+      "items": [
+        {
+          "title": "Löydä",
+          "body": "Agentit löytävät oikean hankinnan kaikkialta Euroopasta, räätälöitynä yrityksellesi."
+        },
+        {
+          "title": "Valmistele",
+          "body": "He hoitavat asiakirjabyrokraatian puolestasi: vaatimukset, sertifikaatit, määräajat."
+        },
+        {
+          "title": "Voita",
+          "body": "He ohjaavat sinut tarjoukseen asti, jotta sinulla on parhaat mahdollisuudet voittaa."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Kenelle se on tarkoitettu",
+      "title": "Rakennettu pk-yrityksille ja yrittäjille",
+      "body": "Niille, jotka haluavat kilpailla rajojen yli ilman omistettua tarjoustiimiä. tendersbay antaa sinulle saman tulituksen kuin suurilla toimijoilla."
+    },
+    "vision": {
+      "eyebrow": "Visio",
+      "title": "Euroopan hankinnat, avoimia kaikille",
+      "body": "Joka vuosi sadat miljardeja liikkuvat eurooppalaisten julkisten hankintojen kautta, mutta ne pysyvät ulottumattomissa niille, joilla ei ole aikaa, kieltä tai osaamista. tendersbay käyttää tekoälyagentteja muuttaakseen tämän — ja antaakseen jokaiselle pk-yritykselle todellisen mahdollisuuden.",
+      "note": "Rakennamme. Palaa pian takaisin."
+    },
+    "footer": {
+      "tagline": "Euroopan hankinnat, joita tekoälyagenttien tiimi voittaa.",
+      "contactLabel": "Ota yhteyttä",
+      "copyright": "© Bernardo Forcillo — Kaikki oikeudet pidätetään"
+    },
+    "tenderCard": { "value": "Arvo", "deadline": "Määräaika", "daysLeft": "{{count}} päivää" },
+    "agentLabels": {
+      "scout": "Tiedustelijaagentti",
+      "docs": "Asiakirja-agentti",
+      "strategy": "Strategia-agentti",
+      "scoutStat": "{{count}} löydettyä hankintaa"
+    }
   }
 }

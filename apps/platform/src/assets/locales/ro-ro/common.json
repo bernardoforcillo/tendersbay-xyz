@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Câștigați următoarea licitație în Europa",
+      "description": "O echipă de agenți AI care găsește, pregătește și câștigă licitații publice europene pentru IMM-uri."
+    },
+    "nav": { "problem": "Problema", "agents": "Agenții", "vision": "Viziune" },
+    "hero": {
+      "eyebrow": "O echipă de agenți AI",
+      "titleLead": "Câștigați următoarea licitație",
+      "titleHighlight": "în Europa",
+      "subtitle": "tendersbay este o echipă de agenți AI care găsește licitația potrivită în toată Europa, se ocupă de birocrație în locul dvs. și vă ghidează până la victorie.",
+      "ctaPrimary": "Vedeți cum funcționează",
+      "ctaSecondary": "Vedeți viziunea",
+      "trust": ["27 de țări", "o echipă de agenți AI", "0 birocrație manuală"]
+    },
+    "problem": {
+      "eyebrow": "Problema",
+      "title": "Licitațiile europene sunt un labirint",
+      "items": [
+        {
+          "title": "Dispersate în 27 de țări",
+          "body": "Oportunitățile potrivite sunt împrăștiate pe zeci de portaluri naționale, în limbi și formate diferite."
+        },
+        {
+          "title": "Birocrație documentară grea",
+          "body": "Cerințe, certificate și termene limită — un labirint documentar unde este ușor să greșești."
+        },
+        {
+          "title": "Nicio echipă dedicată pentru oferte",
+          "body": "IMM-urile nu au un departament de achiziții publice — câștigarea necesită timp și expertiză pe care nu le au."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agenții",
+      "title": "O echipă de agenți AI care lucrează pentru dvs.",
+      "items": [
+        {
+          "title": "Găsiți",
+          "body": "Agenții găsesc licitația potrivită în toată Europa, adaptată afacerii dvs."
+        },
+        {
+          "title": "Pregătiți",
+          "body": "Ei se ocupă de birocrația documentară în locul dvs.: cerințe, certificate, termene limită."
+        },
+        {
+          "title": "Câștigați",
+          "body": "Vă ghidează până la ofertă, pentru cea mai bună șansă de victorie."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Pentru cine este",
+      "title": "Construit pentru IMM-uri și antreprenori",
+      "body": "Pentru cei care doresc să concureze dincolo de granițe fără o echipă dedicată pentru oferte. tendersbay vă oferă aceeași putere de foc ca marii jucători."
+    },
+    "vision": {
+      "eyebrow": "Viziune",
+      "title": "Licitații europene, deschise pentru toți",
+      "body": "În fiecare an, sute de miliarde circulă prin achizițiile publice europene, dar rămân inaccesibile pentru cei fără timp, limbă sau expertiză. tendersbay folosește agenți AI pentru a schimba asta — și pentru a oferi fiecărui IMM o șansă reală.",
+      "note": "Construim. Reveniți curând."
+    },
+    "footer": {
+      "tagline": "Licitațiile Europei, câștigate de o echipă de agenți AI.",
+      "contactLabel": "Luați legătura cu noi",
+      "copyright": "© Bernardo Forcillo — Toate drepturile rezervate"
+    },
+    "tenderCard": { "value": "Valoare", "deadline": "Termen limită", "daysLeft": "{{count}} zile" },
+    "agentLabels": {
+      "scout": "Agent explorator",
+      "docs": "Agent documente",
+      "strategy": "Agent strategie",
+      "scoutStat": "{{count}} licitații găsite"
+    }
   }
 }

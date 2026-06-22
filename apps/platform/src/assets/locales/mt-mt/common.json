@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Irbaħ l-offerta li jmiss tiegħek fl-Ewropa",
+      "description": "Tim ta' aġenti AI li jsib, jipprepara u jirbaħ il-kuntratti pubbliċi Ewropej għall-SMEs."
+    },
+    "nav": { "problem": "Il-Problema", "agents": "L-Aġenti", "vision": "Viżjoni" },
+    "hero": {
+      "eyebrow": "Tim ta' aġenti AI",
+      "titleLead": "Irbaħ l-offerta li jmiss tiegħek",
+      "titleHighlight": "fl-Ewropa",
+      "subtitle": "tendersbay huwa tim ta' aġenti AI li jsib il-kuntratt it-tajjeb madwar l-Ewropa kollha, jieħu ħsieb il-karti f'ismek u jgħinek sal-ħin li tirbaħ.",
+      "ctaPrimary": "Ara kif jaħdem",
+      "ctaSecondary": "Ara l-viżjoni",
+      "trust": ["27 pajjiż", "tim ta' aġenti AI", "0 karti manwali"]
+    },
+    "problem": {
+      "eyebrow": "Il-Problema",
+      "title": "L-offerti Ewropej huma labirint",
+      "items": [
+        {
+          "title": "Mifruxa fuq 27 pajjiż",
+          "body": "L-opportunitajiet it-tajbin huma mifruxa fuq għexieren ta' portali nazzjonali, f'lingwi u formati differenti."
+        },
+        {
+          "title": "Burokratija tad-dokumenti tqila",
+          "body": "Rekwiżiti, ċertifikati u skadenzieri — labirint dokumentarju fejn huwa faċli li tagħmel żbalji."
+        },
+        {
+          "title": "Ebda tim dedikat għall-offerti",
+          "body": "L-SMEs m'għandhomx dipartiment tal-akkwist — ir-rebħ jeħtieġ ħin u għarfien li m'għandhomx."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "L-Aġenti",
+      "title": "Tim ta' aġenti AI li jaħdem għalik",
+      "items": [
+        {
+          "title": "Sib",
+          "body": "L-aġenti jsib il-kuntratt it-tajjeb madwar l-Ewropa kollha, imfassal għan-negozju tiegħek."
+        },
+        {
+          "title": "Ipprepara",
+          "body": "Jieħdu ħsieb il-burokratija tad-dokumenti f'ismek: rekwiżiti, ċertifikati, skadenzieri."
+        },
+        {
+          "title": "Irbaħ",
+          "body": "Jgħinuk sal-offerta, biex ikollok l-aħjar ċans li tirbaħ."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Għal min huwa",
+      "title": "Mibni għall-SMEs u l-intraprendituri",
+      "body": "Għal dawk li jixtiequ jikkompetu lil hinn mill-fruntieri mingħajr tim dedikat tal-offerti. tendersbay jagħtik l-istess qawwa bħal dawk il-kbar."
+    },
+    "vision": {
+      "eyebrow": "Viżjoni",
+      "title": "Offerti Ewropej, miftuħa għal kulħadd",
+      "body": "Kull sena mija ta' biljuni jiċċaqalqu permezz tal-akkwist pubbliku Ewropew, iżda jibqgħu 'l bogħod minn dawk mingħajr il-ħin, il-lingwa jew l-għarfien. tendersbay juża aġenti AI biex ibiddel dan — u jagħti lil kull SME ċans reali.",
+      "note": "Qed nibnu. Erġa' iżżur dalwaqt."
+    },
+    "footer": {
+      "tagline": "L-offerti tal-Ewropa, mirbugħa minn tim ta' aġenti AI.",
+      "contactLabel": "Ikkuntattjana",
+      "copyright": "© Bernardo Forcillo — Id-drittijiet kollha riżervati"
+    },
+    "tenderCard": { "value": "Valur", "deadline": "Skadenza", "daysLeft": "{{count}} jiem" },
+    "agentLabels": {
+      "scout": "Aġent ta' skawt",
+      "docs": "Aġent tad-dokumenti",
+      "strategy": "Aġent tal-istrateġija",
+      "scoutStat": "{{count}} kuntratti misjuba"
+    }
   }
 }

@@ -2,5 +2,80 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Nyerje meg a következő közbeszerzését Európában",
+      "description": "Egy mesterséges intelligencia ügynökökből álló csapat, amely megtalálja, előkészíti és megnyeri az európai közbeszerzéseket a kkv-k számára."
+    },
+    "nav": { "problem": "A probléma", "agents": "Az ügynökök", "vision": "Vízió" },
+    "hero": {
+      "eyebrow": "Mesterséges intelligencia ügynökök csapata",
+      "titleLead": "Nyerje meg a következő közbeszerzését",
+      "titleHighlight": "Európában",
+      "subtitle": "A tendersbay mesterséges intelligencia ügynökök csapata, akik megtalálják a megfelelő pályázatot egész Európában, elvégzik Ön helyett a papírmunkát, és végigkísérik a győzelemig.",
+      "ctaPrimary": "Nézze meg, hogyan működik",
+      "ctaSecondary": "Tekintse meg a víziót",
+      "trust": ["27 ország", "MI-ügynökök csapata", "0 kézi adminisztráció"]
+    },
+    "problem": {
+      "eyebrow": "A probléma",
+      "title": "Az európai közbeszerzések útvesztők",
+      "items": [
+        {
+          "title": "27 országban szétszórva",
+          "body": "A megfelelő lehetőségek tucatnyi nemzeti portálra szétszórva, különböző nyelveken és formátumokban találhatók."
+        },
+        {
+          "title": "Nehéz dokumentációs bürokrácia",
+          "body": "Követelmények, tanúsítványok és határidők — egy dokumentumlabirintus, ahol könnyű hibázni."
+        },
+        {
+          "title": "Nincs dedikált ajánlattételi csapat",
+          "body": "A kkv-knak nincs közbeszerzési osztályuk — a győzelemhez olyan idő és szakértelem kell, amellyel nem rendelkeznek."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Az ügynökök",
+      "title": "Mesterséges intelligencia ügynökök csapata, amely Önért dolgozik",
+      "items": [
+        {
+          "title": "Találjon",
+          "body": "Az ügynökök megtalálják a megfelelő pályázatot egész Európában, az Ön vállalkozására szabva."
+        },
+        {
+          "title": "Készítse elő",
+          "body": "Elvégzik Ön helyett a dokumentációs bürokráciát: követelmények, tanúsítványok, határidők."
+        },
+        {
+          "title": "Nyerjen",
+          "body": "Végigkísérik az ajánlatig, hogy a legjobb esélye legyen a győzelemre."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Kinek szól",
+      "title": "Kkv-k és vállalkozók számára készült",
+      "body": "Azoknak, akik dedikált ajánlattételi csapat nélkül szeretnének határon átnyúlóan versenyezni. A tendersbay ugyanolyan tűzerőt ad Önnek, mint a nagy szereplőknek."
+    },
+    "vision": {
+      "eyebrow": "Vízió",
+      "title": "Európai közbeszerzések, mindenki számára nyitottak",
+      "body": "Évente több száz milliárd áramlik az európai közbeszerzéseken keresztül, de elérhetetlen marad azok számára, akiknek nincs idejük, nyelvtudásuk vagy szakértelmük. A tendersbay mesterséges intelligencia ügynököket használ ennek megváltoztatásához — és hogy minden kkv-nak valódi esélyt adjon.",
+      "note": "Épülünk. Nézzen vissza hamarosan."
+    },
+    "footer": {
+      "tagline": "Európa közbeszerzései, amelyeket MI-ügynökök csapata nyer meg.",
+      "contactLabel": "Lépjen kapcsolatba velünk",
+      "copyright": "© Bernardo Forcillo — Minden jog fenntartva"
+    },
+    "tenderCard": { "value": "Érték", "deadline": "Határidő", "daysLeft": "{{count}} nap" },
+    "agentLabels": {
+      "scout": "Felderítő ügynök",
+      "docs": "Dokumentum-ügynök",
+      "strategy": "Stratégiai ügynök",
+      "scoutStat": "{{count}} megtalált pályázat"
+    }
   }
 }
