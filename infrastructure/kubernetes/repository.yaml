@@ -1,0 +1,29 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: tendersbay-xyz-repository
+  namespace: flux-system
+spec:
+  interval: 30s
+  ref:
+    branch: main
+  url: ssh://git@github.com/bernardoforcillo/tendersbay-xyz
+  secretRef:
+    name: tendersbay-xyz-auth
+  timeout: 3m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: tendersbay-xyz-source
+  namespace: flux-system
+spec:
+  interval: 30s
+  path: ./infrastructure/kubernetes
+  prune: true
+  wait: true
+  sourceRef:
+    kind: GitRepository
+    name: tendersbay-xyz-repository
+  retryInterval: 5m
+  timeout: 5m

@@ -1,0 +1,87 @@
+{
+  "app": {
+    "title": "tendersbay platform",
+    "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Votre prochain marché européen, attribué",
+      "description": "Une équipe d'agents IA qui trouve, prépare et remporte les marchés publics européens pour les PME."
+    },
+    "nav": { "problem": "Le problème", "agents": "Les agents", "vision": "Vision" },
+    "hero": {
+      "eyebrow": "Votre équipe d'agents IA",
+      "titleLead": "Votre prochain marché européen ?",
+      "titleHighlight": "Attribué.",
+      "subtitle": "tendersbay est votre équipe d'agents IA : ils débusquent les bons marchés dans toute l'Europe, écrasent la paperasse à votre place et vous portent jusqu'à l'attribution.",
+      "ctaPrimary": "Voir en action",
+      "ctaSecondary": "Voir la vision",
+      "trust": [
+        "27 pays, une plateforme",
+        "Des agents qui ne dorment jamais",
+        "Zéro paperasse manuelle"
+      ]
+    },
+    "problem": {
+      "eyebrow": "Le problème",
+      "title": "Le jeu des appels d'offres est truqué contre les PME.",
+      "items": [
+        {
+          "title": "Éparpillés dans 27 pays",
+          "body": "Les bonnes opportunités sont réparties sur des dizaines de portails nationaux, dans des langues et formats différents."
+        },
+        {
+          "title": "Une bureaucratie documentaire lourde",
+          "body": "Exigences, certificats et délais — un labyrinthe documentaire où il est facile de se tromper."
+        },
+        {
+          "title": "Aucune équipe dédiée aux offres",
+          "body": "Les PME n'ont pas de service achats — remporter un marché demande du temps et une expertise qu'elles n'ont pas."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Les agents",
+      "title": "Rencontrez les agents qui font le gros du travail.",
+      "items": [
+        {
+          "title": "Trouver",
+          "body": "Les agents dénichent le bon marché dans toute l'Europe, adapté à votre activité."
+        },
+        {
+          "title": "Préparer",
+          "body": "Ils gèrent la bureaucratie documentaire à votre place : exigences, certificats, délais."
+        },
+        {
+          "title": "Remporter",
+          "body": "Ils vous accompagnent jusqu'à l'offre, pour maximiser vos chances d'attribution."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "À qui c'est destiné",
+      "title": "Fait pour les challengers qui ne se contentent pas du minimum.",
+      "body": "Pour ceux qui souhaitent concourir au-delà des frontières sans équipe dédiée. tendersbay vous donne la même puissance de feu que les grands acteurs."
+    },
+    "vision": {
+      "eyebrow": "Vision",
+      "title": "Les marchés publics ne sont pas un club fermé.",
+      "body": "Chaque année, des centaines de milliards circulent dans les marchés publics européens, mais ils restent hors de portée de ceux qui manquent de temps, de langue ou d'expertise. tendersbay utilise des agents IA pour changer cela — et donner à chaque PME une vraie chance.",
+      "note": "Nous construisons. Revenez bientôt."
+    },
+    "footer": {
+      "tagline": "Les marchés d'Europe. Attribués.",
+      "contactLabel": "Nous contacter",
+      "copyright": "© Bernardo Forcillo — Tous droits réservés"
+    },
+    "tenderCard": { "value": "Valeur", "deadline": "Échéance", "daysLeft": "{{count}} jours" },
+    "agentLabels": {
+      "scout": "Agent éclaireur",
+      "docs": "Agent documents",
+      "strategy": "Agent stratégie",
+      "scoutStat": "{{count}} marchés trouvés",
+      "docsStat": "dossier bouclé",
+      "strategyStat": "offre gagnante prête"
+    }
+  }
+}

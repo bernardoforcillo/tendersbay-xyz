@@ -57,6 +57,17 @@ func TestSPAFallbackForUnknownRoute(t *testing.T) {
 	}
 }
 
+func TestSPAFallbackForLocalePrefix(t *testing.T) {
+	res := get(t, New(testFS()), "/en-ie/")
+	if res.StatusCode != http.StatusOK {
+		t.Fatalf("got %d, want 200", res.StatusCode)
+	}
+	body, _ := io.ReadAll(res.Body)
+	if !strings.Contains(string(body), "<title>app</title>") {
+		t.Fatalf("expected index.html body, got %q", body)
+	}
+}
+
 func TestMissingAssetReturns404(t *testing.T) {
 	res := get(t, New(testFS()), "/assets/missing.js")
 	if res.StatusCode != http.StatusNotFound {

@@ -1,4 +1,54 @@
 @import "tailwindcss";
 
-/* Shared design tokens (colors, fonts, radii) are added here as the theme
-   grows, via an @theme { … } block. */
+@theme {
+  /* Brand — teal (primary) */
+  --color-brand-50: #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
+
+  /* Ink — deep forest green (dark surfaces) */
+  --color-ink-50: #f2f7f5;
+  --color-ink-100: #e0ece8;
+  --color-ink-200: #c2d9d1;
+  --color-ink-300: #95bcb0;
+  --color-ink-400: #62988a;
+  --color-ink-500: #427b6d;
+  --color-ink-600: #316256;
+  --color-ink-700: #265046;
+  --color-ink-800: #0f3d36;
+  --color-ink-900: #13322c;
+  --color-ink-950: #0a2019;
+
+  /* Cream — warm sand neutral */
+  --color-cream-50: #fdfbf7;
+  --color-cream-100: #fbf7f0;
+  --color-cream-200: #f3ece0;
+  --color-cream-300: #ece2d2;
+  --color-cream-400: #ddcdb4;
+  --color-cream-500: #cbb594;
+  --color-cream-600: #b39a72;
+  --color-cream-700: #947d59;
+  --color-cream-800: #76644a;
+  --color-cream-900: #60523e;
+  --color-cream-950: #332b20;
+
+  /* Type system — editorial display serif + clean sans + mono for data labels */
+  --font-display: "Calistoga", ui-serif, Georgia, "Times New Roman", serif;
+  --font-sans:
+    "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Soft elevation scale (Soft UI Evolution — layered, low-contrast depth) */
+  --shadow-soft: 0 1px 2px rgba(19, 50, 44, 0.04), 0 6px 16px rgba(19, 50, 44, 0.06);
+  --shadow-soft-md: 0 2px 4px rgba(19, 50, 44, 0.05), 0 12px 28px rgba(19, 50, 44, 0.08);
+  --shadow-soft-lg: 0 4px 8px rgba(19, 50, 44, 0.06), 0 22px 48px rgba(19, 50, 44, 0.12);
+}

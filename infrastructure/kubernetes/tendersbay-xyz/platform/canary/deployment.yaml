@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform-canary
+  namespace: tendersbay-xyz
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tendersbay-xyz
+      tier: platform-canary
+  template:
+    metadata:
+      labels:
+        app: tendersbay-xyz
+        tier: platform-canary
+    spec:
+      securityContext:
+        # gcr.io/distroless/static-debian12:nonroot -> UID/GID 65532.
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: platform
+          # Canary channel: tracks the newest <timestamp>-<sha>-canary image
+          # built from the dev branch (see canary/update.yaml). The $imagepolicy
+          # marker is rewritten by Flux image automation; until the first
+          # reconcile the :latest placeholder is the stable image.
+          image: bernardoforcillo/tendersbay-platform:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-platform-canary-image-policy"}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '50m'
+            requests:
+              memory: '64Mi'
+              cpu: '10m'
+          env:
+            - name: PORT
+              value: '8080'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

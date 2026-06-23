@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - repository.yaml
+  # Namespace + shared Traefik middlewares (used by both channels)
+  - tendersbay-xyz/namespace.yaml
+  - tendersbay-xyz/commons.yaml
+  # platform app — stable channel -> tendersbay.xyz
+  - tendersbay-xyz/platform/main/deployment.yaml
+  - tendersbay-xyz/platform/main/service.yaml
+  - tendersbay-xyz/platform/main/certificate.yaml
+  - tendersbay-xyz/platform/main/ingress.yaml
+  - tendersbay-xyz/platform/main/update.yaml
+  # platform app — canary channel -> dev.tendersbay.xyz
+  - tendersbay-xyz/platform/canary/deployment.yaml
+  - tendersbay-xyz/platform/canary/service.yaml
+  - tendersbay-xyz/platform/canary/certificate.yaml
+  - tendersbay-xyz/platform/canary/ingress.yaml
+  - tendersbay-xyz/platform/canary/middleware.yaml
+  - tendersbay-xyz/platform/canary/update.yaml

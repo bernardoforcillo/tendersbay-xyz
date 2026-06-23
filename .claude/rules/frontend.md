@@ -8,7 +8,7 @@ Import from an app's own `src/` with the `~` alias instead of long relative path
 
 ```ts
 import { App } from '~/app';            // -> src/app
-import { TenderCard } from '~/tenders';  // feature barrel -> src/tenders
+import { TenderCard } from '~/features/tenders';  // feature barrel -> src/features/tenders
 import '~/index.css';                   // bare `~` resolves to src itself
 ```
 
@@ -38,20 +38,23 @@ additionally follow the atomic-design layout below.
 ## Feature-based + atomic-design components
 
 Components are organized **by feature first, then by atomic-design tier**. Each module
-is a folder with an `index.ts(x)` entry point, so the import is the folder, not a file:
+is a folder with an `index.ts(x)` entry point, so the import is the folder, not a file.
+In **apps** the feature root is `src/features/<feature>/`; in the **shared library** it is
+`src/<feature>/` (no `features/` wrapper):
 
 ```
 src/
-  <feature>/
-    index.ts                       // feature barrel: re-exports each tier
-    components/
-      atoms/
-        <name>/index.tsx           // a component (folder = module)
-        index.ts                   // tier barrel: re-exports its components
-      molecules/
-      organisms/
-      templates/
-      pages/                       // apps only — see below
+  features/                        // apps only; the shared library omits this level
+    <feature>/
+      index.ts                     // feature barrel: re-exports each tier
+      components/
+        atoms/
+          <name>/index.tsx           // a component (folder = module)
+          index.ts                   // tier barrel: re-exports its components
+        molecules/
+        organisms/
+        templates/
+        pages/                       // apps only — see below
 ```
 
 - **Tiers:** `atoms`, `molecules`, `organisms`, `templates`. `pages` is **app-only**
@@ -65,9 +68,11 @@ src/
 
 - **`@tendersbay/components`** holds cross-app components under `src/<feature>/…`. Import
   them per-feature: `import { TenderCard } from '@tendersbay/components/tenders'`.
-- **An app** holds its own components under `src/<feature>/…`, imported via the `~` alias
-  (`import { TenderCard } from '~/tenders'`). Cross-package imports always use the package
-  name, never `~`.
+- **An app** holds its own components under `src/features/<feature>/…`, imported via the
+  `~` alias (`import { TenderCard } from '~/features/tenders'`). Infra that is not a
+  feature (TanStack routes in `src/routes/`, i18n in `src/i18n/`, translation files in
+  `src/assets/locales/<locale>/common.json`) stays outside `features/`. Cross-package
+  imports always use the package name, never `~`.
 
 ## Generating components — `pnpm gen`
 
@@ -77,8 +82,10 @@ Scaffold a component with the Turborepo generator instead of hand-creating folde
 pnpm gen   # prompts: target (shared lib | app) → feature → tier → name
 ```
 
-It creates `<base>/<feature>/components/<tier>/<name>/index.tsx` (an `FC<Props>` stub) and
-updates the tier and feature barrels. It refuses `pages` for the shared library.
+It creates `<base>/features/<feature>/components/<tier>/<name>/index.tsx` for apps (or
+`<base>/<feature>/components/<tier>/<name>/index.tsx` for the shared library) — an
+`FC<Props>` stub — and updates the tier and feature barrels. It refuses `pages` for the
+shared library.
 
 ## Lowercase kebab-case names
 

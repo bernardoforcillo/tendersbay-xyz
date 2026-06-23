@@ -1,0 +1,83 @@
+{
+  "app": {
+    "title": "tendersbay platform",
+    "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Tu próxima licitación europea, adjudicada",
+      "description": "Un equipo de agentes de IA que encuentra, prepara y gana licitaciones públicas europeas para las pymes."
+    },
+    "nav": { "problem": "El problema", "agents": "Los agentes", "vision": "Visión" },
+    "hero": {
+      "eyebrow": "Tu equipo de agentes de IA",
+      "titleLead": "¿Tu próxima licitación europea?",
+      "titleHighlight": "Adjudicada.",
+      "subtitle": "tendersbay es tu equipo de agentes de IA: cazan las licitaciones adecuadas en toda Europa, destrozan el papeleo y te llevan directo a la adjudicación.",
+      "ctaPrimary": "Verlo en acción",
+      "ctaSecondary": "Ver la visión",
+      "trust": ["27 países, una plataforma", "Agentes que nunca duermen", "Cero papeleo manual"]
+    },
+    "problem": {
+      "eyebrow": "El problema",
+      "title": "El juego de las licitaciones está amañado contra las pymes.",
+      "items": [
+        {
+          "title": "Dispersas en 27 países",
+          "body": "Las oportunidades adecuadas están repartidas en docenas de portales nacionales, en distintos idiomas y formatos."
+        },
+        {
+          "title": "Burocracia documental pesada",
+          "body": "Requisitos, certificados y plazos — un laberinto documental donde es fácil cometer errores."
+        },
+        {
+          "title": "Sin equipo dedicado a ofertas",
+          "body": "Las pymes no tienen departamento de contratación pública — ganar requiere tiempo y experiencia que no tienen."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Los agentes",
+      "title": "Conoce a los agentes que hacen el trabajo duro.",
+      "items": [
+        {
+          "title": "Encuentra",
+          "body": "Los agentes encuentran la licitación adecuada en toda Europa, adaptada a tu negocio."
+        },
+        {
+          "title": "Prepara",
+          "body": "Se encargan de la burocracia documental por ti: requisitos, certificados, plazos."
+        },
+        {
+          "title": "Gana",
+          "body": "Te acompañan hasta la oferta, para darte la mejor oportunidad de adjudicación."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Para quién es",
+      "title": "Hecho para los que no se conforman con menos.",
+      "body": "Para quienes quieren competir más allá de las fronteras sin un equipo dedicado a licitaciones. tendersbay te da la misma potencia que los grandes actores."
+    },
+    "vision": {
+      "eyebrow": "Visión",
+      "title": "La contratación pública no es un club cerrado.",
+      "body": "Cada año, cientos de miles de millones circulan por la contratación pública europea, pero permanecen fuera del alcance de quienes no tienen tiempo, idioma ni experiencia. tendersbay usa agentes de IA para cambiar eso — y dar a cada pyme una oportunidad real.",
+      "note": "Estamos construyendo. Vuelve pronto."
+    },
+    "footer": {
+      "tagline": "Las licitaciones de Europa. Adjudicadas.",
+      "contactLabel": "Contacta con nosotros",
+      "copyright": "© Bernardo Forcillo — Todos los derechos reservados"
+    },
+    "tenderCard": { "value": "Valor", "deadline": "Plazo", "daysLeft": "{{count}} días" },
+    "agentLabels": {
+      "scout": "Agente explorador",
+      "docs": "Agente de documentos",
+      "strategy": "Agente de estrategia",
+      "scoutStat": "{{count}} licitaciones encontradas",
+      "docsStat": "papeleo resuelto",
+      "strategyStat": "oferta ganadora lista"
+    }
+  }
+}

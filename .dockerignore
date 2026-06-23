@@ -1,0 +1,22 @@
+# VCS
+.git
+
+# Dependencies (reinstalled inside the image)
+**/node_modules
+
+# Build outputs (rebuilt inside the image)
+**/dist
+**/bin
+
+# Tooling caches & runtime
+**/.turbo
+**/tmp
+
+# CI config & local-only docs (not needed to build the image)
+.github
+docs
+
+# Editor / OS noise
+.vscode
+.idea
+.DS_Store

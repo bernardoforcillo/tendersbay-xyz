@@ -1,0 +1,19 @@
+# Normalize line endings: store text as LF in git and check it out as LF on
+# every platform, so Biome (LF) and the toolchain stay deterministic regardless
+# of each contributor's core.autocrlf setting.
+* text=auto eol=lf
+
+# Binary assets — never apply line-ending conversion.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.avif  binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.eot   binary
+*.pdf   binary

@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: platform
+  namespace: tendersbay-xyz
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tendersbay-xyz
+      tier: platform
+  template:
+    metadata:
+      labels:
+        app: tendersbay-xyz
+        tier: platform
+    spec:
+      securityContext:
+        # The runtime image is gcr.io/distroless/static-debian12:nonroot,
+        # whose `nonroot` user/group is UID/GID 65532.
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: platform
+          # Image published by .github/workflows/ci-platform.yml
+          # (main -> :latest + :<timestamp>-<sha>, dev -> :<timestamp>-<sha>-canary).
+          # The tag is managed by Flux image automation (see update.yaml): the
+          # $imagepolicy marker is rewritten to the latest stable tag on main.
+          image: bernardoforcillo/tendersbay-platform:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-platform-image-policy"}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '50m'
+            requests:
+              memory: '64Mi'
+              cpu: '10m'
+          env:
+            - name: PORT
+              value: '8080'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

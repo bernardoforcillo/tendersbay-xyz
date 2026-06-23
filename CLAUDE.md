@@ -31,11 +31,29 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, shared libraries in
 - **Go hot reload:** Air — `pnpm dev` runs Vite + Air concurrently (install once with
   `go install github.com/air-verse/air@latest`; ensure `air` is on `PATH`)
 - **Frontend:** Vite 6 + React 19 + Tailwind CSS v4 (`@tailwindcss/vite`)
+- **Routing:** TanStack Router (file-based, `@tanstack/router-plugin`); `routeTree.gen.ts`
+  is generated and committed, and excluded from Biome.
+- **i18n:** i18next + react-i18next; bundled translations in
+  `apps/platform/src/assets/locales/<locale>/common.json`; 24 official EU locales,
+  default `en-ie`; public routes are locale-prefixed (`/<locale>/`).
+- **Frontend tests:** vitest + jsdom (the app's `test` runs `vitest run` then `go test ./...`).
 
 ## Conventions
 
 Frontend app structure (the `~` alias, `/<name>/index.tsx` modules, kebab-case names)
 is documented in @.claude/rules/frontend.md.
+
+- App components live under `src/features/<name>/…`; the shared `@tendersbay/components`
+  library keeps `src/<feature>/…`. App routing/i18n infra (`src/routes/`, `src/i18n/`,
+  `src/assets/locales/`) stays outside `features/`.
+
+Branching and the canary release policy (`feature → dev → main`, and the Docker
+image tags each branch publishes) are documented in @.claude/rules/git-flow.md.
+
+Kubernetes deployment lives in `infrastructure/kubernetes/`, reconciled by Flux
+(GitOps) onto a Traefik + cert-manager + Cilium cluster; the layout, naming, pod
+hardening, and image-automation conventions are documented in
+@.claude/rules/infrastructure.md.
 
 - Use **pnpm only** — never npm or yarn. Add root dev deps with `pnpm add -Dw <pkg>`;
   add to a workspace with `pnpm add <pkg> --filter <workspace>`.
