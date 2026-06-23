@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Voita seuraava tarjouskilpailu Euroopassa",
+      "title": "tendersbay — Seuraava eurooppalainen hankintasi, myönnetty",
       "description": "Tekoälyagenttien tiimi, joka löytää, valmistelee ja voittaa eurooppalaiset julkiset hankinnat pk-yrityksille."
     },
     "nav": { "problem": "Ongelma", "agents": "Agentit", "vision": "Visio" },
     "hero": {
       "eyebrow": "Tekoälyagenttisi tiimi",
       "titleLead": "Seuraava eurooppalainen hankintasi?",
-      "titleHighlight": "Voitettu.",
-      "subtitle": "tendersbay on tekoälyagenttisi tiimi: he metsästävät oikeat hankinnat koko Euroopasta, murskaavat paperityöt puolestasi ja vievät sinut suoraan voittoon.",
+      "titleHighlight": "Myönnetty.",
+      "subtitle": "tendersbay on tekoälyagenttisi tiimi: he metsästävät oikeat hankinnat koko Euroopasta, murskaavat paperityöt puolestasi ja vievät sinut suoraan hankintapäätökseen.",
       "ctaPrimary": "Katso se toiminnassa",
       "ctaSecondary": "Katso visio",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Voita",
-          "body": "He ohjaavat sinut tarjoukseen asti, jotta sinulla on parhaat mahdollisuudet voittaa."
+          "body": "He ohjaavat sinut tarjoukseen asti, jotta sinulla on parhaat mahdollisuudet hankintapäätökseen."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Rakennamme. Palaa pian takaisin."
     },
     "footer": {
-      "tagline": "Euroopan hankinnat. Voitettu.",
+      "tagline": "Euroopan hankinnat. Myönnetty.",
       "contactLabel": "Ota yhteyttä",
       "copyright": "© Bernardo Forcillo — Kaikki oikeudet pidätetään"
     },

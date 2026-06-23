@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Irbaħ l-offerta li jmiss tiegħek fl-Ewropa",
+      "title": "tendersbay — L-offerta Ewropea li jmiss tiegħek, mogħtija",
       "description": "Tim ta' aġenti AI li jsib, jipprepara u jirbaħ il-kuntratti pubbliċi Ewropej għall-SMEs."
     },
     "nav": { "problem": "Il-Problema", "agents": "L-Aġenti", "vision": "Viżjoni" },
     "hero": {
       "eyebrow": "It-tim ta' aġenti AI tiegħek",
       "titleLead": "L-offerta Ewropea li jmiss tiegħek?",
-      "titleHighlight": "Mirbugħa.",
-      "subtitle": "tendersbay huwa t-tim ta' aġenti AI tiegħek: ifittxu l-kuntratti t-tajbin madwar l-Ewropa kollha, jeqirdu l-karti f'ismek u jieħduk direttament sal-ħin li tirbaħ.",
+      "titleHighlight": "Mogħtija.",
+      "subtitle": "tendersbay huwa t-tim ta' aġenti AI tiegħek: ifittxu l-kuntratti t-tajbin madwar l-Ewropa kollha, jeqirdu l-karti f'ismek u jieħduk direttament sal-ħin li tingħata l-kuntratt.",
       "ctaPrimary": "Ara fl-azzjoni",
       "ctaSecondary": "Ara l-viżjoni",
       "trust": ["27 pajjiż, pjattaforma waħda", "Aġenti li qatt ma jorqdu", "Xejn karti manwali"]
@@ -50,7 +50,7 @@
         },
         {
           "title": "Irbaħ",
-          "body": "Jgħinuk sal-offerta, biex ikollok l-aħjar ċans li tirbaħ."
+          "body": "Jgħinuk sal-offerta, biex ikollok l-aħjar ċans li tingħata l-kuntratt."
         }
       ]
     },
@@ -66,7 +66,7 @@
       "note": "Qed nibnu. Erġa' iżżur dalwaqt."
     },
     "footer": {
-      "tagline": "L-offerti tal-Ewropa. Mirbugħa.",
+      "tagline": "L-offerti tal-Ewropa. Mogħtija.",
       "contactLabel": "Ikkuntattjana",
       "copyright": "© Bernardo Forcillo — Id-drittijiet kollha riżervati"
     },

@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Gewinnen Sie Ihre nächste Ausschreibung in Europa",
+      "title": "tendersbay — Ihre nächste europäische Ausschreibung, zugeschlagen",
       "description": "Ein Team von KI-Agenten, das europäische öffentliche Ausschreibungen für KMU findet, vorbereitet und gewinnt."
     },
     "nav": { "problem": "Das Problem", "agents": "Die Agenten", "vision": "Vision" },
     "hero": {
       "eyebrow": "Ihr KI-Agenten-Team",
       "titleLead": "Ihre nächste europäische Ausschreibung?",
-      "titleHighlight": "Gewonnen.",
-      "subtitle": "tendersbay ist Ihr Team von KI-Agenten: Sie jagen die richtigen Ausschreibungen in ganz Europa, erledigen den Papierkram für Sie und bringen Sie direkt zum Sieg.",
+      "titleHighlight": "Zugeschlagen.",
+      "subtitle": "tendersbay ist Ihr Team von KI-Agenten: Sie jagen die richtigen Ausschreibungen in ganz Europa, erledigen den Papierkram für Sie und bringen Sie direkt zum Zuschlag.",
       "ctaPrimary": "In Aktion sehen",
       "ctaSecondary": "Vision ansehen",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Gewinnen",
-          "body": "Sie begleiten Sie bis zum Angebot, für die beste Chance auf einen Sieg."
+          "body": "Sie begleiten Sie bis zum Angebot, für die beste Chance auf den Zuschlag."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Wir bauen gerade. Schauen Sie bald wieder vorbei."
     },
     "footer": {
-      "tagline": "Europas Ausschreibungen. Gewonnen.",
+      "tagline": "Europas Ausschreibungen. Zugeschlagen.",
       "contactLabel": "Kontakt aufnehmen",
       "copyright": "© Bernardo Forcillo — Alle Rechte vorbehalten"
     },

@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Câștigați următoarea licitație în Europa",
+      "title": "tendersbay — Următoarea licitație europeană, atribuită",
       "description": "O echipă de agenți AI care găsește, pregătește și câștigă licitații publice europene pentru IMM-uri."
     },
     "nav": { "problem": "Problema", "agents": "Agenții", "vision": "Viziune" },
     "hero": {
       "eyebrow": "Echipa dvs. de agenți AI",
       "titleLead": "Următoarea licitație europeană?",
-      "titleHighlight": "Câștigată.",
-      "subtitle": "tendersbay este echipa dvs. de agenți AI: vânează licitațiile potrivite din toată Europa, zdrobesc birocrația în locul dvs. și vă duc direct la victorie.",
+      "titleHighlight": "Atribuită.",
+      "subtitle": "tendersbay este echipa dvs. de agenți AI: vânează licitațiile potrivite din toată Europa, zdrobesc birocrația în locul dvs. și vă duc direct la atribuire.",
       "ctaPrimary": "Vedeți în acțiune",
       "ctaSecondary": "Vedeți viziunea",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Câștigați",
-          "body": "Vă ghidează până la ofertă, pentru cea mai bună șansă de victorie."
+          "body": "Vă ghidează până la ofertă, pentru cea mai bună șansă de atribuire."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Construim. Reveniți curând."
     },
     "footer": {
-      "tagline": "Licitațiile Europei. Câștigate.",
+      "tagline": "Licitațiile Europei. Atribuite.",
       "contactLabel": "Luați legătura cu noi",
       "copyright": "© Bernardo Forcillo — Toate drepturile rezervate"
     },

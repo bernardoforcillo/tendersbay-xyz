@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Wygrywaj przetargi w Europie",
+      "title": "tendersbay — Twój następny europejski przetarg, udzielony",
       "description": "Zespół agentów AI, który znajduje, przygotowuje i wygrywa europejskie zamówienia publiczne dla MŚP."
     },
     "nav": { "problem": "Problem", "agents": "Agenci", "vision": "Wizja" },
     "hero": {
       "eyebrow": "Twój zespół agentów AI",
       "titleLead": "Twój następny europejski przetarg?",
-      "titleHighlight": "Wygrany.",
-      "subtitle": "tendersbay to twój zespół agentów AI: polują na właściwe przetargi w całej Europie, miażdżą papierkową robotę i prowadzą cię aż do zwycięstwa.",
+      "titleHighlight": "Udzielony.",
+      "subtitle": "tendersbay to twój zespół agentów AI: polują na właściwe przetargi w całej Europie, miażdżą papierkową robotę i prowadzą cię aż do udzielenia zamówienia.",
       "ctaPrimary": "Zobacz w akcji",
       "ctaSecondary": "Zobacz wizję",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Wygrywaj",
-          "body": "Prowadzą cię aż do złożenia oferty, by dać ci najlepszą szansę na zwycięstwo."
+          "body": "Prowadzą cię aż do złożenia oferty, by dać ci najlepszą szansę na udzielenie zamówienia."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Budujemy. Wróć wkrótce."
     },
     "footer": {
-      "tagline": "Europejskie przetargi. Wygrane.",
+      "tagline": "Europejskie przetargi. Udzielone.",
       "contactLabel": "Skontaktuj się z nami",
       "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone"
     },

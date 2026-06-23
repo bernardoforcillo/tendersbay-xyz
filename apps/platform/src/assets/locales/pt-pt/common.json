@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Vença a sua próxima proposta na Europa",
+      "title": "tendersbay — O seu próximo concurso europeu, adjudicado",
       "description": "Uma equipa de agentes de IA que encontra, prepara e vence concursos públicos europeus para PME."
     },
     "nav": { "problem": "O problema", "agents": "Os agentes", "vision": "Visão" },
     "hero": {
       "eyebrow": "A sua equipa de agentes de IA",
       "titleLead": "O seu próximo concurso europeu?",
-      "titleHighlight": "Ganho.",
-      "subtitle": "tendersbay é a sua equipa de agentes de IA: caçam os concursos certos em toda a Europa, destroem a burocracia por si e levam-no a direito à vitória.",
+      "titleHighlight": "Adjudicado.",
+      "subtitle": "tendersbay é a sua equipa de agentes de IA: caçam os concursos certos em toda a Europa, destroem a burocracia por si e levam-no a direito à adjudicação.",
       "ctaPrimary": "Ver em ação",
       "ctaSecondary": "Veja a visão",
       "trust": ["27 países, uma plataforma", "Agentes que nunca dormem", "Zero burocracia manual"]
@@ -50,7 +50,7 @@
         },
         {
           "title": "Vença",
-          "body": "Guiam-no até à proposta, para a melhor hipótese de vitória."
+          "body": "Guiam-no até à proposta, para a melhor hipótese de adjudicação."
         }
       ]
     },
@@ -66,7 +66,7 @@
       "note": "Estamos a construir. Volte em breve."
     },
     "footer": {
-      "tagline": "Os concursos da Europa. Ganhos.",
+      "tagline": "Os concursos da Europa. Adjudicados.",
       "contactLabel": "Entre em contacto",
       "copyright": "© Bernardo Forcillo — Todos os direitos reservados"
     },

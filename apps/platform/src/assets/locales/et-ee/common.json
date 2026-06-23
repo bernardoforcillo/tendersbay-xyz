@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Võitke oma järgmine hange Euroopas",
+      "title": "tendersbay — Teie järgmine Euroopa hange, omistatud",
       "description": "Tehisintellekti agentide meeskond, kes leiab, valmistab ette ja võidab Euroopa avalikud hanked VKEdele."
     },
     "nav": { "problem": "Probleem", "agents": "Agendid", "vision": "Visioon" },
     "hero": {
       "eyebrow": "Teie tehisintellekti agentide meeskond",
       "titleLead": "Teie järgmine Euroopa hange?",
-      "titleHighlight": "Võidetud.",
-      "subtitle": "tendersbay on teie tehisintellekti agentide meeskond: nad jahivad õigeid hangete üle kogu Euroopa, purustab paberimajanduse teie eest ja viib teid otse võiduni.",
+      "titleHighlight": "Omistatud.",
+      "subtitle": "tendersbay on teie tehisintellekti agentide meeskond: nad jahivad õigeid hangete üle kogu Euroopa, purustab paberimajanduse teie eest ja viib teid otse omistamiseni.",
       "ctaPrimary": "Vaadake toimimas",
       "ctaSecondary": "Vaadake visiooni",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Võida",
-          "body": "Nad juhivad teid kuni pakkumiseni, et teil oleks parim võimalus võita."
+          "body": "Nad juhivad teid kuni pakkumiseni, et teil oleks parim võimalus omistamiseks."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Me ehitame. Tulge peagi tagasi."
     },
     "footer": {
-      "tagline": "Euroopa hanked. Võidetud.",
+      "tagline": "Euroopa hanked. Omistatud.",
       "contactLabel": "Võtke ühendust",
       "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud"
     },

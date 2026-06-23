@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Vinn nästa upphandling i Europa",
+      "title": "tendersbay — Din nästa europeiska upphandling, tilldelad",
       "description": "Ett team av AI-agenter som hittar, förbereder och vinner europeiska offentliga upphandlingar för SMF."
     },
     "nav": { "problem": "Problemet", "agents": "Agenterna", "vision": "Vision" },
     "hero": {
       "eyebrow": "Ditt AI-agentteam",
       "titleLead": "Din nästa europeiska upphandling?",
-      "titleHighlight": "Vunnen.",
-      "subtitle": "tendersbay är ditt team av AI-agenter: de jagar rätt upphandlingar i hela Europa, krossar pappersarbetet åt dig och kör dig hela vägen till vinsten.",
+      "titleHighlight": "Tilldelad.",
+      "subtitle": "tendersbay är ditt team av AI-agenter: de jagar rätt upphandlingar i hela Europa, krossar pappersarbetet åt dig och kör dig hela vägen till tilldelningen.",
       "ctaPrimary": "Se det i aktion",
       "ctaSecondary": "Se visionen",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Vinn",
-          "body": "De leder dig hela vägen till anbudet, för bästa möjliga chans att vinna."
+          "body": "De leder dig hela vägen till anbudet, för bästa möjliga chans till tilldelning."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Vi bygger. Kom tillbaka snart."
     },
     "footer": {
-      "tagline": "Europas upphandlingar. Vunna.",
+      "tagline": "Europas upphandlingar. Tilldelade.",
       "contactLabel": "Kontakta oss",
       "copyright": "© Bernardo Forcillo — Alla rättigheter förbehållna"
     },

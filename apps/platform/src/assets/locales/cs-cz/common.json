@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Vyhrajte svůj příští tendr v Evropě",
+      "title": "tendersbay — Vaše příští evropská zakázka, přidělena",
       "description": "Tým AI agentů, kteří nacházejí, připravují a vyhravají evropské veřejné zakázky pro malé a střední podniky."
     },
     "nav": { "problem": "Problém", "agents": "Agenti", "vision": "Vize" },
     "hero": {
       "eyebrow": "Váš tým AI agentů",
       "titleLead": "Vaše příští evropská zakázka?",
-      "titleHighlight": "Vyhraná.",
-      "subtitle": "tendersbay je váš tým AI agentů: loví správné zakázky po celé Evropě, drtí papírování za vás a provází vás až k vítězství.",
+      "titleHighlight": "Přidělena.",
+      "subtitle": "tendersbay je váš tým AI agentů: loví správné zakázky po celé Evropě, drtí papírování za vás a provází vás až k přidělení zakázky.",
       "ctaPrimary": "Podívejte se v akci",
       "ctaSecondary": "Podívejte se na vizi",
       "trust": ["27 zemí, jedna platforma", "Agenti, kteří nikdy nespí", "Nula ručního papírování"]
@@ -50,7 +50,7 @@
         },
         {
           "title": "Vyhrajte",
-          "body": "Provázejí vás až k nabídce, abyste měli nejlepší šanci na vítězství."
+          "body": "Provázejí vás až k nabídce, abyste měli nejlepší šanci na přidělení zakázky."
         }
       ]
     },
@@ -66,7 +66,7 @@
       "note": "Budujeme. Vraťte se brzy."
     },
     "footer": {
-      "tagline": "Evropské zakázky. Vyhráno.",
+      "tagline": "Evropské zakázky. Přiděleny.",
       "contactLabel": "Kontaktujte nás",
       "copyright": "© Bernardo Forcillo — Všechna práva vyhrazena"
     },

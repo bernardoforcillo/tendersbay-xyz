@@ -2,15 +2,15 @@
   "app": { "title": "tendersbay platform", "subtitle": "Vite + React, served by Go." },
   "landing": {
     "meta": {
-      "title": "tendersbay — Win your next tender in Europe",
+      "title": "tendersbay — Your next European tender, awarded",
       "description": "A team of AI agents that find, prepare and win European public tenders for SMEs."
     },
     "nav": { "problem": "The problem", "agents": "The agents", "vision": "Vision" },
     "hero": {
       "eyebrow": "Your AI agent team",
       "titleLead": "Your next European tender?",
-      "titleHighlight": "Won.",
-      "subtitle": "tendersbay is your team of AI agents: they hunt down the right tenders across Europe, crush the paperwork, and drive you all the way to the win.",
+      "titleHighlight": "Awarded.",
+      "subtitle": "tendersbay is your team of AI agents: they hunt down the right tenders across Europe, crush the paperwork, and drive you all the way to the award.",
       "ctaPrimary": "See it in action",
       "ctaSecondary": "See the vision",
       "trust": ["27 countries, one platform", "Agents that never sleep", "Zero paperwork by hand"]
@@ -47,7 +47,7 @@
         },
         {
           "title": "Win",
-          "body": "They guide you all the way to the bid, for the best shot at winning."
+          "body": "They guide you all the way to the bid, for the best shot at the award."
         }
       ]
     },
@@ -63,7 +63,7 @@
       "note": "We're building. Check back soon."
     },
     "footer": {
-      "tagline": "Europe's tenders. Won.",
+      "tagline": "Europe's tenders. Awarded.",
       "contactLabel": "Get in touch",
       "copyright": "© Bernardo Forcillo — All rights reserved"
     },

@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Uzvariet nākamajā iepirkumā Eiropā",
+      "title": "tendersbay — Jūsu nākamais Eiropas iepirkums, piešķirts",
       "description": "Mākslīgā intelekta aģentu komanda, kas atrod, sagatavo un uzvar Eiropas publiskos iepirkumus MVU."
     },
     "nav": { "problem": "Problēma", "agents": "Aģenti", "vision": "Vīzija" },
     "hero": {
       "eyebrow": "Jūsu MI aģentu komanda",
       "titleLead": "Jūsu nākamais Eiropas iepirkums?",
-      "titleHighlight": "Uzvarēts.",
-      "subtitle": "tendersbay ir jūsu MI aģentu komanda: viņi medī pareizos iepirkumus visā Eiropā, uzvar birokrātiju jūsu vietā un aizved jūs tieši uz uzvaru.",
+      "titleHighlight": "Piešķirts.",
+      "subtitle": "tendersbay ir jūsu MI aģentu komanda: viņi medī pareizos iepirkumus visā Eiropā, uzvar birokrātiju jūsu vietā un aizved jūs tieši līdz piešķiršanai.",
       "ctaPrimary": "Skatīt darbībā",
       "ctaSecondary": "Skatiet vīziju",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Uzvarēt",
-          "body": "Viņi vada jūs līdz piedāvājumam, lai jums būtu vislabākās izredzes uzvarēt."
+          "body": "Viņi vada jūs līdz piedāvājumam, lai jums būtu vislabākās izredzes piešķiršanai."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Mēs veidojam. Atgriezieties drīz."
     },
     "footer": {
-      "tagline": "Eiropas iepirkumi. Uzvarēti.",
+      "tagline": "Eiropas iepirkumi. Piešķirti.",
       "contactLabel": "Sazinieties ar mums",
       "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas"
     },

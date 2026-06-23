@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Nyerje meg a következő közbeszerzését Európában",
+      "title": "tendersbay — A következő európai közbeszerzése, odaítélve",
       "description": "Egy mesterséges intelligencia ügynökökből álló csapat, amely megtalálja, előkészíti és megnyeri az európai közbeszerzéseket a kkv-k számára."
     },
     "nav": { "problem": "A probléma", "agents": "Az ügynökök", "vision": "Vízió" },
     "hero": {
       "eyebrow": "Az Ön MI-ügynök csapata",
       "titleLead": "A következő európai közbeszerzése?",
-      "titleHighlight": "Megnyerve.",
-      "subtitle": "A tendersbay az Ön MI-ügynök csapata: vadásszák a megfelelő pályázatokat egész Európában, összetörik a papírmunkát az Ön helyett, és egyenesen a győzelembe viszik Önt.",
+      "titleHighlight": "Odaítélve.",
+      "subtitle": "A tendersbay az Ön MI-ügynök csapata: vadásszák a megfelelő pályázatokat egész Európában, összetörik a papírmunkát az Ön helyett, és egyenesen az odaítélésig viszik Önt.",
       "ctaPrimary": "Lássa működés közben",
       "ctaSecondary": "Tekintse meg a víziót",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Nyerjen",
-          "body": "Végigkísérik az ajánlatig, hogy a legjobb esélye legyen a győzelemre."
+          "body": "Végigkísérik az ajánlatig, hogy a legjobb esélye legyen az odaítélésre."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Épülünk. Nézzen vissza hamarosan."
     },
     "footer": {
-      "tagline": "Európa közbeszerzései. Megnyerve.",
+      "tagline": "Európa közbeszerzései. Odaítélve.",
       "contactLabel": "Lépjen kapcsolatba velünk",
       "copyright": "© Bernardo Forcillo — Minden jog fenntartva"
     },

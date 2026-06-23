@@ -13,7 +13,7 @@ describe('LandingPage', () => {
       'Your next European tender?',
     );
     await waitFor(() => {
-      expect(document.title).toBe('tendersbay — Win your next tender in Europe');
+      expect(document.title).toBe('tendersbay — Your next European tender, awarded');
     });
   });
 });

@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Bain amach do thairiscint eile san Eoraip",
+      "title": "tendersbay — Do chéad tairiscint Eorpach eile, bronnta",
       "description": "Foireann gníomhairí AI a aimsíonn, a ullmhaíonn agus a bhuaineann conarthaí poiblí Eorpacha do FBManna."
     },
     "nav": { "problem": "An Fhadhb", "agents": "Na Gníomhairí", "vision": "Fís" },
     "hero": {
       "eyebrow": "Do fhoireann gníomhairí AI",
       "titleLead": "Do chéad tairiscint Eorpach eile?",
-      "titleHighlight": "Buaite.",
-      "subtitle": "Is é tendersbay do fhoireann gníomhairí AI: fiachann siad na conarthaí cearta ar fud na hEorpa, leagann siad an obair pháipéir, agus treorann siad thú díreach go dtí an bua.",
+      "titleHighlight": "Bronnta.",
+      "subtitle": "Is é tendersbay do fhoireann gníomhairí AI: fiachann siad na conarthaí cearta ar fud na hEorpa, leagann siad an obair pháipéir, agus treorann siad thú díreach go dtí an bronnadh.",
       "ctaPrimary": "Féach é i ngníomh",
       "ctaSecondary": "Féach ar an bhfís",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Buaigh",
-          "body": "Treorann siad thú chomh fada leis an tairiscint, ar mhaithe leis an seans is fearr bua a fháil."
+          "body": "Treorann siad thú chomh fada leis an tairiscint, ar mhaithe leis an seans is fearr bronnadh a fháil."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Táimid ag tógáil. Fill ar ais go luath."
     },
     "footer": {
-      "tagline": "Tairiscintí na hEorpa. Buaite.",
+      "tagline": "Tairiscintí na hEorpa. Bronnta.",
       "contactLabel": "Déan teagmháil linn",
       "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint"
     },

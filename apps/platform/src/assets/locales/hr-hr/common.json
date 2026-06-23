@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Pobijedite sljedeći natječaj u Europi",
+      "title": "tendersbay — Vaš sljedeći europski natječaj, dodijeljen",
       "description": "Tim AI agenata koji pronalaze, pripremaju i osvajaju europske javne natječaje za MSP-ove."
     },
     "nav": { "problem": "Problem", "agents": "Agenti", "vision": "Vizija" },
     "hero": {
       "eyebrow": "Vaš tim AI agenata",
       "titleLead": "Vaš sljedeći europski natječaj?",
-      "titleHighlight": "Pobijedio.",
-      "subtitle": "tendersbay je vaš tim AI agenata: pronalaze prave natječaje diljem Europe, slamaju papirologiju umjesto vas i vode vas sve do pobjede.",
+      "titleHighlight": "Dodijeljen.",
+      "subtitle": "tendersbay je vaš tim AI agenata: pronalaze prave natječaje diljem Europe, slamaju papirologiju umjesto vas i vode vas sve do dodjele.",
       "ctaPrimary": "Pogledajte u akciji",
       "ctaSecondary": "Pogledajte viziju",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Pobijedi",
-          "body": "Vode vas sve do ponude, za što bolju šansu za pobjedu."
+          "body": "Vode vas sve do ponude, za što bolju šansu za dodjelu."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Gradimo. Svratite uskoro."
     },
     "footer": {
-      "tagline": "Europski natječaji. Pobjeđeni.",
+      "tagline": "Europski natječaji. Dodijeljeni.",
       "contactLabel": "Kontaktirajte nas",
       "copyright": "© Bernardo Forcillo — Sva prava pridržana"
     },

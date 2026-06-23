@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Vind dit næste udbud i Europa",
+      "title": "tendersbay — Dit næste europæiske udbud, tildelt",
       "description": "Et team af AI-agenter, der finder, forbereder og vinder europæiske offentlige udbud for SMV'er."
     },
     "nav": { "problem": "Problemet", "agents": "Agenterne", "vision": "Vision" },
     "hero": {
       "eyebrow": "Dit AI-agentteam",
       "titleLead": "Dit næste europæiske udbud?",
-      "titleHighlight": "Vundet.",
-      "subtitle": "tendersbay er dit team af AI-agenter: de jager de rigtige udbud i hele Europa, knuser papirarbejdet og kører dig hele vejen til sejren.",
+      "titleHighlight": "Tildelt.",
+      "subtitle": "tendersbay er dit team af AI-agenter: de jager de rigtige udbud i hele Europa, knuser papirarbejdet og kører dig hele vejen til tildelingen.",
       "ctaPrimary": "Se det i aktion",
       "ctaSecondary": "Se visionen",
       "trust": ["27 lande, én platform", "Agenter der aldrig sover", "Nul manuelt papirarbejde"]
@@ -50,7 +50,7 @@
         },
         {
           "title": "Vind",
-          "body": "De guider dig hele vejen til buddet for den bedste chance for sejr."
+          "body": "De guider dig hele vejen til buddet for den bedste chance for tildeling."
         }
       ]
     },
@@ -66,7 +66,7 @@
       "note": "Vi bygger løsningen. Vend tilbage snart."
     },
     "footer": {
-      "tagline": "Europas udbud. Vundet.",
+      "tagline": "Europas udbud. Tildelt.",
       "contactLabel": "Kontakt os",
       "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes"
     },

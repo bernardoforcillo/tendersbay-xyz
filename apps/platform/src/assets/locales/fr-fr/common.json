@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Remportez votre prochain appel d'offres en Europe",
+      "title": "tendersbay — Votre prochain marché européen, attribué",
       "description": "Une équipe d'agents IA qui trouve, prépare et remporte les marchés publics européens pour les PME."
     },
     "nav": { "problem": "Le problème", "agents": "Les agents", "vision": "Vision" },
     "hero": {
       "eyebrow": "Votre équipe d'agents IA",
       "titleLead": "Votre prochain marché européen ?",
-      "titleHighlight": "Remporté.",
-      "subtitle": "tendersbay est votre équipe d'agents IA : ils débusquent les bons marchés dans toute l'Europe, écrasent la paperasse à votre place et vous portent jusqu'à la victoire.",
+      "titleHighlight": "Attribué.",
+      "subtitle": "tendersbay est votre équipe d'agents IA : ils débusquent les bons marchés dans toute l'Europe, écrasent la paperasse à votre place et vous portent jusqu'à l'attribution.",
       "ctaPrimary": "Voir en action",
       "ctaSecondary": "Voir la vision",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Remporter",
-          "body": "Ils vous accompagnent jusqu'à l'offre, pour maximiser vos chances de victoire."
+          "body": "Ils vous accompagnent jusqu'à l'offre, pour maximiser vos chances d'attribution."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Nous construisons. Revenez bientôt."
     },
     "footer": {
-      "tagline": "Les marchés d'Europe. Remportés.",
+      "tagline": "Les marchés d'Europe. Attribués.",
       "contactLabel": "Nous contacter",
       "copyright": "© Bernardo Forcillo — Tous droits réservés"
     },

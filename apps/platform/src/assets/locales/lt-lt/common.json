@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Laimėkite kitą viešąjį pirkimą Europoje",
+      "title": "tendersbay — Jūsų kitas Europos viešasis pirkimas, suteiktas",
       "description": "Dirbtinio intelekto agentų komanda, kuri randa, parengia ir laimi Europos viešuosius pirkimus MVĮ."
     },
     "nav": { "problem": "Problema", "agents": "Agentai", "vision": "Vizija" },
     "hero": {
       "eyebrow": "Jūsų DI agentų komanda",
       "titleLead": "Jūsų kitas Europos viešasis pirkimas?",
-      "titleHighlight": "Laimėtas.",
-      "subtitle": "tendersbay yra jūsų DI agentų komanda: jie medžioja tinkamus pirkimus visoje Europoje, sutriuškina biurokratiją už jus ir nuveda jus tiesiai į pergalę.",
+      "titleHighlight": "Suteiktas.",
+      "subtitle": "tendersbay yra jūsų DI agentų komanda: jie medžioja tinkamus pirkimus visoje Europoje, sutriuškina biurokratiją už jus ir nuveda jus tiesiai iki sutarties suteikimo.",
       "ctaPrimary": "Žiūrėkite veikime",
       "ctaSecondary": "Žiūrėkite viziją",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Laimėkite",
-          "body": "Jie veda jus iki pasiūlymo, kad turėtumėte geriausią šansą laimėti."
+          "body": "Jie veda jus iki pasiūlymo, kad turėtumėte geriausią šansą sutarties suteikimui."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Mes kuriame. Grįžkite netrukus."
     },
     "footer": {
-      "tagline": "Europos viešieji pirkimai. Laimėti.",
+      "tagline": "Europos viešieji pirkimai. Suteikti.",
       "contactLabel": "Susisiekite su mumis",
       "copyright": "© Bernardo Forcillo — Visos teisės saugomos"
     },

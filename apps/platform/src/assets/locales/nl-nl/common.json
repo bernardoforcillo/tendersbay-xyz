@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Win uw volgende aanbesteding in Europa",
+      "title": "tendersbay — Uw volgende Europese aanbesteding, gegund",
       "description": "Een team van AI-agenten dat Europese overheidsopdrachten voor het mkb vindt, voorbereidt en wint."
     },
     "nav": { "problem": "Het probleem", "agents": "De agenten", "vision": "Visie" },
     "hero": {
       "eyebrow": "Uw AI-agentteam",
       "titleLead": "Uw volgende Europese aanbesteding?",
-      "titleHighlight": "Gewonnen.",
-      "subtitle": "tendersbay is uw team van AI-agenten: ze jagen de juiste aanbestedingen door heel Europa, slopen het papierwerk en brengen u helemaal tot aan de winst.",
+      "titleHighlight": "Gegund.",
+      "subtitle": "tendersbay is uw team van AI-agenten: ze jagen de juiste aanbestedingen door heel Europa, slopen het papierwerk en brengen u helemaal tot aan de gunning.",
       "ctaPrimary": "Zie het in actie",
       "ctaSecondary": "Bekijk de visie",
       "trust": ["27 landen, één platform", "Agenten die nooit slapen", "Nul handmatig papierwerk"]
@@ -50,7 +50,7 @@
         },
         {
           "title": "Win",
-          "body": "Ze begeleiden u helemaal tot aan de inschrijving, voor de beste kans op winst."
+          "body": "Ze begeleiden u helemaal tot aan de inschrijving, voor de beste kans op gunning."
         }
       ]
     },
@@ -66,7 +66,7 @@
       "note": "We bouwen. Kom snel terug."
     },
     "footer": {
-      "tagline": "Europa's aanbestedingen. Gewonnen.",
+      "tagline": "Europa's aanbestedingen. Gegund.",
       "contactLabel": "Neem contact op",
       "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden"
     },

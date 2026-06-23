@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Pridobite naslednji razpis v Evropi",
+      "title": "tendersbay — Vaš naslednji evropski razpis, dodeljen",
       "description": "Ekipa agentov umetne inteligence, ki najde, pripravi in zmaga evropske javne razpise za MSP-je."
     },
     "nav": { "problem": "Težava", "agents": "Agenti", "vision": "Vizija" },
     "hero": {
       "eyebrow": "Vaša ekipa agentov UI",
       "titleLead": "Vaš naslednji evropski razpis?",
-      "titleHighlight": "Pridobljen.",
-      "subtitle": "tendersbay je vaša ekipa agentov UI: lovijo prave razpise po vsej Evropi, zdrobijo birokracijo namesto vas in vas peljejo naravnost do zmage.",
+      "titleHighlight": "Dodeljen.",
+      "subtitle": "tendersbay je vaša ekipa agentov UI: lovijo prave razpise po vsej Evropi, zdrobijo birokracijo namesto vas in vas peljejo naravnost do dodelitve.",
       "ctaPrimary": "Oglejte si v akciji",
       "ctaSecondary": "Oglejte si vizijo",
       "trust": [
@@ -54,7 +54,7 @@
         },
         {
           "title": "Zmagajte",
-          "body": "Vodijo vas do ponudbe, da imate najboljše možnosti za zmago."
+          "body": "Vodijo vas do ponudbe, da imate najboljše možnosti za dodelitev."
         }
       ]
     },
@@ -70,7 +70,7 @@
       "note": "Gradimo. Kmalu se vrnite."
     },
     "footer": {
-      "tagline": "Evropski razpisi. Pridobljeni.",
+      "tagline": "Evropski razpisi. Dodeljeni.",
       "contactLabel": "Stopite v stik z nami",
       "copyright": "© Bernardo Forcillo — Vse pravice pridržane"
     },

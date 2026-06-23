@@ -2,15 +2,15 @@
   "app": { "title": "tendersbay platform", "subtitle": "Vite + React, served by Go." },
   "landing": {
     "meta": {
-      "title": "tendersbay — Vinci la tua prossima gara in Europa",
+      "title": "tendersbay — La tua prossima gara europea, aggiudicata",
       "description": "Un team di agenti AI che scova, prepara e vince le gare pubbliche europee per le PMI."
     },
     "nav": { "problem": "Il problema", "agents": "Gli agenti", "vision": "Vision" },
     "hero": {
       "eyebrow": "Il tuo team di agenti AI",
       "titleLead": "La tua prossima gara europea?",
-      "titleHighlight": "Vinta.",
-      "subtitle": "tendersbay è il tuo team di agenti AI: scovano le gare giuste in tutta Europa, sbrigano la burocrazia al posto tuo e ti portano dritto alla vittoria.",
+      "titleHighlight": "Aggiudicata.",
+      "subtitle": "tendersbay è il tuo team di agenti AI: scovano le gare giuste in tutta Europa, sbrigano la burocrazia al posto tuo e ti portano dritto all'aggiudicazione.",
       "ctaPrimary": "Guardalo in azione",
       "ctaSecondary": "Guarda la vision",
       "trust": ["27 paesi, una piattaforma", "Agenti che non dormono mai", "Zero scartoffie a mano"]
@@ -47,7 +47,7 @@
         },
         {
           "title": "Vinci",
-          "body": "Ti accompagnano fino all'offerta, per le migliori chance di vittoria."
+          "body": "Ti accompagnano fino all'offerta, per le migliori chance di aggiudicazione."
         }
       ]
     },
@@ -63,7 +63,7 @@
       "note": "Stiamo costruendo. Torna presto."
     },
     "footer": {
-      "tagline": "Le gare d'Europa. Vinte.",
+      "tagline": "Le gare d'Europa. Aggiudicate.",
       "contactLabel": "Scrivici",
       "copyright": "© Bernardo Forcillo — Tutti i diritti riservati"
     },

@@ -5,15 +5,15 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Gana tu próxima licitación en Europa",
+      "title": "tendersbay — Tu próxima licitación europea, adjudicada",
       "description": "Un equipo de agentes de IA que encuentra, prepara y gana licitaciones públicas europeas para las pymes."
     },
     "nav": { "problem": "El problema", "agents": "Los agentes", "vision": "Visión" },
     "hero": {
       "eyebrow": "Tu equipo de agentes de IA",
       "titleLead": "¿Tu próxima licitación europea?",
-      "titleHighlight": "Ganada.",
-      "subtitle": "tendersbay es tu equipo de agentes de IA: cazan las licitaciones adecuadas en toda Europa, destrozan el papeleo y te llevan directo a la victoria.",
+      "titleHighlight": "Adjudicada.",
+      "subtitle": "tendersbay es tu equipo de agentes de IA: cazan las licitaciones adecuadas en toda Europa, destrozan el papeleo y te llevan directo a la adjudicación.",
       "ctaPrimary": "Verlo en acción",
       "ctaSecondary": "Ver la visión",
       "trust": ["27 países, una plataforma", "Agentes que nunca duermen", "Cero papeleo manual"]
@@ -50,7 +50,7 @@
         },
         {
           "title": "Gana",
-          "body": "Te acompañan hasta la oferta, para darte la mejor oportunidad de ganar."
+          "body": "Te acompañan hasta la oferta, para darte la mejor oportunidad de adjudicación."
         }
       ]
     },
@@ -66,7 +66,7 @@
       "note": "Estamos construyendo. Vuelve pronto."
     },
     "footer": {
-      "tagline": "Las licitaciones de Europa. Ganadas.",
+      "tagline": "Las licitaciones de Europa. Adjudicadas.",
       "contactLabel": "Contacta con nosotros",
       "copyright": "© Bernardo Forcillo — Todos los derechos reservados"
     },
