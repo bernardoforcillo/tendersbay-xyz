@@ -11,7 +11,10 @@
     "test": "vitest run && go test ./..."
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
+    "@fontsource-variable/jetbrains-mono": "^5.2.8",
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
+    "@fontsource/calistoga": "^5.2.7",
     "@tanstack/react-router": "^1.170.16",
     "@tendersbay/components": "workspace:*",
     "@tendersbay/tailwind": "workspace:*",

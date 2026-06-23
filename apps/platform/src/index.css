@@ -1,4 +1,6 @@
-@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource/calistoga";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
 @import "@tendersbay/tailwind";
 
 @layer base {

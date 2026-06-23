@@ -8,7 +8,7 @@ const CONTACT_EMAIL = 'me@bernardoforcillo.com';
 export function SiteFooter() {
   const { t } = useTranslation();
   return (
-    <footer className="border-t border-white/10 bg-ink-800 py-12 text-ink-200">
+    <footer className="border-t border-white/10 bg-ink-950 py-12 text-ink-200">
       <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
           <Logo className="text-white [&>span]:text-brand-400" />

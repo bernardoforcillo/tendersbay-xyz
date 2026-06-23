@@ -9,7 +9,7 @@ export function Eyebrow({ icon, children, className }: EyebrowProps) {
     <span
       className={cx(
         'inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1.5',
-        'text-xs font-bold uppercase tracking-wide text-brand-700',
+        'font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-700',
         className,
       )}
     >

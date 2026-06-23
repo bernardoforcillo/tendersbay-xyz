@@ -10,7 +10,7 @@ import {
 
 export function LandingTemplate() {
   return (
-    <div className="min-h-screen bg-cream-100">
+    <div className="relative min-h-screen bg-cream-100">
       <SiteHeader />
       <main>
         <Hero />

@@ -16,7 +16,7 @@ export function AgentsSection() {
           <Eyebrow icon="sparkle">{t('landing.agents.eyebrow')}</Eyebrow>
           <h2
             id="agents-title"
-            className="mt-4 max-w-[20ch] text-3xl font-extrabold tracking-tight text-ink-900 md:text-4xl"
+            className="mt-5 max-w-[20ch] font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
           >
             {t('landing.agents.title')}
           </h2>

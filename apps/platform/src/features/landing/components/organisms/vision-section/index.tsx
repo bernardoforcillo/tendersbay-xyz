@@ -16,7 +16,7 @@ export function VisionSection() {
           </Eyebrow>
           <h2
             id="vision-title"
-            className="mt-4 text-3xl font-extrabold tracking-tight text-white md:text-4xl"
+            className="mt-5 font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
           >
             {t('landing.vision.title')}
           </h2>

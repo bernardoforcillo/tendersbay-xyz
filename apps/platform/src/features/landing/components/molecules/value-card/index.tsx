@@ -7,15 +7,15 @@ export function ValueCard({ icon, title, body, className }: ValueCardProps) {
   return (
     <div
       className={cx(
-        'rounded-2xl border border-cream-300 bg-white p-6 transition-shadow hover:shadow-lg hover:shadow-ink-900/5',
+        'group rounded-3xl border border-cream-200 bg-white p-7 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-soft-lg',
         className,
       )}
     >
-      <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-[20px] text-brand-600">
+      <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-[21px] text-brand-600 ring-1 ring-brand-100 transition-colors duration-300 group-hover:bg-brand-100">
         <Icon name={icon} />
       </span>
-      <h3 className="mt-4 text-lg font-bold text-ink-900">{title}</h3>
-      <p className="mt-2 text-sm leading-relaxed text-ink-600">{body}</p>
+      <h3 className="mt-5 font-display text-xl text-ink-900">{title}</h3>
+      <p className="mt-2.5 text-[15px] leading-relaxed text-ink-600">{body}</p>
     </div>
   );
 }

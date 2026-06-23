@@ -16,9 +16,13 @@ export function NavLinks({ className }: { className?: string }) {
         <Link
           key={link.href}
           href={link.href}
-          className="text-sm font-medium text-ink-600 no-underline outline-none data-[hovered]:text-ink-900 data-[focus-visible]:text-ink-900"
+          className="group relative text-sm font-medium text-ink-700 no-underline outline-none transition-colors data-[hovered]:text-ink-900 data-[focus-visible]:text-ink-900"
         >
           {t(link.key)}
+          <span
+            aria-hidden="true"
+            className="absolute -bottom-1.5 left-0 h-[2px] w-full origin-left scale-x-0 rounded-full bg-brand-600 transition-transform duration-300 ease-out group-data-[hovered]:scale-x-100 group-data-[focus-visible]:scale-x-100"
+          />
         </Link>
       ))}
     </nav>

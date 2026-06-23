@@ -20,7 +20,7 @@ export function ProblemSection() {
           <Eyebrow icon="layers">{t('landing.problem.eyebrow')}</Eyebrow>
           <h2
             id="problem-title"
-            className="mt-4 max-w-[18ch] text-3xl font-extrabold tracking-tight text-ink-900 md:text-4xl"
+            className="mt-5 max-w-[18ch] font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
           >
             {t('landing.problem.title')}
           </h2>

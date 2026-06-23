@@ -19,18 +19,22 @@ export function TenderCard({ tender, className }: { tender: Tender; className?: 
         className,
       )}
     >
-      <p className="text-[10px] font-bold uppercase tracking-wider text-brand-300">
+      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-300">
         {tender.entity}
       </p>
       <p className="mt-1.5 mb-3 text-sm font-bold leading-tight text-white">{tender.object}</p>
       <dl className="text-xs">
         <div className="flex justify-between border-t border-white/10 py-1.5">
-          <dt className="text-ink-300">{t('landing.tenderCard.value')}</dt>
-          <dd className="font-semibold text-brand-300">{tender.value}</dd>
+          <dt className="font-mono text-[11px] uppercase tracking-wide text-ink-300">
+            {t('landing.tenderCard.value')}
+          </dt>
+          <dd className="font-mono font-medium tabular-nums text-brand-300">{tender.value}</dd>
         </div>
         <div className="flex justify-between border-t border-white/10 py-1.5">
-          <dt className="text-ink-300">{t('landing.tenderCard.deadline')}</dt>
-          <dd className="font-semibold text-brand-300">
+          <dt className="font-mono text-[11px] uppercase tracking-wide text-ink-300">
+            {t('landing.tenderCard.deadline')}
+          </dt>
+          <dd className="font-mono font-medium tabular-nums text-brand-300">
             {t('landing.tenderCard.daysLeft', { count: tender.deadlineDays })}
           </dd>
         </div>

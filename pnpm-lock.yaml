@@ -32,9 +32,18 @@ importers:
 
   apps/platform:
     dependencies:
+      '@fontsource-variable/inter':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource-variable/jetbrains-mono':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@fontsource-variable/plus-jakarta-sans':
         specifier: ^5.2.8
         version: 5.2.8
+      '@fontsource/calistoga':
+        specifier: ^5.2.7
+        version: 5.2.7
       '@tanstack/react-router':
         specifier: ^1.170.16
         version: 1.170.16(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -575,8 +584,17 @@ packages:
       '@noble/hashes':
         optional: true
 
+  '@fontsource-variable/inter@5.2.8':
+    resolution: {integrity: sha512-kOfP2D+ykbcX/P3IFnokOhVRNoTozo5/JxhAIVYLpea/UBmCQ/YWPBfWIDuBImXX/15KH+eKh4xpEUyS2sQQGQ==}
+
+  '@fontsource-variable/jetbrains-mono@5.2.8':
+    resolution: {integrity: sha512-WBA9elru6Jdp5df2mES55wuOO0WIrn3kpXnI4+W2ek5u3ZgLS9XS4gmIlcQhiZOWEKl95meYdvK7xI+ETLCq/Q==}
+
   '@fontsource-variable/plus-jakarta-sans@5.2.8':
     resolution: {integrity: sha512-iQecBizIdZxezODNHzOn4SvvRMrZL/S8k4MEXGDynCmUrImVW0VmX+tIAMqnADwH4haXlHSXqMgU6+kcfBQJdw==}
+
+  '@fontsource/calistoga@5.2.7':
+    resolution: {integrity: sha512-D7cSaK1b5pWbPw7Z95QWcHCouTwOAysHCGSIHSLq6fuQOJR4m/zHILOyBuAQNjQo1u0cTrWiGdll1gE08eG4jA==}
 
   '@inquirer/ansi@1.0.2':
     resolution: {integrity: sha512-S8qNSZiYzFd0wAcyG5AXCvUHC5Sr7xpZ9wZ2py9XR88jUz8wooStVx5M6dRzczbBWjic9NP7+rY0Xi7qqK/aMQ==}
@@ -2637,7 +2655,13 @@ snapshots:
 
   '@exodus/bytes@1.15.1': {}
 
+  '@fontsource-variable/inter@5.2.8': {}
+
+  '@fontsource-variable/jetbrains-mono@5.2.8': {}
+
   '@fontsource-variable/plus-jakarta-sans@5.2.8': {}
+
+  '@fontsource/calistoga@5.2.7': {}
 
   '@inquirer/ansi@1.0.2': {}
 
