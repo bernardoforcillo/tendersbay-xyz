@@ -2,5 +2,86 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Twój następny europejski przetarg, udzielony",
+      "description": "Zespół agentów AI, który znajduje, przygotowuje i wygrywa europejskie zamówienia publiczne dla MŚP."
+    },
+    "nav": { "problem": "Problem", "agents": "Agenci", "vision": "Wizja" },
+    "hero": {
+      "eyebrow": "Twój zespół agentów AI",
+      "titleLead": "Twój następny europejski przetarg?",
+      "titleHighlight": "Udzielony.",
+      "subtitle": "tendersbay to twój zespół agentów AI: polują na właściwe przetargi w całej Europie, miażdżą papierkową robotę i prowadzą cię aż do udzielenia zamówienia.",
+      "ctaPrimary": "Zobacz w akcji",
+      "ctaSecondary": "Zobacz wizję",
+      "trust": [
+        "27 krajów, jedna platforma",
+        "Agenci, którzy nigdy nie śpią",
+        "Zero ręcznej papierkowej roboty"
+      ]
+    },
+    "problem": {
+      "eyebrow": "Problem",
+      "title": "Gra w przetargi jest ustawiona przeciwko MŚP.",
+      "items": [
+        {
+          "title": "Rozproszone w 27 krajach",
+          "body": "Właściwe szanse są rozsiane po dziesiątkach krajowych portali, w różnych językach i formatach."
+        },
+        {
+          "title": "Ciężka biurokracja dokumentacyjna",
+          "body": "Wymagania, zaświadczenia i terminy — labirynt dokumentów, w którym łatwo o błąd."
+        },
+        {
+          "title": "Brak dedykowanego zespołu ds. ofert",
+          "body": "MŚP nie mają działu zamówień — wygrana wymaga czasu i wiedzy, których nie posiadają."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agenci",
+      "title": "Poznaj agentów, którzy robią ciężką robotę.",
+      "items": [
+        {
+          "title": "Znajdź",
+          "body": "Agenci znajdują właściwy przetarg w całej Europie, dopasowany do twojej firmy."
+        },
+        {
+          "title": "Przygotuj",
+          "body": "Obsługują za ciebie biurokrację dokumentacyjną: wymagania, zaświadczenia, terminy."
+        },
+        {
+          "title": "Wygrywaj",
+          "body": "Prowadzą cię aż do złożenia oferty, by dać ci najlepszą szansę na udzielenie zamówienia."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Dla kogo",
+      "title": "Stworzone dla ambitnych outsiderów.",
+      "body": "Dla tych, którzy chcą konkurować ponad granicami bez dedykowanego zespołu ds. ofert. tendersbay daje ci taką samą siłę przebicia jak duże podmioty."
+    },
+    "vision": {
+      "eyebrow": "Wizja",
+      "title": "Przetargi publiczne to nie zamknięty klub.",
+      "body": "Co roku setki miliardów przepływa przez europejskie zamówienia publiczne, ale pozostają poza zasięgiem tych, którym brakuje czasu, znajomości języków lub wiedzy. tendersbay używa agentów AI, by to zmienić — i dać każdemu MŚP prawdziwą szansę.",
+      "note": "Budujemy. Wróć wkrótce."
+    },
+    "footer": {
+      "tagline": "Europejskie przetargi. Udzielone.",
+      "contactLabel": "Skontaktuj się z nami",
+      "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone"
+    },
+    "tenderCard": { "value": "Wartość", "deadline": "Termin", "daysLeft": "{{count}} dni" },
+    "agentLabels": {
+      "scout": "Agent zwiadowca",
+      "docs": "Agent dokumentów",
+      "strategy": "Agent strategii",
+      "scoutStat": "{{count}} znalezionych przetargów",
+      "docsStat": "papiery załatwione",
+      "strategyStat": "zwycięska oferta gotowa"
+    }
   }
 }

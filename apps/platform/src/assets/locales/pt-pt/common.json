@@ -2,5 +2,82 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — O seu próximo concurso europeu, adjudicado",
+      "description": "Uma equipa de agentes de IA que encontra, prepara e vence concursos públicos europeus para PME."
+    },
+    "nav": { "problem": "O problema", "agents": "Os agentes", "vision": "Visão" },
+    "hero": {
+      "eyebrow": "A sua equipa de agentes de IA",
+      "titleLead": "O seu próximo concurso europeu?",
+      "titleHighlight": "Adjudicado.",
+      "subtitle": "tendersbay é a sua equipa de agentes de IA: caçam os concursos certos em toda a Europa, destroem a burocracia por si e levam-no a direito à adjudicação.",
+      "ctaPrimary": "Ver em ação",
+      "ctaSecondary": "Veja a visão",
+      "trust": ["27 países, uma plataforma", "Agentes que nunca dormem", "Zero burocracia manual"]
+    },
+    "problem": {
+      "eyebrow": "O problema",
+      "title": "O jogo dos concursos está viciado contra as PME.",
+      "items": [
+        {
+          "title": "Dispersos por 27 países",
+          "body": "As oportunidades certas estão espalhadas por dezenas de portais nacionais, em idiomas e formatos diferentes."
+        },
+        {
+          "title": "Burocracia documental pesada",
+          "body": "Requisitos, certificados e prazos — um labirinto documental onde é fácil cometer erros."
+        },
+        {
+          "title": "Sem equipa dedicada a propostas",
+          "body": "As PME não têm departamento de contratação pública — vencer requer tempo e experiência que não possuem."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Os agentes",
+      "title": "Conheça os agentes que fazem o trabalho pesado.",
+      "items": [
+        {
+          "title": "Encontre",
+          "body": "Os agentes encontram o concurso certo em toda a Europa, adaptado ao seu negócio."
+        },
+        {
+          "title": "Prepare",
+          "body": "Tratam da burocracia documental por si: requisitos, certificados, prazos."
+        },
+        {
+          "title": "Vença",
+          "body": "Guiam-no até à proposta, para a melhor hipótese de adjudicação."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Para quem é",
+      "title": "Feito para os ambiciosos que não se contentam com menos.",
+      "body": "Para quem quer competir além-fronteiras sem uma equipa dedicada a propostas. tendersbay dá-lhe o mesmo poder de fogo que os grandes players."
+    },
+    "vision": {
+      "eyebrow": "Visão",
+      "title": "Os concursos públicos não são um clube fechado.",
+      "body": "Todos os anos, centenas de milhares de milhões circulam pela contratação pública europeia, mas permanecem inacessíveis para quem não tem tempo, idioma ou experiência. tendersbay usa agentes de IA para mudar isso — e dar a cada PME uma hipótese real.",
+      "note": "Estamos a construir. Volte em breve."
+    },
+    "footer": {
+      "tagline": "Os concursos da Europa. Adjudicados.",
+      "contactLabel": "Entre em contacto",
+      "copyright": "© Bernardo Forcillo — Todos os direitos reservados"
+    },
+    "tenderCard": { "value": "Valor", "deadline": "Prazo", "daysLeft": "{{count}} dias" },
+    "agentLabels": {
+      "scout": "Agente explorador",
+      "docs": "Agente de documentos",
+      "strategy": "Agente de estratégia",
+      "scoutStat": "{{count}} concursos encontrados",
+      "docsStat": "burocracia tratada",
+      "strategyStat": "proposta vencedora pronta"
+    }
   }
 }

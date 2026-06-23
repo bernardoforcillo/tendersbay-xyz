@@ -1,6 +1,80 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
+  "app": { "title": "tendersbay platform", "subtitle": "Vite + React, served by Go." },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Your next European tender, awarded",
+      "description": "A team of AI agents that find, prepare and win European public tenders for SMEs."
+    },
+    "nav": { "problem": "The problem", "agents": "The agents", "vision": "Vision" },
+    "hero": {
+      "eyebrow": "Your AI agent team",
+      "titleLead": "Your next European tender?",
+      "titleHighlight": "Awarded.",
+      "subtitle": "tendersbay is your team of AI agents: they hunt down the right tenders across Europe, crush the paperwork, and drive you all the way to the award.",
+      "ctaPrimary": "See it in action",
+      "ctaSecondary": "See the vision",
+      "trust": ["27 countries, one platform", "Agents that never sleep", "Zero paperwork by hand"]
+    },
+    "problem": {
+      "eyebrow": "The problem",
+      "title": "The tender game is stacked against SMEs.",
+      "items": [
+        {
+          "title": "Scattered across 27 countries",
+          "body": "The right opportunities are spread across dozens of national portals, in different languages and formats."
+        },
+        {
+          "title": "Heavy document bureaucracy",
+          "body": "Requirements, certificates and deadlines — a documentary maze that's easy to get wrong."
+        },
+        {
+          "title": "No dedicated bids team",
+          "body": "SMEs have no procurement office — winning takes time and expertise they don't have."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "The agents",
+      "title": "Meet the agents that do the heavy lifting.",
+      "items": [
+        {
+          "title": "Find",
+          "body": "The agents find the right tender across Europe, tailored to your business."
+        },
+        {
+          "title": "Prepare",
+          "body": "They handle the document bureaucracy for you: requirements, certificates, deadlines."
+        },
+        {
+          "title": "Win",
+          "body": "They guide you all the way to the bid, for the best shot at the award."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Who it's for",
+      "title": "Built for underdogs with ambition.",
+      "body": "For those who want to compete across borders without a dedicated bids office. tendersbay gives you the same firepower as the big players."
+    },
+    "vision": {
+      "eyebrow": "Vision",
+      "title": "Public tenders shouldn't be a closed club.",
+      "body": "Every year hundreds of billions move through European public procurement, yet it stays out of reach for those without the time, the language, or the expertise. tendersbay uses AI agents to change that — and give every SME a real shot.",
+      "note": "We're building. Check back soon."
+    },
+    "footer": {
+      "tagline": "Europe's tenders. Awarded.",
+      "contactLabel": "Get in touch",
+      "copyright": "© Bernardo Forcillo — All rights reserved"
+    },
+    "tenderCard": { "value": "Value", "deadline": "Deadline", "daysLeft": "{{count}} days" },
+    "agentLabels": {
+      "scout": "Scout agent",
+      "docs": "Document agent",
+      "strategy": "Strategy agent",
+      "scoutStat": "{{count}} tenders found",
+      "docsStat": "paperwork sorted",
+      "strategyStat": "winning bid ready"
+    }
   }
 }

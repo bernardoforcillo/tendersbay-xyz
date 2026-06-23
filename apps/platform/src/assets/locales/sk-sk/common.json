@@ -2,5 +2,86 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Vaša ďalšia európska zákazka, udelená",
+      "description": "Tím AI agentov, ktorí nachádzajú, pripravujú a vyhravajú európske verejné zákazky pre malé a stredné podniky."
+    },
+    "nav": { "problem": "Problém", "agents": "Agenti", "vision": "Vízia" },
+    "hero": {
+      "eyebrow": "Váš tím AI agentov",
+      "titleLead": "Vaša ďalšia európska zákazka?",
+      "titleHighlight": "Udelená.",
+      "subtitle": "tendersbay je váš tím AI agentov: lovia správne zákazky po celej Európe, drvajú papierovačky za vás a dovedú vás priamo k udeleniu zákazky.",
+      "ctaPrimary": "Pozrite v akcii",
+      "ctaSecondary": "Pozrite si víziu",
+      "trust": [
+        "27 krajín, jedna platforma",
+        "Agenti, ktorí nikdy nespia",
+        "Nula ručnej papierovačky"
+      ]
+    },
+    "problem": {
+      "eyebrow": "Problém",
+      "title": "Hra na zákazky je nastavená proti malým firmám.",
+      "items": [
+        {
+          "title": "Roztrúsené po 27 krajinách",
+          "body": "Správne príležitosti sú rozsypané po desiatkach národných portálov, v rôznych jazykoch a formátoch."
+        },
+        {
+          "title": "Ťažká dokumentačná byrokracia",
+          "body": "Požiadavky, certifikáty a termíny — dokumentačné bludisko, v ktorom sa ľahko pomýli."
+        },
+        {
+          "title": "Žiadny špecializovaný tím pre ponuky",
+          "body": "Malé a stredné podniky nemajú oddelenie pre zákazky — víťazstvo vyžaduje čas a odbornosť, ktorú nemajú."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agenti",
+      "title": "Spoznajte agentov, ktorí robia ťažkú prácu.",
+      "items": [
+        {
+          "title": "Nájdite",
+          "body": "Agenti nachádzajú správnu zákazku po celej Európe, prispôsobenú vášmu podnikaniu."
+        },
+        {
+          "title": "Pripravte",
+          "body": "Vybavujú za vás dokumentačnú byrokraciu: požiadavky, certifikáty, termíny."
+        },
+        {
+          "title": "Vyhrajte",
+          "body": "Sprevádzajú vás až k ponuke, aby ste mali najlepšiu šancu na udelenie zákazky."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Pre koho je určené",
+      "title": "Pre ambicióznych vyzyváčov, ktorí sa nespokoja s menej.",
+      "body": "Pre tých, ktorí chcú súťažiť naprieč hranicami bez špecializovaného tímu pre ponuky. tendersbay vám dáva rovnakú silu ako veľkým hráčom."
+    },
+    "vision": {
+      "eyebrow": "Vízia",
+      "title": "Verejné zákazky nie sú uzavretý klub.",
+      "body": "Každý rok prechádzajú stovky miliárd cez európske verejné zákazky, ale zostávajú mimo dosahu tých, ktorí nemajú čas, jazykové znalosti ani odbornosť. tendersbay využíva AI agentov, aby to zmenil — a dal každému malému a strednému podniku skutočnú šancu.",
+      "note": "Budujeme. Vráťte sa čoskoro."
+    },
+    "footer": {
+      "tagline": "Európske zákazky. Udelené.",
+      "contactLabel": "Kontaktujte nás",
+      "copyright": "© Bernardo Forcillo — Všetky práva vyhradené"
+    },
+    "tenderCard": { "value": "Hodnota", "deadline": "Termín", "daysLeft": "{{count}} dní" },
+    "agentLabels": {
+      "scout": "Agent prieskumník",
+      "docs": "Agent dokumentov",
+      "strategy": "Agent stratégie",
+      "scoutStat": "{{count}} nájdených zákaziek",
+      "docsStat": "papiere vybavené",
+      "strategyStat": "víťazná ponuka pripravená"
+    }
   }
 }

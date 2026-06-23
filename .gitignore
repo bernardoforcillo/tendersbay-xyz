@@ -37,3 +37,6 @@ Thumbs.db
 # (.superpowers/) are local-only working docs — kept on disk, NEVER committed.
 docs/superpowers/
 .superpowers/
+
+# Browser-automation scratch (screenshots, snapshots) from MCP/Playwright
+.playwright-mcp/

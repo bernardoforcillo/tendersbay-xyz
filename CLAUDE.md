@@ -50,6 +50,11 @@ is documented in @.claude/rules/frontend.md.
 Branching and the canary release policy (`feature → dev → main`, and the Docker
 image tags each branch publishes) are documented in @.claude/rules/git-flow.md.
 
+Kubernetes deployment lives in `infrastructure/kubernetes/`, reconciled by Flux
+(GitOps) onto a Traefik + cert-manager + Cilium cluster; the layout, naming, pod
+hardening, and image-automation conventions are documented in
+@.claude/rules/infrastructure.md.
+
 - Use **pnpm only** — never npm or yarn. Add root dev deps with `pnpm add -Dw <pkg>`;
   add to a workspace with `pnpm add <pkg> --filter <workspace>`.
 - A new app goes in `apps/<name>/` and a new library in `packages/<name>/`, each with

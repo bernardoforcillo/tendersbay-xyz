@@ -2,5 +2,86 @@
   "app": {
     "title": "tendersbay platform",
     "subtitle": "Vite + React, served by Go."
+  },
+  "landing": {
+    "meta": {
+      "title": "tendersbay — Vaš naslednji evropski razpis, dodeljen",
+      "description": "Ekipa agentov umetne inteligence, ki najde, pripravi in zmaga evropske javne razpise za MSP-je."
+    },
+    "nav": { "problem": "Težava", "agents": "Agenti", "vision": "Vizija" },
+    "hero": {
+      "eyebrow": "Vaša ekipa agentov UI",
+      "titleLead": "Vaš naslednji evropski razpis?",
+      "titleHighlight": "Dodeljen.",
+      "subtitle": "tendersbay je vaša ekipa agentov UI: lovijo prave razpise po vsej Evropi, zdrobijo birokracijo namesto vas in vas peljejo naravnost do dodelitve.",
+      "ctaPrimary": "Oglejte si v akciji",
+      "ctaSecondary": "Oglejte si vizijo",
+      "trust": [
+        "27 držav, ena platforma",
+        "Agenti, ki nikoli ne spijo",
+        "Nič ročnega papirnatega dela"
+      ]
+    },
+    "problem": {
+      "eyebrow": "Težava",
+      "title": "Igra razpisov je nastavljena proti MSP-jem.",
+      "items": [
+        {
+          "title": "Razpršeni po 27 državah",
+          "body": "Prave priložnosti so razpršene po desetinah nacionalnih portalov, v različnih jezikih in formatih."
+        },
+        {
+          "title": "Težka dokumentacijska birokracija",
+          "body": "Zahteve, potrdila in roki — dokumentacijski labirint, v katerem je lahko napake enostavno narediti."
+        },
+        {
+          "title": "Ni posebne ekipe za ponudbe",
+          "body": "MSP-ji nimajo nabavnega oddelka — zmaga zahteva čas in strokovnost, ki je nimajo."
+        }
+      ]
+    },
+    "agents": {
+      "eyebrow": "Agenti",
+      "title": "Spoznajte agente, ki opravljajo težko delo.",
+      "items": [
+        {
+          "title": "Poiščite",
+          "body": "Agenti poiščejo pravi razpis po vsej Evropi, prilagojen vašemu podjetju."
+        },
+        {
+          "title": "Pripravite",
+          "body": "Za vas uredijo dokumentacijsko birokracijo: zahteve, potrdila, roke."
+        },
+        {
+          "title": "Zmagajte",
+          "body": "Vodijo vas do ponudbe, da imate najboljše možnosti za dodelitev."
+        }
+      ]
+    },
+    "audience": {
+      "eyebrow": "Za koga je namenjeno",
+      "title": "Narejeno za ambiciozne, ki ne sprejemajo manj.",
+      "body": "Za tiste, ki želijo tekmovati čez meje brez posebne ekipe za ponudbe. tendersbay vam daje enako moč kot velikim akterjem."
+    },
+    "vision": {
+      "eyebrow": "Vizija",
+      "title": "Javni razpisi niso zaprt klub.",
+      "body": "Vsako leto se skozi evropska javna naročila pretočijo stotine milijard, a ostajajo nedosegljivi za tiste brez časa, jezikovnega znanja ali strokovnosti. tendersbay uporablja agente UI, da to spremeni — in da vsakemu MSP-ju da pravo možnost.",
+      "note": "Gradimo. Kmalu se vrnite."
+    },
+    "footer": {
+      "tagline": "Evropski razpisi. Dodeljeni.",
+      "contactLabel": "Stopite v stik z nami",
+      "copyright": "© Bernardo Forcillo — Vse pravice pridržane"
+    },
+    "tenderCard": { "value": "Vrednost", "deadline": "Rok", "daysLeft": "{{count}} dni" },
+    "agentLabels": {
+      "scout": "Agent izvidnik",
+      "docs": "Agent dokumentov",
+      "strategy": "Agent strategije",
+      "scoutStat": "{{count}} najdenih razpisov",
+      "docsStat": "papirji urejeni",
+      "strategyStat": "zmagovalna ponudba pripravljena"
+    }
   }
 }

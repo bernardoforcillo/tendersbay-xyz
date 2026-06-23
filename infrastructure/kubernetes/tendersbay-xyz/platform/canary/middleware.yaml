@@ -1,0 +1,13 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: noindex
+  namespace: tendersbay-xyz
+spec:
+  # Canary only: keep dev.tendersbay.xyz out of search engines and crawlers.
+  # X-Robots-Tag is the authoritative de-indexing signal (honoured by Google,
+  # Bing, etc. for every response, HTML or not) — stronger than robots.txt,
+  # which only discourages crawling. The stable channel never gets this header.
+  headers:
+    customResponseHeaders:
+      X-Robots-Tag: "noindex, nofollow, noarchive, nosnippet"
