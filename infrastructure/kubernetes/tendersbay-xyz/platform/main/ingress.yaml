@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: platform-ingress
+  namespace: tendersbay-xyz
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: (Host(`tendersbay.xyz`) || Host(`www.tendersbay.xyz`))
+      kind: Rule
+      services:
+        - name: platform-svc
+          port: 30080
+      middlewares:
+        - name: rate-limit
+          namespace: tendersbay-xyz
+        - name: security
+          namespace: tendersbay-xyz
+        - name: redirect-http-to-https
+          namespace: tendersbay-xyz
+        - name: redirect-to-non-www
+          namespace: tendersbay-xyz
+  tls:
+    secretName: platform-tls
+    options:
+      name: tlsoptions
+      namespace: tendersbay-xyz

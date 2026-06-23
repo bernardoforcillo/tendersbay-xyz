@@ -1,0 +1,32 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: platform-canary-ingress
+  namespace: tendersbay-xyz
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`dev.tendersbay.xyz`)
+      kind: Rule
+      services:
+        - name: platform-canary-svc
+          port: 30081
+      middlewares:
+        # Reuses the shared middlewares from commons.yaml (same namespace).
+        # No redirect-to-non-www: dev.tendersbay.xyz has no www variant.
+        # Canary-only: block search engines / bots from indexing dev.
+        - name: noindex
+          namespace: tendersbay-xyz
+        - name: rate-limit
+          namespace: tendersbay-xyz
+        - name: security
+          namespace: tendersbay-xyz
+        - name: redirect-http-to-https
+          namespace: tendersbay-xyz
+  tls:
+    secretName: platform-canary-tls
+    options:
+      name: tlsoptions
+      namespace: tendersbay-xyz
