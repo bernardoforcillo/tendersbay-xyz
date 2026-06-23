@@ -7,7 +7,7 @@ describe('ProblemSection', () => {
   it('renders the heading and all three problem cards', () => {
     const { container } = renderWithI18n(<ProblemSection />, 'en-ie');
     expect(
-      screen.getByRole('heading', { name: 'European tenders are a maze' }),
+      screen.getByRole('heading', { name: 'The tender game is stacked against SMEs.' }),
     ).toBeInTheDocument();
     expect(container.querySelector('#problem')).not.toBeNull();
     expect(screen.getByText('Scattered across 27 countries')).toBeInTheDocument();

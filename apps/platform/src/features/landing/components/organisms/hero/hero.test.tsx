@@ -6,8 +6,10 @@ import { Hero } from './index';
 describe('Hero', () => {
   it('renders the headline, both CTAs and the trust line', () => {
     renderWithI18n(<Hero />, 'en-ie');
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Win your next tender');
-    expect(screen.getByRole('link', { name: /see how it works/i })).toHaveAttribute(
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Your next European tender?',
+    );
+    expect(screen.getByRole('link', { name: /see it in action/i })).toHaveAttribute(
       'href',
       '#agents',
     );
@@ -15,6 +17,6 @@ describe('Hero', () => {
       'href',
       '#vision',
     );
-    expect(screen.getByText('27 countries')).toBeInTheDocument();
+    expect(screen.getByText('27 countries, one platform')).toBeInTheDocument();
   });
 });

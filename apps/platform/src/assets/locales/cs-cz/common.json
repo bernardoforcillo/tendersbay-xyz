@@ -10,17 +10,17 @@
     },
     "nav": { "problem": "Problém", "agents": "Agenti", "vision": "Vize" },
     "hero": {
-      "eyebrow": "Tým AI agentů",
-      "titleLead": "Vyhrajte svůj příští tendr",
-      "titleHighlight": "v Evropě",
-      "subtitle": "tendersbay je tým AI agentů, kteří nacházejí správnou zakázku po celé Evropě, vyřizují za vás papírování a provázejí vás až k vítězství.",
-      "ctaPrimary": "Zjistěte, jak to funguje",
+      "eyebrow": "Váš tým AI agentů",
+      "titleLead": "Vaše příští evropská zakázka?",
+      "titleHighlight": "Vyhraná.",
+      "subtitle": "tendersbay je váš tým AI agentů: loví správné zakázky po celé Evropě, drtí papírování za vás a provází vás až k vítězství.",
+      "ctaPrimary": "Podívejte se v akci",
       "ctaSecondary": "Podívejte se na vizi",
-      "trust": ["27 zemí", "tým AI agentů", "0 ručního papírování"]
+      "trust": ["27 zemí, jedna platforma", "Agenti, kteří nikdy nespí", "Nula ručního papírování"]
     },
     "problem": {
       "eyebrow": "Problém",
-      "title": "Evropské tendry jsou bludiště",
+      "title": "Hra na tendry je namíchaná proti malým firmám.",
       "items": [
         {
           "title": "Roztroušené napříč 27 zeměmi",
@@ -38,7 +38,7 @@
     },
     "agents": {
       "eyebrow": "Agenti",
-      "title": "Tým AI agentů, který pracuje pro vás",
+      "title": "Poznejte agenty, kteří dělají tu těžkou práci.",
       "items": [
         {
           "title": "Najděte",
@@ -56,17 +56,17 @@
     },
     "audience": {
       "eyebrow": "Pro koho je určeno",
-      "title": "Vytvořeno pro malé a střední podniky a podnikatele",
+      "title": "Pro outsidery s ambicemi.",
       "body": "Pro ty, kteří chtějí soutěžit přes hranice bez specializovaného týmu pro nabídky. tendersbay vám dává stejnou sílu jako velkým hráčům."
     },
     "vision": {
       "eyebrow": "Vize",
-      "title": "Evropské tendry otevřené pro všechny",
+      "title": "Veřejné zakázky nejsou uzavřený klub.",
       "body": "Každý rok procházejí stovky miliard evropskými veřejnými zakázkami, ale zůstávají mimo dosah těch, kteří nemají čas, jazykové znalosti ani odbornost. tendersbay využívá AI agenty, aby to změnil — a dal každému malému a střednímu podniku skutečnou šanci.",
       "note": "Budujeme. Vraťte se brzy."
     },
     "footer": {
-      "tagline": "Evropské tendry vyhraté týmem AI agentů.",
+      "tagline": "Evropské zakázky. Vyhráno.",
       "contactLabel": "Kontaktujte nás",
       "copyright": "© Bernardo Forcillo — Všechna práva vyhrazena"
     },
@@ -75,7 +75,9 @@
       "scout": "Agent průzkumník",
       "docs": "Agent dokumentů",
       "strategy": "Agent strategie",
-      "scoutStat": "{{count}} nalezených zakázek"
+      "scoutStat": "{{count}} nalezených zakázek",
+      "docsStat": "papíry vyřízeny",
+      "strategyStat": "vítězná nabídka připravena"
     }
   }
 }

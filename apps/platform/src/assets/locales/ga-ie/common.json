@@ -10,17 +10,21 @@
     },
     "nav": { "problem": "An Fhadhb", "agents": "Na Gníomhairí", "vision": "Fís" },
     "hero": {
-      "eyebrow": "Foireann gníomhairí AI",
-      "titleLead": "Bain amach do thairiscint eile",
-      "titleHighlight": "san Eoraip",
-      "subtitle": "Is foireann gníomhairí AI é tendersbay a aimsíonn an conradh ceart ar fud na hEorpa, a dhéanann an obair pháipéir ar do shon, agus a threorann thú ar aghaidh go dtí an bua.",
-      "ctaPrimary": "Féach conas a oibríonn sé",
+      "eyebrow": "Do fhoireann gníomhairí AI",
+      "titleLead": "Do chéad tairiscint Eorpach eile?",
+      "titleHighlight": "Buaite.",
+      "subtitle": "Is é tendersbay do fhoireann gníomhairí AI: fiachann siad na conarthaí cearta ar fud na hEorpa, leagann siad an obair pháipéir, agus treorann siad thú díreach go dtí an bua.",
+      "ctaPrimary": "Féach é i ngníomh",
       "ctaSecondary": "Féach ar an bhfís",
-      "trust": ["27 tír", "foireann gníomhairí AI", "0 obair pháipéir láimhe"]
+      "trust": [
+        "27 tír, aon ardán amháin",
+        "Gníomhairí nach gcodlaíonn riamh",
+        "Nialas obair pháipéir láimhe"
+      ]
     },
     "problem": {
       "eyebrow": "An Fhadhb",
-      "title": "Lúbán í córas tairiscintí na hEorpa",
+      "title": "Tá cluiche na dtairiscintí leagtha in aghaidh FBManna.",
       "items": [
         {
           "title": "Scaipthe ar fud 27 tír",
@@ -38,7 +42,7 @@
     },
     "agents": {
       "eyebrow": "Na Gníomhairí",
-      "title": "Foireann gníomhairí AI ag obair ar do shon",
+      "title": "Cas le gníomhairí a dhéanann an obair chrua.",
       "items": [
         {
           "title": "Aimsigh",
@@ -56,17 +60,17 @@
     },
     "audience": {
       "eyebrow": "Cé dó a bhfuil sé",
-      "title": "Tógtha d'FBManna agus d'fhiontraithe",
+      "title": "Déanta do na cinn éirímiúla nach sásuíonn dara háit.",
       "body": "Dóibh siúd ar mian leo iomaíocht thar theorainneacha gan foireann tiomnaithe tairisceana. Tugann tendersbay an cumhacht chéanna duit agus atá ag na himreoirí móra."
     },
     "vision": {
       "eyebrow": "Fís",
-      "title": "Tairiscintí Eorpacha, oscailte do chách",
+      "title": "Níl tairiscintí poiblí ina gclub dúnta.",
       "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí Eorpach, ach fanann sé as láimh do dhaoine gan am, teanga nó saineolas. Úsáideann tendersbay gníomhairí AI chun sin a athrú — agus chun seans fíor a thabhairt do gach FBM.",
       "note": "Táimid ag tógáil. Fill ar ais go luath."
     },
     "footer": {
-      "tagline": "Tairiscintí na hEorpa, buaite ag foireann gníomhairí AI.",
+      "tagline": "Tairiscintí na hEorpa. Buaite.",
       "contactLabel": "Déan teagmháil linn",
       "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint"
     },
@@ -75,7 +79,9 @@
       "scout": "Gníomhaire fionnachtana",
       "docs": "Gníomhaire doiciméad",
       "strategy": "Gníomhaire straitéise",
-      "scoutStat": "{{count}} conradh aimsithe"
+      "scoutStat": "{{count}} conradh aimsithe",
+      "docsStat": "cáipéisí eagraithe",
+      "strategyStat": "tairiscint bhuacach réidh"
     }
   }
 }

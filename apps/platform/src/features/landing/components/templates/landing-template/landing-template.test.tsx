@@ -12,7 +12,9 @@ describe('LandingTemplate', () => {
     expect(screen.getByRole('banner')).toBeInTheDocument();
     expect(screen.getByRole('main')).toBeInTheDocument();
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Win your next tender');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Your next European tender?',
+    );
     for (const id of ['problem', 'agents', 'vision']) {
       expect(container.querySelector(`#${id}`), id).not.toBeNull();
     }

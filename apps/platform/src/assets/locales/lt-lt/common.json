@@ -10,17 +10,21 @@
     },
     "nav": { "problem": "Problema", "agents": "Agentai", "vision": "Vizija" },
     "hero": {
-      "eyebrow": "DI agentų komanda",
-      "titleLead": "Laimėkite kitą viešąjį pirkimą",
-      "titleHighlight": "Europoje",
-      "subtitle": "tendersbay – tai dirbtinio intelekto agentų komanda, kuri suranda tinkamą pirkimą visoje Europoje, tvarko dokumentus už jus ir veda iki pergalės.",
-      "ctaPrimary": "Sužinokite, kaip tai veikia",
+      "eyebrow": "Jūsų DI agentų komanda",
+      "titleLead": "Jūsų kitas Europos viešasis pirkimas?",
+      "titleHighlight": "Laimėtas.",
+      "subtitle": "tendersbay yra jūsų DI agentų komanda: jie medžioja tinkamus pirkimus visoje Europoje, sutriuškina biurokratiją už jus ir nuveda jus tiesiai į pergalę.",
+      "ctaPrimary": "Žiūrėkite veikime",
       "ctaSecondary": "Žiūrėkite viziją",
-      "trust": ["27 šalys", "DI agentų komanda", "0 rankinio dokumentų tvarkymo"]
+      "trust": [
+        "27 šalys, viena platforma",
+        "Agentai, kurie niekada nemiega",
+        "Nulis rankinio dokumentų tvarkymo"
+      ]
     },
     "problem": {
       "eyebrow": "Problema",
-      "title": "Europos viešieji pirkimai yra labirintas",
+      "title": "Viešųjų pirkimų žaidimas yra sukrautas prieš MVĮ.",
       "items": [
         {
           "title": "Išsibarstę 27 šalyse",
@@ -38,7 +42,7 @@
     },
     "agents": {
       "eyebrow": "Agentai",
-      "title": "DI agentų komanda, dirbanti jūsų labui",
+      "title": "Susipažinkite su agentais, kurie dirba sunkų darbą.",
       "items": [
         {
           "title": "Raskite",
@@ -56,17 +60,17 @@
     },
     "audience": {
       "eyebrow": "Kam skirta",
-      "title": "Sukurta MVĮ ir verslininkams",
+      "title": "Sukurta ambicioziems išorininkams.",
       "body": "Tiems, kurie nori konkuruoti per sienas be skirto pasiūlymų rengimo skyriaus. tendersbay suteikia jums tokią pat galią kaip ir dideliems žaidėjams."
     },
     "vision": {
       "eyebrow": "Vizija",
-      "title": "Europos viešieji pirkimai, atviri visiems",
+      "title": "Viešieji pirkimai nėra uždara draugija.",
       "body": "Kiekvienais metais šimtai milijardų juda per Europos viešuosius pirkimus, tačiau jie lieka nepasiekiami tiems, kurie neturi laiko, kalbos žinių ar kompetencijos. tendersbay naudoja DI agentus tam pakeisti — ir suteikti kiekvienai MVĮ realią galimybę.",
       "note": "Mes kuriame. Grįžkite netrukus."
     },
     "footer": {
-      "tagline": "Europos viešieji pirkimai, kuriuos laimi DI agentų komanda.",
+      "tagline": "Europos viešieji pirkimai. Laimėti.",
       "contactLabel": "Susisiekite su mumis",
       "copyright": "© Bernardo Forcillo — Visos teisės saugomos"
     },
@@ -75,7 +79,9 @@
       "scout": "Žvalgybos agentas",
       "docs": "Dokumentų agentas",
       "strategy": "Strategijos agentas",
-      "scoutStat": "{{count}} rastų pirkimų"
+      "scoutStat": "{{count}} rastų pirkimų",
+      "docsStat": "dokumentai sutvarkyti",
+      "strategyStat": "laimintis pasiūlymas parengtas"
     }
   }
 }

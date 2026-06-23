@@ -10,17 +10,17 @@
     },
     "nav": { "problem": "Het probleem", "agents": "De agenten", "vision": "Visie" },
     "hero": {
-      "eyebrow": "Een team van AI-agenten",
-      "titleLead": "Win uw volgende aanbesteding",
-      "titleHighlight": "in Europa",
-      "subtitle": "tendersbay is een team van AI-agenten dat de juiste aanbesteding door heel Europa vindt, het papierwerk voor u regelt en u begeleidt tot aan de winst.",
-      "ctaPrimary": "Ontdek hoe het werkt",
+      "eyebrow": "Uw AI-agentteam",
+      "titleLead": "Uw volgende Europese aanbesteding?",
+      "titleHighlight": "Gewonnen.",
+      "subtitle": "tendersbay is uw team van AI-agenten: ze jagen de juiste aanbestedingen door heel Europa, slopen het papierwerk en brengen u helemaal tot aan de winst.",
+      "ctaPrimary": "Zie het in actie",
       "ctaSecondary": "Bekijk de visie",
-      "trust": ["27 landen", "een team van AI-agenten", "0 handmatig papierwerk"]
+      "trust": ["27 landen, één platform", "Agenten die nooit slapen", "Nul handmatig papierwerk"]
     },
     "problem": {
       "eyebrow": "Het probleem",
-      "title": "Europese aanbestedingen zijn een doolhof",
+      "title": "Het aanbestedingsspel is in het nadeel van het mkb.",
       "items": [
         {
           "title": "Verspreid over 27 landen",
@@ -38,7 +38,7 @@
     },
     "agents": {
       "eyebrow": "De agenten",
-      "title": "Een team van AI-agenten dat voor u werkt",
+      "title": "Maak kennis met de agenten die het zware werk doen.",
       "items": [
         {
           "title": "Vind",
@@ -56,17 +56,17 @@
     },
     "audience": {
       "eyebrow": "Voor wie het is",
-      "title": "Gebouwd voor het mkb en ondernemers",
+      "title": "Gebouwd voor underdogs met ambitie.",
       "body": "Voor degenen die grensoverschrijdend willen concurreren zonder een dedicated inschrijvingsteam. tendersbay geeft u dezelfde slagkracht als de grote spelers."
     },
     "vision": {
       "eyebrow": "Visie",
-      "title": "Europese aanbestedingen, open voor iedereen",
+      "title": "Aanbestedingen zijn geen gesloten club.",
       "body": "Elk jaar stroomt honderden miljarden door Europese overheidsopdrachten, maar ze blijven buiten bereik voor wie geen tijd, taalkennis of expertise heeft. tendersbay gebruikt AI-agenten om dat te veranderen — en elk mkb-bedrijf een echte kans te geven.",
       "note": "We bouwen. Kom snel terug."
     },
     "footer": {
-      "tagline": "Europa's aanbestedingen, gewonnen door een team van AI-agenten.",
+      "tagline": "Europa's aanbestedingen. Gewonnen.",
       "contactLabel": "Neem contact op",
       "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden"
     },
@@ -75,7 +75,9 @@
       "scout": "Verkenneragent",
       "docs": "Documentagent",
       "strategy": "Strategieagent",
-      "scoutStat": "{{count}} aanbestedingen gevonden"
+      "scoutStat": "{{count}} aanbestedingen gevonden",
+      "docsStat": "papierwerk geregeld",
+      "strategyStat": "winnend bod klaar"
     }
   }
 }

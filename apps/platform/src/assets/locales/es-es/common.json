@@ -10,17 +10,17 @@
     },
     "nav": { "problem": "El problema", "agents": "Los agentes", "vision": "Visión" },
     "hero": {
-      "eyebrow": "Un equipo de agentes de IA",
-      "titleLead": "Gana tu próxima licitación",
-      "titleHighlight": "en Europa",
-      "subtitle": "tendersbay es un equipo de agentes de IA que encuentra la licitación adecuada en toda Europa, gestiona el papeleo por ti y te acompaña hasta la victoria.",
-      "ctaPrimary": "Ver cómo funciona",
+      "eyebrow": "Tu equipo de agentes de IA",
+      "titleLead": "¿Tu próxima licitación europea?",
+      "titleHighlight": "Ganada.",
+      "subtitle": "tendersbay es tu equipo de agentes de IA: cazan las licitaciones adecuadas en toda Europa, destrozan el papeleo y te llevan directo a la victoria.",
+      "ctaPrimary": "Verlo en acción",
       "ctaSecondary": "Ver la visión",
-      "trust": ["27 países", "un equipo de agentes de IA", "0 papeleo manual"]
+      "trust": ["27 países, una plataforma", "Agentes que nunca duermen", "Cero papeleo manual"]
     },
     "problem": {
       "eyebrow": "El problema",
-      "title": "Las licitaciones europeas son un laberinto",
+      "title": "El juego de las licitaciones está amañado contra las pymes.",
       "items": [
         {
           "title": "Dispersas en 27 países",
@@ -38,7 +38,7 @@
     },
     "agents": {
       "eyebrow": "Los agentes",
-      "title": "Un equipo de agentes de IA que trabaja para ti",
+      "title": "Conoce a los agentes que hacen el trabajo duro.",
       "items": [
         {
           "title": "Encuentra",
@@ -56,17 +56,17 @@
     },
     "audience": {
       "eyebrow": "Para quién es",
-      "title": "Creado para pymes y emprendedores",
+      "title": "Hecho para los que no se conforman con menos.",
       "body": "Para quienes quieren competir más allá de las fronteras sin un equipo dedicado a licitaciones. tendersbay te da la misma potencia que los grandes actores."
     },
     "vision": {
       "eyebrow": "Visión",
-      "title": "Licitaciones europeas, abiertas para todos",
+      "title": "La contratación pública no es un club cerrado.",
       "body": "Cada año, cientos de miles de millones circulan por la contratación pública europea, pero permanecen fuera del alcance de quienes no tienen tiempo, idioma ni experiencia. tendersbay usa agentes de IA para cambiar eso — y dar a cada pyme una oportunidad real.",
       "note": "Estamos construyendo. Vuelve pronto."
     },
     "footer": {
-      "tagline": "Las licitaciones de Europa, ganadas por un equipo de agentes de IA.",
+      "tagline": "Las licitaciones de Europa. Ganadas.",
       "contactLabel": "Contacta con nosotros",
       "copyright": "© Bernardo Forcillo — Todos los derechos reservados"
     },
@@ -75,7 +75,9 @@
       "scout": "Agente explorador",
       "docs": "Agente de documentos",
       "strategy": "Agente de estrategia",
-      "scoutStat": "{{count}} licitaciones encontradas"
+      "scoutStat": "{{count}} licitaciones encontradas",
+      "docsStat": "papeleo resuelto",
+      "strategyStat": "oferta ganadora lista"
     }
   }
 }

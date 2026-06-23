@@ -7,7 +7,7 @@ describe('AudienceSection', () => {
   it('renders its heading', () => {
     renderWithI18n(<AudienceSection />, 'en-ie');
     expect(
-      screen.getByRole('heading', { name: 'Built for SMEs and entrepreneurs' }),
+      screen.getByRole('heading', { name: 'Built for underdogs with ambition.' }),
     ).toBeInTheDocument();
   });
 });

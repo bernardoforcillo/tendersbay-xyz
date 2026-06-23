@@ -10,17 +10,21 @@
     },
     "nav": { "problem": "Le problème", "agents": "Les agents", "vision": "Vision" },
     "hero": {
-      "eyebrow": "Une équipe d'agents IA",
-      "titleLead": "Remportez votre prochain appel d'offres",
-      "titleHighlight": "en Europe",
-      "subtitle": "tendersbay est une équipe d'agents IA qui déniche le bon marché dans toute l'Europe, gère la paperasse à votre place et vous guide jusqu'à la victoire.",
-      "ctaPrimary": "Voir comment ça marche",
+      "eyebrow": "Votre équipe d'agents IA",
+      "titleLead": "Votre prochain marché européen ?",
+      "titleHighlight": "Remporté.",
+      "subtitle": "tendersbay est votre équipe d'agents IA : ils débusquent les bons marchés dans toute l'Europe, écrasent la paperasse à votre place et vous portent jusqu'à la victoire.",
+      "ctaPrimary": "Voir en action",
       "ctaSecondary": "Voir la vision",
-      "trust": ["27 pays", "une équipe d'agents IA", "0 paperasse manuelle"]
+      "trust": [
+        "27 pays, une plateforme",
+        "Des agents qui ne dorment jamais",
+        "Zéro paperasse manuelle"
+      ]
     },
     "problem": {
       "eyebrow": "Le problème",
-      "title": "Les appels d'offres européens sont un labyrinthe",
+      "title": "Le jeu des appels d'offres est truqué contre les PME.",
       "items": [
         {
           "title": "Éparpillés dans 27 pays",
@@ -38,7 +42,7 @@
     },
     "agents": {
       "eyebrow": "Les agents",
-      "title": "Une équipe d'agents IA qui travaille pour vous",
+      "title": "Rencontrez les agents qui font le gros du travail.",
       "items": [
         {
           "title": "Trouver",
@@ -56,17 +60,17 @@
     },
     "audience": {
       "eyebrow": "À qui c'est destiné",
-      "title": "Conçu pour les PME et les entrepreneurs",
+      "title": "Fait pour les challengers qui ne se contentent pas du minimum.",
       "body": "Pour ceux qui souhaitent concourir au-delà des frontières sans équipe dédiée. tendersbay vous donne la même puissance de feu que les grands acteurs."
     },
     "vision": {
       "eyebrow": "Vision",
-      "title": "Les marchés européens, ouverts à tous",
+      "title": "Les marchés publics ne sont pas un club fermé.",
       "body": "Chaque année, des centaines de milliards circulent dans les marchés publics européens, mais ils restent hors de portée de ceux qui manquent de temps, de langue ou d'expertise. tendersbay utilise des agents IA pour changer cela — et donner à chaque PME une vraie chance.",
       "note": "Nous construisons. Revenez bientôt."
     },
     "footer": {
-      "tagline": "Les marchés d'Europe, remportés par une équipe d'agents IA.",
+      "tagline": "Les marchés d'Europe. Remportés.",
       "contactLabel": "Nous contacter",
       "copyright": "© Bernardo Forcillo — Tous droits réservés"
     },
@@ -75,7 +79,9 @@
       "scout": "Agent éclaireur",
       "docs": "Agent documents",
       "strategy": "Agent stratégie",
-      "scoutStat": "{{count}} marchés trouvés"
+      "scoutStat": "{{count}} marchés trouvés",
+      "docsStat": "dossier bouclé",
+      "strategyStat": "offre gagnante prête"
     }
   }
 }

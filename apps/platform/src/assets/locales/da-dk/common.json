@@ -10,17 +10,17 @@
     },
     "nav": { "problem": "Problemet", "agents": "Agenterne", "vision": "Vision" },
     "hero": {
-      "eyebrow": "Et team af AI-agenter",
-      "titleLead": "Vind dit næste udbud",
-      "titleHighlight": "i Europa",
-      "subtitle": "tendersbay er et team af AI-agenter, der finder det rette udbud i hele Europa, håndterer papirarbejdet for dig og guider dig hele vejen til sejren.",
-      "ctaPrimary": "Se hvordan det virker",
+      "eyebrow": "Dit AI-agentteam",
+      "titleLead": "Dit næste europæiske udbud?",
+      "titleHighlight": "Vundet.",
+      "subtitle": "tendersbay er dit team af AI-agenter: de jager de rigtige udbud i hele Europa, knuser papirarbejdet og kører dig hele vejen til sejren.",
+      "ctaPrimary": "Se det i aktion",
       "ctaSecondary": "Se visionen",
-      "trust": ["27 lande", "et team af AI-agenter", "0 manuelt papirarbejde"]
+      "trust": ["27 lande, én platform", "Agenter der aldrig sover", "Nul manuelt papirarbejde"]
     },
     "problem": {
       "eyebrow": "Problemet",
-      "title": "Europæiske udbud er en labyrint",
+      "title": "Udbudsspillet er stillet op mod SMV'er.",
       "items": [
         {
           "title": "Spredt over 27 lande",
@@ -38,7 +38,7 @@
     },
     "agents": {
       "eyebrow": "Agenterne",
-      "title": "Et team af AI-agenter, der arbejder for dig",
+      "title": "Mød agenterne, der løfter det tunge.",
       "items": [
         {
           "title": "Find",
@@ -56,17 +56,17 @@
     },
     "audience": {
       "eyebrow": "Hvem det er til",
-      "title": "Bygget til SMV'er og iværksættere",
+      "title": "Bygget til underdogs med ambitioner.",
       "body": "For dem, der ønsker at konkurrere på tværs af grænser uden et dedikeret tilbudsteam. tendersbay giver dig samme styrke som de store spillere."
     },
     "vision": {
       "eyebrow": "Vision",
-      "title": "Europæiske udbud, åbne for alle",
+      "title": "Offentlige udbud er ikke en lukket klub.",
       "body": "Hvert år bevæger hundredvis af milliarder sig gennem europæiske offentlige udbud, men de er uden for rækkevidde for dem uden tid, sprog eller ekspertise. tendersbay bruger AI-agenter til at ændre det — og give enhver SMV en reel chance.",
       "note": "Vi bygger løsningen. Vend tilbage snart."
     },
     "footer": {
-      "tagline": "Europas udbud, vundet af et team af AI-agenter.",
+      "tagline": "Europas udbud. Vundet.",
       "contactLabel": "Kontakt os",
       "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes"
     },
@@ -75,7 +75,9 @@
       "scout": "Spejderagent",
       "docs": "Dokumentagent",
       "strategy": "Strategiagent",
-      "scoutStat": "{{count}} udbud fundet"
+      "scoutStat": "{{count}} udbud fundet",
+      "docsStat": "papirerne styr på",
+      "strategyStat": "vindende bud klar"
     }
   }
 }

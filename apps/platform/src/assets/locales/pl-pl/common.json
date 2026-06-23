@@ -10,17 +10,21 @@
     },
     "nav": { "problem": "Problem", "agents": "Agenci", "vision": "Wizja" },
     "hero": {
-      "eyebrow": "Zespół agentów AI",
-      "titleLead": "Wygrywaj swoje kolejne przetargi",
-      "titleHighlight": "w Europie",
-      "subtitle": "tendersbay to zespół agentów AI, który znajduje właściwy przetarg w całej Europie, obsługuje za ciebie papierkową robotę i prowadzi cię aż do zwycięstwa.",
-      "ctaPrimary": "Zobacz, jak to działa",
+      "eyebrow": "Twój zespół agentów AI",
+      "titleLead": "Twój następny europejski przetarg?",
+      "titleHighlight": "Wygrany.",
+      "subtitle": "tendersbay to twój zespół agentów AI: polują na właściwe przetargi w całej Europie, miażdżą papierkową robotę i prowadzą cię aż do zwycięstwa.",
+      "ctaPrimary": "Zobacz w akcji",
       "ctaSecondary": "Zobacz wizję",
-      "trust": ["27 krajów", "zespół agentów AI", "0 ręcznej papierkowej roboty"]
+      "trust": [
+        "27 krajów, jedna platforma",
+        "Agenci, którzy nigdy nie śpią",
+        "Zero ręcznej papierkowej roboty"
+      ]
     },
     "problem": {
       "eyebrow": "Problem",
-      "title": "Europejskie przetargi to labirynt",
+      "title": "Gra w przetargi jest ustawiona przeciwko MŚP.",
       "items": [
         {
           "title": "Rozproszone w 27 krajach",
@@ -38,7 +42,7 @@
     },
     "agents": {
       "eyebrow": "Agenci",
-      "title": "Zespół agentów AI pracujący dla ciebie",
+      "title": "Poznaj agentów, którzy robią ciężką robotę.",
       "items": [
         {
           "title": "Znajdź",
@@ -56,17 +60,17 @@
     },
     "audience": {
       "eyebrow": "Dla kogo",
-      "title": "Stworzone dla MŚP i przedsiębiorców",
+      "title": "Stworzone dla ambitnych outsiderów.",
       "body": "Dla tych, którzy chcą konkurować ponad granicami bez dedykowanego zespołu ds. ofert. tendersbay daje ci taką samą siłę przebicia jak duże podmioty."
     },
     "vision": {
       "eyebrow": "Wizja",
-      "title": "Europejskie przetargi otwarte dla wszystkich",
+      "title": "Przetargi publiczne to nie zamknięty klub.",
       "body": "Co roku setki miliardów przepływa przez europejskie zamówienia publiczne, ale pozostają poza zasięgiem tych, którym brakuje czasu, znajomości języków lub wiedzy. tendersbay używa agentów AI, by to zmienić — i dać każdemu MŚP prawdziwą szansę.",
       "note": "Budujemy. Wróć wkrótce."
     },
     "footer": {
-      "tagline": "Europejskie przetargi wygrywane przez zespół agentów AI.",
+      "tagline": "Europejskie przetargi. Wygrane.",
       "contactLabel": "Skontaktuj się z nami",
       "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone"
     },
@@ -75,7 +79,9 @@
       "scout": "Agent zwiadowca",
       "docs": "Agent dokumentów",
       "strategy": "Agent strategii",
-      "scoutStat": "{{count}} znalezionych przetargów"
+      "scoutStat": "{{count}} znalezionych przetargów",
+      "docsStat": "papiery załatwione",
+      "strategyStat": "zwycięska oferta gotowa"
     }
   }
 }

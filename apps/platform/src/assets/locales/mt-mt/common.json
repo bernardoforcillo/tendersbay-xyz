@@ -10,17 +10,17 @@
     },
     "nav": { "problem": "Il-Problema", "agents": "L-Aġenti", "vision": "Viżjoni" },
     "hero": {
-      "eyebrow": "Tim ta' aġenti AI",
-      "titleLead": "Irbaħ l-offerta li jmiss tiegħek",
-      "titleHighlight": "fl-Ewropa",
-      "subtitle": "tendersbay huwa tim ta' aġenti AI li jsib il-kuntratt it-tajjeb madwar l-Ewropa kollha, jieħu ħsieb il-karti f'ismek u jgħinek sal-ħin li tirbaħ.",
-      "ctaPrimary": "Ara kif jaħdem",
+      "eyebrow": "It-tim ta' aġenti AI tiegħek",
+      "titleLead": "L-offerta Ewropea li jmiss tiegħek?",
+      "titleHighlight": "Mirbugħa.",
+      "subtitle": "tendersbay huwa t-tim ta' aġenti AI tiegħek: ifittxu l-kuntratti t-tajbin madwar l-Ewropa kollha, jeqirdu l-karti f'ismek u jieħduk direttament sal-ħin li tirbaħ.",
+      "ctaPrimary": "Ara fl-azzjoni",
       "ctaSecondary": "Ara l-viżjoni",
-      "trust": ["27 pajjiż", "tim ta' aġenti AI", "0 karti manwali"]
+      "trust": ["27 pajjiż, pjattaforma waħda", "Aġenti li qatt ma jorqdu", "Xejn karti manwali"]
     },
     "problem": {
       "eyebrow": "Il-Problema",
-      "title": "L-offerti Ewropej huma labirint",
+      "title": "Il-logħba tal-offerti hija miġbuda kontra l-SMEs.",
       "items": [
         {
           "title": "Mifruxa fuq 27 pajjiż",
@@ -38,7 +38,7 @@
     },
     "agents": {
       "eyebrow": "L-Aġenti",
-      "title": "Tim ta' aġenti AI li jaħdem għalik",
+      "title": "Iltaqa' mal-aġenti li jagħmlu x-xogħol il-iebes.",
       "items": [
         {
           "title": "Sib",
@@ -56,17 +56,17 @@
     },
     "audience": {
       "eyebrow": "Għal min huwa",
-      "title": "Mibni għall-SMEs u l-intraprendituri",
+      "title": "Magħmul għall-underdog ambizzjuż.",
       "body": "Għal dawk li jixtiequ jikkompetu lil hinn mill-fruntieri mingħajr tim dedikat tal-offerti. tendersbay jagħtik l-istess qawwa bħal dawk il-kbar."
     },
     "vision": {
       "eyebrow": "Viżjoni",
-      "title": "Offerti Ewropej, miftuħa għal kulħadd",
+      "title": "L-offerti pubbliċi mhumiex club magħluq.",
       "body": "Kull sena mija ta' biljuni jiċċaqalqu permezz tal-akkwist pubbliku Ewropew, iżda jibqgħu 'l bogħod minn dawk mingħajr il-ħin, il-lingwa jew l-għarfien. tendersbay juża aġenti AI biex ibiddel dan — u jagħti lil kull SME ċans reali.",
       "note": "Qed nibnu. Erġa' iżżur dalwaqt."
     },
     "footer": {
-      "tagline": "L-offerti tal-Ewropa, mirbugħa minn tim ta' aġenti AI.",
+      "tagline": "L-offerti tal-Ewropa. Mirbugħa.",
       "contactLabel": "Ikkuntattjana",
       "copyright": "© Bernardo Forcillo — Id-drittijiet kollha riżervati"
     },
@@ -75,7 +75,9 @@
       "scout": "Aġent ta' skawt",
       "docs": "Aġent tad-dokumenti",
       "strategy": "Aġent tal-istrateġija",
-      "scoutStat": "{{count}} kuntratti misjuba"
+      "scoutStat": "{{count}} kuntratti misjuba",
+      "docsStat": "karti indirizzati",
+      "strategyStat": "offerta rebbieħa lesta"
     }
   }
 }

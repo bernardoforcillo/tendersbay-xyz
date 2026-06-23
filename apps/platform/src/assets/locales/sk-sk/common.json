@@ -10,17 +10,21 @@
     },
     "nav": { "problem": "Problém", "agents": "Agenti", "vision": "Vízia" },
     "hero": {
-      "eyebrow": "Tím AI agentov",
-      "titleLead": "Vyhrajte svoju ďalšiu zákazku",
-      "titleHighlight": "v Európe",
-      "subtitle": "tendersbay je tím AI agentov, ktorí nachádzajú správnu zákazku po celej Európe, vybavujú za vás papierovačky a sprevádzajú vás až k víťazstvu.",
-      "ctaPrimary": "Zistite, ako to funguje",
+      "eyebrow": "Váš tím AI agentov",
+      "titleLead": "Vaša ďalšia európska zákazka?",
+      "titleHighlight": "Vyhraná.",
+      "subtitle": "tendersbay je váš tím AI agentov: lovia správne zákazky po celej Európe, drvajú papierovačky za vás a dovedú vás priamo k víťazstvu.",
+      "ctaPrimary": "Pozrite v akcii",
       "ctaSecondary": "Pozrite si víziu",
-      "trust": ["27 krajín", "tím AI agentov", "0 ručnej papierovačky"]
+      "trust": [
+        "27 krajín, jedna platforma",
+        "Agenti, ktorí nikdy nespia",
+        "Nula ručnej papierovačky"
+      ]
     },
     "problem": {
       "eyebrow": "Problém",
-      "title": "Európske zákazky sú bludisko",
+      "title": "Hra na zákazky je nastavená proti malým firmám.",
       "items": [
         {
           "title": "Roztrúsené po 27 krajinách",
@@ -38,7 +42,7 @@
     },
     "agents": {
       "eyebrow": "Agenti",
-      "title": "Tím AI agentov, ktorý pracuje pre vás",
+      "title": "Spoznajte agentov, ktorí robia ťažkú prácu.",
       "items": [
         {
           "title": "Nájdite",
@@ -56,17 +60,17 @@
     },
     "audience": {
       "eyebrow": "Pre koho je určené",
-      "title": "Vytvorené pre malé a stredné podniky a podnikateľov",
+      "title": "Pre ambicióznych vyzyváčov, ktorí sa nespokoja s menej.",
       "body": "Pre tých, ktorí chcú súťažiť naprieč hranicami bez špecializovaného tímu pre ponuky. tendersbay vám dáva rovnakú silu ako veľkým hráčom."
     },
     "vision": {
       "eyebrow": "Vízia",
-      "title": "Európske zákazky otvorené pre všetkých",
+      "title": "Verejné zákazky nie sú uzavretý klub.",
       "body": "Každý rok prechádzajú stovky miliárd cez európske verejné zákazky, ale zostávajú mimo dosahu tých, ktorí nemajú čas, jazykové znalosti ani odbornosť. tendersbay využíva AI agentov, aby to zmenil — a dal každému malému a strednému podniku skutočnú šancu.",
       "note": "Budujeme. Vráťte sa čoskoro."
     },
     "footer": {
-      "tagline": "Európske zákazky vyhrané tímom AI agentov.",
+      "tagline": "Európske zákazky. Vyhrané.",
       "contactLabel": "Kontaktujte nás",
       "copyright": "© Bernardo Forcillo — Všetky práva vyhradené"
     },
@@ -75,7 +79,9 @@
       "scout": "Agent prieskumník",
       "docs": "Agent dokumentov",
       "strategy": "Agent stratégie",
-      "scoutStat": "{{count}} nájdených zákaziek"
+      "scoutStat": "{{count}} nájdených zákaziek",
+      "docsStat": "papiere vybavené",
+      "strategyStat": "víťazná ponuka pripravená"
     }
   }
 }

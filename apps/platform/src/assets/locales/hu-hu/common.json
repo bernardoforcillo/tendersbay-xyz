@@ -10,17 +10,21 @@
     },
     "nav": { "problem": "A probléma", "agents": "Az ügynökök", "vision": "Vízió" },
     "hero": {
-      "eyebrow": "Mesterséges intelligencia ügynökök csapata",
-      "titleLead": "Nyerje meg a következő közbeszerzését",
-      "titleHighlight": "Európában",
-      "subtitle": "A tendersbay mesterséges intelligencia ügynökök csapata, akik megtalálják a megfelelő pályázatot egész Európában, elvégzik Ön helyett a papírmunkát, és végigkísérik a győzelemig.",
-      "ctaPrimary": "Nézze meg, hogyan működik",
+      "eyebrow": "Az Ön MI-ügynök csapata",
+      "titleLead": "A következő európai közbeszerzése?",
+      "titleHighlight": "Megnyerve.",
+      "subtitle": "A tendersbay az Ön MI-ügynök csapata: vadásszák a megfelelő pályázatokat egész Európában, összetörik a papírmunkát az Ön helyett, és egyenesen a győzelembe viszik Önt.",
+      "ctaPrimary": "Lássa működés közben",
       "ctaSecondary": "Tekintse meg a víziót",
-      "trust": ["27 ország", "MI-ügynökök csapata", "0 kézi adminisztráció"]
+      "trust": [
+        "27 ország, egy platform",
+        "Ügynökök, akik soha nem alszanak",
+        "Nulla kézi adminisztráció"
+      ]
     },
     "problem": {
       "eyebrow": "A probléma",
-      "title": "Az európai közbeszerzések útvesztők",
+      "title": "A közbeszerzési játék a kkv-k ellen van megrendezve.",
       "items": [
         {
           "title": "27 országban szétszórva",
@@ -38,7 +42,7 @@
     },
     "agents": {
       "eyebrow": "Az ügynökök",
-      "title": "Mesterséges intelligencia ügynökök csapata, amely Önért dolgozik",
+      "title": "Ismerje meg az ügynököket, akik elvégzik a nehéz munkát.",
       "items": [
         {
           "title": "Találjon",
@@ -56,17 +60,17 @@
     },
     "audience": {
       "eyebrow": "Kinek szól",
-      "title": "Kkv-k és vállalkozók számára készült",
+      "title": "Ambiciózus kihívóknak építve.",
       "body": "Azoknak, akik dedikált ajánlattételi csapat nélkül szeretnének határon átnyúlóan versenyezni. A tendersbay ugyanolyan tűzerőt ad Önnek, mint a nagy szereplőknek."
     },
     "vision": {
       "eyebrow": "Vízió",
-      "title": "Európai közbeszerzések, mindenki számára nyitottak",
+      "title": "A közbeszerzés nem zárt klub.",
       "body": "Évente több száz milliárd áramlik az európai közbeszerzéseken keresztül, de elérhetetlen marad azok számára, akiknek nincs idejük, nyelvtudásuk vagy szakértelmük. A tendersbay mesterséges intelligencia ügynököket használ ennek megváltoztatásához — és hogy minden kkv-nak valódi esélyt adjon.",
       "note": "Épülünk. Nézzen vissza hamarosan."
     },
     "footer": {
-      "tagline": "Európa közbeszerzései, amelyeket MI-ügynökök csapata nyer meg.",
+      "tagline": "Európa közbeszerzései. Megnyerve.",
       "contactLabel": "Lépjen kapcsolatba velünk",
       "copyright": "© Bernardo Forcillo — Minden jog fenntartva"
     },
@@ -75,7 +79,9 @@
       "scout": "Felderítő ügynök",
       "docs": "Dokumentum-ügynök",
       "strategy": "Stratégiai ügynök",
-      "scoutStat": "{{count}} megtalált pályázat"
+      "scoutStat": "{{count}} megtalált pályázat",
+      "docsStat": "papírok rendezve",
+      "strategyStat": "nyerő ajánlat kész"
     }
   }
 }

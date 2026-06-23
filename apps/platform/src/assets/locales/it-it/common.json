@@ -7,17 +7,17 @@
     },
     "nav": { "problem": "Il problema", "agents": "Gli agenti", "vision": "Vision" },
     "hero": {
-      "eyebrow": "Un team di agenti AI",
-      "titleLead": "Vinci la tua prossima gara",
-      "titleHighlight": "in Europa",
-      "subtitle": "tendersbay è un insieme di agenti AI che scovano la gara giusta in tutta Europa, gestiscono la burocrazia documentale al posto tuo e ti accompagnano fino alla vittoria.",
-      "ctaPrimary": "Scopri come",
+      "eyebrow": "Il tuo team di agenti AI",
+      "titleLead": "La tua prossima gara europea?",
+      "titleHighlight": "Vinta.",
+      "subtitle": "tendersbay è il tuo team di agenti AI: scovano le gare giuste in tutta Europa, sbrigano la burocrazia al posto tuo e ti portano dritto alla vittoria.",
+      "ctaPrimary": "Guardalo in azione",
       "ctaSecondary": "Guarda la vision",
-      "trust": ["27 paesi", "un team di agenti AI", "0 scartoffie a mano"]
+      "trust": ["27 paesi, una piattaforma", "Agenti che non dormono mai", "Zero scartoffie a mano"]
     },
     "problem": {
       "eyebrow": "Il problema",
-      "title": "Le gare europee sono un labirinto",
+      "title": "Il gioco delle gare è truccato contro le PMI.",
       "items": [
         {
           "title": "Frammentate su 27 paesi",
@@ -35,7 +35,7 @@
     },
     "agents": {
       "eyebrow": "Gli agenti",
-      "title": "Un team di agenti AI che lavora per te",
+      "title": "Ecco gli agenti che fanno il lavoro pesante.",
       "items": [
         {
           "title": "Scova",
@@ -53,17 +53,17 @@
     },
     "audience": {
       "eyebrow": "Per chi è",
-      "title": "Pensato per PMI e imprenditori",
+      "title": "Fatto per le PMI che non si accontentano.",
       "body": "Per chi vuole competere oltre confine senza un ufficio gare dedicato. tendersbay ti dà la stessa potenza di fuoco delle grandi aziende."
     },
     "vision": {
       "eyebrow": "Vision",
-      "title": "Le gare europee, aperte a tutti",
+      "title": "Le gare pubbliche non sono un club chiuso.",
       "body": "Ogni anno in Europa si muovono centinaia di miliardi in appalti pubblici, ma restano fuori portata per chi non ha tempo, lingua o competenze. tendersbay usa gli agenti AI per cambiare questo — e dare a ogni PMI una vera occasione.",
       "note": "Stiamo costruendo. Torna presto."
     },
     "footer": {
-      "tagline": "Le gare di tutta Europa, vinte da un team di agenti AI.",
+      "tagline": "Le gare d'Europa. Vinte.",
       "contactLabel": "Scrivici",
       "copyright": "© Bernardo Forcillo — Tutti i diritti riservati"
     },
@@ -72,7 +72,9 @@
       "scout": "Agente Scout",
       "docs": "Agente Documenti",
       "strategy": "Agente Strategia",
-      "scoutStat": "{{count}} gare trovate"
+      "scoutStat": "{{count}} gare trovate",
+      "docsStat": "fascicolo pronto",
+      "strategyStat": "offerta vincente"
     }
   }
 }

@@ -10,17 +10,21 @@
     },
     "nav": { "problem": "Težava", "agents": "Agenti", "vision": "Vizija" },
     "hero": {
-      "eyebrow": "Ekipa agentov UI",
-      "titleLead": "Pridobite naslednji razpis",
-      "titleHighlight": "v Evropi",
-      "subtitle": "tendersbay je ekipa agentov umetne inteligence, ki poišče pravi razpis po vsej Evropi, za vas uredi birokracijo in vas vodi vse do zmage.",
-      "ctaPrimary": "Oglejte si, kako deluje",
+      "eyebrow": "Vaša ekipa agentov UI",
+      "titleLead": "Vaš naslednji evropski razpis?",
+      "titleHighlight": "Pridobljen.",
+      "subtitle": "tendersbay je vaša ekipa agentov UI: lovijo prave razpise po vsej Evropi, zdrobijo birokracijo namesto vas in vas peljejo naravnost do zmage.",
+      "ctaPrimary": "Oglejte si v akciji",
       "ctaSecondary": "Oglejte si vizijo",
-      "trust": ["27 držav", "ekipa agentov UI", "0 ročnega papirnatega dela"]
+      "trust": [
+        "27 držav, ena platforma",
+        "Agenti, ki nikoli ne spijo",
+        "Nič ročnega papirnatega dela"
+      ]
     },
     "problem": {
       "eyebrow": "Težava",
-      "title": "Evropski razpisi so labirint",
+      "title": "Igra razpisov je nastavljena proti MSP-jem.",
       "items": [
         {
           "title": "Razpršeni po 27 državah",
@@ -38,7 +42,7 @@
     },
     "agents": {
       "eyebrow": "Agenti",
-      "title": "Ekipa agentov UI, ki dela za vas",
+      "title": "Spoznajte agente, ki opravljajo težko delo.",
       "items": [
         {
           "title": "Poiščite",
@@ -56,17 +60,17 @@
     },
     "audience": {
       "eyebrow": "Za koga je namenjeno",
-      "title": "Ustvarjeno za MSP-je in podjetnike",
+      "title": "Narejeno za ambiciozne, ki ne sprejemajo manj.",
       "body": "Za tiste, ki želijo tekmovati čez meje brez posebne ekipe za ponudbe. tendersbay vam daje enako moč kot velikim akterjem."
     },
     "vision": {
       "eyebrow": "Vizija",
-      "title": "Evropski razpisi, odprti za vse",
+      "title": "Javni razpisi niso zaprt klub.",
       "body": "Vsako leto se skozi evropska javna naročila pretočijo stotine milijard, a ostajajo nedosegljivi za tiste brez časa, jezikovnega znanja ali strokovnosti. tendersbay uporablja agente UI, da to spremeni — in da vsakemu MSP-ju da pravo možnost.",
       "note": "Gradimo. Kmalu se vrnite."
     },
     "footer": {
-      "tagline": "Evropski razpisi, ki jih zmaga ekipa agentov UI.",
+      "tagline": "Evropski razpisi. Pridobljeni.",
       "contactLabel": "Stopite v stik z nami",
       "copyright": "© Bernardo Forcillo — Vse pravice pridržane"
     },
@@ -75,7 +79,9 @@
       "scout": "Agent izvidnik",
       "docs": "Agent dokumentov",
       "strategy": "Agent strategije",
-      "scoutStat": "{{count}} najdenih razpisov"
+      "scoutStat": "{{count}} najdenih razpisov",
+      "docsStat": "papirji urejeni",
+      "strategyStat": "zmagovalna ponudba pripravljena"
     }
   }
 }

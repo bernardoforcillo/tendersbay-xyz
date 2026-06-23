@@ -10,17 +10,17 @@
     },
     "nav": { "problem": "O problema", "agents": "Os agentes", "vision": "Visão" },
     "hero": {
-      "eyebrow": "Uma equipa de agentes de IA",
-      "titleLead": "Vença a sua próxima proposta",
-      "titleHighlight": "na Europa",
-      "subtitle": "tendersbay é uma equipa de agentes de IA que encontra o concurso certo em toda a Europa, trata da burocracia por si e guia-o até à vitória.",
-      "ctaPrimary": "Veja como funciona",
+      "eyebrow": "A sua equipa de agentes de IA",
+      "titleLead": "O seu próximo concurso europeu?",
+      "titleHighlight": "Ganho.",
+      "subtitle": "tendersbay é a sua equipa de agentes de IA: caçam os concursos certos em toda a Europa, destroem a burocracia por si e levam-no a direito à vitória.",
+      "ctaPrimary": "Ver em ação",
       "ctaSecondary": "Veja a visão",
-      "trust": ["27 países", "uma equipa de agentes de IA", "0 burocracia manual"]
+      "trust": ["27 países, uma plataforma", "Agentes que nunca dormem", "Zero burocracia manual"]
     },
     "problem": {
       "eyebrow": "O problema",
-      "title": "Os concursos europeus são um labirinto",
+      "title": "O jogo dos concursos está viciado contra as PME.",
       "items": [
         {
           "title": "Dispersos por 27 países",
@@ -38,7 +38,7 @@
     },
     "agents": {
       "eyebrow": "Os agentes",
-      "title": "Uma equipa de agentes de IA que trabalha para si",
+      "title": "Conheça os agentes que fazem o trabalho pesado.",
       "items": [
         {
           "title": "Encontre",
@@ -56,17 +56,17 @@
     },
     "audience": {
       "eyebrow": "Para quem é",
-      "title": "Criado para PME e empreendedores",
+      "title": "Feito para os ambiciosos que não se contentam com menos.",
       "body": "Para quem quer competir além-fronteiras sem uma equipa dedicada a propostas. tendersbay dá-lhe o mesmo poder de fogo que os grandes players."
     },
     "vision": {
       "eyebrow": "Visão",
-      "title": "Concursos europeus, abertos a todos",
+      "title": "Os concursos públicos não são um clube fechado.",
       "body": "Todos os anos, centenas de milhares de milhões circulam pela contratação pública europeia, mas permanecem inacessíveis para quem não tem tempo, idioma ou experiência. tendersbay usa agentes de IA para mudar isso — e dar a cada PME uma hipótese real.",
       "note": "Estamos a construir. Volte em breve."
     },
     "footer": {
-      "tagline": "Os concursos da Europa, ganhos por uma equipa de agentes de IA.",
+      "tagline": "Os concursos da Europa. Ganhos.",
       "contactLabel": "Entre em contacto",
       "copyright": "© Bernardo Forcillo — Todos os direitos reservados"
     },
@@ -75,7 +75,9 @@
       "scout": "Agente explorador",
       "docs": "Agente de documentos",
       "strategy": "Agente de estratégia",
-      "scoutStat": "{{count}} concursos encontrados"
+      "scoutStat": "{{count}} concursos encontrados",
+      "docsStat": "burocracia tratada",
+      "strategyStat": "proposta vencedora pronta"
     }
   }
 }

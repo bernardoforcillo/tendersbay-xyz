@@ -39,7 +39,7 @@ export function LanguageSwitcher() {
               key={locale}
               id={locale}
               textValue={nativeName(locale)}
-              className="cursor-pointer rounded-lg px-3 py-2 text-sm text-ink-800 outline-none data-[focus]:bg-brand-50 data-[selected]:font-bold data-[selected]:text-brand-700"
+              className="cursor-pointer rounded-lg px-3 py-2 text-sm text-ink-800 outline-none data-[focused]:bg-brand-50 data-[selected]:font-bold data-[selected]:text-brand-700"
             >
               {nativeName(locale)}
             </ListBoxItem>

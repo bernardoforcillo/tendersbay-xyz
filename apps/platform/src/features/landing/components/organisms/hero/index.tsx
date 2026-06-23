@@ -11,10 +11,22 @@ import { SAMPLE_TENDERS } from './sample-tenders';
 import { useRotatingTenders } from './use-rotating-tenders';
 
 const AGENTS = [
-  { icon: 'search' as IconName, labelKey: 'landing.agentLabels.scout', status: '' },
-  { icon: 'document' as IconName, labelKey: 'landing.agentLabels.docs', status: 'fascicolo' },
-  { icon: 'trophy' as IconName, labelKey: 'landing.agentLabels.strategy', status: 'offerta' },
-] as const satisfies ReadonlyArray<{ icon: IconName; labelKey: string; status: string }>;
+  {
+    icon: 'search' as IconName,
+    labelKey: 'landing.agentLabels.scout',
+    statKey: 'landing.agentLabels.scoutStat',
+  },
+  {
+    icon: 'document' as IconName,
+    labelKey: 'landing.agentLabels.docs',
+    statKey: 'landing.agentLabels.docsStat',
+  },
+  {
+    icon: 'trophy' as IconName,
+    labelKey: 'landing.agentLabels.strategy',
+    statKey: 'landing.agentLabels.strategyStat',
+  },
+] as const satisfies ReadonlyArray<{ icon: IconName; labelKey: string; statKey: string }>;
 
 function AgentChip({ icon, label, status }: { icon: IconName; label: string; status: string }) {
   return (
@@ -60,7 +72,6 @@ export function Hero() {
             <span className="bg-gradient-to-r from-brand-600 to-brand-700 bg-clip-text text-transparent">
               {t('landing.hero.titleHighlight')}
             </span>
-            .
           </h1>
           <p className="mt-5 max-w-[48ch] text-lg leading-relaxed text-ink-600">
             {t('landing.hero.subtitle')}
@@ -90,20 +101,20 @@ export function Hero() {
           <AgentChip
             icon={AGENTS[0].icon}
             label={t(AGENTS[0].labelKey)}
-            status={t('landing.agentLabels.scoutStat', { count: tender.scoutCount })}
+            status={t(AGENTS[0].statKey, { count: tender.scoutCount })}
           />
           <div className="absolute right-0 top-5">
             <AgentChip
               icon={AGENTS[1].icon}
               label={t(AGENTS[1].labelKey)}
-              status={AGENTS[1].status}
+              status={t(AGENTS[1].statKey)}
             />
           </div>
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2">
             <AgentChip
               icon={AGENTS[2].icon}
               label={t(AGENTS[2].labelKey)}
-              status={AGENTS[2].status}
+              status={t(AGENTS[2].statKey)}
             />
           </div>
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">

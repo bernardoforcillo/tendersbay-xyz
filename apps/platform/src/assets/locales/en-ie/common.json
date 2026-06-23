@@ -7,17 +7,17 @@
     },
     "nav": { "problem": "The problem", "agents": "The agents", "vision": "Vision" },
     "hero": {
-      "eyebrow": "An AI agent team",
-      "titleLead": "Win your next tender",
-      "titleHighlight": "in Europe",
-      "subtitle": "tendersbay is a team of AI agents that find the right tender across Europe, handle the paperwork for you, and guide you all the way to winning.",
-      "ctaPrimary": "See how it works",
+      "eyebrow": "Your AI agent team",
+      "titleLead": "Your next European tender?",
+      "titleHighlight": "Won.",
+      "subtitle": "tendersbay is your team of AI agents: they hunt down the right tenders across Europe, crush the paperwork, and drive you all the way to the win.",
+      "ctaPrimary": "See it in action",
       "ctaSecondary": "See the vision",
-      "trust": ["27 countries", "an AI agent team", "0 manual paperwork"]
+      "trust": ["27 countries, one platform", "Agents that never sleep", "Zero paperwork by hand"]
     },
     "problem": {
       "eyebrow": "The problem",
-      "title": "European tenders are a maze",
+      "title": "The tender game is stacked against SMEs.",
       "items": [
         {
           "title": "Scattered across 27 countries",
@@ -35,7 +35,7 @@
     },
     "agents": {
       "eyebrow": "The agents",
-      "title": "An AI agent team that works for you",
+      "title": "Meet the agents that do the heavy lifting.",
       "items": [
         {
           "title": "Find",
@@ -53,17 +53,17 @@
     },
     "audience": {
       "eyebrow": "Who it's for",
-      "title": "Built for SMEs and entrepreneurs",
+      "title": "Built for underdogs with ambition.",
       "body": "For those who want to compete across borders without a dedicated bids office. tendersbay gives you the same firepower as the big players."
     },
     "vision": {
       "eyebrow": "Vision",
-      "title": "European tenders, open to everyone",
+      "title": "Public tenders shouldn't be a closed club.",
       "body": "Every year hundreds of billions move through European public procurement, yet it stays out of reach for those without the time, the language, or the expertise. tendersbay uses AI agents to change that — and give every SME a real shot.",
       "note": "We're building. Check back soon."
     },
     "footer": {
-      "tagline": "Europe's tenders, won by a team of AI agents.",
+      "tagline": "Europe's tenders. Won.",
       "contactLabel": "Get in touch",
       "copyright": "© Bernardo Forcillo — All rights reserved"
     },
@@ -72,7 +72,9 @@
       "scout": "Scout agent",
       "docs": "Document agent",
       "strategy": "Strategy agent",
-      "scoutStat": "{{count}} tenders found"
+      "scoutStat": "{{count}} tenders found",
+      "docsStat": "paperwork sorted",
+      "strategyStat": "winning bid ready"
     }
   }
 }

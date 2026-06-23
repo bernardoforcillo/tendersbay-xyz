@@ -8,7 +8,7 @@ describe('VisionSection', () => {
     const { container } = renderWithI18n(<VisionSection />, 'en-ie');
     expect(container.querySelector('#vision')).not.toBeNull();
     expect(
-      screen.getByRole('heading', { name: 'European tenders, open to everyone' }),
+      screen.getByRole('heading', { name: "Public tenders shouldn't be a closed club." }),
     ).toBeInTheDocument();
     expect(screen.getByText("We're building. Check back soon.")).toBeInTheDocument();
   });

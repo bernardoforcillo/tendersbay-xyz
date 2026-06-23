@@ -9,7 +9,9 @@ import { LandingPage } from './index';
 describe('LandingPage', () => {
   it('renders the landing template and sets the document title', async () => {
     renderWithI18n(<LandingPage />, 'en-ie');
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Win your next tender');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
+      'Your next European tender?',
+    );
     await waitFor(() => {
       expect(document.title).toBe('tendersbay — Win your next tender in Europe');
     });
