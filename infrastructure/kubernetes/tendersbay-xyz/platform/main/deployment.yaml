@@ -30,7 +30,7 @@ spec:
           # (main -> :latest + :<timestamp>-<sha>, dev -> :<timestamp>-<sha>-canary).
           # The tag is managed by Flux image automation (see update.yaml): the
           # $imagepolicy marker is rewritten to the latest stable tag on main.
-          image: bernardoforcillo/tendersbay-platform:20260624160843-daa2d1a7b47644a2cd21d046c02d58499fc69096@sha256:9859046c4c4e4b813fa7757317f22e85e3934f17868e87ea86fc7c32ac8381e4 # {"$imagepolicy": "tendersbay-xyz:tendersbay-platform-image-policy"}
+          image: bernardoforcillo/tendersbay-platform:20260624161134-6491af102ecd8e3e63c4dce17cb4e27ae5cfc580@sha256:2494076cad610b5fe5ffb39f2a0ade461bc0e95d2e1b572f2f7e36cd3ecbc846 # {"$imagepolicy": "tendersbay-xyz:tendersbay-platform-image-policy"}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
