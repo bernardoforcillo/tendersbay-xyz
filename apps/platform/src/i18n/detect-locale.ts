@@ -29,6 +29,37 @@ export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = 'en-ie';
 
+// Native names (autonyms) for each supported locale. We keep an explicit map
+// because `Intl.DisplayNames` lacks autonym data for some locales in many
+// browsers (e.g. Maltese and Irish render as the bare "Mt"/"Ga" code), which
+// makes the language switcher inconsistent across runtimes.
+export const LOCALE_NATIVE_NAMES: Record<Locale, string> = {
+  'bg-bg': 'Български',
+  'hr-hr': 'Hrvatski',
+  'cs-cz': 'Čeština',
+  'da-dk': 'Dansk',
+  'nl-nl': 'Nederlands',
+  'en-ie': 'English',
+  'et-ee': 'Eesti',
+  'fi-fi': 'Suomi',
+  'fr-fr': 'Français',
+  'de-de': 'Deutsch',
+  'el-gr': 'Ελληνικά',
+  'hu-hu': 'Magyar',
+  'ga-ie': 'Gaeilge',
+  'it-it': 'Italiano',
+  'lv-lv': 'Latviešu',
+  'lt-lt': 'Lietuvių',
+  'mt-mt': 'Malti',
+  'pl-pl': 'Polski',
+  'pt-pt': 'Português',
+  'ro-ro': 'Română',
+  'sk-sk': 'Slovenčina',
+  'sl-si': 'Slovenščina',
+  'es-es': 'Español',
+  'sv-se': 'Svenska',
+};
+
 const LOCALE_COOKIE = 'locale';
 
 export function isSupportedLocale(value: string): value is Locale {

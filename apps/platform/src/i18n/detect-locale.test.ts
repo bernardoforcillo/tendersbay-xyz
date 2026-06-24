@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { DEFAULT_LOCALE, detectLocale, isSupportedLocale } from './detect-locale';
+import {
+  DEFAULT_LOCALE,
+  detectLocale,
+  isSupportedLocale,
+  LOCALE_NATIVE_NAMES,
+  SUPPORTED_LOCALES,
+} from './detect-locale';
 
 function setLanguages(languages: string[]): void {
   Object.defineProperty(navigator, 'languages', { value: languages, configurable: true });
@@ -59,5 +65,23 @@ describe('isSupportedLocale', () => {
   it('accepts a supported locale and rejects others', () => {
     expect(isSupportedLocale('en-ie')).toBe(true);
     expect(isSupportedLocale('en-gb')).toBe(false);
+  });
+});
+
+describe('LOCALE_NATIVE_NAMES', () => {
+  it('defines a non-empty native name for every supported locale', () => {
+    for (const locale of SUPPORTED_LOCALES) {
+      const name = LOCALE_NATIVE_NAMES[locale];
+      expect(typeof name, locale).toBe('string');
+      expect(name.length, locale).toBeGreaterThan(0);
+      // Guards against the `Intl.DisplayNames` fallback that renders the bare
+      // language code (e.g. Maltese -> "Mt", Irish -> "Ga").
+      expect(name.toLowerCase(), locale).not.toBe(locale.split('-')[0]);
+    }
+  });
+
+  it('uses the correct autonyms for Maltese and Irish', () => {
+    expect(LOCALE_NATIVE_NAMES['mt-mt']).toBe('Malti');
+    expect(LOCALE_NATIVE_NAMES['ga-ie']).toBe('Gaeilge');
   });
 });

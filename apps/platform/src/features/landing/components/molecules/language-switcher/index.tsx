@@ -3,9 +3,17 @@ import type { Key } from 'react-aria-components';
 import { Button, ListBox, ListBoxItem, Popover, Select, SelectValue } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '~/features/landing/components/atoms';
-import { isSupportedLocale, SUPPORTED_LOCALES, writeLocaleCookie } from '~/i18n/detect-locale';
+import {
+  isSupportedLocale,
+  LOCALE_NATIVE_NAMES,
+  SUPPORTED_LOCALES,
+  writeLocaleCookie,
+} from '~/i18n/detect-locale';
 
 function nativeName(locale: string): string {
+  if (isSupportedLocale(locale)) {
+    return LOCALE_NATIVE_NAMES[locale];
+  }
   const [language] = locale.split('-');
   const display = new Intl.DisplayNames([locale], { type: 'language' });
   const label = display.of(language ?? locale) ?? locale;
