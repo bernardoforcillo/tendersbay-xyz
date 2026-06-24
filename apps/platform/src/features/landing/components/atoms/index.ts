@@ -1,4 +1,5 @@
 export { Button } from './button';
+export { CountryFlag } from './country-flag';
 export { Eyebrow } from './eyebrow';
 export { Icon, type IconName } from './icon';
 export { Logo } from './logo';
