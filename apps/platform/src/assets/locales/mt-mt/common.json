@@ -6,29 +6,29 @@
   "landing": {
     "meta": {
       "title": "tendersbay — L-offerta Ewropea li jmiss tiegħek, mogħtija",
-      "description": "Tim ta' aġenti AI li jsib, jipprepara u jirbaħ il-kuntratti pubbliċi Ewropej għall-SMEs."
+      "description": "Tim ta' aġenti AI li jsibu, jippreparaw u jirbħu l-offerti pubbliċi Ewropej għall-SMEs."
     },
     "nav": { "problem": "Il-Problema", "agents": "L-Aġenti", "vision": "Viżjoni" },
     "hero": {
       "eyebrow": "It-tim ta' aġenti AI tiegħek",
       "titleLead": "L-offerta Ewropea li jmiss tiegħek?",
       "titleHighlight": "Mogħtija.",
-      "subtitle": "tendersbay huwa t-tim ta' aġenti AI tiegħek: ifittxu l-kuntratti t-tajbin madwar l-Ewropa kollha, jeqirdu l-karti f'ismek u jieħduk direttament sal-ħin li tingħata l-kuntratt.",
-      "ctaPrimary": "Ara fl-azzjoni",
+      "subtitle": "tendersbay huwa t-tim ta' aġenti AI tiegħek: ifittxu l-offerti t-tajbin madwar l-Ewropa kollha, jeqirdu l-karti f'ismek u jwassluk sal-għotja tal-kuntratt.",
+      "ctaPrimary": "Araha fl-azzjoni",
       "ctaSecondary": "Ara l-viżjoni",
-      "trust": ["27 pajjiż, pjattaforma waħda", "Aġenti li qatt ma jorqdu", "Xejn karti manwali"]
+      "trust": ["27 pajjiż, pjattaforma waħda", "Aġenti li qatt ma jorqdu", "Ebda karti bl-idejn"]
     },
     "problem": {
       "eyebrow": "Il-Problema",
-      "title": "Il-logħba tal-offerti hija miġbuda kontra l-SMEs.",
+      "title": "Il-logħba tal-offerti hija mgħobbija kontra l-SMEs.",
       "items": [
         {
           "title": "Mifruxa fuq 27 pajjiż",
           "body": "L-opportunitajiet it-tajbin huma mifruxa fuq għexieren ta' portali nazzjonali, f'lingwi u formati differenti."
         },
         {
-          "title": "Burokratija tad-dokumenti tqila",
-          "body": "Rekwiżiti, ċertifikati u skadenzieri — labirint dokumentarju fejn huwa faċli li tagħmel żbalji."
+          "title": "Burokratija tqila tad-dokumenti",
+          "body": "Rekwiżiti, ċertifikati u skadenzi — labirint dokumentarju fejn huwa faċli li tiżbalja."
         },
         {
           "title": "Ebda tim dedikat għall-offerti",
@@ -38,15 +38,15 @@
     },
     "agents": {
       "eyebrow": "L-Aġenti",
-      "title": "Iltaqa' mal-aġenti li jagħmlu x-xogħol il-iebes.",
+      "title": "Iltaqa' mal-aġenti li jagħmlu x-xogħol l-iebes.",
       "items": [
         {
           "title": "Sib",
-          "body": "L-aġenti jsib il-kuntratt it-tajjeb madwar l-Ewropa kollha, imfassal għan-negozju tiegħek."
+          "body": "L-aġenti jsibu l-offerta t-tajba madwar l-Ewropa kollha, imfassla għan-negozju tiegħek."
         },
         {
           "title": "Ipprepara",
-          "body": "Jieħdu ħsieb il-burokratija tad-dokumenti f'ismek: rekwiżiti, ċertifikati, skadenzieri."
+          "body": "Jieħdu ħsieb il-burokratija tad-dokumenti f'ismek: rekwiżiti, ċertifikati, skadenzi."
         },
         {
           "title": "Irbaħ",
@@ -56,14 +56,14 @@
     },
     "audience": {
       "eyebrow": "Għal min huwa",
-      "title": "Magħmul għall-underdog ambizzjuż.",
+      "title": "Magħmul għal min jibda minn taħt b'ambizzjoni kbira.",
       "body": "Għal dawk li jixtiequ jikkompetu lil hinn mill-fruntieri mingħajr tim dedikat tal-offerti. tendersbay jagħtik l-istess qawwa bħal dawk il-kbar."
     },
     "vision": {
       "eyebrow": "Viżjoni",
-      "title": "L-offerti pubbliċi mhumiex club magħluq.",
-      "body": "Kull sena mija ta' biljuni jiċċaqalqu permezz tal-akkwist pubbliku Ewropew, iżda jibqgħu 'l bogħod minn dawk mingħajr il-ħin, il-lingwa jew l-għarfien. tendersbay juża aġenti AI biex ibiddel dan — u jagħti lil kull SME ċans reali.",
-      "note": "Qed nibnu. Erġa' iżżur dalwaqt."
+      "title": "L-offerti pubbliċi m'għandhomx ikunu club magħluq.",
+      "body": "Kull sena mijiet ta' biljuni jiċċaqalqu permezz tal-akkwist pubbliku Ewropew, iżda jibqgħu 'l bogħod minn dawk mingħajr il-ħin, il-lingwa jew l-għarfien. tendersbay juża aġenti AI biex ibiddel dan — u jagħti lil kull SME ċans reali.",
+      "note": "Qed nibnu. Erġa' żurna dalwaqt."
     },
     "footer": {
       "tagline": "L-offerti tal-Ewropa. Mogħtija.",
@@ -72,11 +72,11 @@
     },
     "tenderCard": { "value": "Valur", "deadline": "Skadenza", "daysLeft": "{{count}} jiem" },
     "agentLabels": {
-      "scout": "Aġent ta' skawt",
+      "scout": "Aġent esploratur",
       "docs": "Aġent tad-dokumenti",
       "strategy": "Aġent tal-istrateġija",
-      "scoutStat": "{{count}} kuntratti misjuba",
-      "docsStat": "karti indirizzati",
+      "scoutStat": "{{count}} offerti misjuba",
+      "docsStat": "karti rranġati",
       "strategyStat": "offerta rebbieħa lesta"
     }
   }

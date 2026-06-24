@@ -5,69 +5,69 @@
   },
   "landing": {
     "meta": {
-      "title": "tendersbay — Do chéad tairiscint Eorpach eile, bronnta",
-      "description": "Foireann gníomhairí AI a aimsíonn, a ullmhaíonn agus a bhuaineann conarthaí poiblí Eorpacha do FBManna."
+      "title": "tendersbay — An chéad tairiscint Eorpach eile agat, bronnta",
+      "description": "Foireann gníomhairí AI a aimsíonn, a ullmhaíonn agus a bhuann tairiscintí poiblí Eorpacha do FBManna."
     },
     "nav": { "problem": "An Fhadhb", "agents": "Na Gníomhairí", "vision": "Fís" },
     "hero": {
-      "eyebrow": "Do fhoireann gníomhairí AI",
-      "titleLead": "Do chéad tairiscint Eorpach eile?",
+      "eyebrow": "D'fhoireann gníomhairí AI",
+      "titleLead": "An chéad tairiscint Eorpach eile agat?",
       "titleHighlight": "Bronnta.",
-      "subtitle": "Is é tendersbay do fhoireann gníomhairí AI: fiachann siad na conarthaí cearta ar fud na hEorpa, leagann siad an obair pháipéir, agus treorann siad thú díreach go dtí an bronnadh.",
-      "ctaPrimary": "Féach é i ngníomh",
+      "subtitle": "Is é tendersbay d'fhoireann gníomhairí AI: déanann siad seilg ar na tairiscintí cearta ar fud na hEorpa, leagann siad an obair pháipéir, agus treoraíonn siad thú an bealach ar fad go dtí an bronnadh.",
+      "ctaPrimary": "Féach air i ngníomh",
       "ctaSecondary": "Féach ar an bhfís",
       "trust": [
         "27 tír, aon ardán amháin",
         "Gníomhairí nach gcodlaíonn riamh",
-        "Nialas obair pháipéir láimhe"
+        "Gan obair pháipéir de láimh"
       ]
     },
     "problem": {
       "eyebrow": "An Fhadhb",
-      "title": "Tá cluiche na dtairiscintí leagtha in aghaidh FBManna.",
+      "title": "Tá cluiche na dtairiscintí claonta in aghaidh FBManna.",
       "items": [
         {
           "title": "Scaipthe ar fud 27 tír",
-          "body": "Tá na deiseanna cearta scaipthe ar fud na ndoirsiní náisiúnta, i dteangacha agus i bhformáidí éagsúla."
+          "body": "Tá na deiseanna cearta scaipthe ar fud na scórtha tairseach náisiúnta, i dteangacha agus i bhformáidí éagsúla."
         },
         {
-          "title": "Maorlathas trom doiciméad",
-          "body": "Riachtanais, teastais agus spriocdhálacha — lúbán doiciméadach ina bhfuil sé éasca earráidí a dhéanamh."
+          "title": "Maorlathas trom cáipéisí",
+          "body": "Riachtanais, teastais agus spriocdhátaí — lúbra cáipéisíochta ina bhfuil sé éasca dul amú."
         },
         {
-          "title": "Gan foireann tiomnaithe tairisceana",
-          "body": "Níl aon roinn soláthair ag FBManna — teastaíonn am agus saineolas uathu chun bua a fháil nach bhfuil acu."
+          "title": "Gan foireann tiomnaithe tairiscintí",
+          "body": "Níl aon roinn soláthair ag FBManna — chun an bua a bhaint amach teastaíonn am agus saineolas nach bhfuil acu."
         }
       ]
     },
     "agents": {
       "eyebrow": "Na Gníomhairí",
-      "title": "Cas le gníomhairí a dhéanann an obair chrua.",
+      "title": "Cas leis na gníomhairí a dhéanann an obair chrua.",
       "items": [
         {
           "title": "Aimsigh",
-          "body": "Aimsíonn na gníomhairí an conradh ceart ar fud na hEorpa, oiriúnaithe do do ghnó."
+          "body": "Aimsíonn na gníomhairí an tairiscint cheart ar fud na hEorpa, oiriúnaithe do do ghnó."
         },
         {
           "title": "Ullmhaigh",
-          "body": "Déanann siad an maorlathas doiciméad ar do shon: riachtanais, teastais, spriocdhálacha."
+          "body": "Déanann siad an maorlathas cáipéisí ar do shon: riachtanais, teastais, spriocdhátaí."
         },
         {
           "title": "Buaigh",
-          "body": "Treorann siad thú chomh fada leis an tairiscint, ar mhaithe leis an seans is fearr bronnadh a fháil."
+          "body": "Treoraíonn siad thú an bealach ar fad go dtí an tairiscint, leis an seans is fearr ar an mbronnadh."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Cé dó a bhfuil sé",
-      "title": "Déanta do na cinn éirímiúla nach sásuíonn dara háit.",
-      "body": "Dóibh siúd ar mian leo iomaíocht thar theorainneacha gan foireann tiomnaithe tairisceana. Tugann tendersbay an cumhacht chéanna duit agus atá ag na himreoirí móra."
+      "eyebrow": "Cé dó é",
+      "title": "Tógtha dóibh siúd a thosaíonn thíos ach a bhfuil uaillmhian acu.",
+      "body": "Dóibh siúd ar mian leo dul san iomaíocht thar theorainneacha gan foireann tiomnaithe tairiscintí. Tugann tendersbay an chumhacht chéanna duit is atá ag na himreoirí móra."
     },
     "vision": {
       "eyebrow": "Fís",
-      "title": "Níl tairiscintí poiblí ina gclub dúnta.",
-      "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí Eorpach, ach fanann sé as láimh do dhaoine gan am, teanga nó saineolas. Úsáideann tendersbay gníomhairí AI chun sin a athrú — agus chun seans fíor a thabhairt do gach FBM.",
-      "note": "Táimid ag tógáil. Fill ar ais go luath."
+      "title": "Níor cheart go mbeadh tairiscintí poiblí ina gclub dúnta.",
+      "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí Eorpach, ach fanann sé thar acmhainn dóibh siúd gan am, teanga nó saineolas. Úsáideann tendersbay gníomhairí AI chun sin a athrú — agus chun fíorsheans a thabhairt do gach FBM.",
+      "note": "Táimid i mbun tógála. Fill ar ais go luath."
     },
     "footer": {
       "tagline": "Tairiscintí na hEorpa. Bronnta.",
@@ -76,10 +76,10 @@
     },
     "tenderCard": { "value": "Luach", "deadline": "Spriocdháta", "daysLeft": "{{count}} lá" },
     "agentLabels": {
-      "scout": "Gníomhaire fionnachtana",
-      "docs": "Gníomhaire doiciméad",
+      "scout": "Gníomhaire taiscéalaíochta",
+      "docs": "Gníomhaire cáipéisí",
       "strategy": "Gníomhaire straitéise",
-      "scoutStat": "{{count}} conradh aimsithe",
+      "scoutStat": "{{count}} tairiscint aimsithe",
       "docsStat": "cáipéisí eagraithe",
       "strategyStat": "tairiscint bhuacach réidh"
     }
