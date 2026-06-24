@@ -4,6 +4,14 @@ on:
   pull_request:
   push:
     branches: [main, dev]
+    paths:
+      - 'apps/platform/**'
+      - 'packages/**'
+    paths-ignore:
+      - 'infrastructure/**'
+      - 'docs/**'
+      - '**/*.md'
+      - '.claude/**'
 
 jobs:
   quality:
