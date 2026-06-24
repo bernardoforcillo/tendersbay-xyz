@@ -53,6 +53,9 @@ importers:
       '@tendersbay/tailwind':
         specifier: workspace:*
         version: link:../../packages/tailwind
+      country-flag-icons:
+        specifier: ^1.6.19
+        version: 1.6.19
       i18next:
         specifier: ^26.3.1
         version: 26.3.1(typescript@5.9.3)
@@ -1434,6 +1437,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  country-flag-icons@1.6.19:
+    resolution: {integrity: sha512-ykd9jAeW5A0JO0H2fveiX4JScA8BUQNTm8J+DKcYrLXbF0yn7WgzNGR56iAWFTmL3Gnj2kgqkybUUjx4+EUA0Q==}
 
   css-tree@3.2.1:
     resolution: {integrity: sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==}
@@ -3391,6 +3397,8 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 6.0.3
+
+  country-flag-icons@1.6.19: {}
 
   css-tree@3.2.1:
     dependencies:

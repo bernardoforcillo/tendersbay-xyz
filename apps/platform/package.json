@@ -18,6 +18,7 @@
     "@tanstack/react-router": "^1.170.16",
     "@tendersbay/components": "workspace:*",
     "@tendersbay/tailwind": "workspace:*",
+    "country-flag-icons": "^1.6.19",
     "i18next": "^26.3.1",
     "lucide-react": "^1.21.0",
     "motion": "^12.40.0",
