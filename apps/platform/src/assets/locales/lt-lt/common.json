@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Netrukus galėsite ieškoti…",
+      "badge": "Netrukus",
+      "hint": "Paieška netrukus",
+      "ariaLabel": "Paieška — netrukus"
+    },
     "meta": {
       "title": "tendersbay — Jūsų kitas Europos viešasis pirkimas, suteiktas",
       "description": "Dirbtinio intelekto agentų komanda, kuri randa, parengia ir laimi Europos viešuosius pirkimus MVĮ."

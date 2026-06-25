@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Peagi saad otsida…",
+      "badge": "Tulekul",
+      "hint": "Otsing tuleb peagi",
+      "ariaLabel": "Otsing — tulekul"
+    },
     "meta": {
       "title": "tendersbay — Teie järgmine Euroopa hange, omistatud",
       "description": "Tehisintellekti agentide meeskond, kes leiab, valmistab ette ja võidab Euroopa avalikud hanked VKEdele."

@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Bald kannst du suchen…",
+      "badge": "Demnächst",
+      "hint": "Die Suche kommt bald",
+      "ariaLabel": "Suche — demnächst"
+    },
     "meta": {
       "title": "tendersbay — Ihre nächste europäische Ausschreibung, zugeschlagen",
       "description": "Ein Team von KI-Agenten, das europäische öffentliche Ausschreibungen für KMU findet, vorbereitet und gewinnt."

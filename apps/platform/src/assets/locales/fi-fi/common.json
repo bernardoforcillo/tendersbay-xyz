@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Pian voit hakea…",
+      "badge": "Tulossa pian",
+      "hint": "Haku on pian käytettävissä",
+      "ariaLabel": "Haku — tulossa pian"
+    },
     "meta": {
       "title": "tendersbay — Seuraava eurooppalainen hankintasi, myönnetty",
       "description": "Tekoälyagenttien tiimi, joka löytää, valmistelee ja voittaa eurooppalaiset julkiset hankinnat pk-yrityksille."

@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Snart kan du söka…",
+      "badge": "Kommer snart",
+      "hint": "Sök kommer snart",
+      "ariaLabel": "Sök — kommer snart"
+    },
     "meta": {
       "title": "tendersbay — Din nästa europeiska upphandling, tilldelad",
       "description": "Ett team av AI-agenter som hittar, förbereder och vinner europeiska offentliga upphandlingar för SMF."

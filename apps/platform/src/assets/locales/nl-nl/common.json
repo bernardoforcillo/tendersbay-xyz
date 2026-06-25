@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Binnenkort kun je zoeken…",
+      "badge": "Binnenkort",
+      "hint": "Zoeken komt binnenkort",
+      "ariaLabel": "Zoeken — binnenkort"
+    },
     "meta": {
       "title": "tendersbay — Uw volgende Europese aanbesteding, gegund",
       "description": "Een team van AI-agenten dat Europese overheidsopdrachten voor het mkb vindt, voorbereidt en wint."

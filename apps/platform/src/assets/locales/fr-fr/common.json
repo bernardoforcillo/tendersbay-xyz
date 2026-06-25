@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Bientôt, vous pourrez rechercher…",
+      "badge": "Bientôt",
+      "hint": "La recherche arrive bientôt",
+      "ariaLabel": "Recherche — bientôt"
+    },
     "meta": {
       "title": "tendersbay — Votre prochain marché européen, attribué",
       "description": "Une équipe d'agents IA qui trouve, prépare et remporte les marchés publics européens pour les PME."

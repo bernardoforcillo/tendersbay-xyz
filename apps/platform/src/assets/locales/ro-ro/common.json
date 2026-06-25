@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "În curând vei putea căuta…",
+      "badge": "În curând",
+      "hint": "Căutarea vine în curând",
+      "ariaLabel": "Căutare — în curând"
+    },
     "meta": {
       "title": "tendersbay — Următoarea licitație europeană, atribuită",
       "description": "O echipă de agenți AI care găsește, pregătește și câștigă licitații publice europene pentru IMM-uri."

@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Kmalu boš lahko iskal…",
+      "badge": "Kmalu",
+      "hint": "Iskanje prihaja kmalu",
+      "ariaLabel": "Iskanje — kmalu"
+    },
     "meta": {
       "title": "tendersbay — Vaš naslednji evropski razpis, dodeljen",
       "description": "Ekipa agentov umetne inteligence, ki najde, pripravi in zmaga evropske javne razpise za MSP-je."

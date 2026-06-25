@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Čoskoro budete môcť vyhľadávať…",
+      "badge": "Už čoskoro",
+      "hint": "Vyhľadávanie bude čoskoro k dispozícii",
+      "ariaLabel": "Vyhľadávanie — už čoskoro"
+    },
     "meta": {
       "title": "tendersbay — Vaša ďalšia európska zákazka, udelená",
       "description": "Tím AI agentov, ktorí nachádzajú, pripravujú a vyhravajú európske verejné zákazky pre malé a stredné podniky."

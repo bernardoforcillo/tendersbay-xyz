@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Beidh tú in ann cuardach a dhéanamh go luath…",
+      "badge": "Go luath",
+      "hint": "Tá an cuardach ag teacht go luath",
+      "ariaLabel": "Cuardach — go luath"
+    },
     "meta": {
       "title": "tendersbay — Do chéad tairiscint Eorpach eile, bronnta",
       "description": "Foireann gníomhairí AI a aimsíonn, a ullmhaíonn agus a bhuaineann conarthaí poiblí Eorpacha do FBManna."

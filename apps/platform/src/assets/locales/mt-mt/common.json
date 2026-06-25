@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Dalwaqt tkun tista' tfittex…",
+      "badge": "Dalwaqt",
+      "hint": "It-tfittxija waslet dalwaqt",
+      "ariaLabel": "Tfittxija — dalwaqt"
+    },
     "meta": {
       "title": "tendersbay — L-offerta Ewropea li jmiss tiegħek, mogħtija",
       "description": "Tim ta' aġenti AI li jsib, jipprepara u jirbaħ il-kuntratti pubbliċi Ewropej għall-SMEs."

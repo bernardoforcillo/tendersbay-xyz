@@ -4,6 +4,12 @@
     "subtitle": "Vite + React, served by Go."
   },
   "landing": {
+    "search": {
+      "placeholder": "Hamarosan kereshetsz…",
+      "badge": "Hamarosan",
+      "hint": "A keresés hamarosan elérhető",
+      "ariaLabel": "Keresés — hamarosan"
+    },
     "meta": {
       "title": "tendersbay — A következő európai közbeszerzése, odaítélve",
       "description": "Egy mesterséges intelligencia ügynökökből álló csapat, amely megtalálja, előkészíti és megnyeri az európai közbeszerzéseket a kkv-k számára."
