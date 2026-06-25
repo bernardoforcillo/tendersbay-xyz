@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Soon you'll be able to search…",
-      "badge": "Coming soon",
-      "hint": "Search is coming soon",
-      "ariaLabel": "Search — coming soon"
+      "label": "Search",
+      "hint": "AI-powered search — coming soon",
+      "examples": [
+        "Public school renovations",
+        "Hospital IT modernisation",
+        "Solar farm construction",
+        "Electric bus fleets"
+      ]
     },
     "meta": {
       "title": "tendersbay — Your next European tender, awarded",

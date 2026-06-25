@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Snart kan du søge…",
-      "badge": "Kommer snart",
-      "hint": "Søgning kommer snart",
-      "ariaLabel": "Søgning — kommer snart"
+      "label": "Søg",
+      "hint": "AI-søgning — kommer snart",
+      "examples": [
+        "Renovering af offentlige skoler",
+        "IT-modernisering af hospitaler",
+        "Opførelse af solcelleparker",
+        "Flåder af elbusser"
+      ]
     },
     "meta": {
       "title": "tendersbay — Dit næste europæiske udbud, tildelt",

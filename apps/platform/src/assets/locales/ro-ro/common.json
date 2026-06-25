@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "În curând vei putea căuta…",
-      "badge": "În curând",
-      "hint": "Căutarea vine în curând",
-      "ariaLabel": "Căutare — în curând"
+      "label": "Caută",
+      "hint": "Căutare cu IA — în curând",
+      "examples": [
+        "Renovarea școlilor publice",
+        "Modernizarea IT a spitalelor",
+        "Construcția de parcuri solare",
+        "Flote de autobuze electrice"
+      ]
     },
     "meta": {
       "title": "tendersbay — Următoarea licitație europeană, atribuită",

@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Presto potrai cercare…",
-      "badge": "Prossimamente",
-      "hint": "La ricerca arriverà presto",
-      "ariaLabel": "Ricerca — prossimamente"
+      "label": "Cerca",
+      "hint": "Ricerca con IA — presto disponibile",
+      "examples": [
+        "Ristrutturazione di scuole pubbliche",
+        "Modernizzazione IT degli ospedali",
+        "Costruzione di impianti solari",
+        "Flotte di autobus elettrici"
+      ]
     },
     "meta": {
       "title": "tendersbay — La tua prossima gara europea, aggiudicata",

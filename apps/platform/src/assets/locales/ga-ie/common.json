@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Beidh tú in ann cuardach a dhéanamh go luath…",
-      "badge": "Go luath",
-      "hint": "Tá an cuardach ag teacht go luath",
-      "ariaLabel": "Cuardach — go luath"
+      "label": "Cuardaigh",
+      "hint": "Cuardach AI — ar fáil go luath",
+      "examples": [
+        "Athchóiriú scoileanna poiblí",
+        "Nuachóiriú TF ospidéal",
+        "Tógáil feirmeacha gréine",
+        "Flíteanna bus leictreach"
+      ]
     },
     "meta": {
       "title": "tendersbay — Do chéad tairiscint Eorpach eile, bronnta",

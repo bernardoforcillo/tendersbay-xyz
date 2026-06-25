@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Brzy budete moci vyhledávat…",
-      "badge": "Již brzy",
-      "hint": "Vyhledávání bude brzy k dispozici",
-      "ariaLabel": "Vyhledávání — již brzy"
+      "label": "Hledat",
+      "hint": "Vyhledávání s AI — již brzy",
+      "examples": [
+        "Rekonstrukce veřejných škol",
+        "IT modernizace nemocnic",
+        "Výstavba solárních parků",
+        "Flotily elektrobusů"
+      ]
     },
     "meta": {
       "title": "tendersbay — Vaše příští evropská zakázka, přidělena",

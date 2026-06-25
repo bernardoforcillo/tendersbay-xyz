@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Kmalu boš lahko iskal…",
-      "badge": "Kmalu",
-      "hint": "Iskanje prihaja kmalu",
-      "ariaLabel": "Iskanje — kmalu"
+      "label": "Iskanje",
+      "hint": "Iskanje z UI — kmalu na voljo",
+      "examples": [
+        "Prenova javnih šol",
+        "IT posodobitev bolnišnic",
+        "Gradnja sončnih elektrarn",
+        "Flote električnih avtobusov"
+      ]
     },
     "meta": {
       "title": "tendersbay — Vaš naslednji evropski razpis, dodeljen",

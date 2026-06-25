@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Peagi saad otsida…",
-      "badge": "Tulekul",
-      "hint": "Otsing tuleb peagi",
-      "ariaLabel": "Otsing — tulekul"
+      "label": "Otsi",
+      "hint": "AI-otsing — peagi saadaval",
+      "examples": [
+        "Avalike koolide renoveerimine",
+        "Haiglate IT-uuendus",
+        "Päikeseparkide ehitus",
+        "Elektribusside pargid"
+      ]
     },
     "meta": {
       "title": "tendersbay — Teie järgmine Euroopa hange, omistatud",

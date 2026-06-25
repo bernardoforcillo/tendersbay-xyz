@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Uskoro ćete moći pretraživati…",
-      "badge": "Uskoro",
-      "hint": "Pretraživanje stiže uskoro",
-      "ariaLabel": "Pretraživanje — uskoro"
+      "label": "Pretraži",
+      "hint": "Pretraga s umjetnom inteligencijom — uskoro",
+      "examples": [
+        "Obnova javnih škola",
+        "IT modernizacija bolnica",
+        "Izgradnja solarnih parkova",
+        "Flote električnih autobusa"
+      ]
     },
     "meta": {
       "title": "tendersbay — Vaš sljedeći europski natječaj, dodijeljen",

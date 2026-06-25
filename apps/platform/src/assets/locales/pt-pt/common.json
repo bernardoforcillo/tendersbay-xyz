@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Em breve poderás pesquisar…",
-      "badge": "Em breve",
-      "hint": "A pesquisa chega em breve",
-      "ariaLabel": "Pesquisa — em breve"
+      "label": "Pesquisar",
+      "hint": "Pesquisa com IA — em breve",
+      "examples": [
+        "Renovação de escolas públicas",
+        "Modernização de TI hospitalar",
+        "Construção de centrais solares",
+        "Frotas de autocarros elétricos"
+      ]
     },
     "meta": {
       "title": "tendersbay — O seu próximo concurso europeu, adjudicado",

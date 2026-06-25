@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Snart kan du söka…",
-      "badge": "Kommer snart",
-      "hint": "Sök kommer snart",
-      "ariaLabel": "Sök — kommer snart"
+      "label": "Sök",
+      "hint": "AI-sökning — kommer snart",
+      "examples": [
+        "Renovering av offentliga skolor",
+        "IT-modernisering av sjukhus",
+        "Byggnation av solparker",
+        "Elbussflottor"
+      ]
     },
     "meta": {
       "title": "tendersbay — Din nästa europeiska upphandling, tilldelad",

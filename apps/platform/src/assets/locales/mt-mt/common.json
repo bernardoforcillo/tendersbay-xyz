@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Dalwaqt tkun tista' tfittex…",
-      "badge": "Dalwaqt",
-      "hint": "It-tfittxija waslet dalwaqt",
-      "ariaLabel": "Tfittxija — dalwaqt"
+      "label": "Fittex",
+      "hint": "Tfittxija bl-IA — dalwaqt disponibbli",
+      "examples": [
+        "Rinnovazzjoni ta' skejjel pubbliċi",
+        "Modernizzazzjoni tal-IT tal-isptarijiet",
+        "Kostruzzjoni ta' impjanti solari",
+        "Flotot ta' karozzi tal-linja elettriċi"
+      ]
     },
     "meta": {
       "title": "tendersbay — L-offerta Ewropea li jmiss tiegħek, mogħtija",

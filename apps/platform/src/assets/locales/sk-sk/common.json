@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Čoskoro budete môcť vyhľadávať…",
-      "badge": "Už čoskoro",
-      "hint": "Vyhľadávanie bude čoskoro k dispozícii",
-      "ariaLabel": "Vyhľadávanie — už čoskoro"
+      "label": "Hľadať",
+      "hint": "Vyhľadávanie s AI — už čoskoro",
+      "examples": [
+        "Rekonštrukcia verejných škôl",
+        "IT modernizácia nemocníc",
+        "Výstavba solárnych parkov",
+        "Flotily elektrobusov"
+      ]
     },
     "meta": {
       "title": "tendersbay — Vaša ďalšia európska zákazka, udelená",

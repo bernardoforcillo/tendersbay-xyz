@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Już wkrótce będzie można wyszukiwać…",
-      "badge": "Wkrótce",
-      "hint": "Wyszukiwanie już wkrótce",
-      "ariaLabel": "Wyszukiwanie — wkrótce"
+      "label": "Szukaj",
+      "hint": "Wyszukiwanie z AI — już wkrótce",
+      "examples": [
+        "Remonty szkół publicznych",
+        "Modernizacja IT szpitali",
+        "Budowa farm słonecznych",
+        "Floty autobusów elektrycznych"
+      ]
     },
     "meta": {
       "title": "tendersbay — Twój następny europejski przetarg, udzielony",

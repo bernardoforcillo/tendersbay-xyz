@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Binnenkort kun je zoeken…",
-      "badge": "Binnenkort",
-      "hint": "Zoeken komt binnenkort",
-      "ariaLabel": "Zoeken — binnenkort"
+      "label": "Zoeken",
+      "hint": "AI-zoekfunctie — binnenkort beschikbaar",
+      "examples": [
+        "Renovatie van openbare scholen",
+        "IT-modernisering van ziekenhuizen",
+        "Bouw van zonneparken",
+        "Elektrische busvloten"
+      ]
     },
     "meta": {
       "title": "tendersbay — Uw volgende Europese aanbesteding, gegund",

@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Bald kannst du suchen…",
-      "badge": "Demnächst",
-      "hint": "Die Suche kommt bald",
-      "ariaLabel": "Suche — demnächst"
+      "label": "Suchen",
+      "hint": "KI-gestützte Suche — bald verfügbar",
+      "examples": [
+        "Sanierung öffentlicher Schulen",
+        "IT-Modernisierung von Krankenhäusern",
+        "Bau von Solarparks",
+        "Elektrobus-Flotten"
+      ]
     },
     "meta": {
       "title": "tendersbay — Ihre nächste europäische Ausschreibung, zugeschlagen",

@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Pian voit hakea…",
-      "badge": "Tulossa pian",
-      "hint": "Haku on pian käytettävissä",
-      "ariaLabel": "Haku — tulossa pian"
+      "label": "Hae",
+      "hint": "Tekoälyhaku — pian saatavilla",
+      "examples": [
+        "Julkisten koulujen peruskorjaukset",
+        "Sairaaloiden IT-uudistus",
+        "Aurinkovoimaloiden rakentaminen",
+        "Sähköbussikalustot"
+      ]
     },
     "meta": {
       "title": "tendersbay — Seuraava eurooppalainen hankintasi, myönnetty",

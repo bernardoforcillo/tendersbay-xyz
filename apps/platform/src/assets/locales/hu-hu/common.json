@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Hamarosan kereshetsz…",
-      "badge": "Hamarosan",
-      "hint": "A keresés hamarosan elérhető",
-      "ariaLabel": "Keresés — hamarosan"
+      "label": "Keresés",
+      "hint": "MI-alapú keresés — hamarosan",
+      "examples": [
+        "Köziskolák felújítása",
+        "Kórházak IT-korszerűsítése",
+        "Naperőművek építése",
+        "Elektromos buszflották"
+      ]
     },
     "meta": {
       "title": "tendersbay — A következő európai közbeszerzése, odaítélve",

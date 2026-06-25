@@ -4,22 +4,27 @@ import { renderWithI18n } from '~/test/utils';
 import { SearchDock } from './index';
 
 describe('SearchDock', () => {
-  it('renders the localized placeholder and the coming-soon badge', () => {
+  it('renders the first localized example as the looping placeholder', () => {
     renderWithI18n(<SearchDock />, 'en-ie');
-    expect(screen.getByText("Soon you'll be able to search…")).toBeInTheDocument();
-    expect(screen.getByText('Coming soon')).toBeInTheDocument();
+    expect(screen.getByText('Public school renovations')).toBeInTheDocument();
   });
 
-  it('exposes a focusable, non-actionable control labelled for assistive tech', () => {
+  it('exposes a focusable, disabled, grayscale control labelled for assistive tech', () => {
     renderWithI18n(<SearchDock />, 'en-ie');
-    const control = screen.getByRole('button', { name: 'Search — coming soon' });
+    const control = screen.getByRole('button', { name: 'Search' });
     expect(control).toHaveAttribute('aria-disabled', 'true');
+    expect(control.className).toContain('grayscale');
     control.focus();
     expect(control).toHaveFocus();
   });
 
-  it('localizes the placeholder (it-it)', () => {
+  it('localizes the example placeholder (it-it)', () => {
     renderWithI18n(<SearchDock />, 'it-it');
-    expect(screen.getByText('Presto potrai cercare…')).toBeInTheDocument();
+    expect(screen.getByText('Ristrutturazione di scuole pubbliche')).toBeInTheDocument();
+  });
+
+  it('no longer shows the old teaser placeholder', () => {
+    renderWithI18n(<SearchDock />, 'en-ie');
+    expect(screen.queryByText("Soon you'll be able to search…")).not.toBeInTheDocument();
   });
 });

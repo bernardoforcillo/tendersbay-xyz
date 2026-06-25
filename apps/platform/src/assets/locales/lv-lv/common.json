@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Drīz varēsi meklēt…",
-      "badge": "Drīzumā",
-      "hint": "Meklēšana būs drīz pieejama",
-      "ariaLabel": "Meklēšana — drīzumā"
+      "label": "Meklēt",
+      "hint": "AI meklēšana — drīzumā",
+      "examples": [
+        "Publisko skolu renovācija",
+        "Slimnīcu IT modernizācija",
+        "Saules parku būvniecība",
+        "Elektrisko autobusu parki"
+      ]
     },
     "meta": {
       "title": "tendersbay — Jūsu nākamais Eiropas iepirkums, piešķirts",

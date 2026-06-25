@@ -5,10 +5,14 @@
   },
   "landing": {
     "search": {
-      "placeholder": "Bientôt, vous pourrez rechercher…",
-      "badge": "Bientôt",
-      "hint": "La recherche arrive bientôt",
-      "ariaLabel": "Recherche — bientôt"
+      "label": "Rechercher",
+      "hint": "Recherche par IA — bientôt disponible",
+      "examples": [
+        "Rénovation d'écoles publiques",
+        "Modernisation IT des hôpitaux",
+        "Construction de fermes solaires",
+        "Flottes de bus électriques"
+      ]
     },
     "meta": {
       "title": "tendersbay — Votre prochain marché européen, attribué",
