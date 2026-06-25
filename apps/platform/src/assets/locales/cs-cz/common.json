@@ -8,7 +8,11 @@
       "title": "tendersbay — Vaše příští evropská zakázka, přidělena",
       "description": "Tým AI agentů, kteří nacházejí, připravují a vyhravají evropské veřejné zakázky pro malé a střední podniky."
     },
-    "nav": { "problem": "Problém", "agents": "Agenti", "vision": "Vize" },
+    "nav": {
+      "problem": "Problém",
+      "agents": "Agenti",
+      "vision": "Vize"
+    },
     "hero": {
       "eyebrow": "Váš tým AI agentů",
       "titleLead": "Vaše příští evropská zakázka?",
@@ -65,12 +69,24 @@
       "body": "Každý rok procházejí stovky miliard evropskými veřejnými zakázkami, ale zůstávají mimo dosah těch, kteří nemají čas, jazykové znalosti ani odbornost. tendersbay využívá AI agenty, aby to změnil — a dal každému malému a střednímu podniku skutečnou šanci.",
       "note": "Budujeme. Vraťte se brzy."
     },
+    "coverage": {
+      "eyebrow": "Pokrytí",
+      "title": "27 zemí EU, jedna platforma.",
+      "body": "Rozšiřujeme se po celé Evropské unii, trh po trhu. Každá vlajka se rozsvítí, jakmile je pokrytí aktivní.",
+      "statusAvailable": "Dostupné",
+      "statusComingSoon": "Již brzy",
+      "note": "Pokrytí přichází do všech 27 zemí EU."
+    },
     "footer": {
       "tagline": "Evropské zakázky. Přiděleny.",
       "contactLabel": "Kontaktujte nás",
       "copyright": "© Bernardo Forcillo — Všechna práva vyhrazena"
     },
-    "tenderCard": { "value": "Hodnota", "deadline": "Termín", "daysLeft": "{{count}} dní" },
+    "tenderCard": {
+      "value": "Hodnota",
+      "deadline": "Termín",
+      "daysLeft": "{{count}} dní"
+    },
     "agentLabels": {
       "scout": "Agent průzkumník",
       "docs": "Agent dokumentů",

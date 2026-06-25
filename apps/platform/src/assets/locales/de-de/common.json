@@ -8,7 +8,11 @@
       "title": "tendersbay — Ihre nächste europäische Ausschreibung, zugeschlagen",
       "description": "Ein Team von KI-Agenten, das europäische öffentliche Ausschreibungen für KMU findet, vorbereitet und gewinnt."
     },
-    "nav": { "problem": "Das Problem", "agents": "Die Agenten", "vision": "Vision" },
+    "nav": {
+      "problem": "Das Problem",
+      "agents": "Die Agenten",
+      "vision": "Vision"
+    },
     "hero": {
       "eyebrow": "Ihr KI-Agenten-Team",
       "titleLead": "Ihre nächste europäische Ausschreibung?",
@@ -69,12 +73,24 @@
       "body": "Jedes Jahr fließen hunderte Milliarden durch europäische öffentliche Beschaffungen, bleiben aber für diejenigen unerreichbar, die keine Zeit, Sprache oder Fachkenntnis haben. tendersbay nutzt KI-Agenten, um das zu ändern — und jedem KMU eine echte Chance zu geben.",
       "note": "Wir bauen gerade. Schauen Sie bald wieder vorbei."
     },
+    "coverage": {
+      "eyebrow": "Abdeckung",
+      "title": "27 EU-Länder, eine Plattform.",
+      "body": "Wir expandieren in der gesamten Europäischen Union, Markt für Markt. Jede Flagge leuchtet auf, sobald die Abdeckung aktiv ist.",
+      "statusAvailable": "Verfügbar",
+      "statusComingSoon": "Demnächst",
+      "note": "Die Abdeckung kommt in alle 27 EU-Länder."
+    },
     "footer": {
       "tagline": "Europas Ausschreibungen. Zugeschlagen.",
       "contactLabel": "Kontakt aufnehmen",
       "copyright": "© Bernardo Forcillo — Alle Rechte vorbehalten"
     },
-    "tenderCard": { "value": "Wert", "deadline": "Frist", "daysLeft": "{{count}} Tage" },
+    "tenderCard": {
+      "value": "Wert",
+      "deadline": "Frist",
+      "daysLeft": "{{count}} Tage"
+    },
     "agentLabels": {
       "scout": "Scout-Agent",
       "docs": "Dokumenten-Agent",

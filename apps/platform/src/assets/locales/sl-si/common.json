@@ -8,7 +8,11 @@
       "title": "tendersbay — Vaš naslednji evropski razpis, dodeljen",
       "description": "Ekipa agentov umetne inteligence, ki najde, pripravi in zmaga evropske javne razpise za MSP-je."
     },
-    "nav": { "problem": "Težava", "agents": "Agenti", "vision": "Vizija" },
+    "nav": {
+      "problem": "Težava",
+      "agents": "Agenti",
+      "vision": "Vizija"
+    },
     "hero": {
       "eyebrow": "Vaša ekipa agentov UI",
       "titleLead": "Vaš naslednji evropski razpis?",
@@ -69,12 +73,24 @@
       "body": "Vsako leto se skozi evropska javna naročila pretočijo stotine milijard, a ostajajo nedosegljivi za tiste brez časa, jezikovnega znanja ali strokovnosti. tendersbay uporablja agente UI, da to spremeni — in da vsakemu MSP-ju da pravo možnost.",
       "note": "Gradimo. Kmalu se vrnite."
     },
+    "coverage": {
+      "eyebrow": "Pokritost",
+      "title": "27 držav EU, ena platforma.",
+      "body": "Širimo se po vsej Evropski uniji, trg za trgom. Vsaka zastava zasveti, ko pokritost postane aktivna.",
+      "statusAvailable": "Na voljo",
+      "statusComingSoon": "Kmalu",
+      "note": "Pokritost prihaja v vseh 27 držav EU."
+    },
     "footer": {
       "tagline": "Evropski razpisi. Dodeljeni.",
       "contactLabel": "Stopite v stik z nami",
       "copyright": "© Bernardo Forcillo — Vse pravice pridržane"
     },
-    "tenderCard": { "value": "Vrednost", "deadline": "Rok", "daysLeft": "{{count}} dni" },
+    "tenderCard": {
+      "value": "Vrednost",
+      "deadline": "Rok",
+      "daysLeft": "{{count}} dni"
+    },
     "agentLabels": {
       "scout": "Agent izvidnik",
       "docs": "Agent dokumentov",

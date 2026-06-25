@@ -8,7 +8,11 @@
       "title": "tendersbay — Seuraava eurooppalainen hankintasi, myönnetty",
       "description": "Tekoälyagenttien tiimi, joka löytää, valmistelee ja voittaa eurooppalaiset julkiset hankinnat pk-yrityksille."
     },
-    "nav": { "problem": "Ongelma", "agents": "Agentit", "vision": "Visio" },
+    "nav": {
+      "problem": "Ongelma",
+      "agents": "Agentit",
+      "vision": "Visio"
+    },
     "hero": {
       "eyebrow": "Tekoälyagenttisi tiimi",
       "titleLead": "Seuraava eurooppalainen hankintasi?",
@@ -69,12 +73,24 @@
       "body": "Joka vuosi sadat miljardeja liikkuvat eurooppalaisten julkisten hankintojen kautta, mutta ne pysyvät ulottumattomissa niille, joilla ei ole aikaa, kieltä tai osaamista. tendersbay käyttää tekoälyagentteja muuttaakseen tämän — ja antaakseen jokaiselle pk-yritykselle todellisen mahdollisuuden.",
       "note": "Rakennamme. Palaa pian takaisin."
     },
+    "coverage": {
+      "eyebrow": "Kattavuus",
+      "title": "27 EU-maata, yksi alusta.",
+      "body": "Laajenemme koko Euroopan unioniin, markkina kerrallaan. Jokainen lippu syttyy, kun kattavuus aktivoituu.",
+      "statusAvailable": "Saatavilla",
+      "statusComingSoon": "Tulossa pian",
+      "note": "Kattavuus laajenee kaikkiin 27 EU-maahan."
+    },
     "footer": {
       "tagline": "Euroopan hankinnat. Myönnetty.",
       "contactLabel": "Ota yhteyttä",
       "copyright": "© Bernardo Forcillo — Kaikki oikeudet pidätetään"
     },
-    "tenderCard": { "value": "Arvo", "deadline": "Määräaika", "daysLeft": "{{count}} päivää" },
+    "tenderCard": {
+      "value": "Arvo",
+      "deadline": "Määräaika",
+      "daysLeft": "{{count}} päivää"
+    },
     "agentLabels": {
       "scout": "Tiedustelijaagentti",
       "docs": "Asiakirja-agentti",

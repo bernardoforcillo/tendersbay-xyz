@@ -8,7 +8,11 @@
       "title": "tendersbay — Tu próxima licitación europea, adjudicada",
       "description": "Un equipo de agentes de IA que encuentra, prepara y gana licitaciones públicas europeas para las pymes."
     },
-    "nav": { "problem": "El problema", "agents": "Los agentes", "vision": "Visión" },
+    "nav": {
+      "problem": "El problema",
+      "agents": "Los agentes",
+      "vision": "Visión"
+    },
     "hero": {
       "eyebrow": "Tu equipo de agentes de IA",
       "titleLead": "¿Tu próxima licitación europea?",
@@ -65,12 +69,24 @@
       "body": "Cada año, cientos de miles de millones circulan por la contratación pública europea, pero permanecen fuera del alcance de quienes no tienen tiempo, idioma ni experiencia. tendersbay usa agentes de IA para cambiar eso — y dar a cada pyme una oportunidad real.",
       "note": "Estamos construyendo. Vuelve pronto."
     },
+    "coverage": {
+      "eyebrow": "Cobertura",
+      "title": "27 países de la UE, una plataforma.",
+      "body": "Nos estamos expandiendo por toda la Unión Europea, mercado a mercado. Cada bandera se ilumina cuando la cobertura se activa.",
+      "statusAvailable": "Disponible",
+      "statusComingSoon": "Próximamente",
+      "note": "La cobertura está llegando a los 27 países de la UE."
+    },
     "footer": {
       "tagline": "Las licitaciones de Europa. Adjudicadas.",
       "contactLabel": "Contacta con nosotros",
       "copyright": "© Bernardo Forcillo — Todos los derechos reservados"
     },
-    "tenderCard": { "value": "Valor", "deadline": "Plazo", "daysLeft": "{{count}} días" },
+    "tenderCard": {
+      "value": "Valor",
+      "deadline": "Plazo",
+      "daysLeft": "{{count}} días"
+    },
     "agentLabels": {
       "scout": "Agente explorador",
       "docs": "Agente de documentos",

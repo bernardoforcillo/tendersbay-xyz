@@ -8,7 +8,11 @@
       "title": "tendersbay — Vaš sljedeći europski natječaj, dodijeljen",
       "description": "Tim AI agenata koji pronalaze, pripremaju i osvajaju europske javne natječaje za MSP-ove."
     },
-    "nav": { "problem": "Problem", "agents": "Agenti", "vision": "Vizija" },
+    "nav": {
+      "problem": "Problem",
+      "agents": "Agenti",
+      "vision": "Vizija"
+    },
     "hero": {
       "eyebrow": "Vaš tim AI agenata",
       "titleLead": "Vaš sljedeći europski natječaj?",
@@ -69,12 +73,24 @@
       "body": "Svake godine stotine milijardi prolaze kroz europske javne nabave, no ostaju nedostupne onima bez vremena, jezika ili stručnosti. tendersbay koristi AI agente da to promijeni — i da svakom MSP-u pruži pravu šansu.",
       "note": "Gradimo. Svratite uskoro."
     },
+    "coverage": {
+      "eyebrow": "Pokrivenost",
+      "title": "27 zemalja EU-a, jedna platforma.",
+      "body": "Širimo se diljem Europske unije, tržište po tržište. Svaka se zastava upali kada pokrivenost postane aktivna.",
+      "statusAvailable": "Dostupno",
+      "statusComingSoon": "Uskoro",
+      "note": "Pokrivenost stiže u svih 27 zemalja EU-a."
+    },
     "footer": {
       "tagline": "Europski natječaji. Dodijeljeni.",
       "contactLabel": "Kontaktirajte nas",
       "copyright": "© Bernardo Forcillo — Sva prava pridržana"
     },
-    "tenderCard": { "value": "Vrijednost", "deadline": "Rok", "daysLeft": "{{count}} dana" },
+    "tenderCard": {
+      "value": "Vrijednost",
+      "deadline": "Rok",
+      "daysLeft": "{{count}} dana"
+    },
     "agentLabels": {
       "scout": "Agent izviđač",
       "docs": "Agent dokumentacije",

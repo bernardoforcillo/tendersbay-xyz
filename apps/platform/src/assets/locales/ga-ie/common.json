@@ -8,7 +8,11 @@
       "title": "tendersbay — Do chéad tairiscint Eorpach eile, bronnta",
       "description": "Foireann gníomhairí AI a aimsíonn, a ullmhaíonn agus a bhuaineann conarthaí poiblí Eorpacha do FBManna."
     },
-    "nav": { "problem": "An Fhadhb", "agents": "Na Gníomhairí", "vision": "Fís" },
+    "nav": {
+      "problem": "An Fhadhb",
+      "agents": "Na Gníomhairí",
+      "vision": "Fís"
+    },
     "hero": {
       "eyebrow": "Do fhoireann gníomhairí AI",
       "titleLead": "Do chéad tairiscint Eorpach eile?",
@@ -69,12 +73,24 @@
       "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí Eorpach, ach fanann sé as láimh do dhaoine gan am, teanga nó saineolas. Úsáideann tendersbay gníomhairí AI chun sin a athrú — agus chun seans fíor a thabhairt do gach FBM.",
       "note": "Táimid ag tógáil. Fill ar ais go luath."
     },
+    "coverage": {
+      "eyebrow": "Clúdach",
+      "title": "27 tír AE, ardán amháin.",
+      "body": "Táimid ag leathnú ar fud an Aontais Eorpaigh, margadh ar mhargadh. Lasann gach bratach nuair a thagann an clúdach beo.",
+      "statusAvailable": "Ar fáil",
+      "statusComingSoon": "Ag teacht go luath",
+      "note": "Tá an clúdach ag teacht chuig na 27 tír AE go léir."
+    },
     "footer": {
       "tagline": "Tairiscintí na hEorpa. Bronnta.",
       "contactLabel": "Déan teagmháil linn",
       "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint"
     },
-    "tenderCard": { "value": "Luach", "deadline": "Spriocdháta", "daysLeft": "{{count}} lá" },
+    "tenderCard": {
+      "value": "Luach",
+      "deadline": "Spriocdháta",
+      "daysLeft": "{{count}} lá"
+    },
     "agentLabels": {
       "scout": "Gníomhaire fionnachtana",
       "docs": "Gníomhaire doiciméad",

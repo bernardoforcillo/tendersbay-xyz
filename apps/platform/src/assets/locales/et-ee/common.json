@@ -8,7 +8,11 @@
       "title": "tendersbay — Teie järgmine Euroopa hange, omistatud",
       "description": "Tehisintellekti agentide meeskond, kes leiab, valmistab ette ja võidab Euroopa avalikud hanked VKEdele."
     },
-    "nav": { "problem": "Probleem", "agents": "Agendid", "vision": "Visioon" },
+    "nav": {
+      "problem": "Probleem",
+      "agents": "Agendid",
+      "vision": "Visioon"
+    },
     "hero": {
       "eyebrow": "Teie tehisintellekti agentide meeskond",
       "titleLead": "Teie järgmine Euroopa hange?",
@@ -69,12 +73,24 @@
       "body": "Igal aastal liigub Euroopa riigihangetes sadu miljardeid, kuid need jäävad kättesaamatuks neile, kellel pole aega, keeleoskust ega ekspertiisi. tendersbay kasutab tehisintellekti agente selle muutmiseks — ja annab igale VKEle tõelise võimaluse.",
       "note": "Me ehitame. Tulge peagi tagasi."
     },
+    "coverage": {
+      "eyebrow": "Kaetus",
+      "title": "27 EL-i riiki, üks platvorm.",
+      "body": "Laieneme üle kogu Euroopa Liidu, turg turu haaval. Iga lipp süttib, kui kaetus muutub aktiivseks.",
+      "statusAvailable": "Saadaval",
+      "statusComingSoon": "Tulekul",
+      "note": "Kaetus jõuab kõigisse 27 EL-i riiki."
+    },
     "footer": {
       "tagline": "Euroopa hanked. Omistatud.",
       "contactLabel": "Võtke ühendust",
       "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud"
     },
-    "tenderCard": { "value": "Väärtus", "deadline": "Tähtaeg", "daysLeft": "{{count}} päeva" },
+    "tenderCard": {
+      "value": "Väärtus",
+      "deadline": "Tähtaeg",
+      "daysLeft": "{{count}} päeva"
+    },
     "agentLabels": {
       "scout": "Luureagent",
       "docs": "Dokumentide agent",

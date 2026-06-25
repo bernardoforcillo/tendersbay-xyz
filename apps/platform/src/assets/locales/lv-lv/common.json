@@ -8,7 +8,11 @@
       "title": "tendersbay — Jūsu nākamais Eiropas iepirkums, piešķirts",
       "description": "Mākslīgā intelekta aģentu komanda, kas atrod, sagatavo un uzvar Eiropas publiskos iepirkumus MVU."
     },
-    "nav": { "problem": "Problēma", "agents": "Aģenti", "vision": "Vīzija" },
+    "nav": {
+      "problem": "Problēma",
+      "agents": "Aģenti",
+      "vision": "Vīzija"
+    },
     "hero": {
       "eyebrow": "Jūsu MI aģentu komanda",
       "titleLead": "Jūsu nākamais Eiropas iepirkums?",
@@ -69,12 +73,24 @@
       "body": "Katru gadu simtiem miljardu plūst caur Eiropas publiskajiem iepirkumiem, bet tie paliek nesasniedzami tiem, kuriem nav laika, valodu zināšanu vai pieredzes. tendersbay izmanto MI aģentus, lai to mainītu — un dotu katram MVU īstu iespēju.",
       "note": "Mēs veidojam. Atgriezieties drīz."
     },
+    "coverage": {
+      "eyebrow": "Pārklājums",
+      "title": "27 ES valstis, viena platforma.",
+      "body": "Mēs paplašināmies visā Eiropas Savienībā, tirgu pēc tirgus. Katrs karogs iedegas, kad pārklājums kļūst aktīvs.",
+      "statusAvailable": "Pieejams",
+      "statusComingSoon": "Drīzumā",
+      "note": "Pārklājums tuvojas visām 27 ES valstīm."
+    },
     "footer": {
       "tagline": "Eiropas iepirkumi. Piešķirti.",
       "contactLabel": "Sazinieties ar mums",
       "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas"
     },
-    "tenderCard": { "value": "Vērtība", "deadline": "Termiņš", "daysLeft": "{{count}} dienas" },
+    "tenderCard": {
+      "value": "Vērtība",
+      "deadline": "Termiņš",
+      "daysLeft": "{{count}} dienas"
+    },
     "agentLabels": {
       "scout": "Izlūkaģents",
       "docs": "Dokumentu aģents",

@@ -8,7 +8,11 @@
       "title": "tendersbay — L-offerta Ewropea li jmiss tiegħek, mogħtija",
       "description": "Tim ta' aġenti AI li jsib, jipprepara u jirbaħ il-kuntratti pubbliċi Ewropej għall-SMEs."
     },
-    "nav": { "problem": "Il-Problema", "agents": "L-Aġenti", "vision": "Viżjoni" },
+    "nav": {
+      "problem": "Il-Problema",
+      "agents": "L-Aġenti",
+      "vision": "Viżjoni"
+    },
     "hero": {
       "eyebrow": "It-tim ta' aġenti AI tiegħek",
       "titleLead": "L-offerta Ewropea li jmiss tiegħek?",
@@ -65,12 +69,24 @@
       "body": "Kull sena mija ta' biljuni jiċċaqalqu permezz tal-akkwist pubbliku Ewropew, iżda jibqgħu 'l bogħod minn dawk mingħajr il-ħin, il-lingwa jew l-għarfien. tendersbay juża aġenti AI biex ibiddel dan — u jagħti lil kull SME ċans reali.",
       "note": "Qed nibnu. Erġa' iżżur dalwaqt."
     },
+    "coverage": {
+      "eyebrow": "Kopertura",
+      "title": "27 pajjiż tal-UE, pjattaforma waħda.",
+      "body": "Qed nespandu mal-Unjoni Ewropea kollha, suq wara suq. Kull bandiera tixgħel meta l-kopertura ssir attiva.",
+      "statusAvailable": "Disponibbli",
+      "statusComingSoon": "Dalwaqt",
+      "note": "Il-kopertura qed tasal fis-27 pajjiż kollha tal-UE."
+    },
     "footer": {
       "tagline": "L-offerti tal-Ewropa. Mogħtija.",
       "contactLabel": "Ikkuntattjana",
       "copyright": "© Bernardo Forcillo — Id-drittijiet kollha riżervati"
     },
-    "tenderCard": { "value": "Valur", "deadline": "Skadenza", "daysLeft": "{{count}} jiem" },
+    "tenderCard": {
+      "value": "Valur",
+      "deadline": "Skadenza",
+      "daysLeft": "{{count}} jiem"
+    },
     "agentLabels": {
       "scout": "Aġent ta' skawt",
       "docs": "Aġent tad-dokumenti",

@@ -8,7 +8,11 @@
       "title": "tendersbay — Uw volgende Europese aanbesteding, gegund",
       "description": "Een team van AI-agenten dat Europese overheidsopdrachten voor het mkb vindt, voorbereidt en wint."
     },
-    "nav": { "problem": "Het probleem", "agents": "De agenten", "vision": "Visie" },
+    "nav": {
+      "problem": "Het probleem",
+      "agents": "De agenten",
+      "vision": "Visie"
+    },
     "hero": {
       "eyebrow": "Uw AI-agentteam",
       "titleLead": "Uw volgende Europese aanbesteding?",
@@ -65,12 +69,24 @@
       "body": "Elk jaar stroomt honderden miljarden door Europese overheidsopdrachten, maar ze blijven buiten bereik voor wie geen tijd, taalkennis of expertise heeft. tendersbay gebruikt AI-agenten om dat te veranderen — en elk mkb-bedrijf een echte kans te geven.",
       "note": "We bouwen. Kom snel terug."
     },
+    "coverage": {
+      "eyebrow": "Dekking",
+      "title": "27 EU-landen, één platform.",
+      "body": "We breiden uit over de hele Europese Unie, markt voor markt. Elke vlag licht op zodra de dekking actief is.",
+      "statusAvailable": "Beschikbaar",
+      "statusComingSoon": "Binnenkort",
+      "note": "De dekking komt naar alle 27 EU-landen."
+    },
     "footer": {
       "tagline": "Europa's aanbestedingen. Gegund.",
       "contactLabel": "Neem contact op",
       "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden"
     },
-    "tenderCard": { "value": "Waarde", "deadline": "Deadline", "daysLeft": "{{count}} dagen" },
+    "tenderCard": {
+      "value": "Waarde",
+      "deadline": "Deadline",
+      "daysLeft": "{{count}} dagen"
+    },
     "agentLabels": {
       "scout": "Verkenneragent",
       "docs": "Documentagent",

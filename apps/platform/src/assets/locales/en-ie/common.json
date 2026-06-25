@@ -1,11 +1,18 @@
 {
-  "app": { "title": "tendersbay platform", "subtitle": "Vite + React, served by Go." },
+  "app": {
+    "title": "tendersbay platform",
+    "subtitle": "Vite + React, served by Go."
+  },
   "landing": {
     "meta": {
       "title": "tendersbay — Your next European tender, awarded",
       "description": "A team of AI agents that find, prepare and win European public tenders for SMEs."
     },
-    "nav": { "problem": "The problem", "agents": "The agents", "vision": "Vision" },
+    "nav": {
+      "problem": "The problem",
+      "agents": "The agents",
+      "vision": "Vision"
+    },
     "hero": {
       "eyebrow": "Your AI agent team",
       "titleLead": "Your next European tender?",
@@ -62,12 +69,24 @@
       "body": "Every year hundreds of billions move through European public procurement, yet it stays out of reach for those without the time, the language, or the expertise. tendersbay uses AI agents to change that — and give every SME a real shot.",
       "note": "We're building. Check back soon."
     },
+    "coverage": {
+      "eyebrow": "Coverage",
+      "title": "27 EU countries, one platform.",
+      "body": "We're rolling out across the European Union, one market at a time. Every flag lights up as coverage goes live.",
+      "statusAvailable": "Available",
+      "statusComingSoon": "Coming soon",
+      "note": "Coverage is rolling out across all 27 EU countries."
+    },
     "footer": {
       "tagline": "Europe's tenders. Awarded.",
       "contactLabel": "Get in touch",
       "copyright": "© Bernardo Forcillo — All rights reserved"
     },
-    "tenderCard": { "value": "Value", "deadline": "Deadline", "daysLeft": "{{count}} days" },
+    "tenderCard": {
+      "value": "Value",
+      "deadline": "Deadline",
+      "daysLeft": "{{count}} days"
+    },
     "agentLabels": {
       "scout": "Scout agent",
       "docs": "Document agent",

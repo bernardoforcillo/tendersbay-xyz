@@ -8,7 +8,11 @@
       "title": "tendersbay — Din nästa europeiska upphandling, tilldelad",
       "description": "Ett team av AI-agenter som hittar, förbereder och vinner europeiska offentliga upphandlingar för SMF."
     },
-    "nav": { "problem": "Problemet", "agents": "Agenterna", "vision": "Vision" },
+    "nav": {
+      "problem": "Problemet",
+      "agents": "Agenterna",
+      "vision": "Vision"
+    },
     "hero": {
       "eyebrow": "Ditt AI-agentteam",
       "titleLead": "Din nästa europeiska upphandling?",
@@ -69,12 +73,24 @@
       "body": "Varje år rör sig hundratals miljarder genom europeiska offentliga upphandlingar, men de förblir utom räckhåll för dem utan tid, språk eller kompetens. tendersbay använder AI-agenter för att förändra det — och ge varje SMF en riktig chans.",
       "note": "Vi bygger. Kom tillbaka snart."
     },
+    "coverage": {
+      "eyebrow": "Täckning",
+      "title": "27 EU-länder, en plattform.",
+      "body": "Vi expanderar i hela Europeiska unionen, marknad för marknad. Varje flagga tänds när täckningen blir aktiv.",
+      "statusAvailable": "Tillgänglig",
+      "statusComingSoon": "Kommer snart",
+      "note": "Täckningen är på väg till alla 27 EU-länder."
+    },
     "footer": {
       "tagline": "Europas upphandlingar. Tilldelade.",
       "contactLabel": "Kontakta oss",
       "copyright": "© Bernardo Forcillo — Alla rättigheter förbehållna"
     },
-    "tenderCard": { "value": "Värde", "deadline": "Deadline", "daysLeft": "{{count}} dagar" },
+    "tenderCard": {
+      "value": "Värde",
+      "deadline": "Deadline",
+      "daysLeft": "{{count}} dagar"
+    },
     "agentLabels": {
       "scout": "Spaningsagent",
       "docs": "Dokumentagent",

@@ -8,7 +8,11 @@
       "title": "tendersbay — Următoarea licitație europeană, atribuită",
       "description": "O echipă de agenți AI care găsește, pregătește și câștigă licitații publice europene pentru IMM-uri."
     },
-    "nav": { "problem": "Problema", "agents": "Agenții", "vision": "Viziune" },
+    "nav": {
+      "problem": "Problema",
+      "agents": "Agenții",
+      "vision": "Viziune"
+    },
     "hero": {
       "eyebrow": "Echipa dvs. de agenți AI",
       "titleLead": "Următoarea licitație europeană?",
@@ -69,12 +73,24 @@
       "body": "În fiecare an, sute de miliarde circulă prin achizițiile publice europene, dar rămân inaccesibile pentru cei fără timp, limbă sau expertiză. tendersbay folosește agenți AI pentru a schimba asta — și pentru a oferi fiecărui IMM o șansă reală.",
       "note": "Construim. Reveniți curând."
     },
+    "coverage": {
+      "eyebrow": "Acoperire",
+      "title": "27 de țări UE, o singură platformă.",
+      "body": "Ne extindem în întreaga Uniune Europeană, piață cu piață. Fiecare steag se aprinde când acoperirea devine activă.",
+      "statusAvailable": "Disponibil",
+      "statusComingSoon": "În curând",
+      "note": "Acoperirea ajunge în toate cele 27 de țări UE."
+    },
     "footer": {
       "tagline": "Licitațiile Europei. Atribuite.",
       "contactLabel": "Luați legătura cu noi",
       "copyright": "© Bernardo Forcillo — Toate drepturile rezervate"
     },
-    "tenderCard": { "value": "Valoare", "deadline": "Termen limită", "daysLeft": "{{count}} zile" },
+    "tenderCard": {
+      "value": "Valoare",
+      "deadline": "Termen limită",
+      "daysLeft": "{{count}} zile"
+    },
     "agentLabels": {
       "scout": "Agent explorator",
       "docs": "Agent documente",
