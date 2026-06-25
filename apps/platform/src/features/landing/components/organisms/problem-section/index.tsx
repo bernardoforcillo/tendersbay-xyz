@@ -13,7 +13,7 @@ export function ProblemSection() {
     <section
       id="problem"
       aria-labelledby="problem-title"
-      className="scroll-mt-24 bg-cream-100 py-20"
+      className="scroll-mt-24 bg-cream-100 py-24 md:py-28"
     >
       <div className="mx-auto max-w-6xl px-6">
         <Reveal>
@@ -28,7 +28,12 @@ export function ProblemSection() {
         <div className="mt-10 grid gap-5 md:grid-cols-3">
           {items.map((item, i) => (
             <Reveal key={item.title} delay={i * 0.08}>
-              <ValueCard icon={ICONS[i] ?? 'layers'} title={item.title} body={item.body} />
+              <ValueCard
+                tone="muted"
+                icon={ICONS[i] ?? 'layers'}
+                title={item.title}
+                body={item.body}
+              />
             </Reveal>
           ))}
         </div>

@@ -1,5 +1,6 @@
 export { AgentsSection } from './agents-section';
 export { AudienceSection } from './audience-section';
+export { CoverageSection } from './coverage-section';
 export { Hero } from './hero';
 export { ProblemSection } from './problem-section';
 export { SiteFooter } from './site-footer';
