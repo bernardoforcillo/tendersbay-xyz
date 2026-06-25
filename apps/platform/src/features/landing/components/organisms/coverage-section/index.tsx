@@ -5,6 +5,7 @@ import {
   EU_COUNTRIES,
   type EuCountry,
 } from '~/features/landing/components/atoms/country-flag/flags';
+import { PORTALS } from '~/features/landing/components/atoms/country-flag/portals';
 
 /** Live coverage. Empty now (teaser); add an ISO code to light up that flag. */
 const AVAILABLE: ReadonlySet<EuCountry> = new Set<EuCountry>([]);
@@ -64,6 +65,7 @@ export function CoverageSection() {
                 key={code}
                 code={code}
                 name={countryName(i18n.language, code)}
+                portal={PORTALS[code]}
                 available={isAvailable}
                 statusLabel={isAvailable ? availableLabel : comingSoonLabel}
                 variants={reduce ? undefined : itemVariants}
