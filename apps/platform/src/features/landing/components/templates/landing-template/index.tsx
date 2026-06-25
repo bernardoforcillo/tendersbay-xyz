@@ -4,6 +4,7 @@ import {
   CoverageSection,
   Hero,
   ProblemSection,
+  SearchDock,
   SiteFooter,
   SiteHeader,
   VisionSection,
@@ -22,6 +23,7 @@ export function LandingTemplate() {
         <VisionSection />
       </main>
       <SiteFooter />
+      <SearchDock />
     </div>
   );
 }
