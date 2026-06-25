@@ -57,3 +57,23 @@ are developed in parallel on the same branch). So:
   recoverable by SHA / reflog). Re-check `git rev-parse HEAD` and `git log` after any gap
   before assuming your last commit is still HEAD, and re-stage from the working tree if
   needed.
+
+## Parallel work: prefer git worktrees
+
+When more than one feature is in flight at once (the common case here), the **preferred**
+setup is **one git worktree per feature**, each on its own `feature/*` branch off `dev`:
+
+```sh
+git worktree add ../tb-<feature> -b feature/<feature> dev   # then: pnpm install
+```
+
+Each worktree is a single-purpose working tree, which removes every commit-hygiene hazard
+above at the source: `git add -A` and `pnpm format` only ever touch one feature's files, the
+whole-tree `pre-commit` lint can't be blocked by someone else's WIP, and one stream of work
+can't rewrite history under another. Per-worktree caveat: `node_modules` is **not** shared —
+run `pnpm install` in each (pnpm's global store keeps this cheap); each worktree builds its
+own `dist/`. Remove a finished one with `git worktree remove ../tb-<feature>`.
+
+This is the **recommended default, not a mandate — the final choice is the user's.** Suggest
+a worktree when work would otherwise share a tree with unrelated WIP, but never create or
+switch worktrees, or move the user's uncommitted work, without asking first.
