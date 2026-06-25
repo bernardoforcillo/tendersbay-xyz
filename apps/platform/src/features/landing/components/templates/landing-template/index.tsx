@@ -1,6 +1,7 @@
 import {
   AgentsSection,
   AudienceSection,
+  CoverageSection,
   Hero,
   ProblemSection,
   SiteFooter,
@@ -17,6 +18,7 @@ export function LandingTemplate() {
         <ProblemSection />
         <AgentsSection />
         <AudienceSection />
+        <CoverageSection />
         <VisionSection />
       </main>
       <SiteFooter />
