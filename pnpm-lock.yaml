@@ -87,6 +87,9 @@ importers:
       '@tendersbay/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      '@tendersbay/vite-plugin-seo':
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-seo
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
