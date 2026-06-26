@@ -2,6 +2,7 @@ import {
   AgentsSection,
   AudienceSection,
   CoverageSection,
+  CtaBand,
   Hero,
   ProblemSection,
   SearchDock,
@@ -22,6 +23,7 @@ export function LandingTemplate() {
         <CoverageSection />
         <VisionSection />
       </main>
+      <CtaBand />
       <SiteFooter />
       <SearchDock />
     </div>
