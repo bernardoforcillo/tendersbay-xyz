@@ -1,6 +1,7 @@
 export { AgentsSection } from './agents-section';
 export { AudienceSection } from './audience-section';
 export { CoverageSection } from './coverage-section';
+export { CtaBand } from './cta-band';
 export { Hero } from './hero';
 export { ProblemSection } from './problem-section';
 export { SearchDock } from './search-dock';
