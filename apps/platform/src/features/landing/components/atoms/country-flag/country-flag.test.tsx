@@ -5,16 +5,14 @@ import { CountryFlag } from './index';
 
 function renderFlag(props: Partial<React.ComponentProps<typeof CountryFlag>> = {}) {
   return render(
-    <ul>
-      <CountryFlag
-        code="IT"
-        name="Italy"
-        portal="Acquisti in Rete (MEPA)"
-        available={false}
-        statusLabel="Coming soon"
-        {...props}
-      />
-    </ul>,
+    <CountryFlag
+      code="IT"
+      name="Italy"
+      portal="Acquisti in Rete (MEPA)"
+      available={false}
+      statusLabel="Coming soon"
+      {...props}
+    />,
   );
 }
 
@@ -34,12 +32,11 @@ describe('CountryFlag', () => {
     expect(container.querySelector('.grayscale')).toBeNull();
   });
 
-  it('opens a card with the portal name and status when clicked', async () => {
+  it('reveals a card with the national portal on focus', async () => {
     const user = userEvent.setup();
     renderFlag();
-    await user.click(screen.getByRole('button', { name: 'Italy — Coming soon' }));
-    const dialog = await screen.findByRole('dialog');
-    expect(dialog).toHaveTextContent('Acquisti in Rete (MEPA)');
-    expect(dialog).toHaveTextContent('Coming soon');
+    await user.tab();
+    const card = await screen.findByRole('tooltip');
+    expect(card).toHaveTextContent('Acquisti in Rete (MEPA)');
   });
 });

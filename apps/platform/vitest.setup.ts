@@ -20,7 +20,7 @@ if (!window.matchMedia) {
   }));
 }
 
-// jsdom lacks IntersectionObserver (used by motion's whileInView).
+// jsdom lacks IntersectionObserver (used by motion's whileInView / useInView).
 class IntersectionObserverMock {
   observe(): void {}
   unobserve(): void {}
@@ -30,3 +30,11 @@ class IntersectionObserverMock {
   }
 }
 vi.stubGlobal('IntersectionObserver', IntersectionObserverMock);
+
+// jsdom lacks ResizeObserver (used by the marquee to measure its track width).
+class ResizeObserverMock {
+  observe(): void {}
+  unobserve(): void {}
+  disconnect(): void {}
+}
+vi.stubGlobal('ResizeObserver', ResizeObserverMock);

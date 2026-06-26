@@ -1,6 +1,6 @@
-import { motion, useReducedMotion, type Variants } from 'motion/react';
+import { useReducedMotion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
-import { CountryFlag, Eyebrow } from '~/features/landing/components/atoms';
+import { CountryFlag, Eyebrow, Marquee } from '~/features/landing/components/atoms';
 import {
   EU_COUNTRIES,
   type EuCountry,
@@ -9,15 +9,6 @@ import { PORTALS } from '~/features/landing/components/atoms/country-flag/portal
 
 /** Live coverage. Empty now (teaser); add an ISO code to light up that flag. */
 const AVAILABLE: ReadonlySet<EuCountry> = new Set<EuCountry>([]);
-
-const containerVariants: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.03 } },
-};
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 12 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
-};
 
 function countryName(locale: string, code: string): string {
   try {
@@ -32,6 +23,21 @@ export function CoverageSection() {
   const reduce = useReducedMotion();
   const availableLabel = t('landing.coverage.statusAvailable');
   const comingSoonLabel = t('landing.coverage.statusComingSoon');
+  const total = EU_COUNTRIES.length;
+
+  const flags = EU_COUNTRIES.map((code) => {
+    const available = AVAILABLE.has(code);
+    return {
+      code,
+      name: countryName(i18n.language, code),
+      portal: PORTALS[code],
+      available,
+      statusLabel: available ? availableLabel : comingSoonLabel,
+    };
+  });
+  const availableCount = flags.filter((f) => f.available).length;
+  const comingCount = total - availableCount;
+  const rows = [flags.slice(0, 9), flags.slice(9, 18), flags.slice(18, 27)];
 
   return (
     <section
@@ -40,39 +46,73 @@ export function CoverageSection() {
       className="scroll-mt-24 bg-cream-50 py-20"
     >
       <div className="mx-auto max-w-6xl px-6">
-        <div className="max-w-[58ch]">
-          <Eyebrow icon="globe">{t('landing.coverage.eyebrow')}</Eyebrow>
-          <h2
-            id="coverage-title"
-            className="mt-5 font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
-          >
-            {t('landing.coverage.title')}
-          </h2>
-          <p className="mt-5 text-lg leading-relaxed text-ink-600">{t('landing.coverage.body')}</p>
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-[52ch]">
+            <Eyebrow icon="globe">{t('landing.coverage.eyebrow')}</Eyebrow>
+            <h2
+              id="coverage-title"
+              className="mt-5 font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
+            >
+              {t('landing.coverage.title')}
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-ink-600">
+              {t('landing.coverage.body')}
+            </p>
+          </div>
+
+          <dl className="grid shrink-0 gap-2.5 rounded-2xl border border-cream-200 bg-white/70 px-5 py-4 shadow-soft">
+            <div className="flex items-center justify-between gap-8">
+              <dt className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-700">
+                <span className="h-2 w-2 rounded-full bg-brand-500" />
+                {availableLabel}
+              </dt>
+              <dd className="font-mono text-sm tabular-nums text-ink-900">{availableCount}</dd>
+            </div>
+            <div className="h-px bg-cream-200" />
+            <div className="flex items-center justify-between gap-8">
+              <dt className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-500">
+                <span className="h-2 w-2 rounded-full bg-cream-300" />
+                {comingSoonLabel}
+              </dt>
+              <dd className="font-mono text-sm tabular-nums text-ink-500">{comingCount}</dd>
+            </div>
+          </dl>
         </div>
 
-        <motion.ul
-          className="mt-10 grid grid-cols-4 gap-3 sm:grid-cols-6 lg:grid-cols-9"
-          variants={reduce ? undefined : containerVariants}
-          initial={reduce ? undefined : 'hidden'}
-          whileInView={reduce ? undefined : 'show'}
-          viewport={{ once: true, margin: '-80px' }}
-        >
-          {EU_COUNTRIES.map((code) => {
-            const isAvailable = AVAILABLE.has(code);
-            return (
-              <CountryFlag
-                key={code}
-                code={code}
-                name={countryName(i18n.language, code)}
-                portal={PORTALS[code]}
-                available={isAvailable}
-                statusLabel={isAvailable ? availableLabel : comingSoonLabel}
-                variants={reduce ? undefined : itemVariants}
-              />
-            );
-          })}
-        </motion.ul>
+        {reduce ? (
+          <ul className="mt-12 grid grid-cols-3 gap-3 sm:grid-cols-6 lg:grid-cols-9">
+            {flags.map((f) => (
+              <li key={f.code}>
+                <CountryFlag
+                  code={f.code}
+                  name={f.name}
+                  portal={f.portal}
+                  available={f.available}
+                  statusLabel={f.statusLabel}
+                  className="w-full"
+                />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="-mx-6 mt-12 flex flex-col gap-3 px-6 [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent)]">
+            {rows.map((row, i) => (
+              <Marquee key={row[0]?.code ?? i} reverse={i % 2 === 1} durationSec={58 + i * 6}>
+                {row.map((f) => (
+                  <CountryFlag
+                    key={f.code}
+                    code={f.code}
+                    name={f.name}
+                    portal={f.portal}
+                    available={f.available}
+                    statusLabel={f.statusLabel}
+                    className="w-36"
+                  />
+                ))}
+              </Marquee>
+            ))}
+          </div>
+        )}
 
         <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">
           {t('landing.coverage.note')}

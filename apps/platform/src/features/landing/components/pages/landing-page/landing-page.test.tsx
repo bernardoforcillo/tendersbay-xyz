@@ -1,15 +1,27 @@
 import { screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithI18n } from '~/test/utils';
 
 vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
 
 import { LandingPage } from './index';
 
+beforeEach(() => {
+  // Render the coverage section's reduced-motion (static grid) variant so the
+  // full-template render stays light and deterministic (no marquee tracks).
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+    matches: query.includes('reduce'),
+    media: query,
+    onchange: null,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+});
+
 describe('LandingPage', () => {
-  // This is the only test that renders the full template (incl. the 27-flag
-  // coverage grid through motion); the synchronous jsdom render can exceed the
-  // default 5s timeout under full-suite parallelism, so give it extra headroom.
   it('renders the landing template and sets the document title', async () => {
     renderWithI18n(<LandingPage />, 'en-ie');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(

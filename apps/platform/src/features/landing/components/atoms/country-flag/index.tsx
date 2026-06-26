@@ -1,5 +1,6 @@
-import { motion, type Variants } from 'motion/react';
-import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
+import { useState } from 'react';
+import { Button, OverlayArrow, Tooltip, TooltipTrigger } from 'react-aria-components';
+import { Icon } from '~/features/landing/components/atoms/icon';
 import { cx } from '~/features/landing/cx';
 import { type EuCountry, FLAGS } from './flags';
 
@@ -9,7 +10,9 @@ type CountryFlagProps = {
   portal: string;
   available: boolean;
   statusLabel: string;
-  variants?: Variants;
+  className?: string;
+  /** Duplicate marquee copy: still hoverable, but kept out of the tab order. */
+  decorative?: boolean;
 };
 
 export function CountryFlag({
@@ -18,73 +21,106 @@ export function CountryFlag({
   portal,
   available,
   statusLabel,
-  variants,
+  className,
+  decorative,
 }: CountryFlagProps) {
   const Flag = FLAGS[code];
   const label = `${name} — ${statusLabel}`;
+  // Controlled open: show the card instantly on hover/focus, bypassing
+  // react-aria's global tooltip warmup (~1.5s) so the first hover isn't dead.
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
 
   return (
-    <motion.li variants={variants} className="group relative flex">
-      <DialogTrigger>
-        <Button
-          aria-label={label}
-          className={cx(
-            'block w-full cursor-pointer overflow-hidden rounded-md ring-1 outline-none transition duration-300',
-            'data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600 data-[focus-visible]:ring-offset-2 data-[focus-visible]:ring-offset-cream-50',
-            available
-              ? 'opacity-100 shadow-soft ring-brand-300'
-              : 'opacity-60 grayscale ring-cream-300 group-hover:-translate-y-0.5 group-hover:opacity-100 group-hover:shadow-soft group-hover:grayscale-0 data-[pressed]:scale-95 motion-reduce:transform-none',
-          )}
-        >
-          <Flag aria-hidden="true" className="block h-auto w-full" />
-        </Button>
-
-        <Popover
-          placement="top"
-          offset={10}
-          className={cx(
-            'origin-bottom transition duration-200 ease-out',
-            'data-[entering]:scale-95 data-[entering]:opacity-0',
-            'data-[exiting]:scale-95 data-[exiting]:opacity-0',
-          )}
-        >
-          <Dialog
-            aria-label={name}
-            className="w-60 rounded-2xl border border-cream-200 bg-cream-50 p-4 shadow-soft-lg outline-none"
+    <TooltipTrigger
+      isOpen={hovered || focused}
+      onOpenChange={(open) => {
+        if (!open) {
+          setHovered(false);
+          setFocused(false);
+        }
+      }}
+    >
+      <Button
+        aria-label={label}
+        excludeFromTabOrder={decorative}
+        onHoverChange={setHovered}
+        onFocusChange={setFocused}
+        className={cx(
+          'group/flag flex cursor-pointer flex-col gap-1.5 rounded-xl border bg-white p-1.5 outline-none transition duration-300',
+          'hover:-translate-y-1 motion-reduce:transform-none',
+          'data-[pressed]:translate-y-0 data-[pressed]:scale-[0.98]',
+          'data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600 data-[focus-visible]:ring-offset-2 data-[focus-visible]:ring-offset-cream-50',
+          available
+            ? 'border-brand-200 shadow-soft-md'
+            : 'border-cream-200 shadow-soft hover:border-cream-300 hover:shadow-soft-md',
+          className,
+        )}
+      >
+        <span className="block overflow-hidden rounded-md ring-1 ring-ink-900/5">
+          <Flag
+            aria-hidden="true"
+            className={cx(
+              'block h-auto w-full transition duration-500',
+              available
+                ? ''
+                : 'opacity-70 grayscale group-hover/flag:opacity-100 group-hover/flag:grayscale-0',
+            )}
+          />
+        </span>
+        <span className="flex items-center justify-between gap-1.5 px-0.5">
+          <span
+            title={name}
+            className={cx(
+              'min-w-0 flex-1 truncate text-left text-[11px] font-medium transition-colors duration-300',
+              available ? 'text-brand-700' : 'text-ink-500 group-hover/flag:text-ink-700',
+            )}
           >
-            <div className="flex items-center gap-2.5">
-              <span className="block w-8 shrink-0 overflow-hidden rounded ring-1 ring-cream-300">
-                <Flag aria-hidden="true" className="block h-auto w-full" />
-              </span>
-              <h3 className="font-display text-base text-ink-900">{name}</h3>
-            </div>
-            <p className="mt-3 font-mono text-sm font-medium text-brand-700">{portal}</p>
-            <span
-              className={cx(
-                'mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em]',
-                available
-                  ? 'bg-brand-50 text-brand-700 ring-1 ring-brand-200'
-                  : 'bg-cream-200 text-ink-600',
-              )}
-            >
-              <span
-                className={cx(
-                  'h-1.5 w-1.5 rounded-full',
-                  available ? 'bg-brand-500' : 'bg-ink-400',
-                )}
-              />
-              {statusLabel}
-            </span>
-          </Dialog>
-        </Popover>
-      </DialogTrigger>
+            {name}
+          </span>
+          <span
+            aria-hidden="true"
+            className={cx(
+              'h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-300',
+              available ? 'bg-brand-500' : 'bg-cream-300 group-hover/flag:bg-brand-300',
+            )}
+          />
+        </span>
+      </Button>
 
-      {available ? (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute top-1 right-1 z-10 h-2 w-2 rounded-full bg-brand-500 ring-2 ring-white"
-        />
-      ) : null}
-    </motion.li>
+      <Tooltip
+        placement="top"
+        offset={10}
+        className={cx(
+          'origin-bottom transition duration-200 ease-out',
+          'data-[entering]:scale-95 data-[entering]:opacity-0',
+          'data-[exiting]:scale-95 data-[exiting]:opacity-0',
+        )}
+      >
+        <OverlayArrow className="group">
+          <svg
+            width={14}
+            height={14}
+            viewBox="0 0 14 14"
+            aria-hidden="true"
+            className="block fill-cream-50 group-data-[placement=bottom]:rotate-180 group-data-[placement=left]:-rotate-90 group-data-[placement=right]:rotate-90"
+          >
+            <path d="M0 0 L7 7 L14 0" />
+          </svg>
+        </OverlayArrow>
+        <div className="w-60 rounded-2xl border border-cream-200 bg-cream-50 p-4 shadow-soft-lg">
+          <div className="flex items-center gap-2.5">
+            <span className="block w-9 shrink-0 overflow-hidden rounded ring-1 ring-ink-900/10">
+              <Flag aria-hidden="true" className="block h-auto w-full" />
+            </span>
+            <h3 className="font-display text-base leading-tight text-ink-900">{name}</h3>
+          </div>
+          <p className="mt-3 flex items-center gap-1.5 font-mono text-sm font-medium text-brand-700">
+            <Icon name="map" className="shrink-0 text-[15px] text-brand-500" />
+            {portal}
+          </p>
+        </div>
+      </Tooltip>
+    </TooltipTrigger>
   );
 }
