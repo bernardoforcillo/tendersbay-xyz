@@ -42,16 +42,20 @@ function urlBlock(options: SitemapOptions, path: string, locale: string, links: 
 }
 
 /**
- * Build a sitemap.xml expanding each path across every locale with hreflang alternates.
+ * Build a sitemap.xml with one entry per path (in default locale) and hreflang alternates.
+ *
+ * Each path is listed once in the default locale with xhtml:link alternates pointing to
+ * all locale variants plus x-default. This is the correct structure for locale-prefixed
+ * sites; Google then crawls the alternates as variants of the same page, not duplicates.
  *
  * Invariant: hostname, locale codes, and paths come from trusted build-time config
  * (never user input), so they are interpolated into XML without escaping. If a
  * dynamic value is ever introduced, add XML entity escaping for `& < > "`.
  */
 export function buildSitemap(paths: string[], options: SitemapOptions): string {
-  const blocks = paths.flatMap((path) => {
+  const blocks = paths.map((path) => {
     const links = alternates(options, path);
-    return options.locales.map((locale) => urlBlock(options, path, locale, links));
+    return urlBlock(options, path, options.defaultLocale, links);
   });
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
