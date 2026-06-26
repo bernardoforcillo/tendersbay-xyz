@@ -143,3 +143,22 @@ before re-deriving them:
   `TooltipTrigger` note above, or the first hover lags ~1.5s.)
 - **Iterate with a focused test**: `pnpm --filter platform exec vitest run <path>` instead
   of the whole suite.
+
+## Vite config consuming a no-build TS workspace package
+
+A private package that exports raw TS (`exports: { ".": "./src/index.ts" }`, no build step
+— e.g. `@tendersbay/vite-plugin-seo`) imports fine from **app source** (Vite/esbuild bundles
+it). But imported from **`vite.config.ts`** it breaks: Vite externalizes node_modules deps
+while loading the config, then Node loads the raw `.ts` via native type-stripping, which
+**cannot resolve extensionless relative imports** (fails with `Cannot find module '.../head'`).
+
+Fix, in the package consumed at config-load time:
+
+- give every internal relative import an explicit `.ts` extension —
+  `import { headTags } from './head.ts'`, including `export type … from './options.ts'`;
+- set `"allowImportingTsExtensions": true` in its `tsconfig.json` (valid because the shared
+  base config sets `noEmit`).
+
+Only the import closure reachable from the package entry at config-load needs this; packages
+consumed solely by app source (like `@tendersbay/components`) do not — they are bundled, not
+externalized.
