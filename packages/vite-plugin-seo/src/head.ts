@@ -17,7 +17,13 @@ function absolutize(hostname: string, url: string): string {
   return `${hostname}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
-/** Build the static <head> tags injected into index.html (identical across routes). */
+/**
+ * Build the static <head> tags injected into index.html (identical across routes).
+ *
+ * Invariant: every value here comes from trusted, build-time plugin config (never
+ * user input), so values are interpolated into HTML/JSON-LD without escaping. If a
+ * dynamic source (e.g. a per-route title) is ever wired in, add HTML/JSON escaping.
+ */
 export function headTags(options: HeadOptions): HtmlTagDescriptor[] {
   const meta = (attrs: Record<string, string>): HtmlTagDescriptor => ({
     tag: 'meta',

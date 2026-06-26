@@ -41,7 +41,13 @@ function urlBlock(options: SitemapOptions, path: string, locale: string, links: 
   return lines.join('\n');
 }
 
-/** Build a sitemap.xml expanding each path across every locale with hreflang alternates. */
+/**
+ * Build a sitemap.xml expanding each path across every locale with hreflang alternates.
+ *
+ * Invariant: hostname, locale codes, and paths come from trusted build-time config
+ * (never user input), so they are interpolated into XML without escaping. If a
+ * dynamic value is ever introduced, add XML entity escaping for `& < > "`.
+ */
 export function buildSitemap(paths: string[], options: SitemapOptions): string {
   const blocks = paths.flatMap((path) => {
     const links = alternates(options, path);
