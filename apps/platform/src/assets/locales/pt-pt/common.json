@@ -90,7 +90,19 @@
     "footer": {
       "tagline": "Os concursos da Europa. Adjudicados.",
       "contactLabel": "Entre em contacto",
-      "copyright": "© Bernardo Forcillo — Todos os direitos reservados"
+      "copyright": "© Bernardo Forcillo — Todos os direitos reservados",
+      "social": "Siga o tendersbay",
+      "columns": [
+        { "heading": "Produto", "links": ["Os agentes", "Cobertura", "Visão"] },
+        { "heading": "Empresa", "links": ["Sobre nós", "Contacto", "Carreiras", "Blog"] },
+        { "heading": "Recursos", "links": ["Privacidade", "Termos", "Imprensa", "Estado"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Acesso antecipado",
+      "title": "Seja dos primeiros quando o tendersbay arrancar.",
+      "body": "Estamos a expandir por toda a UE, mercado a mercado. Inscreva-se na lista de espera e obtenha acesso antecipado assim que o seu país estiver disponível.",
+      "button": "Juntar-me à lista"
     },
     "tenderCard": {
       "value": "Valor",

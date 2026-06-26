@@ -94,7 +94,22 @@
     "footer": {
       "tagline": "Europas Ausschreibungen. Zugeschlagen.",
       "contactLabel": "Kontakt aufnehmen",
-      "copyright": "© Bernardo Forcillo — Alle Rechte vorbehalten"
+      "copyright": "© Bernardo Forcillo — Alle Rechte vorbehalten",
+      "social": "Tendersbay folgen",
+      "columns": [
+        { "heading": "Produkt", "links": ["Die Agenten", "Abdeckung", "Vision"] },
+        { "heading": "Unternehmen", "links": ["Über uns", "Kontakt", "Karriere", "Blog"] },
+        {
+          "heading": "Ressourcen",
+          "links": ["Datenschutz", "Nutzungsbedingungen", "Presse", "Status"]
+        }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Früher Zugang",
+      "title": "Sei dabei, wenn tendersbay startet.",
+      "body": "Wir expandieren in der gesamten EU, Markt für Markt. Trag dich in die Warteliste ein und erhalte frühen Zugang, sobald dein Land an die Reihe kommt.",
+      "button": "Zur Warteliste"
     },
     "tenderCard": {
       "value": "Wert",

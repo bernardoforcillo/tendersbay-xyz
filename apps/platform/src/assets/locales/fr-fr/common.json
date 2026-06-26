@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Les marchés d'Europe. Attribués.",
       "contactLabel": "Nous contacter",
-      "copyright": "© Bernardo Forcillo — Tous droits réservés"
+      "copyright": "© Bernardo Forcillo — Tous droits réservés",
+      "social": "Suivre tendersbay",
+      "columns": [
+        { "heading": "Produit", "links": ["Les agents", "Couverture", "Vision"] },
+        { "heading": "Entreprise", "links": ["À propos", "Contact", "Carrières", "Blog"] },
+        { "heading": "Ressources", "links": ["Confidentialité", "Conditions", "Presse", "Statut"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Accès anticipé",
+      "title": "Soyez là dès le lancement de tendersbay.",
+      "body": "Nous nous déployons dans toute l'UE, marché après marché. Inscrivez-vous sur la liste d'attente et accédez en avant-première dès que votre pays est couvert.",
+      "button": "Rejoindre la liste"
     },
     "tenderCard": {
       "value": "Valeur",

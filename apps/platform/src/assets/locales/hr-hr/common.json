@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Europski natječaji. Dodijeljeni.",
       "contactLabel": "Kontaktirajte nas",
-      "copyright": "© Bernardo Forcillo — Sva prava pridržana"
+      "copyright": "© Bernardo Forcillo — Sva prava pridržana",
+      "social": "Pratite tendersbay",
+      "columns": [
+        { "heading": "Proizvod", "links": ["Agenti", "Pokrivenost", "Vizija"] },
+        { "heading": "Tvrtka", "links": ["O nama", "Kontakt", "Karijera", "Blog"] },
+        { "heading": "Resursi", "links": ["Privatnost", "Uvjeti", "Tisak", "Status"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Rani pristup",
+      "title": "Budite prvi kada tendersbay krene.",
+      "body": "Širi se po cijeloj EU, tržište po tržište. Prijavite se na listu čekanja i dobijte rani pristup čim vaša zemlja bude aktivna.",
+      "button": "Prijavi se na listu"
     },
     "tenderCard": {
       "value": "Vrijednost",

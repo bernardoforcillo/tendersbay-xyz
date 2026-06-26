@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Licitațiile Europei. Atribuite.",
       "contactLabel": "Luați legătura cu noi",
-      "copyright": "© Bernardo Forcillo — Toate drepturile rezervate"
+      "copyright": "© Bernardo Forcillo — Toate drepturile rezervate",
+      "social": "Urmăriți tendersbay",
+      "columns": [
+        { "heading": "Produs", "links": ["Agenții", "Acoperire", "Viziune"] },
+        { "heading": "Companie", "links": ["Despre noi", "Contact", "Cariere", "Blog"] },
+        { "heading": "Resurse", "links": ["Confidențialitate", "Termeni", "Presă", "Status"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Acces anticipat",
+      "title": "Fiți printre primii când tendersbay se lansează.",
+      "body": "Ne extindem în toată UE, piață cu piață. Înscrieți-vă pe lista de așteptare și primiți acces anticipat din momentul în care țara dvs. este activată.",
+      "button": "Înscrie-te pe listă"
     },
     "tenderCard": {
       "value": "Valoare",

@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Euroopa hanked. Omistatud.",
       "contactLabel": "Võtke ühendust",
-      "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud"
+      "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud",
+      "social": "Jälgi tendersbay",
+      "columns": [
+        { "heading": "Toode", "links": ["Agendid", "Kaetus", "Visioon"] },
+        { "heading": "Ettevõte", "links": ["Meist", "Kontakt", "Karjäär", "Blogi"] },
+        { "heading": "Ressursid", "links": ["Privaatsus", "Tingimused", "Ajakirjandus", "Olek"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Varajane juurdepääs",
+      "title": "Ole esimene, kui tendersbay käivitub.",
+      "body": "Laieneme üle kogu EL-i, turg turu haaval. Liitu ootenimekirjaga ja saa varajane juurdepääs hetkel, kui sinu riik aktiveerub.",
+      "button": "Liitu ootenimekirjaga"
     },
     "tenderCard": {
       "value": "Väärtus",

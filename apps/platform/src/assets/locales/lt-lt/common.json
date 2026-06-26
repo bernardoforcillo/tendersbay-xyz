@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Europos viešieji pirkimai. Suteikti.",
       "contactLabel": "Susisiekite su mumis",
-      "copyright": "© Bernardo Forcillo — Visos teisės saugomos"
+      "copyright": "© Bernardo Forcillo — Visos teisės saugomos",
+      "social": "Sekite tendersbay",
+      "columns": [
+        { "heading": "Produktas", "links": ["Agentai", "Aprėptis", "Vizija"] },
+        { "heading": "Įmonė", "links": ["Apie mus", "Kontaktai", "Karjera", "Blogas"] },
+        { "heading": "Ištekliai", "links": ["Privatumas", "Sąlygos", "Spauda", "Statusas"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Ankstyva prieiga",
+      "title": "Būkite pirmieji, kai tendersbay startuos.",
+      "body": "Plečiamės visoje ES, rinka po rinkos. Užsiregistruokite laukiančiųjų sąraše ir gaukite ankstyvą prieigą iš karto, kai jūsų šalis bus aktyvuota.",
+      "button": "Prisijungti prie sąrašo"
     },
     "tenderCard": {
       "value": "Vertė",

@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Europas upphandlingar. Tilldelade.",
       "contactLabel": "Kontakta oss",
-      "copyright": "© Bernardo Forcillo — Alla rättigheter förbehållna"
+      "copyright": "© Bernardo Forcillo — Alla rättigheter förbehållna",
+      "social": "Följ tendersbay",
+      "columns": [
+        { "heading": "Produkt", "links": ["Agenterna", "Täckning", "Vision"] },
+        { "heading": "Företag", "links": ["Om oss", "Kontakt", "Karriär", "Blogg"] },
+        { "heading": "Resurser", "links": ["Integritet", "Villkor", "Press", "Status"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Tidig tillgång",
+      "title": "Var först när tendersbay lanseras.",
+      "body": "Vi rullar ut i hela EU, marknad för marknad. Anmäl dig till väntelistan och få tidig tillgång så snart ditt land aktiveras.",
+      "button": "Gå med i väntelistan"
     },
     "tenderCard": {
       "value": "Värde",

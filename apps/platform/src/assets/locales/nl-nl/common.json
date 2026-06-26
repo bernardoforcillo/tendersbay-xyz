@@ -90,7 +90,19 @@
     "footer": {
       "tagline": "Europa's aanbestedingen. Gegund.",
       "contactLabel": "Neem contact op",
-      "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden"
+      "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden",
+      "social": "Volg tendersbay",
+      "columns": [
+        { "heading": "Product", "links": ["De agenten", "Dekking", "Visie"] },
+        { "heading": "Bedrijf", "links": ["Over ons", "Contact", "Vacatures", "Blog"] },
+        { "heading": "Bronnen", "links": ["Privacy", "Voorwaarden", "Pers", "Status"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Vroege toegang",
+      "title": "Wees erbij als tendersbay live gaat.",
+      "body": "We rollen uit over de hele EU, markt voor markt. Schrijf je in op de wachtlijst en krijg vroege toegang zodra jouw land beschikbaar is.",
+      "button": "Aanmelden voor wachtlijst"
     },
     "tenderCard": {
       "value": "Waarde",

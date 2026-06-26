@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Európske zákazky. Udelené.",
       "contactLabel": "Kontaktujte nás",
-      "copyright": "© Bernardo Forcillo — Všetky práva vyhradené"
+      "copyright": "© Bernardo Forcillo — Všetky práva vyhradené",
+      "social": "Sledujte tendersbay",
+      "columns": [
+        { "heading": "Produkt", "links": ["Agenti", "Pokrytie", "Vízia"] },
+        { "heading": "Spoločnosť", "links": ["O nás", "Kontakt", "Kariéra", "Blog"] },
+        { "heading": "Zdroje", "links": ["Ochrana súkromia", "Podmienky", "Tlač", "Stav"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Skorý prístup",
+      "title": "Buďte prví, keď tendersbay spustíme.",
+      "body": "Spúšťame sa po celej EÚ, trh po trhu. Zaregistrujte sa na čakaciu listinu a získajte skorý prístup v momente, keď bude vaša krajina aktívna.",
+      "button": "Pridať sa na čakaciu listinu"
     },
     "tenderCard": {
       "value": "Hodnota",

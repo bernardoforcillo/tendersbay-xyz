@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Európa közbeszerzései. Odaítélve.",
       "contactLabel": "Lépjen kapcsolatba velünk",
-      "copyright": "© Bernardo Forcillo — Minden jog fenntartva"
+      "copyright": "© Bernardo Forcillo — Minden jog fenntartva",
+      "social": "Kövesse a tendersbay-t",
+      "columns": [
+        { "heading": "Termék", "links": ["Az ügynökök", "Lefedettség", "Vízió"] },
+        { "heading": "Vállalat", "links": ["Rólunk", "Kapcsolat", "Karrier", "Blog"] },
+        { "heading": "Források", "links": ["Adatvédelem", "Feltételek", "Sajtó", "Állapot"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Korai hozzáférés",
+      "title": "Legyen az első, amikor a tendersbay elindul.",
+      "body": "Az egész EU-ban terjeszkedünk, piacról piacra. Iratkozzon fel a várólistára, és kapjon korai hozzáférést, amint az Ön országa aktiválódik.",
+      "button": "Feliratkozás a várólistára"
     },
     "tenderCard": {
       "value": "Érték",

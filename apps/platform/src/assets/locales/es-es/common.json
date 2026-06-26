@@ -90,7 +90,19 @@
     "footer": {
       "tagline": "Las licitaciones de Europa. Adjudicadas.",
       "contactLabel": "Contacta con nosotros",
-      "copyright": "© Bernardo Forcillo — Todos los derechos reservados"
+      "copyright": "© Bernardo Forcillo — Todos los derechos reservados",
+      "social": "Sigue a tendersbay",
+      "columns": [
+        { "heading": "Producto", "links": ["Los agentes", "Cobertura", "Visión"] },
+        { "heading": "Empresa", "links": ["Nosotros", "Contacto", "Empleo", "Blog"] },
+        { "heading": "Recursos", "links": ["Privacidad", "Términos", "Prensa", "Estado"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Acceso anticipado",
+      "title": "Sé el primero cuando tendersbay se lance.",
+      "body": "Nos estamos expandiendo por toda la UE, mercado a mercado. Apúntate a la lista de espera y consigue acceso anticipado en cuanto tu país esté disponible.",
+      "button": "Únete a la lista"
     },
     "tenderCard": {
       "value": "Valor",

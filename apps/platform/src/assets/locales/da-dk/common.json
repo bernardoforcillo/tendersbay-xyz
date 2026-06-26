@@ -90,7 +90,19 @@
     "footer": {
       "tagline": "Europas udbud. Tildelt.",
       "contactLabel": "Kontakt os",
-      "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes"
+      "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes",
+      "social": "Følg tendersbay",
+      "columns": [
+        { "heading": "Produkt", "links": ["Agenterne", "Dækning", "Vision"] },
+        { "heading": "Virksomhed", "links": ["Om os", "Kontakt", "Karriere", "Blog"] },
+        { "heading": "Ressourcer", "links": ["Privatliv", "Vilkår", "Presse", "Status"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Tidlig adgang",
+      "title": "Vær klar når tendersbay lanceres.",
+      "body": "Vi ruller ud over hele EU, marked for marked. Tilmeld dig ventelisten og få tidlig adgang så snart dit land er aktivt.",
+      "button": "Tilmeld dig ventelisten"
     },
     "tenderCard": {
       "value": "Værdi",

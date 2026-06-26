@@ -90,7 +90,19 @@
     "footer": {
       "tagline": "Le gare d'Europa. Aggiudicate.",
       "contactLabel": "Scrivici",
-      "copyright": "© Bernardo Forcillo — Tutti i diritti riservati"
+      "copyright": "© Bernardo Forcillo — Tutti i diritti riservati",
+      "social": "Segui tendersbay",
+      "columns": [
+        { "heading": "Prodotto", "links": ["Gli agenti", "Copertura", "Visione"] },
+        { "heading": "Azienda", "links": ["Chi siamo", "Contatti", "Lavora con noi", "Blog"] },
+        { "heading": "Risorse", "links": ["Privacy", "Termini", "Stampa", "Stato"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Accesso anticipato",
+      "title": "Sii tra i primi quando tendersbay parte.",
+      "body": "Ci stiamo espandendo in tutta l'UE, un mercato alla volta. Iscriviti alla lista d'attesa e ottieni accesso anticipato nel momento in cui il tuo paese viene attivato.",
+      "button": "Unisciti alla lista"
     },
     "tenderCard": {
       "value": "Valore",

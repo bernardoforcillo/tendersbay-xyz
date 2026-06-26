@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Tairiscintí na hEorpa. Bronnta.",
       "contactLabel": "Déan teagmháil linn",
-      "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint"
+      "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint",
+      "social": "Lean tendersbay",
+      "columns": [
+        { "heading": "Táirge", "links": ["Na gníomhairí", "Clúdach", "Fís"] },
+        { "heading": "Cuideachta", "links": ["Fúinn", "Teagmháil", "Gairmeacha", "Blag"] },
+        { "heading": "Acmhainní", "links": ["Príobháideacht", "Téarmaí", "Preás", "Stádas"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Rochtain luath",
+      "title": "Bí ar an gcéad duine nuair a sheolann tendersbay.",
+      "body": "Táimid ag leathnú ar fud an AE, margadh ar mhargadh. Cláraigh ar an liosta feithimh agus faigh rochtain luath chomh luath agus a lasann do thír.",
+      "button": "Cláraigh ar an liosta"
     },
     "tenderCard": {
       "value": "Luach",

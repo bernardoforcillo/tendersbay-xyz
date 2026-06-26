@@ -90,7 +90,19 @@
     "footer": {
       "tagline": "L-offerti tal-Ewropa. Mogħtija.",
       "contactLabel": "Ikkuntattjana",
-      "copyright": "© Bernardo Forcillo — Id-drittijiet kollha riżervati"
+      "copyright": "© Bernardo Forcillo — Id-drittijiet kollha riżervati",
+      "social": "Segwi tendersbay",
+      "columns": [
+        { "heading": "Prodott", "links": ["L-aġenti", "Kopertura", "Viżjoni"] },
+        { "heading": "Kumpanija", "links": ["Dwarna", "Kuntatt", "Karrieri", "Blog"] },
+        { "heading": "Riżorsi", "links": ["Privatezza", "Termini", "Stampa", "Status"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Aċċess bikri",
+      "title": "Kun l-ewwel meta tendersbay jitnieda.",
+      "body": "Qed nespandu mal-UE kollha, suq wara suq. Irreġistra fuq il-lista ta' stennija u ikseb aċċess bikri hekk kif il-pajjiż tiegħek jiġi attivat.",
+      "button": "Ingħaqad mal-lista"
     },
     "tenderCard": {
       "value": "Valur",

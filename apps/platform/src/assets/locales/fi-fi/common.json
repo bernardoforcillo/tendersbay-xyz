@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Euroopan hankinnat. Myönnetty.",
       "contactLabel": "Ota yhteyttä",
-      "copyright": "© Bernardo Forcillo — Kaikki oikeudet pidätetään"
+      "copyright": "© Bernardo Forcillo — Kaikki oikeudet pidätetään",
+      "social": "Seuraa tendersbay",
+      "columns": [
+        { "heading": "Tuote", "links": ["Agentit", "Kattavuus", "Visio"] },
+        { "heading": "Yritys", "links": ["Meistä", "Yhteystiedot", "Työpaikat", "Blogi"] },
+        { "heading": "Resurssit", "links": ["Tietosuoja", "Ehdot", "Lehdistö", "Tila"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Varhainen käyttöoikeus",
+      "title": "Ole ensimmäisenä kun tendersbay avautuu.",
+      "body": "Laajenemme koko EU:n alueelle markkina kerrallaan. Liity odotuslistalle ja saat varhaisen pääsyn heti kun maasi aktivoituu.",
+      "button": "Liity odotuslistalle"
     },
     "tenderCard": {
       "value": "Arvo",

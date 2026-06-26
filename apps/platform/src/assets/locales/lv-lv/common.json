@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Eiropas iepirkumi. Piešķirti.",
       "contactLabel": "Sazinieties ar mums",
-      "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas"
+      "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas",
+      "social": "Sekojiet tendersbay",
+      "columns": [
+        { "heading": "Produkts", "links": ["Aģenti", "Pārklājums", "Vīzija"] },
+        { "heading": "Uzņēmums", "links": ["Par mums", "Kontakts", "Karjera", "Blogs"] },
+        { "heading": "Resursi", "links": ["Privātums", "Noteikumi", "Prese", "Statuss"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Agrīna piekļuve",
+      "title": "Esi pirmais, kad tendersbay tiek palaists.",
+      "body": "Paplašināmies pa visu ES, tirgu pēc tirgus. Reģistrējieties gaidīšanas sarakstā un iegūstiet agrīnu piekļuvi tiklīdz jūsu valsts aktivizēsies.",
+      "button": "Pievienoties gaidīšanas sarakstam"
     },
     "tenderCard": {
       "value": "Vērtība",

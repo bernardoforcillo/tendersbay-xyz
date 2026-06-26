@@ -94,7 +94,19 @@
     "footer": {
       "tagline": "Europejskie przetargi. Udzielone.",
       "contactLabel": "Skontaktuj się z nami",
-      "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone"
+      "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone",
+      "social": "Obserwuj tendersbay",
+      "columns": [
+        { "heading": "Produkt", "links": ["Agenci", "Zasięg", "Wizja"] },
+        { "heading": "Firma", "links": ["O nas", "Kontakt", "Kariera", "Blog"] },
+        { "heading": "Zasoby", "links": ["Prywatność", "Warunki", "Prasa", "Status"] }
+      ]
+    },
+    "cta": {
+      "eyebrow": "Wczesny dostęp",
+      "title": "Bądź pierwszy, gdy tendersbay ruszy.",
+      "body": "Rozszerzamy działalność na całą UE, rynek po rynku. Dołącz do listy oczekujących i uzyskaj wczesny dostęp, gdy tylko twój kraj zostanie uruchomiony.",
+      "button": "Dołącz do listy"
     },
     "tenderCard": {
       "value": "Wartość",
