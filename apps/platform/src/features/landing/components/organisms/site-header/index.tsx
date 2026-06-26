@@ -5,8 +5,10 @@ import { LanguageSwitcher, NavLinks } from '~/features/landing/components/molecu
 import { useScrolled } from './use-scrolled';
 
 // Full shadow string (matches --shadow-soft-lg) so motion can animate it.
+// NO_SHADOW keeps the same two-layer structure (zero alpha) so motion
+// interpolates layer-by-layer and the shadow fades in instead of snapping.
 const PILL_SHADOW = '0 4px 8px rgba(19, 50, 44, 0.06), 0 22px 48px rgba(19, 50, 44, 0.12)';
-const NO_SHADOW = '0 0 0 rgba(0, 0, 0, 0)';
+const NO_SHADOW = '0 4px 8px rgba(19, 50, 44, 0), 0 22px 48px rgba(19, 50, 44, 0)';
 
 export function SiteHeader() {
   const scrolled = useScrolled();
