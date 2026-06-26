@@ -1,12 +1,12 @@
 import path from 'node:path';
 import type { Plugin } from 'vite';
-import { headTags } from './head';
-import { normalizeOptions, type SeoOptions } from './options';
-import { buildRobots } from './robots';
-import { discoverRoutes } from './routes';
-import { buildSitemap } from './sitemap';
+import { headTags } from './head.ts';
+import { normalizeOptions, type SeoOptions } from './options.ts';
+import { buildRobots } from './robots.ts';
+import { discoverRoutes } from './routes.ts';
+import { buildSitemap } from './sitemap.ts';
 
-export type { SeoOptions } from './options';
+export type { SeoOptions } from './options.ts';
 
 /** Vite plugin: inject static SEO head tags and emit robots.txt + sitemap.xml. */
 export function seo(options: SeoOptions): Plugin {

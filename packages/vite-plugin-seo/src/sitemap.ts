@@ -1,4 +1,4 @@
-import { bcp47 } from './locale';
+import { bcp47 } from './locale.ts';
 
 export interface SitemapOptions {
   hostname: string;
