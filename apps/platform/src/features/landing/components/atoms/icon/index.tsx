@@ -6,13 +6,13 @@ import {
   FileText,
   Globe,
   Layers,
-  type LucideIcon,
   type LucideProps,
   Map as MapIcon,
   Search,
   Sparkles,
   Trophy,
 } from 'lucide-react';
+import type { ComponentType } from 'react';
 import { cx } from '~/features/landing/cx';
 
 // Brand icons removed from lucide-react; ship minimal inline glyphs that
@@ -95,7 +95,7 @@ export type IconName =
   | 'linkedin'
   | 'twitter';
 
-const ICONS: Record<IconName, LucideIcon> = {
+const ICONS: Record<IconName, ComponentType<LucideProps>> = {
   search: Search,
   document: FileText,
   trophy: Trophy,
