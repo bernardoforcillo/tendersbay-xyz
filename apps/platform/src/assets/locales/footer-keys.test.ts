@@ -20,16 +20,21 @@ describe('landing footer + cta locale keys', () => {
     expect(entries).toHaveLength(24);
   });
 
-  it.each(entries)('%s defines footer.social and 3 non-empty columns', (_path, mod) => {
+  // Link counts are index-paired with the code-side COLUMN_HREFS table in
+  // site-footer, so they must stay identical across every locale.
+  const LINK_COUNTS = [3, 4, 4];
+
+  it.each(entries)('%s defines footer.social and the 3/4/4 columns', (_path, mod) => {
     const footer = mod.default.landing.footer;
     expect(footer.social, 'social').toBeTruthy();
     expect(Array.isArray(footer.columns), 'columns is array').toBe(true);
     expect(footer.columns, 'three columns').toHaveLength(3);
-    for (const col of footer.columns ?? []) {
-      expect(col.heading, 'column heading').toBeTruthy();
-      expect(Array.isArray(col.links), 'column links is array').toBe(true);
-      expect((col.links ?? []).length, 'column links non-empty').toBeGreaterThan(0);
-    }
+    LINK_COUNTS.forEach((count, i) => {
+      const col = (footer.columns ?? [])[i];
+      expect(col?.heading, `column ${i} heading`).toBeTruthy();
+      expect(Array.isArray(col?.links), `column ${i} links is array`).toBe(true);
+      expect(col?.links, `column ${i} link count`).toHaveLength(count);
+    });
   });
 
   it.each(entries)('%s defines cta eyebrow, title, body and button', (_path, mod) => {
