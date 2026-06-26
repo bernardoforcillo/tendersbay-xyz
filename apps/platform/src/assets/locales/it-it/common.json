@@ -1,11 +1,24 @@
 {
-  "app": { "title": "tendersbay platform", "subtitle": "Vite + React, served by Go." },
   "landing": {
+    "search": {
+      "label": "Cerca",
+      "hint": "Ricerca con IA — presto disponibile",
+      "examples": [
+        "Ristrutturazione di scuole pubbliche",
+        "Modernizzazione IT degli ospedali",
+        "Costruzione di impianti solari",
+        "Flotte di autobus elettrici"
+      ]
+    },
     "meta": {
       "title": "tendersbay — La tua prossima gara europea, aggiudicata",
       "description": "Un team di agenti AI che scova, prepara e vince le gare pubbliche europee per le PMI."
     },
-    "nav": { "problem": "Il problema", "agents": "Gli agenti", "vision": "Vision" },
+    "nav": {
+      "problem": "Il problema",
+      "agents": "Gli agenti",
+      "vision": "Vision"
+    },
     "hero": {
       "eyebrow": "Il tuo team di agenti AI",
       "titleLead": "La tua prossima gara europea?",
@@ -62,12 +75,36 @@
       "body": "Ogni anno in Europa si muovono centinaia di miliardi in appalti pubblici, ma restano fuori portata per chi non ha tempo, lingua o competenze. tendersbay usa gli agenti AI per cambiare questo — e dare a ogni PMI una vera occasione.",
       "note": "Stiamo costruendo. Torna presto."
     },
+    "coverage": {
+      "eyebrow": "Copertura",
+      "title": "27 paesi UE, una piattaforma.",
+      "body": "Ci stiamo espandendo in tutta l'Unione Europea, un mercato alla volta. Ogni bandiera si accende quando la copertura è attiva.",
+      "statusAvailable": "Disponibile",
+      "statusComingSoon": "In arrivo",
+      "note": "La copertura sta arrivando in tutti i 27 paesi UE."
+    },
     "footer": {
       "tagline": "Le gare d'Europa. Aggiudicate.",
       "contactLabel": "Scrivici",
-      "copyright": "© Bernardo Forcillo — Tutti i diritti riservati"
+      "copyright": "© Bernardo Forcillo — Tutti i diritti riservati",
+      "social": "Segui tendersbay",
+      "columns": [
+        { "heading": "Prodotto", "links": ["Gli agenti", "Copertura", "Visione"] },
+        { "heading": "Azienda", "links": ["Chi siamo", "Contatti", "Lavora con noi", "Blog"] },
+        { "heading": "Risorse", "links": ["Privacy", "Termini", "Stampa", "Stato"] }
+      ]
     },
-    "tenderCard": { "value": "Valore", "deadline": "Scadenza", "daysLeft": "{{count}} giorni" },
+    "cta": {
+      "eyebrow": "Accesso anticipato",
+      "title": "Sii tra i primi quando tendersbay parte.",
+      "body": "Ci stiamo espandendo in tutta l'UE, un mercato alla volta. Iscriviti alla lista d'attesa e ottieni accesso anticipato nel momento in cui il tuo paese viene attivato.",
+      "button": "Unisciti alla lista"
+    },
+    "tenderCard": {
+      "value": "Valore",
+      "deadline": "Scadenza",
+      "daysLeft": "{{count}} giorni"
+    },
     "agentLabels": {
       "scout": "Agente Scout",
       "docs": "Agente Documenti",

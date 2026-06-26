@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Cuardaigh",
+      "hint": "Cuardach AI — ar fáil go luath",
+      "examples": [
+        "Athchóiriú scoileanna poiblí",
+        "Nuachóiriú TF ospidéal",
+        "Tógáil feirmeacha gréine",
+        "Flíteanna bus leictreach"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Do chéad tairiscint Eorpach eile, bronnta",
       "description": "Foireann gníomhairí AI a aimsíonn, a ullmhaíonn agus a bhuaineann conarthaí poiblí Eorpacha do FBManna."
     },
-    "nav": { "problem": "An Fhadhb", "agents": "Na Gníomhairí", "vision": "Fís" },
+    "nav": {
+      "problem": "An Fhadhb",
+      "agents": "Na Gníomhairí",
+      "vision": "Fís"
+    },
     "hero": {
       "eyebrow": "Do fhoireann gníomhairí AI",
       "titleLead": "Do chéad tairiscint Eorpach eile?",
@@ -69,12 +79,36 @@
       "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí Eorpach, ach fanann sé as láimh do dhaoine gan am, teanga nó saineolas. Úsáideann tendersbay gníomhairí AI chun sin a athrú — agus chun seans fíor a thabhairt do gach FBM.",
       "note": "Táimid ag tógáil. Fill ar ais go luath."
     },
+    "coverage": {
+      "eyebrow": "Clúdach",
+      "title": "27 tír AE, ardán amháin.",
+      "body": "Táimid ag leathnú ar fud an Aontais Eorpaigh, margadh ar mhargadh. Lasann gach bratach nuair a thagann an clúdach beo.",
+      "statusAvailable": "Ar fáil",
+      "statusComingSoon": "Ag teacht go luath",
+      "note": "Tá an clúdach ag teacht chuig na 27 tír AE go léir."
+    },
     "footer": {
       "tagline": "Tairiscintí na hEorpa. Bronnta.",
       "contactLabel": "Déan teagmháil linn",
-      "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint"
+      "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint",
+      "social": "Lean tendersbay",
+      "columns": [
+        { "heading": "Táirge", "links": ["Na gníomhairí", "Clúdach", "Fís"] },
+        { "heading": "Cuideachta", "links": ["Fúinn", "Teagmháil", "Gairmeacha", "Blag"] },
+        { "heading": "Acmhainní", "links": ["Príobháideacht", "Téarmaí", "Preás", "Stádas"] }
+      ]
     },
-    "tenderCard": { "value": "Luach", "deadline": "Spriocdháta", "daysLeft": "{{count}} lá" },
+    "cta": {
+      "eyebrow": "Rochtain luath",
+      "title": "Bí ar an gcéad duine nuair a sheolann tendersbay.",
+      "body": "Táimid ag leathnú ar fud an AE, margadh ar mhargadh. Cláraigh ar an liosta feithimh agus faigh rochtain luath chomh luath agus a lasann do thír.",
+      "button": "Cláraigh ar an liosta"
+    },
+    "tenderCard": {
+      "value": "Luach",
+      "deadline": "Spriocdháta",
+      "daysLeft": "{{count}} lá"
+    },
     "agentLabels": {
       "scout": "Gníomhaire fionnachtana",
       "docs": "Gníomhaire doiciméad",

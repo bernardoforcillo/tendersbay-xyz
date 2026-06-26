@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Ieškoti",
+      "hint": "AI paieška — netrukus",
+      "examples": [
+        "Viešųjų mokyklų renovacija",
+        "Ligoninių IT modernizavimas",
+        "Saulės parkų statyba",
+        "Elektrinių autobusų parkai"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Jūsų kitas Europos viešasis pirkimas, suteiktas",
       "description": "Dirbtinio intelekto agentų komanda, kuri randa, parengia ir laimi Europos viešuosius pirkimus MVĮ."
     },
-    "nav": { "problem": "Problema", "agents": "Agentai", "vision": "Vizija" },
+    "nav": {
+      "problem": "Problema",
+      "agents": "Agentai",
+      "vision": "Vizija"
+    },
     "hero": {
       "eyebrow": "Jūsų DI agentų komanda",
       "titleLead": "Jūsų kitas Europos viešasis pirkimas?",
@@ -69,12 +79,36 @@
       "body": "Kiekvienais metais šimtai milijardų juda per Europos viešuosius pirkimus, tačiau jie lieka nepasiekiami tiems, kurie neturi laiko, kalbos žinių ar kompetencijos. tendersbay naudoja DI agentus tam pakeisti — ir suteikti kiekvienai MVĮ realią galimybę.",
       "note": "Mes kuriame. Grįžkite netrukus."
     },
+    "coverage": {
+      "eyebrow": "Aprėptis",
+      "title": "27 ES šalys, viena platforma.",
+      "body": "Plečiamės visoje Europos Sąjungoje, rinka po rinkos. Kiekviena vėliava užsidega, kai aprėptis tampa aktyvi.",
+      "statusAvailable": "Prieinama",
+      "statusComingSoon": "Netrukus",
+      "note": "Aprėptis pasiekia visas 27 ES šalis."
+    },
     "footer": {
       "tagline": "Europos viešieji pirkimai. Suteikti.",
       "contactLabel": "Susisiekite su mumis",
-      "copyright": "© Bernardo Forcillo — Visos teisės saugomos"
+      "copyright": "© Bernardo Forcillo — Visos teisės saugomos",
+      "social": "Sekite tendersbay",
+      "columns": [
+        { "heading": "Produktas", "links": ["Agentai", "Aprėptis", "Vizija"] },
+        { "heading": "Įmonė", "links": ["Apie mus", "Kontaktai", "Karjera", "Blogas"] },
+        { "heading": "Ištekliai", "links": ["Privatumas", "Sąlygos", "Spauda", "Statusas"] }
+      ]
     },
-    "tenderCard": { "value": "Vertė", "deadline": "Terminas", "daysLeft": "{{count}} dienos" },
+    "cta": {
+      "eyebrow": "Ankstyva prieiga",
+      "title": "Būkite pirmieji, kai tendersbay startuos.",
+      "body": "Plečiamės visoje ES, rinka po rinkos. Užsiregistruokite laukiančiųjų sąraše ir gaukite ankstyvą prieigą iš karto, kai jūsų šalis bus aktyvuota.",
+      "button": "Prisijungti prie sąrašo"
+    },
+    "tenderCard": {
+      "value": "Vertė",
+      "deadline": "Terminas",
+      "daysLeft": "{{count}} dienos"
+    },
     "agentLabels": {
       "scout": "Žvalgybos agentas",
       "docs": "Dokumentų agentas",

@@ -53,6 +53,9 @@ importers:
       '@tendersbay/tailwind':
         specifier: workspace:*
         version: link:../../packages/tailwind
+      country-flag-icons:
+        specifier: ^1.6.19
+        version: 1.6.19
       i18next:
         specifier: ^26.3.1
         version: 26.3.1(typescript@5.9.3)
@@ -84,6 +87,9 @@ importers:
       '@tendersbay/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      '@tendersbay/vite-plugin-seo':
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-seo
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -149,6 +155,24 @@ importers:
         version: 4.3.1
 
   packages/tsconfig: {}
+
+  packages/vite-plugin-seo:
+    devDependencies:
+      '@tendersbay/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.13.2
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+      vite:
+        specifier: ^6.0.0
+        version: 6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.32.0)
+      vitest:
+        specifier: ^4.1.9
+        version: 4.1.9(@types/node@24.13.2)(jsdom@29.1.1)(vite@6.4.3(@types/node@24.13.2)(jiti@2.7.0)(lightningcss@1.32.0))
 
 packages:
 
@@ -1434,6 +1458,9 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  country-flag-icons@1.6.19:
+    resolution: {integrity: sha512-ykd9jAeW5A0JO0H2fveiX4JScA8BUQNTm8J+DKcYrLXbF0yn7WgzNGR56iAWFTmL3Gnj2kgqkybUUjx4+EUA0Q==}
 
   css-tree@3.2.1:
     resolution: {integrity: sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==}
@@ -3391,6 +3418,8 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 6.0.3
+
+  country-flag-icons@1.6.19: {}
 
   css-tree@3.2.1:
     dependencies:

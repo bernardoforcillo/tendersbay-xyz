@@ -8,6 +8,9 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, shared libraries in
 - `packages/tsconfig` (`@tendersbay/tsconfig`) — shared TypeScript configs.
 - `packages/tailwind` (`@tendersbay/tailwind`) — shared Tailwind v4 theme.
 - `packages/components` (`@tendersbay/components`) — shared React components.
+- `packages/vite-plugin-seo` (`@tendersbay/vite-plugin-seo`) — Vite plugin that emits
+  `robots.txt` + a locale-aware `sitemap.xml` and injects static SEO `<head>` tags
+  (meta/OG/Twitter/JSON-LD) at build; wired into `apps/platform/vite.config.ts`.
 
 ## Commands
 

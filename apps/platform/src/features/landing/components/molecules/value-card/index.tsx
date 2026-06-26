@@ -1,17 +1,40 @@
 import { Icon, type IconName } from '~/features/landing/components/atoms';
 import { cx } from '~/features/landing/cx';
 
-type ValueCardProps = { icon: IconName; title: string; body: string; className?: string };
+type Tone = 'solution' | 'muted';
+type ValueCardProps = {
+  icon: IconName;
+  title: string;
+  body: string;
+  tone?: Tone;
+  className?: string;
+};
 
-export function ValueCard({ icon, title, body, className }: ValueCardProps) {
+const SURFACE: Record<Tone, string> = {
+  solution: 'border-cream-200 bg-white shadow-soft hover:shadow-soft-lg',
+  muted: 'border-cream-300 bg-cream-50 shadow-soft hover:shadow-soft-md',
+};
+
+const ICON_TILE: Record<Tone, string> = {
+  solution: 'bg-brand-50 text-brand-600 ring-brand-100 group-hover:bg-brand-100',
+  muted: 'bg-cream-200/70 text-ink-500 ring-cream-300 group-hover:bg-cream-200',
+};
+
+export function ValueCard({ icon, title, body, tone = 'solution', className }: ValueCardProps) {
   return (
     <div
       className={cx(
-        'group rounded-3xl border border-cream-200 bg-white p-7 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-soft-lg',
+        'group rounded-3xl border p-7 transition-all duration-300 hover:-translate-y-1',
+        SURFACE[tone],
         className,
       )}
     >
-      <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-50 text-[21px] text-brand-600 ring-1 ring-brand-100 transition-colors duration-300 group-hover:bg-brand-100">
+      <span
+        className={cx(
+          'inline-flex h-12 w-12 items-center justify-center rounded-2xl text-[21px] ring-1 transition-colors duration-300',
+          ICON_TILE[tone],
+        )}
+      >
         <Icon name={icon} />
       </span>
       <h3 className="mt-5 font-display text-xl text-ink-900">{title}</h3>

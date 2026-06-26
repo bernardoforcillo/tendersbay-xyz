@@ -16,4 +16,13 @@ describe('SiteFooter', () => {
     );
     expect(screen.getByText('© Bernardo Forcillo — All rights reserved')).toBeInTheDocument();
   });
+
+  it('renders the link columns and social nav', () => {
+    renderWithI18n(<SiteFooter />, 'en-ie');
+    expect(screen.getByRole('navigation', { name: 'Product' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Company' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Resources' })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Follow tendersbay' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Vision' })).toHaveAttribute('href', '#vision');
+  });
 });

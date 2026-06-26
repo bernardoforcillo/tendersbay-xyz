@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Buscar",
+      "hint": "Búsqueda con IA — próximamente",
+      "examples": [
+        "Renovación de escuelas públicas",
+        "Modernización TI de hospitales",
+        "Construcción de plantas solares",
+        "Flotas de autobuses eléctricos"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Tu próxima licitación europea, adjudicada",
       "description": "Un equipo de agentes de IA que encuentra, prepara y gana licitaciones públicas europeas para las pymes."
     },
-    "nav": { "problem": "El problema", "agents": "Los agentes", "vision": "Visión" },
+    "nav": {
+      "problem": "El problema",
+      "agents": "Los agentes",
+      "vision": "Visión"
+    },
     "hero": {
       "eyebrow": "Tu equipo de agentes de IA",
       "titleLead": "¿Tu próxima licitación europea?",
@@ -65,12 +75,36 @@
       "body": "Cada año, cientos de miles de millones circulan por la contratación pública europea, pero permanecen fuera del alcance de quienes no tienen tiempo, idioma ni experiencia. tendersbay usa agentes de IA para cambiar eso — y dar a cada pyme una oportunidad real.",
       "note": "Estamos construyendo. Vuelve pronto."
     },
+    "coverage": {
+      "eyebrow": "Cobertura",
+      "title": "27 países de la UE, una plataforma.",
+      "body": "Nos estamos expandiendo por toda la Unión Europea, mercado a mercado. Cada bandera se ilumina cuando la cobertura se activa.",
+      "statusAvailable": "Disponible",
+      "statusComingSoon": "Próximamente",
+      "note": "La cobertura está llegando a los 27 países de la UE."
+    },
     "footer": {
       "tagline": "Las licitaciones de Europa. Adjudicadas.",
       "contactLabel": "Contacta con nosotros",
-      "copyright": "© Bernardo Forcillo — Todos los derechos reservados"
+      "copyright": "© Bernardo Forcillo — Todos los derechos reservados",
+      "social": "Sigue a tendersbay",
+      "columns": [
+        { "heading": "Producto", "links": ["Los agentes", "Cobertura", "Visión"] },
+        { "heading": "Empresa", "links": ["Nosotros", "Contacto", "Empleo", "Blog"] },
+        { "heading": "Recursos", "links": ["Privacidad", "Términos", "Prensa", "Estado"] }
+      ]
     },
-    "tenderCard": { "value": "Valor", "deadline": "Plazo", "daysLeft": "{{count}} días" },
+    "cta": {
+      "eyebrow": "Acceso anticipado",
+      "title": "Sé el primero cuando tendersbay se lance.",
+      "body": "Nos estamos expandiendo por toda la UE, mercado a mercado. Apúntate a la lista de espera y consigue acceso anticipado en cuanto tu país esté disponible.",
+      "button": "Únete a la lista"
+    },
+    "tenderCard": {
+      "value": "Valor",
+      "deadline": "Plazo",
+      "daysLeft": "{{count}} días"
+    },
     "agentLabels": {
       "scout": "Agente explorador",
       "docs": "Agente de documentos",

@@ -18,5 +18,7 @@ describe('LandingTemplate', () => {
     for (const id of ['problem', 'agents', 'vision']) {
       expect(container.querySelector(`#${id}`), id).not.toBeNull();
     }
+    expect(screen.getByText('Public school renovations')).toBeInTheDocument();
+    expect(container.querySelector('#site-footer'), 'site-footer').not.toBeNull();
   });
 });

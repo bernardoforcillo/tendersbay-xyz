@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Szukaj",
+      "hint": "Wyszukiwanie z AI — już wkrótce",
+      "examples": [
+        "Remonty szkół publicznych",
+        "Modernizacja IT szpitali",
+        "Budowa farm słonecznych",
+        "Floty autobusów elektrycznych"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Twój następny europejski przetarg, udzielony",
       "description": "Zespół agentów AI, który znajduje, przygotowuje i wygrywa europejskie zamówienia publiczne dla MŚP."
     },
-    "nav": { "problem": "Problem", "agents": "Agenci", "vision": "Wizja" },
+    "nav": {
+      "problem": "Problem",
+      "agents": "Agenci",
+      "vision": "Wizja"
+    },
     "hero": {
       "eyebrow": "Twój zespół agentów AI",
       "titleLead": "Twój następny europejski przetarg?",
@@ -69,12 +79,36 @@
       "body": "Co roku setki miliardów przepływa przez europejskie zamówienia publiczne, ale pozostają poza zasięgiem tych, którym brakuje czasu, znajomości języków lub wiedzy. tendersbay używa agentów AI, by to zmienić — i dać każdemu MŚP prawdziwą szansę.",
       "note": "Budujemy. Wróć wkrótce."
     },
+    "coverage": {
+      "eyebrow": "Zasięg",
+      "title": "27 krajów UE, jedna platforma.",
+      "body": "Rozszerzamy działalność na całą Unię Europejską, rynek po rynku. Każda flaga rozświetla się, gdy zasięg staje się aktywny.",
+      "statusAvailable": "Dostępne",
+      "statusComingSoon": "Wkrótce",
+      "note": "Zasięg pojawia się we wszystkich 27 krajach UE."
+    },
     "footer": {
       "tagline": "Europejskie przetargi. Udzielone.",
       "contactLabel": "Skontaktuj się z nami",
-      "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone"
+      "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone",
+      "social": "Obserwuj tendersbay",
+      "columns": [
+        { "heading": "Produkt", "links": ["Agenci", "Zasięg", "Wizja"] },
+        { "heading": "Firma", "links": ["O nas", "Kontakt", "Kariera", "Blog"] },
+        { "heading": "Zasoby", "links": ["Prywatność", "Warunki", "Prasa", "Status"] }
+      ]
     },
-    "tenderCard": { "value": "Wartość", "deadline": "Termin", "daysLeft": "{{count}} dni" },
+    "cta": {
+      "eyebrow": "Wczesny dostęp",
+      "title": "Bądź pierwszy, gdy tendersbay ruszy.",
+      "body": "Rozszerzamy działalność na całą UE, rynek po rynku. Dołącz do listy oczekujących i uzyskaj wczesny dostęp, gdy tylko twój kraj zostanie uruchomiony.",
+      "button": "Dołącz do listy"
+    },
+    "tenderCard": {
+      "value": "Wartość",
+      "deadline": "Termin",
+      "daysLeft": "{{count}} dni"
+    },
     "agentLabels": {
       "scout": "Agent zwiadowca",
       "docs": "Agent dokumentów",

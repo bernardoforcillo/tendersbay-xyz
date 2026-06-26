@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Keresés",
+      "hint": "MI-alapú keresés — hamarosan",
+      "examples": [
+        "Köziskolák felújítása",
+        "Kórházak IT-korszerűsítése",
+        "Naperőművek építése",
+        "Elektromos buszflották"
+      ]
+    },
     "meta": {
       "title": "tendersbay — A következő európai közbeszerzése, odaítélve",
       "description": "Egy mesterséges intelligencia ügynökökből álló csapat, amely megtalálja, előkészíti és megnyeri az európai közbeszerzéseket a kkv-k számára."
     },
-    "nav": { "problem": "A probléma", "agents": "Az ügynökök", "vision": "Vízió" },
+    "nav": {
+      "problem": "A probléma",
+      "agents": "Az ügynökök",
+      "vision": "Vízió"
+    },
     "hero": {
       "eyebrow": "Az Ön MI-ügynök csapata",
       "titleLead": "A következő európai közbeszerzése?",
@@ -69,12 +79,36 @@
       "body": "Évente több száz milliárd áramlik az európai közbeszerzéseken keresztül, de elérhetetlen marad azok számára, akiknek nincs idejük, nyelvtudásuk vagy szakértelmük. A tendersbay mesterséges intelligencia ügynököket használ ennek megváltoztatásához — és hogy minden kkv-nak valódi esélyt adjon.",
       "note": "Épülünk. Nézzen vissza hamarosan."
     },
+    "coverage": {
+      "eyebrow": "Lefedettség",
+      "title": "27 EU-ország, egy platform.",
+      "body": "Az egész Európai Unióban terjeszkedünk, piacról piacra. Minden zászló kigyullad, amint a lefedettség élővé válik.",
+      "statusAvailable": "Elérhető",
+      "statusComingSoon": "Hamarosan",
+      "note": "A lefedettség mind a 27 EU-országba megérkezik."
+    },
     "footer": {
       "tagline": "Európa közbeszerzései. Odaítélve.",
       "contactLabel": "Lépjen kapcsolatba velünk",
-      "copyright": "© Bernardo Forcillo — Minden jog fenntartva"
+      "copyright": "© Bernardo Forcillo — Minden jog fenntartva",
+      "social": "Kövesse a tendersbay-t",
+      "columns": [
+        { "heading": "Termék", "links": ["Az ügynökök", "Lefedettség", "Vízió"] },
+        { "heading": "Vállalat", "links": ["Rólunk", "Kapcsolat", "Karrier", "Blog"] },
+        { "heading": "Források", "links": ["Adatvédelem", "Feltételek", "Sajtó", "Állapot"] }
+      ]
     },
-    "tenderCard": { "value": "Érték", "deadline": "Határidő", "daysLeft": "{{count}} nap" },
+    "cta": {
+      "eyebrow": "Korai hozzáférés",
+      "title": "Legyen az első, amikor a tendersbay elindul.",
+      "body": "Az egész EU-ban terjeszkedünk, piacról piacra. Iratkozzon fel a várólistára, és kapjon korai hozzáférést, amint az Ön országa aktiválódik.",
+      "button": "Feliratkozás a várólistára"
+    },
+    "tenderCard": {
+      "value": "Érték",
+      "deadline": "Határidő",
+      "daysLeft": "{{count}} nap"
+    },
     "agentLabels": {
       "scout": "Felderítő ügynök",
       "docs": "Dokumentum-ügynök",

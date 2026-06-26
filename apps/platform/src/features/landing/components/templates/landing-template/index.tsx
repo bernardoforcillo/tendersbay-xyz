@@ -1,8 +1,11 @@
 import {
   AgentsSection,
   AudienceSection,
+  CoverageSection,
+  CtaBand,
   Hero,
   ProblemSection,
+  SearchDock,
   SiteFooter,
   SiteHeader,
   VisionSection,
@@ -17,9 +20,12 @@ export function LandingTemplate() {
         <ProblemSection />
         <AgentsSection />
         <AudienceSection />
+        <CoverageSection />
         <VisionSection />
       </main>
+      <CtaBand />
       <SiteFooter />
+      <SearchDock />
     </div>
   );
 }
