@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Caută",
+      "hint": "Căutare cu IA — în curând",
+      "examples": [
+        "Renovarea școlilor publice",
+        "Modernizarea IT a spitalelor",
+        "Construcția de parcuri solare",
+        "Flote de autobuze electrice"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Următoarea licitație europeană, atribuită",
       "description": "O echipă de agenți AI care găsește, pregătește și câștigă licitații publice europene pentru IMM-uri."
     },
-    "nav": { "problem": "Problema", "agents": "Agenții", "vision": "Viziune" },
+    "nav": {
+      "problem": "Problema",
+      "agents": "Agenții",
+      "vision": "Viziune"
+    },
     "hero": {
       "eyebrow": "Echipa dvs. de agenți AI",
       "titleLead": "Următoarea licitație europeană?",
@@ -69,12 +79,36 @@
       "body": "În fiecare an, sute de miliarde circulă prin achizițiile publice europene, dar rămân inaccesibile pentru cei fără timp, limbă sau expertiză. tendersbay folosește agenți AI pentru a schimba asta — și pentru a oferi fiecărui IMM o șansă reală.",
       "note": "Construim. Reveniți curând."
     },
+    "coverage": {
+      "eyebrow": "Acoperire",
+      "title": "27 de țări UE, o singură platformă.",
+      "body": "Ne extindem în întreaga Uniune Europeană, piață cu piață. Fiecare steag se aprinde când acoperirea devine activă.",
+      "statusAvailable": "Disponibil",
+      "statusComingSoon": "În curând",
+      "note": "Acoperirea ajunge în toate cele 27 de țări UE."
+    },
     "footer": {
       "tagline": "Licitațiile Europei. Atribuite.",
       "contactLabel": "Luați legătura cu noi",
-      "copyright": "© Bernardo Forcillo — Toate drepturile rezervate"
+      "copyright": "© Bernardo Forcillo — Toate drepturile rezervate",
+      "social": "Urmăriți tendersbay",
+      "columns": [
+        { "heading": "Produs", "links": ["Agenții", "Acoperire", "Viziune"] },
+        { "heading": "Companie", "links": ["Despre noi", "Contact", "Cariere", "Blog"] },
+        { "heading": "Resurse", "links": ["Confidențialitate", "Termeni", "Presă", "Status"] }
+      ]
     },
-    "tenderCard": { "value": "Valoare", "deadline": "Termen limită", "daysLeft": "{{count}} zile" },
+    "cta": {
+      "eyebrow": "Acces anticipat",
+      "title": "Fiți printre primii când tendersbay se lansează.",
+      "body": "Ne extindem în toată UE, piață cu piață. Înscrieți-vă pe lista de așteptare și primiți acces anticipat din momentul în care țara dvs. este activată.",
+      "button": "Înscrie-te pe listă"
+    },
+    "tenderCard": {
+      "value": "Valoare",
+      "deadline": "Termen limită",
+      "daysLeft": "{{count}} zile"
+    },
     "agentLabels": {
       "scout": "Agent explorator",
       "docs": "Agent documente",

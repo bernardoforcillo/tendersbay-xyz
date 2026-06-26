@@ -95,22 +95,22 @@ export function Hero() {
       className="relative flex min-h-[88vh] items-center overflow-hidden bg-cream-100"
       aria-labelledby="hero-title"
     >
-      {/* layered depth: aurora glow + second warm glow + fine grain */}
-      <div
+      {/* aurora mesh — top-weighted teal glows with a gentle breathing drift */}
+      <motion.div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            'radial-gradient(55% 70% at 92% -8%, rgba(13,148,136,0.18), transparent 60%), radial-gradient(45% 55% at 0% 108%, rgba(15,118,110,0.10), transparent 60%)',
+            'radial-gradient(42% 52% at 84% -6%, rgba(45,212,191,0.20), transparent 60%), radial-gradient(36% 46% at 52% 30%, rgba(13,148,136,0.07), transparent 70%)',
         }}
+        animate={reduce ? undefined : { scale: [1, 1.05, 1], opacity: [0.92, 1, 0.92] }}
+        transition={reduce ? undefined : { duration: 14, repeat: Infinity, ease: 'easeInOut' }}
       />
+      {/* bottom fade — blends the hero seamlessly into the cream Problem section */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.4]"
-        style={{
-          backgroundImage: 'radial-gradient(rgba(19,50,44,0.05) 1px, transparent 1px)',
-          backgroundSize: '4px 4px',
-        }}
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3"
+        style={{ background: 'linear-gradient(to bottom, transparent, #fbf7f0)' }}
       />
 
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pt-28 pb-20 md:grid-cols-[1.05fr_0.95fr] md:pt-24 md:pb-16">

@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Meklēt",
+      "hint": "AI meklēšana — drīzumā",
+      "examples": [
+        "Publisko skolu renovācija",
+        "Slimnīcu IT modernizācija",
+        "Saules parku būvniecība",
+        "Elektrisko autobusu parki"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Jūsu nākamais Eiropas iepirkums, piešķirts",
       "description": "Mākslīgā intelekta aģentu komanda, kas atrod, sagatavo un uzvar Eiropas publiskos iepirkumus MVU."
     },
-    "nav": { "problem": "Problēma", "agents": "Aģenti", "vision": "Vīzija" },
+    "nav": {
+      "problem": "Problēma",
+      "agents": "Aģenti",
+      "vision": "Vīzija"
+    },
     "hero": {
       "eyebrow": "Jūsu MI aģentu komanda",
       "titleLead": "Jūsu nākamais Eiropas iepirkums?",
@@ -69,12 +79,36 @@
       "body": "Katru gadu simtiem miljardu plūst caur Eiropas publiskajiem iepirkumiem, bet tie paliek nesasniedzami tiem, kuriem nav laika, valodu zināšanu vai pieredzes. tendersbay izmanto MI aģentus, lai to mainītu — un dotu katram MVU īstu iespēju.",
       "note": "Mēs veidojam. Atgriezieties drīz."
     },
+    "coverage": {
+      "eyebrow": "Pārklājums",
+      "title": "27 ES valstis, viena platforma.",
+      "body": "Mēs paplašināmies visā Eiropas Savienībā, tirgu pēc tirgus. Katrs karogs iedegas, kad pārklājums kļūst aktīvs.",
+      "statusAvailable": "Pieejams",
+      "statusComingSoon": "Drīzumā",
+      "note": "Pārklājums tuvojas visām 27 ES valstīm."
+    },
     "footer": {
       "tagline": "Eiropas iepirkumi. Piešķirti.",
       "contactLabel": "Sazinieties ar mums",
-      "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas"
+      "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas",
+      "social": "Sekojiet tendersbay",
+      "columns": [
+        { "heading": "Produkts", "links": ["Aģenti", "Pārklājums", "Vīzija"] },
+        { "heading": "Uzņēmums", "links": ["Par mums", "Kontakts", "Karjera", "Blogs"] },
+        { "heading": "Resursi", "links": ["Privātums", "Noteikumi", "Prese", "Statuss"] }
+      ]
     },
-    "tenderCard": { "value": "Vērtība", "deadline": "Termiņš", "daysLeft": "{{count}} dienas" },
+    "cta": {
+      "eyebrow": "Agrīna piekļuve",
+      "title": "Esi pirmais, kad tendersbay tiek palaists.",
+      "body": "Paplašināmies pa visu ES, tirgu pēc tirgus. Reģistrējieties gaidīšanas sarakstā un iegūstiet agrīnu piekļuvi tiklīdz jūsu valsts aktivizēsies.",
+      "button": "Pievienoties gaidīšanas sarakstam"
+    },
+    "tenderCard": {
+      "value": "Vērtība",
+      "deadline": "Termiņš",
+      "daysLeft": "{{count}} dienas"
+    },
     "agentLabels": {
       "scout": "Izlūkaģents",
       "docs": "Dokumentu aģents",

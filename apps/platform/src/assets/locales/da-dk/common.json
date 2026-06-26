@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Søg",
+      "hint": "AI-søgning — kommer snart",
+      "examples": [
+        "Renovering af offentlige skoler",
+        "IT-modernisering af hospitaler",
+        "Opførelse af solcelleparker",
+        "Flåder af elbusser"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Dit næste europæiske udbud, tildelt",
       "description": "Et team af AI-agenter, der finder, forbereder og vinder europæiske offentlige udbud for SMV'er."
     },
-    "nav": { "problem": "Problemet", "agents": "Agenterne", "vision": "Vision" },
+    "nav": {
+      "problem": "Problemet",
+      "agents": "Agenterne",
+      "vision": "Vision"
+    },
     "hero": {
       "eyebrow": "Dit AI-agentteam",
       "titleLead": "Dit næste europæiske udbud?",
@@ -65,12 +75,36 @@
       "body": "Hvert år bevæger hundredvis af milliarder sig gennem europæiske offentlige udbud, men de er uden for rækkevidde for dem uden tid, sprog eller ekspertise. tendersbay bruger AI-agenter til at ændre det — og give enhver SMV en reel chance.",
       "note": "Vi bygger løsningen. Vend tilbage snart."
     },
+    "coverage": {
+      "eyebrow": "Dækning",
+      "title": "27 EU-lande, én platform.",
+      "body": "Vi udvider i hele Den Europæiske Union, marked for marked. Hvert flag lyser op, når dækningen går live.",
+      "statusAvailable": "Tilgængelig",
+      "statusComingSoon": "Kommer snart",
+      "note": "Dækningen er på vej til alle 27 EU-lande."
+    },
     "footer": {
       "tagline": "Europas udbud. Tildelt.",
       "contactLabel": "Kontakt os",
-      "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes"
+      "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes",
+      "social": "Følg tendersbay",
+      "columns": [
+        { "heading": "Produkt", "links": ["Agenterne", "Dækning", "Vision"] },
+        { "heading": "Virksomhed", "links": ["Om os", "Kontakt", "Karriere", "Blog"] },
+        { "heading": "Ressourcer", "links": ["Privatliv", "Vilkår", "Presse", "Status"] }
+      ]
     },
-    "tenderCard": { "value": "Værdi", "deadline": "Frist", "daysLeft": "{{count}} dage" },
+    "cta": {
+      "eyebrow": "Tidlig adgang",
+      "title": "Vær klar når tendersbay lanceres.",
+      "body": "Vi ruller ud over hele EU, marked for marked. Tilmeld dig ventelisten og få tidlig adgang så snart dit land er aktivt.",
+      "button": "Tilmeld dig ventelisten"
+    },
+    "tenderCard": {
+      "value": "Værdi",
+      "deadline": "Frist",
+      "daysLeft": "{{count}} dage"
+    },
     "agentLabels": {
       "scout": "Spejderagent",
       "docs": "Dokumentagent",

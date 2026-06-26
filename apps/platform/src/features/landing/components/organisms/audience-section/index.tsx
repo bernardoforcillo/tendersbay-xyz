@@ -21,11 +21,14 @@ export function AudienceSection() {
           <Eyebrow icon="check">{t('landing.audience.eyebrow')}</Eyebrow>
           <h2
             id="audience-title"
-            className="mt-7 font-display text-[2.5rem] leading-[1.02] tracking-[-0.01em] text-ink-900 md:text-[3.4rem]"
+            className="mt-7 max-w-[16ch] font-display text-[2.7rem] leading-[1.0] tracking-[-0.015em] text-ink-900 md:text-[3.8rem]"
           >
             {t('landing.audience.title')}
           </h2>
-          <span aria-hidden="true" className="mt-8 h-px w-16 bg-brand-400" />
+          <span
+            aria-hidden="true"
+            className="mt-8 h-px w-16 bg-gradient-to-r from-brand-400 to-brand-600"
+          />
           <p className="mt-8 max-w-[46ch] text-lg leading-relaxed text-ink-600 md:text-xl">
             {t('landing.audience.body')}
           </p>

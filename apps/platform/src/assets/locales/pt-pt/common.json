@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Pesquisar",
+      "hint": "Pesquisa com IA — em breve",
+      "examples": [
+        "Renovação de escolas públicas",
+        "Modernização de TI hospitalar",
+        "Construção de centrais solares",
+        "Frotas de autocarros elétricos"
+      ]
+    },
     "meta": {
       "title": "tendersbay — O seu próximo concurso europeu, adjudicado",
       "description": "Uma equipa de agentes de IA que encontra, prepara e vence concursos públicos europeus para PME."
     },
-    "nav": { "problem": "O problema", "agents": "Os agentes", "vision": "Visão" },
+    "nav": {
+      "problem": "O problema",
+      "agents": "Os agentes",
+      "vision": "Visão"
+    },
     "hero": {
       "eyebrow": "A sua equipa de agentes de IA",
       "titleLead": "O seu próximo concurso europeu?",
@@ -65,12 +75,36 @@
       "body": "Todos os anos, centenas de milhares de milhões circulam pela contratação pública europeia, mas permanecem inacessíveis para quem não tem tempo, idioma ou experiência. tendersbay usa agentes de IA para mudar isso — e dar a cada PME uma hipótese real.",
       "note": "Estamos a construir. Volte em breve."
     },
+    "coverage": {
+      "eyebrow": "Cobertura",
+      "title": "27 países da UE, uma plataforma.",
+      "body": "Estamos a expandir por toda a União Europeia, mercado a mercado. Cada bandeira acende quando a cobertura fica ativa.",
+      "statusAvailable": "Disponível",
+      "statusComingSoon": "Em breve",
+      "note": "A cobertura está a chegar a todos os 27 países da UE."
+    },
     "footer": {
       "tagline": "Os concursos da Europa. Adjudicados.",
       "contactLabel": "Entre em contacto",
-      "copyright": "© Bernardo Forcillo — Todos os direitos reservados"
+      "copyright": "© Bernardo Forcillo — Todos os direitos reservados",
+      "social": "Siga o tendersbay",
+      "columns": [
+        { "heading": "Produto", "links": ["Os agentes", "Cobertura", "Visão"] },
+        { "heading": "Empresa", "links": ["Sobre nós", "Contacto", "Carreiras", "Blog"] },
+        { "heading": "Recursos", "links": ["Privacidade", "Termos", "Imprensa", "Estado"] }
+      ]
     },
-    "tenderCard": { "value": "Valor", "deadline": "Prazo", "daysLeft": "{{count}} dias" },
+    "cta": {
+      "eyebrow": "Acesso antecipado",
+      "title": "Seja dos primeiros quando o tendersbay arrancar.",
+      "body": "Estamos a expandir por toda a UE, mercado a mercado. Inscreva-se na lista de espera e obtenha acesso antecipado assim que o seu país estiver disponível.",
+      "button": "Juntar-me à lista"
+    },
+    "tenderCard": {
+      "value": "Valor",
+      "deadline": "Prazo",
+      "daysLeft": "{{count}} dias"
+    },
     "agentLabels": {
       "scout": "Agente explorador",
       "docs": "Agente de documentos",

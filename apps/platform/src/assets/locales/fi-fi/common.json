@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Hae",
+      "hint": "Tekoälyhaku — pian saatavilla",
+      "examples": [
+        "Julkisten koulujen peruskorjaukset",
+        "Sairaaloiden IT-uudistus",
+        "Aurinkovoimaloiden rakentaminen",
+        "Sähköbussikalustot"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Seuraava eurooppalainen hankintasi, myönnetty",
       "description": "Tekoälyagenttien tiimi, joka löytää, valmistelee ja voittaa eurooppalaiset julkiset hankinnat pk-yrityksille."
     },
-    "nav": { "problem": "Ongelma", "agents": "Agentit", "vision": "Visio" },
+    "nav": {
+      "problem": "Ongelma",
+      "agents": "Agentit",
+      "vision": "Visio"
+    },
     "hero": {
       "eyebrow": "Tekoälyagenttisi tiimi",
       "titleLead": "Seuraava eurooppalainen hankintasi?",
@@ -69,12 +79,36 @@
       "body": "Joka vuosi sadat miljardeja liikkuvat eurooppalaisten julkisten hankintojen kautta, mutta ne pysyvät ulottumattomissa niille, joilla ei ole aikaa, kieltä tai osaamista. tendersbay käyttää tekoälyagentteja muuttaakseen tämän — ja antaakseen jokaiselle pk-yritykselle todellisen mahdollisuuden.",
       "note": "Rakennamme. Palaa pian takaisin."
     },
+    "coverage": {
+      "eyebrow": "Kattavuus",
+      "title": "27 EU-maata, yksi alusta.",
+      "body": "Laajenemme koko Euroopan unioniin, markkina kerrallaan. Jokainen lippu syttyy, kun kattavuus aktivoituu.",
+      "statusAvailable": "Saatavilla",
+      "statusComingSoon": "Tulossa pian",
+      "note": "Kattavuus laajenee kaikkiin 27 EU-maahan."
+    },
     "footer": {
       "tagline": "Euroopan hankinnat. Myönnetty.",
       "contactLabel": "Ota yhteyttä",
-      "copyright": "© Bernardo Forcillo — Kaikki oikeudet pidätetään"
+      "copyright": "© Bernardo Forcillo — Kaikki oikeudet pidätetään",
+      "social": "Seuraa tendersbay",
+      "columns": [
+        { "heading": "Tuote", "links": ["Agentit", "Kattavuus", "Visio"] },
+        { "heading": "Yritys", "links": ["Meistä", "Yhteystiedot", "Työpaikat", "Blogi"] },
+        { "heading": "Resurssit", "links": ["Tietosuoja", "Ehdot", "Lehdistö", "Tila"] }
+      ]
     },
-    "tenderCard": { "value": "Arvo", "deadline": "Määräaika", "daysLeft": "{{count}} päivää" },
+    "cta": {
+      "eyebrow": "Varhainen käyttöoikeus",
+      "title": "Ole ensimmäisenä kun tendersbay avautuu.",
+      "body": "Laajenemme koko EU:n alueelle markkina kerrallaan. Liity odotuslistalle ja saat varhaisen pääsyn heti kun maasi aktivoituu.",
+      "button": "Liity odotuslistalle"
+    },
+    "tenderCard": {
+      "value": "Arvo",
+      "deadline": "Määräaika",
+      "daysLeft": "{{count}} päivää"
+    },
     "agentLabels": {
       "scout": "Tiedustelijaagentti",
       "docs": "Asiakirja-agentti",

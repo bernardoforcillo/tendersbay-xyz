@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Rechercher",
+      "hint": "Recherche par IA — bientôt disponible",
+      "examples": [
+        "Rénovation d'écoles publiques",
+        "Modernisation IT des hôpitaux",
+        "Construction de fermes solaires",
+        "Flottes de bus électriques"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Votre prochain marché européen, attribué",
       "description": "Une équipe d'agents IA qui trouve, prépare et remporte les marchés publics européens pour les PME."
     },
-    "nav": { "problem": "Le problème", "agents": "Les agents", "vision": "Vision" },
+    "nav": {
+      "problem": "Le problème",
+      "agents": "Les agents",
+      "vision": "Vision"
+    },
     "hero": {
       "eyebrow": "Votre équipe d'agents IA",
       "titleLead": "Votre prochain marché européen ?",
@@ -69,12 +79,36 @@
       "body": "Chaque année, des centaines de milliards circulent dans les marchés publics européens, mais ils restent hors de portée de ceux qui manquent de temps, de langue ou d'expertise. tendersbay utilise des agents IA pour changer cela — et donner à chaque PME une vraie chance.",
       "note": "Nous construisons. Revenez bientôt."
     },
+    "coverage": {
+      "eyebrow": "Couverture",
+      "title": "27 pays de l'UE, une plateforme.",
+      "body": "Nous nous déployons dans toute l'Union européenne, marché après marché. Chaque drapeau s'illumine dès que la couverture est active.",
+      "statusAvailable": "Disponible",
+      "statusComingSoon": "Bientôt",
+      "note": "La couverture arrive dans les 27 pays de l'UE."
+    },
     "footer": {
       "tagline": "Les marchés d'Europe. Attribués.",
       "contactLabel": "Nous contacter",
-      "copyright": "© Bernardo Forcillo — Tous droits réservés"
+      "copyright": "© Bernardo Forcillo — Tous droits réservés",
+      "social": "Suivre tendersbay",
+      "columns": [
+        { "heading": "Produit", "links": ["Les agents", "Couverture", "Vision"] },
+        { "heading": "Entreprise", "links": ["À propos", "Contact", "Carrières", "Blog"] },
+        { "heading": "Ressources", "links": ["Confidentialité", "Conditions", "Presse", "Statut"] }
+      ]
     },
-    "tenderCard": { "value": "Valeur", "deadline": "Échéance", "daysLeft": "{{count}} jours" },
+    "cta": {
+      "eyebrow": "Accès anticipé",
+      "title": "Soyez là dès le lancement de tendersbay.",
+      "body": "Nous nous déployons dans toute l'UE, marché après marché. Inscrivez-vous sur la liste d'attente et accédez en avant-première dès que votre pays est couvert.",
+      "button": "Rejoindre la liste"
+    },
+    "tenderCard": {
+      "value": "Valeur",
+      "deadline": "Échéance",
+      "daysLeft": "{{count}} jours"
+    },
     "agentLabels": {
       "scout": "Agent éclaireur",
       "docs": "Agent documents",

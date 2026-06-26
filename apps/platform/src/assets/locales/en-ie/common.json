@@ -1,11 +1,24 @@
 {
-  "app": { "title": "tendersbay platform", "subtitle": "Vite + React, served by Go." },
   "landing": {
+    "search": {
+      "label": "Search",
+      "hint": "AI-powered search — coming soon",
+      "examples": [
+        "Public school renovations",
+        "Hospital IT modernisation",
+        "Solar farm construction",
+        "Electric bus fleets"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Your next European tender, awarded",
       "description": "A team of AI agents that find, prepare and win European public tenders for SMEs."
     },
-    "nav": { "problem": "The problem", "agents": "The agents", "vision": "Vision" },
+    "nav": {
+      "problem": "The problem",
+      "agents": "The agents",
+      "vision": "Vision"
+    },
     "hero": {
       "eyebrow": "Your AI agent team",
       "titleLead": "Your next European tender?",
@@ -62,12 +75,36 @@
       "body": "Every year hundreds of billions move through European public procurement, yet it stays out of reach for those without the time, the language, or the expertise. tendersbay uses AI agents to change that — and give every SME a real shot.",
       "note": "We're building. Check back soon."
     },
+    "coverage": {
+      "eyebrow": "Coverage",
+      "title": "27 EU countries, one platform.",
+      "body": "We're rolling out across the European Union, one market at a time. Every flag lights up as coverage goes live.",
+      "statusAvailable": "Available",
+      "statusComingSoon": "Coming soon",
+      "note": "Coverage is rolling out across all 27 EU countries."
+    },
     "footer": {
       "tagline": "Europe's tenders. Awarded.",
       "contactLabel": "Get in touch",
-      "copyright": "© Bernardo Forcillo — All rights reserved"
+      "copyright": "© Bernardo Forcillo — All rights reserved",
+      "social": "Follow tendersbay",
+      "columns": [
+        { "heading": "Product", "links": ["The agents", "Coverage", "Vision"] },
+        { "heading": "Company", "links": ["About", "Contact", "Careers", "Blog"] },
+        { "heading": "Resources", "links": ["Privacy", "Terms", "Press", "Status"] }
+      ]
     },
-    "tenderCard": { "value": "Value", "deadline": "Deadline", "daysLeft": "{{count}} days" },
+    "cta": {
+      "eyebrow": "Early access",
+      "title": "Be first when tendersbay goes live.",
+      "body": "We're rolling out across the EU, market by market. Join the waitlist and get early access the moment your country lights up.",
+      "button": "Join the waitlist"
+    },
+    "tenderCard": {
+      "value": "Value",
+      "deadline": "Deadline",
+      "daysLeft": "{{count}} days"
+    },
     "agentLabels": {
       "scout": "Scout agent",
       "docs": "Document agent",

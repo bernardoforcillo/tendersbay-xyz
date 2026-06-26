@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Zoeken",
+      "hint": "AI-zoekfunctie — binnenkort beschikbaar",
+      "examples": [
+        "Renovatie van openbare scholen",
+        "IT-modernisering van ziekenhuizen",
+        "Bouw van zonneparken",
+        "Elektrische busvloten"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Uw volgende Europese aanbesteding, gegund",
       "description": "Een team van AI-agenten dat Europese overheidsopdrachten voor het mkb vindt, voorbereidt en wint."
     },
-    "nav": { "problem": "Het probleem", "agents": "De agenten", "vision": "Visie" },
+    "nav": {
+      "problem": "Het probleem",
+      "agents": "De agenten",
+      "vision": "Visie"
+    },
     "hero": {
       "eyebrow": "Uw AI-agentteam",
       "titleLead": "Uw volgende Europese aanbesteding?",
@@ -65,12 +75,36 @@
       "body": "Elk jaar stroomt honderden miljarden door Europese overheidsopdrachten, maar ze blijven buiten bereik voor wie geen tijd, taalkennis of expertise heeft. tendersbay gebruikt AI-agenten om dat te veranderen — en elk mkb-bedrijf een echte kans te geven.",
       "note": "We bouwen. Kom snel terug."
     },
+    "coverage": {
+      "eyebrow": "Dekking",
+      "title": "27 EU-landen, één platform.",
+      "body": "We breiden uit over de hele Europese Unie, markt voor markt. Elke vlag licht op zodra de dekking actief is.",
+      "statusAvailable": "Beschikbaar",
+      "statusComingSoon": "Binnenkort",
+      "note": "De dekking komt naar alle 27 EU-landen."
+    },
     "footer": {
       "tagline": "Europa's aanbestedingen. Gegund.",
       "contactLabel": "Neem contact op",
-      "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden"
+      "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden",
+      "social": "Volg tendersbay",
+      "columns": [
+        { "heading": "Product", "links": ["De agenten", "Dekking", "Visie"] },
+        { "heading": "Bedrijf", "links": ["Over ons", "Contact", "Vacatures", "Blog"] },
+        { "heading": "Bronnen", "links": ["Privacy", "Voorwaarden", "Pers", "Status"] }
+      ]
     },
-    "tenderCard": { "value": "Waarde", "deadline": "Deadline", "daysLeft": "{{count}} dagen" },
+    "cta": {
+      "eyebrow": "Vroege toegang",
+      "title": "Wees erbij als tendersbay live gaat.",
+      "body": "We rollen uit over de hele EU, markt voor markt. Schrijf je in op de wachtlijst en krijg vroege toegang zodra jouw land beschikbaar is.",
+      "button": "Aanmelden voor wachtlijst"
+    },
+    "tenderCard": {
+      "value": "Waarde",
+      "deadline": "Deadline",
+      "daysLeft": "{{count}} dagen"
+    },
     "agentLabels": {
       "scout": "Verkenneragent",
       "docs": "Documentagent",

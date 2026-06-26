@@ -1,14 +1,24 @@
 {
-  "app": {
-    "title": "tendersbay platform",
-    "subtitle": "Vite + React, served by Go."
-  },
   "landing": {
+    "search": {
+      "label": "Otsi",
+      "hint": "AI-otsing — peagi saadaval",
+      "examples": [
+        "Avalike koolide renoveerimine",
+        "Haiglate IT-uuendus",
+        "Päikeseparkide ehitus",
+        "Elektribusside pargid"
+      ]
+    },
     "meta": {
       "title": "tendersbay — Teie järgmine Euroopa hange, omistatud",
       "description": "Tehisintellekti agentide meeskond, kes leiab, valmistab ette ja võidab Euroopa avalikud hanked VKEdele."
     },
-    "nav": { "problem": "Probleem", "agents": "Agendid", "vision": "Visioon" },
+    "nav": {
+      "problem": "Probleem",
+      "agents": "Agendid",
+      "vision": "Visioon"
+    },
     "hero": {
       "eyebrow": "Teie tehisintellekti agentide meeskond",
       "titleLead": "Teie järgmine Euroopa hange?",
@@ -69,12 +79,36 @@
       "body": "Igal aastal liigub Euroopa riigihangetes sadu miljardeid, kuid need jäävad kättesaamatuks neile, kellel pole aega, keeleoskust ega ekspertiisi. tendersbay kasutab tehisintellekti agente selle muutmiseks — ja annab igale VKEle tõelise võimaluse.",
       "note": "Me ehitame. Tulge peagi tagasi."
     },
+    "coverage": {
+      "eyebrow": "Kaetus",
+      "title": "27 EL-i riiki, üks platvorm.",
+      "body": "Laieneme üle kogu Euroopa Liidu, turg turu haaval. Iga lipp süttib, kui kaetus muutub aktiivseks.",
+      "statusAvailable": "Saadaval",
+      "statusComingSoon": "Tulekul",
+      "note": "Kaetus jõuab kõigisse 27 EL-i riiki."
+    },
     "footer": {
       "tagline": "Euroopa hanked. Omistatud.",
       "contactLabel": "Võtke ühendust",
-      "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud"
+      "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud",
+      "social": "Jälgi tendersbay",
+      "columns": [
+        { "heading": "Toode", "links": ["Agendid", "Kaetus", "Visioon"] },
+        { "heading": "Ettevõte", "links": ["Meist", "Kontakt", "Karjäär", "Blogi"] },
+        { "heading": "Ressursid", "links": ["Privaatsus", "Tingimused", "Ajakirjandus", "Olek"] }
+      ]
     },
-    "tenderCard": { "value": "Väärtus", "deadline": "Tähtaeg", "daysLeft": "{{count}} päeva" },
+    "cta": {
+      "eyebrow": "Varajane juurdepääs",
+      "title": "Ole esimene, kui tendersbay käivitub.",
+      "body": "Laieneme üle kogu EL-i, turg turu haaval. Liitu ootenimekirjaga ja saa varajane juurdepääs hetkel, kui sinu riik aktiveerub.",
+      "button": "Liitu ootenimekirjaga"
+    },
+    "tenderCard": {
+      "value": "Väärtus",
+      "deadline": "Tähtaeg",
+      "daysLeft": "{{count}} päeva"
+    },
     "agentLabels": {
       "scout": "Luureagent",
       "docs": "Dokumentide agent",
