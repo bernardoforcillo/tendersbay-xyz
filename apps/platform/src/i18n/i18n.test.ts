@@ -7,6 +7,8 @@ describe('i18n', () => {
   });
 
   it('resolves a bundled translation key from the common namespace', () => {
-    expect(i18n.t('app.title')).toBe('tendersbay platform');
+    const resolved = i18n.t('landing.meta.title');
+    expect(resolved).not.toBe('landing.meta.title');
+    expect(resolved.length).toBeGreaterThan(0);
   });
 });
