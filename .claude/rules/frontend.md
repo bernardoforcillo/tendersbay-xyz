@@ -74,6 +74,20 @@ src/
   `src/assets/locales/<locale>/common.json`) stays outside `features/`. Cross-package
   imports always use the package name, never `~`.
 
+## Hooks & feature-vs-infra placement
+
+- **Hooks live under `hooks/`**, one folder-module per hook:
+  `<feature-or-infra>/hooks/use-x/index.ts(x)` — e.g. `features/consent/hooks/use-consent/`,
+  `analytics/hooks/use-locale-property/`. The containing barrel re-exports them.
+- **Feature vs infra:** anything that **renders UI** is a feature under
+  `src/features/<name>/` (atomic-design tiers below). Cross-cutting, **non-UI plumbing** is
+  top-level **infra** — a flat-file module like `src/i18n/` (e.g. `src/analytics/` for the
+  PostHog client + provider + error boundary; the consent *banner* is a feature, but its
+  state hook is infra-adjacent and lives in `features/consent/hooks/`). The infra dirs
+  (`src/routes/`, `src/i18n/`, `src/assets/locales/`, `src/analytics/`) are a **pattern, not
+  a closed list**: add a new top-level infra dir only for plumbing with no UI; if it renders
+  anything, it's a feature.
+
 ## Generating components — `pnpm gen`
 
 Scaffold a component with the Turborepo generator instead of hand-creating folders:
@@ -116,6 +130,15 @@ before re-deriving them:
 
 - jsdom lacks `ResizeObserver` and `IntersectionObserver` — both are stubbed in
   `apps/platform/vitest.setup.ts`. Add new globals there, not per-test.
+- **`localStorage` in jsdom (Node 24+):** Node defines a native `localStorage` global as
+  `undefined` which shadows jsdom's, and vitest's `populateGlobal` won't override an
+  already-defined global — so bare `localStorage` is `undefined` in tests (`*.clear()`
+  throws). Two-part fix, already in place: `vitest.config.ts` →
+  `test.environmentOptions.jsdom.url: 'http://localhost'` (jsdom needs a real origin before
+  it initializes `Storage`), **and** a bridge in `vitest.setup.ts`:
+  `vi.stubGlobal('localStorage', (global as any).jsdom?.window?.localStorage)`. Reach
+  Storage via vitest's `global.jsdom` handle — the setup-scope `window` is **not** jsdom's
+  window instance, so `window.localStorage` there does not work.
 - For components that branch on `useReducedMotion`, force the **static** variant in
   tests by overriding `window.matchMedia` in a `beforeEach` so
   `(prefers-reduced-motion: reduce)` matches. This gives deterministic markup
