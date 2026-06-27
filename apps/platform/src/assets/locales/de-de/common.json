@@ -26,7 +26,6 @@
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Bei jeder Ausschreibung unterlegen. Bis jetzt.",
       "titleLead": "Die Ausschreibung, die sie längst als ihre verbucht haben?",
       "titleHighlight": "Zugeschlagen.",
       "subtitle": "Heute Nacht läuft eine Ausschreibung mit Ihrem Namen aus. Die Großen haben längst ein Team daran. Sie haben drei Excel-Tabs offen. Damit ist Schluss — KI-Agenten, die sie finden, den Papierkram zerlegen und Sie ins Angebot bringen. Während Sie schlafen.",
@@ -35,7 +34,6 @@
       "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"]
     },
     "problem": {
-      "eyebrow": "Die Kosten des Nichtstuns",
       "title": "Das Spiel ist manipuliert, um Sie draußen zu halten. Und es funktioniert.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Die Agenten",
       "title": "Drei Agenten. Sie verfehlen nichts, schlafen nicht, geben nicht auf.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Für wen es ist",
       "title": "Einer davon sind Sie. Sie wissen längst, welcher.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Kein Haken",
       "title": "Stellen Sie die Fragen, die sonst den Deal killen.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vision",
       "title": "Öffentliches Geld liegt hinter einer samtenen Kordel. Wir durchtrennen sie.",
       "body": "Jedes Jahr fließen hunderte Milliarden durch die europäische öffentliche Beschaffung — und bleiben unerreichbar für alle ohne Zeit, Sprachen oder ein Angebotsteam. KI-Agenten ändern die Rechnung. Jedes KMU bekommt eine echte Chance.",
       "note": "Wir bauen gerade. Ihr Land ist als Nächstes dran."
     },
     "coverage": {
-      "eyebrow": "Abdeckung",
       "title": "27 Länder. Wir holen sie uns, eins nach dem anderen.",
       "body": "Wir expandieren in der gesamten Europäischen Union, Markt für Markt. Jede Flagge leuchtet an dem Tag auf, an dem Ihr Land live geht.",
       "statusAvailable": "Live",
@@ -130,8 +123,14 @@
       "copyright": "© Bernardo Forcillo — Alle Rechte vorbehalten",
       "social": "tendersbay folgen",
       "columns": [
-        { "heading": "Produkt", "links": ["Die Agenten", "Abdeckung", "Vision"] },
-        { "heading": "Unternehmen", "links": ["Über uns", "Kontakt", "Karriere", "Blog"] },
+        {
+          "heading": "Produkt",
+          "links": ["Die Agenten", "Abdeckung", "Vision"]
+        },
+        {
+          "heading": "Unternehmen",
+          "links": ["Über uns", "Kontakt", "Karriere", "Blog"]
+        },
         {
           "heading": "Ressourcen",
           "links": ["Datenschutz", "Nutzungsbedingungen", "Presse", "Status"]
@@ -139,7 +138,6 @@
       ]
     },
     "cta": {
-      "eyebrow": "Früher Zugang",
       "title": "Ihre Agenten sind bereit. Es fehlen nur Sie.",
       "body": "Wir schalten die EU Markt für Markt frei. Tragen Sie sich in die Warteliste ein — sobald Ihr Land aufleuchtet, gehen Ihre Agenten auf die Jagd.",
       "button": "Sichern Sie sich Ihren Platz"
@@ -148,14 +146,6 @@
       "value": "Wert",
       "deadline": "Frist",
       "daysLeft": "{{count}} Tage"
-    },
-    "agentLabels": {
-      "scout": "Scout-Agent",
-      "docs": "Dokumenten-Agent",
-      "strategy": "Strategie-Agent",
-      "scoutStat": "{{count}} gefundene Ausschreibungen",
-      "docsStat": "Unterlagen erledigt",
-      "strategyStat": "Gewinngebot bereit"
     }
   }
 }

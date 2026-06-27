@@ -26,7 +26,6 @@
       "vision": "Vizija"
     },
     "hero": {
-      "eyebrow": "V podrejenem položaju na vsakem razpisu. Doslej.",
       "titleLead": "Razpis, ki so ga že šteli za svojega?",
       "titleHighlight": "Dodeljen.",
       "subtitle": "Nocoj se zapre razpis z vašim imenom. Veliki igralci že imajo ekipo na njem. Vi imate odprte tri zavihke v Excelu. Tu je konec — agenti UI, ki ga najdejo, raztrgajo birokracijo in vas postavijo v ponudbo. Medtem ko spite.",
@@ -35,7 +34,6 @@
       "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"]
     },
     "problem": {
-      "eyebrow": "Strošek nedejavnosti",
       "title": "Igra je prirejena, da vas drži zunaj. In deluje.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agenti",
       "title": "Trije agenti. Ne zgrešijo, ne spijo, ne odnehajo.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Za koga je namenjeno",
       "title": "Eden od njih ste vi. Že veste, kateri.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Brez zapletov",
       "title": "Postavite vprašanja, ki običajno potopijo posel.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vizija",
       "title": "Javni denar je za žametno vrvico. Mi jo prerežemo.",
       "body": "Vsako leto se skozi evropska javna naročila pretoči stotine milijard — in ostanejo nedosegljive vsem brez časa, jezikov ali ekipe za ponudbe. Agenti UI spremenijo računico. Vsak MSP dobi pravo priložnost.",
       "note": "Gradimo. Vaša država je naslednja."
     },
     "coverage": {
-      "eyebrow": "Pokritost",
       "title": "27 držav. Osvajamo jih eno za drugo.",
       "body": "Širimo se po vsej Evropski uniji, trg za trgom. Vsaka zastava zasveti na dan, ko vaša država zaživi.",
       "statusAvailable": "Aktivno",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Vse pravice pridržane",
       "social": "Sledite tendersbay",
       "columns": [
-        { "heading": "Izdelek", "links": ["Agenti", "Pokritost", "Vizija"] },
-        { "heading": "Podjetje", "links": ["O nas", "Kontakt", "Kariera", "Blog"] },
-        { "heading": "Viri", "links": ["Zasebnost", "Pogoji", "Tisk", "Stanje"] }
+        {
+          "heading": "Izdelek",
+          "links": ["Agenti", "Pokritost", "Vizija"]
+        },
+        {
+          "heading": "Podjetje",
+          "links": ["O nas", "Kontakt", "Kariera", "Blog"]
+        },
+        {
+          "heading": "Viri",
+          "links": ["Zasebnost", "Pogoji", "Tisk", "Stanje"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Zgodnji dostop",
       "title": "Vaši agenti so pripravljeni. Manjkate samo še vi.",
       "body": "Prižigamo EU trg za trgom. Pridružite se čakalni listi — v trenutku, ko vaša država zasveti, vaši agenti odidejo na lov.",
       "button": "Zagotovite si svoje mesto"
@@ -145,14 +146,6 @@
       "value": "Vrednost",
       "deadline": "Rok",
       "daysLeft": "{{count}} dni"
-    },
-    "agentLabels": {
-      "scout": "Agent izvidnik",
-      "docs": "Agent dokumentov",
-      "strategy": "Agent strategije",
-      "scoutStat": "{{count}} najdenih razpisov",
-      "docsStat": "papirji urejeni",
-      "strategyStat": "zmagovalna ponudba pripravljena"
     }
   }
 }

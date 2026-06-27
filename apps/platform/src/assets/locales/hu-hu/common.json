@@ -26,7 +26,6 @@
       "vision": "Vízió"
     },
     "hero": {
-      "eyebrow": "Minden pályázaton alulmaradva. Mostanáig.",
       "titleLead": "A pályázat, amit már a sajátjuknak hittek?",
       "titleHighlight": "Odaítélve.",
       "subtitle": "Ma éjjel lejár egy pályázat az Ön nevével. A nagy szereplőknek már csapatuk van rajta. Önnek három lap van nyitva az Excelben. Itt vége — MI-ügynökök, akik megtalálják, széttépik a papírmunkát, és beállítják Önt az ajánlatba. Miközben alszik.",
@@ -39,7 +38,6 @@
       ]
     },
     "problem": {
-      "eyebrow": "A tétlenség ára",
       "title": "A játékot úgy állították be, hogy Önt kizárja. És működik.",
       "items": [
         {
@@ -57,7 +55,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Az ügynökök",
       "title": "Három ügynök. Nem hibáznak, nem alszanak, nem adják fel.",
       "items": [
         {
@@ -75,7 +72,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Kinek szól",
       "title": "Egyikük Ön. Már tudja, melyik.",
       "items": [
         {
@@ -93,7 +89,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Nincs csapda",
       "title": "Tegye fel a kérdéseket, amelyek általában megölik az üzletet.",
       "items": [
         {
@@ -115,13 +110,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vízió",
       "title": "A közpénz bársonykötél mögött ül. Mi elvágjuk.",
       "body": "Évente több száz milliárd áramlik át az európai közbeszerzéseken — és elérhetetlen marad mindenki számára, akinek nincs ideje, nyelvtudása vagy ajánlati csapata. A mesterséges intelligencia ügynökök átírják a képletet. Minden kkv valódi esélyt kap.",
       "note": "Épülünk. Az Ön országa a következő."
     },
     "coverage": {
-      "eyebrow": "Lefedettség",
       "title": "27 ország. Egyenként vesszük be őket.",
       "body": "Az egész Európai Unióban terjeszkedünk, piacról piacra. Minden zászló kigyullad azon a napon, amikor az Ön országa élesben indul.",
       "statusAvailable": "Aktív",
@@ -134,13 +127,21 @@
       "copyright": "© Bernardo Forcillo — Minden jog fenntartva",
       "social": "Kövesse a tendersbay-t",
       "columns": [
-        { "heading": "Termék", "links": ["Az ügynökök", "Lefedettség", "Vízió"] },
-        { "heading": "Vállalat", "links": ["Rólunk", "Kapcsolat", "Karrier", "Blog"] },
-        { "heading": "Források", "links": ["Adatvédelem", "Feltételek", "Sajtó", "Állapot"] }
+        {
+          "heading": "Termék",
+          "links": ["Az ügynökök", "Lefedettség", "Vízió"]
+        },
+        {
+          "heading": "Vállalat",
+          "links": ["Rólunk", "Kapcsolat", "Karrier", "Blog"]
+        },
+        {
+          "heading": "Források",
+          "links": ["Adatvédelem", "Feltételek", "Sajtó", "Állapot"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Korai hozzáférés",
       "title": "Az ügynökei készen állnak. Már csak Ön hiányzik.",
       "body": "Piacról piacra kapcsoljuk be az EU-t. Iratkozzon fel a várólistára — abban a pillanatban, amikor az Ön országa felgyullad, az ügynökei vadászni indulnak.",
       "button": "Foglalja le a helyét"
@@ -149,14 +150,6 @@
       "value": "Érték",
       "deadline": "Határidő",
       "daysLeft": "{{count}} nap"
-    },
-    "agentLabels": {
-      "scout": "Felderítő ügynök",
-      "docs": "Dokumentum-ügynök",
-      "strategy": "Stratégiai ügynök",
-      "scoutStat": "{{count}} megtalált pályázat",
-      "docsStat": "papírok rendezve",
-      "strategyStat": "nyerő ajánlat kész"
     }
   }
 }

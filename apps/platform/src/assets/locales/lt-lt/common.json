@@ -26,7 +26,6 @@
       "vision": "Vizija"
     },
     "hero": {
-      "eyebrow": "Kiekviename pirkime nuskriausti. Iki šiol.",
       "titleLead": "Pirkimas, kurį jie jau laikė savu?",
       "titleHighlight": "Suteiktas.",
       "subtitle": "Šįnakt baigiasi pirkimas su jūsų vardu. Didieji žaidėjai jau turi jam komandą. Jūs turite tris atidarytus skirtukus „Excel“. Čia tai baigiasi — DI agentai, kurie jį suranda, sudrasko biurokratiją ir įstato jus į pasiūlymą. Kol miegate.",
@@ -39,7 +38,6 @@
       ]
     },
     "problem": {
-      "eyebrow": "Neveikimo kaina",
       "title": "Žaidimas sukurptas taip, kad jus laikytų lauke. Ir tai veikia.",
       "items": [
         {
@@ -57,7 +55,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agentai",
       "title": "Trys agentai. Jie neprašauna, nemiega, nepasiduoda.",
       "items": [
         {
@@ -75,7 +72,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Kam skirta",
       "title": "Vienas iš jų esate jūs. Jau žinote kuris.",
       "items": [
         {
@@ -93,7 +89,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Be spąstų",
       "title": "Užduokite klausimus, kurie paprastai sužlugdo sandorį.",
       "items": [
         {
@@ -115,13 +110,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vizija",
       "title": "Viešieji pinigai už aksominės virvės. Mes ją perkerpame.",
       "body": "Kiekvienais metais šimtai milijardų teka per Europos viešuosius pirkimus — ir lieka nepasiekiami visiems, neturintiems laiko, kalbų ar pasiūlymų komandos. DI agentai keičia skaičiavimą. Kiekviena MVĮ gauna realią galimybę.",
       "note": "Mes kuriame. Jūsų šalis – kita."
     },
     "coverage": {
-      "eyebrow": "Aprėptis",
       "title": "27 šalys. Imame jas po vieną.",
       "body": "Plečiamės visoje Europos Sąjungoje, rinka po rinkos. Kiekviena vėliava užsidega tą dieną, kai jūsų šalis pradeda veikti.",
       "statusAvailable": "Aktyvu",
@@ -134,13 +127,21 @@
       "copyright": "© Bernardo Forcillo — Visos teisės saugomos",
       "social": "Sekite tendersbay",
       "columns": [
-        { "heading": "Produktas", "links": ["Agentai", "Aprėptis", "Vizija"] },
-        { "heading": "Įmonė", "links": ["Apie mus", "Kontaktai", "Karjera", "Blogas"] },
-        { "heading": "Ištekliai", "links": ["Privatumas", "Sąlygos", "Spauda", "Statusas"] }
+        {
+          "heading": "Produktas",
+          "links": ["Agentai", "Aprėptis", "Vizija"]
+        },
+        {
+          "heading": "Įmonė",
+          "links": ["Apie mus", "Kontaktai", "Karjera", "Blogas"]
+        },
+        {
+          "heading": "Ištekliai",
+          "links": ["Privatumas", "Sąlygos", "Spauda", "Statusas"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Ankstyva prieiga",
       "title": "Jūsų agentai pasiruošę. Trūksta tik jūsų.",
       "body": "Įjungiame ES rinka po rinkos. Užsiregistruokite laukiančiųjų sąraše — tą akimirką, kai jūsų šalis užsidega, jūsų agentai išeina į medžioklę.",
       "button": "Užsitikrinkite savo vietą"
@@ -149,14 +150,6 @@
       "value": "Vertė",
       "deadline": "Terminas",
       "daysLeft": "{{count}} dienos"
-    },
-    "agentLabels": {
-      "scout": "Žvalgybos agentas",
-      "docs": "Dokumentų agentas",
-      "strategy": "Strategijos agentas",
-      "scoutStat": "{{count}} rastų pirkimų",
-      "docsStat": "dokumentai sutvarkyti",
-      "strategyStat": "laimintis pasiūlymas parengtas"
     }
   }
 }

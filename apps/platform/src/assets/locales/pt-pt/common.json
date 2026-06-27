@@ -26,7 +26,6 @@
       "vision": "Visão"
     },
     "hero": {
-      "eyebrow": "Em desvantagem em cada concurso. Até agora.",
       "titleLead": "O concurso que já davam como deles?",
       "titleHighlight": "Adjudicado.",
       "subtitle": "Esta noite fecha um concurso com o seu nome. Os grandes já têm uma equipa nele. Você tem três separadores abertos no Excel. Acaba aqui — agentes de IA que o encontram, despedaçam a burocracia e põem-no na proposta. Enquanto dorme.",
@@ -35,7 +34,6 @@
       "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"]
     },
     "problem": {
-      "eyebrow": "O custo de não fazer nada",
       "title": "O jogo está viciado para o deixar de fora. E está a resultar.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Os agentes",
       "title": "Três agentes. Não falham, não dormem, não desistem.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Para quem é",
       "title": "Um destes é você. Já sabe qual.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Sem rasteiras",
       "title": "Faça as perguntas que costumam deitar o negócio abaixo.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Visão",
       "title": "O dinheiro público está atrás de um cordão de veludo. Nós cortamo-lo.",
       "body": "Todos os anos, centenas de milhares de milhões passam pela contratação pública europeia — e ficam fora do alcance de quem não tem tempo, idiomas ou uma equipa de propostas. Os agentes de IA mudam as contas. Cada PME tem uma hipótese real.",
       "note": "Estamos a construir. O seu país é o próximo."
     },
     "coverage": {
-      "eyebrow": "Cobertura",
       "title": "27 países. Vamos conquistá-los um a um.",
       "body": "Estamos a expandir por toda a União Europeia, mercado a mercado. Cada bandeira acende no dia em que o seu país fica ativo.",
       "statusAvailable": "Ativo",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Todos os direitos reservados",
       "social": "Siga o tendersbay",
       "columns": [
-        { "heading": "Produto", "links": ["Os agentes", "Cobertura", "Visão"] },
-        { "heading": "Empresa", "links": ["Sobre nós", "Contacto", "Carreiras", "Blog"] },
-        { "heading": "Recursos", "links": ["Privacidade", "Termos", "Imprensa", "Estado"] }
+        {
+          "heading": "Produto",
+          "links": ["Os agentes", "Cobertura", "Visão"]
+        },
+        {
+          "heading": "Empresa",
+          "links": ["Sobre nós", "Contacto", "Carreiras", "Blog"]
+        },
+        {
+          "heading": "Recursos",
+          "links": ["Privacidade", "Termos", "Imprensa", "Estado"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Acesso antecipado",
       "title": "Os seus agentes estão prontos. Só falta você.",
       "body": "Estamos a ligar a UE mercado a mercado. Inscreva-se na lista — assim que o seu país acender, os seus agentes vão à caça.",
       "button": "Garanta o seu lugar"
@@ -145,14 +146,6 @@
       "value": "Valor",
       "deadline": "Prazo",
       "daysLeft": "{{count}} dias"
-    },
-    "agentLabels": {
-      "scout": "Agente explorador",
-      "docs": "Agente de documentos",
-      "strategy": "Agente de estratégia",
-      "scoutStat": "{{count}} concursos encontrados",
-      "docsStat": "burocracia tratada",
-      "strategyStat": "proposta vencedora pronta"
     }
   }
 }

@@ -26,7 +26,6 @@
       "vision": "Vizija"
     },
     "hero": {
-      "eyebrow": "U podređenom položaju na svakom natječaju. Do sada.",
       "titleLead": "Natječaj koji su već smatrali svojim?",
       "titleHighlight": "Dodijeljen.",
       "subtitle": "Večeras se zatvara natječaj s vašim imenom. Veliki igrači već imaju tim na njemu. Vi imate tri otvorene kartice u Excelu. Tu je kraj — AI agenti koji ga pronađu, razderu papirologiju i postave vas u ponudu. Dok spavate.",
@@ -39,7 +38,6 @@
       ]
     },
     "problem": {
-      "eyebrow": "Trošak nečinjenja",
       "title": "Igra je namještena da vas drži vani. I uspijeva.",
       "items": [
         {
@@ -57,7 +55,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agenti",
       "title": "Tri agenta. Ne promašuju, ne spavaju, ne odustaju.",
       "items": [
         {
@@ -75,7 +72,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Za koga je namijenjeno",
       "title": "Jedan od njih ste vi. Već znate koji.",
       "items": [
         {
@@ -93,7 +89,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Bez kvake",
       "title": "Postavite pitanja koja obično ubiju posao.",
       "items": [
         {
@@ -115,13 +110,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vizija",
       "title": "Javni novac stoji iza baršunaste vrpce. Mi je presijecamo.",
       "body": "Svake godine stotine milijardi prolaze kroz europsku javnu nabavu — i ostaju nedostupne svima bez vremena, jezika ili tima za ponude. AI agenti mijenjaju računicu. Svaki MSP dobiva pravu priliku.",
       "note": "Gradimo. Vaša zemlja je sljedeća."
     },
     "coverage": {
-      "eyebrow": "Pokrivenost",
       "title": "27 zemalja. Osvajamo ih jednu po jednu.",
       "body": "Širimo se diljem Europske unije, tržište po tržište. Svaka se zastava upali na dan kada vaša zemlja krene.",
       "statusAvailable": "Aktivno",
@@ -134,13 +127,21 @@
       "copyright": "© Bernardo Forcillo — Sva prava pridržana",
       "social": "Pratite tendersbay",
       "columns": [
-        { "heading": "Proizvod", "links": ["Agenti", "Pokrivenost", "Vizija"] },
-        { "heading": "Tvrtka", "links": ["O nama", "Kontakt", "Karijera", "Blog"] },
-        { "heading": "Resursi", "links": ["Privatnost", "Uvjeti", "Tisak", "Status"] }
+        {
+          "heading": "Proizvod",
+          "links": ["Agenti", "Pokrivenost", "Vizija"]
+        },
+        {
+          "heading": "Tvrtka",
+          "links": ["O nama", "Kontakt", "Karijera", "Blog"]
+        },
+        {
+          "heading": "Resursi",
+          "links": ["Privatnost", "Uvjeti", "Tisak", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Rani pristup",
       "title": "Vaši agenti su spremni. Jedino što nedostaje ste vi.",
       "body": "Palimo EU tržište po tržište. Prijavite se na listu čekanja — u trenutku kada vaša zemlja zasvijetli, vaši agenti kreću u lov.",
       "button": "Osigurajte svoje mjesto"
@@ -149,14 +150,6 @@
       "value": "Vrijednost",
       "deadline": "Rok",
       "daysLeft": "{{count}} dana"
-    },
-    "agentLabels": {
-      "scout": "Agent izviđač",
-      "docs": "Agent dokumentacije",
-      "strategy": "Agent strategije",
-      "scoutStat": "{{count}} pronađenih natječaja",
-      "docsStat": "dokumentacija sredena",
-      "strategyStat": "pobjednička ponuda spremna"
     }
   }
 }

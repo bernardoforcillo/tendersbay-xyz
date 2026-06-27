@@ -26,7 +26,6 @@
       "vision": "Vīzija"
     },
     "hero": {
-      "eyebrow": "Katrā iepirkumā mazākumā. Līdz šim.",
       "titleLead": "Iepirkums, ko viņi jau uzskatīja par savu?",
       "titleHighlight": "Piešķirts.",
       "subtitle": "Šonakt noslēdzas iepirkums ar jūsu vārdu. Lielajiem spēlētājiem tam jau ir komanda. Jums ir atvērtas trīs cilnes programmā Excel. Te tas beidzas — MI aģenti, kas to atrod, saplosa birokrātiju un ieliek jūs piedāvājumā. Kamēr jūs guļat.",
@@ -35,7 +34,6 @@
       "trust": ["27 valstis, viena meklēšana", "Aģenti, kas nekad neguļ", "Birokrātija: nokārtota"]
     },
     "problem": {
-      "eyebrow": "Bezdarbības cena",
       "title": "Spēle ir sarežģēta tā, lai turētu jūs ārā. Un tā darbojas.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Aģenti",
       "title": "Trīs aģenti. Viņi nekļūdās, neguļ, nepadodas.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Kam tas paredzēts",
       "title": "Viens no tiem esat jūs. Jau zināt, kurš.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Bez āķa",
       "title": "Uzdodiet jautājumus, kas parasti izjauc darījumu.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vīzija",
       "title": "Publiskā nauda atrodas aiz samta auklas. Mēs to pārgriežam.",
       "body": "Katru gadu simtiem miljardu plūst caur Eiropas publiskajiem iepirkumiem — un paliek nesasniedzami visiem bez laika, valodām vai piedāvājumu komandas. MI aģenti maina aprēķinu. Katrs MVU saņem īstu iespēju.",
       "note": "Mēs veidojam. Jūsu valsts ir nākamā."
     },
     "coverage": {
-      "eyebrow": "Pārklājums",
       "title": "27 valstis. Ieņemam tās vienu pēc otras.",
       "body": "Mēs paplašināmies visā Eiropas Savienībā, tirgu pēc tirgus. Katrs karogs iedegas dienā, kad jūsu valsts sāk darboties.",
       "statusAvailable": "Aktīvs",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas",
       "social": "Sekojiet tendersbay",
       "columns": [
-        { "heading": "Produkts", "links": ["Aģenti", "Pārklājums", "Vīzija"] },
-        { "heading": "Uzņēmums", "links": ["Par mums", "Kontakts", "Karjera", "Blogs"] },
-        { "heading": "Resursi", "links": ["Privātums", "Noteikumi", "Prese", "Statuss"] }
+        {
+          "heading": "Produkts",
+          "links": ["Aģenti", "Pārklājums", "Vīzija"]
+        },
+        {
+          "heading": "Uzņēmums",
+          "links": ["Par mums", "Kontakts", "Karjera", "Blogs"]
+        },
+        {
+          "heading": "Resursi",
+          "links": ["Privātums", "Noteikumi", "Prese", "Statuss"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Agrīna piekļuve",
       "title": "Jūsu aģenti ir gatavi. Trūkst tikai jūs.",
       "body": "Mēs ieslēdzam ES tirgu pēc tirgus. Reģistrējieties gaidīšanas sarakstā — brīdī, kad jūsu valsts iedegas, jūsu aģenti dodas medībās.",
       "button": "Rezervējiet savu vietu"
@@ -145,14 +146,6 @@
       "value": "Vērtība",
       "deadline": "Termiņš",
       "daysLeft": "{{count}} dienas"
-    },
-    "agentLabels": {
-      "scout": "Izlūkaģents",
-      "docs": "Dokumentu aģents",
-      "strategy": "Stratēģijas aģents",
-      "scoutStat": "{{count}} atrasti iepirkumi",
-      "docsStat": "dokumenti kārtībā",
-      "strategyStat": "uzvaroša piedāvājuma gatavs"
     }
   }
 }

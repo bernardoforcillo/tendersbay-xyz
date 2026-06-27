@@ -26,7 +26,6 @@
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Armi spuntate su ogni gara. Fino a oggi.",
       "titleLead": "La gara che davano già per loro?",
       "titleHighlight": "Aggiudicata.",
       "subtitle": "Stanotte scade una gara col tuo nome sopra. I grandi ci hanno messo una squadra. Tu hai tre schede aperte in Excel. Finisce qui — agenti AI che la trovano, sbranano la burocrazia e ti mettono in gara. Mentre dormi.",
@@ -35,7 +34,6 @@
       "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"]
     },
     "problem": {
-      "eyebrow": "Il costo di non fare nulla",
       "title": "Il gioco è truccato per tenerti fuori. E funziona.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Gli agenti",
       "title": "Tre agenti. Non sbagliano, non dormono, non mollano.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Per chi è",
       "title": "Uno di questi sei tu. Lo sai già quale.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Nessun trucco",
       "title": "Fai pure le domande che di solito fanno saltare il contratto.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vision",
       "title": "I soldi pubblici stanno dietro a un cordone di velluto. Noi lo tagliamo.",
       "body": "Ogni anno centinaia di miliardi passano per gli appalti pubblici europei — e restano fuori portata per chi non ha tempo, lingue o un ufficio gare. Gli agenti AI cambiano i conti. Ogni PMI ha una vera occasione.",
       "note": "Stiamo costruendo. Il tuo paese è il prossimo."
     },
     "coverage": {
-      "eyebrow": "Copertura",
       "title": "27 paesi. Li conquistiamo uno a uno.",
       "body": "Ci espandiamo in tutta l'Unione Europea, un mercato alla volta. Ogni bandiera si accende il giorno in cui il tuo paese va live.",
       "statusAvailable": "Attivo",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Tutti i diritti riservati",
       "social": "Segui tendersbay",
       "columns": [
-        { "heading": "Prodotto", "links": ["Gli agenti", "Copertura", "Visione"] },
-        { "heading": "Azienda", "links": ["Chi siamo", "Contatti", "Lavora con noi", "Blog"] },
-        { "heading": "Risorse", "links": ["Privacy", "Termini", "Stampa", "Stato"] }
+        {
+          "heading": "Prodotto",
+          "links": ["Gli agenti", "Copertura", "Visione"]
+        },
+        {
+          "heading": "Azienda",
+          "links": ["Chi siamo", "Contatti", "Lavora con noi", "Blog"]
+        },
+        {
+          "heading": "Risorse",
+          "links": ["Privacy", "Termini", "Stampa", "Stato"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Accesso anticipato",
       "title": "I tuoi agenti sono pronti. Manca solo tu.",
       "body": "Stiamo accendendo l'UE un mercato alla volta. Iscriviti alla lista — nel momento in cui il tuo paese si accende, i tuoi agenti partono a caccia.",
       "button": "Prendi il tuo posto"
@@ -145,14 +146,6 @@
       "value": "Valore",
       "deadline": "Scadenza",
       "daysLeft": "{{count}} giorni"
-    },
-    "agentLabels": {
-      "scout": "Agente Scout",
-      "docs": "Agente Documenti",
-      "strategy": "Agente Strategia",
-      "scoutStat": "{{count}} gare trovate",
-      "docsStat": "fascicolo pronto",
-      "strategyStat": "offerta vincente"
     }
   }
 }

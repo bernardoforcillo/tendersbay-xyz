@@ -26,7 +26,6 @@
       "vision": "Visioon"
     },
     "hero": {
-      "eyebrow": "Igal hankel alajõud. Seni.",
       "titleLead": "Hange, mille nad juba enda omaks lugesid?",
       "titleHighlight": "Omistatud.",
       "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja panevad teid pakkumisse. Sel ajal kui magate.",
@@ -35,7 +34,6 @@
       "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"]
     },
     "problem": {
-      "eyebrow": "Tegevusetuse hind",
       "title": "Mäng on seatud teid välja jätma. Ja see töötab.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agendid",
       "title": "Kolm agenti. Nad ei eksi, ei maga, ei anna alla.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Kellele see mõeldud on",
       "title": "Üks neist olete teie. Te juba teate, milline.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Ilma konksuta",
       "title": "Esitage küsimused, mis tavaliselt tehingu tapavad.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Visioon",
       "title": "Avalik raha on sametnööri taga. Meie lõikame selle läbi.",
       "body": "Igal aastal liigub Euroopa riigihangetes sadu miljardeid — ja jäävad kättesaamatuks kõigile, kellel pole aega, keeli ega pakkumismeeskonda. Tehisintellekti agendid muudavad arvestuse. Iga VKE saab tõelise võimaluse.",
       "note": "Me ehitame. Teie riik on järgmine."
     },
     "coverage": {
-      "eyebrow": "Kaetus",
       "title": "27 riiki. Võtame need ükshaaval.",
       "body": "Laieneme üle kogu Euroopa Liidu, turg turu haaval. Iga lipp süttib päeval, mil teie riik käivitub.",
       "statusAvailable": "Aktiivne",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud",
       "social": "Jälgi tendersbay",
       "columns": [
-        { "heading": "Toode", "links": ["Agendid", "Kaetus", "Visioon"] },
-        { "heading": "Ettevõte", "links": ["Meist", "Kontakt", "Karjäär", "Blogi"] },
-        { "heading": "Ressursid", "links": ["Privaatsus", "Tingimused", "Ajakirjandus", "Olek"] }
+        {
+          "heading": "Toode",
+          "links": ["Agendid", "Kaetus", "Visioon"]
+        },
+        {
+          "heading": "Ettevõte",
+          "links": ["Meist", "Kontakt", "Karjäär", "Blogi"]
+        },
+        {
+          "heading": "Ressursid",
+          "links": ["Privaatsus", "Tingimused", "Ajakirjandus", "Olek"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Varajane juurdepääs",
       "title": "Teie agendid on valmis. Puudute ainult teie.",
       "body": "Lülitame ELi sisse turg turu haaval. Liituge ootenimekirjaga — hetkel, mil teie riik süttib, lähevad teie agendid jahile.",
       "button": "Broneerige oma koht"
@@ -145,14 +146,6 @@
       "value": "Väärtus",
       "deadline": "Tähtaeg",
       "daysLeft": "{{count}} päeva"
-    },
-    "agentLabels": {
-      "scout": "Luureagent",
-      "docs": "Dokumentide agent",
-      "strategy": "Strateegia agent",
-      "scoutStat": "{{count}} leitud hanget",
-      "docsStat": "paberid korras",
-      "strategyStat": "võidukas pakkumine valmis"
     }
   }
 }

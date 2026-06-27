@@ -26,7 +26,6 @@
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Underlegen i hvert udbud. Indtil nu.",
       "titleLead": "Udbuddet de allerede regnede for deres?",
       "titleHighlight": "Tildelt.",
       "subtitle": "I aften lukker et udbud med dit navn på. De store spillere har allerede et team på det. Du har tre faner åbne i Excel. Det slutter her — AI-agenter, der finder det, flår papirarbejdet fra hinanden og sætter dig på buddet. Mens du sover.",
@@ -35,7 +34,6 @@
       "trust": ["27 lande, én søgning", "Agenter der aldrig sover", "Papirarbejde: klaret"]
     },
     "problem": {
-      "eyebrow": "Prisen for at gøre ingenting",
       "title": "Spillet er rigget til at holde dig ude. Og det virker.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agenterne",
       "title": "Tre agenter. De rammer ikke ved siden af, sover ikke, giver ikke op.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Hvem det er til",
       "title": "En af dem er dig. Du ved allerede hvem.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Ingen hage",
       "title": "Stil de spørgsmål, der normalt vælter handlen.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vision",
       "title": "Offentlige penge sidder bag en fløjlssnor. Vi klipper den over.",
       "body": "Hvert år bevæger hundredvis af milliarder sig gennem europæiske offentlige udbud — og forbliver uden for rækkevidde for alle uden tid, sprog eller et tilbudsteam. AI-agenter ændrer regnestykket. Hver SMV får en reel chance.",
       "note": "Vi bygger. Dit land er det næste."
     },
     "coverage": {
-      "eyebrow": "Dækning",
       "title": "27 lande. Vi tager dem ét ad gangen.",
       "body": "Vi udvider i hele Den Europæiske Union, marked for marked. Hvert flag lyser op den dag, dit land går live.",
       "statusAvailable": "Live",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes",
       "social": "Følg tendersbay",
       "columns": [
-        { "heading": "Produkt", "links": ["Agenterne", "Dækning", "Vision"] },
-        { "heading": "Virksomhed", "links": ["Om os", "Kontakt", "Karriere", "Blog"] },
-        { "heading": "Ressourcer", "links": ["Privatliv", "Vilkår", "Presse", "Status"] }
+        {
+          "heading": "Produkt",
+          "links": ["Agenterne", "Dækning", "Vision"]
+        },
+        {
+          "heading": "Virksomhed",
+          "links": ["Om os", "Kontakt", "Karriere", "Blog"]
+        },
+        {
+          "heading": "Ressourcer",
+          "links": ["Privatliv", "Vilkår", "Presse", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Tidlig adgang",
       "title": "Dine agenter er klar. Det eneste, der mangler, er dig.",
       "body": "Vi tænder EU marked for marked. Tilmeld dig ventelisten — i samme øjeblik dit land lyser op, går dine agenter på jagt.",
       "button": "Sikr dig din plads"
@@ -145,14 +146,6 @@
       "value": "Værdi",
       "deadline": "Frist",
       "daysLeft": "{{count}} dage"
-    },
-    "agentLabels": {
-      "scout": "Spejderagent",
-      "docs": "Dokumentagent",
-      "strategy": "Strategiagent",
-      "scoutStat": "{{count}} udbud fundet",
-      "docsStat": "papirerne styr på",
-      "strategyStat": "vindende bud klar"
     }
   }
 }

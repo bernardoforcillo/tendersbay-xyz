@@ -26,7 +26,6 @@
       "vision": "Viżjoni"
     },
     "hero": {
-      "eyebrow": "Megħlub f'kull offerta. Sa issa.",
       "titleLead": "L-offerta li diġà qisuha tagħhom?",
       "titleHighlight": "Mogħtija.",
       "subtitle": "Illejla tagħlaq offerta b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
@@ -35,7 +34,6 @@
       "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"]
     },
     "problem": {
-      "eyebrow": "L-ispiża li ma tagħmel xejn",
       "title": "Il-logħba hija mqassma biex iżżommok barra. U qed taħdem.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "L-Aġenti",
       "title": "Tliet aġenti. Ma jfallux, ma jorqdux, ma jċedux.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Għal min huwa",
       "title": "Wieħed minnhom huwa int. Diġà taf liema.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Ebda nassa",
       "title": "Staqsi l-mistoqsijiet li normalment joqtlu l-ftehim.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Viżjoni",
       "title": "Il-flus pubbliċi qegħdin wara ħabel tal-bellus. Aħna naqtgħuh.",
       "body": "Kull sena mijiet ta' biljuni jgħaddu mill-akkwist pubbliku Ewropew — u jibqgħu 'l bogħod minn kull min m'għandux il-ħin, il-lingwi jew tim tal-offerti. L-aġenti AI ibiddlu l-kalkolu. Kull SME jikseb ċans reali.",
       "note": "Qed nibnu. Pajjiżek imiss."
     },
     "coverage": {
-      "eyebrow": "Kopertura",
       "title": "27 pajjiż. Qed neħduhom wieħed wieħed.",
       "body": "Qed nespandu mal-Unjoni Ewropea kollha, suq wara suq. Kull bandiera tixgħel fil-jum li pajjiżek jibda jaħdem.",
       "statusAvailable": "Attiv",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Id-drittijiet kollha riżervati",
       "social": "Segwi tendersbay",
       "columns": [
-        { "heading": "Prodott", "links": ["L-aġenti", "Kopertura", "Viżjoni"] },
-        { "heading": "Kumpanija", "links": ["Dwarna", "Kuntatt", "Karrieri", "Blog"] },
-        { "heading": "Riżorsi", "links": ["Privatezza", "Termini", "Stampa", "Status"] }
+        {
+          "heading": "Prodott",
+          "links": ["L-aġenti", "Kopertura", "Viżjoni"]
+        },
+        {
+          "heading": "Kumpanija",
+          "links": ["Dwarna", "Kuntatt", "Karrieri", "Blog"]
+        },
+        {
+          "heading": "Riżorsi",
+          "links": ["Privatezza", "Termini", "Stampa", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Aċċess bikri",
       "title": "L-aġenti tiegħek lesti. L-uniku li jonqos huwa int.",
       "body": "Qed nixegħlu l-UE suq wara suq. Irreġistra fuq il-lista ta' stennija — fil-mument li pajjiżek jixgħel, l-aġenti tiegħek joħorġu għall-kaċċa.",
       "button": "Iżgura postok"
@@ -145,14 +146,6 @@
       "value": "Valur",
       "deadline": "Skadenza",
       "daysLeft": "{{count}} jiem"
-    },
-    "agentLabels": {
-      "scout": "Aġent ta' skawt",
-      "docs": "Aġent tad-dokumenti",
-      "strategy": "Aġent tal-istrateġija",
-      "scoutStat": "{{count}} kuntratti misjuba",
-      "docsStat": "karti indirizzati",
-      "strategyStat": "offerta rebbieħa lesta"
     }
   }
 }

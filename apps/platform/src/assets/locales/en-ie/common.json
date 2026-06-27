@@ -26,7 +26,6 @@
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Outgunned on every tender. Until now.",
       "titleLead": "The tender they already counted as theirs?",
       "titleHighlight": "Awarded.",
       "subtitle": "A tender with your name on it closes tonight. The big players have a team on it. You have three tabs open in Excel. That ends here — AI agents that find it, gut the paperwork, and put you on the bid. While you sleep.",
@@ -35,7 +34,6 @@
       "trust": ["27 countries, one search", "Agents that never sleep", "Paperwork: handled"]
     },
     "problem": {
-      "eyebrow": "The cost of doing nothing",
       "title": "The game was rigged to keep you out. It's working.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "The agents",
       "title": "Three agents. They don't miss, don't sleep, don't quit.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Who it's for",
       "title": "One of these is you. You already know which.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "No catch",
       "title": "Ask the questions that usually kill the deal.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vision",
       "title": "Public money sits behind a velvet rope. We're cutting it.",
       "body": "Hundreds of billions move through European public procurement every year — and stay out of reach for anyone without the time, the languages, or a bid office. AI agents change the math. Every SME gets a real shot.",
       "note": "We're building. Your country is next."
     },
     "coverage": {
-      "eyebrow": "Coverage",
       "title": "27 countries. We're taking them one by one.",
       "body": "We're rolling out across the European Union, market by market. Every flag lights up the day your country goes live.",
       "statusAvailable": "Live",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — All rights reserved",
       "social": "Follow tendersbay",
       "columns": [
-        { "heading": "Product", "links": ["The agents", "Coverage", "Vision"] },
-        { "heading": "Company", "links": ["About", "Contact", "Careers", "Blog"] },
-        { "heading": "Resources", "links": ["Privacy", "Terms", "Press", "Status"] }
+        {
+          "heading": "Product",
+          "links": ["The agents", "Coverage", "Vision"]
+        },
+        {
+          "heading": "Company",
+          "links": ["About", "Contact", "Careers", "Blog"]
+        },
+        {
+          "heading": "Resources",
+          "links": ["Privacy", "Terms", "Press", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Early access",
       "title": "Your agents are ready. The only thing missing is you.",
       "body": "We're switching on the EU market by market. Join the waitlist — the moment your country lights up, your agents start hunting.",
       "button": "Claim your spot"
@@ -145,14 +146,6 @@
       "value": "Value",
       "deadline": "Deadline",
       "daysLeft": "{{count}} days"
-    },
-    "agentLabels": {
-      "scout": "Scout agent",
-      "docs": "Document agent",
-      "strategy": "Strategy agent",
-      "scoutStat": "{{count}} tenders found",
-      "docsStat": "paperwork sorted",
-      "strategyStat": "winning bid ready"
     }
   }
 }

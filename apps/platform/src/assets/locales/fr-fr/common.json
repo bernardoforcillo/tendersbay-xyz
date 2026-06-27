@@ -26,7 +26,6 @@
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Dominé sur chaque marché. Jusqu'à aujourd'hui.",
       "titleLead": "Le marché qu'ils croyaient déjà à eux ?",
       "titleHighlight": "Attribué.",
       "subtitle": "Un marché à votre nom se clôt ce soir. Les gros ont déjà une équipe dessus. Vous avez trois onglets ouverts dans Excel. Ça s'arrête ici — des agents IA qui le trouvent, étripent la paperasse et vous placent sur l'offre. Pendant que vous dormez.",
@@ -35,7 +34,6 @@
       "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"]
     },
     "problem": {
-      "eyebrow": "Le coût de l'inaction",
       "title": "Le jeu est truqué pour vous tenir dehors. Et ça marche.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Les agents",
       "title": "Trois agents. Ils ne ratent rien, ne dorment pas, n'abandonnent jamais.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "À qui c'est destiné",
       "title": "L'un d'eux, c'est vous. Vous savez déjà lequel.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Sans piège",
       "title": "Posez les questions qui font d'habitude capoter le contrat.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vision",
       "title": "L'argent public est derrière un cordon de velours. Nous le coupons.",
       "body": "Chaque année, des centaines de milliards passent par les marchés publics européens — et restent hors de portée de qui n'a ni le temps, ni les langues, ni un service offres. Les agents IA changent l'équation. Chaque PME a une vraie chance.",
       "note": "Nous construisons. Votre pays est le prochain."
     },
     "coverage": {
-      "eyebrow": "Couverture",
       "title": "27 pays. On les prend un par un.",
       "body": "Nous nous déployons dans toute l'Union européenne, marché après marché. Chaque drapeau s'illumine le jour où votre pays passe en ligne.",
       "statusAvailable": "En ligne",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Tous droits réservés",
       "social": "Suivre tendersbay",
       "columns": [
-        { "heading": "Produit", "links": ["Les agents", "Couverture", "Vision"] },
-        { "heading": "Entreprise", "links": ["À propos", "Contact", "Carrières", "Blog"] },
-        { "heading": "Ressources", "links": ["Confidentialité", "Conditions", "Presse", "Statut"] }
+        {
+          "heading": "Produit",
+          "links": ["Les agents", "Couverture", "Vision"]
+        },
+        {
+          "heading": "Entreprise",
+          "links": ["À propos", "Contact", "Carrières", "Blog"]
+        },
+        {
+          "heading": "Ressources",
+          "links": ["Confidentialité", "Conditions", "Presse", "Statut"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Accès anticipé",
       "title": "Vos agents sont prêts. Il ne manque que vous.",
       "body": "Nous allumons l'UE marché après marché. Inscrivez-vous sur la liste — dès que votre pays s'allume, vos agents partent en chasse.",
       "button": "Réservez votre place"
@@ -145,14 +146,6 @@
       "value": "Valeur",
       "deadline": "Échéance",
       "daysLeft": "{{count}} jours"
-    },
-    "agentLabels": {
-      "scout": "Agent éclaireur",
-      "docs": "Agent documents",
-      "strategy": "Agent stratégie",
-      "scoutStat": "{{count}} marchés trouvés",
-      "docsStat": "dossier bouclé",
-      "strategyStat": "offre gagnante prête"
     }
   }
 }

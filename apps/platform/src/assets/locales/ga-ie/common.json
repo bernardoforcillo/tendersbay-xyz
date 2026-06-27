@@ -26,7 +26,6 @@
       "vision": "Fís"
     },
     "hero": {
-      "eyebrow": "Faoi mhíbhuntáiste i ngach tairiscint. Go dtí seo.",
       "titleLead": "An tairiscint a mheas siad cheana mar a gcuid féin?",
       "titleHighlight": "Bronnta.",
       "subtitle": "Anocht dúnann tairiscint le d'ainm uirthi. Tá foireann ag na himreoirí móra uirthi cheana. Tá trí chluaisín oscailte agat in Excel. Críochnaíonn sé anseo — gníomhairí AI a aimsíonn í, a stróiceann an obair pháipéir, agus a chuireann thú sa tairiscint. Agus tú i do chodladh.",
@@ -39,7 +38,6 @@
       ]
     },
     "problem": {
-      "eyebrow": "Costas na neamhghníomhaíochta",
       "title": "Tá an cluiche socraithe chun thú a choinneáil amuigh. Agus tá ag éirí leis.",
       "items": [
         {
@@ -57,7 +55,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Na Gníomhairí",
       "title": "Trí ghníomhaire. Ní chailleann siad, ní chodlaíonn siad, ní éiríonn siad as.",
       "items": [
         {
@@ -75,7 +72,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Cé dó a bhfuil sé",
       "title": "Tusa duine acu. Tá a fhios agat cheana cé acu.",
       "items": [
         {
@@ -93,7 +89,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Gan aon chleas",
       "title": "Cuir na ceisteanna a mharaíonn an margadh de ghnáth.",
       "items": [
         {
@@ -115,13 +110,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Fís",
       "title": "Tá airgead poiblí taobh thiar de chorda veilbhite. Gearraimid é.",
       "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí na hEorpa — agus fanann sé as raon do dhuine ar bith gan am, teangacha nó foireann tairisceana. Athraíonn gníomhairí AI an mhatamaitic. Faigheann gach FBM seans fíor.",
       "note": "Táimid ag tógáil. Is í do thír an chéad cheann eile."
     },
     "coverage": {
-      "eyebrow": "Clúdach",
       "title": "27 tír. Glacaimid iad ceann ar cheann.",
       "body": "Táimid ag leathnú ar fud an Aontais Eorpaigh, margadh ar mhargadh. Lasann gach bratach an lá a théann do thír beo.",
       "statusAvailable": "Beo",
@@ -134,13 +127,21 @@
       "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint",
       "social": "Lean tendersbay",
       "columns": [
-        { "heading": "Táirge", "links": ["Na gníomhairí", "Clúdach", "Fís"] },
-        { "heading": "Cuideachta", "links": ["Fúinn", "Teagmháil", "Gairmeacha", "Blag"] },
-        { "heading": "Acmhainní", "links": ["Príobháideacht", "Téarmaí", "Preás", "Stádas"] }
+        {
+          "heading": "Táirge",
+          "links": ["Na gníomhairí", "Clúdach", "Fís"]
+        },
+        {
+          "heading": "Cuideachta",
+          "links": ["Fúinn", "Teagmháil", "Gairmeacha", "Blag"]
+        },
+        {
+          "heading": "Acmhainní",
+          "links": ["Príobháideacht", "Téarmaí", "Preás", "Stádas"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Rochtain luath",
       "title": "Tá do ghníomhairí réidh. Níl in easnamh ach tusa.",
       "body": "Táimid ag lasadh an AE margadh ar mhargadh. Cláraigh ar an liosta feithimh — an nóiméad a lasann do thír, téann do ghníomhairí ag fiach.",
       "button": "Cinntigh d'áit"
@@ -149,14 +150,6 @@
       "value": "Luach",
       "deadline": "Spriocdháta",
       "daysLeft": "{{count}} lá"
-    },
-    "agentLabels": {
-      "scout": "Gníomhaire fionnachtana",
-      "docs": "Gníomhaire doiciméad",
-      "strategy": "Gníomhaire straitéise",
-      "scoutStat": "{{count}} conradh aimsithe",
-      "docsStat": "cáipéisí eagraithe",
-      "strategyStat": "tairiscint bhuacach réidh"
     }
   }
 }

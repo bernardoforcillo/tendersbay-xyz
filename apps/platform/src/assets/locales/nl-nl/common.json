@@ -26,7 +26,6 @@
       "vision": "Visie"
     },
     "hero": {
-      "eyebrow": "Bij elke aanbesteding in de minderheid. Tot nu.",
       "titleLead": "De aanbesteding die ze al van zichzelf rekenden?",
       "titleHighlight": "Gegund.",
       "subtitle": "Vanavond sluit een aanbesteding met uw naam erop. De grote spelers hebben er al een team op. U heeft drie tabbladen open in Excel. Daar is het mee gedaan — AI-agenten die haar vinden, het papierwerk slopen en u op de inschrijving zetten. Terwijl u slaapt.",
@@ -35,7 +34,6 @@
       "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"]
     },
     "problem": {
-      "eyebrow": "De kosten van niets doen",
       "title": "Het spel is opgezet om u buiten te houden. En het werkt.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "De agenten",
       "title": "Drie agenten. Ze missen niets, slapen niet, geven niet op.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Voor wie het is",
       "title": "Eén van deze bent u. U weet al welke.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Geen addertje",
       "title": "Stel de vragen die de deal meestal de kop kosten.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Visie",
       "title": "Publiek geld zit achter een fluwelen koord. Wij knippen het door.",
       "body": "Elk jaar gaan honderden miljarden door Europese overheidsopdrachten — en blijven buiten bereik voor iedereen zonder tijd, talen of een biedteam. AI-agenten veranderen de rekensom. Elk mkb-bedrijf krijgt een echte kans.",
       "note": "We bouwen. Uw land is het volgende."
     },
     "coverage": {
-      "eyebrow": "Dekking",
       "title": "27 landen. We nemen ze één voor één in.",
       "body": "We breiden uit over de hele Europese Unie, markt voor markt. Elke vlag licht op op de dag dat uw land live gaat.",
       "statusAvailable": "Live",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden",
       "social": "Volg tendersbay",
       "columns": [
-        { "heading": "Product", "links": ["De agenten", "Dekking", "Visie"] },
-        { "heading": "Bedrijf", "links": ["Over ons", "Contact", "Vacatures", "Blog"] },
-        { "heading": "Bronnen", "links": ["Privacy", "Voorwaarden", "Pers", "Status"] }
+        {
+          "heading": "Product",
+          "links": ["De agenten", "Dekking", "Visie"]
+        },
+        {
+          "heading": "Bedrijf",
+          "links": ["Over ons", "Contact", "Vacatures", "Blog"]
+        },
+        {
+          "heading": "Bronnen",
+          "links": ["Privacy", "Voorwaarden", "Pers", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Vroege toegang",
       "title": "Uw agenten staan klaar. Alleen u ontbreekt nog.",
       "body": "We zetten de EU markt voor markt aan. Schrijf u in op de wachtlijst — zodra uw land oplicht, gaan uw agenten op jacht.",
       "button": "Claim uw plek"
@@ -145,14 +146,6 @@
       "value": "Waarde",
       "deadline": "Deadline",
       "daysLeft": "{{count}} dagen"
-    },
-    "agentLabels": {
-      "scout": "Verkenneragent",
-      "docs": "Documentagent",
-      "strategy": "Strategieagent",
-      "scoutStat": "{{count}} aanbestedingen gevonden",
-      "docsStat": "papierwerk geregeld",
-      "strategyStat": "winnend bod klaar"
     }
   }
 }

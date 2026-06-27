@@ -26,7 +26,6 @@
       "vision": "Wizja"
     },
     "hero": {
-      "eyebrow": "Na przegranej pozycji w każdym przetargu. Do teraz.",
       "titleLead": "Przetarg, który już liczyli jako swój?",
       "titleHighlight": "Udzielony.",
       "subtitle": "Dziś w nocy zamyka się przetarg z twoim nazwiskiem. Duzi gracze mają już na nim zespół. Ty masz trzy karty otwarte w Excelu. To koniec — agenci AI, którzy go znajdą, rozszarpią papierkową robotę i wstawią cię do oferty. Gdy śpisz.",
@@ -39,7 +38,6 @@
       ]
     },
     "problem": {
-      "eyebrow": "Koszt bezczynności",
       "title": "Gra jest ustawiona, by trzymać cię na zewnątrz. I działa.",
       "items": [
         {
@@ -57,7 +55,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agenci",
       "title": "Trzej agenci. Nie chybiają, nie śpią, nie odpuszczają.",
       "items": [
         {
@@ -75,7 +72,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Dla kogo",
       "title": "Jeden z nich to ty. Już wiesz który.",
       "items": [
         {
@@ -93,7 +89,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Bez haczyka",
       "title": "Zadaj pytania, które zwykle grzebią transakcję.",
       "items": [
         {
@@ -115,13 +110,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Wizja",
       "title": "Publiczne pieniądze są za aksamitnym sznurem. My go przecinamy.",
       "body": "Co roku setki miliardów przepływają przez europejskie zamówienia publiczne — i pozostają poza zasięgiem każdego, kto nie ma czasu, języków ani działu ofert. Agenci AI zmieniają rachunek. Każde MŚP dostaje prawdziwą szansę.",
       "note": "Budujemy. Twój kraj jest następny."
     },
     "coverage": {
-      "eyebrow": "Zasięg",
       "title": "27 krajów. Zdobywamy je jeden po drugim.",
       "body": "Rozszerzamy działalność na całą Unię Europejską, rynek po rynku. Każda flaga rozświetla się w dniu, gdy twój kraj rusza.",
       "statusAvailable": "Aktywne",
@@ -134,13 +127,21 @@
       "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone",
       "social": "Obserwuj tendersbay",
       "columns": [
-        { "heading": "Produkt", "links": ["Agenci", "Zasięg", "Wizja"] },
-        { "heading": "Firma", "links": ["O nas", "Kontakt", "Kariera", "Blog"] },
-        { "heading": "Zasoby", "links": ["Prywatność", "Warunki", "Prasa", "Status"] }
+        {
+          "heading": "Produkt",
+          "links": ["Agenci", "Zasięg", "Wizja"]
+        },
+        {
+          "heading": "Firma",
+          "links": ["O nas", "Kontakt", "Kariera", "Blog"]
+        },
+        {
+          "heading": "Zasoby",
+          "links": ["Prywatność", "Warunki", "Prasa", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Wczesny dostęp",
       "title": "Twoi agenci są gotowi. Brakuje tylko ciebie.",
       "body": "Uruchamiamy UE rynek po rynku. Dołącz do listy — w chwili, gdy twój kraj się rozświetli, twoi agenci ruszają na łowy.",
       "button": "Zarezerwuj swoje miejsce"
@@ -149,14 +150,6 @@
       "value": "Wartość",
       "deadline": "Termin",
       "daysLeft": "{{count}} dni"
-    },
-    "agentLabels": {
-      "scout": "Agent zwiadowca",
-      "docs": "Agent dokumentów",
-      "strategy": "Agent strategii",
-      "scoutStat": "{{count}} znalezionych przetargów",
-      "docsStat": "papiery załatwione",
-      "strategyStat": "zwycięska oferta gotowa"
     }
   }
 }

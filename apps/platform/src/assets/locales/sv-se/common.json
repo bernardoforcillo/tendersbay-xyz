@@ -26,7 +26,6 @@
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Underlägsen i varje upphandling. Tills nu.",
       "titleLead": "Upphandlingen de redan räknat som sin?",
       "titleHighlight": "Tilldelad.",
       "subtitle": "Ikväll stänger en upphandling med ditt namn på. De stora aktörerna har redan ett team på den. Du har tre flikar öppna i Excel. Det slutar här — AI-agenter som hittar den, sliter sönder pappersarbetet och placerar dig i anbudet. Medan du sover.",
@@ -35,7 +34,6 @@
       "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"]
     },
     "problem": {
-      "eyebrow": "Kostnaden för att inte göra något",
       "title": "Spelet är riggat för att hålla dig ute. Och det fungerar.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agenterna",
       "title": "Tre agenter. De missar inte, sover inte, ger inte upp.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Vem det är till för",
       "title": "En av dem är du. Du vet redan vilken.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Ingen hake",
       "title": "Ställ frågorna som brukar sänka affären.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vision",
       "title": "Offentliga pengar sitter bakom en sammetslina. Vi klipper av den.",
       "body": "Varje år rör sig hundratals miljarder genom europeisk offentlig upphandling — och förblir utom räckhåll för alla utan tid, språk eller ett anbudsteam. AI-agenter ändrar kalkylen. Varje SMF får en riktig chans.",
       "note": "Vi bygger. Ditt land är nästa."
     },
     "coverage": {
-      "eyebrow": "Täckning",
       "title": "27 länder. Vi tar dem ett i taget.",
       "body": "Vi expanderar i hela Europeiska unionen, marknad för marknad. Varje flagga tänds den dag ditt land går live.",
       "statusAvailable": "Live",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Alla rättigheter förbehållna",
       "social": "Följ tendersbay",
       "columns": [
-        { "heading": "Produkt", "links": ["Agenterna", "Täckning", "Vision"] },
-        { "heading": "Företag", "links": ["Om oss", "Kontakt", "Karriär", "Blogg"] },
-        { "heading": "Resurser", "links": ["Integritet", "Villkor", "Press", "Status"] }
+        {
+          "heading": "Produkt",
+          "links": ["Agenterna", "Täckning", "Vision"]
+        },
+        {
+          "heading": "Företag",
+          "links": ["Om oss", "Kontakt", "Karriär", "Blogg"]
+        },
+        {
+          "heading": "Resurser",
+          "links": ["Integritet", "Villkor", "Press", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Tidig tillgång",
       "title": "Dina agenter är redo. Det enda som saknas är du.",
       "body": "Vi slår på EU marknad för marknad. Gå med på väntelistan — i samma stund ditt land tänds börjar dina agenter jaga.",
       "button": "Säkra din plats"
@@ -145,14 +146,6 @@
       "value": "Värde",
       "deadline": "Deadline",
       "daysLeft": "{{count}} dagar"
-    },
-    "agentLabels": {
-      "scout": "Spaningsagent",
-      "docs": "Dokumentagent",
-      "strategy": "Strategiagent",
-      "scoutStat": "{{count}} upphandlingar hittade",
-      "docsStat": "pappren ordnade",
-      "strategyStat": "vinnande anbud redo"
     }
   }
 }

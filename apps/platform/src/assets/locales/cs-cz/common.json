@@ -26,7 +26,6 @@
       "vision": "Vize"
     },
     "hero": {
-      "eyebrow": "V každé zakázce v nevýhodě. Až dosud.",
       "titleLead": "Zakázka, kterou už počítali za svou?",
       "titleHighlight": "Přidělena.",
       "subtitle": "Dnes v noci se uzavírá zakázka s vaším jménem. Velcí hráči na ní už mají tým. Vy máte otevřené tři panely v Excelu. Tady to končí — AI agenti, kteří ji najdou, rozcupují papírování a postaví vás do nabídky. Zatímco spíte.",
@@ -35,7 +34,6 @@
       "trust": ["27 zemí, jedno hledání", "Agenti, kteří nikdy nespí", "Papírování: vyřízeno"]
     },
     "problem": {
-      "eyebrow": "Cena nečinnosti",
       "title": "Hra je nastavená tak, aby vás držela venku. A funguje to.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agenti",
       "title": "Tři agenti. Neminou, nespí, nevzdávají se.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Pro koho je určeno",
       "title": "Jeden z nich jste vy. Už víte který.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Žádný háček",
       "title": "Zeptejte se na to, co obvykle zabije obchod.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Vize",
       "title": "Veřejné peníze sedí za sametovou šňůrou. My ji přestřihneme.",
       "body": "Každý rok protečou stovky miliard evropskými veřejnými zakázkami — a zůstávají mimo dosah všech bez času, jazyků nebo týmu pro nabídky. AI agenti mění výpočet. Každá malá a střední firma dostává skutečnou šanci.",
       "note": "Budujeme. Vaše země je další na řadě."
     },
     "coverage": {
-      "eyebrow": "Pokrytí",
       "title": "27 zemí. Bereme je jednu po druhé.",
       "body": "Rozšiřujeme se po celé Evropské unii, trh po trhu. Každá vlajka se rozsvítí v den, kdy vaše země naběhne.",
       "statusAvailable": "Aktivní",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Všechna práva vyhrazena",
       "social": "Sledujte tendersbay",
       "columns": [
-        { "heading": "Produkt", "links": ["Agenti", "Pokrytí", "Vize"] },
-        { "heading": "Společnost", "links": ["O nás", "Kontakt", "Kariéra", "Blog"] },
-        { "heading": "Zdroje", "links": ["Ochrana soukromí", "Podmínky", "Tisk", "Stav"] }
+        {
+          "heading": "Produkt",
+          "links": ["Agenti", "Pokrytí", "Vize"]
+        },
+        {
+          "heading": "Společnost",
+          "links": ["O nás", "Kontakt", "Kariéra", "Blog"]
+        },
+        {
+          "heading": "Zdroje",
+          "links": ["Ochrana soukromí", "Podmínky", "Tisk", "Stav"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Brzký přístup",
       "title": "Vaši agenti jsou připraveni. Chybíte už jen vy.",
       "body": "Zapínáme EU trh po trhu. Zaregistrujte se na čekací listinu — ve chvíli, kdy se vaše země rozsvítí, vyrazí vaši agenti na lov.",
       "button": "Zajistěte si své místo"
@@ -145,14 +146,6 @@
       "value": "Hodnota",
       "deadline": "Termín",
       "daysLeft": "{{count}} dní"
-    },
-    "agentLabels": {
-      "scout": "Agent průzkumník",
-      "docs": "Agent dokumentů",
-      "strategy": "Agent strategie",
-      "scoutStat": "{{count}} nalezených zakázek",
-      "docsStat": "papíry vyřízeny",
-      "strategyStat": "vítězná nabídka připravena"
     }
   }
 }

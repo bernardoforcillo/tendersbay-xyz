@@ -26,7 +26,6 @@
       "vision": "Viziune"
     },
     "hero": {
-      "eyebrow": "În inferioritate la fiecare licitație. Până acum.",
       "titleLead": "Licitația pe care o socoteau deja a lor?",
       "titleHighlight": "Atribuită.",
       "subtitle": "În seara asta se închide o licitație cu numele dvs. Marii jucători au deja o echipă pe ea. Dvs. aveți trei file deschise în Excel. Aici se termină — agenți AI care o găsesc, sfâșie birocrația și vă pun pe ofertă. În timp ce dormiți.",
@@ -35,7 +34,6 @@
       "trust": ["27 de țări, o căutare", "Agenți care nu dorm niciodată", "Birocrație: rezolvată"]
     },
     "problem": {
-      "eyebrow": "Costul inacțiunii",
       "title": "Jocul e măsluit ca să vă țină pe dinafară. Și funcționează.",
       "items": [
         {
@@ -53,7 +51,6 @@
       ]
     },
     "agents": {
-      "eyebrow": "Agenții",
       "title": "Trei agenți. Nu ratează, nu dorm, nu renunță.",
       "items": [
         {
@@ -71,7 +68,6 @@
       ]
     },
     "audience": {
-      "eyebrow": "Pentru cine este",
       "title": "Unul dintre aceștia sunteți dvs. Știți deja care.",
       "items": [
         {
@@ -89,7 +85,6 @@
       ]
     },
     "assurance": {
-      "eyebrow": "Fără capcane",
       "title": "Puneți întrebările care de obicei dărâmă afacerea.",
       "items": [
         {
@@ -111,13 +106,11 @@
       ]
     },
     "vision": {
-      "eyebrow": "Viziune",
       "title": "Banii publici stau în spatele unui cordon de catifea. Noi îl tăiem.",
       "body": "În fiecare an, sute de miliarde trec prin achizițiile publice europene — și rămân de neatins pentru oricine fără timp, limbi sau o echipă de oferte. Agenții AI schimbă socoteala. Fiecare IMM primește o șansă reală.",
       "note": "Construim. Țara dvs. urmează."
     },
     "coverage": {
-      "eyebrow": "Acoperire",
       "title": "27 de țări. Le luăm una câte una.",
       "body": "Ne extindem în întreaga Uniune Europeană, piață cu piață. Fiecare steag se aprinde în ziua în care țara dvs. intră în funcțiune.",
       "statusAvailable": "Activ",
@@ -130,13 +123,21 @@
       "copyright": "© Bernardo Forcillo — Toate drepturile rezervate",
       "social": "Urmăriți tendersbay",
       "columns": [
-        { "heading": "Produs", "links": ["Agenții", "Acoperire", "Viziune"] },
-        { "heading": "Companie", "links": ["Despre noi", "Contact", "Cariere", "Blog"] },
-        { "heading": "Resurse", "links": ["Confidențialitate", "Termeni", "Presă", "Status"] }
+        {
+          "heading": "Produs",
+          "links": ["Agenții", "Acoperire", "Viziune"]
+        },
+        {
+          "heading": "Companie",
+          "links": ["Despre noi", "Contact", "Cariere", "Blog"]
+        },
+        {
+          "heading": "Resurse",
+          "links": ["Confidențialitate", "Termeni", "Presă", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Acces anticipat",
       "title": "Agenții dvs. sunt gata. Singurul care lipsește sunteți dvs.",
       "body": "Aprindem UE piață cu piață. Înscrieți-vă pe lista de așteptare — în clipa în care țara dvs. se aprinde, agenții dvs. pornesc la vânătoare.",
       "button": "Rezervați-vă locul"
@@ -145,14 +146,6 @@
       "value": "Valoare",
       "deadline": "Termen limită",
       "daysLeft": "{{count}} zile"
-    },
-    "agentLabels": {
-      "scout": "Agent explorator",
-      "docs": "Agent documente",
-      "strategy": "Agent strategie",
-      "scoutStat": "{{count}} licitații găsite",
-      "docsStat": "documente aranjate",
-      "strategyStat": "ofertă câștigătoare gata"
     }
   }
 }

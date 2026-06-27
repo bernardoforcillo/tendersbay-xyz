@@ -31,7 +31,6 @@ describe('landing persona + assurance locale keys', () => {
 
   it.each(entries)('%s has a 4-card assurance block', (_path, mod) => {
     const assurance = mod.default.landing.assurance;
-    expect(assurance?.eyebrow, 'assurance.eyebrow').toBeTruthy();
     expect(assurance?.title, 'assurance.title').toBeTruthy();
     expect(cardsAreFilled(assurance?.items, 4), 'assurance.items (4 filled cards)').toBe(true);
   });
