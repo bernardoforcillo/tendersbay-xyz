@@ -13,20 +13,11 @@ export function AgentsSection() {
     <section
       id="agents"
       aria-labelledby="agents-title"
-      className="relative scroll-mt-24 overflow-hidden bg-ink-900 py-24 text-ink-100 md:py-28"
+      className="scroll-mt-24 bg-brand-700 py-24 text-white md:py-28"
     >
-      {/* aurora top-edge bleeding down from the light Problem section */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-64"
-        style={{
-          background:
-            'radial-gradient(60% 80% at 50% -10%, rgba(45,212,191,0.16), transparent 70%)',
-        }}
-      />
-      <div className="relative mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <Reveal>
-          <Eyebrow icon="sparkle" className="border-white/15 bg-white/5 text-brand-300">
+          <Eyebrow icon="sparkle" className="border-white/25 bg-white/10 text-white">
             {t('landing.agents.eyebrow')}
           </Eyebrow>
           <h2

@@ -13,14 +13,16 @@ export function ProblemSection() {
     <section
       id="problem"
       aria-labelledby="problem-title"
-      className="scroll-mt-24 bg-cream-100 py-24 md:py-28"
+      className="scroll-mt-24 bg-ink-900 py-24 text-ink-100 md:py-28"
     >
       <div className="mx-auto max-w-6xl px-6">
         <Reveal>
-          <Eyebrow icon="layers">{t('landing.problem.eyebrow')}</Eyebrow>
+          <Eyebrow icon="layers" className="border-white/15 bg-white/5 text-brand-300">
+            {t('landing.problem.eyebrow')}
+          </Eyebrow>
           <h2
             id="problem-title"
-            className="mt-5 max-w-[18ch] font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
+            className="mt-5 max-w-[18ch] font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
           >
             {t('landing.problem.title')}
           </h2>
@@ -29,7 +31,7 @@ export function ProblemSection() {
           {items.map((item, i) => (
             <Reveal key={item.title} delay={i * 0.08}>
               <ValueCard
-                tone="muted"
+                tone="solution"
                 icon={ICONS[i] ?? 'layers'}
                 title={item.title}
                 body={item.body}

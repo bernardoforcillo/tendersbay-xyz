@@ -1,4 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -7,6 +8,7 @@ import {
   type IconName,
   TenderCard,
 } from '~/features/landing/components/atoms';
+import { useParallax } from '~/features/landing/motion';
 import { SAMPLE_TENDERS } from './sample-tenders';
 import { useRotatingTenders } from './use-rotating-tenders';
 
@@ -65,6 +67,8 @@ export function Hero() {
   const { tender } = useRotatingTenders(SAMPLE_TENDERS);
   const reduce = useReducedMotion();
   const trust = t('landing.hero.trust', { returnObjects: true }) as string[];
+  const heroRef = useRef<HTMLElement>(null);
+  const constellationY = useParallax(heroRef, 80);
 
   const container = reduce
     ? {}
@@ -91,28 +95,11 @@ export function Hero() {
 
   return (
     <section
+      ref={heroRef}
       id="top"
       className="relative flex min-h-[88vh] items-center overflow-hidden bg-cream-100"
       aria-labelledby="hero-title"
     >
-      {/* aurora mesh — top-weighted teal glows with a gentle breathing drift */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(42% 52% at 84% -6%, rgba(45,212,191,0.20), transparent 60%), radial-gradient(36% 46% at 52% 30%, rgba(13,148,136,0.07), transparent 70%)',
-        }}
-        animate={reduce ? undefined : { scale: [1, 1.05, 1], opacity: [0.92, 1, 0.92] }}
-        transition={reduce ? undefined : { duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-      />
-      {/* bottom fade — blends the hero seamlessly into the cream Problem section */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3"
-        style={{ background: 'linear-gradient(to bottom, transparent, #fbf7f0)' }}
-      />
-
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-6 pt-28 pb-20 md:grid-cols-[1.05fr_0.95fr] md:pt-24 md:pb-16">
         <motion.div {...container}>
           <motion.div {...item}>
@@ -159,23 +146,16 @@ export function Hero() {
         <motion.div
           aria-hidden="true"
           className="relative mx-auto h-[360px] w-[340px] shrink-0"
+          style={constellationY ? { y: constellationY } : undefined}
           initial={reduce ? undefined : { opacity: 0, scale: 0.94 }}
           animate={reduce ? undefined : { opacity: 1, scale: 1 }}
           transition={reduce ? undefined : { duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* halo */}
-          <motion.div
-            className="absolute left-1/2 top-1/2 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{
-              background:
-                'radial-gradient(circle, rgba(13,148,136,0.22) 0%, rgba(13,148,136,0) 70%)',
-            }}
-            animate={reduce ? undefined : { scale: [1, 1.08, 1], opacity: [0.85, 1, 0.85] }}
-            transition={reduce ? undefined : { duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          />
+          {/* bold teal backdrop — a flat block that makes the agent chips and tender card pop */}
+          <div className="absolute -inset-6 rounded-[2rem] bg-brand-700 shadow-soft-lg" />
           {/* dashed ring */}
           <motion.div
-            className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-brand-300/60"
+            className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-white/25"
             animate={reduce ? undefined : { rotate: 360 }}
             transition={reduce ? undefined : { duration: 60, repeat: Infinity, ease: 'linear' }}
           />
@@ -183,7 +163,7 @@ export function Hero() {
           <svg className="absolute inset-0 h-full w-full" viewBox="0 0 340 360" fill="none">
             <title>agent connections</title>
             <motion.g
-              stroke="#9bcabf"
+              stroke="#5eead4"
               strokeWidth="1.5"
               strokeDasharray="4 6"
               animate={reduce ? undefined : { strokeDashoffset: [0, -20] }}

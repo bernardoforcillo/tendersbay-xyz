@@ -1,18 +1,22 @@
+import { motion } from 'motion/react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Icon } from '~/features/landing/components/atoms';
+import { useKineticBlock } from '~/features/landing/motion';
 
 export function CtaBand() {
   const { t } = useTranslation();
+  const sectionRef = useRef<HTMLElement>(null);
+  const kinetic = useKineticBlock(sectionRef);
 
   return (
-    <section aria-labelledby="cta-title" className="px-6 py-16 md:py-20">
-      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-ink-950 px-8 py-16 text-center shadow-soft-lg md:px-16 md:py-20">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_-10%,rgba(45,212,191,0.25),transparent_60%)]"
-        />
+    <section ref={sectionRef} aria-labelledby="cta-title" className="px-6 py-16 md:py-20">
+      <motion.div
+        style={kinetic}
+        className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-brand-700 px-8 py-16 text-center shadow-soft-lg md:px-16 md:py-20"
+      >
         <div className="relative mx-auto flex max-w-2xl flex-col items-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-300">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-white">
             <Icon name="sparkle" className="text-[14px]" />
             {t('landing.cta.eyebrow')}
           </span>
@@ -22,14 +26,14 @@ export function CtaBand() {
           >
             {t('landing.cta.title')}
           </h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-ink-200 md:text-base">
+          <p className="mt-4 text-[15px] leading-relaxed text-brand-50 md:text-base">
             {t('landing.cta.body')}
           </p>
-          <Button href="#top" className="mt-8">
+          <Button href="#top" variant="invert" className="mt-8">
             {t('landing.cta.button')}
           </Button>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

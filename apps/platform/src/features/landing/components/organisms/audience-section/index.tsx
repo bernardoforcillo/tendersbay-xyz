@@ -13,16 +13,9 @@ export function AudienceSection() {
     <section
       id="audience"
       aria-labelledby="audience-title"
-      className="relative scroll-mt-24 overflow-hidden bg-cream-50 py-28 md:py-32"
+      className="scroll-mt-24 bg-cream-100 py-28 md:py-32"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[720px] -translate-x-1/2 -translate-y-1/2"
-        style={{
-          background: 'radial-gradient(50% 50% at 50% 50%, rgba(13,148,136,0.10), transparent 70%)',
-        }}
-      />
-      <div className="relative mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <Reveal className="flex flex-col items-center text-center">
           <Eyebrow icon="check">{t('landing.audience.eyebrow')}</Eyebrow>
           <h2

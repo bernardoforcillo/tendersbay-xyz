@@ -13,7 +13,7 @@ export function AssuranceSection() {
     <section
       id="assurance"
       aria-labelledby="assurance-title"
-      className="scroll-mt-24 bg-cream-100 py-24 md:py-28"
+      className="scroll-mt-24 bg-cream-50 py-24 md:py-28"
     >
       <div className="mx-auto max-w-6xl px-6">
         <Reveal className="flex flex-col items-center text-center">
