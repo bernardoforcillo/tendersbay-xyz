@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Eyebrow, type IconName, Reveal } from '~/features/landing/components/atoms';
+import { type IconName, Reveal } from '~/features/landing/components/atoms';
 import { ValueCard } from '~/features/landing/components/molecules';
 
 type Item = { title: string; body: string };
@@ -17,10 +17,9 @@ export function AudienceSection() {
     >
       <div className="mx-auto max-w-6xl px-6">
         <Reveal className="flex flex-col items-center text-center">
-          <Eyebrow icon="check">{t('landing.audience.eyebrow')}</Eyebrow>
           <h2
             id="audience-title"
-            className="mt-7 max-w-[20ch] font-display text-[2rem] leading-[1.05] tracking-[-0.015em] text-ink-900 md:text-[2.7rem]"
+            className="max-w-[20ch] font-display text-[2rem] leading-[1.05] tracking-[-0.015em] text-ink-900 md:text-[2.7rem]"
           >
             {t('landing.audience.title')}
           </h2>

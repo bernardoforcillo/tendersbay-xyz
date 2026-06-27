@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
-import { Eyebrow, Reveal } from '~/features/landing/components/atoms';
+import { Reveal } from '~/features/landing/components/atoms';
 
 export function VisionSection() {
   const { t } = useTranslation();
@@ -13,12 +13,9 @@ export function VisionSection() {
     >
       <div className="mx-auto max-w-3xl px-6 text-center">
         <Reveal>
-          <Eyebrow icon="sparkle" className="mx-auto">
-            {t('landing.vision.eyebrow')}
-          </Eyebrow>
           <h2
             id="vision-title"
-            className="mt-5 font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
+            className="font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
           >
             {t('landing.vision.title')}
           </h2>

@@ -1,6 +1,6 @@
 import { useReducedMotion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
-import { CountryFlag, Eyebrow, Marquee } from '~/features/landing/components/atoms';
+import { CountryFlag, Marquee } from '~/features/landing/components/atoms';
 import {
   EU_COUNTRIES,
   type EuCountry,
@@ -48,12 +48,9 @@ export function CoverageSection() {
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-[52ch]">
-            <Eyebrow icon="globe" className="border-white/15 bg-white/5 text-brand-300">
-              {t('landing.coverage.eyebrow')}
-            </Eyebrow>
             <h2
               id="coverage-title"
-              className="mt-5 font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
+              className="font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
             >
               {t('landing.coverage.title')}
             </h2>

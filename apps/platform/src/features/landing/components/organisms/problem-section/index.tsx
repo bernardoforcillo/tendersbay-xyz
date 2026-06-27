@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Eyebrow, type IconName, Reveal } from '~/features/landing/components/atoms';
+import { type IconName, Reveal } from '~/features/landing/components/atoms';
 import { ValueCard } from '~/features/landing/components/molecules';
 
 type Item = { title: string; body: string };
@@ -17,12 +17,9 @@ export function ProblemSection() {
     >
       <div className="mx-auto max-w-6xl px-6">
         <Reveal>
-          <Eyebrow icon="layers" className="border-white/15 bg-white/5 text-brand-300">
-            {t('landing.problem.eyebrow')}
-          </Eyebrow>
           <h2
             id="problem-title"
-            className="mt-5 max-w-[18ch] font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
+            className="max-w-[18ch] font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
           >
             {t('landing.problem.title')}
           </h2>
