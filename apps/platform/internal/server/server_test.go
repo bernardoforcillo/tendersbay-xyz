@@ -1,7 +1,9 @@
 package server
 
 import (
+	"bytes"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -72,5 +74,19 @@ func TestMissingAssetReturns404(t *testing.T) {
 	res := get(t, New(testFS()), "/assets/missing.js")
 	if res.StatusCode != http.StatusNotFound {
 		t.Fatalf("got %d, want 404", res.StatusCode)
+	}
+}
+
+func TestLogsEachRequest(t *testing.T) {
+	var buf bytes.Buffer
+	prev := slog.Default()
+	slog.SetDefault(slog.New(slog.NewTextHandler(&buf, nil)))
+	t.Cleanup(func() { slog.SetDefault(prev) })
+
+	get(t, New(testFS()), "/assets/app.js")
+
+	out := buf.String()
+	if !strings.Contains(out, "method=GET") || !strings.Contains(out, "status=200") {
+		t.Fatalf("expected a request log with method+status, got %q", out)
 	}
 }
