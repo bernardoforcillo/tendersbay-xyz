@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "We use cookies",
+    "body": "We use analytics cookies to understand how you use our site and improve your experience. You can accept or reject non-essential cookies.",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
   "landing": {
     "search": {
       "label": "Search",

@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Používáme cookies",
+    "body": "Používáme analytické cookies, abychom pochopili, jak náš web využíváte, a zlepšili váš zážitek. Nepovinné cookies můžete přijmout nebo odmítnout.",
+    "accept": "Přijmout",
+    "reject": "Odmítnout"
+  },
   "landing": {
     "search": {
       "label": "Hledat",

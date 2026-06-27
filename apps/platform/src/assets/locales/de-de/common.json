@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Wir verwenden Cookies",
+    "body": "Wir verwenden Analyse-Cookies, um zu verstehen, wie Sie unsere Website nutzen, und um Ihre Erfahrung zu verbessern. Sie können nicht notwendige Cookies akzeptieren oder ablehnen.",
+    "accept": "Akzeptieren",
+    "reject": "Ablehnen"
+  },
   "landing": {
     "search": {
       "label": "Suchen",

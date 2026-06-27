@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Vi bruger cookies",
+    "body": "Vi bruger analytiske cookies til at forstå, hvordan du bruger vores side og forbedre din oplevelse. Du kan acceptere eller afvise ikke-nødvendige cookies.",
+    "accept": "Accepter",
+    "reject": "Afvis"
+  },
   "landing": {
     "search": {
       "label": "Søg",

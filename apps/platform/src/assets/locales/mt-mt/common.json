@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Nużaw il-cookies",
+    "body": "Nużaw cookies analitiċi biex nifhmu kif tuża s-sit tagħna u ntejbu l-esperjenza tiegħek. Tista' taċċetta jew tirrifjuta l-cookies mhux essenzjali.",
+    "accept": "Aċċetta",
+    "reject": "Irrifjuta"
+  },
   "landing": {
     "search": {
       "label": "Fittex",

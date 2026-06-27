@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Mēs izmantojam sīkfailus",
+    "body": "Mēs izmantojam analītiskos sīkfailus, lai saprastu, kā jūs izmantojat mūsu vietni, un uzlabotu jūsu pieredzi. Jūs varat pieņemt vai noraidīt neobligātos sīkfailus.",
+    "accept": "Pieņemt",
+    "reject": "Noraidīt"
+  },
   "landing": {
     "search": {
       "label": "Meklēt",

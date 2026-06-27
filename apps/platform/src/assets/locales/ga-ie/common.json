@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Úsáidimid fianáin",
+    "body": "Úsáidimid fianáin anailísíochta chun tuiscint a fháil ar conas a úsáideann tú ár suíomh agus chun do thaithí a fheabhsú. Is féidir leat fianáin neamhriachtanacha a ghlacadh nó a dhiúltú.",
+    "accept": "Glac",
+    "reject": "Diúltaigh"
+  },
   "landing": {
     "search": {
       "label": "Cuardaigh",

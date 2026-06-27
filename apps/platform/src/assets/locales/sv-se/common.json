@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Vi använder cookies",
+    "body": "Vi använder analytiska cookies för att förstå hur du använder vår webbplats och förbättra din upplevelse. Du kan acceptera eller avvisa icke-nödvändiga cookies.",
+    "accept": "Acceptera",
+    "reject": "Avvisa"
+  },
   "landing": {
     "search": {
       "label": "Sök",

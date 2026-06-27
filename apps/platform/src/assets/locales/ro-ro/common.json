@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Folosim cookie-uri",
+    "body": "Folosim cookie-uri analitice pentru a înțelege cum utilizați site-ul nostru și pentru a vă îmbunătăți experiența. Puteți accepta sau respinge cookie-urile neesențiale.",
+    "accept": "Acceptă",
+    "reject": "Respinge"
+  },
   "landing": {
     "search": {
       "label": "Caută",

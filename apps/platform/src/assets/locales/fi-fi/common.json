@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Käytämme evästeitä",
+    "body": "Käytämme analytiikkaevästeitä ymmärtääksemme, miten käytät sivustoamme, ja parantaaksemme käyttökokemustasi. Voit hyväksyä tai hylätä ei-välttämättömät evästeet.",
+    "accept": "Hyväksy",
+    "reject": "Hylkää"
+  },
   "landing": {
     "search": {
       "label": "Hae",

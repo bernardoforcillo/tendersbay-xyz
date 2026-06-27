@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Kasutame küpsiseid",
+    "body": "Kasutame analüütikaküpsiseid, et mõista, kuidas te meie saiti kasutate, ja parandada teie kogemust. Saate mittekohustuslikud küpsised vastu võtta või tagasi lükata.",
+    "accept": "Nõustu",
+    "reject": "Keeldu"
+  },
   "landing": {
     "search": {
       "label": "Otsi",

@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Naudojame slapukus",
+    "body": "Naudojame analitinius slapukus, kad suprastume, kaip naudojate mūsų svetainę, ir pagerintume jūsų patirtį. Galite priimti arba atmesti nebūtinus slapukus.",
+    "accept": "Priimti",
+    "reject": "Atmesti"
+  },
   "landing": {
     "search": {
       "label": "Ieškoti",

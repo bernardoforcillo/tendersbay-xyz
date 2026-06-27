@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Koristimo kolačiće",
+    "body": "Koristimo analitičke kolačiće kako bismo razumjeli kako koristite naše web-mjesto i poboljšali vaše iskustvo. Možete prihvatiti ili odbiti neobavezne kolačiće.",
+    "accept": "Prihvati",
+    "reject": "Odbij"
+  },
   "landing": {
     "search": {
       "label": "Pretraži",

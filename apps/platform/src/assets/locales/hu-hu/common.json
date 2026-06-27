@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Sütiket használunk",
+    "body": "Elemzési sütiket használunk annak megértéséhez, hogyan használja weboldalunkat, és a felhasználói élmény javításához. Elfogadhatja vagy elutasíthatja a nem kötelező sütiket.",
+    "accept": "Elfogadom",
+    "reject": "Elutasítom"
+  },
   "landing": {
     "search": {
       "label": "Keresés",

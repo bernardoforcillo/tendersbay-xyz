@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "We gebruiken cookies",
+    "body": "We gebruiken analytische cookies om te begrijpen hoe u onze site gebruikt en uw ervaring te verbeteren. U kunt niet-essentiële cookies accepteren of weigeren.",
+    "accept": "Accepteren",
+    "reject": "Weigeren"
+  },
   "landing": {
     "search": {
       "label": "Zoeken",
