@@ -18,9 +18,10 @@ RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the sources and build only the frontend (not `go build`).
 COPY . .
-# PostHog client key is baked into the bundle at build time (phc_… is a public
-# project key). Empty by default -> analytics stays disabled.
-ARG VITE_POSTHOG_KEY=""
+# PostHog client key is baked into the bundle at build time. phc_… is a public
+# project key (it ships in client JS), so the plaintext default is intentional;
+# override the ARG only to point at a different project.
+ARG VITE_POSTHOG_KEY="phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C"
 ARG VITE_POSTHOG_HOST="https://eu.i.posthog.com"
 ENV VITE_POSTHOG_KEY=$VITE_POSTHOG_KEY
 ENV VITE_POSTHOG_HOST=$VITE_POSTHOG_HOST
