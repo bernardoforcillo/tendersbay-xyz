@@ -11,80 +11,115 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Vaše příští evropská zakázka, přidělena",
-      "description": "Tým AI agentů, kteří nacházejí, připravují a vyhravají evropské veřejné zakázky pro malé a střední podniky."
+      "title": "tendersbay — Evropské zakázky, přidělené vašimi AI agenty",
+      "description": "AI agenti, kteří vyhledají správné evropské veřejné zakázky, rozdrtí papírování a dovedou vaši malou či střední firmu až k přidělení zakázky."
     },
     "nav": {
-      "problem": "Problém",
+      "problem": "Náklady",
       "agents": "Agenti",
       "vision": "Vize"
     },
     "hero": {
-      "eyebrow": "Váš tým AI agentů",
-      "titleLead": "Vaše příští evropská zakázka?",
+      "eyebrow": "V každé zakázce v nevýhodě. Až dosud.",
+      "titleLead": "Zakázka, kterou už počítali za svou?",
       "titleHighlight": "Přidělena.",
-      "subtitle": "tendersbay je váš tým AI agentů: loví správné zakázky po celé Evropě, drtí papírování za vás a provází vás až k přidělení zakázky.",
-      "ctaPrimary": "Podívejte se v akci",
+      "subtitle": "Dnes v noci se uzavírá zakázka s vaším jménem. Velcí hráči na ní už mají tým. Vy máte otevřené tři panely v Excelu. Tady to končí — AI agenti, kteří ji najdou, rozcupují papírování a postaví vás do nabídky. Zatímco spíte.",
+      "ctaPrimary": "Pošlete své agenty do práce",
       "ctaSecondary": "Podívejte se na vizi",
-      "trust": ["27 zemí, jedna platforma", "Agenti, kteří nikdy nespí", "Nula ručního papírování"]
+      "trust": ["27 zemí, jedno hledání", "Agenti, kteří nikdy nespí", "Papírování: vyřízeno"]
     },
     "problem": {
-      "eyebrow": "Problém",
-      "title": "Hra na tendry je namíchaná proti malým firmám.",
+      "eyebrow": "Cena nečinnosti",
+      "title": "Hra je nastavená tak, aby vás držela venku. A funguje to.",
       "items": [
         {
-          "title": "Roztroušené napříč 27 zeměmi",
-          "body": "Správné příležitosti jsou rozesety po desítkách národních portálů, v různých jazycích a formátech."
+          "title": "Pohřbené napříč 27 zeměmi",
+          "body": "Zakázky, které vám sedí, jsou roztroušené po desítkách národních portálů, v jazycích, kterými nemluvíte, ve formátech, které kladou odpor."
         },
         {
-          "title": "Těžká dokumentační byrokracie",
-          "body": "Požadavky, certifikáty a termíny — dokumentační bludiště, ve kterém se snadno udělá chyba."
+          "title": "Topíte se v papírech",
+          "body": "Požadavky, certifikáty, ESPD, termíny. Přehlédnete jeden řádek a týdny práce končí v koši."
         },
         {
-          "title": "Žádný specializovaný tým pro nabídky",
-          "body": "Malé a střední podniky nemají oddělení pro zakázky — vítězství vyžaduje čas a odbornost, které nemají."
+          "title": "Žádný tým pro nabídky, žádná šance",
+          "body": "Giganti na to mají tým. Vy máte noci, víkendy a tabulku. Hádejte, kdo vyhraje."
         }
       ]
     },
     "agents": {
       "eyebrow": "Agenti",
-      "title": "Poznejte agenty, kteří dělají tu těžkou práci.",
+      "title": "Tři agenti. Neminou, nespí, nevzdávají se.",
       "items": [
         {
           "title": "Najděte",
-          "body": "Agenti nacházejí správnou zakázku po celé Evropě, přizpůsobenou vašemu podnikání."
+          "body": "Každý den pročešou všech 27 zemí a vytáhnou jen zakázky, které stojí za váš čas — na míru tomu, co opravdu děláte."
         },
         {
           "title": "Připravte",
-          "body": "Vyřizují za vás dokumentační byrokracii: požadavky, certifikáty, termíny."
+          "body": "Požadavky, certifikáty, ESPD, termíny: extrahované, zkontrolované, sestavené. Papírování, které vás lámalo, vyřízeno."
         },
         {
           "title": "Vyhrajte",
-          "body": "Provázejí vás až k nabídce, abyste měli nejlepší šanci na přidělení zakázky."
+          "body": "Promění zadávací dokumentaci ve vítěznou strategii, abyste vstoupili se stejnou palebnou silou jako giganti."
         }
       ]
     },
     "audience": {
       "eyebrow": "Pro koho je určeno",
-      "title": "Pro outsidery s ambicemi.",
-      "body": "Pro ty, kteří chtějí soutěžit přes hranice bez specializovaného týmu pro nabídky. tendersbay vám dává stejnou sílu jako velkým hráčům."
+      "title": "Jeden z nich jste vy. Už víte který.",
+      "items": [
+        {
+          "title": "Vy připravujete nabídky",
+          "body": "Půlnoc, další ESPD ručně. Předejte dokumenty agentům. Věnujte své hodiny nabídce, která opravdu vyhrává."
+        },
+        {
+          "title": "Vy odpovídáte za čísla",
+          "body": "Váš tým pro nabídky je úzké hrdlo růstu ve veřejné sféře. Více zakázek, stejný počet lidí — to není funkce, to je změna měřítka. S čísly, kterými to dokážete vedení."
+        },
+        {
+          "title": "Vy násobíte klienty",
+          "body": "Každý klient je svět sám pro sebe a každá ušetřená hodina je další klient, kterého můžete vzít. Oddělené pracovní prostory, čistá data na klienta, vaše marže."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Žádný háček",
+      "title": "Zeptejte se na to, co obvykle zabije obchod.",
+      "items": [
+        {
+          "title": "„Trénují má data vaši AI?“",
+          "body": "Ne. Vaše zadávací dokumentace, vaše ceníky, vaše nabídky zůstávají vaše. Nikdy je nekrmíme do ničího modelu."
+        },
+        {
+          "title": "„Nevymýšlí si to?“",
+          "body": "Čte skutečnou zakázku a cituje stránku. Každý požadavek vede zpět k dokumentu — žádné vymyšlené specifikace."
+        },
+        {
+          "title": "„Jsou data každého klienta opravdu oddělená?“",
+          "body": "Oddělené pracovní prostory na klienta. Co je jejich, zůstává jejich. Nic neprosakuje mezi účty."
+        },
+        {
+          "title": "„Zapadne to do toho, co už používám?“",
+          "body": "Zapadne do vašeho stacku. Nežádá vás, abyste cokoli zahodili."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Vize",
-      "title": "Veřejné zakázky nejsou uzavřený klub.",
-      "body": "Každý rok procházejí stovky miliard evropskými veřejnými zakázkami, ale zůstávají mimo dosah těch, kteří nemají čas, jazykové znalosti ani odbornost. tendersbay využívá AI agenty, aby to změnil — a dal každému malému a střednímu podniku skutečnou šanci.",
-      "note": "Budujeme. Vraťte se brzy."
+      "title": "Veřejné peníze sedí za sametovou šňůrou. My ji přestřihneme.",
+      "body": "Každý rok protečou stovky miliard evropskými veřejnými zakázkami — a zůstávají mimo dosah všech bez času, jazyků nebo týmu pro nabídky. AI agenti mění výpočet. Každá malá a střední firma dostává skutečnou šanci.",
+      "note": "Budujeme. Vaše země je další na řadě."
     },
     "coverage": {
       "eyebrow": "Pokrytí",
-      "title": "27 zemí EU, jedna platforma.",
-      "body": "Rozšiřujeme se po celé Evropské unii, trh po trhu. Každá vlajka se rozsvítí, jakmile je pokrytí aktivní.",
-      "statusAvailable": "Dostupné",
+      "title": "27 zemí. Bereme je jednu po druhé.",
+      "body": "Rozšiřujeme se po celé Evropské unii, trh po trhu. Každá vlajka se rozsvítí v den, kdy vaše země naběhne.",
+      "statusAvailable": "Aktivní",
       "statusComingSoon": "Již brzy",
       "note": "Pokrytí přichází do všech 27 zemí EU."
     },
     "footer": {
-      "tagline": "Evropské zakázky. Přiděleny.",
+      "tagline": "Evropské zakázky. Vaše.",
       "contactLabel": "Kontaktujte nás",
       "copyright": "© Bernardo Forcillo — Všechna práva vyhrazena",
       "social": "Sledujte tendersbay",
@@ -96,9 +131,9 @@
     },
     "cta": {
       "eyebrow": "Brzký přístup",
-      "title": "Buďte první, až tendersbay spustíme.",
-      "body": "Spouštíme se po celé EU, trh po trhu. Zaregistrujte se na čekací listinu a získejte brzký přístup ve chvíli, kdy vaše země bude aktivní.",
-      "button": "Přidat se na čekací listinu"
+      "title": "Vaši agenti jsou připraveni. Chybíte už jen vy.",
+      "body": "Zapínáme EU trh po trhu. Zaregistrujte se na čekací listinu — ve chvíli, kdy se vaše země rozsvítí, vyrazí vaši agenti na lov.",
+      "button": "Zajistěte si své místo"
     },
     "tenderCard": {
       "value": "Hodnota",

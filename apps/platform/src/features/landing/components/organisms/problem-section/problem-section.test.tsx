@@ -7,10 +7,10 @@ describe('ProblemSection', () => {
   it('renders the heading and all three problem cards', () => {
     const { container } = renderWithI18n(<ProblemSection />, 'en-ie');
     expect(
-      screen.getByRole('heading', { name: 'The tender game is stacked against SMEs.' }),
+      screen.getByRole('heading', { name: "The game was rigged to keep you out. It's working." }),
     ).toBeInTheDocument();
     expect(container.querySelector('#problem')).not.toBeNull();
-    expect(screen.getByText('Scattered across 27 countries')).toBeInTheDocument();
-    expect(screen.getByText('No dedicated bids team')).toBeInTheDocument();
+    expect(screen.getByText('Buried across 27 countries')).toBeInTheDocument();
+    expect(screen.getByText('No bid office, no shot')).toBeInTheDocument();
   });
 });

@@ -11,80 +11,115 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Dit næste europæiske udbud, tildelt",
-      "description": "Et team af AI-agenter, der finder, forbereder og vinder europæiske offentlige udbud for SMV'er."
+      "title": "tendersbay — Europæiske udbud, tildelt af dine AI-agenter",
+      "description": "AI-agenter, der opsporer de rigtige europæiske offentlige udbud, knuser papirarbejdet og fører din SMV hele vejen til tildelingen."
     },
     "nav": {
-      "problem": "Problemet",
+      "problem": "Omkostningen",
       "agents": "Agenterne",
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Dit AI-agentteam",
-      "titleLead": "Dit næste europæiske udbud?",
+      "eyebrow": "Underlegen i hvert udbud. Indtil nu.",
+      "titleLead": "Udbuddet de allerede regnede for deres?",
       "titleHighlight": "Tildelt.",
-      "subtitle": "tendersbay er dit team af AI-agenter: de jager de rigtige udbud i hele Europa, knuser papirarbejdet og kører dig hele vejen til tildelingen.",
-      "ctaPrimary": "Se det i aktion",
+      "subtitle": "I aften lukker et udbud med dit navn på. De store spillere har allerede et team på det. Du har tre faner åbne i Excel. Det slutter her — AI-agenter, der finder det, flår papirarbejdet fra hinanden og sætter dig på buddet. Mens du sover.",
+      "ctaPrimary": "Sæt dine agenter i gang",
       "ctaSecondary": "Se visionen",
-      "trust": ["27 lande, én platform", "Agenter der aldrig sover", "Nul manuelt papirarbejde"]
+      "trust": ["27 lande, én søgning", "Agenter der aldrig sover", "Papirarbejde: klaret"]
     },
     "problem": {
-      "eyebrow": "Problemet",
-      "title": "Udbudsspillet er stillet op mod SMV'er.",
+      "eyebrow": "Prisen for at gøre ingenting",
+      "title": "Spillet er rigget til at holde dig ude. Og det virker.",
       "items": [
         {
-          "title": "Spredt over 27 lande",
-          "body": "De rette muligheder er fordelt over snesevis af nationale portaler på forskellige sprog og i forskellige formater."
+          "title": "Begravet i 27 lande",
+          "body": "De udbud, der passer til dig, ligger spredt over snesevis af nationale portaler, på sprog du ikke taler, i formater der kæmper imod."
         },
         {
-          "title": "Tung dokumentbureaukrati",
-          "body": "Krav, certifikater og frister — en dokumentarisk labyrint, hvor det er let at begå fejl."
+          "title": "Druknende i papirarbejde",
+          "body": "Krav, certifikater, ESPD, frister. Spring én linje over, og ugers arbejde ryger i skraldespanden."
         },
         {
-          "title": "Intet dedikeret tilbudsteam",
-          "body": "SMV'er har ingen indkøbsafdeling — at vinde kræver tid og ekspertise, de ikke har."
+          "title": "Intet tilbudsteam, ingen chance",
+          "body": "Giganterne har et team til det her. Du har nætter, weekender og et regneark. Gæt hvem der vinder."
         }
       ]
     },
     "agents": {
       "eyebrow": "Agenterne",
-      "title": "Mød agenterne, der løfter det tunge.",
+      "title": "Tre agenter. De rammer ikke ved siden af, sover ikke, giver ikke op.",
       "items": [
         {
           "title": "Find",
-          "body": "Agenterne finder det rette udbud i hele Europa, skræddersyet til din virksomhed."
+          "body": "De finkæmmer alle 27 lande hver dag og fremhæver kun de udbud, der er din tid værd — tilpasset det, du faktisk laver."
         },
         {
           "title": "Forbered",
-          "body": "De håndterer dokumentbureaukratiet for dig: krav, certifikater, frister."
+          "body": "Krav, certifikater, ESPD, frister: udtrukket, krydstjekket, samlet. Papirarbejdet, der knækkede dig, klaret."
         },
         {
           "title": "Vind",
-          "body": "De guider dig hele vejen til buddet for den bedste chance for tildeling."
+          "body": "De forvandler udbudsmaterialet til en vindende strategi, så du går ind med samme slagkraft som giganterne."
         }
       ]
     },
     "audience": {
       "eyebrow": "Hvem det er til",
-      "title": "Bygget til underdogs med ambitioner.",
-      "body": "For dem, der ønsker at konkurrere på tværs af grænser uden et dedikeret tilbudsteam. tendersbay giver dig samme styrke som de store spillere."
+      "title": "En af dem er dig. Du ved allerede hvem.",
+      "items": [
+        {
+          "title": "Du laver buddene",
+          "body": "Midnat, endnu en ESPD i hånden. Giv dokumenterne til agenterne. Brug dine timer på tilbuddet, der faktisk vinder."
+        },
+        {
+          "title": "Du står for tallet",
+          "body": "Dit tilbudsteam er flaskehalsen for offentlig vækst. Flere udbud, samme bemanding — det er ikke en funktion, det er et skaleskift. Med tallene til at bevise det for bestyrelsen."
+        },
+        {
+          "title": "Du mangedobler dine kunder",
+          "body": "Hver kunde er en verden for sig, og hver sparet time er én kunde mere, du kan tage. Adskilte arbejdsområder, rene data pr. kunde, din margin."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Ingen hage",
+      "title": "Stil de spørgsmål, der normalt vælter handlen.",
+      "items": [
+        {
+          "title": "”Træner mine data jeres AI?”",
+          "body": "Nej. Dine udbudsmaterialer, dine prislister, dine bud forbliver dine. Aldrig fodret til nogens model."
+        },
+        {
+          "title": "”Finder den bare på ting?”",
+          "body": "Den læser det faktiske udbud og citerer siden. Hvert krav kan spores tilbage til dokumentet — ingen opfundne specifikationer."
+        },
+        {
+          "title": "”Er hver kundes data virkelig adskilt?”",
+          "body": "Indkapslede arbejdsområder pr. kunde. Det, der er deres, forbliver deres. Intet siver mellem konti."
+        },
+        {
+          "title": "”Passer det til det, jeg allerede bruger?”",
+          "body": "Det glider ind i din stack. Det beder dig ikke smide noget ud."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Vision",
-      "title": "Offentlige udbud er ikke en lukket klub.",
-      "body": "Hvert år bevæger hundredvis af milliarder sig gennem europæiske offentlige udbud, men de er uden for rækkevidde for dem uden tid, sprog eller ekspertise. tendersbay bruger AI-agenter til at ændre det — og give enhver SMV en reel chance.",
-      "note": "Vi bygger løsningen. Vend tilbage snart."
+      "title": "Offentlige penge sidder bag en fløjlssnor. Vi klipper den over.",
+      "body": "Hvert år bevæger hundredvis af milliarder sig gennem europæiske offentlige udbud — og forbliver uden for rækkevidde for alle uden tid, sprog eller et tilbudsteam. AI-agenter ændrer regnestykket. Hver SMV får en reel chance.",
+      "note": "Vi bygger. Dit land er det næste."
     },
     "coverage": {
       "eyebrow": "Dækning",
-      "title": "27 EU-lande, én platform.",
-      "body": "Vi udvider i hele Den Europæiske Union, marked for marked. Hvert flag lyser op, når dækningen går live.",
-      "statusAvailable": "Tilgængelig",
+      "title": "27 lande. Vi tager dem ét ad gangen.",
+      "body": "Vi udvider i hele Den Europæiske Union, marked for marked. Hvert flag lyser op den dag, dit land går live.",
+      "statusAvailable": "Live",
       "statusComingSoon": "Kommer snart",
       "note": "Dækningen er på vej til alle 27 EU-lande."
     },
     "footer": {
-      "tagline": "Europas udbud. Tildelt.",
+      "tagline": "Europas udbud. Dine.",
       "contactLabel": "Kontakt os",
       "copyright": "© Bernardo Forcillo — Alle rettigheder forbeholdes",
       "social": "Følg tendersbay",
@@ -96,9 +131,9 @@
     },
     "cta": {
       "eyebrow": "Tidlig adgang",
-      "title": "Vær klar når tendersbay lanceres.",
-      "body": "Vi ruller ud over hele EU, marked for marked. Tilmeld dig ventelisten og få tidlig adgang så snart dit land er aktivt.",
-      "button": "Tilmeld dig ventelisten"
+      "title": "Dine agenter er klar. Det eneste, der mangler, er dig.",
+      "body": "Vi tænder EU marked for marked. Tilmeld dig ventelisten — i samme øjeblik dit land lyser op, går dine agenter på jagt.",
+      "button": "Sikr dig din plads"
     },
     "tenderCard": {
       "value": "Værdi",

@@ -11,84 +11,115 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Jūsu nākamais Eiropas iepirkums, piešķirts",
-      "description": "Mākslīgā intelekta aģentu komanda, kas atrod, sagatavo un uzvar Eiropas publiskos iepirkumus MVU."
+      "title": "tendersbay — Eiropas iepirkumi, ko izcīna jūsu MI aģenti",
+      "description": "MI aģenti, kas izseko pareizos Eiropas publiskos iepirkumus, sasmalcina birokrātiju un aizved jūsu MVU līdz iepirkuma piešķiršanai."
     },
     "nav": {
-      "problem": "Problēma",
+      "problem": "Izmaksas",
       "agents": "Aģenti",
       "vision": "Vīzija"
     },
     "hero": {
-      "eyebrow": "Jūsu MI aģentu komanda",
-      "titleLead": "Jūsu nākamais Eiropas iepirkums?",
+      "eyebrow": "Katrā iepirkumā mazākumā. Līdz šim.",
+      "titleLead": "Iepirkums, ko viņi jau uzskatīja par savu?",
       "titleHighlight": "Piešķirts.",
-      "subtitle": "tendersbay ir jūsu MI aģentu komanda: viņi medī pareizos iepirkumus visā Eiropā, uzvar birokrātiju jūsu vietā un aizved jūs tieši līdz piešķiršanai.",
-      "ctaPrimary": "Skatīt darbībā",
+      "subtitle": "Šonakt noslēdzas iepirkums ar jūsu vārdu. Lielajiem spēlētājiem tam jau ir komanda. Jums ir atvērtas trīs cilnes programmā Excel. Te tas beidzas — MI aģenti, kas to atrod, saplosa birokrātiju un ieliek jūs piedāvājumā. Kamēr jūs guļat.",
+      "ctaPrimary": "Lieciet saviem aģentiem strādāt",
       "ctaSecondary": "Skatiet vīziju",
-      "trust": [
-        "27 valstis, viena platforma",
-        "Aģenti, kas nekad neguļ",
-        "Nulle manuālas dokumentācijas"
-      ]
+      "trust": ["27 valstis, viena meklēšana", "Aģenti, kas nekad neguļ", "Birokrātija: nokārtota"]
     },
     "problem": {
-      "eyebrow": "Problēma",
-      "title": "Iepirkumu spēle ir vērsta pret MVU.",
+      "eyebrow": "Bezdarbības cena",
+      "title": "Spēle ir sarežģēta tā, lai turētu jūs ārā. Un tā darbojas.",
       "items": [
         {
-          "title": "Izkaisīti 27 valstīs",
-          "body": "Pareizās iespējas ir izkliedētas pa desmitiem nacionālo portālu, dažādās valodās un formātos."
+          "title": "Apglabāti 27 valstīs",
+          "body": "Iepirkumi, kas jums der, ir izkaisīti pa desmitiem nacionālo portālu, valodās, kuras nerunājat, formātos, kas pretojas."
         },
         {
-          "title": "Smaga dokumentu birokrātija",
-          "body": "Prasības, sertifikāti un termiņi — dokumentāls labirints, kurā viegli kļūdīties."
+          "title": "Slīkstat dokumentos",
+          "body": "Prasības, sertifikāti, ESPD, termiņi. Izlaidiet vienu rindu, un nedēļām ilgs darbs nonāk miskastē."
         },
         {
-          "title": "Nav īpašas piedāvājumu komandas",
-          "body": "MVU nav iepirkumu nodaļas — uzvarai nepieciešams laiks un zināšanas, kuru nav."
+          "title": "Nav piedāvājumu komandas, nav iespēju",
+          "body": "Gigantiem tam ir komanda. Jums ir naktis, nedēļas nogales un izklājlapa. Uzminiet, kurš uzvar."
         }
       ]
     },
     "agents": {
       "eyebrow": "Aģenti",
-      "title": "Iepazīstieties ar aģentiem, kas veic smago darbu.",
+      "title": "Trīs aģenti. Viņi nekļūdās, neguļ, nepadodas.",
       "items": [
         {
           "title": "Atrast",
-          "body": "Aģenti atrod pareizo iepirkumu visā Eiropā, pielāgotu jūsu uzņēmumam."
+          "body": "Katru dienu izķemmē visas 27 valstis un izceļ tikai tos iepirkumus, kas ir jūsu laika vērti — pielāgotus tam, ko jūs patiešām darāt."
         },
         {
           "title": "Sagatavot",
-          "body": "Viņi kārto dokumentu birokrātiju jūsu vietā: prasības, sertifikātus, termiņus."
+          "body": "Prasības, sertifikāti, ESPD, termiņi: izvilkti, salīdzināti, samontēti. Birokrātija, kas jūs lauza, nokārtota."
         },
         {
           "title": "Uzvarēt",
-          "body": "Viņi vada jūs līdz piedāvājumam, lai jums būtu vislabākās izredzes piešķiršanai."
+          "body": "Viņi pārvērš iepirkuma dokumentāciju uzvaras stratēģijā, lai jūs ienāktu ar tādu pašu uguns spēku kā giganti."
         }
       ]
     },
     "audience": {
       "eyebrow": "Kam tas paredzēts",
-      "title": "Veidots ambicioziem izaicinātājiem.",
-      "body": "Tiem, kas vēlas konkurēt pāri robežām bez īpašas piedāvājumu komandas. tendersbay dod jums tādu pašu spēku kā lielajiem spēlētājiem."
+      "title": "Viens no tiem esat jūs. Jau zināt, kurš.",
+      "items": [
+        {
+          "title": "Jūs gatavojat piedāvājumus",
+          "body": "Pusnakts, vēl viens ESPD ar roku. Nododiet dokumentus aģentiem. Veltiet savas stundas piedāvājumam, kas patiešām uzvar."
+        },
+        {
+          "title": "Jūs atbildat par skaitli",
+          "body": "Jūsu piedāvājumu komanda ir publiskā sektora izaugsmes šaurā vieta. Vairāk iepirkumu, tas pats personāls — tā nav funkcija, tā ir mēroga maiņa. Ar skaitļiem, lai to pierādītu valdei."
+        },
+        {
+          "title": "Jūs reizināt klientus",
+          "body": "Katrs klients ir atsevišķa pasaule, un katra ietaupītā stunda ir vēl viens klients, ko varat uzņemt. Atsevišķas darba telpas, tīri dati katram klientam, jūsu peļņa."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Bez āķa",
+      "title": "Uzdodiet jautājumus, kas parasti izjauc darījumu.",
+      "items": [
+        {
+          "title": "„Vai mani dati apmāca jūsu MI?“",
+          "body": "Nē. Jūsu dokumentācija, cenrāži, piedāvājumi paliek jūsu. Nekad netiek ievadīti nevienā modelī."
+        },
+        {
+          "title": "„Vai tas vienkārši izdomā?“",
+          "body": "Tas lasa īsto iepirkumu un citē lappusi. Katra prasība atgriežas pie dokumenta — nekādu izdomātu specifikāciju."
+        },
+        {
+          "title": "„Vai katra klienta dati patiešām ir atdalīti?“",
+          "body": "Norobežotas darba telpas katram klientam. Kas ir viņu, paliek viņu. Nekas nenoplūst starp kontiem."
+        },
+        {
+          "title": "„Vai tas iederas tajā, ko jau izmantoju?“",
+          "body": "Tas iekļaujas jūsu stekā. Tas neprasa neko izmest."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Vīzija",
-      "title": "Publiskie iepirkumi nav slēgts klubs.",
-      "body": "Katru gadu simtiem miljardu plūst caur Eiropas publiskajiem iepirkumiem, bet tie paliek nesasniedzami tiem, kuriem nav laika, valodu zināšanu vai pieredzes. tendersbay izmanto MI aģentus, lai to mainītu — un dotu katram MVU īstu iespēju.",
-      "note": "Mēs veidojam. Atgriezieties drīz."
+      "title": "Publiskā nauda atrodas aiz samta auklas. Mēs to pārgriežam.",
+      "body": "Katru gadu simtiem miljardu plūst caur Eiropas publiskajiem iepirkumiem — un paliek nesasniedzami visiem bez laika, valodām vai piedāvājumu komandas. MI aģenti maina aprēķinu. Katrs MVU saņem īstu iespēju.",
+      "note": "Mēs veidojam. Jūsu valsts ir nākamā."
     },
     "coverage": {
       "eyebrow": "Pārklājums",
-      "title": "27 ES valstis, viena platforma.",
-      "body": "Mēs paplašināmies visā Eiropas Savienībā, tirgu pēc tirgus. Katrs karogs iedegas, kad pārklājums kļūst aktīvs.",
-      "statusAvailable": "Pieejams",
+      "title": "27 valstis. Ieņemam tās vienu pēc otras.",
+      "body": "Mēs paplašināmies visā Eiropas Savienībā, tirgu pēc tirgus. Katrs karogs iedegas dienā, kad jūsu valsts sāk darboties.",
+      "statusAvailable": "Aktīvs",
       "statusComingSoon": "Drīzumā",
       "note": "Pārklājums tuvojas visām 27 ES valstīm."
     },
     "footer": {
-      "tagline": "Eiropas iepirkumi. Piešķirti.",
+      "tagline": "Eiropas iepirkumi. Jūsu.",
       "contactLabel": "Sazinieties ar mums",
       "copyright": "© Bernardo Forcillo — Visas tiesības aizsargātas",
       "social": "Sekojiet tendersbay",
@@ -100,9 +131,9 @@
     },
     "cta": {
       "eyebrow": "Agrīna piekļuve",
-      "title": "Esi pirmais, kad tendersbay tiek palaists.",
-      "body": "Paplašināmies pa visu ES, tirgu pēc tirgus. Reģistrējieties gaidīšanas sarakstā un iegūstiet agrīnu piekļuvi tiklīdz jūsu valsts aktivizēsies.",
-      "button": "Pievienoties gaidīšanas sarakstam"
+      "title": "Jūsu aģenti ir gatavi. Trūkst tikai jūs.",
+      "body": "Mēs ieslēdzam ES tirgu pēc tirgus. Reģistrējieties gaidīšanas sarakstā — brīdī, kad jūsu valsts iedegas, jūsu aģenti dodas medībās.",
+      "button": "Rezervējiet savu vietu"
     },
     "tenderCard": {
       "value": "Vērtība",

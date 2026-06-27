@@ -7,9 +7,9 @@ describe('Hero', () => {
   it('renders the headline, both CTAs and the trust line', () => {
     renderWithI18n(<Hero />, 'en-ie');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Your next European tender?',
+      'The tender they already counted as theirs?',
     );
-    expect(screen.getByRole('link', { name: /see it in action/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /put your agents to work/i })).toHaveAttribute(
       'href',
       '#agents',
     );
@@ -17,6 +17,6 @@ describe('Hero', () => {
       'href',
       '#vision',
     );
-    expect(screen.getByText('27 countries, one platform')).toBeInTheDocument();
+    expect(screen.getByText('27 countries, one search')).toBeInTheDocument();
   });
 });

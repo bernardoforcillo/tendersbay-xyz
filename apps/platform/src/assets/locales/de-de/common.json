@@ -11,84 +11,115 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Ihre nächste europäische Ausschreibung, zugeschlagen",
-      "description": "Ein Team von KI-Agenten, das europäische öffentliche Ausschreibungen für KMU findet, vorbereitet und gewinnt."
+      "title": "tendersbay — Europäische Ausschreibungen, von Ihren KI-Agenten zugeschlagen",
+      "description": "KI-Agenten, die die richtigen europäischen öffentlichen Ausschreibungen aufspüren, den Papierkram zerlegen und Ihr KMU bis zum Zuschlag bringen."
     },
     "nav": {
-      "problem": "Das Problem",
+      "problem": "Die Kosten",
       "agents": "Die Agenten",
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Ihr KI-Agenten-Team",
-      "titleLead": "Ihre nächste europäische Ausschreibung?",
+      "eyebrow": "Bei jeder Ausschreibung unterlegen. Bis jetzt.",
+      "titleLead": "Die Ausschreibung, die sie längst als ihre verbucht haben?",
       "titleHighlight": "Zugeschlagen.",
-      "subtitle": "tendersbay ist Ihr Team von KI-Agenten: Sie jagen die richtigen Ausschreibungen in ganz Europa, erledigen den Papierkram für Sie und bringen Sie direkt zum Zuschlag.",
-      "ctaPrimary": "In Aktion sehen",
+      "subtitle": "Heute Nacht läuft eine Ausschreibung mit Ihrem Namen aus. Die Großen haben längst ein Team daran. Sie haben drei Excel-Tabs offen. Damit ist Schluss — KI-Agenten, die sie finden, den Papierkram zerlegen und Sie ins Angebot bringen. Während Sie schlafen.",
+      "ctaPrimary": "Setzen Sie Ihre Agenten ein",
       "ctaSecondary": "Vision ansehen",
-      "trust": [
-        "27 Länder, eine Plattform",
-        "Agenten, die nie schlafen",
-        "Null manueller Papierkram"
-      ]
+      "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"]
     },
     "problem": {
-      "eyebrow": "Das Problem",
-      "title": "Das Ausschreibungsspiel ist gegen KMU gestapelt.",
+      "eyebrow": "Die Kosten des Nichtstuns",
+      "title": "Das Spiel ist manipuliert, um Sie draußen zu halten. Und es funktioniert.",
       "items": [
         {
-          "title": "Verteilt auf 27 Länder",
-          "body": "Die richtigen Chancen sind über Dutzende nationaler Portale in verschiedenen Sprachen und Formaten verstreut."
+          "title": "Verschüttet über 27 Länder",
+          "body": "Die Ausschreibungen, die zu Ihnen passen, liegen verstreut auf Dutzenden nationaler Portale, in Sprachen, die Sie nicht sprechen, in Formaten, die sich sperren."
         },
         {
-          "title": "Schwere Dokumentenbürokratie",
-          "body": "Anforderungen, Zertifikate und Fristen — ein dokumentarisches Labyrinth, in dem man leicht Fehler macht."
+          "title": "Im Papierkram ertrinkend",
+          "body": "Anforderungen, Zertifikate, EEE, Fristen. Eine Zeile übersehen und Wochen Arbeit landen im Müll."
         },
         {
-          "title": "Kein dediziertes Angebotsteam",
-          "body": "KMU haben keine Beschaffungsabteilung — Gewinnen erfordert Zeit und Fachkenntnisse, die sie nicht haben."
+          "title": "Kein Angebotsteam, keine Chance",
+          "body": "Die Großen haben ein Team dafür. Sie haben Nächte, Wochenenden und eine Tabelle. Raten Sie, wer gewinnt."
         }
       ]
     },
     "agents": {
       "eyebrow": "Die Agenten",
-      "title": "Lernen Sie die Agenten kennen, die die schwere Arbeit erledigen.",
+      "title": "Drei Agenten. Sie verfehlen nichts, schlafen nicht, geben nicht auf.",
       "items": [
         {
           "title": "Finden",
-          "body": "Die Agenten finden die richtige Ausschreibung in ganz Europa, zugeschnitten auf Ihr Unternehmen."
+          "body": "Sie durchkämmen täglich alle 27 Länder und zeigen nur die Ausschreibungen, die Ihre Zeit wert sind — zugeschnitten auf das, was Sie wirklich tun."
         },
         {
           "title": "Vorbereiten",
-          "body": "Sie erledigen die Dokumentenbürokratie für Sie: Anforderungen, Zertifikate, Fristen."
+          "body": "Anforderungen, Zertifikate, EEE, Fristen: extrahiert, abgeglichen, zusammengestellt. Der Papierkram, der Sie zermürbt hat, erledigt."
         },
         {
           "title": "Gewinnen",
-          "body": "Sie begleiten Sie bis zum Angebot, für die beste Chance auf den Zuschlag."
+          "body": "Sie machen aus den Vergabeunterlagen eine Gewinnstrategie, damit Sie mit derselben Schlagkraft antreten wie die Großen."
         }
       ]
     },
     "audience": {
       "eyebrow": "Für wen es ist",
-      "title": "Gebaut für Außenseiter mit Ambitionen.",
-      "body": "Für diejenigen, die grenzüberschreitend konkurrieren wollen, ohne ein dediziertes Angebotsteam. tendersbay gibt Ihnen dieselbe Schlagkraft wie den großen Akteuren."
+      "title": "Einer davon sind Sie. Sie wissen längst, welcher.",
+      "items": [
+        {
+          "title": "Sie erstellen die Angebote",
+          "body": "Mitternacht, noch eine EEE von Hand. Geben Sie die Unterlagen an die Agenten. Verbringen Sie Ihre Stunden mit dem Angebot, das wirklich gewinnt."
+        },
+        {
+          "title": "Sie verantworten die Zahl",
+          "body": "Ihr Angebotsteam ist der Engpass für öffentliches Wachstum. Mehr Ausschreibungen, gleiche Mannstärke — das ist kein Feature, das ist ein Sprung in der Größenordnung. Mit den Zahlen, um es dem Vorstand zu beweisen."
+        },
+        {
+          "title": "Sie vervielfachen Mandanten",
+          "body": "Jeder Mandant ist eine eigene Welt, und jede gesparte Stunde ist ein Mandant mehr, den Sie annehmen können. Getrennte Arbeitsbereiche, saubere Daten pro Mandant, Ihre Marge."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Kein Haken",
+      "title": "Stellen Sie die Fragen, die sonst den Deal killen.",
+      "items": [
+        {
+          "title": "„Trainieren meine Daten Ihre KI?“",
+          "body": "Nein. Ihre Vergabeunterlagen, Ihre Preislisten, Ihre Angebote bleiben Ihre. Nie in irgendein Modell eingespeist."
+        },
+        {
+          "title": "„Erfindet sie einfach Dinge?“",
+          "body": "Sie liest die echte Ausschreibung und zitiert die Seite. Jede Anforderung führt zurück zum Dokument — keine erfundenen Spezifikationen."
+        },
+        {
+          "title": "„Sind die Daten jedes Mandanten wirklich getrennt?“",
+          "body": "Abgeschottete Arbeitsbereiche pro Mandant. Was ihnen gehört, bleibt ihres. Nichts dringt zwischen Konten durch."
+        },
+        {
+          "title": "„Passt es zu dem, was ich schon nutze?“",
+          "body": "Es fügt sich in Ihren Stack ein. Es verlangt nicht, irgendetwas wegzuwerfen."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Vision",
-      "title": "Öffentliche Ausschreibungen sind kein geschlossener Club.",
-      "body": "Jedes Jahr fließen hunderte Milliarden durch europäische öffentliche Beschaffungen, bleiben aber für diejenigen unerreichbar, die keine Zeit, Sprache oder Fachkenntnis haben. tendersbay nutzt KI-Agenten, um das zu ändern — und jedem KMU eine echte Chance zu geben.",
-      "note": "Wir bauen gerade. Schauen Sie bald wieder vorbei."
+      "title": "Öffentliches Geld liegt hinter einer samtenen Kordel. Wir durchtrennen sie.",
+      "body": "Jedes Jahr fließen hunderte Milliarden durch die europäische öffentliche Beschaffung — und bleiben unerreichbar für alle ohne Zeit, Sprachen oder ein Angebotsteam. KI-Agenten ändern die Rechnung. Jedes KMU bekommt eine echte Chance.",
+      "note": "Wir bauen gerade. Ihr Land ist als Nächstes dran."
     },
     "coverage": {
       "eyebrow": "Abdeckung",
-      "title": "27 EU-Länder, eine Plattform.",
-      "body": "Wir expandieren in der gesamten Europäischen Union, Markt für Markt. Jede Flagge leuchtet auf, sobald die Abdeckung aktiv ist.",
-      "statusAvailable": "Verfügbar",
+      "title": "27 Länder. Wir holen sie uns, eins nach dem anderen.",
+      "body": "Wir expandieren in der gesamten Europäischen Union, Markt für Markt. Jede Flagge leuchtet an dem Tag auf, an dem Ihr Land live geht.",
+      "statusAvailable": "Live",
       "statusComingSoon": "Demnächst",
       "note": "Die Abdeckung kommt in alle 27 EU-Länder."
     },
     "footer": {
-      "tagline": "Europas Ausschreibungen. Zugeschlagen.",
+      "tagline": "Europas Ausschreibungen. Ihre.",
       "contactLabel": "Kontakt aufnehmen",
       "copyright": "© Bernardo Forcillo — Alle Rechte vorbehalten",
       "social": "tendersbay folgen",
@@ -103,9 +134,9 @@
     },
     "cta": {
       "eyebrow": "Früher Zugang",
-      "title": "Sei dabei, wenn tendersbay startet.",
-      "body": "Wir expandieren in der gesamten EU, Markt für Markt. Trag dich in die Warteliste ein und erhalte frühen Zugang, sobald dein Land an die Reihe kommt.",
-      "button": "Zur Warteliste"
+      "title": "Ihre Agenten sind bereit. Es fehlen nur Sie.",
+      "body": "Wir schalten die EU Markt für Markt frei. Tragen Sie sich in die Warteliste ein — sobald Ihr Land aufleuchtet, gehen Ihre Agenten auf die Jagd.",
+      "button": "Sichern Sie sich Ihren Platz"
     },
     "tenderCard": {
       "value": "Wert",

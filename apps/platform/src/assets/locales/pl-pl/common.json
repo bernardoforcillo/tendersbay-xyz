@@ -11,84 +11,119 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Twój następny europejski przetarg, udzielony",
-      "description": "Zespół agentów AI, który znajduje, przygotowuje i wygrywa europejskie zamówienia publiczne dla MŚP."
+      "title": "tendersbay — Europejskie przetargi wygrane przez twoich agentów AI",
+      "description": "Agenci AI, którzy wytropią właściwe europejskie zamówienia publiczne, zmiażdżą papierkową robotę i doprowadzą twoje MŚP aż do wygranej."
     },
     "nav": {
-      "problem": "Problem",
+      "problem": "Koszt",
       "agents": "Agenci",
       "vision": "Wizja"
     },
     "hero": {
-      "eyebrow": "Twój zespół agentów AI",
-      "titleLead": "Twój następny europejski przetarg?",
+      "eyebrow": "Na przegranej pozycji w każdym przetargu. Do teraz.",
+      "titleLead": "Przetarg, który już liczyli jako swój?",
       "titleHighlight": "Udzielony.",
-      "subtitle": "tendersbay to twój zespół agentów AI: polują na właściwe przetargi w całej Europie, miażdżą papierkową robotę i prowadzą cię aż do udzielenia zamówienia.",
-      "ctaPrimary": "Zobacz w akcji",
+      "subtitle": "Dziś w nocy zamyka się przetarg z twoim nazwiskiem. Duzi gracze mają już na nim zespół. Ty masz trzy karty otwarte w Excelu. To koniec — agenci AI, którzy go znajdą, rozszarpią papierkową robotę i wstawią cię do oferty. Gdy śpisz.",
+      "ctaPrimary": "Zaprzęgnij swoich agentów do pracy",
       "ctaSecondary": "Zobacz wizję",
       "trust": [
-        "27 krajów, jedna platforma",
+        "27 krajów, jedno wyszukiwanie",
         "Agenci, którzy nigdy nie śpią",
-        "Zero ręcznej papierkowej roboty"
+        "Papierkowa robota: ogarnięta"
       ]
     },
     "problem": {
-      "eyebrow": "Problem",
-      "title": "Gra w przetargi jest ustawiona przeciwko MŚP.",
+      "eyebrow": "Koszt bezczynności",
+      "title": "Gra jest ustawiona, by trzymać cię na zewnątrz. I działa.",
       "items": [
         {
-          "title": "Rozproszone w 27 krajach",
-          "body": "Właściwe szanse są rozsiane po dziesiątkach krajowych portali, w różnych językach i formatach."
+          "title": "Zagrzebane w 27 krajach",
+          "body": "Przetargi pasujące do ciebie są rozrzucone po dziesiątkach krajowych portali, w językach, których nie znasz, w formatach, które stawiają opór."
         },
         {
-          "title": "Ciężka biurokracja dokumentacyjna",
-          "body": "Wymagania, zaświadczenia i terminy — labirynt dokumentów, w którym łatwo o błąd."
+          "title": "Tonąc w papierach",
+          "body": "Wymagania, zaświadczenia, JEDZ, terminy. Pominiesz jedną linijkę i tygodnie pracy lądują w koszu."
         },
         {
-          "title": "Brak dedykowanego zespołu ds. ofert",
-          "body": "MŚP nie mają działu zamówień — wygrana wymaga czasu i wiedzy, których nie posiadają."
+          "title": "Brak działu ofert, brak szans",
+          "body": "Giganci mają do tego zespół. Ty masz noce, weekendy i arkusz kalkulacyjny. Zgadnij, kto wygrywa."
         }
       ]
     },
     "agents": {
       "eyebrow": "Agenci",
-      "title": "Poznaj agentów, którzy robią ciężką robotę.",
+      "title": "Trzej agenci. Nie chybiają, nie śpią, nie odpuszczają.",
       "items": [
         {
           "title": "Znajdź",
-          "body": "Agenci znajdują właściwy przetarg w całej Europie, dopasowany do twojej firmy."
+          "body": "Codziennie przeczesują wszystkie 27 krajów i pokazują tylko przetargi warte twojego czasu — dopasowane do tego, co naprawdę robisz."
         },
         {
           "title": "Przygotuj",
-          "body": "Obsługują za ciebie biurokrację dokumentacyjną: wymagania, zaświadczenia, terminy."
+          "body": "Wymagania, zaświadczenia, JEDZ, terminy: wyciągnięte, sprawdzone, złożone. Papierkowa robota, która cię łamała, ogarnięta."
         },
         {
           "title": "Wygrywaj",
-          "body": "Prowadzą cię aż do złożenia oferty, by dać ci najlepszą szansę na udzielenie zamówienia."
+          "body": "Zamieniają specyfikację w zwycięską strategię, byś wszedł z taką samą siłą rażenia jak giganci."
         }
       ]
     },
     "audience": {
       "eyebrow": "Dla kogo",
-      "title": "Stworzone dla ambitnych outsiderów.",
-      "body": "Dla tych, którzy chcą konkurować ponad granicami bez dedykowanego zespołu ds. ofert. tendersbay daje ci taką samą siłę przebicia jak duże podmioty."
+      "title": "Jeden z nich to ty. Już wiesz który.",
+      "items": [
+        {
+          "title": "Ty składasz oferty",
+          "body": "Północ, kolejny JEDZ ręcznie. Oddaj dokumenty agentom. Poświęć swoje godziny ofercie, która naprawdę wygrywa."
+        },
+        {
+          "title": "Ty odpowiadasz za wynik",
+          "body": "Twój zespół ofertowy to wąskie gardło wzrostu w sektorze publicznym. Więcej przetargów, ta sama obsada — to nie funkcja, to zmiana skali. Z liczbami, by udowodnić to zarządowi."
+        },
+        {
+          "title": "Ty mnożysz klientów",
+          "body": "Każdy klient to osobny świat, a każda zaoszczędzona godzina to kolejny klient, którego możesz przyjąć. Oddzielne przestrzenie, czyste dane na klienta, twoja marża."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Bez haczyka",
+      "title": "Zadaj pytania, które zwykle grzebią transakcję.",
+      "items": [
+        {
+          "title": "„Czy moje dane trenują waszą AI?”",
+          "body": "Nie. Twoje specyfikacje, twoje cenniki, twoje oferty pozostają twoje. Nigdy nie trafiają do niczyjego modelu."
+        },
+        {
+          "title": "„Czy zmyśla?”",
+          "body": "Czyta prawdziwy przetarg i cytuje stronę. Każde wymaganie prowadzi z powrotem do dokumentu — żadnych zmyślonych specyfikacji."
+        },
+        {
+          "title": "„Czy dane każdego klienta są naprawdę oddzielone?”",
+          "body": "Odgrodzone przestrzenie na klienta. Co ich, zostaje ich. Nic nie przecieka między kontami."
+        },
+        {
+          "title": "„Czy pasuje do tego, czego już używam?”",
+          "body": "Wpasowuje się w twój stack. Nie każe ci niczego wyrzucać."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Wizja",
-      "title": "Przetargi publiczne to nie zamknięty klub.",
-      "body": "Co roku setki miliardów przepływa przez europejskie zamówienia publiczne, ale pozostają poza zasięgiem tych, którym brakuje czasu, znajomości języków lub wiedzy. tendersbay używa agentów AI, by to zmienić — i dać każdemu MŚP prawdziwą szansę.",
-      "note": "Budujemy. Wróć wkrótce."
+      "title": "Publiczne pieniądze są za aksamitnym sznurem. My go przecinamy.",
+      "body": "Co roku setki miliardów przepływają przez europejskie zamówienia publiczne — i pozostają poza zasięgiem każdego, kto nie ma czasu, języków ani działu ofert. Agenci AI zmieniają rachunek. Każde MŚP dostaje prawdziwą szansę.",
+      "note": "Budujemy. Twój kraj jest następny."
     },
     "coverage": {
       "eyebrow": "Zasięg",
-      "title": "27 krajów UE, jedna platforma.",
-      "body": "Rozszerzamy działalność na całą Unię Europejską, rynek po rynku. Każda flaga rozświetla się, gdy zasięg staje się aktywny.",
-      "statusAvailable": "Dostępne",
+      "title": "27 krajów. Zdobywamy je jeden po drugim.",
+      "body": "Rozszerzamy działalność na całą Unię Europejską, rynek po rynku. Każda flaga rozświetla się w dniu, gdy twój kraj rusza.",
+      "statusAvailable": "Aktywne",
       "statusComingSoon": "Wkrótce",
       "note": "Zasięg pojawia się we wszystkich 27 krajach UE."
     },
     "footer": {
-      "tagline": "Europejskie przetargi. Udzielone.",
+      "tagline": "Przetargi Europy. Twoje.",
       "contactLabel": "Skontaktuj się z nami",
       "copyright": "© Bernardo Forcillo — Wszelkie prawa zastrzeżone",
       "social": "Obserwuj tendersbay",
@@ -100,9 +135,9 @@
     },
     "cta": {
       "eyebrow": "Wczesny dostęp",
-      "title": "Bądź pierwszy, gdy tendersbay ruszy.",
-      "body": "Rozszerzamy działalność na całą UE, rynek po rynku. Dołącz do listy oczekujących i uzyskaj wczesny dostęp, gdy tylko twój kraj zostanie uruchomiony.",
-      "button": "Dołącz do listy"
+      "title": "Twoi agenci są gotowi. Brakuje tylko ciebie.",
+      "body": "Uruchamiamy UE rynek po rynku. Dołącz do listy — w chwili, gdy twój kraj się rozświetli, twoi agenci ruszają na łowy.",
+      "button": "Zarezerwuj swoje miejsce"
     },
     "tenderCard": {
       "value": "Wartość",

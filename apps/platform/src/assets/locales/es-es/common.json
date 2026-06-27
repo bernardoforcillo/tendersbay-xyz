@@ -11,80 +11,115 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Tu próxima licitación europea, adjudicada",
-      "description": "Un equipo de agentes de IA que encuentra, prepara y gana licitaciones públicas europeas para las pymes."
+      "title": "tendersbay — Licitaciones europeas, adjudicadas por tus agentes de IA",
+      "description": "Agentes de IA que cazan las licitaciones públicas europeas adecuadas, arrasan con el papeleo y llevan a tu pyme hasta la adjudicación."
     },
     "nav": {
-      "problem": "El problema",
+      "problem": "El coste",
       "agents": "Los agentes",
       "vision": "Visión"
     },
     "hero": {
-      "eyebrow": "Tu equipo de agentes de IA",
-      "titleLead": "¿Tu próxima licitación europea?",
+      "eyebrow": "En inferioridad en cada licitación. Hasta ahora.",
+      "titleLead": "¿La licitación que ya daban por suya?",
       "titleHighlight": "Adjudicada.",
-      "subtitle": "tendersbay es tu equipo de agentes de IA: cazan las licitaciones adecuadas en toda Europa, destrozan el papeleo y te llevan directo a la adjudicación.",
-      "ctaPrimary": "Verlo en acción",
+      "subtitle": "Esta noche se cierra una licitación con tu nombre. Los grandes ya tienen un equipo en ella. Tú tienes tres pestañas abiertas en Excel. Aquí se acaba — agentes de IA que la encuentran, destrozan el papeleo y te ponen en la oferta. Mientras duermes.",
+      "ctaPrimary": "Pon a trabajar a tus agentes",
       "ctaSecondary": "Ver la visión",
-      "trust": ["27 países, una plataforma", "Agentes que nunca duermen", "Cero papeleo manual"]
+      "trust": ["27 países, una búsqueda", "Agentes que nunca duermen", "Papeleo: resuelto"]
     },
     "problem": {
-      "eyebrow": "El problema",
-      "title": "El juego de las licitaciones está amañado contra las pymes.",
+      "eyebrow": "El coste de no hacer nada",
+      "title": "El juego está amañado para dejarte fuera. Y funciona.",
       "items": [
         {
-          "title": "Dispersas en 27 países",
-          "body": "Las oportunidades adecuadas están repartidas en docenas de portales nacionales, en distintos idiomas y formatos."
+          "title": "Enterradas en 27 países",
+          "body": "Las licitaciones que te encajan están repartidas en docenas de portales nacionales, en idiomas que no hablas, en formatos que se resisten."
         },
         {
-          "title": "Burocracia documental pesada",
-          "body": "Requisitos, certificados y plazos — un laberinto documental donde es fácil cometer errores."
+          "title": "Ahogado en papeleo",
+          "body": "Pliegos, certificados, DEUC, plazos. Te saltas una línea y semanas de trabajo van a la basura."
         },
         {
-          "title": "Sin equipo dedicado a ofertas",
-          "body": "Las pymes no tienen departamento de contratación pública — ganar requiere tiempo y experiencia que no tienen."
+          "title": "Sin equipo de ofertas, sin opciones",
+          "body": "Los gigantes tienen un equipo para esto. Tú tienes noches, fines de semana y una hoja de cálculo. Adivina quién gana."
         }
       ]
     },
     "agents": {
       "eyebrow": "Los agentes",
-      "title": "Conoce a los agentes que hacen el trabajo duro.",
+      "title": "Tres agentes. No fallan, no duermen, no se rinden.",
       "items": [
         {
           "title": "Encuentra",
-          "body": "Los agentes encuentran la licitación adecuada en toda Europa, adaptada a tu negocio."
+          "body": "Rastrean los 27 países cada día y solo te muestran las licitaciones que valen tu tiempo — a la medida de lo que haces de verdad."
         },
         {
           "title": "Prepara",
-          "body": "Se encargan de la burocracia documental por ti: requisitos, certificados, plazos."
+          "body": "Requisitos, certificados, DEUC, plazos: extraídos, contrastados, montados. El papeleo que te hundía, resuelto."
         },
         {
           "title": "Gana",
-          "body": "Te acompañan hasta la oferta, para darte la mejor oportunidad de adjudicación."
+          "body": "Convierten el pliego en una estrategia ganadora, para que entres con la misma potencia que los gigantes."
         }
       ]
     },
     "audience": {
       "eyebrow": "Para quién es",
-      "title": "Hecho para los que no se conforman con menos.",
-      "body": "Para quienes quieren competir más allá de las fronteras sin un equipo dedicado a licitaciones. tendersbay te da la misma potencia que los grandes actores."
+      "title": "Uno de estos eres tú. Ya sabes cuál.",
+      "items": [
+        {
+          "title": "Tú preparas las ofertas",
+          "body": "Medianoche, otro DEUC a mano. Pásales los documentos a los agentes. Dedica tus horas a la oferta que de verdad gana."
+        },
+        {
+          "title": "Tú respondes del número",
+          "body": "Tu equipo de licitaciones es el cuello de botella del crecimiento público. Más licitaciones, la misma plantilla — no es una función, es un cambio de escala. Con los números para demostrárselo al consejo."
+        },
+        {
+          "title": "Tú multiplicas clientes",
+          "body": "Cada cliente es un mundo, y cada hora que ahorras es un cliente más que puedes asumir. Espacios separados, datos limpios por cliente, tu margen."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Sin truco",
+      "title": "Haz las preguntas que suelen tumbar el trato.",
+      "items": [
+        {
+          "title": "«¿Mis datos entrenan vuestra IA?»",
+          "body": "No. Tus pliegos, tus tarifas, tus ofertas siguen siendo tuyos. Nunca alimentan el modelo de nadie."
+        },
+        {
+          "title": "«¿Se inventa las cosas?»",
+          "body": "Lee la licitación real y cita la página. Cada requisito remite al documento — sin especificaciones inventadas."
+        },
+        {
+          "title": "«¿Los datos de cada cliente están de verdad separados?»",
+          "body": "Espacios blindados por cliente. Lo suyo sigue siendo suyo. Nada se filtra entre cuentas."
+        },
+        {
+          "title": "«¿Encaja con lo que ya uso?»",
+          "body": "Se acopla a tu stack. No te pide tirar nada."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Visión",
-      "title": "La contratación pública no es un club cerrado.",
-      "body": "Cada año, cientos de miles de millones circulan por la contratación pública europea, pero permanecen fuera del alcance de quienes no tienen tiempo, idioma ni experiencia. tendersbay usa agentes de IA para cambiar eso — y dar a cada pyme una oportunidad real.",
-      "note": "Estamos construyendo. Vuelve pronto."
+      "title": "El dinero público está tras un cordón de terciopelo. Lo cortamos.",
+      "body": "Cada año, cientos de miles de millones circulan por la contratación pública europea — y quedan fuera del alcance de quien no tiene tiempo, idiomas ni un equipo de ofertas. Los agentes de IA cambian las cuentas. Cada pyme tiene una oportunidad real.",
+      "note": "Estamos construyendo. Tu país es el siguiente."
     },
     "coverage": {
       "eyebrow": "Cobertura",
-      "title": "27 países de la UE, una plataforma.",
-      "body": "Nos estamos expandiendo por toda la Unión Europea, mercado a mercado. Cada bandera se ilumina cuando la cobertura se activa.",
-      "statusAvailable": "Disponible",
+      "title": "27 países. Los vamos conquistando uno a uno.",
+      "body": "Nos expandimos por toda la Unión Europea, mercado a mercado. Cada bandera se enciende el día en que tu país entra en marcha.",
+      "statusAvailable": "Activo",
       "statusComingSoon": "Próximamente",
       "note": "La cobertura está llegando a los 27 países de la UE."
     },
     "footer": {
-      "tagline": "Las licitaciones de Europa. Adjudicadas.",
+      "tagline": "Las licitaciones de Europa. Tuyas.",
       "contactLabel": "Contacta con nosotros",
       "copyright": "© Bernardo Forcillo — Todos los derechos reservados",
       "social": "Sigue a tendersbay",
@@ -96,9 +131,9 @@
     },
     "cta": {
       "eyebrow": "Acceso anticipado",
-      "title": "Sé el primero cuando tendersbay se lance.",
-      "body": "Nos estamos expandiendo por toda la UE, mercado a mercado. Apúntate a la lista de espera y consigue acceso anticipado en cuanto tu país esté disponible.",
-      "button": "Únete a la lista"
+      "title": "Tus agentes están listos. Solo faltas tú.",
+      "body": "Estamos encendiendo la UE mercado a mercado. Apúntate a la lista — en cuanto tu país se encienda, tus agentes salen a cazar.",
+      "button": "Reserva tu plaza"
     },
     "tenderCard": {
       "value": "Valor",

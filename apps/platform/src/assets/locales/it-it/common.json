@@ -11,80 +11,115 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — La tua prossima gara europea, aggiudicata",
-      "description": "Un team di agenti AI che scova, prepara e vince le gare pubbliche europee per le PMI."
+      "title": "tendersbay — Gare europee, aggiudicate dai tuoi agenti AI",
+      "description": "Agenti AI che scovano le gare pubbliche europee giuste, distruggono la burocrazia e portano la tua PMI fino all'aggiudicazione."
     },
     "nav": {
-      "problem": "Il problema",
+      "problem": "Il costo",
       "agents": "Gli agenti",
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Il tuo team di agenti AI",
-      "titleLead": "La tua prossima gara europea?",
+      "eyebrow": "Armi spuntate su ogni gara. Fino a oggi.",
+      "titleLead": "La gara che davano già per loro?",
       "titleHighlight": "Aggiudicata.",
-      "subtitle": "tendersbay è il tuo team di agenti AI: scovano le gare giuste in tutta Europa, sbrigano la burocrazia al posto tuo e ti portano dritto all'aggiudicazione.",
-      "ctaPrimary": "Guardalo in azione",
+      "subtitle": "Stanotte scade una gara col tuo nome sopra. I grandi ci hanno messo una squadra. Tu hai tre schede aperte in Excel. Finisce qui — agenti AI che la trovano, sbranano la burocrazia e ti mettono in gara. Mentre dormi.",
+      "ctaPrimary": "Metti al lavoro i tuoi agenti",
       "ctaSecondary": "Guarda la vision",
-      "trust": ["27 paesi, una piattaforma", "Agenti che non dormono mai", "Zero scartoffie a mano"]
+      "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"]
     },
     "problem": {
-      "eyebrow": "Il problema",
-      "title": "Il gioco delle gare è truccato contro le PMI.",
+      "eyebrow": "Il costo di non fare nulla",
+      "title": "Il gioco è truccato per tenerti fuori. E funziona.",
       "items": [
         {
-          "title": "Frammentate su 27 paesi",
-          "body": "Le gare giuste sono sparse su decine di portali nazionali, in lingue e formati diversi."
+          "title": "Sepolte su 27 paesi",
+          "body": "Le gare giuste sono sparse su decine di portali nazionali, in lingue che non parli, in formati che ti remano contro."
         },
         {
-          "title": "Burocrazia documentale pesante",
-          "body": "Requisiti, certificati e scadenze: un labirinto documentale facile da sbagliare."
+          "title": "Sommerso dalle scartoffie",
+          "body": "Requisiti, certificati, DGUE, scadenze. Salti una riga e settimane di lavoro finiscono nel cestino."
         },
         {
-          "title": "Nessun ufficio gare",
-          "body": "Le PMI non hanno un ufficio gare: vincere richiede tempo e competenze che mancano."
+          "title": "Niente ufficio gare, niente partita",
+          "body": "I giganti hanno una squadra per questo. Tu hai notti, weekend e un foglio Excel. Indovina chi vince."
         }
       ]
     },
     "agents": {
       "eyebrow": "Gli agenti",
-      "title": "Ecco gli agenti che fanno il lavoro pesante.",
+      "title": "Tre agenti. Non sbagliano, non dormono, non mollano.",
       "items": [
         {
           "title": "Scova",
-          "body": "Gli agenti scovano la gara giusta in tutta Europa, su misura per la tua impresa."
+          "body": "Setacciano tutti i 27 paesi ogni giorno e ti mostrano solo le gare che valgono il tuo tempo — su misura per ciò che fai davvero."
         },
         {
           "title": "Prepara",
-          "body": "Preparano la burocrazia documentale al posto tuo: requisiti, certificati, scadenze."
+          "body": "Requisiti, certificati, DGUE, scadenze: estratti, verificati, assemblati. La burocrazia che ti spezzava, risolta."
         },
         {
           "title": "Vinci",
-          "body": "Ti accompagnano fino all'offerta, per le migliori chance di aggiudicazione."
+          "body": "Trasformano il capitolato in una strategia vincente, così entri con la stessa potenza di fuoco dei giganti."
         }
       ]
     },
     "audience": {
       "eyebrow": "Per chi è",
-      "title": "Fatto per le PMI che non si accontentano.",
-      "body": "Per chi vuole competere oltre confine senza un ufficio gare dedicato. tendersbay ti dà la stessa potenza di fuoco delle grandi aziende."
+      "title": "Uno di questi sei tu. Lo sai già quale.",
+      "items": [
+        {
+          "title": "Tu compili le gare",
+          "body": "Mezzanotte, un altro DGUE a mano. Passa i documenti agli agenti. Spendi le tue ore sull'offerta che fa vincere davvero."
+        },
+        {
+          "title": "Tu rispondi del numero",
+          "body": "Il tuo team gare è il collo di bottiglia della crescita pubblica. Più gare, stesso organico — non è una feature, è un cambio di scala. Con i numeri per dimostrarlo al board."
+        },
+        {
+          "title": "Tu moltiplichi sui clienti",
+          "body": "Ogni cliente è un mondo, e ogni ora risparmiata è un cliente in più che puoi prendere. Aree separate, dati puliti per cliente, il tuo margine."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Nessun trucco",
+      "title": "Fai pure le domande che di solito fanno saltare il contratto.",
+      "items": [
+        {
+          "title": "«I miei dati addestrano la vostra AI?»",
+          "body": "No. I tuoi capitolati, i tuoi listini, le tue offerte restano tuoi. Mai dati in pasto al modello di nessuno."
+        },
+        {
+          "title": "«Si inventa le cose?»",
+          "body": "Legge la gara vera e cita la pagina. Ogni requisito risale al documento — nessuna specifica inventata."
+        },
+        {
+          "title": "«I dati di ogni cliente sono davvero separati?»",
+          "body": "Aree blindate per cliente. Ciò che è loro resta loro. Niente fughe tra account."
+        },
+        {
+          "title": "«Si integra con ciò che già uso?»",
+          "body": "Si incastra nel tuo stack. Non ti chiede di buttare via niente."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Vision",
-      "title": "Le gare pubbliche non sono un club chiuso.",
-      "body": "Ogni anno in Europa si muovono centinaia di miliardi in appalti pubblici, ma restano fuori portata per chi non ha tempo, lingua o competenze. tendersbay usa gli agenti AI per cambiare questo — e dare a ogni PMI una vera occasione.",
-      "note": "Stiamo costruendo. Torna presto."
+      "title": "I soldi pubblici stanno dietro a un cordone di velluto. Noi lo tagliamo.",
+      "body": "Ogni anno centinaia di miliardi passano per gli appalti pubblici europei — e restano fuori portata per chi non ha tempo, lingue o un ufficio gare. Gli agenti AI cambiano i conti. Ogni PMI ha una vera occasione.",
+      "note": "Stiamo costruendo. Il tuo paese è il prossimo."
     },
     "coverage": {
       "eyebrow": "Copertura",
-      "title": "27 paesi UE, una piattaforma.",
-      "body": "Ci stiamo espandendo in tutta l'Unione Europea, un mercato alla volta. Ogni bandiera si accende quando la copertura è attiva.",
-      "statusAvailable": "Disponibile",
+      "title": "27 paesi. Li conquistiamo uno a uno.",
+      "body": "Ci espandiamo in tutta l'Unione Europea, un mercato alla volta. Ogni bandiera si accende il giorno in cui il tuo paese va live.",
+      "statusAvailable": "Attivo",
       "statusComingSoon": "In arrivo",
       "note": "La copertura sta arrivando in tutti i 27 paesi UE."
     },
     "footer": {
-      "tagline": "Le gare d'Europa. Aggiudicate.",
+      "tagline": "Le gare d'Europa. Tue.",
       "contactLabel": "Scrivici",
       "copyright": "© Bernardo Forcillo — Tutti i diritti riservati",
       "social": "Segui tendersbay",
@@ -96,9 +131,9 @@
     },
     "cta": {
       "eyebrow": "Accesso anticipato",
-      "title": "Sii tra i primi quando tendersbay parte.",
-      "body": "Ci stiamo espandendo in tutta l'UE, un mercato alla volta. Iscriviti alla lista d'attesa e ottieni accesso anticipato nel momento in cui il tuo paese viene attivato.",
-      "button": "Unisciti alla lista"
+      "title": "I tuoi agenti sono pronti. Manca solo tu.",
+      "body": "Stiamo accendendo l'UE un mercato alla volta. Iscriviti alla lista — nel momento in cui il tuo paese si accende, i tuoi agenti partono a caccia.",
+      "button": "Prendi il tuo posto"
     },
     "tenderCard": {
       "value": "Valore",

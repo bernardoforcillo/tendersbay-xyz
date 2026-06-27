@@ -11,84 +11,115 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Vaš naslednji evropski razpis, dodeljen",
-      "description": "Ekipa agentov umetne inteligence, ki najde, pripravi in zmaga evropske javne razpise za MSP-je."
+      "title": "tendersbay — Evropski razpisi, dodeljeni z vašimi agenti UI",
+      "description": "Agenti UI, ki izsledijo prave evropske javne razpise, zdrobijo birokracijo in popeljejo vaš MSP vse do dodelitve."
     },
     "nav": {
-      "problem": "Težava",
+      "problem": "Strošek",
       "agents": "Agenti",
       "vision": "Vizija"
     },
     "hero": {
-      "eyebrow": "Vaša ekipa agentov UI",
-      "titleLead": "Vaš naslednji evropski razpis?",
+      "eyebrow": "V podrejenem položaju na vsakem razpisu. Doslej.",
+      "titleLead": "Razpis, ki so ga že šteli za svojega?",
       "titleHighlight": "Dodeljen.",
-      "subtitle": "tendersbay je vaša ekipa agentov UI: lovijo prave razpise po vsej Evropi, zdrobijo birokracijo namesto vas in vas peljejo naravnost do dodelitve.",
-      "ctaPrimary": "Oglejte si v akciji",
+      "subtitle": "Nocoj se zapre razpis z vašim imenom. Veliki igralci že imajo ekipo na njem. Vi imate odprte tri zavihke v Excelu. Tu je konec — agenti UI, ki ga najdejo, raztrgajo birokracijo in vas postavijo v ponudbo. Medtem ko spite.",
+      "ctaPrimary": "Pošljite svoje agente na delo",
       "ctaSecondary": "Oglejte si vizijo",
-      "trust": [
-        "27 držav, ena platforma",
-        "Agenti, ki nikoli ne spijo",
-        "Nič ročnega papirnatega dela"
-      ]
+      "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"]
     },
     "problem": {
-      "eyebrow": "Težava",
-      "title": "Igra razpisov je nastavljena proti MSP-jem.",
+      "eyebrow": "Strošek nedejavnosti",
+      "title": "Igra je prirejena, da vas drži zunaj. In deluje.",
       "items": [
         {
-          "title": "Razpršeni po 27 državah",
-          "body": "Prave priložnosti so razpršene po desetinah nacionalnih portalov, v različnih jezikih in formatih."
+          "title": "Zakopani po 27 državah",
+          "body": "Razpisi, ki vam ustrezajo, so raztreseni po desetinah nacionalnih portalov, v jezikih, ki jih ne govorite, v formatih, ki se upirajo."
         },
         {
-          "title": "Težka dokumentacijska birokracija",
-          "body": "Zahteve, potrdila in roki — dokumentacijski labirint, v katerem je lahko napake enostavno narediti."
+          "title": "Utapljate se v papirjih",
+          "body": "Zahteve, potrdila, ESPD, roki. Spregledate eno vrstico in tedni dela končajo v košu."
         },
         {
-          "title": "Ni posebne ekipe za ponudbe",
-          "body": "MSP-ji nimajo nabavnega oddelka — zmaga zahteva čas in strokovnost, ki je nimajo."
+          "title": "Brez ekipe za ponudbe, brez možnosti",
+          "body": "Velikani imajo za to ekipo. Vi imate noči, vikende in preglednico. Uganite, kdo zmaga."
         }
       ]
     },
     "agents": {
       "eyebrow": "Agenti",
-      "title": "Spoznajte agente, ki opravljajo težko delo.",
+      "title": "Trije agenti. Ne zgrešijo, ne spijo, ne odnehajo.",
       "items": [
         {
           "title": "Poiščite",
-          "body": "Agenti poiščejo pravi razpis po vsej Evropi, prilagojen vašemu podjetju."
+          "body": "Vsak dan prečešejo vseh 27 držav in izpostavijo le razpise, vredne vašega časa — prilagojene temu, kar resnično počnete."
         },
         {
           "title": "Pripravite",
-          "body": "Za vas uredijo dokumentacijsko birokracijo: zahteve, potrdila, roke."
+          "body": "Zahteve, potrdila, ESPD, roki: izvlečeni, navzkrižno preverjeni, sestavljeni. Birokracija, ki vas je lomila, urejena."
         },
         {
           "title": "Zmagajte",
-          "body": "Vodijo vas do ponudbe, da imate najboljše možnosti za dodelitev."
+          "body": "Razpisno dokumentacijo spremenijo v zmagovalno strategijo, da vstopite z enako ognjeno močjo kot velikani."
         }
       ]
     },
     "audience": {
       "eyebrow": "Za koga je namenjeno",
-      "title": "Narejeno za ambiciozne, ki ne sprejemajo manj.",
-      "body": "Za tiste, ki želijo tekmovati čez meje brez posebne ekipe za ponudbe. tendersbay vam daje enako moč kot velikim akterjem."
+      "title": "Eden od njih ste vi. Že veste, kateri.",
+      "items": [
+        {
+          "title": "Vi pripravljate ponudbe",
+          "body": "Polnoč, še en ESPD na roko. Dokumente predajte agentom. Svoje ure namenite ponudbi, ki resnično zmaga."
+        },
+        {
+          "title": "Vi odgovarjate za številko",
+          "body": "Vaša ekipa za ponudbe je ozko grlo rasti v javnem sektorju. Več razpisov, enako število ljudi — to ni funkcija, to je sprememba obsega. S številkami, da to dokažete upravi."
+        },
+        {
+          "title": "Vi množite stranke",
+          "body": "Vsaka stranka je svet zase, in vsaka prihranjena ura je še ena stranka, ki jo lahko sprejmete. Ločeni delovni prostori, čisti podatki za vsako stranko, vaša marža."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Brez zapletov",
+      "title": "Postavite vprašanja, ki običajno potopijo posel.",
+      "items": [
+        {
+          "title": "„Ali moji podatki učijo vaš UI?“",
+          "body": "Ne. Vaša dokumentacija, vaši ceniki, vaše ponudbe ostanejo vaše. Nikoli niso vključeni v noben model."
+        },
+        {
+          "title": "„Si stvari kar izmišlja?“",
+          "body": "Bere dejanski razpis in navaja stran. Vsaka zahteva vodi nazaj do dokumenta — brez izmišljenih specifikacij."
+        },
+        {
+          "title": "„So podatki vsake stranke res ločeni?“",
+          "body": "Ograjeni delovni prostori za vsako stranko. Kar je njihovo, ostane njihovo. Nič ne pronica med računi."
+        },
+        {
+          "title": "„Se ujema s tem, kar že uporabljam?“",
+          "body": "Vključi se v vaš sklad. Ne zahteva, da karkoli zavržete."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Vizija",
-      "title": "Javni razpisi niso zaprt klub.",
-      "body": "Vsako leto se skozi evropska javna naročila pretočijo stotine milijard, a ostajajo nedosegljivi za tiste brez časa, jezikovnega znanja ali strokovnosti. tendersbay uporablja agente UI, da to spremeni — in da vsakemu MSP-ju da pravo možnost.",
-      "note": "Gradimo. Kmalu se vrnite."
+      "title": "Javni denar je za žametno vrvico. Mi jo prerežemo.",
+      "body": "Vsako leto se skozi evropska javna naročila pretoči stotine milijard — in ostanejo nedosegljive vsem brez časa, jezikov ali ekipe za ponudbe. Agenti UI spremenijo računico. Vsak MSP dobi pravo priložnost.",
+      "note": "Gradimo. Vaša država je naslednja."
     },
     "coverage": {
       "eyebrow": "Pokritost",
-      "title": "27 držav EU, ena platforma.",
-      "body": "Širimo se po vsej Evropski uniji, trg za trgom. Vsaka zastava zasveti, ko pokritost postane aktivna.",
-      "statusAvailable": "Na voljo",
+      "title": "27 držav. Osvajamo jih eno za drugo.",
+      "body": "Širimo se po vsej Evropski uniji, trg za trgom. Vsaka zastava zasveti na dan, ko vaša država zaživi.",
+      "statusAvailable": "Aktivno",
       "statusComingSoon": "Kmalu",
       "note": "Pokritost prihaja v vseh 27 držav EU."
     },
     "footer": {
-      "tagline": "Evropski razpisi. Dodeljeni.",
+      "tagline": "Evropski razpisi. Vaši.",
       "contactLabel": "Stopite v stik z nami",
       "copyright": "© Bernardo Forcillo — Vse pravice pridržane",
       "social": "Sledite tendersbay",
@@ -100,9 +131,9 @@
     },
     "cta": {
       "eyebrow": "Zgodnji dostop",
-      "title": "Bodite prvi, ko tendersbay zaživi.",
-      "body": "Širimo se po celotni EU, trg za trgom. Pridružite se čakalni listi in dobite zgodnji dostop takoj, ko se vaša država aktivira.",
-      "button": "Pridruži se čakalni listi"
+      "title": "Vaši agenti so pripravljeni. Manjkate samo še vi.",
+      "body": "Prižigamo EU trg za trgom. Pridružite se čakalni listi — v trenutku, ko vaša država zasveti, vaši agenti odidejo na lov.",
+      "button": "Zagotovite si svoje mesto"
     },
     "tenderCard": {
       "value": "Vrednost",

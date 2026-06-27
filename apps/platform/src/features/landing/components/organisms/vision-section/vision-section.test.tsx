@@ -8,8 +8,10 @@ describe('VisionSection', () => {
     const { container } = renderWithI18n(<VisionSection />, 'en-ie');
     expect(container.querySelector('#vision')).not.toBeNull();
     expect(
-      screen.getByRole('heading', { name: "Public tenders shouldn't be a closed club." }),
+      screen.getByRole('heading', {
+        name: "Public money sits behind a velvet rope. We're cutting it.",
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByText("We're building. Check back soon.")).toBeInTheDocument();
+    expect(screen.getByText("We're building. Your country is next.")).toBeInTheDocument();
   });
 });

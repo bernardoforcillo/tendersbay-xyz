@@ -11,84 +11,115 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Votre prochain marché européen, attribué",
-      "description": "Une équipe d'agents IA qui trouve, prépare et remporte les marchés publics européens pour les PME."
+      "title": "tendersbay — Marchés européens, attribués par vos agents IA",
+      "description": "Des agents IA qui débusquent les bons marchés publics européens, écrasent la paperasse et mènent votre PME jusqu'à l'attribution."
     },
     "nav": {
-      "problem": "Le problème",
+      "problem": "Le coût",
       "agents": "Les agents",
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Votre équipe d'agents IA",
-      "titleLead": "Votre prochain marché européen ?",
+      "eyebrow": "Dominé sur chaque marché. Jusqu'à aujourd'hui.",
+      "titleLead": "Le marché qu'ils croyaient déjà à eux ?",
       "titleHighlight": "Attribué.",
-      "subtitle": "tendersbay est votre équipe d'agents IA : ils débusquent les bons marchés dans toute l'Europe, écrasent la paperasse à votre place et vous portent jusqu'à l'attribution.",
-      "ctaPrimary": "Voir en action",
+      "subtitle": "Un marché à votre nom se clôt ce soir. Les gros ont déjà une équipe dessus. Vous avez trois onglets ouverts dans Excel. Ça s'arrête ici — des agents IA qui le trouvent, étripent la paperasse et vous placent sur l'offre. Pendant que vous dormez.",
+      "ctaPrimary": "Mettez vos agents au travail",
       "ctaSecondary": "Voir la vision",
-      "trust": [
-        "27 pays, une plateforme",
-        "Des agents qui ne dorment jamais",
-        "Zéro paperasse manuelle"
-      ]
+      "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"]
     },
     "problem": {
-      "eyebrow": "Le problème",
-      "title": "Le jeu des appels d'offres est truqué contre les PME.",
+      "eyebrow": "Le coût de l'inaction",
+      "title": "Le jeu est truqué pour vous tenir dehors. Et ça marche.",
       "items": [
         {
-          "title": "Éparpillés dans 27 pays",
-          "body": "Les bonnes opportunités sont réparties sur des dizaines de portails nationaux, dans des langues et formats différents."
+          "title": "Enfouis dans 27 pays",
+          "body": "Les marchés qui vous correspondent sont éparpillés sur des dizaines de portails nationaux, dans des langues que vous ne parlez pas, dans des formats qui résistent."
         },
         {
-          "title": "Une bureaucratie documentaire lourde",
-          "body": "Exigences, certificats et délais — un labyrinthe documentaire où il est facile de se tromper."
+          "title": "Noyé sous la paperasse",
+          "body": "Exigences, certificats, DUME, délais. Une ligne oubliée et des semaines de travail partent à la poubelle."
         },
         {
-          "title": "Aucune équipe dédiée aux offres",
-          "body": "Les PME n'ont pas de service achats — remporter un marché demande du temps et une expertise qu'elles n'ont pas."
+          "title": "Pas de service offres, aucune chance",
+          "body": "Les géants ont une équipe pour ça. Vous avez vos nuits, vos week-ends et un tableur. Devinez qui gagne."
         }
       ]
     },
     "agents": {
       "eyebrow": "Les agents",
-      "title": "Rencontrez les agents qui font le gros du travail.",
+      "title": "Trois agents. Ils ne ratent rien, ne dorment pas, n'abandonnent jamais.",
       "items": [
         {
           "title": "Trouver",
-          "body": "Les agents dénichent le bon marché dans toute l'Europe, adapté à votre activité."
+          "body": "Ils passent les 27 pays au peigne fin chaque jour et ne remontent que les marchés qui valent votre temps — adaptés à ce que vous faites vraiment."
         },
         {
           "title": "Préparer",
-          "body": "Ils gèrent la bureaucratie documentaire à votre place : exigences, certificats, délais."
+          "body": "Exigences, certificats, DUME, délais : extraits, recoupés, assemblés. La paperasse qui vous brisait, réglée."
         },
         {
           "title": "Remporter",
-          "body": "Ils vous accompagnent jusqu'à l'offre, pour maximiser vos chances d'attribution."
+          "body": "Ils transforment le cahier des charges en stratégie gagnante, pour que vous entriez avec la même puissance de feu que les géants."
         }
       ]
     },
     "audience": {
       "eyebrow": "À qui c'est destiné",
-      "title": "Fait pour les challengers qui ne se contentent pas du minimum.",
-      "body": "Pour ceux qui souhaitent concourir au-delà des frontières sans équipe dédiée. tendersbay vous donne la même puissance de feu que les grands acteurs."
+      "title": "L'un d'eux, c'est vous. Vous savez déjà lequel.",
+      "items": [
+        {
+          "title": "Vous montez les offres",
+          "body": "Minuit, encore un DUME à la main. Confiez les documents aux agents. Passez vos heures sur l'offre qui fait vraiment gagner."
+        },
+        {
+          "title": "Vous répondez du chiffre",
+          "body": "Votre équipe offres est le goulot d'étranglement de la croissance publique. Plus de marchés, le même effectif — ce n'est pas une fonctionnalité, c'est un changement d'échelle. Avec les chiffres pour le prouver au comité."
+        },
+        {
+          "title": "Vous multipliez les clients",
+          "body": "Chaque client est un monde, et chaque heure gagnée est un client de plus que vous pouvez prendre. Espaces séparés, données propres par client, votre marge."
+        }
+      ]
+    },
+    "assurance": {
+      "eyebrow": "Sans piège",
+      "title": "Posez les questions qui font d'habitude capoter le contrat.",
+      "items": [
+        {
+          "title": "« Mes données entraînent-elles votre IA ? »",
+          "body": "Non. Vos cahiers des charges, vos tarifs, vos offres restent à vous. Jamais versés au modèle de qui que ce soit."
+        },
+        {
+          "title": "« Est-ce qu'elle invente ? »",
+          "body": "Elle lit le marché réel et cite la page. Chaque exigence renvoie au document — aucune spécification inventée."
+        },
+        {
+          "title": "« Les données de chaque client sont-elles vraiment cloisonnées ? »",
+          "body": "Espaces blindés par client. Ce qui est à eux reste à eux. Rien ne fuite d'un compte à l'autre."
+        },
+        {
+          "title": "« Est-ce que ça s'intègre à mes outils ? »",
+          "body": "Ça se glisse dans votre stack. Sans vous demander de jeter quoi que ce soit."
+        }
+      ]
     },
     "vision": {
       "eyebrow": "Vision",
-      "title": "Les marchés publics ne sont pas un club fermé.",
-      "body": "Chaque année, des centaines de milliards circulent dans les marchés publics européens, mais ils restent hors de portée de ceux qui manquent de temps, de langue ou d'expertise. tendersbay utilise des agents IA pour changer cela — et donner à chaque PME une vraie chance.",
-      "note": "Nous construisons. Revenez bientôt."
+      "title": "L'argent public est derrière un cordon de velours. Nous le coupons.",
+      "body": "Chaque année, des centaines de milliards passent par les marchés publics européens — et restent hors de portée de qui n'a ni le temps, ni les langues, ni un service offres. Les agents IA changent l'équation. Chaque PME a une vraie chance.",
+      "note": "Nous construisons. Votre pays est le prochain."
     },
     "coverage": {
       "eyebrow": "Couverture",
-      "title": "27 pays de l'UE, une plateforme.",
-      "body": "Nous nous déployons dans toute l'Union européenne, marché après marché. Chaque drapeau s'illumine dès que la couverture est active.",
-      "statusAvailable": "Disponible",
+      "title": "27 pays. On les prend un par un.",
+      "body": "Nous nous déployons dans toute l'Union européenne, marché après marché. Chaque drapeau s'illumine le jour où votre pays passe en ligne.",
+      "statusAvailable": "En ligne",
       "statusComingSoon": "Bientôt",
       "note": "La couverture arrive dans les 27 pays de l'UE."
     },
     "footer": {
-      "tagline": "Les marchés d'Europe. Attribués.",
+      "tagline": "Les marchés d'Europe. À vous.",
       "contactLabel": "Nous contacter",
       "copyright": "© Bernardo Forcillo — Tous droits réservés",
       "social": "Suivre tendersbay",
@@ -100,9 +131,9 @@
     },
     "cta": {
       "eyebrow": "Accès anticipé",
-      "title": "Soyez là dès le lancement de tendersbay.",
-      "body": "Nous nous déployons dans toute l'UE, marché après marché. Inscrivez-vous sur la liste d'attente et accédez en avant-première dès que votre pays est couvert.",
-      "button": "Rejoindre la liste"
+      "title": "Vos agents sont prêts. Il ne manque que vous.",
+      "body": "Nous allumons l'UE marché après marché. Inscrivez-vous sur la liste — dès que votre pays s'allume, vos agents partent en chasse.",
+      "button": "Réservez votre place"
     },
     "tenderCard": {
       "value": "Valeur",
