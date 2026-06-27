@@ -86,7 +86,8 @@ func TestLogsEachRequest(t *testing.T) {
 	get(t, New(testFS()), "/assets/app.js")
 
 	out := buf.String()
-	if !strings.Contains(out, "method=GET") || !strings.Contains(out, "status=200") {
-		t.Fatalf("expected a request log with method+status, got %q", out)
+	if !strings.Contains(out, "method=GET") || !strings.Contains(out, "status=200") ||
+		!strings.Contains(out, "path=/assets/app.js") || !strings.Contains(out, "duration_ms=") {
+		t.Fatalf("expected a request log with method+path+status+duration_ms, got %q", out)
 	}
 }

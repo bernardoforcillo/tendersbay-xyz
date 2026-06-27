@@ -66,6 +66,7 @@ func Setup(ctx context.Context, cfg Config) (func(context.Context) error, error)
 		resource.WithAttributes(semconv.ServiceNameKey.String(cfg.ServiceName)),
 	)
 	if err != nil {
+		_ = exporter.Shutdown(ctx)
 		return noop, err
 	}
 
