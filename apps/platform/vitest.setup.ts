@@ -6,6 +6,21 @@ afterEach(() => {
   cleanup();
 });
 
+// Node 24+ exposes a native `localStorage` global (unavailable without
+// --localstorage-file) that shadows jsdom's Storage; vitest's populateGlobal
+// won't override an already-defined global, so bare `localStorage` used by app
+// code stays undefined. Bridge it to jsdom's real Storage (reachable via the
+// jsdom window, with the `url` set in vitest.config.ts so Storage initializes).
+// Note: the setup-scope `window` is not jsdom's window instance here, so we
+// reach the working Storage through vitest's jsdom handle.
+if (typeof localStorage === 'undefined') {
+  // biome-ignore lint/suspicious/noExplicitAny: reaching vitest's jsdom window for test env setup
+  const jsdomWindow = (global as any).jsdom?.window;
+  if (jsdomWindow?.localStorage) {
+    vi.stubGlobal('localStorage', jsdomWindow.localStorage);
+  }
+}
+
 // jsdom lacks matchMedia (used by reduced-motion checks) — provide a default mock.
 if (!window.matchMedia) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
