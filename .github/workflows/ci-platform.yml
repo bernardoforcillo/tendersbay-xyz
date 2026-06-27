@@ -83,5 +83,8 @@ jobs:
           file: apps/platform/Dockerfile
           push: true
           tags: ${{ steps.tags.outputs.tags }}
+          build-args: |
+            VITE_POSTHOG_KEY=${{ vars.VITE_POSTHOG_KEY }}
+            VITE_POSTHOG_HOST=${{ vars.VITE_POSTHOG_HOST }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

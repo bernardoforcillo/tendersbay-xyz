@@ -18,6 +18,12 @@ RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the sources and build only the frontend (not `go build`).
 COPY . .
+# PostHog client key is baked into the bundle at build time (phc_… is a public
+# project key). Empty by default -> analytics stays disabled.
+ARG VITE_POSTHOG_KEY=""
+ARG VITE_POSTHOG_HOST="https://eu.i.posthog.com"
+ENV VITE_POSTHOG_KEY=$VITE_POSTHOG_KEY
+ENV VITE_POSTHOG_HOST=$VITE_POSTHOG_HOST
 RUN pnpm --filter platform exec vite build
 
 # ---- Stage 2: compile the Go binary that embeds dist ----
