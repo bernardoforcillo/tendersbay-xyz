@@ -35,6 +35,10 @@ Every build keeps an immutable `timestamp-sha` tag, so any commit's image can be
 pulled even after `latest` moves on. The `-canary` suffix is the only marker that
 distinguishes a `dev` build — there are no moving channel tags.
 
+The `services/backend` service publishes `bernardoforcillo/tendersbay-backend` on the same
+channel scheme via `.github/workflows/ci-backend.yml` (`dev` → `…-canary`, `main` → `…` +
+`latest`).
+
 ## Commit hygiene
 
 Work branches often carry **unrelated in-progress changes** (multiple features
