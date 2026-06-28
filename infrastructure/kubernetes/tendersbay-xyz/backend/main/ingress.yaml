@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: backend-ingress
+  namespace: tendersbay-xyz
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`api.tendersbay.xyz`)
+      kind: Rule
+      services:
+        - name: backend-svc
+          port: 30082
+      middlewares:
+        # Reuses shared middlewares from commons.yaml (same namespace).
+        # No redirect-to-non-www: api.tendersbay.xyz has no www variant.
+        - name: rate-limit
+          namespace: tendersbay-xyz
+        - name: security
+          namespace: tendersbay-xyz
+        - name: redirect-http-to-https
+          namespace: tendersbay-xyz
+  tls:
+    secretName: backend-tls
+    options:
+      name: tlsoptions
+      namespace: tendersbay-xyz
