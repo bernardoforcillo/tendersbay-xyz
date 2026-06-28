@@ -4,14 +4,22 @@ on:
   pull_request:
   push:
     branches: [main, dev]
+    # Build the image only when something that goes into it changes. Manifest
+    # edits under infrastructure/** (e.g. Flux's image-automation commit to main)
+    # never change the image, so they don't match this allowlist and the whole
+    # workflow is skipped — this breaks the CI -> new image -> Flux commit -> CI
+    # feedback loop on main. (Use only `paths`; GitHub rejects `paths` +
+    # `paths-ignore` on the same event.)
     paths:
       - 'apps/platform/**'
       - 'packages/**'
-    paths-ignore:
-      - 'infrastructure/**'
-      - 'docs/**'
-      - '**/*.md'
-      - '.claude/**'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'package.json'
+      - 'turbo.json'
+      - '.nvmrc'
+      - '.github/workflows/ci-platform.yml'
+
 
 jobs:
   quality:
