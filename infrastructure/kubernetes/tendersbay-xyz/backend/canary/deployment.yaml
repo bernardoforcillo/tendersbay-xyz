@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-canary
+  namespace: tendersbay-xyz
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: tendersbay-xyz
+      tier: backend-canary
+  template:
+    metadata:
+      labels:
+        app: tendersbay-xyz
+        tier: backend-canary
+    spec:
+      securityContext:
+        # gcr.io/distroless/static-debian12:nonroot is UID/GID 65532.
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: backend
+          image: bernardoforcillo/tendersbay-backend:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-backend-canary-image-policy"}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            limits:
+              memory: '128Mi'
+              cpu: '50m'
+            requests:
+              memory: '64Mi'
+              cpu: '10m'
+          env:
+            - name: PORT
+              value: '8080'
+            - name: SERVICE_NAME
+              value: 'tendersbay-backend'
+            # PostHog project key is a public client key (phc_…); plaintext is fine.
+            - name: POSTHOG_API_KEY
+              value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
+            - name: POSTHOG_HOST
+              value: 'https://eu.i.posthog.com'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
