@@ -1,5 +1,6 @@
 import {
   AgentsSection,
+  AssuranceSection,
   AudienceSection,
   CoverageSection,
   CtaBand,
@@ -20,6 +21,7 @@ export function LandingTemplate() {
         <ProblemSection />
         <AgentsSection />
         <AudienceSection />
+        <AssuranceSection />
         <CoverageSection />
         <VisionSection />
       </main>

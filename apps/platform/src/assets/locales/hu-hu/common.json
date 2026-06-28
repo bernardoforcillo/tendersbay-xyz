@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Sütiket használunk",
+    "body": "Elemzési sütiket használunk annak megértéséhez, hogyan használja weboldalunkat, és a felhasználói élmény javításához. Elfogadhatja vagy elutasíthatja a nem kötelező sütiket.",
+    "accept": "Elfogadom",
+    "reject": "Elutasítom"
+  },
   "landing": {
     "search": {
       "label": "Keresés",
@@ -11,111 +17,139 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — A következő európai közbeszerzése, odaítélve",
-      "description": "Egy mesterséges intelligencia ügynökökből álló csapat, amely megtalálja, előkészíti és megnyeri az európai közbeszerzéseket a kkv-k számára."
+      "title": "tendersbay — Nyerjen európai közbeszerzéseket MI-ügynökök csapatával",
+      "description": "MI-ügynökök, akik felkutatják a megfelelő európai közbeszerzéseket, szétzúzzák a papírmunkát, és egészen az odaítélésig viszik az Ön kkv-ját."
     },
     "nav": {
-      "problem": "A probléma",
+      "problem": "A költség",
       "agents": "Az ügynökök",
       "vision": "Vízió"
     },
     "hero": {
-      "eyebrow": "Az Ön MI-ügynök csapata",
-      "titleLead": "A következő európai közbeszerzése?",
+      "titleLead": "A pályázat, amit már a sajátjuknak hittek?",
       "titleHighlight": "Odaítélve.",
-      "subtitle": "A tendersbay az Ön MI-ügynök csapata: vadásszák a megfelelő pályázatokat egész Európában, összetörik a papírmunkát az Ön helyett, és egyenesen az odaítélésig viszik Önt.",
-      "ctaPrimary": "Lássa működés közben",
+      "subtitle": "Ma éjjel lejár egy pályázat az Ön nevével. A nagy szereplőknek már csapatuk van rajta. Önnek három lap van nyitva az Excelben. Itt vége — MI-ügynökök, akik megtalálják, széttépik a papírmunkát, és beállítják Önt az ajánlatba. Miközben alszik.",
+      "ctaPrimary": "Állítsa munkába az ügynökeit",
       "ctaSecondary": "Tekintse meg a víziót",
       "trust": [
-        "27 ország, egy platform",
+        "27 ország, egy keresés",
         "Ügynökök, akik soha nem alszanak",
-        "Nulla kézi adminisztráció"
+        "Papírmunka: elintézve"
       ]
     },
     "problem": {
-      "eyebrow": "A probléma",
-      "title": "A közbeszerzési játék a kkv-k ellen van megrendezve.",
+      "title": "A játékot úgy állították be, hogy Önt kizárja. És működik.",
       "items": [
         {
-          "title": "27 országban szétszórva",
-          "body": "A megfelelő lehetőségek tucatnyi nemzeti portálra szétszórva, különböző nyelveken és formátumokban találhatók."
+          "title": "27 országban eltemetve",
+          "body": "Az Önnek megfelelő pályázatok tucatnyi nemzeti portálon szétszórva hevernek, olyan nyelveken, amelyeket nem beszél, olyan formátumokban, amelyek ellenállnak."
         },
         {
-          "title": "Nehéz dokumentációs bürokrácia",
-          "body": "Követelmények, tanúsítványok és határidők — egy dokumentumlabirintus, ahol könnyű hibázni."
+          "title": "Papírmunkában fuldokolva",
+          "body": "Követelmények, tanúsítványok, EEKD, határidők. Kihagy egy sort, és hetek munkája a kukába kerül."
         },
         {
-          "title": "Nincs dedikált ajánlattételi csapat",
-          "body": "A kkv-knak nincs közbeszerzési osztályuk — a győzelemhez olyan idő és szakértelem kell, amellyel nem rendelkeznek."
+          "title": "Nincs ajánlati csapat, nincs esély",
+          "body": "Az óriásoknak van erre csapatuk. Önnek van éjszakája, hétvégéje és egy táblázata. Találja ki, ki nyer."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Az ügynökök",
-      "title": "Ismerje meg az ügynököket, akik elvégzik a nehéz munkát.",
+      "title": "Három ügynök. Nem hibáznak, nem alszanak, nem adják fel.",
       "items": [
         {
           "title": "Találjon",
-          "body": "Az ügynökök megtalálják a megfelelő pályázatot egész Európában, az Ön vállalkozására szabva."
+          "body": "Minden nap átfésülik mind a 27 országot, és csak azokat a pályázatokat hozzák fel, amelyek megérik az Ön idejét — arra szabva, amit valójában csinál."
         },
         {
           "title": "Készítse elő",
-          "body": "Elvégzik Ön helyett a dokumentációs bürokráciát: követelmények, tanúsítványok, határidők."
+          "body": "Követelmények, tanúsítványok, EEKD, határidők: kinyerve, összevetve, összeállítva. A papírmunka, ami megtörte, elintézve."
         },
         {
           "title": "Nyerjen",
-          "body": "Végigkísérik az ajánlatig, hogy a legjobb esélye legyen az odaítélésre."
+          "body": "A kiírást nyertes stratégiává alakítják, hogy ugyanakkora tűzerővel lépjen be, mint az óriások."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Kinek szól",
-      "title": "Ambiciózus kihívóknak építve.",
-      "body": "Azoknak, akik dedikált ajánlattételi csapat nélkül szeretnének határon átnyúlóan versenyezni. A tendersbay ugyanolyan tűzerőt ad Önnek, mint a nagy szereplőknek."
+      "title": "Egyikük Ön. Már tudja, melyik.",
+      "items": [
+        {
+          "title": "Ön készíti az ajánlatokat",
+          "body": "Éjfél, még egy EEKD kézzel. Adja át a dokumentumokat az ügynököknek. Töltse az óráit azzal az ajánlattal, ami tényleg nyer."
+        },
+        {
+          "title": "Ön felel a számért",
+          "body": "Az ajánlati csapata a közszférás növekedés szűk keresztmetszete. Több pályázat, ugyanannyi ember — ez nem funkció, ez léptékváltás. A számokkal, amelyekkel bebizonyítja az igazgatóságnak."
+        },
+        {
+          "title": "Ön sokszorozza az ügyfeleket",
+          "body": "Minden ügyfél külön világ, és minden megspórolt óra egy újabb ügyfél, akit elvállalhat. Külön munkaterek, tiszta adatok ügyfelenként, az Ön árrése."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Tegye fel a kérdéseket, amelyek általában megölik az üzletet.",
+      "items": [
+        {
+          "title": "„Az adataim tanítják a mesterséges intelligenciájukat?”",
+          "body": "Nem. A kiírásai, az árlistái, az ajánlatai az Önéi maradnak. Soha nem tápláljuk be senki modelljébe."
+        },
+        {
+          "title": "„Csak kitalál dolgokat?”",
+          "body": "A valódi pályázatot olvassa, és az oldalt idézi. Minden követelmény visszavezethető a dokumentumra — semmi kitalált specifikáció."
+        },
+        {
+          "title": "„Tényleg külön van minden ügyfél adata?”",
+          "body": "Elszigetelt munkaterek ügyfelenként. Ami az övék, az az övék marad. Semmi nem szivárog át a fiókok között."
+        },
+        {
+          "title": "„Illeszkedik ahhoz, amit már használok?”",
+          "body": "Beilleszkedik a stackjébe. Nem kéri, hogy bármit is kidobjon."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Vízió",
-      "title": "A közbeszerzés nem zárt klub.",
-      "body": "Évente több száz milliárd áramlik az európai közbeszerzéseken keresztül, de elérhetetlen marad azok számára, akiknek nincs idejük, nyelvtudásuk vagy szakértelmük. A tendersbay mesterséges intelligencia ügynököket használ ennek megváltoztatásához — és hogy minden kkv-nak valódi esélyt adjon.",
-      "note": "Épülünk. Nézzen vissza hamarosan."
+      "title": "A közpénz bársonykötél mögött ül. Mi elvágjuk.",
+      "body": "Évente több száz milliárd áramlik át az európai közbeszerzéseken — és elérhetetlen marad mindenki számára, akinek nincs ideje, nyelvtudása vagy ajánlati csapata. A mesterséges intelligencia ügynökök átírják a képletet. Minden kkv valódi esélyt kap.",
+      "note": "Épülünk. Az Ön országa a következő."
     },
     "coverage": {
-      "eyebrow": "Lefedettség",
-      "title": "27 EU-ország, egy platform.",
-      "body": "Az egész Európai Unióban terjeszkedünk, piacról piacra. Minden zászló kigyullad, amint a lefedettség élővé válik.",
-      "statusAvailable": "Elérhető",
+      "title": "27 ország. Egyenként vesszük be őket.",
+      "body": "Az egész Európai Unióban terjeszkedünk, piacról piacra. Minden zászló kigyullad azon a napon, amikor az Ön országa élesben indul.",
+      "statusAvailable": "Aktív",
       "statusComingSoon": "Hamarosan",
       "note": "A lefedettség mind a 27 EU-országba megérkezik."
     },
     "footer": {
-      "tagline": "Európa közbeszerzései. Odaítélve.",
+      "tagline": "Európa közbeszerzései. Az Önéi.",
       "contactLabel": "Lépjen kapcsolatba velünk",
       "copyright": "© Bernardo Forcillo — Minden jog fenntartva",
       "social": "Kövesse a tendersbay-t",
       "columns": [
-        { "heading": "Termék", "links": ["Az ügynökök", "Lefedettség", "Vízió"] },
-        { "heading": "Vállalat", "links": ["Rólunk", "Kapcsolat", "Karrier", "Blog"] },
-        { "heading": "Források", "links": ["Adatvédelem", "Feltételek", "Sajtó", "Állapot"] }
+        {
+          "heading": "Termék",
+          "links": ["Az ügynökök", "Lefedettség", "Vízió"]
+        },
+        {
+          "heading": "Vállalat",
+          "links": ["Rólunk", "Kapcsolat", "Karrier", "Blog"]
+        },
+        {
+          "heading": "Források",
+          "links": ["Adatvédelem", "Feltételek", "Sajtó", "Állapot"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Korai hozzáférés",
-      "title": "Legyen az első, amikor a tendersbay elindul.",
-      "body": "Az egész EU-ban terjeszkedünk, piacról piacra. Iratkozzon fel a várólistára, és kapjon korai hozzáférést, amint az Ön országa aktiválódik.",
-      "button": "Feliratkozás a várólistára"
+      "title": "Az ügynökei készen állnak. Már csak Ön hiányzik.",
+      "body": "Piacról piacra kapcsoljuk be az EU-t. Iratkozzon fel a várólistára — abban a pillanatban, amikor az Ön országa felgyullad, az ügynökei vadászni indulnak.",
+      "button": "Foglalja le a helyét"
     },
     "tenderCard": {
       "value": "Érték",
       "deadline": "Határidő",
       "daysLeft": "{{count}} nap"
-    },
-    "agentLabels": {
-      "scout": "Felderítő ügynök",
-      "docs": "Dokumentum-ügynök",
-      "strategy": "Stratégiai ügynök",
-      "scoutStat": "{{count}} megtalált pályázat",
-      "docsStat": "papírok rendezve",
-      "strategyStat": "nyerő ajánlat kész"
     }
   }
 }

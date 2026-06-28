@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: backend-tls
+  namespace: tendersbay-xyz
+spec:
+  secretName: backend-tls
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  issuerRef:
+    name: cluster-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+  commonName: api.tendersbay.xyz
+  dnsNames:
+    - api.tendersbay.xyz

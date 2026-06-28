@@ -10,8 +10,10 @@ describe('CtaBand', () => {
   it('renders the CTA heading and a button linking to #top', () => {
     renderWithI18n(<CtaBand />, 'en-ie');
     expect(
-      screen.getByRole('heading', { name: 'Be first when tendersbay goes live.' }),
+      screen.getByRole('heading', {
+        name: 'Your agents are ready. The only thing missing is you.',
+      }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Join the waitlist' })).toHaveAttribute('href', '#top');
+    expect(screen.getByRole('link', { name: 'Claim your spot' })).toHaveAttribute('href', '#top');
   });
 });

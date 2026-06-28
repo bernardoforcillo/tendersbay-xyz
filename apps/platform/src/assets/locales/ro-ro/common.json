@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Folosim cookie-uri",
+    "body": "Folosim cookie-uri analitice pentru a înțelege cum utilizați site-ul nostru și pentru a vă îmbunătăți experiența. Puteți accepta sau respinge cookie-urile neesențiale.",
+    "accept": "Acceptă",
+    "reject": "Respinge"
+  },
   "landing": {
     "search": {
       "label": "Caută",
@@ -11,111 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Următoarea licitație europeană, atribuită",
-      "description": "O echipă de agenți AI care găsește, pregătește și câștigă licitații publice europene pentru IMM-uri."
+      "title": "tendersbay — Licitații europene, atribuite de agenții dvs. AI",
+      "description": "Agenți AI care depistează licitațiile publice europene potrivite, fac praf birocrația și vă duc IMM-ul până la atribuire."
     },
     "nav": {
-      "problem": "Problema",
+      "problem": "Costul",
       "agents": "Agenții",
       "vision": "Viziune"
     },
     "hero": {
-      "eyebrow": "Echipa dvs. de agenți AI",
-      "titleLead": "Următoarea licitație europeană?",
+      "titleLead": "Licitația pe care o socoteau deja a lor?",
       "titleHighlight": "Atribuită.",
-      "subtitle": "tendersbay este echipa dvs. de agenți AI: vânează licitațiile potrivite din toată Europa, zdrobesc birocrația în locul dvs. și vă duc direct la atribuire.",
-      "ctaPrimary": "Vedeți în acțiune",
+      "subtitle": "În seara asta se închide o licitație cu numele dvs. Marii jucători au deja o echipă pe ea. Dvs. aveți trei file deschise în Excel. Aici se termină — agenți AI care o găsesc, sfâșie birocrația și vă pun pe ofertă. În timp ce dormiți.",
+      "ctaPrimary": "Puneți-vă agenții la treabă",
       "ctaSecondary": "Vedeți viziunea",
-      "trust": [
-        "27 de țări, o platformă",
-        "Agenți care nu dorm niciodată",
-        "Zero birocrație manuală"
-      ]
+      "trust": ["27 de țări, o căutare", "Agenți care nu dorm niciodată", "Birocrație: rezolvată"]
     },
     "problem": {
-      "eyebrow": "Problema",
-      "title": "Jocul licitațiilor este tructat împotriva IMM-urilor.",
+      "title": "Jocul e măsluit ca să vă țină pe dinafară. Și funcționează.",
       "items": [
         {
-          "title": "Dispersate în 27 de țări",
-          "body": "Oportunitățile potrivite sunt împrăștiate pe zeci de portaluri naționale, în limbi și formate diferite."
+          "title": "Îngropate în 27 de țări",
+          "body": "Licitațiile care vi se potrivesc stau împrăștiate pe zeci de portaluri naționale, în limbi pe care nu le vorbiți, în formate care vă pun bețe în roate."
         },
         {
-          "title": "Birocrație documentară grea",
-          "body": "Cerințe, certificate și termene limită — un labirint documentar unde este ușor să greșești."
+          "title": "Înecat în hârtii",
+          "body": "Cerințe, certificate, DUAE, termene. Săriți un rând și săptămâni de muncă ajung la coș."
         },
         {
-          "title": "Nicio echipă dedicată pentru oferte",
-          "body": "IMM-urile nu au un departament de achiziții publice — câștigarea necesită timp și expertiză pe care nu le au."
+          "title": "Fără echipă de oferte, nicio șansă",
+          "body": "Giganții au o echipă pentru asta. Dvs. aveți nopți, weekenduri și un tabel. Ghiciți cine câștigă."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Agenții",
-      "title": "Cunoașteți agenții care fac munca grea.",
+      "title": "Trei agenți. Nu ratează, nu dorm, nu renunță.",
       "items": [
         {
           "title": "Găsiți",
-          "body": "Agenții găsesc licitația potrivită în toată Europa, adaptată afacerii dvs."
+          "body": "Răscolesc toate cele 27 de țări în fiecare zi și scot la suprafață doar licitațiile care merită timpul dvs. — pe măsura a ceea ce faceți cu adevărat."
         },
         {
           "title": "Pregătiți",
-          "body": "Ei se ocupă de birocrația documentară în locul dvs.: cerințe, certificate, termene limită."
+          "body": "Cerințe, certificate, DUAE, termene: extrase, verificate încrucișat, asamblate. Birocrația care vă frângea, rezolvată."
         },
         {
           "title": "Câștigați",
-          "body": "Vă ghidează până la ofertă, pentru cea mai bună șansă de atribuire."
+          "body": "Transformă caietul de sarcini într-o strategie câștigătoare, ca să intrați cu aceeași putere de foc ca giganții."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Pentru cine este",
-      "title": "Construit pentru ambiții care nu se mulțumesc cu mai puțin.",
-      "body": "Pentru cei care doresc să concureze dincolo de granițe fără o echipă dedicată pentru oferte. tendersbay vă oferă aceeași putere de foc ca marii jucători."
+      "title": "Unul dintre aceștia sunteți dvs. Știți deja care.",
+      "items": [
+        {
+          "title": "Dvs. pregătiți ofertele",
+          "body": "Miezul nopții, încă un DUAE de mână. Dați documentele agenților. Petreceți-vă orele pe oferta care chiar câștigă."
+        },
+        {
+          "title": "Dvs. răspundeți de cifră",
+          "body": "Echipa dvs. de oferte e gâtul de sticlă al creșterii în sectorul public. Mai multe licitații, același personal — nu e o funcție, e o schimbare de scară. Cu cifrele care o dovedesc consiliului."
+        },
+        {
+          "title": "Dvs. înmulțiți clienții",
+          "body": "Fiecare client e o lume aparte, și fiecare oră economisită e încă un client pe care îl puteți prelua. Spații separate, date curate pentru fiecare client, marja dvs."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Puneți întrebările care de obicei dărâmă afacerea.",
+      "items": [
+        {
+          "title": "„Datele mele vă antrenează AI-ul?”",
+          "body": "Nu. Caietele dvs. de sarcini, listele dvs. de prețuri, ofertele dvs. rămân ale dvs. Niciodată date vreunui model."
+        },
+        {
+          "title": "„Inventează lucruri?”",
+          "body": "Citește licitația reală și citează pagina. Fiecare cerință se întoarce la document — fără specificații inventate."
+        },
+        {
+          "title": "„Datele fiecărui client sunt cu adevărat separate?”",
+          "body": "Spații izolate pentru fiecare client. Ce e al lor rămâne al lor. Nimic nu se scurge între conturi."
+        },
+        {
+          "title": "„Se potrivește cu ce folosesc deja?”",
+          "body": "Se strecoară în stack-ul dvs. Nu vă cere să aruncați nimic."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Viziune",
-      "title": "Licitațiile publice nu sunt un club închis.",
-      "body": "În fiecare an, sute de miliarde circulă prin achizițiile publice europene, dar rămân inaccesibile pentru cei fără timp, limbă sau expertiză. tendersbay folosește agenți AI pentru a schimba asta — și pentru a oferi fiecărui IMM o șansă reală.",
-      "note": "Construim. Reveniți curând."
+      "title": "Banii publici stau în spatele unui cordon de catifea. Noi îl tăiem.",
+      "body": "În fiecare an, sute de miliarde trec prin achizițiile publice europene — și rămân de neatins pentru oricine fără timp, limbi sau o echipă de oferte. Agenții AI schimbă socoteala. Fiecare IMM primește o șansă reală.",
+      "note": "Construim. Țara dvs. urmează."
     },
     "coverage": {
-      "eyebrow": "Acoperire",
-      "title": "27 de țări UE, o singură platformă.",
-      "body": "Ne extindem în întreaga Uniune Europeană, piață cu piață. Fiecare steag se aprinde când acoperirea devine activă.",
-      "statusAvailable": "Disponibil",
+      "title": "27 de țări. Le luăm una câte una.",
+      "body": "Ne extindem în întreaga Uniune Europeană, piață cu piață. Fiecare steag se aprinde în ziua în care țara dvs. intră în funcțiune.",
+      "statusAvailable": "Activ",
       "statusComingSoon": "În curând",
       "note": "Acoperirea ajunge în toate cele 27 de țări UE."
     },
     "footer": {
-      "tagline": "Licitațiile Europei. Atribuite.",
+      "tagline": "Licitațiile Europei. Ale dvs.",
       "contactLabel": "Luați legătura cu noi",
       "copyright": "© Bernardo Forcillo — Toate drepturile rezervate",
       "social": "Urmăriți tendersbay",
       "columns": [
-        { "heading": "Produs", "links": ["Agenții", "Acoperire", "Viziune"] },
-        { "heading": "Companie", "links": ["Despre noi", "Contact", "Cariere", "Blog"] },
-        { "heading": "Resurse", "links": ["Confidențialitate", "Termeni", "Presă", "Status"] }
+        {
+          "heading": "Produs",
+          "links": ["Agenții", "Acoperire", "Viziune"]
+        },
+        {
+          "heading": "Companie",
+          "links": ["Despre noi", "Contact", "Cariere", "Blog"]
+        },
+        {
+          "heading": "Resurse",
+          "links": ["Confidențialitate", "Termeni", "Presă", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Acces anticipat",
-      "title": "Fiți printre primii când tendersbay se lansează.",
-      "body": "Ne extindem în toată UE, piață cu piață. Înscrieți-vă pe lista de așteptare și primiți acces anticipat din momentul în care țara dvs. este activată.",
-      "button": "Înscrie-te pe listă"
+      "title": "Agenții dvs. sunt gata. Singurul care lipsește sunteți dvs.",
+      "body": "Aprindem UE piață cu piață. Înscrieți-vă pe lista de așteptare — în clipa în care țara dvs. se aprinde, agenții dvs. pornesc la vânătoare.",
+      "button": "Rezervați-vă locul"
     },
     "tenderCard": {
       "value": "Valoare",
       "deadline": "Termen limită",
       "daysLeft": "{{count}} zile"
-    },
-    "agentLabels": {
-      "scout": "Agent explorator",
-      "docs": "Agent documente",
-      "strategy": "Agent strategie",
-      "scoutStat": "{{count}} licitații găsite",
-      "docsStat": "documente aranjate",
-      "strategyStat": "ofertă câștigătoare gata"
     }
   }
 }

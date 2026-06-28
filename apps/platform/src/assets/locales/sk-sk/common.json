@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Používame cookies",
+    "body": "Používame analytické cookies, aby sme pochopili, ako používate náš web, a zlepšili váš zážitok. Nepovinné cookies môžete prijať alebo odmietnuť.",
+    "accept": "Prijať",
+    "reject": "Odmietnuť"
+  },
   "landing": {
     "search": {
       "label": "Hľadať",
@@ -11,111 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Vaša ďalšia európska zákazka, udelená",
-      "description": "Tím AI agentov, ktorí nachádzajú, pripravujú a vyhravajú európske verejné zákazky pre malé a stredné podniky."
+      "title": "tendersbay — Európske zákazky, udelené vašimi AI agentmi",
+      "description": "AI agenti, ktorí vyhľadajú správne európske verejné zákazky, rozdrvia papierovačky a dovedú vašu malú či strednú firmu až k udeleniu zákazky."
     },
     "nav": {
-      "problem": "Problém",
+      "problem": "Náklady",
       "agents": "Agenti",
       "vision": "Vízia"
     },
     "hero": {
-      "eyebrow": "Váš tím AI agentov",
-      "titleLead": "Vaša ďalšia európska zákazka?",
+      "titleLead": "Zákazka, ktorú už rátali za svoju?",
       "titleHighlight": "Udelená.",
-      "subtitle": "tendersbay je váš tím AI agentov: lovia správne zákazky po celej Európe, drvajú papierovačky za vás a dovedú vás priamo k udeleniu zákazky.",
-      "ctaPrimary": "Pozrite v akcii",
+      "subtitle": "Dnes v noci sa uzatvára zákazka s vaším menom. Veľkí hráči na nej už majú tím. Vy máte otvorené tri karty v Exceli. Tu to končí — AI agenti, ktorí ju nájdu, rozcupujú papierovačky a postavia vás do ponuky. Kým spíte.",
+      "ctaPrimary": "Pošlite svojich agentov do práce",
       "ctaSecondary": "Pozrite si víziu",
-      "trust": [
-        "27 krajín, jedna platforma",
-        "Agenti, ktorí nikdy nespia",
-        "Nula ručnej papierovačky"
-      ]
+      "trust": ["27 krajín, jedno hľadanie", "Agenti, ktorí nikdy nespia", "Papierovačky: vybavené"]
     },
     "problem": {
-      "eyebrow": "Problém",
-      "title": "Hra na zákazky je nastavená proti malým firmám.",
+      "title": "Hra je nastavená tak, aby vás držala vonku. A funguje to.",
       "items": [
         {
-          "title": "Roztrúsené po 27 krajinách",
-          "body": "Správne príležitosti sú rozsypané po desiatkach národných portálov, v rôznych jazykoch a formátoch."
+          "title": "Pochované v 27 krajinách",
+          "body": "Zákazky, ktoré vám sedia, sú roztrúsené po desiatkach národných portálov, v jazykoch, ktorými nehovoríte, vo formátoch, ktoré kladú odpor."
         },
         {
-          "title": "Ťažká dokumentačná byrokracia",
-          "body": "Požiadavky, certifikáty a termíny — dokumentačné bludisko, v ktorom sa ľahko pomýli."
+          "title": "Topíte sa v papieroch",
+          "body": "Požiadavky, certifikáty, JED, termíny. Prehliadnete jeden riadok a týždne práce skončia v koši."
         },
         {
-          "title": "Žiadny špecializovaný tím pre ponuky",
-          "body": "Malé a stredné podniky nemajú oddelenie pre zákazky — víťazstvo vyžaduje čas a odbornosť, ktorú nemajú."
+          "title": "Žiadny tím pre ponuky, žiadna šanca",
+          "body": "Giganti na to majú tím. Vy máte noci, víkendy a tabuľku. Hádajte, kto vyhrá."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Agenti",
-      "title": "Spoznajte agentov, ktorí robia ťažkú prácu.",
+      "title": "Traja agenti. Neminú, nespia, nevzdávajú sa.",
       "items": [
         {
           "title": "Nájdite",
-          "body": "Agenti nachádzajú správnu zákazku po celej Európe, prispôsobenú vášmu podnikaniu."
+          "body": "Každý deň prečešú všetkých 27 krajín a vytiahnu len zákazky, ktoré stoja za váš čas — na mieru tomu, čo naozaj robíte."
         },
         {
           "title": "Pripravte",
-          "body": "Vybavujú za vás dokumentačnú byrokraciu: požiadavky, certifikáty, termíny."
+          "body": "Požiadavky, certifikáty, JED, termíny: extrahované, skontrolované, zostavené. Papierovačky, ktoré vás lámali, vybavené."
         },
         {
           "title": "Vyhrajte",
-          "body": "Sprevádzajú vás až k ponuke, aby ste mali najlepšiu šancu na udelenie zákazky."
+          "body": "Premenia súťažné podklady na víťaznú stratégiu, aby ste vstúpili s rovnakou palebnou silou ako giganti."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Pre koho je určené",
-      "title": "Pre ambicióznych vyzyváčov, ktorí sa nespokoja s menej.",
-      "body": "Pre tých, ktorí chcú súťažiť naprieč hranicami bez špecializovaného tímu pre ponuky. tendersbay vám dáva rovnakú silu ako veľkým hráčom."
+      "title": "Jeden z nich ste vy. Už viete ktorý.",
+      "items": [
+        {
+          "title": "Vy pripravujete ponuky",
+          "body": "Polnoc, ďalší JED ručne. Odovzdajte dokumenty agentom. Venujte svoje hodiny ponuke, ktorá naozaj vyhráva."
+        },
+        {
+          "title": "Vy zodpovedáte za čísla",
+          "body": "Váš tím pre ponuky je úzke hrdlo rastu vo verejnej sfére. Viac zákaziek, rovnaký počet ľudí — to nie je funkcia, to je zmena mierky. S číslami, ktorými to dokážete vedeniu."
+        },
+        {
+          "title": "Vy násobíte klientov",
+          "body": "Každý klient je svet sám pre seba a každá ušetrená hodina je ďalší klient, ktorého môžete vziať. Oddelené pracovné priestory, čisté dáta na klienta, vaša marža."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Spýtajte sa na to, čo obvykle zabije obchod.",
+      "items": [
+        {
+          "title": "„Trénujú moje dáta vašu AI?“",
+          "body": "Nie. Vaše súťažné podklady, vaše cenníky, vaše ponuky zostávajú vaše. Nikdy ich nekŕmime do ničieho modelu."
+        },
+        {
+          "title": "„Nevymýšľa si to?“",
+          "body": "Číta skutočnú zákazku a cituje stranu. Každá požiadavka vedie späť k dokumentu — žiadne vymyslené špecifikácie."
+        },
+        {
+          "title": "„Sú dáta každého klienta naozaj oddelené?“",
+          "body": "Oddelené pracovné priestory na klienta. Čo je ich, zostáva ich. Nič nepreteká medzi účtami."
+        },
+        {
+          "title": "„Zapadne to do toho, čo už používam?“",
+          "body": "Zapadne do vášho stacku. Nežiada vás, aby ste čokoľvek zahodili."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Vízia",
-      "title": "Verejné zákazky nie sú uzavretý klub.",
-      "body": "Každý rok prechádzajú stovky miliárd cez európske verejné zákazky, ale zostávajú mimo dosahu tých, ktorí nemajú čas, jazykové znalosti ani odbornosť. tendersbay využíva AI agentov, aby to zmenil — a dal každému malému a strednému podniku skutočnú šancu.",
-      "note": "Budujeme. Vráťte sa čoskoro."
+      "title": "Verejné peniaze sedia za zamatovou šnúrou. My ju prestrihneme.",
+      "body": "Každý rok pretečú stovky miliárd cez európske verejné zákazky — a zostávajú mimo dosahu všetkých bez času, jazykov alebo tímu pre ponuky. AI agenti menia výpočet. Každá malá a stredná firma dostáva skutočnú šancu.",
+      "note": "Budujeme. Vaša krajina je ďalšia na rade."
     },
     "coverage": {
-      "eyebrow": "Pokrytie",
-      "title": "27 krajín EÚ, jedna platforma.",
-      "body": "Rozširujeme sa po celej Európskej únii, trh za trhom. Každá vlajka sa rozsvieti, keď sa pokrytie aktivuje.",
-      "statusAvailable": "Dostupné",
+      "title": "27 krajín. Berieme ich jednu po druhej.",
+      "body": "Rozširujeme sa po celej Európskej únii, trh za trhom. Každá vlajka sa rozsvieti v deň, keď vaša krajina nabehne.",
+      "statusAvailable": "Aktívne",
       "statusComingSoon": "Čoskoro",
       "note": "Pokrytie prichádza do všetkých 27 krajín EÚ."
     },
     "footer": {
-      "tagline": "Európske zákazky. Udelené.",
+      "tagline": "Európske zákazky. Vaše.",
       "contactLabel": "Kontaktujte nás",
       "copyright": "© Bernardo Forcillo — Všetky práva vyhradené",
       "social": "Sledujte tendersbay",
       "columns": [
-        { "heading": "Produkt", "links": ["Agenti", "Pokrytie", "Vízia"] },
-        { "heading": "Spoločnosť", "links": ["O nás", "Kontakt", "Kariéra", "Blog"] },
-        { "heading": "Zdroje", "links": ["Ochrana súkromia", "Podmienky", "Tlač", "Stav"] }
+        {
+          "heading": "Produkt",
+          "links": ["Agenti", "Pokrytie", "Vízia"]
+        },
+        {
+          "heading": "Spoločnosť",
+          "links": ["O nás", "Kontakt", "Kariéra", "Blog"]
+        },
+        {
+          "heading": "Zdroje",
+          "links": ["Ochrana súkromia", "Podmienky", "Tlač", "Stav"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Skorý prístup",
-      "title": "Buďte prví, keď tendersbay spustíme.",
-      "body": "Spúšťame sa po celej EÚ, trh po trhu. Zaregistrujte sa na čakaciu listinu a získajte skorý prístup v momente, keď bude vaša krajina aktívna.",
-      "button": "Pridať sa na čakaciu listinu"
+      "title": "Vaši agenti sú pripravení. Chýbate už len vy.",
+      "body": "Zapíname EÚ trh po trhu. Zaregistrujte sa na čakaciu listinu — vo chvíli, keď sa vaša krajina rozsvieti, vyrazia vaši agenti na lov.",
+      "button": "Zaistite si svoje miesto"
     },
     "tenderCard": {
       "value": "Hodnota",
       "deadline": "Termín",
       "daysLeft": "{{count}} dní"
-    },
-    "agentLabels": {
-      "scout": "Agent prieskumník",
-      "docs": "Agent dokumentov",
-      "strategy": "Agent stratégie",
-      "scoutStat": "{{count}} nájdených zákaziek",
-      "docsStat": "papiere vybavené",
-      "strategyStat": "víťazná ponuka pripravená"
     }
   }
 }

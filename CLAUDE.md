@@ -1,10 +1,13 @@
 # tendersbay-xyz
 
-A pnpm + Turborepo monorepo. Applications live in `apps/`, shared libraries in
-`packages/`.
+A pnpm + Turborepo monorepo. Applications live in `apps/`, standalone backend services in
+`services/`, shared libraries in `packages/`.
 
 - `apps/platform` — Vite + React + TypeScript frontend embedded into and served by a
   Go static server (`//go:embed`); Air provides hot reload in dev.
+- `services/backend` — standalone Go HTTP service (hexagonal: `internal/core` +
+  `internal/adapter/*`), its own `go.mod` and Docker image (`tendersbay-backend`); serves
+  `api.tendersbay.xyz`. Unlike `apps/`, a service does not embed the frontend.
 - `packages/tsconfig` (`@tendersbay/tsconfig`) — shared TypeScript configs.
 - `packages/tailwind` (`@tendersbay/tailwind`) — shared Tailwind v4 theme.
 - `packages/components` (`@tendersbay/components`) — shared React components.
@@ -60,8 +63,18 @@ hardening, and image-automation conventions are documented in
 
 - Use **pnpm only** — never npm or yarn. Add root dev deps with `pnpm add -Dw <pkg>`;
   add to a workspace with `pnpm add <pkg> --filter <workspace>`.
+- **Dependency build scripts are gated.** This repo treats ignored build scripts as a hard
+  error, so a new dep that ships a postinstall (e.g. `core-js` via `posthog-js`) makes
+  every `pnpm` task fail with `ERR_PNPM_IGNORED_BUILDS` until you decide. `pnpm add` writes
+  a `<pkg>: set this to true or false` placeholder under `allowBuilds:` in
+  `pnpm-workspace.yaml` — resolve it: `false` if the build isn't needed (the common case:
+  funding-notice postinstalls like `core-js`), `true` to run it. Then `pnpm install` passes.
 - A new app goes in `apps/<name>/` and a new library in `packages/<name>/`, each with
   its own `package.json`. pnpm workspaces and Turbo pick it up with no root changes.
+- A standalone backend service goes in `services/<name>/` (its own `go.mod`, Dockerfile,
+  CI workflow, and k8s app folder under `infrastructure/kubernetes/`). `services/*` is
+  already a pnpm workspace glob, so Turbo orchestrates its `build`/`dev`/`lint`/`test`
+  scripts like any other workspace.
 - Reference internal packages with the `workspace:*` protocol.
 - Let Biome own formatting and linting — don't add ESLint/Prettier configs. Run
   `pnpm format` before committing; the `pre-commit` hook blocks on lint errors.

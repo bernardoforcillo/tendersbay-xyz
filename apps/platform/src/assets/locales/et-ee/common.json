@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Kasutame küpsiseid",
+    "body": "Kasutame analüütikaküpsiseid, et mõista, kuidas te meie saiti kasutate, ja parandada teie kogemust. Saate mittekohustuslikud küpsised vastu võtta või tagasi lükata.",
+    "accept": "Nõustu",
+    "reject": "Keeldu"
+  },
   "landing": {
     "search": {
       "label": "Otsi",
@@ -11,111 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Teie järgmine Euroopa hange, omistatud",
-      "description": "Tehisintellekti agentide meeskond, kes leiab, valmistab ette ja võidab Euroopa avalikud hanked VKEdele."
+      "title": "tendersbay — Euroopa hanked, omistatud teie AI-agentide abil",
+      "description": "Tehisintellekti agendid, kes jälitavad õigeid Euroopa riigihankeid, purustavad paberimajanduse ja viivad teie VKE kuni hanke omistamiseni."
     },
     "nav": {
-      "problem": "Probleem",
+      "problem": "Hind",
       "agents": "Agendid",
       "vision": "Visioon"
     },
     "hero": {
-      "eyebrow": "Teie tehisintellekti agentide meeskond",
-      "titleLead": "Teie järgmine Euroopa hange?",
+      "titleLead": "Hange, mille nad juba enda omaks lugesid?",
       "titleHighlight": "Omistatud.",
-      "subtitle": "tendersbay on teie tehisintellekti agentide meeskond: nad jahivad õigeid hangete üle kogu Euroopa, purustab paberimajanduse teie eest ja viib teid otse omistamiseni.",
-      "ctaPrimary": "Vaadake toimimas",
+      "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja panevad teid pakkumisse. Sel ajal kui magate.",
+      "ctaPrimary": "Pange oma agendid tööle",
       "ctaSecondary": "Vaadake visiooni",
-      "trust": [
-        "27 riiki, üks platvorm",
-        "Agendid, kes ei maga kunagi",
-        "Null käsitsi paberimajandust"
-      ]
+      "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"]
     },
     "problem": {
-      "eyebrow": "Probleem",
-      "title": "Hangete mäng on VKEde vastu kallutatud.",
+      "title": "Mäng on seatud teid välja jätma. Ja see töötab.",
       "items": [
         {
-          "title": "Hajutatud 27 riiki",
-          "body": "Õiged võimalused on laiali kümnetes riiklikes portaalides, erinevates keeltes ja formaatides."
+          "title": "Maetud 27 riiki",
+          "body": "Teile sobivad hanked on laiali kümnetes riiklikes portaalides, keeltes, mida te ei räägi, vormingutes, mis panevad vastu."
         },
         {
-          "title": "Raske dokumentatsioonibürokraatia",
-          "body": "Nõuded, sertifikaadid ja tähtajad — dokumentaalne labürint, kus on kerge eksida."
+          "title": "Paberimajandusse uppumas",
+          "body": "Nõuded, sertifikaadid, ESPD, tähtajad. Üks rida vahele ja nädalad tööd lendavad prügikasti."
         },
         {
-          "title": "Puudub spetsiaalne pakkumismeeskond",
-          "body": "VKEdel pole hankeosakonda — võitmine nõuab aega ja oskusi, mida neil pole."
+          "title": "Pole pakkumismeeskonda, pole võimalust",
+          "body": "Hiiglastel on selleks meeskond. Teil on ööd, nädalavahetused ja tabel. Arvake, kes võidab."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Agendid",
-      "title": "Tutvuge agentidega, kes teevad rasket tööd.",
+      "title": "Kolm agenti. Nad ei eksi, ei maga, ei anna alla.",
       "items": [
         {
           "title": "Leia",
-          "body": "Agendid leiavad õige hange üle kogu Euroopa, kohandatuna teie ettevõttele."
+          "body": "Nad kammivad iga päev läbi kõik 27 riiki ja toovad esile ainult hanked, mis on teie aega väärt — kohandatuna sellele, mida te tegelikult teete."
         },
         {
           "title": "Valmista ette",
-          "body": "Nad haldavad teie eest dokumentatsioonibürokraatiat: nõuded, sertifikaadid, tähtajad."
+          "body": "Nõuded, sertifikaadid, ESPD, tähtajad: välja võetud, ristkontrollitud, kokku pandud. Paberimajandus, mis teid murdis, korras."
         },
         {
           "title": "Võida",
-          "body": "Nad juhivad teid kuni pakkumiseni, et teil oleks parim võimalus omistamiseks."
+          "body": "Nad muudavad hankedokumendid võidustrateegiaks, et astuksite sisse sama löögijõuga kui hiiglased."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Kellele see mõeldud on",
-      "title": "Loodud ambitsioonikate tõusjate jaoks.",
-      "body": "Neile, kes soovivad konkureerida üle piiride ilma spetsiaalse pakkumismeeskonnata. tendersbay annab teile sama võimsuse kui suurtel mängijatel."
+      "title": "Üks neist olete teie. Te juba teate, milline.",
+      "items": [
+        {
+          "title": "Teie koostate pakkumised",
+          "body": "Kesköö, järjekordne ESPD käsitsi. Andke dokumendid agentidele. Kulutage oma tunnid pakkumisele, mis tegelikult võidab."
+        },
+        {
+          "title": "Teie vastutate numbri eest",
+          "body": "Teie pakkumismeeskond on avaliku sektori kasvu pudelikael. Rohkem hankeid, sama koosseis — see pole funktsioon, see on mastaabimuutus. Numbritega, et seda juhatusele tõestada."
+        },
+        {
+          "title": "Teie korrutate kliente",
+          "body": "Iga klient on omaette maailm ja iga säästetud tund on üks klient juurde, kelle saate võtta. Eraldatud tööruumid, puhtad andmed kliendi kohta, teie marginaal."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Esitage küsimused, mis tavaliselt tehingu tapavad.",
+      "items": [
+        {
+          "title": "„Kas mu andmed treenivad teie tehisintellekti?“",
+          "body": "Ei. Teie hankedokumendid, hinnakirjad, pakkumised jäävad teie omaks. Kunagi ei söödeta kellegi mudelisse."
+        },
+        {
+          "title": "„Kas see lihtsalt mõtleb asju välja?“",
+          "body": "See loeb tegelikku hanget ja viitab leheküljele. Iga nõue viib tagasi dokumendini — ei mingeid väljamõeldud spetsifikatsioone."
+        },
+        {
+          "title": "„Kas iga kliendi andmed on tõesti eraldi?“",
+          "body": "Eraldatud tööruumid kliendi kohta. Mis on nende oma, jääb nende omaks. Midagi ei leki kontode vahel."
+        },
+        {
+          "title": "„Kas see sobib sellega, mida ma juba kasutan?“",
+          "body": "See sobitub teie stäkki. See ei palu teil midagi ära visata."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Visioon",
-      "title": "Riigihanked ei ole suletud klubi.",
-      "body": "Igal aastal liigub Euroopa riigihangetes sadu miljardeid, kuid need jäävad kättesaamatuks neile, kellel pole aega, keeleoskust ega ekspertiisi. tendersbay kasutab tehisintellekti agente selle muutmiseks — ja annab igale VKEle tõelise võimaluse.",
-      "note": "Me ehitame. Tulge peagi tagasi."
+      "title": "Avalik raha on sametnööri taga. Meie lõikame selle läbi.",
+      "body": "Igal aastal liigub Euroopa riigihangetes sadu miljardeid — ja jäävad kättesaamatuks kõigile, kellel pole aega, keeli ega pakkumismeeskonda. Tehisintellekti agendid muudavad arvestuse. Iga VKE saab tõelise võimaluse.",
+      "note": "Me ehitame. Teie riik on järgmine."
     },
     "coverage": {
-      "eyebrow": "Kaetus",
-      "title": "27 EL-i riiki, üks platvorm.",
-      "body": "Laieneme üle kogu Euroopa Liidu, turg turu haaval. Iga lipp süttib, kui kaetus muutub aktiivseks.",
-      "statusAvailable": "Saadaval",
+      "title": "27 riiki. Võtame need ükshaaval.",
+      "body": "Laieneme üle kogu Euroopa Liidu, turg turu haaval. Iga lipp süttib päeval, mil teie riik käivitub.",
+      "statusAvailable": "Aktiivne",
       "statusComingSoon": "Tulekul",
       "note": "Kaetus jõuab kõigisse 27 EL-i riiki."
     },
     "footer": {
-      "tagline": "Euroopa hanked. Omistatud.",
+      "tagline": "Euroopa hanked. Teie omad.",
       "contactLabel": "Võtke ühendust",
       "copyright": "© Bernardo Forcillo — Kõik õigused kaitstud",
       "social": "Jälgi tendersbay",
       "columns": [
-        { "heading": "Toode", "links": ["Agendid", "Kaetus", "Visioon"] },
-        { "heading": "Ettevõte", "links": ["Meist", "Kontakt", "Karjäär", "Blogi"] },
-        { "heading": "Ressursid", "links": ["Privaatsus", "Tingimused", "Ajakirjandus", "Olek"] }
+        {
+          "heading": "Toode",
+          "links": ["Agendid", "Kaetus", "Visioon"]
+        },
+        {
+          "heading": "Ettevõte",
+          "links": ["Meist", "Kontakt", "Karjäär", "Blogi"]
+        },
+        {
+          "heading": "Ressursid",
+          "links": ["Privaatsus", "Tingimused", "Ajakirjandus", "Olek"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Varajane juurdepääs",
-      "title": "Ole esimene, kui tendersbay käivitub.",
-      "body": "Laieneme üle kogu EL-i, turg turu haaval. Liitu ootenimekirjaga ja saa varajane juurdepääs hetkel, kui sinu riik aktiveerub.",
-      "button": "Liitu ootenimekirjaga"
+      "title": "Teie agendid on valmis. Puudute ainult teie.",
+      "body": "Lülitame ELi sisse turg turu haaval. Liituge ootenimekirjaga — hetkel, mil teie riik süttib, lähevad teie agendid jahile.",
+      "button": "Broneerige oma koht"
     },
     "tenderCard": {
       "value": "Väärtus",
       "deadline": "Tähtaeg",
       "daysLeft": "{{count}} päeva"
-    },
-    "agentLabels": {
-      "scout": "Luureagent",
-      "docs": "Dokumentide agent",
-      "strategy": "Strateegia agent",
-      "scoutStat": "{{count}} leitud hanget",
-      "docsStat": "paberid korras",
-      "strategyStat": "võidukas pakkumine valmis"
     }
   }
 }

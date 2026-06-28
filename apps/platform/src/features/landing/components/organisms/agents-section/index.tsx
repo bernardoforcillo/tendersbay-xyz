@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Eyebrow, type IconName, Reveal } from '~/features/landing/components/atoms';
-import { AgentStep } from '~/features/landing/components/molecules';
+import { Icon, type IconName, Reveal } from '~/features/landing/components/atoms';
 
 type Item = { title: string; body: string };
 const ICONS: IconName[] = ['search', 'document', 'trophy'];
@@ -13,39 +12,27 @@ export function AgentsSection() {
     <section
       id="agents"
       aria-labelledby="agents-title"
-      className="relative scroll-mt-24 overflow-hidden bg-ink-900 py-24 text-ink-100 md:py-28"
+      className="scroll-mt-24 bg-brand-700 py-24 text-white md:py-28"
     >
-      {/* aurora top-edge bleeding down from the light Problem section */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-64"
-        style={{
-          background:
-            'radial-gradient(60% 80% at 50% -10%, rgba(45,212,191,0.16), transparent 70%)',
-        }}
-      />
-      <div className="relative mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-6xl px-6">
         <Reveal>
-          <Eyebrow icon="sparkle" className="border-white/15 bg-white/5 text-brand-300">
-            {t('landing.agents.eyebrow')}
-          </Eyebrow>
           <h2
             id="agents-title"
-            className="mt-5 max-w-[20ch] font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
+            className="max-w-[24ch] font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
           >
             {t('landing.agents.title')}
           </h2>
         </Reveal>
 
-        <div className="relative mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
+        {/* One team, working in parallel — no sequential numbering. */}
+        <div className="mt-14 grid gap-12 md:grid-cols-3 md:gap-8">
           {items.map((item, i) => (
-            <Reveal key={item.title} delay={i * 0.1}>
-              <AgentStep
-                index={i + 1}
-                icon={ICONS[i] ?? 'sparkle'}
-                title={item.title}
-                body={item.body}
-              />
+            <Reveal key={item.title} delay={i * 0.08}>
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[21px] text-white ring-1 ring-white/20">
+                <Icon name={ICONS[i] ?? 'sparkle'} />
+              </span>
+              <h3 className="mt-5 font-display text-xl text-white">{item.title}</h3>
+              <p className="mt-2.5 text-[15px] leading-relaxed text-brand-50">{item.body}</p>
             </Reveal>
           ))}
         </div>

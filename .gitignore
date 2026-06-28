@@ -6,6 +6,8 @@ dist/
 build/
 out/
 .next/
+bin/
+tmp/
 # Turborepo
 .turbo/
 

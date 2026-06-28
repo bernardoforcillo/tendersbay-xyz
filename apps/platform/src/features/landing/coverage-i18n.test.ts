@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import enIe from '~/assets/locales/en-ie/common.json';
 import itIt from '~/assets/locales/it-it/common.json';
 
-const KEYS = ['eyebrow', 'title', 'body', 'statusAvailable', 'statusComingSoon', 'note'];
+const KEYS = ['title', 'body', 'statusAvailable', 'statusComingSoon', 'note'];
 
 describe('landing.coverage copy', () => {
   it('has every coverage key in the source locale (en-ie)', () => {

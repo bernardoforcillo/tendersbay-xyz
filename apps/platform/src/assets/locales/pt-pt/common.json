@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Utilizamos cookies",
+    "body": "Utilizamos cookies analíticos para compreender como utiliza o nosso site e melhorar a sua experiência. Pode aceitar ou rejeitar os cookies não essenciais.",
+    "accept": "Aceitar",
+    "reject": "Rejeitar"
+  },
   "landing": {
     "search": {
       "label": "Pesquisar",
@@ -11,107 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — O seu próximo concurso europeu, adjudicado",
-      "description": "Uma equipa de agentes de IA que encontra, prepara e vence concursos públicos europeus para PME."
+      "title": "tendersbay — Concursos europeus, adjudicados pelos seus agentes de IA",
+      "description": "Agentes de IA que caçam os concursos públicos europeus certos, arrasam a burocracia e levam a sua PME até à adjudicação."
     },
     "nav": {
-      "problem": "O problema",
+      "problem": "O custo",
       "agents": "Os agentes",
       "vision": "Visão"
     },
     "hero": {
-      "eyebrow": "A sua equipa de agentes de IA",
-      "titleLead": "O seu próximo concurso europeu?",
+      "titleLead": "O concurso que já davam como deles?",
       "titleHighlight": "Adjudicado.",
-      "subtitle": "tendersbay é a sua equipa de agentes de IA: caçam os concursos certos em toda a Europa, destroem a burocracia por si e levam-no a direito à adjudicação.",
-      "ctaPrimary": "Ver em ação",
+      "subtitle": "Esta noite fecha um concurso com o seu nome. Os grandes já têm uma equipa nele. Você tem três separadores abertos no Excel. Acaba aqui — agentes de IA que o encontram, despedaçam a burocracia e põem-no na proposta. Enquanto dorme.",
+      "ctaPrimary": "Ponha os seus agentes a trabalhar",
       "ctaSecondary": "Veja a visão",
-      "trust": ["27 países, uma plataforma", "Agentes que nunca dormem", "Zero burocracia manual"]
+      "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"]
     },
     "problem": {
-      "eyebrow": "O problema",
-      "title": "O jogo dos concursos está viciado contra as PME.",
+      "title": "O jogo está viciado para o deixar de fora. E está a resultar.",
       "items": [
         {
-          "title": "Dispersos por 27 países",
-          "body": "As oportunidades certas estão espalhadas por dezenas de portais nacionais, em idiomas e formatos diferentes."
+          "title": "Soterrados por 27 países",
+          "body": "Os concursos que lhe servem estão espalhados por dezenas de portais nacionais, em idiomas que não fala, em formatos que resistem."
         },
         {
-          "title": "Burocracia documental pesada",
-          "body": "Requisitos, certificados e prazos — um labirinto documental onde é fácil cometer erros."
+          "title": "A afogar-se em papelada",
+          "body": "Requisitos, certificados, DEUCP, prazos. Salta uma linha e semanas de trabalho vão para o lixo."
         },
         {
-          "title": "Sem equipa dedicada a propostas",
-          "body": "As PME não têm departamento de contratação pública — vencer requer tempo e experiência que não possuem."
+          "title": "Sem equipa de propostas, sem hipótese",
+          "body": "Os gigantes têm uma equipa para isto. Você tem noites, fins de semana e uma folha de cálculo. Adivinhe quem ganha."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Os agentes",
-      "title": "Conheça os agentes que fazem o trabalho pesado.",
+      "title": "Três agentes. Não falham, não dormem, não desistem.",
       "items": [
         {
           "title": "Encontre",
-          "body": "Os agentes encontram o concurso certo em toda a Europa, adaptado ao seu negócio."
+          "body": "Vasculham os 27 países todos os dias e mostram-lhe apenas os concursos que valem o seu tempo — à medida do que faz de facto."
         },
         {
           "title": "Prepare",
-          "body": "Tratam da burocracia documental por si: requisitos, certificados, prazos."
+          "body": "Requisitos, certificados, DEUCP, prazos: extraídos, cruzados, montados. A burocracia que o derrubava, tratada."
         },
         {
           "title": "Vença",
-          "body": "Guiam-no até à proposta, para a melhor hipótese de adjudicação."
+          "body": "Transformam o caderno de encargos numa estratégia vencedora, para entrar com o mesmo poder de fogo dos gigantes."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Para quem é",
-      "title": "Feito para os ambiciosos que não se contentam com menos.",
-      "body": "Para quem quer competir além-fronteiras sem uma equipa dedicada a propostas. tendersbay dá-lhe o mesmo poder de fogo que os grandes players."
+      "title": "Um destes é você. Já sabe qual.",
+      "items": [
+        {
+          "title": "Você prepara as propostas",
+          "body": "Meia-noite, mais um DEUCP à mão. Entregue os documentos aos agentes. Gaste as suas horas na proposta que ganha mesmo."
+        },
+        {
+          "title": "Você responde pelo número",
+          "body": "A sua equipa de concursos é o gargalo do crescimento público. Mais concursos, o mesmo quadro de pessoal — não é uma funcionalidade, é uma mudança de escala. Com os números para o provar à administração."
+        },
+        {
+          "title": "Você multiplica clientes",
+          "body": "Cada cliente é um mundo, e cada hora poupada é mais um cliente que pode aceitar. Espaços separados, dados limpos por cliente, a sua margem."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Faça as perguntas que costumam deitar o negócio abaixo.",
+      "items": [
+        {
+          "title": "«Os meus dados treinam a vossa IA?»",
+          "body": "Não. Os seus cadernos de encargos, as suas tabelas, as suas propostas continuam seus. Nunca alimentam o modelo de ninguém."
+        },
+        {
+          "title": "«Inventa coisas?»",
+          "body": "Lê o concurso real e cita a página. Cada requisito remete para o documento — sem especificações inventadas."
+        },
+        {
+          "title": "«Os dados de cada cliente estão mesmo separados?»",
+          "body": "Espaços blindados por cliente. O que é deles continua deles. Nada passa de uma conta para outra."
+        },
+        {
+          "title": "«Encaixa no que já uso?»",
+          "body": "Encaixa no seu stack. Não lhe pede para deitar nada fora."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Visão",
-      "title": "Os concursos públicos não são um clube fechado.",
-      "body": "Todos os anos, centenas de milhares de milhões circulam pela contratação pública europeia, mas permanecem inacessíveis para quem não tem tempo, idioma ou experiência. tendersbay usa agentes de IA para mudar isso — e dar a cada PME uma hipótese real.",
-      "note": "Estamos a construir. Volte em breve."
+      "title": "O dinheiro público está atrás de um cordão de veludo. Nós cortamo-lo.",
+      "body": "Todos os anos, centenas de milhares de milhões passam pela contratação pública europeia — e ficam fora do alcance de quem não tem tempo, idiomas ou uma equipa de propostas. Os agentes de IA mudam as contas. Cada PME tem uma hipótese real.",
+      "note": "Estamos a construir. O seu país é o próximo."
     },
     "coverage": {
-      "eyebrow": "Cobertura",
-      "title": "27 países da UE, uma plataforma.",
-      "body": "Estamos a expandir por toda a União Europeia, mercado a mercado. Cada bandeira acende quando a cobertura fica ativa.",
-      "statusAvailable": "Disponível",
+      "title": "27 países. Vamos conquistá-los um a um.",
+      "body": "Estamos a expandir por toda a União Europeia, mercado a mercado. Cada bandeira acende no dia em que o seu país fica ativo.",
+      "statusAvailable": "Ativo",
       "statusComingSoon": "Em breve",
       "note": "A cobertura está a chegar a todos os 27 países da UE."
     },
     "footer": {
-      "tagline": "Os concursos da Europa. Adjudicados.",
+      "tagline": "Os concursos da Europa. Seus.",
       "contactLabel": "Entre em contacto",
       "copyright": "© Bernardo Forcillo — Todos os direitos reservados",
       "social": "Siga o tendersbay",
       "columns": [
-        { "heading": "Produto", "links": ["Os agentes", "Cobertura", "Visão"] },
-        { "heading": "Empresa", "links": ["Sobre nós", "Contacto", "Carreiras", "Blog"] },
-        { "heading": "Recursos", "links": ["Privacidade", "Termos", "Imprensa", "Estado"] }
+        {
+          "heading": "Produto",
+          "links": ["Os agentes", "Cobertura", "Visão"]
+        },
+        {
+          "heading": "Empresa",
+          "links": ["Sobre nós", "Contacto", "Carreiras", "Blog"]
+        },
+        {
+          "heading": "Recursos",
+          "links": ["Privacidade", "Termos", "Imprensa", "Estado"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Acesso antecipado",
-      "title": "Seja dos primeiros quando o tendersbay arrancar.",
-      "body": "Estamos a expandir por toda a UE, mercado a mercado. Inscreva-se na lista de espera e obtenha acesso antecipado assim que o seu país estiver disponível.",
-      "button": "Juntar-me à lista"
+      "title": "Os seus agentes estão prontos. Só falta você.",
+      "body": "Estamos a ligar a UE mercado a mercado. Inscreva-se na lista — assim que o seu país acender, os seus agentes vão à caça.",
+      "button": "Garanta o seu lugar"
     },
     "tenderCard": {
       "value": "Valor",
       "deadline": "Prazo",
       "daysLeft": "{{count}} dias"
-    },
-    "agentLabels": {
-      "scout": "Agente explorador",
-      "docs": "Agente de documentos",
-      "strategy": "Agente de estratégia",
-      "scoutStat": "{{count}} concursos encontrados",
-      "docsStat": "burocracia tratada",
-      "strategyStat": "proposta vencedora pronta"
     }
   }
 }
