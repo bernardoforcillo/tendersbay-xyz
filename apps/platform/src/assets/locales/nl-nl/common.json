@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "We gebruiken cookies",
+    "body": "We gebruiken analytische cookies om te begrijpen hoe u onze site gebruikt en uw ervaring te verbeteren. U kunt niet-essentiële cookies accepteren of weigeren.",
+    "accept": "Accepteren",
+    "reject": "Weigeren"
+  },
   "landing": {
     "search": {
       "label": "Zoeken",
@@ -11,107 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Uw volgende Europese aanbesteding, gegund",
-      "description": "Een team van AI-agenten dat Europese overheidsopdrachten voor het mkb vindt, voorbereidt en wint."
+      "title": "tendersbay — Europese aanbestedingen, gegund door uw AI-agenten",
+      "description": "AI-agenten die de juiste Europese overheidsopdrachten opsporen, het papierwerk slopen en uw mkb tot aan de gunning brengen."
     },
     "nav": {
-      "problem": "Het probleem",
+      "problem": "De kosten",
       "agents": "De agenten",
       "vision": "Visie"
     },
     "hero": {
-      "eyebrow": "Uw AI-agentteam",
-      "titleLead": "Uw volgende Europese aanbesteding?",
+      "titleLead": "De aanbesteding die ze al van zichzelf rekenden?",
       "titleHighlight": "Gegund.",
-      "subtitle": "tendersbay is uw team van AI-agenten: ze jagen de juiste aanbestedingen door heel Europa, slopen het papierwerk en brengen u helemaal tot aan de gunning.",
-      "ctaPrimary": "Zie het in actie",
+      "subtitle": "Vanavond sluit een aanbesteding met uw naam erop. De grote spelers hebben er al een team op. U heeft drie tabbladen open in Excel. Daar is het mee gedaan — AI-agenten die haar vinden, het papierwerk slopen en u op de inschrijving zetten. Terwijl u slaapt.",
+      "ctaPrimary": "Zet uw agenten aan het werk",
       "ctaSecondary": "Bekijk de visie",
-      "trust": ["27 landen, één platform", "Agenten die nooit slapen", "Nul handmatig papierwerk"]
+      "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"]
     },
     "problem": {
-      "eyebrow": "Het probleem",
-      "title": "Het aanbestedingsspel is in het nadeel van het mkb.",
+      "title": "Het spel is opgezet om u buiten te houden. En het werkt.",
       "items": [
         {
-          "title": "Verspreid over 27 landen",
-          "body": "De juiste kansen zijn verspreid over tientallen nationale portalen, in verschillende talen en formaten."
+          "title": "Begraven over 27 landen",
+          "body": "De aanbestedingen die bij u passen liggen verspreid over tientallen nationale portalen, in talen die u niet spreekt, in formaten die tegenwerken."
         },
         {
-          "title": "Zware documentatiebureaucratie",
-          "body": "Vereisten, certificaten en deadlines — een documentair doolhof waar je snel fouten in maakt."
+          "title": "Verzuipend in papierwerk",
+          "body": "Eisen, certificaten, UEA, deadlines. Eén regel gemist en weken werk gaan de prullenbak in."
         },
         {
-          "title": "Geen dedicated inschrijvingsteam",
-          "body": "Het mkb heeft geen aanbestedingsafdeling — winnen vereist tijd en expertise die ze niet hebben."
+          "title": "Geen biedteam, geen kans",
+          "body": "De reuzen hebben hier een team voor. U heeft nachten, weekends en een spreadsheet. Raad eens wie wint."
         }
       ]
     },
     "agents": {
-      "eyebrow": "De agenten",
-      "title": "Maak kennis met de agenten die het zware werk doen.",
+      "title": "Drie agenten. Ze missen niets, slapen niet, geven niet op.",
       "items": [
         {
           "title": "Vind",
-          "body": "De agenten vinden de juiste aanbesteding door heel Europa, op maat van uw bedrijf."
+          "body": "Ze kammen elke dag alle 27 landen uit en tonen alleen de aanbestedingen die uw tijd waard zijn — afgestemd op wat u echt doet."
         },
         {
           "title": "Bereid voor",
-          "body": "Ze regelen de documentatiebureaucratie voor u: vereisten, certificaten, deadlines."
+          "body": "Eisen, certificaten, UEA, deadlines: opgehaald, gecontroleerd, samengesteld. Het papierwerk dat u brak, geregeld."
         },
         {
           "title": "Win",
-          "body": "Ze begeleiden u helemaal tot aan de inschrijving, voor de beste kans op gunning."
+          "body": "Ze maken van het bestek een winnende strategie, zodat u binnenkomt met dezelfde slagkracht als de reuzen."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Voor wie het is",
-      "title": "Gebouwd voor underdogs met ambitie.",
-      "body": "Voor degenen die grensoverschrijdend willen concurreren zonder een dedicated inschrijvingsteam. tendersbay geeft u dezelfde slagkracht als de grote spelers."
+      "title": "Eén van deze bent u. U weet al welke.",
+      "items": [
+        {
+          "title": "U stelt de inschrijvingen op",
+          "body": "Middernacht, weer een UEA met de hand. Geef de documenten aan de agenten. Besteed uw uren aan de offerte die echt wint."
+        },
+        {
+          "title": "U bent verantwoordelijk voor het getal",
+          "body": "Uw biedteam is het knelpunt voor publieke groei. Meer aanbestedingen, dezelfde bezetting — dat is geen feature, dat is een schaalsprong. Met de cijfers om het de directie te bewijzen."
+        },
+        {
+          "title": "U vermenigvuldigt uw klanten",
+          "body": "Elke klant is een wereld apart, en elk bespaard uur is een klant extra die u erbij kunt nemen. Gescheiden werkruimtes, schone data per klant, uw marge."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Stel de vragen die de deal meestal de kop kosten.",
+      "items": [
+        {
+          "title": "„Trainen mijn data jullie AI?”",
+          "body": "Nee. Uw bestekken, uw prijslijsten, uw offertes blijven van u. Nooit aan wiens model dan ook gevoerd."
+        },
+        {
+          "title": "„Verzint hij dingen?”",
+          "body": "Hij leest de echte aanbesteding en citeert de pagina. Elke eis is terug te voeren op het document — geen verzonnen specificaties."
+        },
+        {
+          "title": "„Zijn de data van elke klant echt gescheiden?”",
+          "body": "Afgeschermde werkruimtes per klant. Wat van hen is blijft van hen. Niets lekt tussen accounts."
+        },
+        {
+          "title": "„Past het bij wat ik al gebruik?”",
+          "body": "Het schuift in uw stack. Het vraagt u niets weg te gooien."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Visie",
-      "title": "Aanbestedingen zijn geen gesloten club.",
-      "body": "Elk jaar stroomt honderden miljarden door Europese overheidsopdrachten, maar ze blijven buiten bereik voor wie geen tijd, taalkennis of expertise heeft. tendersbay gebruikt AI-agenten om dat te veranderen — en elk mkb-bedrijf een echte kans te geven.",
-      "note": "We bouwen. Kom snel terug."
+      "title": "Publiek geld zit achter een fluwelen koord. Wij knippen het door.",
+      "body": "Elk jaar gaan honderden miljarden door Europese overheidsopdrachten — en blijven buiten bereik voor iedereen zonder tijd, talen of een biedteam. AI-agenten veranderen de rekensom. Elk mkb-bedrijf krijgt een echte kans.",
+      "note": "We bouwen. Uw land is het volgende."
     },
     "coverage": {
-      "eyebrow": "Dekking",
-      "title": "27 EU-landen, één platform.",
-      "body": "We breiden uit over de hele Europese Unie, markt voor markt. Elke vlag licht op zodra de dekking actief is.",
-      "statusAvailable": "Beschikbaar",
+      "title": "27 landen. We nemen ze één voor één in.",
+      "body": "We breiden uit over de hele Europese Unie, markt voor markt. Elke vlag licht op op de dag dat uw land live gaat.",
+      "statusAvailable": "Live",
       "statusComingSoon": "Binnenkort",
       "note": "De dekking komt naar alle 27 EU-landen."
     },
     "footer": {
-      "tagline": "Europa's aanbestedingen. Gegund.",
+      "tagline": "Europa's aanbestedingen. Van u.",
       "contactLabel": "Neem contact op",
       "copyright": "© Bernardo Forcillo — Alle rechten voorbehouden",
       "social": "Volg tendersbay",
       "columns": [
-        { "heading": "Product", "links": ["De agenten", "Dekking", "Visie"] },
-        { "heading": "Bedrijf", "links": ["Over ons", "Contact", "Vacatures", "Blog"] },
-        { "heading": "Bronnen", "links": ["Privacy", "Voorwaarden", "Pers", "Status"] }
+        {
+          "heading": "Product",
+          "links": ["De agenten", "Dekking", "Visie"]
+        },
+        {
+          "heading": "Bedrijf",
+          "links": ["Over ons", "Contact", "Vacatures", "Blog"]
+        },
+        {
+          "heading": "Bronnen",
+          "links": ["Privacy", "Voorwaarden", "Pers", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Vroege toegang",
-      "title": "Wees erbij als tendersbay live gaat.",
-      "body": "We rollen uit over de hele EU, markt voor markt. Schrijf je in op de wachtlijst en krijg vroege toegang zodra jouw land beschikbaar is.",
-      "button": "Aanmelden voor wachtlijst"
+      "title": "Uw agenten staan klaar. Alleen u ontbreekt nog.",
+      "body": "We zetten de EU markt voor markt aan. Schrijf u in op de wachtlijst — zodra uw land oplicht, gaan uw agenten op jacht.",
+      "button": "Claim uw plek"
     },
     "tenderCard": {
       "value": "Waarde",
       "deadline": "Deadline",
       "daysLeft": "{{count}} dagen"
-    },
-    "agentLabels": {
-      "scout": "Verkenneragent",
-      "docs": "Documentagent",
-      "strategy": "Strategieagent",
-      "scoutStat": "{{count}} aanbestedingen gevonden",
-      "docsStat": "papierwerk geregeld",
-      "strategyStat": "winnend bod klaar"
     }
   }
 }

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Eyebrow, type IconName, Reveal } from '~/features/landing/components/atoms';
+import { type IconName, Reveal } from '~/features/landing/components/atoms';
 import { ValueCard } from '~/features/landing/components/molecules';
 
 type Item = { title: string; body: string };
@@ -13,14 +13,13 @@ export function ProblemSection() {
     <section
       id="problem"
       aria-labelledby="problem-title"
-      className="scroll-mt-24 bg-cream-100 py-24 md:py-28"
+      className="scroll-mt-24 bg-ink-900 py-24 text-ink-100 md:py-28"
     >
       <div className="mx-auto max-w-6xl px-6">
         <Reveal>
-          <Eyebrow icon="layers">{t('landing.problem.eyebrow')}</Eyebrow>
           <h2
             id="problem-title"
-            className="mt-5 max-w-[18ch] font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
+            className="max-w-[18ch] font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
           >
             {t('landing.problem.title')}
           </h2>
@@ -29,7 +28,7 @@ export function ProblemSection() {
           {items.map((item, i) => (
             <Reveal key={item.title} delay={i * 0.08}>
               <ValueCard
-                tone="muted"
+                tone="solution"
                 icon={ICONS[i] ?? 'layers'}
                 title={item.title}
                 body={item.body}

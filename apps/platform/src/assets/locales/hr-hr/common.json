@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Koristimo kolačiće",
+    "body": "Koristimo analitičke kolačiće kako bismo razumjeli kako koristite naše web-mjesto i poboljšali vaše iskustvo. Možete prihvatiti ili odbiti neobavezne kolačiće.",
+    "accept": "Prihvati",
+    "reject": "Odbij"
+  },
   "landing": {
     "search": {
       "label": "Pretraži",
@@ -11,111 +17,139 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Vaš sljedeći europski natječaj, dodijeljen",
-      "description": "Tim AI agenata koji pronalaze, pripremaju i osvajaju europske javne natječaje za MSP-ove."
+      "title": "tendersbay — Europski natječaji, dodijeljeni od strane vaših AI agenata",
+      "description": "AI agenti koji pronalaze prave europske javne natječaje, drobe papirologiju i vode vaš MSP sve do dodjele."
     },
     "nav": {
-      "problem": "Problem",
+      "problem": "Trošak",
       "agents": "Agenti",
       "vision": "Vizija"
     },
     "hero": {
-      "eyebrow": "Vaš tim AI agenata",
-      "titleLead": "Vaš sljedeći europski natječaj?",
+      "titleLead": "Natječaj koji su već smatrali svojim?",
       "titleHighlight": "Dodijeljen.",
-      "subtitle": "tendersbay je vaš tim AI agenata: pronalaze prave natječaje diljem Europe, slamaju papirologiju umjesto vas i vode vas sve do dodjele.",
-      "ctaPrimary": "Pogledajte u akciji",
+      "subtitle": "Večeras se zatvara natječaj s vašim imenom. Veliki igrači već imaju tim na njemu. Vi imate tri otvorene kartice u Excelu. Tu je kraj — AI agenti koji ga pronađu, razderu papirologiju i postave vas u ponudu. Dok spavate.",
+      "ctaPrimary": "Pošaljite svoje agente na posao",
       "ctaSecondary": "Pogledajte viziju",
       "trust": [
-        "27 zemalja, jedna platforma",
+        "27 zemalja, jedno pretraživanje",
         "Agenti koji nikada ne spavaju",
-        "Nula ručne papirologije"
+        "Papirologija: riješena"
       ]
     },
     "problem": {
-      "eyebrow": "Problem",
-      "title": "Igra natječaja naklonjena je krupnim igračima, ne MSP-ovima.",
+      "title": "Igra je namještena da vas drži vani. I uspijeva.",
       "items": [
         {
-          "title": "Raspršeni u 27 zemalja",
-          "body": "Prave prilike rasute su po desecima nacionalnih portala, na različitim jezicima i u različitim formatima."
+          "title": "Zatrpani u 27 zemalja",
+          "body": "Natječaji koji vam odgovaraju rasuti su po desecima nacionalnih portala, na jezicima koje ne govorite, u formatima koji se opiru."
         },
         {
-          "title": "Teška dokumentacijska birokracija",
-          "body": "Uvjeti, certifikati i rokovi — dokumentacijski labirint u kojemu se lako pogriješiti."
+          "title": "Utapate se u papirologiji",
+          "body": "Uvjeti, certifikati, ESPD, rokovi. Preskočite jedan redak i tjedni rada završe u smeću."
         },
         {
-          "title": "Nema namjenskog tima za ponude",
-          "body": "MSP-ovi nemaju odjel za nabavu — pobjeda zahtijeva vrijeme i stručnost koje nemaju."
+          "title": "Bez tima za ponude, bez šanse",
+          "body": "Divovi imaju tim za ovo. Vi imate noći, vikende i tablicu. Pogodite tko pobjeđuje."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Agenti",
-      "title": "Upoznajte agente koji rade teški posao.",
+      "title": "Tri agenta. Ne promašuju, ne spavaju, ne odustaju.",
       "items": [
         {
           "title": "Pronađi",
-          "body": "Agenti pronalaze pravi natječaj diljem Europe, prilagođen vašem poslovanju."
+          "body": "Svaki dan pročešljaju svih 27 zemalja i izdvoje samo natječaje vrijedne vašeg vremena — prilagođene onome što stvarno radite."
         },
         {
           "title": "Pripremi",
-          "body": "Oni obrađuju dokumentacijsku birokraciju umjesto vas: uvjete, certifikate, rokove."
+          "body": "Uvjeti, certifikati, ESPD, rokovi: izvučeni, unakrsno provjereni, složeni. Papirologija koja vas je lomila, riješena."
         },
         {
           "title": "Pobijedi",
-          "body": "Vode vas sve do ponude, za što bolju šansu za dodjelu."
+          "body": "Pretvaraju natječajnu dokumentaciju u pobjedničku strategiju, da uđete s istom vatrenom moći kao divovi."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Za koga je namijenjeno",
-      "title": "Napravljeno za autsajdere s ambicijama.",
-      "body": "Za one koji žele se natjecati preko granica bez namjenskog tima za ponude. tendersbay vam daje istu vatru kao i veliki igrači."
+      "title": "Jedan od njih ste vi. Već znate koji.",
+      "items": [
+        {
+          "title": "Vi pripremate ponude",
+          "body": "Ponoć, još jedan ESPD ručno. Predajte dokumente agentima. Potrošite svoje sate na ponudu koja stvarno pobjeđuje."
+        },
+        {
+          "title": "Vi odgovarate za brojku",
+          "body": "Vaš tim za ponude usko je grlo rasta u javnom sektoru. Više natječaja, isti broj ljudi — to nije značajka, to je promjena razmjera. S brojkama da to dokažete upravi."
+        },
+        {
+          "title": "Vi umnožavate klijente",
+          "body": "Svaki klijent je zaseban svijet, a svaki ušteđeni sat još je jedan klijent kojeg možete preuzeti. Odvojeni radni prostori, čisti podaci po klijentu, vaša marža."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Postavite pitanja koja obično ubiju posao.",
+      "items": [
+        {
+          "title": "„Treniraju li moji podaci vaš AI?“",
+          "body": "Ne. Vaša dokumentacija, vaši cjenici, vaše ponude ostaju vaši. Nikada se ne ubacuju ni u čiji model."
+        },
+        {
+          "title": "„Izmišlja li stvari?“",
+          "body": "Čita stvarni natječaj i citira stranicu. Svaki uvjet vodi natrag do dokumenta — nikakvih izmišljenih specifikacija."
+        },
+        {
+          "title": "„Jesu li podaci svakog klijenta doista odvojeni?“",
+          "body": "Ograđeni radni prostori po klijentu. Što je njihovo, ostaje njihovo. Ništa ne curi između računa."
+        },
+        {
+          "title": "„Uklapa li se u ono što već koristim?“",
+          "body": "Uklopi se u vaš stack. Ne traži da bilo što bacite."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Vizija",
-      "title": "Javni natječaji nisu zatvoreni klub.",
-      "body": "Svake godine stotine milijardi prolaze kroz europske javne nabave, no ostaju nedostupne onima bez vremena, jezika ili stručnosti. tendersbay koristi AI agente da to promijeni — i da svakom MSP-u pruži pravu šansu.",
-      "note": "Gradimo. Svratite uskoro."
+      "title": "Javni novac stoji iza baršunaste vrpce. Mi je presijecamo.",
+      "body": "Svake godine stotine milijardi prolaze kroz europsku javnu nabavu — i ostaju nedostupne svima bez vremena, jezika ili tima za ponude. AI agenti mijenjaju računicu. Svaki MSP dobiva pravu priliku.",
+      "note": "Gradimo. Vaša zemlja je sljedeća."
     },
     "coverage": {
-      "eyebrow": "Pokrivenost",
-      "title": "27 zemalja EU-a, jedna platforma.",
-      "body": "Širimo se diljem Europske unije, tržište po tržište. Svaka se zastava upali kada pokrivenost postane aktivna.",
-      "statusAvailable": "Dostupno",
+      "title": "27 zemalja. Osvajamo ih jednu po jednu.",
+      "body": "Širimo se diljem Europske unije, tržište po tržište. Svaka se zastava upali na dan kada vaša zemlja krene.",
+      "statusAvailable": "Aktivno",
       "statusComingSoon": "Uskoro",
       "note": "Pokrivenost stiže u svih 27 zemalja EU-a."
     },
     "footer": {
-      "tagline": "Europski natječaji. Dodijeljeni.",
+      "tagline": "Europski natječaji. Vaši.",
       "contactLabel": "Kontaktirajte nas",
       "copyright": "© Bernardo Forcillo — Sva prava pridržana",
       "social": "Pratite tendersbay",
       "columns": [
-        { "heading": "Proizvod", "links": ["Agenti", "Pokrivenost", "Vizija"] },
-        { "heading": "Tvrtka", "links": ["O nama", "Kontakt", "Karijera", "Blog"] },
-        { "heading": "Resursi", "links": ["Privatnost", "Uvjeti", "Tisak", "Status"] }
+        {
+          "heading": "Proizvod",
+          "links": ["Agenti", "Pokrivenost", "Vizija"]
+        },
+        {
+          "heading": "Tvrtka",
+          "links": ["O nama", "Kontakt", "Karijera", "Blog"]
+        },
+        {
+          "heading": "Resursi",
+          "links": ["Privatnost", "Uvjeti", "Tisak", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Rani pristup",
-      "title": "Budite prvi kada tendersbay krene.",
-      "body": "Širi se po cijeloj EU, tržište po tržište. Prijavite se na listu čekanja i dobijte rani pristup čim vaša zemlja bude aktivna.",
-      "button": "Prijavi se na listu"
+      "title": "Vaši agenti su spremni. Jedino što nedostaje ste vi.",
+      "body": "Palimo EU tržište po tržište. Prijavite se na listu čekanja — u trenutku kada vaša zemlja zasvijetli, vaši agenti kreću u lov.",
+      "button": "Osigurajte svoje mjesto"
     },
     "tenderCard": {
       "value": "Vrijednost",
       "deadline": "Rok",
       "daysLeft": "{{count}} dana"
-    },
-    "agentLabels": {
-      "scout": "Agent izviđač",
-      "docs": "Agent dokumentacije",
-      "strategy": "Agent strategije",
-      "scoutStat": "{{count}} pronađenih natječaja",
-      "docsStat": "dokumentacija sredena",
-      "strategyStat": "pobjednička ponuda spremna"
     }
   }
 }

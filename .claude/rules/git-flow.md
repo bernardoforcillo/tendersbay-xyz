@@ -35,6 +35,10 @@ Every build keeps an immutable `timestamp-sha` tag, so any commit's image can be
 pulled even after `latest` moves on. The `-canary` suffix is the only marker that
 distinguishes a `dev` build — there are no moving channel tags.
 
+The `services/backend` service publishes `bernardoforcillo/tendersbay-backend` on the same
+channel scheme via `.github/workflows/ci-backend.yml` (`dev` → `…-canary`, `main` → `…` +
+`latest`).
+
 ## Commit hygiene
 
 Work branches often carry **unrelated in-progress changes** (multiple features
@@ -57,6 +61,16 @@ are developed in parallel on the same branch). So:
   recoverable by SHA / reflog). Re-check `git rev-parse HEAD` and `git log` after any gap
   before assuming your last commit is still HEAD, and re-stage from the working tree if
   needed.
+- **Never `git commit --amend` on a shared branch.** Git authorship is the same repo user
+  for *every* commit (yours and the human's), so you cannot tell them apart by author — only
+  by message/content. If the human commits between your `git rev-parse HEAD` check and your
+  amend, the amend silently rewrites **their** commit. Make fresh commits only. Recover a bad
+  amend with `git reset --soft <their-original-sha>` (from the reflog): it restores their
+  commit byte-identical and leaves *your* delta staged to re-commit on top.
+- **Committing your hunk in a file the human is also editing (uncommitted):** save their WIP
+  with `git diff HEAD -- <file> > wip.patch`, `git checkout HEAD -- <file>`, apply only your
+  edit, stage + commit, then `git apply wip.patch` to restore their WIP on top. Works when
+  the two edits touch non-overlapping regions (it's a clean text patch, not a 3-way merge).
 
 ## Parallel work: prefer git worktrees
 

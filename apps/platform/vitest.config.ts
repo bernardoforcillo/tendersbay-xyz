@@ -9,6 +9,12 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    environmentOptions: {
+      jsdom: {
+        // jsdom 25+ requires a url to enable localStorage/sessionStorage.
+        url: 'http://localhost',
+      },
+    },
     setupFiles: ['./vitest.setup.ts'],
   },
 });

@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "We use cookies",
+    "body": "We use analytics cookies to understand how you use our site and improve your experience. You can accept or reject non-essential cookies.",
+    "accept": "Accept",
+    "reject": "Reject"
+  },
   "landing": {
     "search": {
       "label": "Search",
@@ -11,107 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Your next European tender, awarded",
-      "description": "A team of AI agents that find, prepare and win European public tenders for SMEs."
+      "title": "tendersbay — European tenders, awarded by your AI agents",
+      "description": "AI agents that hunt down the right European public tenders, demolish the paperwork, and walk your SME all the way to the award."
     },
     "nav": {
-      "problem": "The problem",
+      "problem": "The cost",
       "agents": "The agents",
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Your AI agent team",
-      "titleLead": "Your next European tender?",
+      "titleLead": "The tender they already counted as theirs?",
       "titleHighlight": "Awarded.",
-      "subtitle": "tendersbay is your team of AI agents: they hunt down the right tenders across Europe, crush the paperwork, and drive you all the way to the award.",
-      "ctaPrimary": "See it in action",
+      "subtitle": "A tender with your name on it closes tonight. The big players have a team on it. You have three tabs open in Excel. That ends here — AI agents that find it, gut the paperwork, and put you on the bid. While you sleep.",
+      "ctaPrimary": "Put your agents to work",
       "ctaSecondary": "See the vision",
-      "trust": ["27 countries, one platform", "Agents that never sleep", "Zero paperwork by hand"]
+      "trust": ["27 countries, one search", "Agents that never sleep", "Paperwork: handled"]
     },
     "problem": {
-      "eyebrow": "The problem",
-      "title": "The tender game is stacked against SMEs.",
+      "title": "The game was rigged to keep you out. It's working.",
       "items": [
         {
-          "title": "Scattered across 27 countries",
-          "body": "The right opportunities are spread across dozens of national portals, in different languages and formats."
+          "title": "Buried across 27 countries",
+          "body": "The tenders that fit you sit scattered on dozens of national portals, in languages you don't speak, in formats that fight back."
         },
         {
-          "title": "Heavy document bureaucracy",
-          "body": "Requirements, certificates and deadlines — a documentary maze that's easy to get wrong."
+          "title": "Drowning in paperwork",
+          "body": "Specs, certificates, DGUE, deadlines. Miss one line and weeks of work hit the bin."
         },
         {
-          "title": "No dedicated bids team",
-          "body": "SMEs have no procurement office — winning takes time and expertise they don't have."
+          "title": "No bid office, no shot",
+          "body": "The giants have a team for this. You have nights, weekends, and a spreadsheet. Guess who wins."
         }
       ]
     },
     "agents": {
-      "eyebrow": "The agents",
-      "title": "Meet the agents that do the heavy lifting.",
+      "title": "Three agents. They don't miss, don't sleep, don't quit.",
       "items": [
         {
           "title": "Find",
-          "body": "The agents find the right tender across Europe, tailored to your business."
+          "body": "They comb all 27 countries every day and surface only the tenders worth your time — matched to what you actually do."
         },
         {
           "title": "Prepare",
-          "body": "They handle the document bureaucracy for you: requirements, certificates, deadlines."
+          "body": "Requirements, certificates, DGUE, deadlines: extracted, cross-checked, assembled. The paperwork that broke you, handled."
         },
         {
           "title": "Win",
-          "body": "They guide you all the way to the bid, for the best shot at the award."
+          "body": "They turn the spec into a winning strategy, so you walk in with the same firepower as the giants."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Who it's for",
-      "title": "Built for underdogs with ambition.",
-      "body": "For those who want to compete across borders without a dedicated bids office. tendersbay gives you the same firepower as the big players."
+      "title": "One of these is you. You already know which.",
+      "items": [
+        {
+          "title": "You run the bids",
+          "body": "Midnight, another DGUE by hand. Hand the documents to the agents. Spend your hours on the offer that actually wins."
+        },
+        {
+          "title": "You own the number",
+          "body": "Your bid team is the bottleneck on public growth. More tenders, same headcount — that's not a feature, it's a change of scale. With the numbers to prove it to the board."
+        },
+        {
+          "title": "You multiply across clients",
+          "body": "Every client is a different world, and every saved hour is one more client you can take. Separate workspaces, clean data per client, your margin."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Ask the questions that usually kill the deal.",
+      "items": [
+        {
+          "title": "“Does my data train your AI?”",
+          "body": "No. Your specs, your price lists, your bids stay yours. Never fed to anyone's model."
+        },
+        {
+          "title": "“Will it just make things up?”",
+          "body": "It reads the actual tender and cites the page. Every requirement traces back to the document — no invented specs."
+        },
+        {
+          "title": "“Is each client's data really separate?”",
+          "body": "Walled-off workspaces per client. What's theirs stays theirs. Nothing leaks across accounts."
+        },
+        {
+          "title": "“Does it fit what I already use?”",
+          "body": "It slots into your stack. It doesn't ask you to throw anything out."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Vision",
-      "title": "Public tenders shouldn't be a closed club.",
-      "body": "Every year hundreds of billions move through European public procurement, yet it stays out of reach for those without the time, the language, or the expertise. tendersbay uses AI agents to change that — and give every SME a real shot.",
-      "note": "We're building. Check back soon."
+      "title": "Public money sits behind a velvet rope. We're cutting it.",
+      "body": "Hundreds of billions move through European public procurement every year — and stay out of reach for anyone without the time, the languages, or a bid office. AI agents change the math. Every SME gets a real shot.",
+      "note": "We're building. Your country is next."
     },
     "coverage": {
-      "eyebrow": "Coverage",
-      "title": "27 EU countries, one platform.",
-      "body": "We're rolling out across the European Union, one market at a time. Every flag lights up as coverage goes live.",
-      "statusAvailable": "Available",
+      "title": "27 countries. We're taking them one by one.",
+      "body": "We're rolling out across the European Union, market by market. Every flag lights up the day your country goes live.",
+      "statusAvailable": "Live",
       "statusComingSoon": "Coming soon",
       "note": "Coverage is rolling out across all 27 EU countries."
     },
     "footer": {
-      "tagline": "Europe's tenders. Awarded.",
+      "tagline": "Europe's tenders. Yours.",
       "contactLabel": "Get in touch",
       "copyright": "© Bernardo Forcillo — All rights reserved",
       "social": "Follow tendersbay",
       "columns": [
-        { "heading": "Product", "links": ["The agents", "Coverage", "Vision"] },
-        { "heading": "Company", "links": ["About", "Contact", "Careers", "Blog"] },
-        { "heading": "Resources", "links": ["Privacy", "Terms", "Press", "Status"] }
+        {
+          "heading": "Product",
+          "links": ["The agents", "Coverage", "Vision"]
+        },
+        {
+          "heading": "Company",
+          "links": ["About", "Contact", "Careers", "Blog"]
+        },
+        {
+          "heading": "Resources",
+          "links": ["Privacy", "Terms", "Press", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Early access",
-      "title": "Be first when tendersbay goes live.",
-      "body": "We're rolling out across the EU, market by market. Join the waitlist and get early access the moment your country lights up.",
-      "button": "Join the waitlist"
+      "title": "Your agents are ready. The only thing missing is you.",
+      "body": "We're switching on the EU market by market. Join the waitlist — the moment your country lights up, your agents start hunting.",
+      "button": "Claim your spot"
     },
     "tenderCard": {
       "value": "Value",
       "deadline": "Deadline",
       "daysLeft": "{{count}} days"
-    },
-    "agentLabels": {
-      "scout": "Scout agent",
-      "docs": "Document agent",
-      "strategy": "Strategy agent",
-      "scoutStat": "{{count}} tenders found",
-      "docsStat": "paperwork sorted",
-      "strategyStat": "winning bid ready"
     }
   }
 }

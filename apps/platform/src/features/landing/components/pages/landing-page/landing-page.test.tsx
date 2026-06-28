@@ -25,11 +25,11 @@ describe('LandingPage', () => {
   it('renders the landing template and sets the document title', async () => {
     renderWithI18n(<LandingPage />, 'en-ie');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'Your next European tender?',
+      'The tender they already counted as theirs?',
     );
-    expect(screen.getByRole('heading', { name: /27 EU countries/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /taking them one by one/i })).toBeInTheDocument();
     await waitFor(() => {
-      expect(document.title).toBe('tendersbay — Your next European tender, awarded');
+      expect(document.title).toBe('tendersbay — European tenders, awarded by your AI agents');
     });
   }, 20000);
 });

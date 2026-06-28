@@ -37,9 +37,8 @@ describe('landing footer + cta locale keys', () => {
     });
   });
 
-  it.each(entries)('%s defines cta eyebrow, title, body and button', (_path, mod) => {
+  it.each(entries)('%s defines cta title, body and button', (_path, mod) => {
     const cta = mod.default.landing.cta;
-    expect(cta?.eyebrow, 'eyebrow').toBeTruthy();
     expect(cta?.title, 'title').toBeTruthy();
     expect(cta?.body, 'body').toBeTruthy();
     expect(cta?.button, 'button').toBeTruthy();

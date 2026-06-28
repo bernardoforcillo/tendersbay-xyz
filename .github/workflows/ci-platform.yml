@@ -4,14 +4,22 @@ on:
   pull_request:
   push:
     branches: [main, dev]
+    # Build the image only when something that goes into it changes. Manifest
+    # edits under infrastructure/** (e.g. Flux's image-automation commit to main)
+    # never change the image, so they don't match this allowlist and the whole
+    # workflow is skipped — this breaks the CI -> new image -> Flux commit -> CI
+    # feedback loop on main. (Use only `paths`; GitHub rejects `paths` +
+    # `paths-ignore` on the same event.)
     paths:
       - 'apps/platform/**'
       - 'packages/**'
-    paths-ignore:
-      - 'infrastructure/**'
-      - 'docs/**'
-      - '**/*.md'
-      - '.claude/**'
+      - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
+      - 'package.json'
+      - 'turbo.json'
+      - '.nvmrc'
+      - '.github/workflows/ci-platform.yml'
+
 
 jobs:
   quality:
@@ -83,5 +91,10 @@ jobs:
           file: apps/platform/Dockerfile
           push: true
           tags: ${{ steps.tags.outputs.tags }}
+          # phc_… is a public PostHog project key (it ships in client JS), so it
+          # is set plain here rather than via an Actions variable/secret.
+          build-args: |
+            VITE_POSTHOG_KEY=phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C
+            VITE_POSTHOG_HOST=https://eu.i.posthog.com
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -1,4 +1,5 @@
 export { AgentsSection } from './agents-section';
+export { AssuranceSection } from './assurance-section';
 export { AudienceSection } from './audience-section';
 export { CoverageSection } from './coverage-section';
 export { CtaBand } from './cta-band';

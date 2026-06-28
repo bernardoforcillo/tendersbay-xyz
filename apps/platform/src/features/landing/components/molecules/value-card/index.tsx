@@ -24,7 +24,7 @@ export function ValueCard({ icon, title, body, tone = 'solution', className }: V
   return (
     <div
       className={cx(
-        'group rounded-3xl border p-7 transition-all duration-300 hover:-translate-y-1',
+        'group h-full rounded-3xl border p-7 transition-all duration-300 hover:-translate-y-1',
         SURFACE[tone],
         className,
       )}

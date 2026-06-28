@@ -1,0 +1,12 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o ./tmp/backend.exe ."
+bin = "./tmp/backend.exe"
+include_ext = ["go"]
+exclude_dir = ["tmp", "bin", "node_modules"]
+delay = 200
+
+[log]
+time = true

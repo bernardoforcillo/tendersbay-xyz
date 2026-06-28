@@ -96,6 +96,18 @@ The `platform` image `bernardoforcillo/tendersbay-platform` is built and pushed 
   only the manifest edit lands on the `main` git branch). The Flux deploy-key secret
   (`tendersbay-xyz-auth`) therefore needs **write** access.
 
+A second app `backend` lives in the same namespace under `tendersbay-xyz/backend/`,
+shipping the image `bernardoforcillo/tendersbay-backend` (built by
+`.github/workflows/ci-backend.yml`). It mirrors `platform`'s two-channel layout with its
+**own** ImageRepository (`tendersbay-backend-image-repository`), ImageUpdateAutomation
+(`image-automation-tendersbay-backend`, scanning `…/tendersbay-xyz/backend`, committing to
+`main`), and two ImagePolicies (stable + canary). Channels: stable `backend` →
+`api.tendersbay.xyz` (NodePort 30082); canary `backend-canary` → `api.dev.tendersbay.xyz`
+(NodePort 30083, reusing the shared `commons.yaml` middlewares + the `noindex` middleware
+from `platform/canary`). The Cilium `webapp-restricted` policy selects by
+`app: tendersbay-xyz` (no `tier`), so it already covers the backend pods (ingress 8080,
+egress 443 for PostHog) — no new policy needed.
+
 ## Adding an app or channel
 
 - **New app:** create `<namespace>/<app>/<channel>/` mirroring `platform/main`

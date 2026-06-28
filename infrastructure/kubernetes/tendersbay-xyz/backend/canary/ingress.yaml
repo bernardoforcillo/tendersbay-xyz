@@ -1,0 +1,30 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: backend-canary-ingress
+  namespace: tendersbay-xyz
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`api.dev.tendersbay.xyz`)
+      kind: Rule
+      services:
+        - name: backend-canary-svc
+          port: 30083
+      middlewares:
+        # Canary-only: keep api.dev out of search engines (noindex from platform/canary).
+        - name: noindex
+          namespace: tendersbay-xyz
+        - name: rate-limit
+          namespace: tendersbay-xyz
+        - name: security
+          namespace: tendersbay-xyz
+        - name: redirect-http-to-https
+          namespace: tendersbay-xyz
+  tls:
+    secretName: backend-canary-tls
+    options:
+      name: tlsoptions
+      namespace: tendersbay-xyz

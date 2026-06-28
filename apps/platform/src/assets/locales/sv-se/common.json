@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Vi använder cookies",
+    "body": "Vi använder analytiska cookies för att förstå hur du använder vår webbplats och förbättra din upplevelse. Du kan acceptera eller avvisa icke-nödvändiga cookies.",
+    "accept": "Acceptera",
+    "reject": "Avvisa"
+  },
   "landing": {
     "search": {
       "label": "Sök",
@@ -11,111 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Din nästa europeiska upphandling, tilldelad",
-      "description": "Ett team av AI-agenter som hittar, förbereder och vinner europeiska offentliga upphandlingar för SMF."
+      "title": "tendersbay — Europeiska upphandlingar, tilldelade av dina AI-agenter",
+      "description": "AI-agenter som spårar upp rätt europeiska offentliga upphandlingar, krossar pappersarbetet och tar ditt SMF hela vägen till tilldelning."
     },
     "nav": {
-      "problem": "Problemet",
+      "problem": "Kostnaden",
       "agents": "Agenterna",
       "vision": "Vision"
     },
     "hero": {
-      "eyebrow": "Ditt AI-agentteam",
-      "titleLead": "Din nästa europeiska upphandling?",
+      "titleLead": "Upphandlingen de redan räknat som sin?",
       "titleHighlight": "Tilldelad.",
-      "subtitle": "tendersbay är ditt team av AI-agenter: de jagar rätt upphandlingar i hela Europa, krossar pappersarbetet åt dig och kör dig hela vägen till tilldelningen.",
-      "ctaPrimary": "Se det i aktion",
+      "subtitle": "Ikväll stänger en upphandling med ditt namn på. De stora aktörerna har redan ett team på den. Du har tre flikar öppna i Excel. Det slutar här — AI-agenter som hittar den, sliter sönder pappersarbetet och placerar dig i anbudet. Medan du sover.",
+      "ctaPrimary": "Sätt dina agenter i arbete",
       "ctaSecondary": "Se visionen",
-      "trust": [
-        "27 länder, en plattform",
-        "Agenter som aldrig sover",
-        "Noll manuellt pappersarbete"
-      ]
+      "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"]
     },
     "problem": {
-      "eyebrow": "Problemet",
-      "title": "Upphandlingsspelet är riggat mot SMF.",
+      "title": "Spelet är riggat för att hålla dig ute. Och det fungerar.",
       "items": [
         {
-          "title": "Utspridda i 27 länder",
-          "body": "Rätt möjligheter finns spridda över dussintals nationella portaler, på olika språk och i olika format."
+          "title": "Begravda i 27 länder",
+          "body": "Upphandlingarna som passar dig ligger spridda över dussintals nationella portaler, på språk du inte talar, i format som kämpar emot."
         },
         {
-          "title": "Tung dokumentbyråkrati",
-          "body": "Krav, certifikat och deadlines — en dokumentlabyrint där det är lätt att göra fel."
+          "title": "Drunknar i pappersarbete",
+          "body": "Krav, certifikat, ESPD, deadlines. Missa en rad och veckors arbete hamnar i papperskorgen."
         },
         {
-          "title": "Inget dedikerat anbudsteam",
-          "body": "SMF har ingen upphandlingsavdelning — att vinna kräver tid och kompetens de inte har."
+          "title": "Inget anbudsteam, ingen chans",
+          "body": "Jättarna har ett team för det här. Du har nätter, helger och ett kalkylblad. Gissa vem som vinner."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Agenterna",
-      "title": "Möt agenterna som gör det tunga lyftet.",
+      "title": "Tre agenter. De missar inte, sover inte, ger inte upp.",
       "items": [
         {
           "title": "Hitta",
-          "body": "Agenterna hittar rätt upphandling i hela Europa, anpassad till ditt företag."
+          "body": "De finkammar alla 27 länder varje dag och lyfter bara fram upphandlingarna som är värda din tid — anpassade efter vad du faktiskt gör."
         },
         {
           "title": "Förbered",
-          "body": "De sköter dokumentbyråkratin åt dig: krav, certifikat, deadlines."
+          "body": "Krav, certifikat, ESPD, deadlines: extraherade, korskontrollerade, sammanställda. Pappersarbetet som knäckte dig, löst."
         },
         {
           "title": "Vinn",
-          "body": "De leder dig hela vägen till anbudet, för bästa möjliga chans till tilldelning."
+          "body": "De gör om förfrågningsunderlaget till en vinnande strategi, så att du går in med samma eldkraft som jättarna."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Vem det är till för",
-      "title": "Byggt för ambitiösa utmanare som inte nöjer sig.",
-      "body": "För dem som vill konkurrera över gränserna utan ett dedikerat anbudsteam. tendersbay ger dig samma eldkraft som de stora aktörerna."
+      "title": "En av dem är du. Du vet redan vilken.",
+      "items": [
+        {
+          "title": "Du gör anbuden",
+          "body": "Midnatt, ännu en ESPD för hand. Lämna dokumenten till agenterna. Lägg dina timmar på anbudet som faktiskt vinner."
+        },
+        {
+          "title": "Du svarar för siffran",
+          "body": "Ditt anbudsteam är flaskhalsen för offentlig tillväxt. Fler upphandlingar, samma bemanning — det är inte en funktion, det är ett skalskifte. Med siffrorna för att bevisa det för styrelsen."
+        },
+        {
+          "title": "Du mångdubblar dina kunder",
+          "body": "Varje kund är en egen värld, och varje sparad timme är en kund till du kan ta. Separata arbetsytor, ren data per kund, din marginal."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Ställ frågorna som brukar sänka affären.",
+      "items": [
+        {
+          "title": "”Tränar mina data er AI?”",
+          "body": "Nej. Dina underlag, dina prislistor, dina anbud förblir dina. Matas aldrig in i någons modell."
+        },
+        {
+          "title": "”Hittar den bara på?”",
+          "body": "Den läser den faktiska upphandlingen och citerar sidan. Varje krav går att spåra till dokumentet — inga påhittade specifikationer."
+        },
+        {
+          "title": "”Är varje kunds data verkligen åtskild?”",
+          "body": "Avskärmade arbetsytor per kund. Det som är deras förblir deras. Inget läcker mellan konton."
+        },
+        {
+          "title": "”Passar det med det jag redan använder?”",
+          "body": "Det glider in i din stack. Det ber dig inte slänga något."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Vision",
-      "title": "Offentliga upphandlingar är ingen sluten klubb.",
-      "body": "Varje år rör sig hundratals miljarder genom europeiska offentliga upphandlingar, men de förblir utom räckhåll för dem utan tid, språk eller kompetens. tendersbay använder AI-agenter för att förändra det — och ge varje SMF en riktig chans.",
-      "note": "Vi bygger. Kom tillbaka snart."
+      "title": "Offentliga pengar sitter bakom en sammetslina. Vi klipper av den.",
+      "body": "Varje år rör sig hundratals miljarder genom europeisk offentlig upphandling — och förblir utom räckhåll för alla utan tid, språk eller ett anbudsteam. AI-agenter ändrar kalkylen. Varje SMF får en riktig chans.",
+      "note": "Vi bygger. Ditt land är nästa."
     },
     "coverage": {
-      "eyebrow": "Täckning",
-      "title": "27 EU-länder, en plattform.",
-      "body": "Vi expanderar i hela Europeiska unionen, marknad för marknad. Varje flagga tänds när täckningen blir aktiv.",
-      "statusAvailable": "Tillgänglig",
+      "title": "27 länder. Vi tar dem ett i taget.",
+      "body": "Vi expanderar i hela Europeiska unionen, marknad för marknad. Varje flagga tänds den dag ditt land går live.",
+      "statusAvailable": "Live",
       "statusComingSoon": "Kommer snart",
       "note": "Täckningen är på väg till alla 27 EU-länder."
     },
     "footer": {
-      "tagline": "Europas upphandlingar. Tilldelade.",
+      "tagline": "Europas upphandlingar. Dina.",
       "contactLabel": "Kontakta oss",
       "copyright": "© Bernardo Forcillo — Alla rättigheter förbehållna",
       "social": "Följ tendersbay",
       "columns": [
-        { "heading": "Produkt", "links": ["Agenterna", "Täckning", "Vision"] },
-        { "heading": "Företag", "links": ["Om oss", "Kontakt", "Karriär", "Blogg"] },
-        { "heading": "Resurser", "links": ["Integritet", "Villkor", "Press", "Status"] }
+        {
+          "heading": "Produkt",
+          "links": ["Agenterna", "Täckning", "Vision"]
+        },
+        {
+          "heading": "Företag",
+          "links": ["Om oss", "Kontakt", "Karriär", "Blogg"]
+        },
+        {
+          "heading": "Resurser",
+          "links": ["Integritet", "Villkor", "Press", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Tidig tillgång",
-      "title": "Var först när tendersbay lanseras.",
-      "body": "Vi rullar ut i hela EU, marknad för marknad. Anmäl dig till väntelistan och få tidig tillgång så snart ditt land aktiveras.",
-      "button": "Gå med i väntelistan"
+      "title": "Dina agenter är redo. Det enda som saknas är du.",
+      "body": "Vi slår på EU marknad för marknad. Gå med på väntelistan — i samma stund ditt land tänds börjar dina agenter jaga.",
+      "button": "Säkra din plats"
     },
     "tenderCard": {
       "value": "Värde",
       "deadline": "Deadline",
       "daysLeft": "{{count}} dagar"
-    },
-    "agentLabels": {
-      "scout": "Spaningsagent",
-      "docs": "Dokumentagent",
-      "strategy": "Strategiagent",
-      "scoutStat": "{{count}} upphandlingar hittade",
-      "docsStat": "pappren ordnade",
-      "strategyStat": "vinnande anbud redo"
     }
   }
 }

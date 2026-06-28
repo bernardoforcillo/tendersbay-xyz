@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Käytämme evästeitä",
+    "body": "Käytämme analytiikkaevästeitä ymmärtääksemme, miten käytät sivustoamme, ja parantaaksemme käyttökokemustasi. Voit hyväksyä tai hylätä ei-välttämättömät evästeet.",
+    "accept": "Hyväksy",
+    "reject": "Hylkää"
+  },
   "landing": {
     "search": {
       "label": "Hae",
@@ -11,111 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Seuraava eurooppalainen hankintasi, myönnetty",
-      "description": "Tekoälyagenttien tiimi, joka löytää, valmistelee ja voittaa eurooppalaiset julkiset hankinnat pk-yrityksille."
+      "title": "tendersbay — Eurooppalaiset hankinnat, tekoälyagenttiesi voittamina",
+      "description": "Tekoälyagentit, jotka jäljittävät oikeat eurooppalaiset julkiset hankinnat, murskaavat paperityöt ja vievät pk-yrityksesi aina hankintapäätökseen asti."
     },
     "nav": {
-      "problem": "Ongelma",
+      "problem": "Hinta",
       "agents": "Agentit",
       "vision": "Visio"
     },
     "hero": {
-      "eyebrow": "Tekoälyagenttisi tiimi",
-      "titleLead": "Seuraava eurooppalainen hankintasi?",
+      "titleLead": "Hankinta, jonka he jo laskivat omakseen?",
       "titleHighlight": "Myönnetty.",
-      "subtitle": "tendersbay on tekoälyagenttisi tiimi: he metsästävät oikeat hankinnat koko Euroopasta, murskaavat paperityöt puolestasi ja vievät sinut suoraan hankintapäätökseen.",
-      "ctaPrimary": "Katso se toiminnassa",
+      "subtitle": "Tänä yönä sulkeutuu hankinta, jossa on sinun nimesi. Suurilla toimijoilla on jo tiimi sen kimpussa. Sinulla on kolme välilehteä auki Excelissä. Se loppuu tähän — tekoälyagentit, jotka löytävät sen, repivät paperityöt kappaleiksi ja nostavat sinut tarjoukseen. Sillä aikaa kun nukut.",
+      "ctaPrimary": "Pane agenttisi töihin",
       "ctaSecondary": "Katso visio",
-      "trust": [
-        "27 maata, yksi alusta",
-        "Agentit jotka eivät koskaan nuku",
-        "Nolla manuaalista paperityötä"
-      ]
+      "trust": ["27 maata, yksi haku", "Agentit jotka eivät koskaan nuku", "Paperityöt: hoidettu"]
     },
     "problem": {
-      "eyebrow": "Ongelma",
-      "title": "Hankintapeli on pienten yritysten vastainen.",
+      "title": "Peli on viritetty pitämään sinut ulkona. Ja se toimii.",
       "items": [
         {
-          "title": "Hajautettuna 27 maahan",
-          "body": "Oikeat mahdollisuudet ovat hajallaan kymmenissä kansallisissa portaaleissa eri kielillä ja muodoissa."
+          "title": "Hautautuneena 27 maahan",
+          "body": "Sinulle sopivat hankinnat ovat hajallaan kymmenissä kansallisissa portaaleissa, kielillä joita et puhu, muodoissa jotka vastustavat."
         },
         {
-          "title": "Raskas asiakirjabyrokraatia",
-          "body": "Vaatimukset, sertifikaatit ja määräajat — asiakirjalabyrintti, jossa on helppo tehdä virheitä."
+          "title": "Paperityöhön hukkuen",
+          "body": "Vaatimukset, sertifikaatit, ESPD, määräajat. Ohita yksi rivi, ja viikkojen työ menee roskiin."
         },
         {
-          "title": "Ei omistettua tarjoustiimiä",
-          "body": "Pk-yrityksillä ei ole hankintaosastoa — voittaminen vaatii aikaa ja osaamista, joita heillä ei ole."
+          "title": "Ei tarjoustiimiä, ei mahdollisuuksia",
+          "body": "Jättiläisillä on tähän tiimi. Sinulla on yöt, viikonloput ja taulukkolaskenta. Arvaa kuka voittaa."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Agentit",
-      "title": "Tapaa agentit jotka tekevät raskaan työn.",
+      "title": "Kolme agenttia. Ne eivät hairahda, eivät nuku, eivät luovuta.",
       "items": [
         {
           "title": "Löydä",
-          "body": "Agentit löytävät oikean hankinnan kaikkialta Euroopasta, räätälöitynä yrityksellesi."
+          "body": "Ne kampaavat kaikki 27 maata joka päivä ja nostavat esiin vain hankinnat, jotka ovat aikasi arvoisia — räätälöitynä siihen, mitä todella teet."
         },
         {
           "title": "Valmistele",
-          "body": "He hoitavat asiakirjabyrokraatian puolestasi: vaatimukset, sertifikaatit, määräajat."
+          "body": "Vaatimukset, sertifikaatit, ESPD, määräajat: poimittu, ristiintarkistettu, koottu. Paperityö, joka mursi sinut, hoidettu."
         },
         {
           "title": "Voita",
-          "body": "He ohjaavat sinut tarjoukseen asti, jotta sinulla on parhaat mahdollisuudet hankintapäätökseen."
+          "body": "Ne muuttavat tarjouspyynnön voittavaksi strategiaksi, niin että astut sisään samalla tulivoimalla kuin jättiläiset."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Kenelle se on tarkoitettu",
-      "title": "Rakennettu kunnianhimoisille haastajille.",
-      "body": "Niille, jotka haluavat kilpailla rajojen yli ilman omistettua tarjoustiimiä. tendersbay antaa sinulle saman tulituksen kuin suurilla toimijoilla."
+      "title": "Yksi näistä olet sinä. Tiedät jo mikä.",
+      "items": [
+        {
+          "title": "Sinä teet tarjoukset",
+          "body": "Keskiyö, taas yksi ESPD käsin. Anna asiakirjat agenteille. Käytä tuntisi tarjoukseen, joka oikeasti voittaa."
+        },
+        {
+          "title": "Sinä vastaat luvusta",
+          "body": "Tarjoustiimisi on julkisen kasvun pullonkaula. Enemmän hankintoja, sama henkilöstö — se ei ole ominaisuus, se on mittakaavan muutos. Numeroilla, joilla todistat sen johdolle."
+        },
+        {
+          "title": "Sinä monistat asiakkaita",
+          "body": "Jokainen asiakas on oma maailmansa, ja jokainen säästetty tunti on yksi asiakas lisää, jonka voit ottaa. Erilliset työtilat, puhtaat tiedot asiakasta kohden, sinun katteesi."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Kysy ne kysymykset, jotka yleensä kaatavat kaupan.",
+      "items": [
+        {
+          "title": "”Kouluttavatko tietoni tekoälyänne?”",
+          "body": "Eivät. Tarjouspyyntösi, hinnastosi, tarjouksesi pysyvät sinun. Niitä ei koskaan syötetä kenenkään malliin."
+        },
+        {
+          "title": "”Keksiikö se asioita?”",
+          "body": "Se lukee oikean hankinnan ja siteeraa sivun. Jokainen vaatimus jäljittyy asiakirjaan — ei keksittyjä erittelyjä."
+        },
+        {
+          "title": "”Ovatko kunkin asiakkaan tiedot todella erillään?”",
+          "body": "Eristetyt työtilat asiakasta kohden. Mikä on heidän, pysyy heidän. Mikään ei vuoda tilien välillä."
+        },
+        {
+          "title": "”Sopiiko se siihen, mitä jo käytän?”",
+          "body": "Se solahtaa pinoosi. Se ei pyydä sinua heittämään mitään pois."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Visio",
-      "title": "Julkiset hankinnat eivät ole suljettu klubi.",
-      "body": "Joka vuosi sadat miljardeja liikkuvat eurooppalaisten julkisten hankintojen kautta, mutta ne pysyvät ulottumattomissa niille, joilla ei ole aikaa, kieltä tai osaamista. tendersbay käyttää tekoälyagentteja muuttaakseen tämän — ja antaakseen jokaiselle pk-yritykselle todellisen mahdollisuuden.",
-      "note": "Rakennamme. Palaa pian takaisin."
+      "title": "Julkinen raha on samettiköyden takana. Me katkaisemme sen.",
+      "body": "Joka vuosi sadat miljardit virtaavat eurooppalaisten julkisten hankintojen läpi — ja pysyvät ulottumattomissa kaikilta, joilla ei ole aikaa, kieliä tai tarjoustiimiä. Tekoälyagentit muuttavat laskelman. Jokainen pk-yritys saa todellisen mahdollisuuden.",
+      "note": "Rakennamme. Maasi on seuraava."
     },
     "coverage": {
-      "eyebrow": "Kattavuus",
-      "title": "27 EU-maata, yksi alusta.",
-      "body": "Laajenemme koko Euroopan unioniin, markkina kerrallaan. Jokainen lippu syttyy, kun kattavuus aktivoituu.",
-      "statusAvailable": "Saatavilla",
+      "title": "27 maata. Otamme ne yksi kerrallaan.",
+      "body": "Laajenemme koko Euroopan unioniin, markkina kerrallaan. Jokainen lippu syttyy sinä päivänä, kun maasi avautuu.",
+      "statusAvailable": "Aktiivinen",
       "statusComingSoon": "Tulossa pian",
       "note": "Kattavuus laajenee kaikkiin 27 EU-maahan."
     },
     "footer": {
-      "tagline": "Euroopan hankinnat. Myönnetty.",
+      "tagline": "Euroopan hankinnat. Sinun.",
       "contactLabel": "Ota yhteyttä",
       "copyright": "© Bernardo Forcillo — Kaikki oikeudet pidätetään",
       "social": "Seuraa tendersbay",
       "columns": [
-        { "heading": "Tuote", "links": ["Agentit", "Kattavuus", "Visio"] },
-        { "heading": "Yritys", "links": ["Meistä", "Yhteystiedot", "Työpaikat", "Blogi"] },
-        { "heading": "Resurssit", "links": ["Tietosuoja", "Ehdot", "Lehdistö", "Tila"] }
+        {
+          "heading": "Tuote",
+          "links": ["Agentit", "Kattavuus", "Visio"]
+        },
+        {
+          "heading": "Yritys",
+          "links": ["Meistä", "Yhteystiedot", "Työpaikat", "Blogi"]
+        },
+        {
+          "heading": "Resurssit",
+          "links": ["Tietosuoja", "Ehdot", "Lehdistö", "Tila"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Varhainen käyttöoikeus",
-      "title": "Ole ensimmäisenä kun tendersbay avautuu.",
-      "body": "Laajenemme koko EU:n alueelle markkina kerrallaan. Liity odotuslistalle ja saat varhaisen pääsyn heti kun maasi aktivoituu.",
-      "button": "Liity odotuslistalle"
+      "title": "Agenttisi ovat valmiina. Vain sinä puutut.",
+      "body": "Sytytämme EU:n markkina kerrallaan. Liity odotuslistalle — sillä hetkellä kun maasi syttyy, agenttisi lähtevät metsästämään.",
+      "button": "Varaa paikkasi"
     },
     "tenderCard": {
       "value": "Arvo",
       "deadline": "Määräaika",
       "daysLeft": "{{count}} päivää"
-    },
-    "agentLabels": {
-      "scout": "Tiedustelijaagentti",
-      "docs": "Asiakirja-agentti",
-      "strategy": "Strategia-agentti",
-      "scoutStat": "{{count}} löydettyä hankintaa",
-      "docsStat": "paperit hoidettu",
-      "strategyStat": "voittava tarjous valmis"
     }
   }
 }

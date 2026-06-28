@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Úsáidimid fianáin",
+    "body": "Úsáidimid fianáin anailísíochta chun tuiscint a fháil ar conas a úsáideann tú ár suíomh agus chun do thaithí a fheabhsú. Is féidir leat fianáin neamhriachtanacha a ghlacadh nó a dhiúltú.",
+    "accept": "Glac",
+    "reject": "Diúltaigh"
+  },
   "landing": {
     "search": {
       "label": "Cuardaigh",
@@ -11,111 +17,139 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Do chéad tairiscint Eorpach eile, bronnta",
-      "description": "Foireann gníomhairí AI a aimsíonn, a ullmhaíonn agus a bhuaineann conarthaí poiblí Eorpacha do FBManna."
+      "title": "tendersbay — Tairiscintí Eorpacha, bronnta ag do ghníomhairí AI",
+      "description": "Gníomhairí AI a aimsíonn na tairiscintí poiblí Eorpacha cearta, a réabann an obair pháipéir, agus a thugann do FBM an bealach ar fad go dtí an bronnadh."
     },
     "nav": {
-      "problem": "An Fhadhb",
+      "problem": "An Costas",
       "agents": "Na Gníomhairí",
       "vision": "Fís"
     },
     "hero": {
-      "eyebrow": "Do fhoireann gníomhairí AI",
-      "titleLead": "Do chéad tairiscint Eorpach eile?",
+      "titleLead": "An tairiscint a mheas siad cheana mar a gcuid féin?",
       "titleHighlight": "Bronnta.",
-      "subtitle": "Is é tendersbay do fhoireann gníomhairí AI: fiachann siad na conarthaí cearta ar fud na hEorpa, leagann siad an obair pháipéir, agus treorann siad thú díreach go dtí an bronnadh.",
-      "ctaPrimary": "Féach é i ngníomh",
+      "subtitle": "Anocht dúnann tairiscint le d'ainm uirthi. Tá foireann ag na himreoirí móra uirthi cheana. Tá trí chluaisín oscailte agat in Excel. Críochnaíonn sé anseo — gníomhairí AI a aimsíonn í, a stróiceann an obair pháipéir, agus a chuireann thú sa tairiscint. Agus tú i do chodladh.",
+      "ctaPrimary": "Cuir do ghníomhairí ag obair",
       "ctaSecondary": "Féach ar an bhfís",
       "trust": [
-        "27 tír, aon ardán amháin",
+        "27 tír, aon chuardach amháin",
         "Gníomhairí nach gcodlaíonn riamh",
-        "Nialas obair pháipéir láimhe"
+        "Obair pháipéir: réitithe"
       ]
     },
     "problem": {
-      "eyebrow": "An Fhadhb",
-      "title": "Tá cluiche na dtairiscintí leagtha in aghaidh FBManna.",
+      "title": "Tá an cluiche socraithe chun thú a choinneáil amuigh. Agus tá ag éirí leis.",
       "items": [
         {
-          "title": "Scaipthe ar fud 27 tír",
-          "body": "Tá na deiseanna cearta scaipthe ar fud na ndoirsiní náisiúnta, i dteangacha agus i bhformáidí éagsúla."
+          "title": "Curtha i bhfolach ar fud 27 tír",
+          "body": "Tá na tairiscintí a oireann duit scaipthe ar fud na ndoirsiní náisiúnta, i dteangacha nach labhraíonn tú, i bhformáidí a chuireann i do choinne."
         },
         {
-          "title": "Maorlathas trom doiciméad",
-          "body": "Riachtanais, teastais agus spriocdhálacha — lúbán doiciméadach ina bhfuil sé éasca earráidí a dhéanamh."
+          "title": "Ag báthadh in obair pháipéir",
+          "body": "Riachtanais, teastais, ESPD, spriocdhátaí. Caill líne amháin agus téann seachtainí oibre sa bhruscar."
         },
         {
-          "title": "Gan foireann tiomnaithe tairisceana",
-          "body": "Níl aon roinn soláthair ag FBManna — teastaíonn am agus saineolas uathu chun bua a fháil nach bhfuil acu."
+          "title": "Gan foireann tairisceana, gan seans",
+          "body": "Tá foireann ag na fathaigh dó seo. Tá oícheanta, deirí seachtaine agus scarbhileog agat. Buille faoi thuairim cé a bhuann."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Na Gníomhairí",
-      "title": "Cas le gníomhairí a dhéanann an obair chrua.",
+      "title": "Trí ghníomhaire. Ní chailleann siad, ní chodlaíonn siad, ní éiríonn siad as.",
       "items": [
         {
           "title": "Aimsigh",
-          "body": "Aimsíonn na gníomhairí an conradh ceart ar fud na hEorpa, oiriúnaithe do do ghnó."
+          "body": "Cíorann siad na 27 tír gach lá agus ní thugann chun solais ach na tairiscintí ar fiú do chuid ama iad — oiriúnaithe don rud a dhéanann tú i ndáiríre."
         },
         {
           "title": "Ullmhaigh",
-          "body": "Déanann siad an maorlathas doiciméad ar do shon: riachtanais, teastais, spriocdhálacha."
+          "body": "Riachtanais, teastais, ESPD, spriocdhátaí: bainte amach, cros-seiceáilte, curtha le chéile. An obair pháipéir a bhris thú, réitithe."
         },
         {
           "title": "Buaigh",
-          "body": "Treorann siad thú chomh fada leis an tairiscint, ar mhaithe leis an seans is fearr bronnadh a fháil."
+          "body": "Athraíonn siad na cáipéisí tairisceana ina straitéis bhuacach, ionas go siúlfaidh tú isteach leis an gcumhacht chéanna leis na fathaigh."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Cé dó a bhfuil sé",
-      "title": "Déanta do na cinn éirímiúla nach sásuíonn dara háit.",
-      "body": "Dóibh siúd ar mian leo iomaíocht thar theorainneacha gan foireann tiomnaithe tairisceana. Tugann tendersbay an cumhacht chéanna duit agus atá ag na himreoirí móra."
+      "title": "Tusa duine acu. Tá a fhios agat cheana cé acu.",
+      "items": [
+        {
+          "title": "Ullmhaíonn tú na tairiscintí",
+          "body": "Meán oíche, ESPD eile de láimh. Tabhair na cáipéisí do na gníomhairí. Caith do chuid uaireanta ar an tairiscint a bhuann i ndáiríre."
+        },
+        {
+          "title": "Tá tú freagrach as an uimhir",
+          "body": "Is é d'fhoireann tairisceana scrogall fáis na hearnála poiblí. Níos mó tairiscintí, an fhoireann chéanna — ní gné é sin, is athrú scála é. Leis na figiúirí chun é a chruthú don bhord."
+        },
+        {
+          "title": "Méadaíonn tú do chliaint",
+          "body": "Is domhan ann féin gach cliant, agus is cliant breise gach uair an chloig a shábhálann tú, ar féidir leat glacadh leis. Spásanna oibre ar leithligh, sonraí glana in aghaidh an chliaint, do chorrlach."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Cuir na ceisteanna a mharaíonn an margadh de ghnáth.",
+      "items": [
+        {
+          "title": "„An dtraenálann mo chuid sonraí do AI?“",
+          "body": "Ní dhéanann. Fanann do cháipéisí, do liostaí praghsanna, do thairiscintí mar do chuid féin. Ní chuirtear isteach i samhail aon duine riamh iad."
+        },
+        {
+          "title": "„An ndéanann sé rudaí a chumadh?“",
+          "body": "Léann sé an tairiscint iarbhír agus luann sé an leathanach. Téann gach riachtanas ar ais go dtí an cháipéis — gan aon sonraíocht chumtha."
+        },
+        {
+          "title": "„An bhfuil sonraí gach cliaint scartha i ndáiríre?“",
+          "body": "Spásanna oibre faoi bhalla in aghaidh an chliaint. An rud is leo, fanann sé leo. Ní sceitheann aon rud idir chuntais."
+        },
+        {
+          "title": "„An n-oireann sé don rud a úsáidim cheana?“",
+          "body": "Sleamhnaíonn sé isteach i do chruach. Ní iarrann sé ort aon rud a chaitheamh amach."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Fís",
-      "title": "Níl tairiscintí poiblí ina gclub dúnta.",
-      "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí Eorpach, ach fanann sé as láimh do dhaoine gan am, teanga nó saineolas. Úsáideann tendersbay gníomhairí AI chun sin a athrú — agus chun seans fíor a thabhairt do gach FBM.",
-      "note": "Táimid ag tógáil. Fill ar ais go luath."
+      "title": "Tá airgead poiblí taobh thiar de chorda veilbhite. Gearraimid é.",
+      "body": "Gach bliain bogann na céadta billiún trí sholáthar poiblí na hEorpa — agus fanann sé as raon do dhuine ar bith gan am, teangacha nó foireann tairisceana. Athraíonn gníomhairí AI an mhatamaitic. Faigheann gach FBM seans fíor.",
+      "note": "Táimid ag tógáil. Is í do thír an chéad cheann eile."
     },
     "coverage": {
-      "eyebrow": "Clúdach",
-      "title": "27 tír AE, ardán amháin.",
-      "body": "Táimid ag leathnú ar fud an Aontais Eorpaigh, margadh ar mhargadh. Lasann gach bratach nuair a thagann an clúdach beo.",
-      "statusAvailable": "Ar fáil",
+      "title": "27 tír. Glacaimid iad ceann ar cheann.",
+      "body": "Táimid ag leathnú ar fud an Aontais Eorpaigh, margadh ar mhargadh. Lasann gach bratach an lá a théann do thír beo.",
+      "statusAvailable": "Beo",
       "statusComingSoon": "Ag teacht go luath",
       "note": "Tá an clúdach ag teacht chuig na 27 tír AE go léir."
     },
     "footer": {
-      "tagline": "Tairiscintí na hEorpa. Bronnta.",
+      "tagline": "Tairiscintí na hEorpa. Leatsa.",
       "contactLabel": "Déan teagmháil linn",
       "copyright": "© Bernardo Forcillo — Gach ceart ar cosaint",
       "social": "Lean tendersbay",
       "columns": [
-        { "heading": "Táirge", "links": ["Na gníomhairí", "Clúdach", "Fís"] },
-        { "heading": "Cuideachta", "links": ["Fúinn", "Teagmháil", "Gairmeacha", "Blag"] },
-        { "heading": "Acmhainní", "links": ["Príobháideacht", "Téarmaí", "Preás", "Stádas"] }
+        {
+          "heading": "Táirge",
+          "links": ["Na gníomhairí", "Clúdach", "Fís"]
+        },
+        {
+          "heading": "Cuideachta",
+          "links": ["Fúinn", "Teagmháil", "Gairmeacha", "Blag"]
+        },
+        {
+          "heading": "Acmhainní",
+          "links": ["Príobháideacht", "Téarmaí", "Preás", "Stádas"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Rochtain luath",
-      "title": "Bí ar an gcéad duine nuair a sheolann tendersbay.",
-      "body": "Táimid ag leathnú ar fud an AE, margadh ar mhargadh. Cláraigh ar an liosta feithimh agus faigh rochtain luath chomh luath agus a lasann do thír.",
-      "button": "Cláraigh ar an liosta"
+      "title": "Tá do ghníomhairí réidh. Níl in easnamh ach tusa.",
+      "body": "Táimid ag lasadh an AE margadh ar mhargadh. Cláraigh ar an liosta feithimh — an nóiméad a lasann do thír, téann do ghníomhairí ag fiach.",
+      "button": "Cinntigh d'áit"
     },
     "tenderCard": {
       "value": "Luach",
       "deadline": "Spriocdháta",
       "daysLeft": "{{count}} lá"
-    },
-    "agentLabels": {
-      "scout": "Gníomhaire fionnachtana",
-      "docs": "Gníomhaire doiciméad",
-      "strategy": "Gníomhaire straitéise",
-      "scoutStat": "{{count}} conradh aimsithe",
-      "docsStat": "cáipéisí eagraithe",
-      "strategyStat": "tairiscint bhuacach réidh"
     }
   }
 }

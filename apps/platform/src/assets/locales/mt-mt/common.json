@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Nużaw il-cookies",
+    "body": "Nużaw cookies analitiċi biex nifhmu kif tuża s-sit tagħna u ntejbu l-esperjenza tiegħek. Tista' taċċetta jew tirrifjuta l-cookies mhux essenzjali.",
+    "accept": "Aċċetta",
+    "reject": "Irrifjuta"
+  },
   "landing": {
     "search": {
       "label": "Fittex",
@@ -11,107 +17,135 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — L-offerta Ewropea li jmiss tiegħek, mogħtija",
-      "description": "Tim ta' aġenti AI li jsib, jipprepara u jirbaħ il-kuntratti pubbliċi Ewropej għall-SMEs."
+      "title": "tendersbay — Offerti Ewropej, mogħtija mill-aġenti AI tiegħek",
+      "description": "Aġenti AI li jsibu l-offerti pubbliċi Ewropej it-tajbin, ifarrku l-burokrazija u jieħdu l-SME tiegħek sal-għoti tal-kuntratt."
     },
     "nav": {
-      "problem": "Il-Problema",
+      "problem": "L-Ispiża",
       "agents": "L-Aġenti",
       "vision": "Viżjoni"
     },
     "hero": {
-      "eyebrow": "It-tim ta' aġenti AI tiegħek",
-      "titleLead": "L-offerta Ewropea li jmiss tiegħek?",
+      "titleLead": "L-offerta li diġà qisuha tagħhom?",
       "titleHighlight": "Mogħtija.",
-      "subtitle": "tendersbay huwa t-tim ta' aġenti AI tiegħek: ifittxu l-kuntratti t-tajbin madwar l-Ewropa kollha, jeqirdu l-karti f'ismek u jieħduk direttament sal-ħin li tingħata l-kuntratt.",
-      "ctaPrimary": "Ara fl-azzjoni",
+      "subtitle": "Illejla tagħlaq offerta b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
+      "ctaPrimary": "Poġġi l-aġenti tiegħek jaħdmu",
       "ctaSecondary": "Ara l-viżjoni",
-      "trust": ["27 pajjiż, pjattaforma waħda", "Aġenti li qatt ma jorqdu", "Xejn karti manwali"]
+      "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"]
     },
     "problem": {
-      "eyebrow": "Il-Problema",
-      "title": "Il-logħba tal-offerti hija miġbuda kontra l-SMEs.",
+      "title": "Il-logħba hija mqassma biex iżżommok barra. U qed taħdem.",
       "items": [
         {
-          "title": "Mifruxa fuq 27 pajjiż",
-          "body": "L-opportunitajiet it-tajbin huma mifruxa fuq għexieren ta' portali nazzjonali, f'lingwi u formati differenti."
+          "title": "Midfuna fi 27 pajjiż",
+          "body": "L-offerti li jaqblu miegħek huma mxerrda fuq għexieren ta' portali nazzjonali, f'lingwi li ma titkellimx, f'formati li jirreżistu."
         },
         {
-          "title": "Burokratija tad-dokumenti tqila",
-          "body": "Rekwiżiti, ċertifikati u skadenzieri — labirint dokumentarju fejn huwa faċli li tagħmel żbalji."
+          "title": "Tegħreq fil-karti",
+          "body": "Rekwiżiti, ċertifikati, ESPD, skadenzieri. Taqbeż linja waħda u ġimgħat ta' xogħol jispiċċaw fil-landa."
         },
         {
-          "title": "Ebda tim dedikat għall-offerti",
-          "body": "L-SMEs m'għandhomx dipartiment tal-akkwist — ir-rebħ jeħtieġ ħin u għarfien li m'għandhomx."
+          "title": "Ebda tim tal-offerti, ebda ċans",
+          "body": "Il-ġganti għandhom tim għal dan. Int għandek iljieli, tmiem il-ġimgħa u spreadsheet. Aqta' min jirbaħ."
         }
       ]
     },
     "agents": {
-      "eyebrow": "L-Aġenti",
-      "title": "Iltaqa' mal-aġenti li jagħmlu x-xogħol il-iebes.",
+      "title": "Tliet aġenti. Ma jfallux, ma jorqdux, ma jċedux.",
       "items": [
         {
           "title": "Sib",
-          "body": "L-aġenti jsib il-kuntratt it-tajjeb madwar l-Ewropa kollha, imfassal għan-negozju tiegħek."
+          "body": "Kuljum ifittxu sew il-27 pajjiż kollha u joħorġu biss l-offerti li jistħoqqilhom il-ħin tiegħek — imfassla għal dak li tagħmel tabilħaqq."
         },
         {
           "title": "Ipprepara",
-          "body": "Jieħdu ħsieb il-burokratija tad-dokumenti f'ismek: rekwiżiti, ċertifikati, skadenzieri."
+          "body": "Rekwiżiti, ċertifikati, ESPD, skadenzieri: estratti, ivverifikati, miġbura. Il-burokrazija li kissritek, solvuta."
         },
         {
           "title": "Irbaħ",
-          "body": "Jgħinuk sal-offerta, biex ikollok l-aħjar ċans li tingħata l-kuntratt."
+          "body": "Ibiddlu d-dokumenti tal-offerta fi strateġija rebbieħa, biex tidħol bl-istess saħħa bħall-ġganti."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Għal min huwa",
-      "title": "Magħmul għall-underdog ambizzjuż.",
-      "body": "Għal dawk li jixtiequ jikkompetu lil hinn mill-fruntieri mingħajr tim dedikat tal-offerti. tendersbay jagħtik l-istess qawwa bħal dawk il-kbar."
+      "title": "Wieħed minnhom huwa int. Diġà taf liema.",
+      "items": [
+        {
+          "title": "Int tipprepara l-offerti",
+          "body": "Nofsillejl, ESPD ieħor bl-idejn. Agħti d-dokumenti lill-aġenti. Onfoq is-sigħat tiegħek fuq l-offerta li tabilħaqq tirbaħ."
+        },
+        {
+          "title": "Int responsabbli għaċ-ċifra",
+          "body": "It-tim tal-offerti tiegħek huwa l-konġestjoni tat-tkabbir pubbliku. Aktar offerti, l-istess persunal — mhix funzjoni, hija bidla fl-iskala. Biċ-ċifri biex tipprovaha lill-bord."
+        },
+        {
+          "title": "Int timmoltiplika l-klijenti",
+          "body": "Kull klijent huwa dinja għaliha, u kull siegħa li tiffranka hija klijent ieħor li tista' tieħu. Spazji tax-xogħol separati, data nadifa għal kull klijent, il-marġni tiegħek."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Staqsi l-mistoqsijiet li normalment joqtlu l-ftehim.",
+      "items": [
+        {
+          "title": "„Id-data tiegħi tħarreġ l-AI tagħkom?“",
+          "body": "Le. Id-dokumenti tiegħek, il-listi tal-prezzijiet, l-offerti tiegħek jibqgħu tiegħek. Qatt ma jiddaħħlu fil-mudell ta' ħadd."
+        },
+        {
+          "title": "„Taqbad tivvinta l-affarijiet?“",
+          "body": "Taqra l-offerta vera u tikkwota l-paġna. Kull rekwiżit imur lura għad-dokument — ebda speċifikazzjoni vvintata."
+        },
+        {
+          "title": "„Id-data ta' kull klijent hija tabilħaqq separata?“",
+          "body": "Spazji tax-xogħol magħluqa għal kull klijent. Dak li hu tagħhom, jibqa' tagħhom. Xejn ma joħroġ bejn il-kontijiet."
+        },
+        {
+          "title": "„Taqbel ma' dak li diġà nuża?“",
+          "body": "Tidħol fl-istack tiegħek. Ma titolbokx tarmi xejn."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Viżjoni",
-      "title": "L-offerti pubbliċi mhumiex club magħluq.",
-      "body": "Kull sena mija ta' biljuni jiċċaqalqu permezz tal-akkwist pubbliku Ewropew, iżda jibqgħu 'l bogħod minn dawk mingħajr il-ħin, il-lingwa jew l-għarfien. tendersbay juża aġenti AI biex ibiddel dan — u jagħti lil kull SME ċans reali.",
-      "note": "Qed nibnu. Erġa' iżżur dalwaqt."
+      "title": "Il-flus pubbliċi qegħdin wara ħabel tal-bellus. Aħna naqtgħuh.",
+      "body": "Kull sena mijiet ta' biljuni jgħaddu mill-akkwist pubbliku Ewropew — u jibqgħu 'l bogħod minn kull min m'għandux il-ħin, il-lingwi jew tim tal-offerti. L-aġenti AI ibiddlu l-kalkolu. Kull SME jikseb ċans reali.",
+      "note": "Qed nibnu. Pajjiżek imiss."
     },
     "coverage": {
-      "eyebrow": "Kopertura",
-      "title": "27 pajjiż tal-UE, pjattaforma waħda.",
-      "body": "Qed nespandu mal-Unjoni Ewropea kollha, suq wara suq. Kull bandiera tixgħel meta l-kopertura ssir attiva.",
-      "statusAvailable": "Disponibbli",
+      "title": "27 pajjiż. Qed neħduhom wieħed wieħed.",
+      "body": "Qed nespandu mal-Unjoni Ewropea kollha, suq wara suq. Kull bandiera tixgħel fil-jum li pajjiżek jibda jaħdem.",
+      "statusAvailable": "Attiv",
       "statusComingSoon": "Dalwaqt",
       "note": "Il-kopertura qed tasal fis-27 pajjiż kollha tal-UE."
     },
     "footer": {
-      "tagline": "L-offerti tal-Ewropa. Mogħtija.",
+      "tagline": "L-offerti tal-Ewropa. Tiegħek.",
       "contactLabel": "Ikkuntattjana",
       "copyright": "© Bernardo Forcillo — Id-drittijiet kollha riżervati",
       "social": "Segwi tendersbay",
       "columns": [
-        { "heading": "Prodott", "links": ["L-aġenti", "Kopertura", "Viżjoni"] },
-        { "heading": "Kumpanija", "links": ["Dwarna", "Kuntatt", "Karrieri", "Blog"] },
-        { "heading": "Riżorsi", "links": ["Privatezza", "Termini", "Stampa", "Status"] }
+        {
+          "heading": "Prodott",
+          "links": ["L-aġenti", "Kopertura", "Viżjoni"]
+        },
+        {
+          "heading": "Kumpanija",
+          "links": ["Dwarna", "Kuntatt", "Karrieri", "Blog"]
+        },
+        {
+          "heading": "Riżorsi",
+          "links": ["Privatezza", "Termini", "Stampa", "Status"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Aċċess bikri",
-      "title": "Kun l-ewwel meta tendersbay jitnieda.",
-      "body": "Qed nespandu mal-UE kollha, suq wara suq. Irreġistra fuq il-lista ta' stennija u ikseb aċċess bikri hekk kif il-pajjiż tiegħek jiġi attivat.",
-      "button": "Ingħaqad mal-lista"
+      "title": "L-aġenti tiegħek lesti. L-uniku li jonqos huwa int.",
+      "body": "Qed nixegħlu l-UE suq wara suq. Irreġistra fuq il-lista ta' stennija — fil-mument li pajjiżek jixgħel, l-aġenti tiegħek joħorġu għall-kaċċa.",
+      "button": "Iżgura postok"
     },
     "tenderCard": {
       "value": "Valur",
       "deadline": "Skadenza",
       "daysLeft": "{{count}} jiem"
-    },
-    "agentLabels": {
-      "scout": "Aġent ta' skawt",
-      "docs": "Aġent tad-dokumenti",
-      "strategy": "Aġent tal-istrateġija",
-      "scoutStat": "{{count}} kuntratti misjuba",
-      "docsStat": "karti indirizzati",
-      "strategyStat": "offerta rebbieħa lesta"
     }
   }
 }

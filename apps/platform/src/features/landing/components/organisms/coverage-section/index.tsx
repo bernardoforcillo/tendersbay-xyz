@@ -1,6 +1,6 @@
 import { useReducedMotion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
-import { CountryFlag, Eyebrow, Marquee } from '~/features/landing/components/atoms';
+import { CountryFlag, Marquee } from '~/features/landing/components/atoms';
 import {
   EU_COUNTRIES,
   type EuCountry,
@@ -43,38 +43,37 @@ export function CoverageSection() {
     <section
       id="coverage"
       aria-labelledby="coverage-title"
-      className="scroll-mt-24 bg-cream-50 py-20"
+      className="scroll-mt-24 bg-ink-950 py-24 text-ink-100 md:py-28"
     >
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
           <div className="max-w-[52ch]">
-            <Eyebrow icon="globe">{t('landing.coverage.eyebrow')}</Eyebrow>
             <h2
               id="coverage-title"
-              className="mt-5 font-display text-[2rem] leading-[1.05] tracking-tight text-ink-900 md:text-[2.7rem]"
+              className="font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
             >
               {t('landing.coverage.title')}
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-ink-600">
+            <p className="mt-5 text-lg leading-relaxed text-ink-200">
               {t('landing.coverage.body')}
             </p>
           </div>
 
-          <dl className="grid shrink-0 gap-2.5 rounded-2xl border border-cream-200 bg-white/70 px-5 py-4 shadow-soft">
+          <dl className="grid shrink-0 gap-2.5 rounded-2xl border border-white/10 bg-white/5 px-5 py-4 shadow-soft backdrop-blur-sm">
             <div className="flex items-center justify-between gap-8">
-              <dt className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-700">
-                <span className="h-2 w-2 rounded-full bg-brand-500" />
+              <dt className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-100">
+                <span className="h-2 w-2 rounded-full bg-brand-400" />
                 {availableLabel}
               </dt>
-              <dd className="font-mono text-sm tabular-nums text-ink-900">{availableCount}</dd>
+              <dd className="font-mono text-sm tabular-nums text-white">{availableCount}</dd>
             </div>
-            <div className="h-px bg-cream-200" />
+            <div className="h-px bg-white/10" />
             <div className="flex items-center justify-between gap-8">
-              <dt className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-500">
-                <span className="h-2 w-2 rounded-full bg-cream-300" />
+              <dt className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-400">
+                <span className="h-2 w-2 rounded-full bg-white/25" />
                 {comingSoonLabel}
               </dt>
-              <dd className="font-mono text-sm tabular-nums text-ink-500">{comingCount}</dd>
+              <dd className="font-mono text-sm tabular-nums text-ink-400">{comingCount}</dd>
             </div>
           </dl>
         </div>
@@ -114,7 +113,7 @@ export function CoverageSection() {
           </div>
         )}
 
-        <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-500">
+        <p className="mt-8 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-400">
           {t('landing.coverage.note')}
         </p>
       </div>

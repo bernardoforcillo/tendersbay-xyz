@@ -1,4 +1,10 @@
 {
+  "consent": {
+    "title": "Naudojame slapukus",
+    "body": "Naudojame analitinius slapukus, kad suprastume, kaip naudojate mūsų svetainę, ir pagerintume jūsų patirtį. Galite priimti arba atmesti nebūtinus slapukus.",
+    "accept": "Priimti",
+    "reject": "Atmesti"
+  },
   "landing": {
     "search": {
       "label": "Ieškoti",
@@ -11,111 +17,139 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Jūsų kitas Europos viešasis pirkimas, suteiktas",
-      "description": "Dirbtinio intelekto agentų komanda, kuri randa, parengia ir laimi Europos viešuosius pirkimus MVĮ."
+      "title": "tendersbay — Europos viešieji pirkimai, kuriuos laimi jūsų DI agentai",
+      "description": "DI agentai, kurie suranda tinkamus Europos viešuosius pirkimus, sutriuškina biurokratiją ir nuveda jūsų MVĮ iki sutarties suteikimo."
     },
     "nav": {
-      "problem": "Problema",
+      "problem": "Kaina",
       "agents": "Agentai",
       "vision": "Vizija"
     },
     "hero": {
-      "eyebrow": "Jūsų DI agentų komanda",
-      "titleLead": "Jūsų kitas Europos viešasis pirkimas?",
+      "titleLead": "Pirkimas, kurį jie jau laikė savu?",
       "titleHighlight": "Suteiktas.",
-      "subtitle": "tendersbay yra jūsų DI agentų komanda: jie medžioja tinkamus pirkimus visoje Europoje, sutriuškina biurokratiją už jus ir nuveda jus tiesiai iki sutarties suteikimo.",
-      "ctaPrimary": "Žiūrėkite veikime",
+      "subtitle": "Šįnakt baigiasi pirkimas su jūsų vardu. Didieji žaidėjai jau turi jam komandą. Jūs turite tris atidarytus skirtukus „Excel“. Čia tai baigiasi — DI agentai, kurie jį suranda, sudrasko biurokratiją ir įstato jus į pasiūlymą. Kol miegate.",
+      "ctaPrimary": "Paleiskite savo agentus į darbą",
       "ctaSecondary": "Žiūrėkite viziją",
       "trust": [
-        "27 šalys, viena platforma",
+        "27 šalys, viena paieška",
         "Agentai, kurie niekada nemiega",
-        "Nulis rankinio dokumentų tvarkymo"
+        "Biurokratija: sutvarkyta"
       ]
     },
     "problem": {
-      "eyebrow": "Problema",
-      "title": "Viešųjų pirkimų žaidimas yra sukrautas prieš MVĮ.",
+      "title": "Žaidimas sukurptas taip, kad jus laikytų lauke. Ir tai veikia.",
       "items": [
         {
-          "title": "Išsibarstę 27 šalyse",
-          "body": "Tinkamos galimybės išsibarsčiusios dešimtyse nacionalinių portalų, skirtingomis kalbomis ir formatais."
+          "title": "Užkasti 27 šalyse",
+          "body": "Jums tinkami pirkimai išbarstyti dešimtyse nacionalinių portalų, kalbomis, kurių nemokate, formatais, kurie priešinasi."
         },
         {
-          "title": "Sunki dokumentų biurokratija",
-          "body": "Reikalavimai, sertifikatai ir terminai — dokumentų labirintas, kuriame lengva suklysti."
+          "title": "Skęstate dokumentuose",
+          "body": "Reikalavimai, sertifikatai, EBVPD, terminai. Praleisite vieną eilutę ir savaitės darbo keliauja į šiukšliadėžę."
         },
         {
-          "title": "Nėra skirto pasiūlymų rengimo skyriaus",
-          "body": "MVĮ neturi viešųjų pirkimų skyriaus — laimėti reikia laiko ir kompetencijos, kurių jos neturi."
+          "title": "Nėra pasiūlymų komandos, nėra šanso",
+          "body": "Milžinai tam turi komandą. Jūs turite naktis, savaitgalius ir skaičiuoklę. Atspėkite, kas laimi."
         }
       ]
     },
     "agents": {
-      "eyebrow": "Agentai",
-      "title": "Susipažinkite su agentais, kurie dirba sunkų darbą.",
+      "title": "Trys agentai. Jie neprašauna, nemiega, nepasiduoda.",
       "items": [
         {
           "title": "Raskite",
-          "body": "Agentai suranda tinkamą pirkimą visoje Europoje, pritaikytą jūsų verslui."
+          "body": "Kiekvieną dieną iššukuoja visas 27 šalis ir iškelia tik tuos pirkimus, kurie verti jūsų laiko — pritaikytus tam, ką iš tikrųjų darote."
         },
         {
           "title": "Paruoškite",
-          "body": "Jie tvarko dokumentų biurokratiją už jus: reikalavimus, sertifikatus, terminus."
+          "body": "Reikalavimai, sertifikatai, EBVPD, terminai: ištraukti, sutikrinti, sudėti. Biurokratija, kuri jus laužė, sutvarkyta."
         },
         {
           "title": "Laimėkite",
-          "body": "Jie veda jus iki pasiūlymo, kad turėtumėte geriausią šansą sutarties suteikimui."
+          "body": "Jie paverčia pirkimo dokumentus laiminčia strategija, kad įžengtumėte su tokia pat ugnies galia kaip milžinai."
         }
       ]
     },
     "audience": {
-      "eyebrow": "Kam skirta",
-      "title": "Sukurta ambicioziems išorininkams.",
-      "body": "Tiems, kurie nori konkuruoti per sienas be skirto pasiūlymų rengimo skyriaus. tendersbay suteikia jums tokią pat galią kaip ir dideliems žaidėjams."
+      "title": "Vienas iš jų esate jūs. Jau žinote kuris.",
+      "items": [
+        {
+          "title": "Jūs rengiate pasiūlymus",
+          "body": "Vidurnaktis, dar vienas EBVPD ranka. Atiduokite dokumentus agentams. Skirkite savo valandas pasiūlymui, kuris iš tikrųjų laimi."
+        },
+        {
+          "title": "Jūs atsakote už skaičių",
+          "body": "Jūsų pasiūlymų komanda yra viešojo sektoriaus augimo butelio kaklelis. Daugiau pirkimų, tas pats personalas — tai ne funkcija, tai masto pokytis. Su skaičiais, kad tai įrodytumėte valdybai."
+        },
+        {
+          "title": "Jūs dauginate klientus",
+          "body": "Kiekvienas klientas yra atskiras pasaulis, o kiekviena sutaupyta valanda — dar vienas klientas, kurį galite priimti. Atskiros darbo erdvės, švarūs duomenys kiekvienam klientui, jūsų marža."
+        }
+      ]
+    },
+    "assurance": {
+      "title": "Užduokite klausimus, kurie paprastai sužlugdo sandorį.",
+      "items": [
+        {
+          "title": "„Ar mano duomenys moko jūsų DI?“",
+          "body": "Ne. Jūsų pirkimo dokumentai, kainoraščiai, pasiūlymai lieka jūsų. Niekada nepatenka į niekieno modelį."
+        },
+        {
+          "title": "„Ar jis tiesiog prasimano?“",
+          "body": "Jis skaito tikrą pirkimą ir cituoja puslapį. Kiekvienas reikalavimas grįžta prie dokumento — jokių išgalvotų specifikacijų."
+        },
+        {
+          "title": "„Ar kiekvieno kliento duomenys tikrai atskirti?“",
+          "body": "Atitvertos darbo erdvės kiekvienam klientui. Kas jų, lieka jų. Niekas neprateka tarp paskyrų."
+        },
+        {
+          "title": "„Ar tinka prie to, ką jau naudoju?“",
+          "body": "Įsilieja į jūsų steką. Neprašo nieko išmesti."
+        }
+      ]
     },
     "vision": {
-      "eyebrow": "Vizija",
-      "title": "Viešieji pirkimai nėra uždara draugija.",
-      "body": "Kiekvienais metais šimtai milijardų juda per Europos viešuosius pirkimus, tačiau jie lieka nepasiekiami tiems, kurie neturi laiko, kalbos žinių ar kompetencijos. tendersbay naudoja DI agentus tam pakeisti — ir suteikti kiekvienai MVĮ realią galimybę.",
-      "note": "Mes kuriame. Grįžkite netrukus."
+      "title": "Viešieji pinigai už aksominės virvės. Mes ją perkerpame.",
+      "body": "Kiekvienais metais šimtai milijardų teka per Europos viešuosius pirkimus — ir lieka nepasiekiami visiems, neturintiems laiko, kalbų ar pasiūlymų komandos. DI agentai keičia skaičiavimą. Kiekviena MVĮ gauna realią galimybę.",
+      "note": "Mes kuriame. Jūsų šalis – kita."
     },
     "coverage": {
-      "eyebrow": "Aprėptis",
-      "title": "27 ES šalys, viena platforma.",
-      "body": "Plečiamės visoje Europos Sąjungoje, rinka po rinkos. Kiekviena vėliava užsidega, kai aprėptis tampa aktyvi.",
-      "statusAvailable": "Prieinama",
+      "title": "27 šalys. Imame jas po vieną.",
+      "body": "Plečiamės visoje Europos Sąjungoje, rinka po rinkos. Kiekviena vėliava užsidega tą dieną, kai jūsų šalis pradeda veikti.",
+      "statusAvailable": "Aktyvu",
       "statusComingSoon": "Netrukus",
       "note": "Aprėptis pasiekia visas 27 ES šalis."
     },
     "footer": {
-      "tagline": "Europos viešieji pirkimai. Suteikti.",
+      "tagline": "Europos pirkimai. Jūsų.",
       "contactLabel": "Susisiekite su mumis",
       "copyright": "© Bernardo Forcillo — Visos teisės saugomos",
       "social": "Sekite tendersbay",
       "columns": [
-        { "heading": "Produktas", "links": ["Agentai", "Aprėptis", "Vizija"] },
-        { "heading": "Įmonė", "links": ["Apie mus", "Kontaktai", "Karjera", "Blogas"] },
-        { "heading": "Ištekliai", "links": ["Privatumas", "Sąlygos", "Spauda", "Statusas"] }
+        {
+          "heading": "Produktas",
+          "links": ["Agentai", "Aprėptis", "Vizija"]
+        },
+        {
+          "heading": "Įmonė",
+          "links": ["Apie mus", "Kontaktai", "Karjera", "Blogas"]
+        },
+        {
+          "heading": "Ištekliai",
+          "links": ["Privatumas", "Sąlygos", "Spauda", "Statusas"]
+        }
       ]
     },
     "cta": {
-      "eyebrow": "Ankstyva prieiga",
-      "title": "Būkite pirmieji, kai tendersbay startuos.",
-      "body": "Plečiamės visoje ES, rinka po rinkos. Užsiregistruokite laukiančiųjų sąraše ir gaukite ankstyvą prieigą iš karto, kai jūsų šalis bus aktyvuota.",
-      "button": "Prisijungti prie sąrašo"
+      "title": "Jūsų agentai pasiruošę. Trūksta tik jūsų.",
+      "body": "Įjungiame ES rinka po rinkos. Užsiregistruokite laukiančiųjų sąraše — tą akimirką, kai jūsų šalis užsidega, jūsų agentai išeina į medžioklę.",
+      "button": "Užsitikrinkite savo vietą"
     },
     "tenderCard": {
       "value": "Vertė",
       "deadline": "Terminas",
       "daysLeft": "{{count}} dienos"
-    },
-    "agentLabels": {
-      "scout": "Žvalgybos agentas",
-      "docs": "Dokumentų agentas",
-      "strategy": "Strategijos agentas",
-      "scoutStat": "{{count}} rastų pirkimų",
-      "docsStat": "dokumentai sutvarkyti",
-      "strategyStat": "laimintis pasiūlymas parengtas"
     }
   }
 }
