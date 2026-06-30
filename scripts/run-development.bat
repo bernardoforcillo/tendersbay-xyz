@@ -3,12 +3,27 @@ setlocal EnableDelayedExpansion
 
 set ROOT=%~dp0..
 
+:: ── Engine detection (Docker → Podman) ────────────────────────────────────────
+docker compose version >nul 2>&1
+if not errorlevel 1 (
+  set ENGINE=docker compose
+  goto engine_ok
+)
+podman compose version >nul 2>&1
+if not errorlevel 1 (
+  set ENGINE=podman compose
+  goto engine_ok
+)
+echo Error: "docker compose" (v2 plugin) or "podman compose" is required.
+exit /b 1
+:engine_ok
+
 :: ── Postgres ──────────────────────────────────────────────────────────────────
-docker compose -f "%ROOT%\docker-compose.dev.yml" up -d
+%ENGINE% -f "%ROOT%\docker-compose.dev.yml" up -d
 
 echo Waiting for postgres...
 :wait_loop
-docker compose -f "%ROOT%\docker-compose.dev.yml" exec -T postgres pg_isready -U root -d tendersbay >nul 2>&1
+%ENGINE% -f "%ROOT%\docker-compose.dev.yml" exec -T postgres pg_isready -U root -d tendersbay >nul 2>&1
 if errorlevel 1 (
   timeout /t 1 /nobreak >nul
   goto wait_loop
@@ -36,5 +51,5 @@ echo   Backend  (Air)  ^>  http://localhost:8080
 echo   Platform (Air)  ^>  http://localhost:3000
 echo   Frontend (Vite) ^>  http://localhost:5173
 echo   Close the opened windows to stop the servers.
-echo   Run: docker compose -f docker-compose.dev.yml stop   ^<-- to stop postgres
+echo   Run: %ENGINE% -f docker-compose.dev.yml stop   ^<-- to stop postgres
 echo.

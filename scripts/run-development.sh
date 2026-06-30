@@ -2,7 +2,17 @@
 set -e
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-COMPOSE="docker compose -f $ROOT/docker-compose.dev.yml"
+
+# ── Engine detection (Docker → Podman) ────────────────────────────────────────
+if docker compose version >/dev/null 2>&1; then
+  ENGINE="docker compose"
+elif podman compose version >/dev/null 2>&1; then
+  ENGINE="podman compose"
+else
+  echo "Error: 'docker compose' (v2 plugin) or 'podman compose' is required." >&2
+  exit 1
+fi
+COMPOSE="$ENGINE -f $ROOT/docker-compose.dev.yml"
 
 # ── Postgres ─────────────────────────────────────────────────────────────────
 $COMPOSE up -d
