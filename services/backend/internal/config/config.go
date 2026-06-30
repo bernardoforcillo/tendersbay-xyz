@@ -3,6 +3,7 @@ package config
 
 import (
 	"os"
+	"strings"
 	"time"
 )
 
@@ -24,6 +25,7 @@ type Config struct {
 	RefreshExpiry time.Duration
 	ResendAPIKey  string
 	AppBaseURL    string
+	CORSOrigins   []string
 }
 
 // FromEnv builds a Config from environment variables, applying defaults for
@@ -37,8 +39,14 @@ func FromEnv() Config {
 		PostHogHost:   getenv("POSTHOG_HOST", defaultPostHogHost),
 		DatabaseURL:   os.Getenv("DATABASE_URL"),
 		JWTSecret:     os.Getenv("JWT_SECRET"),
-		ResendAPIKey:  os.Getenv("RESEND_API_KEY"),
-		AppBaseURL:    os.Getenv("APP_BASE_URL"),
+		ResendAPIKey: os.Getenv("RESEND_API_KEY"),
+		AppBaseURL:   os.Getenv("APP_BASE_URL"),
+	}
+
+	if raw := os.Getenv("CORS_ORIGINS"); raw != "" {
+		cfg.CORSOrigins = strings.Split(raw, ",")
+	} else {
+		cfg.CORSOrigins = []string{"https://tendersbay.xyz", "https://dev.tendersbay.xyz"}
 	}
 
 	expiry := os.Getenv("JWT_EXPIRY")

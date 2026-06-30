@@ -82,8 +82,7 @@ func main() {
 	mux.Handle(userPath, userRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
-	corsOrigins := []string{"https://tendersbay.xyz", "https://dev.tendersbay.xyz"}
-	handler := connectapi.NewCORS(corsOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(mux))
+	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(mux))
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.Port,
