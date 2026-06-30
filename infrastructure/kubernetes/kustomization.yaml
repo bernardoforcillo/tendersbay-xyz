@@ -20,12 +20,14 @@ resources:
   - tendersbay-xyz/platform/canary/middleware.yaml
   - tendersbay-xyz/platform/canary/update.yaml
   # backend app — stable channel -> api.tendersbay.xyz
+  - tendersbay-xyz/backend/main/secret.yaml
   - tendersbay-xyz/backend/main/deployment.yaml
   - tendersbay-xyz/backend/main/service.yaml
   - tendersbay-xyz/backend/main/certificate.yaml
   - tendersbay-xyz/backend/main/ingress.yaml
   - tendersbay-xyz/backend/main/update.yaml
   # backend app — canary channel -> api.dev.tendersbay.xyz
+  - tendersbay-xyz/backend/canary/secret.yaml
   - tendersbay-xyz/backend/canary/deployment.yaml
   - tendersbay-xyz/backend/canary/service.yaml
   - tendersbay-xyz/backend/canary/certificate.yaml

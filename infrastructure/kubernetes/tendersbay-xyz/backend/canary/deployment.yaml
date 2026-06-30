@@ -39,6 +39,9 @@ spec:
             requests:
               memory: '64Mi'
               cpu: '10m'
+          envFrom:
+            - secretRef:
+                name: backend-canary-secrets
           env:
             - name: PORT
               value: '8080'
