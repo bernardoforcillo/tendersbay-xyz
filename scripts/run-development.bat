@@ -30,21 +30,24 @@ if errorlevel 1 (
 )
 echo Postgres ready.
 
-:: ── Backend env ───────────────────────────────────────────────────────────────
+:: ── Backend env (inherited by the window started below) ───────────────────────
 set DATABASE_URL=postgres://root:toor@localhost:5432/tendersbay?sslmode=disable
 set JWT_SECRET=dev-only-secret-change-in-production
 set APP_BASE_URL=http://localhost:5173
 set JWT_EXPIRY=15m
 set REFRESH_EXPIRY=168h
-:: localhost:5173 = Vite dev server, localhost:3000 = platform Air server
 set CORS_ORIGINS=http://localhost:5173,http://localhost:3000
-set VITE_API_URL=http://localhost:8080
 
 :: ── Backend (Air) — port 8080 ─────────────────────────────────────────────────
-start "Backend (Air :8080)" cmd /k "cd /d "%ROOT%\services\backend" && set PORT=8080 && air"
+:: Set PORT before start so the new window inherits the exact value (no trailing
+:: space — "set VAR=val && cmd" includes the space before && in the value).
+set PORT=8080
+start "Backend (Air :8080)" cmd /k "cd /d "%ROOT%\services\backend" && air"
 
 :: ── Platform (Vite :5173 + Air :3000) ────────────────────────────────────────
-start "Platform (Vite+Air)" cmd /k "cd /d "%ROOT%\apps\platform" && set PORT=3000 && pnpm dev"
+set PORT=3000
+set VITE_API_URL=http://localhost:8080
+start "Platform (Vite+Air)" cmd /k "cd /d "%ROOT%\apps\platform" && pnpm dev"
 
 echo.
 echo   Backend  (Air)  ^>  http://localhost:8080
