@@ -1,0 +1,8 @@
+go 1.26
+
+use (
+	./apps/platform
+	./services/backend
+	./go-services/password
+	./go-services/token
+)
