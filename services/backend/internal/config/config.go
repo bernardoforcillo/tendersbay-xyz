@@ -1,7 +1,10 @@
 // Package config loads the backend service configuration from the environment.
 package config
 
-import "os"
+import (
+	"os"
+	"time"
+)
 
 const (
 	defaultPort        = "8080"
@@ -15,18 +18,42 @@ type Config struct {
 	ServiceName   string
 	PostHogAPIKey string
 	PostHogHost   string
+	DatabaseURL   string
+	JWTSecret     string
+	JWTExpiry     time.Duration
+	RefreshExpiry time.Duration
+	ResendAPIKey  string
+	AppBaseURL    string
 }
 
 // FromEnv builds a Config from environment variables, applying defaults for
 // PORT (8080), SERVICE_NAME (tendersbay-backend) and POSTHOG_HOST (EU endpoint).
 // POSTHOG_API_KEY has no default; an empty key disables telemetry export.
 func FromEnv() Config {
-	return Config{
+	cfg := Config{
 		Port:          getenv("PORT", defaultPort),
 		ServiceName:   getenv("SERVICE_NAME", defaultServiceName),
 		PostHogAPIKey: os.Getenv("POSTHOG_API_KEY"),
 		PostHogHost:   getenv("POSTHOG_HOST", defaultPostHogHost),
+		DatabaseURL:   os.Getenv("DATABASE_URL"),
+		JWTSecret:     os.Getenv("JWT_SECRET"),
+		ResendAPIKey:  os.Getenv("RESEND_API_KEY"),
+		AppBaseURL:    os.Getenv("APP_BASE_URL"),
 	}
+
+	expiry := os.Getenv("JWT_EXPIRY")
+	if expiry == "" {
+		expiry = "15m"
+	}
+	cfg.JWTExpiry, _ = time.ParseDuration(expiry)
+
+	refresh := os.Getenv("REFRESH_EXPIRY")
+	if refresh == "" {
+		refresh = "168h"
+	}
+	cfg.RefreshExpiry, _ = time.ParseDuration(refresh)
+
+	return cfg
 }
 
 func getenv(key, fallback string) string {

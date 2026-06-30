@@ -10,10 +10,17 @@ import (
 	"syscall"
 	"time"
 
+	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
+	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/email"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/httpapi"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/probe"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/config"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/telemetry"
 )
 
@@ -34,8 +41,57 @@ func main() {
 	}
 	defer func() { _ = shutdown(context.Background()) }()
 
-	svc := health.New(probe.NewReady())
-	srv := &http.Server{Addr: ":" + cfg.Port, Handler: httpapi.New(svc)}
+	if cfg.DatabaseURL == "" {
+		slog.Error("DATABASE_URL is required")
+		os.Exit(1)
+	}
+
+	db, sqlDB, err := postgres.New(ctx, cfg.DatabaseURL)
+	if err != nil {
+		slog.Error("failed to connect to database", "error", err)
+		os.Exit(1)
+	}
+
+	userRepo := postgres.NewUserRepo(db)
+	sessionRepo := postgres.NewSessionRepo(db)
+	evRepo := postgres.NewEVRepo(db)
+	prRepo := postgres.NewPRRepo(db)
+
+	mailer := email.NewResend(cfg.ResendAPIKey, "noreply@tendersbay.xyz")
+
+	authCfg := auth.Config{
+		JWTSecret:     cfg.JWTSecret,
+		JWTExpiry:     cfg.JWTExpiry,
+		RefreshExpiry: cfg.RefreshExpiry,
+		AppBaseURL:    cfg.AppBaseURL,
+	}
+
+	authSvc := auth.NewService(userRepo, sessionRepo, evRepo, prRepo, mailer, authCfg)
+	userSvc := user.NewService(userRepo, sessionRepo, evRepo, mailer, authCfg)
+
+	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
+	userHandler := connectapi.NewUserHandler(userSvc)
+
+	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
+	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
+
+	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
+
+	mux := http.NewServeMux()
+	mux.Handle(authPath, authRPC)
+	mux.Handle(userPath, userRPC)
+	mux.Handle("/", httpapi.New(healthSvc))
+
+	corsOrigins := []string{"https://tendersbay.xyz", "https://dev.tendersbay.xyz"}
+	handler := connectapi.NewCORS(corsOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(mux))
+
+	srv := &http.Server{
+		Addr:         ":" + cfg.Port,
+		Handler:      handler,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 30 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
 
 	srvErr := make(chan error, 1)
 	go func() {
