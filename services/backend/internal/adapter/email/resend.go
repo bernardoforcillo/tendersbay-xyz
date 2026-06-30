@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 )
 
@@ -28,19 +29,46 @@ func NewResendWithURL(apiKey, from, url string) *ResendSender {
 	return &ResendSender{apiKey: apiKey, from: from, baseURL: url, client: &http.Client{}}
 }
 
+var (
+	verifyTmpl = template.Must(template.New("").Parse(
+		`<p>Hi {{.Name}},</p><p>Click the link below to verify your email:</p><p><a href="{{.Link}}">Verify email</a></p>`,
+	))
+	resetTmpl = template.Must(template.New("").Parse(
+		`<p>Hi {{.Name}},</p><p>Click the link below to reset your password. It expires in 1 hour:</p><p><a href="{{.Link}}">Reset password</a></p>`,
+	))
+	changeEmailTmpl = template.Must(template.New("").Parse(
+		`<p>Hi {{.Name}},</p><p>Click the link below to confirm your new email address:</p><p><a href="{{.Link}}">Confirm email</a></p>`,
+	))
+)
+
+func renderEmail(tmpl *template.Template, name, link string) (string, error) {
+	var buf bytes.Buffer
+	err := tmpl.Execute(&buf, struct{ Name, Link string }{name, link})
+	return buf.String(), err
+}
+
 func (r *ResendSender) SendVerification(ctx context.Context, to, displayName, link string) error {
-	return r.send(ctx, to, "Verify your email — Tendersbay",
-		fmt.Sprintf("<p>Hi %s,</p><p>Click the link below to verify your email:</p><p><a href=%q>Verify email</a></p>", displayName, link))
+	body, err := renderEmail(verifyTmpl, displayName, link)
+	if err != nil {
+		return fmt.Errorf("render verification email: %w", err)
+	}
+	return r.send(ctx, to, "Verify your email — Tendersbay", body)
 }
 
 func (r *ResendSender) SendPasswordReset(ctx context.Context, to, displayName, link string) error {
-	return r.send(ctx, to, "Reset your password — Tendersbay",
-		fmt.Sprintf("<p>Hi %s,</p><p>Click the link below to reset your password. It expires in 1 hour:</p><p><a href=%q>Reset password</a></p>", displayName, link))
+	body, err := renderEmail(resetTmpl, displayName, link)
+	if err != nil {
+		return fmt.Errorf("render password reset email: %w", err)
+	}
+	return r.send(ctx, to, "Reset your password — Tendersbay", body)
 }
 
 func (r *ResendSender) SendEmailChangeVerification(ctx context.Context, to, displayName, link string) error {
-	return r.send(ctx, to, "Confirm your new email — Tendersbay",
-		fmt.Sprintf("<p>Hi %s,</p><p>Click the link below to confirm your new email address:</p><p><a href=%q>Confirm email</a></p>", displayName, link))
+	body, err := renderEmail(changeEmailTmpl, displayName, link)
+	if err != nil {
+		return fmt.Errorf("render email change email: %w", err)
+	}
+	return r.send(ctx, to, "Confirm your new email — Tendersbay", body)
 }
 
 func (r *ResendSender) send(ctx context.Context, to, subject, html string) error {
