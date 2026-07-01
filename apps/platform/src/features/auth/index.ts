@@ -1,5 +1,5 @@
-export { LoginPage } from './components/pages/login'
-export { SignupPage } from './components/pages/signup'
-export { ForgotPasswordPage } from './components/pages/forgot-password'
-export { VerifyEmailPage } from './components/pages/verify-email'
-export { ResetPasswordPage } from './components/pages/reset-password'
+export { ForgotPasswordPage } from './components/pages/forgot-password';
+export { LoginPage } from './components/pages/login';
+export { ResetPasswordPage } from './components/pages/reset-password';
+export { SignupPage } from './components/pages/signup';
+export { VerifyEmailPage } from './components/pages/verify-email';
