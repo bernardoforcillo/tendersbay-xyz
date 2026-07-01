@@ -57,7 +57,17 @@ func main() {
 	evRepo := postgres.NewEVRepo(db)
 	prRepo := postgres.NewPRRepo(db)
 
-	mailer := email.NewResend(cfg.ResendAPIKey, "noreply@tendersbay.xyz")
+	var mailer interface {
+		SendVerification(ctx context.Context, to, displayName, link string) error
+		SendPasswordReset(ctx context.Context, to, displayName, link string) error
+		SendEmailChangeVerification(ctx context.Context, to, displayName, link string) error
+	}
+	if cfg.ResendAPIKey == "" {
+		slog.Warn("RESEND_API_KEY not set — emails will be logged to stdout only")
+		mailer = email.NewLog()
+	} else {
+		mailer = email.NewResend(cfg.ResendAPIKey, "noreply@tendersbay.xyz")
+	}
 
 	authCfg := auth.Config{
 		JWTSecret:     cfg.JWTSecret,
