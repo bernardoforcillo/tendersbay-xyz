@@ -1,5 +1,5 @@
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
 import { authClient } from '~/lib/api/client';
@@ -12,12 +12,17 @@ export function VerifyEmailPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  // Prevent React strict-mode double-invocation: the first call deletes the
+  // token from the DB; a second call immediately after would fail with "invalid".
+  const called = useRef(false);
 
   useEffect(() => {
     if (!token || !type) {
       setStatus('error');
       return;
     }
+    if (called.current) return;
+    called.current = true;
     authClient
       .verifyEmail({ token, type })
       .then(async () => {
