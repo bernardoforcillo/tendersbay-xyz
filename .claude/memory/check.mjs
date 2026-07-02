@@ -25,7 +25,8 @@ for (const file of pages) {
   const block = fm[1];
   if (!/^name:\s*\S/m.test(block)) problems.push(`${file}: missing 'name'`);
   if (!/^description:\s*\S/m.test(block)) problems.push(`${file}: missing 'description'`);
-  if (!/^\s*type:\s*\S/m.test(block)) problems.push(`${file}: missing 'metadata.type'`);
+  if (!/^metadata:/m.test(block) || !/^\s+type:\s*\S/m.test(block))
+    problems.push(`${file}: missing 'metadata.type' (must be nested under 'metadata:')`);
   const nameMatch = block.match(/^name:\s*(\S+)/m);
   if (nameMatch && nameMatch[1] !== slug)
     problems.push(`${file}: name '${nameMatch[1]}' != slug '${slug}'`);
