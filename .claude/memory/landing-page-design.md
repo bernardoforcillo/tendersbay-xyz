@@ -43,9 +43,7 @@ functional) with a sparkle icon, a **looping localized placeholder** of detailed
 example queries (`landing.search.examples`, rotated by `useRotatingPlaceholder`), and a
 hover/focus hint "AI-powered search — coming soon" (`landing.search.hint`). Fades out over
 the footer via `useHideNearFooter` (IntersectionObserver on `#site-footer`). Disabled-but-
-focusable RAC `Button` (`aria-disabled`, no-op `onPress`). Built under a parallel-WIP commit
-hygiene discipline (the user edits in parallel; stage only the files a change touches, never
-`git add -A`).
+focusable RAC `Button` (`aria-disabled`, no-op `onPress`).
 
 **Copy re-architecture (2026-06-26, persona-led + cutting tone):** the landing was
 rewritten for max "desire at the end", driven by the buyer-personas + vertical study

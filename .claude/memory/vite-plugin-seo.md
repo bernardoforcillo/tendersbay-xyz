@@ -36,6 +36,3 @@ Spec + plan are local-only/gitignored at
   asserted by presence not value; sitemap `toContain` wouldn't catch a split-alternate bug;
   `generateBundle` file-emission only covered e2e; flat-route convention untested.
 - `routeMeta.changefreq` typed as plain `string` (could be the sitemap frequency union).
-
-Built under the same parallel-WIP commit-hygiene discipline as the rest of the repo (stage
-only the files a change touches, never `git add -A`), following the user's usual SDD flow.
