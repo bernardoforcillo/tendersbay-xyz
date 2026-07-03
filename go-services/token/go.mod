@@ -2,4 +2,4 @@ module github.com/bernardoforcillo/tendersbay-xyz/go-services/token
 
 go 1.26
 
-require github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
+require github.com/golang-jwt/jwt/v5 v5.3.1

@@ -10,12 +10,17 @@ export function initAnalytics(): PostHog | null {
   if (client) {
     return client;
   }
-  const key = import.meta.env.VITE_POSTHOG_KEY;
+  // Prefer runtime config injected by the Go server (window.__ENV__); fall back
+  // to the build-time value (Vite/.env) in dev.
+  const key = window.__ENV__?.POSTHOG_KEY ?? import.meta.env.VITE_POSTHOG_KEY;
   if (!key) {
     return null;
   }
   posthog.init(key, {
-    api_host: import.meta.env.VITE_POSTHOG_HOST ?? 'https://eu.i.posthog.com',
+    api_host:
+      window.__ENV__?.POSTHOG_HOST ??
+      import.meta.env.VITE_POSTHOG_HOST ??
+      'https://eu.i.posthog.com',
     opt_out_capturing_by_default: true,
     autocapture: true,
     capture_pageview: 'history_change',

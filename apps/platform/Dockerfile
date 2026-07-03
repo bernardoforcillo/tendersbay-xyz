@@ -18,13 +18,9 @@ RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the sources and build only the frontend (not `go build`).
 COPY . .
-# PostHog client key is baked into the bundle at build time. phc_… is a public
-# project key (it ships in client JS), so the plaintext default is intentional;
-# override the ARG only to point at a different project.
-ARG VITE_POSTHOG_KEY="phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C"
-ARG VITE_POSTHOG_HOST="https://eu.i.posthog.com"
-ENV VITE_POSTHOG_KEY=$VITE_POSTHOG_KEY
-ENV VITE_POSTHOG_HOST=$VITE_POSTHOG_HOST
+# Client config (API URL, PostHog) is provided at runtime by the Go server via
+# window.__ENV__ (see internal/server), so nothing is baked into the bundle here.
+# A dev/build-time value can still be supplied through apps/platform/.env.
 RUN pnpm --filter platform exec vite build
 
 # ---- Stage 2: compile the Go binary that embeds dist ----
