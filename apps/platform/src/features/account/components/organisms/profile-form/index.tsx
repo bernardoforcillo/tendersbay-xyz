@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Button, FieldError, Form, Input, Label, TextField } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
-import { AccountLayout } from '~/features/account/components/templates/account-layout';
+import { SettingsSection } from '~/features/account/components/organisms/settings-section';
 import { userClient } from '~/lib/api/client';
 import { type AuthUser, useAuthStore } from '~/store/auth';
 
@@ -10,7 +10,7 @@ const INPUT =
 const BTN =
   'mt-2 w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition data-[hovered]:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-60';
 
-export function ProfilePage() {
+export function ProfileForm() {
   const { t } = useTranslation();
   const { user, setAuth, accessToken } = useAuthStore();
   const [error, setError] = useState<string | null>(null);
@@ -42,11 +42,14 @@ export function ProfilePage() {
   }
 
   return (
-    <AccountLayout
+    <SettingsSection
       title={t('account.profile.title', 'Profile')}
-      description={t('account.profile.description', 'Update your display name.')}
+      description={t(
+        'account.profile.description',
+        'Update your display name and how others see you.',
+      )}
     >
-      <div className="mb-6 flex items-center gap-3">
+      <div className="mb-5 flex items-center gap-4">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-100 text-lg font-bold text-brand-700">
           {(user?.displayName?.[0] ?? user?.email?.[0] ?? '?').toUpperCase()}
         </div>
@@ -87,6 +90,6 @@ export function ProfilePage() {
             : t('account.profile.submit', 'Save changes')}
         </Button>
       </Form>
-    </AccountLayout>
+    </SettingsSection>
   );
 }

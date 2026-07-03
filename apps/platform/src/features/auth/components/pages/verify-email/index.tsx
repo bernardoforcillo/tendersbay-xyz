@@ -28,7 +28,7 @@ export function VerifyEmailPage() {
       .then(async () => {
         setStatus('success');
         await new Promise((r) => setTimeout(r, 2000));
-        await navigate({ to: '/account/profile' });
+        await navigate({ to: '/' });
       })
       .catch(() => setStatus('error'));
   }, [token, type, navigate]);

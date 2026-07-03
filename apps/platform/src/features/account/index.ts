@@ -1,4 +1,3 @@
-export { ChangeEmailPage } from './components/pages/change-email';
-export { ChangePasswordPage } from './components/pages/change-password';
-export { DeleteAccountPage } from './components/pages/delete';
-export { ProfilePage } from './components/pages/profile';
+export { AccountExplorePage } from './components/pages/explore';
+export { AccountOverviewPage } from './components/pages/overview';
+export { AccountSettingsPage } from './components/pages/settings';

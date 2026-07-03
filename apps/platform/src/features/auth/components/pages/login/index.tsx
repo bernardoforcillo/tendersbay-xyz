@@ -33,7 +33,7 @@ export function LoginPage() {
         email: res.user?.email ?? '',
         displayName: res.user?.displayName ?? '',
       });
-      await navigate({ to: '/account/profile' });
+      await navigate({ to: '/' });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
