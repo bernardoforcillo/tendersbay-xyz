@@ -39,6 +39,9 @@ spec:
             requests:
               memory: '64Mi'
               cpu: '10m'
+          envFrom:
+            - secretRef:
+                name: backend-canary-secrets
           env:
             - name: PORT
               value: '8080'
@@ -49,6 +52,13 @@ spec:
               value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
             - name: POSTHOG_HOST
               value: 'https://eu.i.posthog.com'
+            # Non-secret app config — kept in plaintext here, out of the Secret.
+            - name: APP_BASE_URL
+              value: 'https://dev.tendersbay.xyz'
+            - name: JWT_EXPIRY
+              value: '15m'
+            - name: REFRESH_EXPIRY
+              value: '168h'
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

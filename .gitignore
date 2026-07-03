@@ -42,3 +42,8 @@ docs/superpowers/
 
 # Browser-automation scratch (screenshots, snapshots) from MCP/Playwright
 .playwright-mcp/
+
+# Kubernetes secrets applied out-of-band (real values, NEVER committed).
+# The committed *secret.yaml under infrastructure/ are empty templates only.
+local.secret.yaml
+*.local.secret.yaml

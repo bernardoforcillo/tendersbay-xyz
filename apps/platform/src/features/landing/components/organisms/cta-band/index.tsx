@@ -1,11 +1,11 @@
+import { Link as RouterLink } from '@tanstack/react-router';
 import { motion } from 'motion/react';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '~/features/landing/components/atoms';
 import { useKineticBlock } from '~/features/landing/motion';
 
 export function CtaBand() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const sectionRef = useRef<HTMLElement>(null);
   const kinetic = useKineticBlock(sectionRef);
 
@@ -25,9 +25,13 @@ export function CtaBand() {
           <p className="mt-4 text-[15px] leading-relaxed text-brand-50 md:text-base">
             {t('landing.cta.body')}
           </p>
-          <Button href="#top" variant="invert" className="mt-8">
+          <RouterLink
+            to="/$locale/auth/signup"
+            params={{ locale: i18n.language }}
+            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-7 py-4 text-sm font-bold text-brand-700 no-underline shadow-lg shadow-brand-950/20 transition-colors hover:bg-cream-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-700"
+          >
             {t('landing.cta.button')}
-          </Button>
+          </RouterLink>
         </div>
       </motion.div>
     </section>

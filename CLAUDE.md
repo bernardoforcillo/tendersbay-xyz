@@ -61,6 +61,16 @@ Kubernetes deployment lives in `infrastructure/kubernetes/`, reconciled by Flux
 hardening, and image-automation conventions are documented in
 @.claude/rules/infrastructure.md.
 
+## Memory wiki
+
+Project knowledge accumulates in `.claude/memory/` — a committed markdown wiki
+maintained by the `capture-learnings` skill. Its conventions (page format, routing,
+ingest/lint operations) are documented in @.claude/rules/memory-wiki.md.
+
+The catalog is imported here so it loads every session:
+
+@.claude/memory/index.md
+
 - Use **pnpm only** — never npm or yarn. Add root dev deps with `pnpm add -Dw <pkg>`;
   add to a workspace with `pnpm add <pkg> --filter <workspace>`.
 - **Dependency build scripts are gated.** This repo treats ignored build scripts as a hard

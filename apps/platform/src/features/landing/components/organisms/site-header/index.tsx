@@ -1,5 +1,7 @@
+import { Link as RouterLink } from '@tanstack/react-router';
 import { motion, useReducedMotion } from 'motion/react';
 import { Link } from 'react-aria-components';
+import { useTranslation } from 'react-i18next';
 import { Logo } from '~/features/landing/components/atoms';
 import { LanguageSwitcher, NavLinks } from '~/features/landing/components/molecules';
 import { useScrolled } from './use-scrolled';
@@ -13,6 +15,8 @@ const NO_SHADOW = '0 4px 8px rgba(19, 50, 44, 0), 0 22px 48px rgba(19, 50, 44, 0
 export function SiteHeader() {
   const scrolled = useScrolled();
   const reduce = useReducedMotion();
+  const { i18n } = useTranslation();
+  const locale = i18n.language;
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3">
@@ -36,7 +40,23 @@ export function SiteHeader() {
           <Logo />
         </Link>
         <NavLinks className="hidden md:flex" />
-        <LanguageSwitcher />
+        <div className="flex items-center gap-2">
+          <RouterLink
+            to="/$locale/auth/login"
+            params={{ locale }}
+            className="hidden rounded-full px-4 py-2 text-sm font-semibold text-ink-700 no-underline transition-colors hover:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 sm:inline-flex"
+          >
+            Log in
+          </RouterLink>
+          <RouterLink
+            to="/$locale/auth/signup"
+            params={{ locale }}
+            className="inline-flex rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
+          >
+            Sign up
+          </RouterLink>
+          <LanguageSwitcher />
+        </div>
       </motion.div>
     </header>
   );

@@ -20,12 +20,15 @@ resources:
   - tendersbay-xyz/platform/canary/middleware.yaml
   - tendersbay-xyz/platform/canary/update.yaml
   # backend app — stable channel -> api.tendersbay.xyz
+  # NB: backend-secrets is applied out-of-band (kubectl), NOT via Flux —
+  # prune=true would zero real values on reconcile. See backend/readme.md.
   - tendersbay-xyz/backend/main/deployment.yaml
   - tendersbay-xyz/backend/main/service.yaml
   - tendersbay-xyz/backend/main/certificate.yaml
   - tendersbay-xyz/backend/main/ingress.yaml
   - tendersbay-xyz/backend/main/update.yaml
   # backend app — canary channel -> api.dev.tendersbay.xyz
+  # backend-canary-secrets is applied out-of-band (kubectl) — see backend/readme.md.
   - tendersbay-xyz/backend/canary/deployment.yaml
   - tendersbay-xyz/backend/canary/service.yaml
   - tendersbay-xyz/backend/canary/certificate.yaml

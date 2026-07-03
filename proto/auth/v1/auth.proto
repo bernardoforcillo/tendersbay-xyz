@@ -1,0 +1,64 @@
+syntax = "proto3";
+package auth.v1;
+
+option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1;authv1";
+
+service AuthService {
+  rpc SignUp(SignUpRequest) returns (SignUpResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
+  rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailResponse);
+}
+
+message UserInfo {
+  string id = 1;
+  string email = 2;
+  string display_name = 3;
+}
+
+message SignUpRequest {
+  string email = 1;
+  string password = 2;
+  string display_name = 3;
+  string locale = 4;
+}
+message SignUpResponse {}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+message LoginResponse {
+  string access_token = 1;
+  UserInfo user = 2;
+}
+
+message LogoutRequest {}
+message LogoutResponse {}
+
+message RefreshTokenRequest {}
+message RefreshTokenResponse {
+  string access_token = 1;
+  UserInfo user = 2;
+}
+
+message ForgotPasswordRequest {
+  string email = 1;
+  string locale = 2;
+}
+message ForgotPasswordResponse {}
+
+message ResetPasswordRequest {
+  string token = 1;
+  string new_password = 2;
+}
+message ResetPasswordResponse {}
+
+message VerifyEmailRequest {
+  string token = 1;
+  string type = 2;
+}
+message VerifyEmailResponse {}
