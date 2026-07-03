@@ -6,6 +6,9 @@ on:
     branches: [main, dev]
     paths:
       - 'services/backend/**'
+      - 'go-services/**'
+      - 'go.work'
+      - 'go.work.sum'
       - 'pnpm-lock.yaml'
       - 'pnpm-workspace.yaml'
       - 'turbo.json'
@@ -69,7 +72,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: services/backend
+          context: .
           file: services/backend/Dockerfile
           push: true
           tags: ${{ steps.tags.outputs.tags }}
