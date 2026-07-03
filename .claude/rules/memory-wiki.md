@@ -35,7 +35,7 @@ page yet is a to-write marker. For project pages, prefer stating the why.>
 - `index.md` — content catalog, categorized, one line per page:
   `- [Title](slug.md) — hook`. Every page appears exactly once. `@`-imported by CLAUDE.md.
 - `log.md` — append-only. Entry prefix `## [YYYY-MM-DD] <op> | <topic>` where `<op>` is
-  `ingest`, `lint`, `migrate`, or `query`.
+  `ingest`, `lint`, or `migrate`.
 
 ## Operations (run by the capture-learnings skill)
 

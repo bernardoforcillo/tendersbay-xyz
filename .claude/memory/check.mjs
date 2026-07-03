@@ -25,10 +25,12 @@ for (const file of pages) {
   const block = fm[1];
   if (!/^name:\s*\S/m.test(block)) problems.push(`${file}: missing 'name'`);
   if (!/^description:\s*\S/m.test(block)) problems.push(`${file}: missing 'description'`);
-  if (!/^metadata:/m.test(block) || !/^\s+type:\s*\S/m.test(block))
-    problems.push(`${file}: missing 'metadata.type' (must be nested under 'metadata:')`);
-  const nameMatch = block.match(/^name:\s*(\S+)/m);
-  if (nameMatch && nameMatch[1] !== slug)
+  const metaBlock = block.match(/^metadata:[^\n]*\n((?:[ \t]+.*\n?)*)/m);
+  if (!metaBlock || !/^[ \t]+type:[ \t]*\S/m.test(metaBlock[1]))
+    problems.push(`${file}: missing 'metadata.type' (type must be nested under 'metadata:')`);
+  const nameMatch = block.match(/^name:\s*["']?([a-z0-9-]+)["']?\s*$/m);
+  if (!nameMatch) problems.push(`${file}: 'name' must be a bare kebab-case slug`);
+  else if (nameMatch[1] !== slug)
     problems.push(`${file}: name '${nameMatch[1]}' != slug '${slug}'`);
 }
 
