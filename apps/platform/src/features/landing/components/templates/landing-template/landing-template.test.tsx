@@ -1,8 +1,12 @@
 import { screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithI18n } from '~/test/utils';
 
-vi.mock('@tanstack/react-router', () => ({ useNavigate: () => vi.fn() }));
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => vi.fn(),
+  Link: ({ to, children }: { to: string; children?: ReactNode }) => <a href={to}>{children}</a>,
+}));
 
 import { LandingTemplate } from './index';
 
