@@ -1,4 +1,4 @@
-import { createFileRoute, redirect, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 import { detectLocale } from '~/i18n/detect-locale';
 
 export const Route = createFileRoute('/_authenticated')({

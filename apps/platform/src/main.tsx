@@ -11,9 +11,9 @@ import {
 import { ConsentProvider, CookieConsentBanner } from '~/features/consent';
 import { i18n } from '~/i18n';
 import { authClient } from '~/lib/api/client';
+import { routeTree } from '~/routeTree.gen';
 import { useAuthStore } from '~/store/auth';
 import { isTokenExpired } from '~/store/auth/utils';
-import { routeTree } from '~/routeTree.gen';
 import '~/index.css';
 
 initAnalytics();
@@ -40,10 +40,11 @@ async function bootstrap() {
   if (!accessToken || isTokenExpired(accessToken)) {
     try {
       const res = await authClient.refreshToken({});
+      if (!res.user) throw new Error('refreshToken response missing user');
       setAuth(res.accessToken, {
-        id: res.user!.id,
-        email: res.user!.email,
-        displayName: res.user!.displayName,
+        id: res.user.id,
+        email: res.user.email,
+        displayName: res.user.displayName,
       });
     } catch {
       clearAuth();
