@@ -11,8 +11,13 @@ const authInterceptor: Interceptor = (next) => async (req) => {
   return next(req);
 };
 
+// Prefer runtime config injected by the Go server (window.__ENV__) so one image
+// serves every environment; fall back to the build-time value (Vite/.env) in dev,
+// then a localhost default so a missing value never crashes the RPC layer.
+const baseUrl = window.__ENV__?.API_URL ?? import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+
 const transport = createConnectTransport({
-  baseUrl: import.meta.env.VITE_API_URL,
+  baseUrl,
   fetch: (input, init) => globalThis.fetch(input, { ...init, credentials: 'include' }),
   interceptors: [authInterceptor],
 });

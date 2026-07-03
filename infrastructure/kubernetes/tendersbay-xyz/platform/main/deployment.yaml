@@ -47,6 +47,9 @@ spec:
           env:
             - name: PORT
               value: '8080'
+            # ConnectRPC backend the browser calls; injected into window.__ENV__.
+            - name: API_URL
+              value: 'https://api.tendersbay.xyz'
             # PostHog project key is a public client key (phc_…); plaintext is fine.
             - name: POSTHOG_API_KEY
               value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'

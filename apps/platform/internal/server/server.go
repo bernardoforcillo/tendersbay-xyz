@@ -3,9 +3,12 @@
 package server
 
 import (
+	"bytes"
+	"encoding/json"
 	"io/fs"
 	"log/slog"
 	"net/http"
+	"os"
 	"path"
 	"strings"
 	"time"
@@ -16,12 +19,25 @@ import (
 // exist falls back to index.html when it has no file extension (so client-side
 // SPA routes resolve); a missing path that looks like an asset returns 404.
 func New(fsys fs.FS) http.Handler {
+	index, err := indexHTML(fsys)
+	if err != nil {
+		slog.Error("failed to prepare index.html", "error", err)
+	}
+
 	fileServer := http.FileServer(http.FS(fsys))
 
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := strings.TrimPrefix(path.Clean(r.URL.Path), "/")
 		if name == "" {
 			name = "index.html"
+		}
+
+		// index.html carries runtime config injected from the environment, so it
+		// is always served from the prepared bytes — never straight off the file
+		// server, which would return the un-injected embedded copy.
+		if name == "index.html" {
+			serveIndex(w, r, index)
+			return
 		}
 
 		if fileExists(fsys, name) {
@@ -34,7 +50,7 @@ func New(fsys fs.FS) http.Handler {
 			return
 		}
 
-		serveIndex(w, r, fsys)
+		serveIndex(w, r, index)
 	})
 
 	return withLogging(handler)
@@ -45,14 +61,57 @@ func fileExists(fsys fs.FS, name string) bool {
 	return err == nil && !info.IsDir()
 }
 
-func serveIndex(w http.ResponseWriter, r *http.Request, fsys fs.FS) {
-	data, err := fs.ReadFile(fsys, "index.html")
-	if err != nil {
+func serveIndex(w http.ResponseWriter, r *http.Request, index []byte) {
+	if index == nil {
 		http.NotFound(w, r)
 		return
 	}
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	_, _ = w.Write(data)
+	_, _ = w.Write(index)
+}
+
+// indexHTML loads index.html and injects runtime configuration into the
+// window.__ENV__ placeholder, so the browser receives values such as the API
+// URL at serve time — no rebuild required. When no runtime config is set the
+// embedded bytes are returned unchanged and the app falls back to its
+// build-time (import.meta.env) configuration.
+func indexHTML(fsys fs.FS) ([]byte, error) {
+	data, err := fs.ReadFile(fsys, "index.html")
+	if err != nil {
+		return nil, err
+	}
+
+	// Client runtime config injected into window.__ENV__. The PostHog project key
+	// (phc_…) is public — it already ships in the browser bundle — so exposing it
+	// is safe; it maps from the same POSTHOG_* vars the server reads for its own
+	// telemetry.
+	env := map[string]string{}
+	putEnv(env, "API_URL", "API_URL")
+	putEnv(env, "POSTHOG_KEY", "POSTHOG_API_KEY")
+	putEnv(env, "POSTHOG_HOST", "POSTHOG_HOST")
+	if len(env) == 0 {
+		return data, nil
+	}
+
+	// json.Marshal HTML-escapes <, >, & so the value cannot break out of the
+	// surrounding <script> element.
+	encoded, err := json.Marshal(env)
+	if err != nil {
+		return data, nil
+	}
+	return bytes.Replace(
+		data,
+		[]byte("window.__ENV__ = {}"),
+		[]byte("window.__ENV__ = "+string(encoded)),
+		1,
+	), nil
+}
+
+// putEnv copies a non-empty environment variable into m under key.
+func putEnv(m map[string]string, key, envVar string) {
+	if v := os.Getenv(envVar); v != "" {
+		m[key] = v
+	}
 }
 
 // statusRecorder captures the status code written to the response.
