@@ -34,3 +34,13 @@ spec:
         protocol: TCP
       - port: "443"
         protocol: TCP
+  # Backend -> CloudNativePG cluster (postgres ns) on 5432. Scoped to the
+  # CNPG cluster pods so only Postgres traffic is allowed cross-namespace.
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: postgres
+        cnpg.io/cluster: postgres-cluster
+    toPorts:
+    - ports:
+      - port: "5432"
+        protocol: TCP

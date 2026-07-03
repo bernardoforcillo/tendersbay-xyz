@@ -13,12 +13,15 @@ afterEach(() => {
 // jsdom window, with the `url` set in vitest.config.ts so Storage initializes).
 // Note: the setup-scope `window` is not jsdom's window instance here, so we
 // reach the working Storage through vitest's jsdom handle.
-if (typeof localStorage === 'undefined') {
-  // biome-ignore lint/suspicious/noExplicitAny: reaching vitest's jsdom window for test env setup
-  const jsdomWindow = (global as any).jsdom?.window;
-  if (jsdomWindow?.localStorage) {
-    vi.stubGlobal('localStorage', jsdomWindow.localStorage);
-  }
+// biome-ignore lint/suspicious/noExplicitAny: reaching vitest's jsdom window for test env setup
+const jsdomWindow = (global as any).jsdom?.window;
+// Node 24+ exposes native localStorage/sessionStorage globals as undefined, shadowing jsdom's.
+// Bridge both to jsdom's real Storage instances so Zustand persist works in tests.
+if (typeof localStorage === 'undefined' && jsdomWindow?.localStorage) {
+  vi.stubGlobal('localStorage', jsdomWindow.localStorage);
+}
+if (typeof sessionStorage === 'undefined' && jsdomWindow?.sessionStorage) {
+  vi.stubGlobal('sessionStorage', jsdomWindow.sessionStorage);
 }
 
 // jsdom lacks matchMedia (used by reduced-motion checks) — provide a default mock.

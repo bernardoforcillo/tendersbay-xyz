@@ -1,0 +1,16 @@
+{
+  "name": "@tendersbay/proto",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./auth/v1/auth_pb": "./src/gen/auth/v1/auth_pb.js",
+    "./auth/v1/auth_connect": "./src/gen/auth/v1/auth_connect.js",
+    "./user/v1/user_pb": "./src/gen/user/v1/user_pb.js",
+    "./user/v1/user_connect": "./src/gen/user/v1/user_connect.js"
+  },
+  "peerDependencies": {
+    "@bufbuild/protobuf": "^2.0.0",
+    "@connectrpc/connect": "^2.0.0"
+  }
+}

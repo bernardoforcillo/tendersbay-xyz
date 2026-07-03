@@ -9,10 +9,27 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedExploreIndexRouteImport } from './routes/_authenticated/explore/index'
+import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings/profile'
+import { Route as AuthenticatedSettingsDeleteRouteImport } from './routes/_authenticated/settings/delete'
+import { Route as AuthenticatedSettingsChangePasswordRouteImport } from './routes/_authenticated/settings/change-password'
+import { Route as AuthenticatedSettingsChangeEmailRouteImport } from './routes/_authenticated/settings/change-email'
+import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as LocaleAuthVerifyEmailRouteImport } from './routes/$locale/auth/verify-email'
+import { Route as LocaleAuthSignupRouteImport } from './routes/$locale/auth/signup'
+import { Route as LocaleAuthResetPasswordRouteImport } from './routes/$locale/auth/reset-password'
+import { Route as LocaleAuthLoginRouteImport } from './routes/$locale/auth/login'
+import { Route as LocaleAuthForgotPasswordRouteImport } from './routes/$locale/auth/forgot-password'
 
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LocaleRouteRoute = LocaleRouteRouteImport.update({
   id: '/$locale',
   path: '/$locale',
@@ -28,37 +45,196 @@ const LocaleIndexRoute = LocaleIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedExploreIndexRoute =
+  AuthenticatedExploreIndexRouteImport.update({
+    id: '/explore/',
+    path: '/explore/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSettingsProfileRoute =
+  AuthenticatedSettingsProfileRouteImport.update({
+    id: '/settings/profile',
+    path: '/settings/profile',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSettingsDeleteRoute =
+  AuthenticatedSettingsDeleteRouteImport.update({
+    id: '/settings/delete',
+    path: '/settings/delete',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSettingsChangePasswordRoute =
+  AuthenticatedSettingsChangePasswordRouteImport.update({
+    id: '/settings/change-password',
+    path: '/settings/change-password',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSettingsChangeEmailRoute =
+  AuthenticatedSettingsChangeEmailRouteImport.update({
+    id: '/settings/change-email',
+    path: '/settings/change-email',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSettingsAccountRoute =
+  AuthenticatedSettingsAccountRouteImport.update({
+    id: '/settings/account',
+    path: '/settings/account',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const LocaleAuthVerifyEmailRoute = LocaleAuthVerifyEmailRouteImport.update({
+  id: '/auth/verify-email',
+  path: '/auth/verify-email',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleAuthSignupRoute = LocaleAuthSignupRouteImport.update({
+  id: '/auth/signup',
+  path: '/auth/signup',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleAuthResetPasswordRoute = LocaleAuthResetPasswordRouteImport.update({
+  id: '/auth/reset-password',
+  path: '/auth/reset-password',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleAuthLoginRoute = LocaleAuthLoginRouteImport.update({
+  id: '/auth/login',
+  path: '/auth/login',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const LocaleAuthForgotPasswordRoute =
+  LocaleAuthForgotPasswordRouteImport.update({
+    id: '/auth/forgot-password',
+    path: '/auth/forgot-password',
+    getParentRoute: () => LocaleRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/$locale/': typeof LocaleIndexRoute
+  '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
+  '/$locale/auth/login': typeof LocaleAuthLoginRoute
+  '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
+  '/$locale/auth/signup': typeof LocaleAuthSignupRoute
+  '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/settings/account': typeof AuthenticatedSettingsAccountRoute
+  '/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
+  '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
+  '/settings/delete': typeof AuthenticatedSettingsDeleteRoute
+  '/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/explore/': typeof AuthenticatedExploreIndexRoute
+  '/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleIndexRoute
+  '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
+  '/$locale/auth/login': typeof LocaleAuthLoginRoute
+  '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
+  '/$locale/auth/signup': typeof LocaleAuthSignupRoute
+  '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/settings/account': typeof AuthenticatedSettingsAccountRoute
+  '/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
+  '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
+  '/settings/delete': typeof AuthenticatedSettingsDeleteRoute
+  '/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/explore': typeof AuthenticatedExploreIndexRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/$locale/': typeof LocaleIndexRoute
+  '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
+  '/$locale/auth/login': typeof LocaleAuthLoginRoute
+  '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
+  '/$locale/auth/signup': typeof LocaleAuthSignupRoute
+  '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
+  '/_authenticated/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
+  '/_authenticated/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
+  '/_authenticated/settings/delete': typeof AuthenticatedSettingsDeleteRoute
+  '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/_authenticated/explore/': typeof AuthenticatedExploreIndexRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$locale' | '/$locale/'
+  fullPaths:
+    | '/'
+    | '/$locale'
+    | '/$locale/'
+    | '/$locale/auth/forgot-password'
+    | '/$locale/auth/login'
+    | '/$locale/auth/reset-password'
+    | '/$locale/auth/signup'
+    | '/$locale/auth/verify-email'
+    | '/settings/account'
+    | '/settings/change-email'
+    | '/settings/change-password'
+    | '/settings/delete'
+    | '/settings/profile'
+    | '/explore/'
+    | '/settings/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$locale'
-  id: '__root__' | '/' | '/$locale' | '/$locale/'
+  to:
+    | '/'
+    | '/$locale'
+    | '/$locale/auth/forgot-password'
+    | '/$locale/auth/login'
+    | '/$locale/auth/reset-password'
+    | '/$locale/auth/signup'
+    | '/$locale/auth/verify-email'
+    | '/settings/account'
+    | '/settings/change-email'
+    | '/settings/change-password'
+    | '/settings/delete'
+    | '/settings/profile'
+    | '/explore'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/$locale'
+    | '/_authenticated'
+    | '/$locale/'
+    | '/$locale/auth/forgot-password'
+    | '/$locale/auth/login'
+    | '/$locale/auth/reset-password'
+    | '/$locale/auth/signup'
+    | '/$locale/auth/verify-email'
+    | '/_authenticated/settings/account'
+    | '/_authenticated/settings/change-email'
+    | '/_authenticated/settings/change-password'
+    | '/_authenticated/settings/delete'
+    | '/_authenticated/settings/profile'
+    | '/_authenticated/explore/'
+    | '/_authenticated/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$locale': {
       id: '/$locale'
       path: '/$locale'
@@ -80,24 +256,144 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleIndexRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/explore/': {
+      id: '/_authenticated/explore/'
+      path: '/explore'
+      fullPath: '/explore/'
+      preLoaderRoute: typeof AuthenticatedExploreIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/profile': {
+      id: '/_authenticated/settings/profile'
+      path: '/settings/profile'
+      fullPath: '/settings/profile'
+      preLoaderRoute: typeof AuthenticatedSettingsProfileRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/delete': {
+      id: '/_authenticated/settings/delete'
+      path: '/settings/delete'
+      fullPath: '/settings/delete'
+      preLoaderRoute: typeof AuthenticatedSettingsDeleteRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/change-password': {
+      id: '/_authenticated/settings/change-password'
+      path: '/settings/change-password'
+      fullPath: '/settings/change-password'
+      preLoaderRoute: typeof AuthenticatedSettingsChangePasswordRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/change-email': {
+      id: '/_authenticated/settings/change-email'
+      path: '/settings/change-email'
+      fullPath: '/settings/change-email'
+      preLoaderRoute: typeof AuthenticatedSettingsChangeEmailRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/account': {
+      id: '/_authenticated/settings/account'
+      path: '/settings/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/$locale/auth/verify-email': {
+      id: '/$locale/auth/verify-email'
+      path: '/auth/verify-email'
+      fullPath: '/$locale/auth/verify-email'
+      preLoaderRoute: typeof LocaleAuthVerifyEmailRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/auth/signup': {
+      id: '/$locale/auth/signup'
+      path: '/auth/signup'
+      fullPath: '/$locale/auth/signup'
+      preLoaderRoute: typeof LocaleAuthSignupRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/auth/reset-password': {
+      id: '/$locale/auth/reset-password'
+      path: '/auth/reset-password'
+      fullPath: '/$locale/auth/reset-password'
+      preLoaderRoute: typeof LocaleAuthResetPasswordRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/auth/login': {
+      id: '/$locale/auth/login'
+      path: '/auth/login'
+      fullPath: '/$locale/auth/login'
+      preLoaderRoute: typeof LocaleAuthLoginRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/auth/forgot-password': {
+      id: '/$locale/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/$locale/auth/forgot-password'
+      preLoaderRoute: typeof LocaleAuthForgotPasswordRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
   }
 }
 
 interface LocaleRouteRouteChildren {
   LocaleIndexRoute: typeof LocaleIndexRoute
+  LocaleAuthForgotPasswordRoute: typeof LocaleAuthForgotPasswordRoute
+  LocaleAuthLoginRoute: typeof LocaleAuthLoginRoute
+  LocaleAuthResetPasswordRoute: typeof LocaleAuthResetPasswordRoute
+  LocaleAuthSignupRoute: typeof LocaleAuthSignupRoute
+  LocaleAuthVerifyEmailRoute: typeof LocaleAuthVerifyEmailRoute
 }
 
 const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleIndexRoute: LocaleIndexRoute,
+  LocaleAuthForgotPasswordRoute: LocaleAuthForgotPasswordRoute,
+  LocaleAuthLoginRoute: LocaleAuthLoginRoute,
+  LocaleAuthResetPasswordRoute: LocaleAuthResetPasswordRoute,
+  LocaleAuthSignupRoute: LocaleAuthSignupRoute,
+  LocaleAuthVerifyEmailRoute: LocaleAuthVerifyEmailRoute,
 }
 
 const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
   LocaleRouteRouteChildren,
 )
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
+  AuthenticatedSettingsChangeEmailRoute: typeof AuthenticatedSettingsChangeEmailRoute
+  AuthenticatedSettingsChangePasswordRoute: typeof AuthenticatedSettingsChangePasswordRoute
+  AuthenticatedSettingsDeleteRoute: typeof AuthenticatedSettingsDeleteRoute
+  AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
+  AuthenticatedExploreIndexRoute: typeof AuthenticatedExploreIndexRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
+  AuthenticatedSettingsChangeEmailRoute: AuthenticatedSettingsChangeEmailRoute,
+  AuthenticatedSettingsChangePasswordRoute:
+    AuthenticatedSettingsChangePasswordRoute,
+  AuthenticatedSettingsDeleteRoute: AuthenticatedSettingsDeleteRoute,
+  AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
+  AuthenticatedExploreIndexRoute: AuthenticatedExploreIndexRoute,
+  AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LocaleRouteRoute: LocaleRouteRouteWithChildren,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
