@@ -4,12 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { AccountLayout } from '~/features/account/components/templates/account-layout';
 import { WorkspaceContext } from '~/features/workspace/context';
 import { useWorkspace } from '~/features/workspace/hooks';
-import { can, Permission } from '~/features/workspace/permissions';
 import { BTN_SECONDARY } from '~/features/workspace/ui';
 import { useWorkspaceStore } from '~/store/workspace';
-
-const TAB =
-  'rounded-lg px-3 py-2 text-sm font-medium text-ink-500 no-underline transition-colors hover:bg-cream-200 hover:text-ink-900 [&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
 
 export function WorkspaceLayout() {
   const { workspaceId } = useParams({ from: '/_authenticated/workspaces/$workspaceId' });
@@ -45,68 +41,11 @@ export function WorkspaceLayout() {
   }
 
   const { workspace, myPermissions } = data;
-  const canInvite =
-    can(myPermissions, Permission.CreateInvite) || can(myPermissions, Permission.ManageInvites);
-
-  const tabs = [
-    {
-      to: '/workspaces/$workspaceId',
-      key: 'overview',
-      label: t('workspace.nav.overview', 'Overview'),
-      exact: true,
-      show: true,
-    },
-    {
-      to: '/workspaces/$workspaceId/members',
-      key: 'members',
-      label: t('workspace.nav.members', 'Members'),
-      show: true,
-    },
-    {
-      to: '/workspaces/$workspaceId/roles',
-      key: 'roles',
-      label: t('workspace.nav.roles', 'Roles'),
-      show: true,
-    },
-    {
-      to: '/workspaces/$workspaceId/invites',
-      key: 'invites',
-      label: t('workspace.nav.invites', 'Invites'),
-      show: canInvite,
-    },
-    {
-      to: '/workspaces/$workspaceId/settings',
-      key: 'settings',
-      label: t('workspace.nav.settings', 'Settings'),
-      show: true,
-    },
-  ] as const;
 
   return (
     <AccountLayout>
       <WorkspaceContext.Provider value={{ workspaceId, workspace, myPermissions, refetch }}>
-        <div className="flex flex-col gap-6 p-6 lg:p-8">
-          <header className="flex flex-col gap-4">
-            <div>
-              <h1 className="font-display text-2xl text-ink-900">{workspace.name}</h1>
-              <p className="text-sm text-ink-500">/{workspace.slug}</p>
-            </div>
-            <nav className="flex flex-wrap gap-1 border-b border-cream-200 pb-2">
-              {tabs
-                .filter((tab) => tab.show)
-                .map((tab) => (
-                  <Link
-                    key={tab.key}
-                    to={tab.to}
-                    params={{ workspaceId }}
-                    activeOptions={'exact' in tab && tab.exact ? { exact: true } : undefined}
-                    className={TAB}
-                  >
-                    {tab.label}
-                  </Link>
-                ))}
-            </nav>
-          </header>
+        <div className="flex min-h-full flex-col">
           <Outlet />
         </div>
       </WorkspaceContext.Provider>
