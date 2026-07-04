@@ -1,19 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { useWorkbenchContext } from '~/features/workbench/context';
-import { CARD } from '~/features/workbench/ui';
 
 export function WorkbenchOverviewPage() {
   const { t } = useTranslation();
-  const { workbench } = useWorkbenchContext();
+  // The workbench name/description live in the layout header; the overview root
+  // is an empty surface until item types land in a later spec.
   return (
-    <div className={CARD}>
-      <h2 className="font-display text-lg text-ink-900">{workbench.name}</h2>
-      <p className="mt-1 text-sm text-ink-500">
-        {workbench.description || t('workbench.overview.noDescription', 'No description yet.')}
-      </p>
-      <span className="mt-3 inline-block rounded-full bg-cream-200 px-2 py-0.5 text-xs text-ink-600">
-        {t(`workbench.visibility.${workbench.visibility}`, workbench.visibility)}
-      </span>
-    </div>
+    <p className="text-sm text-ink-500">
+      {t('workbench.overview.empty', 'This workbench is empty for now.')}
+    </p>
   );
 }
