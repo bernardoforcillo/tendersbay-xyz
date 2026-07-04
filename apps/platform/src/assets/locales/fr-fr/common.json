@@ -282,7 +282,8 @@
       "creating": "Création…",
       "edit": "Modifier",
       "delete": "Supprimer",
-      "saved": "Enregistré"
+      "saved": "Enregistré",
+      "confirm": "Confirmer"
     },
     "nav": {
       "general": "Général",
@@ -364,7 +365,9 @@
       "deleteHint": "Supprimer définitivement cet espace collaboratif et toutes ses données.",
       "delete": "Supprimer l'espace collaboratif",
       "leaveHint": "Quitter cet espace collaboratif. Un gestionnaire pourra vous y réajouter.",
-      "leave": "Quitter l'espace collaboratif"
+      "leave": "Quitter l'espace collaboratif",
+      "confirmDelete": "Supprimer cet espace collaboratif ?",
+      "confirmLeave": "Quitter cet espace collaboratif ?"
     }
   }
 }

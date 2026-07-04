@@ -282,7 +282,8 @@
       "creating": "Qed jinħoloq…",
       "edit": "Editja",
       "delete": "Ħassar",
-      "saved": "Issejvjat"
+      "saved": "Issejvjat",
+      "confirm": "Ikkonferma"
     },
     "nav": {
       "general": "Ġenerali",
@@ -364,7 +365,9 @@
       "deleteHint": "Ħassar b'mod permanenti dan il-workbench u d-data kollha tiegħu.",
       "delete": "Ħassar il-workbench",
       "leaveHint": "Itlaq minn dan il-workbench. Maniġer jista' jerġa' jżidek.",
-      "leave": "Itlaq mill-workbench"
+      "leave": "Itlaq mill-workbench",
+      "confirmDelete": "Tħassar dan il-workbench?",
+      "confirmLeave": "Titlaq minn dan il-workbench?"
     }
   }
 }

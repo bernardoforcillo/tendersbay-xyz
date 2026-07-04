@@ -282,7 +282,8 @@
       "creating": "Skapar…",
       "edit": "Redigera",
       "delete": "Ta bort",
-      "saved": "Sparat"
+      "saved": "Sparat",
+      "confirm": "Bekräfta"
     },
     "nav": {
       "general": "Allmänt",
@@ -364,7 +365,9 @@
       "deleteHint": "Ta bort den här arbetsbänken och all dess data permanent.",
       "delete": "Ta bort arbetsbänk",
       "leaveHint": "Lämna den här arbetsbänken. En administratör kan lägga till dig igen.",
-      "leave": "Lämna arbetsbänk"
+      "leave": "Lämna arbetsbänk",
+      "confirmDelete": "Ta bort den här arbetsbänken?",
+      "confirmLeave": "Lämna den här arbetsbänken?"
     }
   }
 }

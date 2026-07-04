@@ -286,7 +286,8 @@
       "creating": "Kuriama…",
       "edit": "Redaguoti",
       "delete": "Ištrinti",
-      "saved": "Įrašyta"
+      "saved": "Įrašyta",
+      "confirm": "Patvirtinti"
     },
     "nav": {
       "general": "Bendra",
@@ -368,7 +369,9 @@
       "deleteHint": "Visam laikui ištrinti šią darbastalę ir visus jos duomenis.",
       "delete": "Ištrinti darbastalę",
       "leaveHint": "Palikti šią darbastalę. Valdytojas gali jus pridėti iš naujo.",
-      "leave": "Palikti darbastalę"
+      "leave": "Palikti darbastalę",
+      "confirmDelete": "Ištrinti šią darbastalę?",
+      "confirmLeave": "Palikti šią darbastalę?"
     }
   }
 }

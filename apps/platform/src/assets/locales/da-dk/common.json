@@ -282,7 +282,8 @@
       "creating": "Opretter…",
       "edit": "Rediger",
       "delete": "Slet",
-      "saved": "Gemt"
+      "saved": "Gemt",
+      "confirm": "Bekræft"
     },
     "nav": {
       "general": "Generelt",
@@ -364,7 +365,9 @@
       "deleteHint": "Slet dette arbejdsbord og alle dets data permanent.",
       "delete": "Slet arbejdsbord",
       "leaveHint": "Forlad dette arbejdsbord. En administrator kan tilføje dig igen.",
-      "leave": "Forlad arbejdsbord"
+      "leave": "Forlad arbejdsbord",
+      "confirmDelete": "Slet dette arbejdsbord?",
+      "confirmLeave": "Forlad dette arbejdsbord?"
     }
   }
 }

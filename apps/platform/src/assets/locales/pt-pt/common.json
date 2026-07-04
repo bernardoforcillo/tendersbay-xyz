@@ -282,7 +282,8 @@
       "creating": "A criar…",
       "edit": "Editar",
       "delete": "Eliminar",
-      "saved": "Guardado"
+      "saved": "Guardado",
+      "confirm": "Confirmar"
     },
     "nav": {
       "general": "Geral",
@@ -364,7 +365,9 @@
       "deleteHint": "Eliminar permanentemente este workbench e todos os respetivos dados.",
       "delete": "Eliminar workbench",
       "leaveHint": "Sair deste workbench. Um gestor pode voltar a adicioná-lo.",
-      "leave": "Sair do workbench"
+      "leave": "Sair do workbench",
+      "confirmDelete": "Eliminar este workbench?",
+      "confirmLeave": "Sair deste workbench?"
     }
   }
 }

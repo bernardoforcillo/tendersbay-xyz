@@ -282,7 +282,8 @@
       "creating": "Ustvarjanje…",
       "edit": "Uredi",
       "delete": "Izbriši",
-      "saved": "Shranjeno"
+      "saved": "Shranjeno",
+      "confirm": "Potrdi"
     },
     "nav": {
       "general": "Splošno",
@@ -364,7 +365,9 @@
       "deleteHint": "Trajno izbriši ta delovni pult in vse njegove podatke.",
       "delete": "Izbriši delovni pult",
       "leaveHint": "Zapusti ta delovni pult. Upravitelj vas lahko znova doda.",
-      "leave": "Zapusti delovni pult"
+      "leave": "Zapusti delovni pult",
+      "confirmDelete": "Izbrisati ta delovni pult?",
+      "confirmLeave": "Zapustiti ta delovni pult?"
     }
   }
 }

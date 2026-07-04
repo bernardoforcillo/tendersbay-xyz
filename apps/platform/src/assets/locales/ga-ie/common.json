@@ -286,7 +286,8 @@
       "creating": "Á chruthú…",
       "edit": "Cuir in eagar",
       "delete": "Scrios",
-      "saved": "Sábháilte"
+      "saved": "Sábháilte",
+      "confirm": "Deimhnigh"
     },
     "nav": {
       "general": "Ginearálta",
@@ -368,7 +369,9 @@
       "deleteHint": "Scrios an binse oibre seo agus a shonraí go léir go buan.",
       "delete": "Scrios an binse oibre",
       "leaveHint": "Fág an binse oibre seo. Is féidir le bainisteoir tú a chur leis arís.",
-      "leave": "Fág an binse oibre"
+      "leave": "Fág an binse oibre",
+      "confirmDelete": "An binse oibre seo a scriosadh?",
+      "confirmLeave": "An binse oibre seo a fhágáil?"
     }
   }
 }

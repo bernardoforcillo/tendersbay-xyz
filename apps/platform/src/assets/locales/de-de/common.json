@@ -282,7 +282,8 @@
       "creating": "Wird erstellt…",
       "edit": "Bearbeiten",
       "delete": "Löschen",
-      "saved": "Gespeichert"
+      "saved": "Gespeichert",
+      "confirm": "Bestätigen"
     },
     "nav": {
       "general": "Allgemein",
@@ -364,7 +365,9 @@
       "deleteHint": "Diese Workbench und alle zugehörigen Daten dauerhaft löschen.",
       "delete": "Workbench löschen",
       "leaveHint": "Diese Workbench verlassen. Ein Manager kann Sie erneut hinzufügen.",
-      "leave": "Workbench verlassen"
+      "leave": "Workbench verlassen",
+      "confirmDelete": "Diese Workbench löschen?",
+      "confirmLeave": "Diese Workbench verlassen?"
     }
   }
 }

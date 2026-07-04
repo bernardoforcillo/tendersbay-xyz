@@ -282,7 +282,8 @@
       "creating": "Vytvára sa…",
       "edit": "Upraviť",
       "delete": "Odstrániť",
-      "saved": "Uložené"
+      "saved": "Uložené",
+      "confirm": "Potvrdiť"
     },
     "nav": {
       "general": "Všeobecné",
@@ -364,7 +365,9 @@
       "deleteHint": "Natrvalo odstrániť túto pracovnú plochu a všetky jej údaje.",
       "delete": "Odstrániť pracovnú plochu",
       "leaveHint": "Opustiť túto pracovnú plochu. Správca vás môže znova pridať.",
-      "leave": "Opustiť pracovnú plochu"
+      "leave": "Opustiť pracovnú plochu",
+      "confirmDelete": "Odstrániť túto pracovnú plochu?",
+      "confirmLeave": "Opustiť túto pracovnú plochu?"
     }
   }
 }

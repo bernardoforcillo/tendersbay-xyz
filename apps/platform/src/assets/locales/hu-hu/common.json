@@ -286,7 +286,8 @@
       "creating": "Létrehozás…",
       "edit": "Szerkesztés",
       "delete": "Törlés",
-      "saved": "Mentve"
+      "saved": "Mentve",
+      "confirm": "Megerősítés"
     },
     "nav": {
       "general": "Általános",
@@ -368,7 +369,9 @@
       "deleteHint": "A munkafelület és minden adatának végleges törlése.",
       "delete": "Munkafelület törlése",
       "leaveHint": "Kilépés ebből a munkafelületből. Egy kezelő újra hozzáadhatja.",
-      "leave": "Kilépés a munkafelületből"
+      "leave": "Kilépés a munkafelületből",
+      "confirmDelete": "Törli ezt a munkafelületet?",
+      "confirmLeave": "Kilép ebből a munkafelületből?"
     }
   }
 }

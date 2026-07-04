@@ -282,7 +282,8 @@
       "creating": "Aanmaken…",
       "edit": "Bewerken",
       "delete": "Verwijderen",
-      "saved": "Opgeslagen"
+      "saved": "Opgeslagen",
+      "confirm": "Bevestigen"
     },
     "nav": {
       "general": "Algemeen",
@@ -364,7 +365,9 @@
       "deleteHint": "Deze werkbank en alle bijbehorende gegevens permanent verwijderen.",
       "delete": "Werkbank verwijderen",
       "leaveHint": "Deze werkbank verlaten. Een beheerder kan je opnieuw toevoegen.",
-      "leave": "Werkbank verlaten"
+      "leave": "Werkbank verlaten",
+      "confirmDelete": "Deze werkbank verwijderen?",
+      "confirmLeave": "Deze werkbank verlaten?"
     }
   }
 }

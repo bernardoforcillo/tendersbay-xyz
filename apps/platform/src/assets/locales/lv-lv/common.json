@@ -282,7 +282,8 @@
       "creating": "Notiek izveide…",
       "edit": "Rediģēt",
       "delete": "Dzēst",
-      "saved": "Saglabāts"
+      "saved": "Saglabāts",
+      "confirm": "Apstiprināt"
     },
     "nav": {
       "general": "Vispārīgi",
@@ -364,7 +365,9 @@
       "deleteHint": "Neatgriezeniski dzēst šo darbagaldu un visus tā datus.",
       "delete": "Dzēst darbagaldu",
       "leaveHint": "Pamest šo darbagaldu. Pārvaldnieks var jūs pievienot atkārtoti.",
-      "leave": "Pamest darbagaldu"
+      "leave": "Pamest darbagaldu",
+      "confirmDelete": "Dzēst šo darbagaldu?",
+      "confirmLeave": "Pamest šo darbagaldu?"
     }
   }
 }

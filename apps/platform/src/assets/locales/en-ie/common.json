@@ -282,7 +282,8 @@
       "creating": "Creating…",
       "edit": "Edit",
       "delete": "Delete",
-      "saved": "Saved"
+      "saved": "Saved",
+      "confirm": "Confirm"
     },
     "nav": {
       "general": "General",
@@ -364,7 +365,9 @@
       "deleteHint": "Permanently delete this workbench and all its data.",
       "delete": "Delete workbench",
       "leaveHint": "Leave this workbench. You can be re-added by a manager.",
-      "leave": "Leave workbench"
+      "leave": "Leave workbench",
+      "confirmDelete": "Delete this workbench?",
+      "confirmLeave": "Leave this workbench?"
     }
   }
 }

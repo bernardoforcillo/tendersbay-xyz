@@ -282,7 +282,8 @@
       "creating": "Luodaan…",
       "edit": "Muokkaa",
       "delete": "Poista",
-      "saved": "Tallennettu"
+      "saved": "Tallennettu",
+      "confirm": "Vahvista"
     },
     "nav": {
       "general": "Yleiset",
@@ -364,7 +365,9 @@
       "deleteHint": "Poista tämä työpöytä ja kaikki sen tiedot pysyvästi.",
       "delete": "Poista työpöytä",
       "leaveHint": "Poistu tästä työpöydästä. Ylläpitäjä voi lisätä sinut uudelleen.",
-      "leave": "Poistu työpöydästä"
+      "leave": "Poistu työpöydästä",
+      "confirmDelete": "Poistetaanko tämä työpöytä?",
+      "confirmLeave": "Poistutaanko tästä työpöydästä?"
     }
   }
 }

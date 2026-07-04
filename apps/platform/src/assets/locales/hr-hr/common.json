@@ -286,7 +286,8 @@
       "creating": "Stvaranje…",
       "edit": "Uredi",
       "delete": "Izbriši",
-      "saved": "Spremljeno"
+      "saved": "Spremljeno",
+      "confirm": "Potvrdi"
     },
     "nav": {
       "general": "Općenito",
@@ -368,7 +369,9 @@
       "deleteHint": "Trajno izbriši ovaj radni stol i sve njegove podatke.",
       "delete": "Izbriši radni stol",
       "leaveHint": "Napusti ovaj radni stol. Voditelj vas može ponovno dodati.",
-      "leave": "Napusti radni stol"
+      "leave": "Napusti radni stol",
+      "confirmDelete": "Izbrisati ovaj radni stol?",
+      "confirmLeave": "Napustiti ovaj radni stol?"
     }
   }
 }

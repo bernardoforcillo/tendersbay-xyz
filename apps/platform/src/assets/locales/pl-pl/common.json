@@ -286,7 +286,8 @@
       "creating": "Tworzenie…",
       "edit": "Edytuj",
       "delete": "Usuń",
-      "saved": "Zapisano"
+      "saved": "Zapisano",
+      "confirm": "Potwierdź"
     },
     "nav": {
       "general": "Ogólne",
@@ -368,7 +369,9 @@
       "deleteHint": "Trwale usuń ten panel roboczy i wszystkie jego dane.",
       "delete": "Usuń panel roboczy",
       "leaveHint": "Opuść ten panel roboczy. Menedżer może dodać Cię ponownie.",
-      "leave": "Opuść panel roboczy"
+      "leave": "Opuść panel roboczy",
+      "confirmDelete": "Usunąć ten panel roboczy?",
+      "confirmLeave": "Opuścić ten panel roboczy?"
     }
   }
 }

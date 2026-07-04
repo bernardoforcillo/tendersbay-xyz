@@ -282,7 +282,8 @@
       "creating": "Loomine…",
       "edit": "Muuda",
       "delete": "Kustuta",
-      "saved": "Salvestatud"
+      "saved": "Salvestatud",
+      "confirm": "Kinnita"
     },
     "nav": {
       "general": "Üldine",
@@ -364,7 +365,9 @@
       "deleteHint": "Kustuta see töölaud ja kõik selle andmed jäädavalt.",
       "delete": "Kustuta töölaud",
       "leaveHint": "Lahku sellest töölauast. Haldur saab sind uuesti lisada.",
-      "leave": "Lahku töölauast"
+      "leave": "Lahku töölauast",
+      "confirmDelete": "Kustutada see töölaud?",
+      "confirmLeave": "Lahkuda sellest töölauast?"
     }
   }
 }

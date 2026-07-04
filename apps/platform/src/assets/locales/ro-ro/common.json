@@ -282,7 +282,8 @@
       "creating": "Se creează…",
       "edit": "Editează",
       "delete": "Șterge",
-      "saved": "Salvat"
+      "saved": "Salvat",
+      "confirm": "Confirmă"
     },
     "nav": {
       "general": "General",
@@ -364,7 +365,9 @@
       "deleteHint": "Șterge definitiv acest spațiu colaborativ și toate datele sale.",
       "delete": "Șterge spațiul colaborativ",
       "leaveHint": "Părăsește acest spațiu colaborativ. Un manager te poate readăuga.",
-      "leave": "Părăsește spațiul colaborativ"
+      "leave": "Părăsește spațiul colaborativ",
+      "confirmDelete": "Ștergi acest spațiu colaborativ?",
+      "confirmLeave": "Părăsești acest spațiu colaborativ?"
     }
   }
 }
