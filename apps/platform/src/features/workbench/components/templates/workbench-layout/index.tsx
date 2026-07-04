@@ -46,7 +46,7 @@ export function WorkbenchLayout() {
     <WorkbenchContext.Provider
       value={{ workbenchId, workbench, myPermissions, workspaceName, refetch }}
     >
-      <div className="flex flex-col gap-6 p-6 lg:p-8">
+      <div className="flex min-h-full flex-col gap-6 p-6 lg:p-8">
         <header className="flex flex-col gap-4">
           <Breadcrumb
             items={[

@@ -1,12 +1,13 @@
-import { useTranslation } from 'react-i18next';
+import { SearchDock } from '~/features/account/components/organisms';
 
 export function WorkbenchOverviewPage() {
-  const { t } = useTranslation();
-  // The workbench name/description live in the layout header; the overview root
-  // is an empty surface until item types land in a later spec.
+  // Mirror the workspace overview: the search dock pins to the bottom and
+  // animates to center on Explore via its shared layoutId.
   return (
-    <p className="text-sm text-ink-500">
-      {t('workbench.overview.empty', 'This workbench is empty for now.')}
-    </p>
+    <div className="flex flex-1 flex-col">
+      <div className="mt-auto flex justify-center px-4 pb-6 pt-4">
+        <SearchDock />
+      </div>
+    </div>
   );
 }
