@@ -9,6 +9,7 @@ import (
 	"connectrpc.com/connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
 
@@ -120,6 +121,23 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeAlreadyExists, err)
 	case errors.Is(err, workspace.ErrLinkExhausted):
 		return connect.NewError(connect.CodeResourceExhausted, err)
+
+	// Workbench domain
+	case errors.Is(err, workbench.ErrForbidden),
+		errors.Is(err, workbench.ErrNotMember),
+		errors.Is(err, workbench.ErrOwnerOnly),
+		errors.Is(err, workbench.ErrPrivilegeEscalation),
+		errors.Is(err, workbench.ErrNotWorkspaceMember):
+		return connect.NewError(connect.CodePermissionDenied, err)
+	case errors.Is(err, workbench.ErrWorkbenchNotFound),
+		errors.Is(err, workbench.ErrRoleNotFound):
+		return connect.NewError(connect.CodeNotFound, err)
+	case errors.Is(err, workbench.ErrLastOwner),
+		errors.Is(err, workbench.ErrDefaultRole),
+		errors.Is(err, workbench.ErrRoleInUse):
+		return connect.NewError(connect.CodeFailedPrecondition, err)
+	case errors.Is(err, workbench.ErrAlreadyMember):
+		return connect.NewError(connect.CodeAlreadyExists, err)
 
 	default:
 		return connect.NewError(connect.CodeInternal, err)

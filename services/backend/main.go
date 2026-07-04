@@ -12,6 +12,7 @@ import (
 
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
+	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
 	workspacev1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1/workspacev1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/email"
@@ -22,6 +23,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/telemetry"
 )
@@ -94,13 +96,26 @@ func main() {
 		workspace.Config{AppBaseURL: cfg.AppBaseURL, InviteExpiry: cfg.WorkspaceInviteExpiry},
 	)
 
+	workbenchWSAccess := postgres.NewWorkbenchWorkspaceAccess(db)
+	workbenchUow := postgres.NewWorkbenchUnitOfWork(db)
+	workbenchSvc := workbench.NewService(
+		postgres.NewWorkbenchRepo(db),
+		postgres.NewWorkbenchRoleRepo(db),
+		postgres.NewWorkbenchMemberRepo(db),
+		userRepo, // satisfies workbench.UserLookup (FindByID)
+		workbenchWSAccess,
+		workbenchUow,
+	)
+
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc)
+	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
 
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
 	workspacePath, workspaceRPC := workspacev1connect.NewWorkspaceServiceHandler(workspaceHandler)
+	workbenchPath, workbenchRPC := workbenchv1connect.NewWorkbenchServiceHandler(workbenchHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
@@ -108,6 +123,7 @@ func main() {
 	mux.Handle(authPath, authRPC)
 	mux.Handle(userPath, userRPC)
 	mux.Handle(workspacePath, workspaceRPC)
+	mux.Handle(workbenchPath, workbenchRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
 	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(mux))
