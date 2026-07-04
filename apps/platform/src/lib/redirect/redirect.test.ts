@@ -15,6 +15,12 @@ describe('sanitizeRedirect', () => {
     expect(sanitizeRedirect('http://evil.com/path')).toBe('/');
   });
 
+  it('rejects the backslash trick that browsers normalise to //', () => {
+    expect(sanitizeRedirect('/\\evil.com')).toBe('/');
+    expect(sanitizeRedirect('/\\/evil.com')).toBe('/');
+    expect(sanitizeRedirect('/\\\\evil.com')).toBe('/');
+  });
+
   it('defaults empty or nullish input to /', () => {
     expect(sanitizeRedirect(null)).toBe('/');
     expect(sanitizeRedirect(undefined)).toBe('/');
