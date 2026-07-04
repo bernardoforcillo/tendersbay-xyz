@@ -11,11 +11,18 @@ export function WorkspaceLayout() {
   const { workspaceId } = useParams({ from: '/_authenticated/workspaces/$workspaceId' });
   const { t } = useTranslation();
   const { data, loading, error, refetch } = useWorkspace(workspaceId);
+  const currentWorkspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
   const setCurrentWorkspace = useWorkspaceStore((s) => s.setCurrentWorkspace);
 
   useEffect(() => {
-    if (data?.workspace) setCurrentWorkspace(workspaceId);
-  }, [data?.workspace, workspaceId, setCurrentWorkspace]);
+    if (data?.workspace) {
+      setCurrentWorkspace(workspaceId);
+    } else if (!loading && currentWorkspaceId === workspaceId) {
+      // The remembered workspace is gone or inaccessible — forget it so the
+      // sidebar nav disappears and "/" falls back to the workspace list.
+      setCurrentWorkspace(null);
+    }
+  }, [data?.workspace, loading, workspaceId, currentWorkspaceId, setCurrentWorkspace]);
 
   if (loading) {
     return (
