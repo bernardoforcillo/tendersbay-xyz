@@ -272,5 +272,99 @@
       "label": "Werkruimtes",
       "manage": "Alle werkruimtes"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Laden…",
+      "saving": "Opslaan…",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "creating": "Aanmaken…",
+      "edit": "Bewerken",
+      "delete": "Verwijderen",
+      "saved": "Opgeslagen"
+    },
+    "nav": {
+      "general": "Algemeen",
+      "members": "Leden",
+      "roles": "Rollen",
+      "settings": "Instellingen",
+      "allWorkbenches": "Alle werkbanken"
+    },
+    "errors": {
+      "notFound": "Deze werkbank is niet beschikbaar."
+    },
+    "breadcrumb": {
+      "workspaces": "Werkruimtes",
+      "workbenches": "Werkbanken"
+    },
+    "visibility": {
+      "label": "Zichtbaarheid",
+      "private": "Privé",
+      "shared": "Gedeeld",
+      "makePrivate": "Maak privé",
+      "makeShared": "Maak gedeeld",
+      "hint": "Gedeelde werkbanken zijn zichtbaar voor werkruimteleden die werkbanken mogen bekijken."
+    },
+    "list": {
+      "title": "Werkbanken",
+      "new": "Nieuwe werkbank",
+      "nameLabel": "Naam werkbank",
+      "namePlaceholder": "Aanbestedingen Q3",
+      "descriptionLabel": "Beschrijving",
+      "create": "Werkbank aanmaken",
+      "empty": "Nog geen werkbanken.",
+      "createFirst": "Maak je eerste werkbank aan"
+    },
+    "members": {
+      "title": "Leden",
+      "owner": "Eigenaar",
+      "role": "Rol",
+      "remove": "Verwijderen",
+      "add": "Toevoegen",
+      "addLabel": "Lid toevoegen",
+      "selectMember": "Selecteer een lid…"
+    },
+    "roles": {
+      "title": "Rollen",
+      "new": "Nieuwe rol",
+      "createTitle": "Nieuwe rol",
+      "editTitle": "Rol bewerken",
+      "nameLabel": "Naam rol",
+      "namePlaceholder": "Bewerker",
+      "permissionsLabel": "Rechten",
+      "default": "Standaard",
+      "permCount": "{{count}} rechten"
+    },
+    "permissions": {
+      "viewWorkbench": "Werkbank bekijken",
+      "manageWorkbench": "Werkbank beheren",
+      "manageMembers": "Leden beheren",
+      "manageRoles": "Rollen beheren",
+      "administrator": "Beheerder"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "De werkbank en de inhoud ervan bekijken",
+      "manageWorkbench": "Werkbank hernoemen, bewerken en zichtbaarheid wijzigen",
+      "manageMembers": "Leden toevoegen, verwijderen en van rol wijzigen",
+      "manageRoles": "Rollen aanmaken, bewerken en verwijderen",
+      "administrator": "Volledige toegang — omzeilt elke rechtencontrole"
+    },
+    "settings": {
+      "detailsTitle": "Gegevens werkbank",
+      "name": "Naam",
+      "description": "Beschrijving",
+      "visibilityTitle": "Zichtbaarheid",
+      "visibility": "Zichtbaarheid",
+      "transferTitle": "Eigendom overdragen",
+      "newOwner": "Nieuwe eigenaar",
+      "selectMember": "Selecteer een lid…",
+      "transfer": "Overdragen",
+      "dangerTitle": "Gevarenzone",
+      "deleteHint": "Deze werkbank en alle bijbehorende gegevens permanent verwijderen.",
+      "delete": "Werkbank verwijderen",
+      "leaveHint": "Deze werkbank verlaten. Een beheerder kan je opnieuw toevoegen.",
+      "leave": "Werkbank verlaten"
+    }
   }
 }

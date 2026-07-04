@@ -276,5 +276,99 @@
       "label": "Munkaterületek",
       "manage": "Összes munkaterület"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Betöltés…",
+      "saving": "Mentés…",
+      "save": "Mentés",
+      "cancel": "Mégse",
+      "creating": "Létrehozás…",
+      "edit": "Szerkesztés",
+      "delete": "Törlés",
+      "saved": "Mentve"
+    },
+    "nav": {
+      "general": "Általános",
+      "members": "Tagok",
+      "roles": "Szerepkörök",
+      "settings": "Beállítások",
+      "allWorkbenches": "Összes munkafelület"
+    },
+    "errors": {
+      "notFound": "Ez a munkafelület nem érhető el."
+    },
+    "breadcrumb": {
+      "workspaces": "Munkaterületek",
+      "workbenches": "Munkafelületek"
+    },
+    "visibility": {
+      "label": "Láthatóság",
+      "private": "Privát",
+      "shared": "Megosztott",
+      "makePrivate": "Legyen privát",
+      "makeShared": "Legyen megosztott",
+      "hint": "A megosztott munkafelületek láthatók azon munkaterületi tagok számára, akik megtekinthetik a munkafelületeket."
+    },
+    "list": {
+      "title": "Munkafelületek",
+      "new": "Új munkafelület",
+      "nameLabel": "Munkafelület neve",
+      "namePlaceholder": "Q3 pályázatok",
+      "descriptionLabel": "Leírás",
+      "create": "Munkafelület létrehozása",
+      "empty": "Még nincs munkafelület.",
+      "createFirst": "Hozza létre első munkafelületét"
+    },
+    "members": {
+      "title": "Tagok",
+      "owner": "Tulajdonos",
+      "role": "Szerepkör",
+      "remove": "Eltávolítás",
+      "add": "Hozzáadás",
+      "addLabel": "Tag hozzáadása",
+      "selectMember": "Válasszon tagot…"
+    },
+    "roles": {
+      "title": "Szerepkörök",
+      "new": "Új szerepkör",
+      "createTitle": "Új szerepkör",
+      "editTitle": "Szerepkör szerkesztése",
+      "nameLabel": "Szerepkör neve",
+      "namePlaceholder": "Szerkesztő",
+      "permissionsLabel": "Jogosultságok",
+      "default": "Alapértelmezett",
+      "permCount": "{{count}} jogosultság"
+    },
+    "permissions": {
+      "viewWorkbench": "Munkafelület megtekintése",
+      "manageWorkbench": "Munkafelület kezelése",
+      "manageMembers": "Tagok kezelése",
+      "manageRoles": "Szerepkörök kezelése",
+      "administrator": "Rendszergazda"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "A munkafelület és tartalmának megtekintése",
+      "manageWorkbench": "Átnevezés, szerkesztés és láthatóság módosítása",
+      "manageMembers": "Tagok hozzáadása, eltávolítása és szerepkörének módosítása",
+      "manageRoles": "Szerepkörök létrehozása, szerkesztése és törlése",
+      "administrator": "Teljes hozzáférés — minden jogosultsági ellenőrzést megkerül"
+    },
+    "settings": {
+      "detailsTitle": "Munkafelület adatai",
+      "name": "Név",
+      "description": "Leírás",
+      "visibilityTitle": "Láthatóság",
+      "visibility": "Láthatóság",
+      "transferTitle": "Tulajdonjog átruházása",
+      "newOwner": "Új tulajdonos",
+      "selectMember": "Válasszon tagot…",
+      "transfer": "Átruházás",
+      "dangerTitle": "Veszélyzóna",
+      "deleteHint": "A munkafelület és minden adatának végleges törlése.",
+      "delete": "Munkafelület törlése",
+      "leaveHint": "Kilépés ebből a munkafelületből. Egy kezelő újra hozzáadhatja.",
+      "leave": "Kilépés a munkafelületből"
+    }
   }
 }

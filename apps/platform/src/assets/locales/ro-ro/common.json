@@ -272,5 +272,99 @@
       "label": "Spații de lucru",
       "manage": "Toate spațiile de lucru"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Se încarcă…",
+      "saving": "Se salvează…",
+      "save": "Salvează",
+      "cancel": "Anulează",
+      "creating": "Se creează…",
+      "edit": "Editează",
+      "delete": "Șterge",
+      "saved": "Salvat"
+    },
+    "nav": {
+      "general": "General",
+      "members": "Membri",
+      "roles": "Roluri",
+      "settings": "Setări",
+      "allWorkbenches": "Toate spațiile de lucru colaborative"
+    },
+    "errors": {
+      "notFound": "Acest spațiu de lucru colaborativ este indisponibil."
+    },
+    "breadcrumb": {
+      "workspaces": "Spații de lucru",
+      "workbenches": "Spații de lucru colaborative"
+    },
+    "visibility": {
+      "label": "Vizibilitate",
+      "private": "Privat",
+      "shared": "Partajat",
+      "makePrivate": "Fă privat",
+      "makeShared": "Fă partajat",
+      "hint": "Spațiile de lucru colaborative partajate sunt vizibile membrilor spațiului de lucru care le pot vizualiza."
+    },
+    "list": {
+      "title": "Spații de lucru colaborative",
+      "new": "Spațiu colaborativ nou",
+      "nameLabel": "Numele spațiului colaborativ",
+      "namePlaceholder": "Licitații T3",
+      "descriptionLabel": "Descriere",
+      "create": "Creează spațiu colaborativ",
+      "empty": "Nu există încă spații de lucru colaborative.",
+      "createFirst": "Creează primul tău spațiu colaborativ"
+    },
+    "members": {
+      "title": "Membri",
+      "owner": "Proprietar",
+      "role": "Rol",
+      "remove": "Elimină",
+      "add": "Adaugă",
+      "addLabel": "Adaugă membru",
+      "selectMember": "Selectează un membru…"
+    },
+    "roles": {
+      "title": "Roluri",
+      "new": "Rol nou",
+      "createTitle": "Rol nou",
+      "editTitle": "Editează rolul",
+      "nameLabel": "Numele rolului",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Permisiuni",
+      "default": "Implicit",
+      "permCount": "{{count}} permisiuni"
+    },
+    "permissions": {
+      "viewWorkbench": "Vizualizează spațiul colaborativ",
+      "manageWorkbench": "Gestionează spațiul colaborativ",
+      "manageMembers": "Gestionează membrii",
+      "manageRoles": "Gestionează rolurile",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Vezi spațiul colaborativ și conținutul acestuia",
+      "manageWorkbench": "Redenumește, editează și modifică vizibilitatea",
+      "manageMembers": "Adaugă, elimină și modifică rolul membrilor",
+      "manageRoles": "Creează, editează și șterge roluri",
+      "administrator": "Acces complet — ocolește orice verificare a permisiunilor"
+    },
+    "settings": {
+      "detailsTitle": "Detaliile spațiului colaborativ",
+      "name": "Nume",
+      "description": "Descriere",
+      "visibilityTitle": "Vizibilitate",
+      "visibility": "Vizibilitate",
+      "transferTitle": "Transferă proprietatea",
+      "newOwner": "Proprietar nou",
+      "selectMember": "Selectează un membru…",
+      "transfer": "Transferă",
+      "dangerTitle": "Zonă periculoasă",
+      "deleteHint": "Șterge definitiv acest spațiu colaborativ și toate datele sale.",
+      "delete": "Șterge spațiul colaborativ",
+      "leaveHint": "Părăsește acest spațiu colaborativ. Un manager te poate readăuga.",
+      "leave": "Părăsește spațiul colaborativ"
+    }
   }
 }

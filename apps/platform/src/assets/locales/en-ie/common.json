@@ -272,5 +272,99 @@
       "label": "Workspaces",
       "manage": "All workspaces"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Loading…",
+      "saving": "Saving…",
+      "save": "Save",
+      "cancel": "Cancel",
+      "creating": "Creating…",
+      "edit": "Edit",
+      "delete": "Delete",
+      "saved": "Saved"
+    },
+    "nav": {
+      "general": "General",
+      "members": "Members",
+      "roles": "Roles",
+      "settings": "Settings",
+      "allWorkbenches": "All workbenches"
+    },
+    "errors": {
+      "notFound": "This workbench is unavailable."
+    },
+    "breadcrumb": {
+      "workspaces": "Workspaces",
+      "workbenches": "Workbenches"
+    },
+    "visibility": {
+      "label": "Visibility",
+      "private": "Private",
+      "shared": "Shared",
+      "makePrivate": "Make private",
+      "makeShared": "Make shared",
+      "hint": "Shared workbenches are visible to workspace members who can view workbenches."
+    },
+    "list": {
+      "title": "Workbenches",
+      "new": "New workbench",
+      "nameLabel": "Workbench name",
+      "namePlaceholder": "Q3 Bids",
+      "descriptionLabel": "Description",
+      "create": "Create workbench",
+      "empty": "No workbenches yet.",
+      "createFirst": "Create your first workbench"
+    },
+    "members": {
+      "title": "Members",
+      "owner": "Owner",
+      "role": "Role",
+      "remove": "Remove",
+      "add": "Add",
+      "addLabel": "Add member",
+      "selectMember": "Select a member…"
+    },
+    "roles": {
+      "title": "Roles",
+      "new": "New role",
+      "createTitle": "New role",
+      "editTitle": "Edit role",
+      "nameLabel": "Role name",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Permissions",
+      "default": "Default",
+      "permCount": "{{count}} permissions"
+    },
+    "permissions": {
+      "viewWorkbench": "View workbench",
+      "manageWorkbench": "Manage workbench",
+      "manageMembers": "Manage members",
+      "manageRoles": "Manage roles",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "See the workbench and its content",
+      "manageWorkbench": "Rename, edit and change visibility",
+      "manageMembers": "Add, remove and re-role members",
+      "manageRoles": "Create, edit and delete roles",
+      "administrator": "Full access — bypasses every permission check"
+    },
+    "settings": {
+      "detailsTitle": "Workbench details",
+      "name": "Name",
+      "description": "Description",
+      "visibilityTitle": "Visibility",
+      "visibility": "Visibility",
+      "transferTitle": "Transfer ownership",
+      "newOwner": "New owner",
+      "selectMember": "Select a member…",
+      "transfer": "Transfer",
+      "dangerTitle": "Danger zone",
+      "deleteHint": "Permanently delete this workbench and all its data.",
+      "delete": "Delete workbench",
+      "leaveHint": "Leave this workbench. You can be re-added by a manager.",
+      "leave": "Leave workbench"
+    }
   }
 }

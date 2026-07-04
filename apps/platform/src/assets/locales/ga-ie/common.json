@@ -276,5 +276,99 @@
       "label": "Spásanna oibre",
       "manage": "Gach spás oibre"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Á lódáil…",
+      "saving": "Á shábháil…",
+      "save": "Sábháil",
+      "cancel": "Cealaigh",
+      "creating": "Á chruthú…",
+      "edit": "Cuir in eagar",
+      "delete": "Scrios",
+      "saved": "Sábháilte"
+    },
+    "nav": {
+      "general": "Ginearálta",
+      "members": "Baill",
+      "roles": "Róil",
+      "settings": "Socruithe",
+      "allWorkbenches": "Gach binse oibre"
+    },
+    "errors": {
+      "notFound": "Níl an binse oibre seo ar fáil."
+    },
+    "breadcrumb": {
+      "workspaces": "Spásanna oibre",
+      "workbenches": "Binsí oibre"
+    },
+    "visibility": {
+      "label": "Infheictheacht",
+      "private": "Príobháideach",
+      "shared": "Comhroinnte",
+      "makePrivate": "Déan príobháideach",
+      "makeShared": "Déan comhroinnte",
+      "hint": "Tá binsí oibre comhroinnte le feiceáil ag baill an spáis oibre a bhfuil cead acu binsí oibre a fheiceáil."
+    },
+    "list": {
+      "title": "Binsí oibre",
+      "new": "Binse oibre nua",
+      "nameLabel": "Ainm an bhinse oibre",
+      "namePlaceholder": "Tairiscintí Q3",
+      "descriptionLabel": "Cur síos",
+      "create": "Cruthaigh binse oibre",
+      "empty": "Níl aon bhinsí oibre fós ann.",
+      "createFirst": "Cruthaigh do chéad bhinse oibre"
+    },
+    "members": {
+      "title": "Baill",
+      "owner": "Úinéir",
+      "role": "Ról",
+      "remove": "Bain",
+      "add": "Cuir leis",
+      "addLabel": "Cuir ball leis",
+      "selectMember": "Roghnaigh ball…"
+    },
+    "roles": {
+      "title": "Róil",
+      "new": "Ról nua",
+      "createTitle": "Ról nua",
+      "editTitle": "Cuir ról in eagar",
+      "nameLabel": "Ainm an róil",
+      "namePlaceholder": "Eagarthóir",
+      "permissionsLabel": "Ceadanna",
+      "default": "Réamhshocrú",
+      "permCount": "{{count}} cead"
+    },
+    "permissions": {
+      "viewWorkbench": "Féach ar an mbinse oibre",
+      "manageWorkbench": "Bainistigh an binse oibre",
+      "manageMembers": "Bainistigh baill",
+      "manageRoles": "Bainistigh róil",
+      "administrator": "Riarthóir"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Féach ar an mbinse oibre agus ar a bhfuil ann",
+      "manageWorkbench": "Athainmnigh, cuir in eagar agus athraigh an infheictheacht",
+      "manageMembers": "Cuir baill leis, bain iad agus athraigh a róil",
+      "manageRoles": "Cruthaigh, cuir in eagar agus scrios róil",
+      "administrator": "Rochtain iomlán — seachnaíonn sé gach seiceáil cheada"
+    },
+    "settings": {
+      "detailsTitle": "Sonraí an bhinse oibre",
+      "name": "Ainm",
+      "description": "Cur síos",
+      "visibilityTitle": "Infheictheacht",
+      "visibility": "Infheictheacht",
+      "transferTitle": "Aistrigh úinéireacht",
+      "newOwner": "Úinéir nua",
+      "selectMember": "Roghnaigh ball…",
+      "transfer": "Aistrigh",
+      "dangerTitle": "Crios contúirte",
+      "deleteHint": "Scrios an binse oibre seo agus a shonraí go léir go buan.",
+      "delete": "Scrios an binse oibre",
+      "leaveHint": "Fág an binse oibre seo. Is féidir le bainisteoir tú a chur leis arís.",
+      "leave": "Fág an binse oibre"
+    }
   }
 }

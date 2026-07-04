@@ -272,5 +272,99 @@
       "label": "Arbetsytor",
       "manage": "Alla arbetsytor"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Läser in…",
+      "saving": "Sparar…",
+      "save": "Spara",
+      "cancel": "Avbryt",
+      "creating": "Skapar…",
+      "edit": "Redigera",
+      "delete": "Ta bort",
+      "saved": "Sparat"
+    },
+    "nav": {
+      "general": "Allmänt",
+      "members": "Medlemmar",
+      "roles": "Roller",
+      "settings": "Inställningar",
+      "allWorkbenches": "Alla arbetsbänkar"
+    },
+    "errors": {
+      "notFound": "Den här arbetsbänken är inte tillgänglig."
+    },
+    "breadcrumb": {
+      "workspaces": "Arbetsytor",
+      "workbenches": "Arbetsbänkar"
+    },
+    "visibility": {
+      "label": "Synlighet",
+      "private": "Privat",
+      "shared": "Delad",
+      "makePrivate": "Gör privat",
+      "makeShared": "Gör delad",
+      "hint": "Delade arbetsbänkar är synliga för medlemmar i arbetsytan som kan visa arbetsbänkar."
+    },
+    "list": {
+      "title": "Arbetsbänkar",
+      "new": "Ny arbetsbänk",
+      "nameLabel": "Namn på arbetsbänk",
+      "namePlaceholder": "Upphandlingar Q3",
+      "descriptionLabel": "Beskrivning",
+      "create": "Skapa arbetsbänk",
+      "empty": "Inga arbetsbänkar än.",
+      "createFirst": "Skapa din första arbetsbänk"
+    },
+    "members": {
+      "title": "Medlemmar",
+      "owner": "Ägare",
+      "role": "Roll",
+      "remove": "Ta bort",
+      "add": "Lägg till",
+      "addLabel": "Lägg till medlem",
+      "selectMember": "Välj en medlem…"
+    },
+    "roles": {
+      "title": "Roller",
+      "new": "Ny roll",
+      "createTitle": "Ny roll",
+      "editTitle": "Redigera roll",
+      "nameLabel": "Rollnamn",
+      "namePlaceholder": "Redaktör",
+      "permissionsLabel": "Behörigheter",
+      "default": "Standard",
+      "permCount": "{{count}} behörigheter"
+    },
+    "permissions": {
+      "viewWorkbench": "Visa arbetsbänk",
+      "manageWorkbench": "Hantera arbetsbänk",
+      "manageMembers": "Hantera medlemmar",
+      "manageRoles": "Hantera roller",
+      "administrator": "Administratör"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Se arbetsbänken och dess innehåll",
+      "manageWorkbench": "Byt namn på, redigera och ändra synlighet",
+      "manageMembers": "Lägg till, ta bort och ändra roll för medlemmar",
+      "manageRoles": "Skapa, redigera och ta bort roller",
+      "administrator": "Fullständig åtkomst — kringgår varje behörighetskontroll"
+    },
+    "settings": {
+      "detailsTitle": "Uppgifter om arbetsbänk",
+      "name": "Namn",
+      "description": "Beskrivning",
+      "visibilityTitle": "Synlighet",
+      "visibility": "Synlighet",
+      "transferTitle": "Överför ägarskap",
+      "newOwner": "Ny ägare",
+      "selectMember": "Välj en medlem…",
+      "transfer": "Överför",
+      "dangerTitle": "Farozon",
+      "deleteHint": "Ta bort den här arbetsbänken och all dess data permanent.",
+      "delete": "Ta bort arbetsbänk",
+      "leaveHint": "Lämna den här arbetsbänken. En administratör kan lägga till dig igen.",
+      "leave": "Lämna arbetsbänk"
+    }
   }
 }

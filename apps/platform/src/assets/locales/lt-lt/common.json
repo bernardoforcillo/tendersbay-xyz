@@ -276,5 +276,99 @@
       "label": "Darbo sritys",
       "manage": "Visos darbo sritys"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Įkeliama…",
+      "saving": "Įrašoma…",
+      "save": "Įrašyti",
+      "cancel": "Atšaukti",
+      "creating": "Kuriama…",
+      "edit": "Redaguoti",
+      "delete": "Ištrinti",
+      "saved": "Įrašyta"
+    },
+    "nav": {
+      "general": "Bendra",
+      "members": "Nariai",
+      "roles": "Vaidmenys",
+      "settings": "Nustatymai",
+      "allWorkbenches": "Visos darbastalės"
+    },
+    "errors": {
+      "notFound": "Ši darbastalė nepasiekiama."
+    },
+    "breadcrumb": {
+      "workspaces": "Darbo sritys",
+      "workbenches": "Darbastalės"
+    },
+    "visibility": {
+      "label": "Matomumas",
+      "private": "Privati",
+      "shared": "Bendra",
+      "makePrivate": "Padaryti privačią",
+      "makeShared": "Padaryti bendrą",
+      "hint": "Bendras darbastales mato darbo srities nariai, galintys jas peržiūrėti."
+    },
+    "list": {
+      "title": "Darbastalės",
+      "new": "Nauja darbastalė",
+      "nameLabel": "Darbastalės pavadinimas",
+      "namePlaceholder": "Q3 pasiūlymai",
+      "descriptionLabel": "Aprašymas",
+      "create": "Sukurti darbastalę",
+      "empty": "Kol kas nėra darbastalių.",
+      "createFirst": "Sukurkite pirmąją darbastalę"
+    },
+    "members": {
+      "title": "Nariai",
+      "owner": "Savininkas",
+      "role": "Vaidmuo",
+      "remove": "Pašalinti",
+      "add": "Pridėti",
+      "addLabel": "Pridėti narį",
+      "selectMember": "Pasirinkite narį…"
+    },
+    "roles": {
+      "title": "Vaidmenys",
+      "new": "Naujas vaidmuo",
+      "createTitle": "Naujas vaidmuo",
+      "editTitle": "Redaguoti vaidmenį",
+      "nameLabel": "Vaidmens pavadinimas",
+      "namePlaceholder": "Redaktorius",
+      "permissionsLabel": "Leidimai",
+      "default": "Numatytasis",
+      "permCount": "{{count}} leidimai"
+    },
+    "permissions": {
+      "viewWorkbench": "Peržiūrėti darbastalę",
+      "manageWorkbench": "Tvarkyti darbastalę",
+      "manageMembers": "Tvarkyti narius",
+      "manageRoles": "Tvarkyti vaidmenis",
+      "administrator": "Administratorius"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Matyti darbastalę ir jos turinį",
+      "manageWorkbench": "Pervadinti, redaguoti ir keisti matomumą",
+      "manageMembers": "Pridėti, šalinti ir keisti narių vaidmenis",
+      "manageRoles": "Kurti, redaguoti ir trinti vaidmenis",
+      "administrator": "Visapusiška prieiga — apeina visus leidimų patikrinimus"
+    },
+    "settings": {
+      "detailsTitle": "Darbastalės informacija",
+      "name": "Pavadinimas",
+      "description": "Aprašymas",
+      "visibilityTitle": "Matomumas",
+      "visibility": "Matomumas",
+      "transferTitle": "Nuosavybės perdavimas",
+      "newOwner": "Naujas savininkas",
+      "selectMember": "Pasirinkite narį…",
+      "transfer": "Perduoti",
+      "dangerTitle": "Pavojaus zona",
+      "deleteHint": "Visam laikui ištrinti šią darbastalę ir visus jos duomenis.",
+      "delete": "Ištrinti darbastalę",
+      "leaveHint": "Palikti šią darbastalę. Valdytojas gali jus pridėti iš naujo.",
+      "leave": "Palikti darbastalę"
+    }
   }
 }

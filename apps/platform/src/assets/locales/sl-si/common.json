@@ -272,5 +272,99 @@
       "label": "Delovni prostori",
       "manage": "Vsi delovni prostori"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Nalaganje…",
+      "saving": "Shranjevanje…",
+      "save": "Shrani",
+      "cancel": "Prekliči",
+      "creating": "Ustvarjanje…",
+      "edit": "Uredi",
+      "delete": "Izbriši",
+      "saved": "Shranjeno"
+    },
+    "nav": {
+      "general": "Splošno",
+      "members": "Člani",
+      "roles": "Vloge",
+      "settings": "Nastavitve",
+      "allWorkbenches": "Vsi delovni pulti"
+    },
+    "errors": {
+      "notFound": "Ta delovni pult ni na voljo."
+    },
+    "breadcrumb": {
+      "workspaces": "Delovni prostori",
+      "workbenches": "Delovni pulti"
+    },
+    "visibility": {
+      "label": "Vidnost",
+      "private": "Zaseben",
+      "shared": "Skupen",
+      "makePrivate": "Naredi zasebno",
+      "makeShared": "Naredi skupno",
+      "hint": "Skupni delovni pulti so vidni članom delovnega prostora, ki lahko ogledujejo delovne pulte."
+    },
+    "list": {
+      "title": "Delovni pulti",
+      "new": "Nov delovni pult",
+      "nameLabel": "Ime delovnega pulta",
+      "namePlaceholder": "Razpisi Q3",
+      "descriptionLabel": "Opis",
+      "create": "Ustvari delovni pult",
+      "empty": "Delovnih pultov še ni.",
+      "createFirst": "Ustvarite svoj prvi delovni pult"
+    },
+    "members": {
+      "title": "Člani",
+      "owner": "Lastnik",
+      "role": "Vloga",
+      "remove": "Odstrani",
+      "add": "Dodaj",
+      "addLabel": "Dodaj člana",
+      "selectMember": "Izberite člana…"
+    },
+    "roles": {
+      "title": "Vloge",
+      "new": "Nova vloga",
+      "createTitle": "Nova vloga",
+      "editTitle": "Uredi vlogo",
+      "nameLabel": "Ime vloge",
+      "namePlaceholder": "Urejevalec",
+      "permissionsLabel": "Dovoljenja",
+      "default": "Privzeta",
+      "permCount": "Dovoljenja: {{count}}"
+    },
+    "permissions": {
+      "viewWorkbench": "Ogled delovnega pulta",
+      "manageWorkbench": "Upravljanje delovnega pulta",
+      "manageMembers": "Upravljanje članov",
+      "manageRoles": "Upravljanje vlog",
+      "administrator": "Skrbnik"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Ogled delovnega pulta in njegove vsebine",
+      "manageWorkbench": "Preimenovanje, urejanje in spreminjanje vidnosti",
+      "manageMembers": "Dodajanje, odstranjevanje in spreminjanje vlog članov",
+      "manageRoles": "Ustvarjanje, urejanje in brisanje vlog",
+      "administrator": "Popoln dostop — obide vsako preverjanje dovoljenj"
+    },
+    "settings": {
+      "detailsTitle": "Podrobnosti delovnega pulta",
+      "name": "Ime",
+      "description": "Opis",
+      "visibilityTitle": "Vidnost",
+      "visibility": "Vidnost",
+      "transferTitle": "Prenos lastništva",
+      "newOwner": "Novi lastnik",
+      "selectMember": "Izberite člana…",
+      "transfer": "Prenesi",
+      "dangerTitle": "Nevarno območje",
+      "deleteHint": "Trajno izbriši ta delovni pult in vse njegove podatke.",
+      "delete": "Izbriši delovni pult",
+      "leaveHint": "Zapusti ta delovni pult. Upravitelj vas lahko znova doda.",
+      "leave": "Zapusti delovni pult"
+    }
   }
 }

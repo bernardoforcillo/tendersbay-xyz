@@ -272,5 +272,99 @@
       "label": "Darbvietas",
       "manage": "Visas darbvietas"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Notiek ielāde…",
+      "saving": "Notiek saglabāšana…",
+      "save": "Saglabāt",
+      "cancel": "Atcelt",
+      "creating": "Notiek izveide…",
+      "edit": "Rediģēt",
+      "delete": "Dzēst",
+      "saved": "Saglabāts"
+    },
+    "nav": {
+      "general": "Vispārīgi",
+      "members": "Dalībnieki",
+      "roles": "Lomas",
+      "settings": "Iestatījumi",
+      "allWorkbenches": "Visi darbagaldi"
+    },
+    "errors": {
+      "notFound": "Šis darbagalds nav pieejams."
+    },
+    "breadcrumb": {
+      "workspaces": "Darbvietas",
+      "workbenches": "Darbagaldi"
+    },
+    "visibility": {
+      "label": "Redzamība",
+      "private": "Privāts",
+      "shared": "Kopīgots",
+      "makePrivate": "Padarīt privātu",
+      "makeShared": "Padarīt kopīgotu",
+      "hint": "Kopīgoti darbagaldi ir redzami darbvietas dalībniekiem, kuri var skatīt darbagaldus."
+    },
+    "list": {
+      "title": "Darbagaldi",
+      "new": "Jauns darbagalds",
+      "nameLabel": "Darbagalda nosaukums",
+      "namePlaceholder": "Q3 piedāvājumi",
+      "descriptionLabel": "Apraksts",
+      "create": "Izveidot darbagaldu",
+      "empty": "Vēl nav darbagaldu.",
+      "createFirst": "Izveidojiet savu pirmo darbagaldu"
+    },
+    "members": {
+      "title": "Dalībnieki",
+      "owner": "Īpašnieks",
+      "role": "Loma",
+      "remove": "Noņemt",
+      "add": "Pievienot",
+      "addLabel": "Pievienot dalībnieku",
+      "selectMember": "Atlasiet dalībnieku…"
+    },
+    "roles": {
+      "title": "Lomas",
+      "new": "Jauna loma",
+      "createTitle": "Jauna loma",
+      "editTitle": "Rediģēt lomu",
+      "nameLabel": "Lomas nosaukums",
+      "namePlaceholder": "Redaktors",
+      "permissionsLabel": "Atļaujas",
+      "default": "Noklusējums",
+      "permCount": "{{count}} atļaujas"
+    },
+    "permissions": {
+      "viewWorkbench": "Skatīt darbagaldu",
+      "manageWorkbench": "Pārvaldīt darbagaldu",
+      "manageMembers": "Pārvaldīt dalībniekus",
+      "manageRoles": "Pārvaldīt lomas",
+      "administrator": "Administrators"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Skatīt darbagaldu un tā saturu",
+      "manageWorkbench": "Pārdēvēt, rediģēt un mainīt redzamību",
+      "manageMembers": "Pievienot, noņemt un mainīt dalībnieku lomas",
+      "manageRoles": "Izveidot, rediģēt un dzēst lomas",
+      "administrator": "Pilna piekļuve — apiet katru atļauju pārbaudi"
+    },
+    "settings": {
+      "detailsTitle": "Darbagalda informācija",
+      "name": "Nosaukums",
+      "description": "Apraksts",
+      "visibilityTitle": "Redzamība",
+      "visibility": "Redzamība",
+      "transferTitle": "Īpašumtiesību nodošana",
+      "newOwner": "Jaunais īpašnieks",
+      "selectMember": "Atlasiet dalībnieku…",
+      "transfer": "Nodot",
+      "dangerTitle": "Bīstamā zona",
+      "deleteHint": "Neatgriezeniski dzēst šo darbagaldu un visus tā datus.",
+      "delete": "Dzēst darbagaldu",
+      "leaveHint": "Pamest šo darbagaldu. Pārvaldnieks var jūs pievienot atkārtoti.",
+      "leave": "Pamest darbagaldu"
+    }
   }
 }

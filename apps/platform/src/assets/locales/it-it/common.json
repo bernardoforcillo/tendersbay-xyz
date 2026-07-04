@@ -272,5 +272,99 @@
       "label": "Spazi di lavoro",
       "manage": "Tutti gli spazi di lavoro"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Caricamento…",
+      "saving": "Salvataggio…",
+      "save": "Salva",
+      "cancel": "Annulla",
+      "creating": "Creazione…",
+      "edit": "Modifica",
+      "delete": "Elimina",
+      "saved": "Salvato"
+    },
+    "nav": {
+      "general": "Generale",
+      "members": "Membri",
+      "roles": "Ruoli",
+      "settings": "Impostazioni",
+      "allWorkbenches": "Tutti i workbench"
+    },
+    "errors": {
+      "notFound": "Questo workbench non è disponibile."
+    },
+    "breadcrumb": {
+      "workspaces": "Spazi di lavoro",
+      "workbenches": "Workbench"
+    },
+    "visibility": {
+      "label": "Visibilità",
+      "private": "Privato",
+      "shared": "Condiviso",
+      "makePrivate": "Rendi privato",
+      "makeShared": "Rendi condiviso",
+      "hint": "I workbench condivisi sono visibili ai membri dello spazio di lavoro che possono visualizzare i workbench."
+    },
+    "list": {
+      "title": "Workbench",
+      "new": "Nuovo workbench",
+      "nameLabel": "Nome del workbench",
+      "namePlaceholder": "Gare Q3",
+      "descriptionLabel": "Descrizione",
+      "create": "Crea workbench",
+      "empty": "Nessun workbench ancora.",
+      "createFirst": "Crea il tuo primo workbench"
+    },
+    "members": {
+      "title": "Membri",
+      "owner": "Proprietario",
+      "role": "Ruolo",
+      "remove": "Rimuovi",
+      "add": "Aggiungi",
+      "addLabel": "Aggiungi membro",
+      "selectMember": "Seleziona un membro…"
+    },
+    "roles": {
+      "title": "Ruoli",
+      "new": "Nuovo ruolo",
+      "createTitle": "Nuovo ruolo",
+      "editTitle": "Modifica ruolo",
+      "nameLabel": "Nome del ruolo",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Autorizzazioni",
+      "default": "Predefinito",
+      "permCount": "{{count}} autorizzazioni"
+    },
+    "permissions": {
+      "viewWorkbench": "Visualizza il workbench",
+      "manageWorkbench": "Gestisci il workbench",
+      "manageMembers": "Gestisci i membri",
+      "manageRoles": "Gestisci i ruoli",
+      "administrator": "Amministratore"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Visualizzare il workbench e i suoi contenuti",
+      "manageWorkbench": "Rinominare, modificare e cambiare la visibilità",
+      "manageMembers": "Aggiungere, rimuovere e cambiare ruolo ai membri",
+      "manageRoles": "Creare, modificare ed eliminare ruoli",
+      "administrator": "Accesso completo — ignora ogni controllo delle autorizzazioni"
+    },
+    "settings": {
+      "detailsTitle": "Dettagli del workbench",
+      "name": "Nome",
+      "description": "Descrizione",
+      "visibilityTitle": "Visibilità",
+      "visibility": "Visibilità",
+      "transferTitle": "Trasferisci la proprietà",
+      "newOwner": "Nuovo proprietario",
+      "selectMember": "Seleziona un membro…",
+      "transfer": "Trasferisci",
+      "dangerTitle": "Zona pericolosa",
+      "deleteHint": "Elimina definitivamente questo workbench e tutti i suoi dati.",
+      "delete": "Elimina workbench",
+      "leaveHint": "Abbandona questo workbench. Un gestore potrà aggiungerti di nuovo.",
+      "leave": "Abbandona workbench"
+    }
   }
 }

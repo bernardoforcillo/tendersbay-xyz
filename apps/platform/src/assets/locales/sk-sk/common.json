@@ -272,5 +272,99 @@
       "label": "Pracovné priestory",
       "manage": "Všetky pracovné priestory"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Načítava sa…",
+      "saving": "Ukladá sa…",
+      "save": "Uložiť",
+      "cancel": "Zrušiť",
+      "creating": "Vytvára sa…",
+      "edit": "Upraviť",
+      "delete": "Odstrániť",
+      "saved": "Uložené"
+    },
+    "nav": {
+      "general": "Všeobecné",
+      "members": "Členovia",
+      "roles": "Roly",
+      "settings": "Nastavenia",
+      "allWorkbenches": "Všetky pracovné plochy"
+    },
+    "errors": {
+      "notFound": "Táto pracovná plocha nie je k dispozícii."
+    },
+    "breadcrumb": {
+      "workspaces": "Pracovné priestory",
+      "workbenches": "Pracovné plochy"
+    },
+    "visibility": {
+      "label": "Viditeľnosť",
+      "private": "Súkromná",
+      "shared": "Zdieľaná",
+      "makePrivate": "Nastaviť ako súkromnú",
+      "makeShared": "Nastaviť ako zdieľanú",
+      "hint": "Zdieľané pracovné plochy sú viditeľné pre členov pracovného priestoru, ktorí môžu zobrazovať pracovné plochy."
+    },
+    "list": {
+      "title": "Pracovné plochy",
+      "new": "Nová pracovná plocha",
+      "nameLabel": "Názov pracovnej plochy",
+      "namePlaceholder": "Ponuky Q3",
+      "descriptionLabel": "Popis",
+      "create": "Vytvoriť pracovnú plochu",
+      "empty": "Zatiaľ žiadne pracovné plochy.",
+      "createFirst": "Vytvorte svoju prvú pracovnú plochu"
+    },
+    "members": {
+      "title": "Členovia",
+      "owner": "Vlastník",
+      "role": "Rola",
+      "remove": "Odstrániť",
+      "add": "Pridať",
+      "addLabel": "Pridať člena",
+      "selectMember": "Vyberte člena…"
+    },
+    "roles": {
+      "title": "Roly",
+      "new": "Nová rola",
+      "createTitle": "Nová rola",
+      "editTitle": "Upraviť rolu",
+      "nameLabel": "Názov roly",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Oprávnenia",
+      "default": "Predvolená",
+      "permCount": "Oprávnenia: {{count}}"
+    },
+    "permissions": {
+      "viewWorkbench": "Zobraziť pracovnú plochu",
+      "manageWorkbench": "Spravovať pracovnú plochu",
+      "manageMembers": "Spravovať členov",
+      "manageRoles": "Spravovať roly",
+      "administrator": "Administrátor"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Zobraziť pracovnú plochu a jej obsah",
+      "manageWorkbench": "Premenovať, upravovať a meniť viditeľnosť",
+      "manageMembers": "Pridávať, odstraňovať a meniť roly členov",
+      "manageRoles": "Vytvárať, upravovať a odstraňovať roly",
+      "administrator": "Plný prístup — obchádza každú kontrolu oprávnení"
+    },
+    "settings": {
+      "detailsTitle": "Podrobnosti pracovnej plochy",
+      "name": "Názov",
+      "description": "Popis",
+      "visibilityTitle": "Viditeľnosť",
+      "visibility": "Viditeľnosť",
+      "transferTitle": "Prevod vlastníctva",
+      "newOwner": "Nový vlastník",
+      "selectMember": "Vyberte člena…",
+      "transfer": "Previesť",
+      "dangerTitle": "Nebezpečná zóna",
+      "deleteHint": "Natrvalo odstrániť túto pracovnú plochu a všetky jej údaje.",
+      "delete": "Odstrániť pracovnú plochu",
+      "leaveHint": "Opustiť túto pracovnú plochu. Správca vás môže znova pridať.",
+      "leave": "Opustiť pracovnú plochu"
+    }
   }
 }

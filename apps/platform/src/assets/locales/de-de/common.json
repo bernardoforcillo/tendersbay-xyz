@@ -272,5 +272,99 @@
       "label": "Workspaces",
       "manage": "Alle Workspaces"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Wird geladen…",
+      "saving": "Wird gespeichert…",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "creating": "Wird erstellt…",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "saved": "Gespeichert"
+    },
+    "nav": {
+      "general": "Allgemein",
+      "members": "Mitglieder",
+      "roles": "Rollen",
+      "settings": "Einstellungen",
+      "allWorkbenches": "Alle Workbenches"
+    },
+    "errors": {
+      "notFound": "Diese Workbench ist nicht verfügbar."
+    },
+    "breadcrumb": {
+      "workspaces": "Workspaces",
+      "workbenches": "Workbenches"
+    },
+    "visibility": {
+      "label": "Sichtbarkeit",
+      "private": "Privat",
+      "shared": "Geteilt",
+      "makePrivate": "Privat machen",
+      "makeShared": "Teilen",
+      "hint": "Geteilte Workbenches sind für Workspace-Mitglieder sichtbar, die Workbenches einsehen dürfen."
+    },
+    "list": {
+      "title": "Workbenches",
+      "new": "Neue Workbench",
+      "nameLabel": "Workbench-Name",
+      "namePlaceholder": "Ausschreibungen Q3",
+      "descriptionLabel": "Beschreibung",
+      "create": "Workbench erstellen",
+      "empty": "Noch keine Workbenches vorhanden.",
+      "createFirst": "Erstellen Sie Ihre erste Workbench"
+    },
+    "members": {
+      "title": "Mitglieder",
+      "owner": "Eigentümer",
+      "role": "Rolle",
+      "remove": "Entfernen",
+      "add": "Hinzufügen",
+      "addLabel": "Mitglied hinzufügen",
+      "selectMember": "Mitglied auswählen…"
+    },
+    "roles": {
+      "title": "Rollen",
+      "new": "Neue Rolle",
+      "createTitle": "Neue Rolle",
+      "editTitle": "Rolle bearbeiten",
+      "nameLabel": "Rollenname",
+      "namePlaceholder": "Bearbeiter",
+      "permissionsLabel": "Berechtigungen",
+      "default": "Standard",
+      "permCount": "{{count}} Berechtigungen"
+    },
+    "permissions": {
+      "viewWorkbench": "Workbench anzeigen",
+      "manageWorkbench": "Workbench verwalten",
+      "manageMembers": "Mitglieder verwalten",
+      "manageRoles": "Rollen verwalten",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Die Workbench und ihre Inhalte einsehen",
+      "manageWorkbench": "Umbenennen, bearbeiten und Sichtbarkeit ändern",
+      "manageMembers": "Mitglieder hinzufügen, entfernen und neu zuordnen",
+      "manageRoles": "Rollen erstellen, bearbeiten und löschen",
+      "administrator": "Vollzugriff — umgeht jede Berechtigungsprüfung"
+    },
+    "settings": {
+      "detailsTitle": "Workbench-Details",
+      "name": "Name",
+      "description": "Beschreibung",
+      "visibilityTitle": "Sichtbarkeit",
+      "visibility": "Sichtbarkeit",
+      "transferTitle": "Eigentum übertragen",
+      "newOwner": "Neuer Eigentümer",
+      "selectMember": "Mitglied auswählen…",
+      "transfer": "Übertragen",
+      "dangerTitle": "Gefahrenzone",
+      "deleteHint": "Diese Workbench und alle zugehörigen Daten dauerhaft löschen.",
+      "delete": "Workbench löschen",
+      "leaveHint": "Diese Workbench verlassen. Ein Manager kann Sie erneut hinzufügen.",
+      "leave": "Workbench verlassen"
+    }
   }
 }

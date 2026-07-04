@@ -272,5 +272,99 @@
       "label": "Arbejdsområder",
       "manage": "Alle arbejdsområder"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Indlæser…",
+      "saving": "Gemmer…",
+      "save": "Gem",
+      "cancel": "Annuller",
+      "creating": "Opretter…",
+      "edit": "Rediger",
+      "delete": "Slet",
+      "saved": "Gemt"
+    },
+    "nav": {
+      "general": "Generelt",
+      "members": "Medlemmer",
+      "roles": "Roller",
+      "settings": "Indstillinger",
+      "allWorkbenches": "Alle arbejdsborde"
+    },
+    "errors": {
+      "notFound": "Dette arbejdsbord er ikke tilgængeligt."
+    },
+    "breadcrumb": {
+      "workspaces": "Arbejdsområder",
+      "workbenches": "Arbejdsborde"
+    },
+    "visibility": {
+      "label": "Synlighed",
+      "private": "Privat",
+      "shared": "Delt",
+      "makePrivate": "Gør privat",
+      "makeShared": "Gør delt",
+      "hint": "Delte arbejdsborde er synlige for medlemmer af arbejdsområdet, der kan se arbejdsborde."
+    },
+    "list": {
+      "title": "Arbejdsborde",
+      "new": "Nyt arbejdsbord",
+      "nameLabel": "Navn på arbejdsbord",
+      "namePlaceholder": "Q3-udbud",
+      "descriptionLabel": "Beskrivelse",
+      "create": "Opret arbejdsbord",
+      "empty": "Ingen arbejdsborde endnu.",
+      "createFirst": "Opret dit første arbejdsbord"
+    },
+    "members": {
+      "title": "Medlemmer",
+      "owner": "Ejer",
+      "role": "Rolle",
+      "remove": "Fjern",
+      "add": "Tilføj",
+      "addLabel": "Tilføj medlem",
+      "selectMember": "Vælg et medlem…"
+    },
+    "roles": {
+      "title": "Roller",
+      "new": "Ny rolle",
+      "createTitle": "Ny rolle",
+      "editTitle": "Rediger rolle",
+      "nameLabel": "Rollenavn",
+      "namePlaceholder": "Redaktør",
+      "permissionsLabel": "Tilladelser",
+      "default": "Standard",
+      "permCount": "{{count}} tilladelser"
+    },
+    "permissions": {
+      "viewWorkbench": "Se arbejdsbord",
+      "manageWorkbench": "Administrer arbejdsbord",
+      "manageMembers": "Administrer medlemmer",
+      "manageRoles": "Administrer roller",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Se arbejdsbordet og dets indhold",
+      "manageWorkbench": "Omdøb, rediger og skift synlighed",
+      "manageMembers": "Tilføj, fjern og skift rolle for medlemmer",
+      "manageRoles": "Opret, rediger og slet roller",
+      "administrator": "Fuld adgang — omgår enhver tilladelseskontrol"
+    },
+    "settings": {
+      "detailsTitle": "Oplysninger om arbejdsbord",
+      "name": "Navn",
+      "description": "Beskrivelse",
+      "visibilityTitle": "Synlighed",
+      "visibility": "Synlighed",
+      "transferTitle": "Overdrag ejerskab",
+      "newOwner": "Ny ejer",
+      "selectMember": "Vælg et medlem…",
+      "transfer": "Overdrag",
+      "dangerTitle": "Farezone",
+      "deleteHint": "Slet dette arbejdsbord og alle dets data permanent.",
+      "delete": "Slet arbejdsbord",
+      "leaveHint": "Forlad dette arbejdsbord. En administrator kan tilføje dig igen.",
+      "leave": "Forlad arbejdsbord"
+    }
   }
 }

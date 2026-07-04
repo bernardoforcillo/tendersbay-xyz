@@ -272,5 +272,99 @@
       "label": "Espaços de trabalho",
       "manage": "Todos os espaços de trabalho"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "A carregar…",
+      "saving": "A guardar…",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "creating": "A criar…",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "saved": "Guardado"
+    },
+    "nav": {
+      "general": "Geral",
+      "members": "Membros",
+      "roles": "Funções",
+      "settings": "Definições",
+      "allWorkbenches": "Todos os workbenches"
+    },
+    "errors": {
+      "notFound": "Este workbench está indisponível."
+    },
+    "breadcrumb": {
+      "workspaces": "Espaços de trabalho",
+      "workbenches": "Workbenches"
+    },
+    "visibility": {
+      "label": "Visibilidade",
+      "private": "Privado",
+      "shared": "Partilhado",
+      "makePrivate": "Tornar privado",
+      "makeShared": "Tornar partilhado",
+      "hint": "Os workbenches partilhados são visíveis para os membros do espaço de trabalho que podem ver workbenches."
+    },
+    "list": {
+      "title": "Workbenches",
+      "new": "Novo workbench",
+      "nameLabel": "Nome do workbench",
+      "namePlaceholder": "Concursos Q3",
+      "descriptionLabel": "Descrição",
+      "create": "Criar workbench",
+      "empty": "Ainda não existem workbenches.",
+      "createFirst": "Crie o seu primeiro workbench"
+    },
+    "members": {
+      "title": "Membros",
+      "owner": "Proprietário",
+      "role": "Função",
+      "remove": "Remover",
+      "add": "Adicionar",
+      "addLabel": "Adicionar membro",
+      "selectMember": "Selecione um membro…"
+    },
+    "roles": {
+      "title": "Funções",
+      "new": "Nova função",
+      "createTitle": "Nova função",
+      "editTitle": "Editar função",
+      "nameLabel": "Nome da função",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Permissões",
+      "default": "Predefinição",
+      "permCount": "{{count}} permissões"
+    },
+    "permissions": {
+      "viewWorkbench": "Ver o workbench",
+      "manageWorkbench": "Gerir o workbench",
+      "manageMembers": "Gerir membros",
+      "manageRoles": "Gerir funções",
+      "administrator": "Administrador"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Ver o workbench e o respetivo conteúdo",
+      "manageWorkbench": "Mudar o nome, editar e alterar a visibilidade",
+      "manageMembers": "Adicionar, remover e alterar a função de membros",
+      "manageRoles": "Criar, editar e eliminar funções",
+      "administrator": "Acesso total — ignora todas as verificações de permissões"
+    },
+    "settings": {
+      "detailsTitle": "Detalhes do workbench",
+      "name": "Nome",
+      "description": "Descrição",
+      "visibilityTitle": "Visibilidade",
+      "visibility": "Visibilidade",
+      "transferTitle": "Transferir a propriedade",
+      "newOwner": "Novo proprietário",
+      "selectMember": "Selecione um membro…",
+      "transfer": "Transferir",
+      "dangerTitle": "Zona de perigo",
+      "deleteHint": "Eliminar permanentemente este workbench e todos os respetivos dados.",
+      "delete": "Eliminar workbench",
+      "leaveHint": "Sair deste workbench. Um gestor pode voltar a adicioná-lo.",
+      "leave": "Sair do workbench"
+    }
   }
 }

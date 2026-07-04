@@ -272,5 +272,99 @@
       "label": "Spazji tax-xogħol",
       "manage": "L-ispazji tax-xogħol kollha"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Qed jitgħabba…",
+      "saving": "Qed jinħażen…",
+      "save": "Issejvja",
+      "cancel": "Ikkanċella",
+      "creating": "Qed jinħoloq…",
+      "edit": "Editja",
+      "delete": "Ħassar",
+      "saved": "Issejvjat"
+    },
+    "nav": {
+      "general": "Ġenerali",
+      "members": "Membri",
+      "roles": "Rwoli",
+      "settings": "Settings",
+      "allWorkbenches": "Il-workbenches kollha"
+    },
+    "errors": {
+      "notFound": "Dan il-workbench mhux disponibbli."
+    },
+    "breadcrumb": {
+      "workspaces": "Spazji tax-xogħol",
+      "workbenches": "Workbenches"
+    },
+    "visibility": {
+      "label": "Viżibbiltà",
+      "private": "Privat",
+      "shared": "Kondiviż",
+      "makePrivate": "Agħmel privat",
+      "makeShared": "Agħmel kondiviż",
+      "hint": "Il-workbenches kondiviżi huma viżibbli għall-membri tal-ispazju tax-xogħol li jistgħu jaraw il-workbenches."
+    },
+    "list": {
+      "title": "Workbenches",
+      "new": "Workbench ġdid",
+      "nameLabel": "Isem il-workbench",
+      "namePlaceholder": "Offerti Q3",
+      "descriptionLabel": "Deskrizzjoni",
+      "create": "Oħloq workbench",
+      "empty": "Għad m'hemm l-ebda workbench.",
+      "createFirst": "Oħloq l-ewwel workbench tiegħek"
+    },
+    "members": {
+      "title": "Membri",
+      "owner": "Sid",
+      "role": "Rwol",
+      "remove": "Neħħi",
+      "add": "Żid",
+      "addLabel": "Żid membru",
+      "selectMember": "Agħżel membru…"
+    },
+    "roles": {
+      "title": "Rwoli",
+      "new": "Rwol ġdid",
+      "createTitle": "Rwol ġdid",
+      "editTitle": "Editja r-rwol",
+      "nameLabel": "Isem ir-rwol",
+      "namePlaceholder": "Editur",
+      "permissionsLabel": "Permessi",
+      "default": "Prestabbilit",
+      "permCount": "{{count}} permessi"
+    },
+    "permissions": {
+      "viewWorkbench": "Ara l-workbench",
+      "manageWorkbench": "Immaniġġja l-workbench",
+      "manageMembers": "Immaniġġja l-membri",
+      "manageRoles": "Immaniġġja r-rwoli",
+      "administrator": "Amministratur"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Ara l-workbench u l-kontenut tiegħu",
+      "manageWorkbench": "Ibdel l-isem, editja u biddel il-viżibbiltà",
+      "manageMembers": "Żid, neħħi u biddel ir-rwol tal-membri",
+      "manageRoles": "Oħloq, editja u ħassar rwoli",
+      "administrator": "Aċċess sħiħ — jaqbeż kull verifika ta' permess"
+    },
+    "settings": {
+      "detailsTitle": "Dettalji tal-workbench",
+      "name": "Isem",
+      "description": "Deskrizzjoni",
+      "visibilityTitle": "Viżibbiltà",
+      "visibility": "Viżibbiltà",
+      "transferTitle": "Ittrasferixxi s-sjieda",
+      "newOwner": "Sid ġdid",
+      "selectMember": "Agħżel membru…",
+      "transfer": "Ittrasferixxi",
+      "dangerTitle": "Żona ta' periklu",
+      "deleteHint": "Ħassar b'mod permanenti dan il-workbench u d-data kollha tiegħu.",
+      "delete": "Ħassar il-workbench",
+      "leaveHint": "Itlaq minn dan il-workbench. Maniġer jista' jerġa' jżidek.",
+      "leave": "Itlaq mill-workbench"
+    }
   }
 }

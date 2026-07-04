@@ -272,5 +272,99 @@
       "label": "Tööruumid",
       "manage": "Kõik tööruumid"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Laadimine…",
+      "saving": "Salvestamine…",
+      "save": "Salvesta",
+      "cancel": "Tühista",
+      "creating": "Loomine…",
+      "edit": "Muuda",
+      "delete": "Kustuta",
+      "saved": "Salvestatud"
+    },
+    "nav": {
+      "general": "Üldine",
+      "members": "Liikmed",
+      "roles": "Rollid",
+      "settings": "Seaded",
+      "allWorkbenches": "Kõik töölauad"
+    },
+    "errors": {
+      "notFound": "See töölaud pole saadaval."
+    },
+    "breadcrumb": {
+      "workspaces": "Tööruumid",
+      "workbenches": "Töölauad"
+    },
+    "visibility": {
+      "label": "Nähtavus",
+      "private": "Privaatne",
+      "shared": "Jagatud",
+      "makePrivate": "Muuda privaatseks",
+      "makeShared": "Muuda jagatuks",
+      "hint": "Jagatud töölauad on nähtavad tööruumi liikmetele, kes saavad töölaudu vaadata."
+    },
+    "list": {
+      "title": "Töölauad",
+      "new": "Uus töölaud",
+      "nameLabel": "Töölaua nimi",
+      "namePlaceholder": "Q3 pakkumised",
+      "descriptionLabel": "Kirjeldus",
+      "create": "Loo töölaud",
+      "empty": "Töölaudu pole veel.",
+      "createFirst": "Loo oma esimene töölaud"
+    },
+    "members": {
+      "title": "Liikmed",
+      "owner": "Omanik",
+      "role": "Roll",
+      "remove": "Eemalda",
+      "add": "Lisa",
+      "addLabel": "Lisa liige",
+      "selectMember": "Vali liige…"
+    },
+    "roles": {
+      "title": "Rollid",
+      "new": "Uus roll",
+      "createTitle": "Uus roll",
+      "editTitle": "Muuda rolli",
+      "nameLabel": "Rolli nimi",
+      "namePlaceholder": "Toimetaja",
+      "permissionsLabel": "Õigused",
+      "default": "Vaikimisi",
+      "permCount": "{{count}} õigust"
+    },
+    "permissions": {
+      "viewWorkbench": "Vaata töölauda",
+      "manageWorkbench": "Halda töölauda",
+      "manageMembers": "Halda liikmeid",
+      "manageRoles": "Halda rolle",
+      "administrator": "Administraator"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Näe töölauda ja selle sisu",
+      "manageWorkbench": "Nimeta ümber, muuda ja vaheta nähtavust",
+      "manageMembers": "Lisa, eemalda ja muuda liikmete rolle",
+      "manageRoles": "Loo, muuda ja kustuta rolle",
+      "administrator": "Täielik juurdepääs — möödub igast õiguste kontrollist"
+    },
+    "settings": {
+      "detailsTitle": "Töölaua andmed",
+      "name": "Nimi",
+      "description": "Kirjeldus",
+      "visibilityTitle": "Nähtavus",
+      "visibility": "Nähtavus",
+      "transferTitle": "Omandiõiguse üleandmine",
+      "newOwner": "Uus omanik",
+      "selectMember": "Vali liige…",
+      "transfer": "Anna üle",
+      "dangerTitle": "Ohutsoon",
+      "deleteHint": "Kustuta see töölaud ja kõik selle andmed jäädavalt.",
+      "delete": "Kustuta töölaud",
+      "leaveHint": "Lahku sellest töölauast. Haldur saab sind uuesti lisada.",
+      "leave": "Lahku töölauast"
+    }
   }
 }

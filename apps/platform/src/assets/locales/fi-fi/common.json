@@ -272,5 +272,99 @@
       "label": "Työtilat",
       "manage": "Kaikki työtilat"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Ladataan…",
+      "saving": "Tallennetaan…",
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "creating": "Luodaan…",
+      "edit": "Muokkaa",
+      "delete": "Poista",
+      "saved": "Tallennettu"
+    },
+    "nav": {
+      "general": "Yleiset",
+      "members": "Jäsenet",
+      "roles": "Roolit",
+      "settings": "Asetukset",
+      "allWorkbenches": "Kaikki työpöydät"
+    },
+    "errors": {
+      "notFound": "Tämä työpöytä ei ole käytettävissä."
+    },
+    "breadcrumb": {
+      "workspaces": "Työtilat",
+      "workbenches": "Työpöydät"
+    },
+    "visibility": {
+      "label": "Näkyvyys",
+      "private": "Yksityinen",
+      "shared": "Jaettu",
+      "makePrivate": "Tee yksityiseksi",
+      "makeShared": "Tee jaetuksi",
+      "hint": "Jaetut työpöydät näkyvät työtilan jäsenille, joilla on oikeus tarkastella työpöytiä."
+    },
+    "list": {
+      "title": "Työpöydät",
+      "new": "Uusi työpöytä",
+      "nameLabel": "Työpöydän nimi",
+      "namePlaceholder": "Q3-tarjoukset",
+      "descriptionLabel": "Kuvaus",
+      "create": "Luo työpöytä",
+      "empty": "Ei vielä työpöytiä.",
+      "createFirst": "Luo ensimmäinen työpöytäsi"
+    },
+    "members": {
+      "title": "Jäsenet",
+      "owner": "Omistaja",
+      "role": "Rooli",
+      "remove": "Poista",
+      "add": "Lisää",
+      "addLabel": "Lisää jäsen",
+      "selectMember": "Valitse jäsen…"
+    },
+    "roles": {
+      "title": "Roolit",
+      "new": "Uusi rooli",
+      "createTitle": "Uusi rooli",
+      "editTitle": "Muokkaa roolia",
+      "nameLabel": "Roolin nimi",
+      "namePlaceholder": "Muokkaaja",
+      "permissionsLabel": "Käyttöoikeudet",
+      "default": "Oletus",
+      "permCount": "{{count}} käyttöoikeutta"
+    },
+    "permissions": {
+      "viewWorkbench": "Näytä työpöytä",
+      "manageWorkbench": "Hallitse työpöytää",
+      "manageMembers": "Hallitse jäseniä",
+      "manageRoles": "Hallitse rooleja",
+      "administrator": "Järjestelmänvalvoja"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Näe työpöytä ja sen sisältö",
+      "manageWorkbench": "Nimeä uudelleen, muokkaa ja vaihda näkyvyyttä",
+      "manageMembers": "Lisää, poista ja vaihda jäsenten rooleja",
+      "manageRoles": "Luo, muokkaa ja poista rooleja",
+      "administrator": "Täysi käyttöoikeus — ohittaa jokaisen käyttöoikeustarkistuksen"
+    },
+    "settings": {
+      "detailsTitle": "Työpöydän tiedot",
+      "name": "Nimi",
+      "description": "Kuvaus",
+      "visibilityTitle": "Näkyvyys",
+      "visibility": "Näkyvyys",
+      "transferTitle": "Siirrä omistajuus",
+      "newOwner": "Uusi omistaja",
+      "selectMember": "Valitse jäsen…",
+      "transfer": "Siirrä",
+      "dangerTitle": "Vaaravyöhyke",
+      "deleteHint": "Poista tämä työpöytä ja kaikki sen tiedot pysyvästi.",
+      "delete": "Poista työpöytä",
+      "leaveHint": "Poistu tästä työpöydästä. Ylläpitäjä voi lisätä sinut uudelleen.",
+      "leave": "Poistu työpöydästä"
+    }
   }
 }

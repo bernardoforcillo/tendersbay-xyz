@@ -276,5 +276,99 @@
       "label": "Przestrzenie robocze",
       "manage": "Wszystkie przestrzenie robocze"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Ładowanie…",
+      "saving": "Zapisywanie…",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "creating": "Tworzenie…",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "saved": "Zapisano"
+    },
+    "nav": {
+      "general": "Ogólne",
+      "members": "Członkowie",
+      "roles": "Role",
+      "settings": "Ustawienia",
+      "allWorkbenches": "Wszystkie panele robocze"
+    },
+    "errors": {
+      "notFound": "Ten panel roboczy jest niedostępny."
+    },
+    "breadcrumb": {
+      "workspaces": "Przestrzenie robocze",
+      "workbenches": "Panele robocze"
+    },
+    "visibility": {
+      "label": "Widoczność",
+      "private": "Prywatny",
+      "shared": "Współdzielony",
+      "makePrivate": "Ustaw jako prywatny",
+      "makeShared": "Ustaw jako współdzielony",
+      "hint": "Współdzielone panele robocze są widoczne dla członków przestrzeni roboczej, którzy mogą je przeglądać."
+    },
+    "list": {
+      "title": "Panele robocze",
+      "new": "Nowy panel roboczy",
+      "nameLabel": "Nazwa panelu roboczego",
+      "namePlaceholder": "Przetargi Q3",
+      "descriptionLabel": "Opis",
+      "create": "Utwórz panel roboczy",
+      "empty": "Nie ma jeszcze paneli roboczych.",
+      "createFirst": "Utwórz swój pierwszy panel roboczy"
+    },
+    "members": {
+      "title": "Członkowie",
+      "owner": "Właściciel",
+      "role": "Rola",
+      "remove": "Usuń",
+      "add": "Dodaj",
+      "addLabel": "Dodaj członka",
+      "selectMember": "Wybierz członka…"
+    },
+    "roles": {
+      "title": "Role",
+      "new": "Nowa rola",
+      "createTitle": "Nowa rola",
+      "editTitle": "Edytuj rolę",
+      "nameLabel": "Nazwa roli",
+      "namePlaceholder": "Edytor",
+      "permissionsLabel": "Uprawnienia",
+      "default": "Domyślna",
+      "permCount": "Uprawnienia: {{count}}"
+    },
+    "permissions": {
+      "viewWorkbench": "Wyświetlanie panelu roboczego",
+      "manageWorkbench": "Zarządzanie panelem roboczym",
+      "manageMembers": "Zarządzanie członkami",
+      "manageRoles": "Zarządzanie rolami",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Wyświetlanie panelu roboczego i jego zawartości",
+      "manageWorkbench": "Zmiana nazwy, edycja i zmiana widoczności",
+      "manageMembers": "Dodawanie, usuwanie i zmiana ról członków",
+      "manageRoles": "Tworzenie, edytowanie i usuwanie ról",
+      "administrator": "Pełny dostęp — pomija każde sprawdzenie uprawnień"
+    },
+    "settings": {
+      "detailsTitle": "Szczegóły panelu roboczego",
+      "name": "Nazwa",
+      "description": "Opis",
+      "visibilityTitle": "Widoczność",
+      "visibility": "Widoczność",
+      "transferTitle": "Przeniesienie własności",
+      "newOwner": "Nowy właściciel",
+      "selectMember": "Wybierz członka…",
+      "transfer": "Przenieś",
+      "dangerTitle": "Strefa zagrożenia",
+      "deleteHint": "Trwale usuń ten panel roboczy i wszystkie jego dane.",
+      "delete": "Usuń panel roboczy",
+      "leaveHint": "Opuść ten panel roboczy. Menedżer może dodać Cię ponownie.",
+      "leave": "Opuść panel roboczy"
+    }
   }
 }

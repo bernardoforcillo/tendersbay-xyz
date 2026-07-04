@@ -272,5 +272,99 @@
       "label": "Espaces de travail",
       "manage": "Tous les espaces de travail"
     }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Chargement…",
+      "saving": "Enregistrement…",
+      "save": "Enregistrer",
+      "cancel": "Annuler",
+      "creating": "Création…",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "saved": "Enregistré"
+    },
+    "nav": {
+      "general": "Général",
+      "members": "Membres",
+      "roles": "Rôles",
+      "settings": "Paramètres",
+      "allWorkbenches": "Tous les espaces de travail collaboratifs"
+    },
+    "errors": {
+      "notFound": "Cet espace de travail collaboratif est indisponible."
+    },
+    "breadcrumb": {
+      "workspaces": "Espaces de travail",
+      "workbenches": "Espaces de travail collaboratifs"
+    },
+    "visibility": {
+      "label": "Visibilité",
+      "private": "Privé",
+      "shared": "Partagé",
+      "makePrivate": "Rendre privé",
+      "makeShared": "Rendre partagé",
+      "hint": "Les espaces de travail collaboratifs partagés sont visibles par les membres de l'espace de travail pouvant les consulter."
+    },
+    "list": {
+      "title": "Espaces de travail collaboratifs",
+      "new": "Nouvel espace collaboratif",
+      "nameLabel": "Nom de l'espace collaboratif",
+      "namePlaceholder": "Appels d'offres T3",
+      "descriptionLabel": "Description",
+      "create": "Créer l'espace collaboratif",
+      "empty": "Aucun espace de travail collaboratif pour le moment.",
+      "createFirst": "Créez votre premier espace collaboratif"
+    },
+    "members": {
+      "title": "Membres",
+      "owner": "Propriétaire",
+      "role": "Rôle",
+      "remove": "Retirer",
+      "add": "Ajouter",
+      "addLabel": "Ajouter un membre",
+      "selectMember": "Sélectionner un membre…"
+    },
+    "roles": {
+      "title": "Rôles",
+      "new": "Nouveau rôle",
+      "createTitle": "Nouveau rôle",
+      "editTitle": "Modifier le rôle",
+      "nameLabel": "Nom du rôle",
+      "namePlaceholder": "Éditeur",
+      "permissionsLabel": "Autorisations",
+      "default": "Par défaut",
+      "permCount": "{{count}} autorisations"
+    },
+    "permissions": {
+      "viewWorkbench": "Consulter l'espace collaboratif",
+      "manageWorkbench": "Gérer l'espace collaboratif",
+      "manageMembers": "Gérer les membres",
+      "manageRoles": "Gérer les rôles",
+      "administrator": "Administrateur"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Voir l'espace collaboratif et son contenu",
+      "manageWorkbench": "Renommer, modifier et changer la visibilité",
+      "manageMembers": "Ajouter, retirer et changer le rôle des membres",
+      "manageRoles": "Créer, modifier et supprimer des rôles",
+      "administrator": "Accès complet — contourne toute vérification d'autorisation"
+    },
+    "settings": {
+      "detailsTitle": "Détails de l'espace collaboratif",
+      "name": "Nom",
+      "description": "Description",
+      "visibilityTitle": "Visibilité",
+      "visibility": "Visibilité",
+      "transferTitle": "Transférer la propriété",
+      "newOwner": "Nouveau propriétaire",
+      "selectMember": "Sélectionner un membre…",
+      "transfer": "Transférer",
+      "dangerTitle": "Zone de danger",
+      "deleteHint": "Supprimer définitivement cet espace collaboratif et toutes ses données.",
+      "delete": "Supprimer l'espace collaboratif",
+      "leaveHint": "Quitter cet espace collaboratif. Un gestionnaire pourra vous y réajouter.",
+      "leave": "Quitter l'espace collaboratif"
+    }
   }
 }
