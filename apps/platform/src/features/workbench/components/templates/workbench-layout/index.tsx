@@ -1,12 +1,13 @@
 import { Link, Outlet, useParams } from '@tanstack/react-router';
+import { Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { WorkbenchContext } from '~/features/workbench/context';
 import { useWorkbench } from '~/features/workbench/hooks';
 import { BTN_SECONDARY } from '~/features/workbench/ui';
 import { Breadcrumb } from '~/features/workspace/components/molecules/breadcrumb';
 
-const TAB =
-  'rounded-lg px-3 py-2 text-sm font-medium text-ink-500 no-underline transition-colors hover:bg-cream-200 hover:text-ink-900 [&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
+const GEAR =
+  'shrink-0 rounded-lg p-2 text-ink-400 no-underline transition-colors hover:bg-cream-200 hover:text-ink-900 [&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
 
 export function WorkbenchLayout() {
   const { workspaceId, workbenchId } = useParams({
@@ -40,29 +41,6 @@ export function WorkbenchLayout() {
   }
 
   const { workbench, myPermissions, workspaceName } = data;
-  const tabs = [
-    {
-      to: '/workspaces/$workspaceId/workbench/$workbenchId',
-      key: 'overview',
-      label: t('workbench.nav.overview', 'Overview'),
-      exact: true,
-    },
-    {
-      to: '/workspaces/$workspaceId/workbench/$workbenchId/members',
-      key: 'members',
-      label: t('workbench.nav.members', 'Members'),
-    },
-    {
-      to: '/workspaces/$workspaceId/workbench/$workbenchId/roles',
-      key: 'roles',
-      label: t('workbench.nav.roles', 'Roles'),
-    },
-    {
-      to: '/workspaces/$workspaceId/workbench/$workbenchId/settings',
-      key: 'settings',
-      label: t('workbench.nav.settings', 'Settings'),
-    },
-  ] as const;
 
   return (
     <WorkbenchContext.Provider
@@ -82,25 +60,22 @@ export function WorkbenchLayout() {
               { label: workbench.name },
             ]}
           />
-          <div>
-            <h1 className="font-display text-2xl text-ink-900">{workbench.name}</h1>
-            {workbench.description && (
-              <p className="text-sm text-ink-500">{workbench.description}</p>
-            )}
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="font-display text-2xl text-ink-900">{workbench.name}</h1>
+              {workbench.description && (
+                <p className="text-sm text-ink-500">{workbench.description}</p>
+              )}
+            </div>
+            <Link
+              to="/workspaces/$workspaceId/workbench/$workbenchId/settings"
+              params={{ workspaceId, workbenchId }}
+              aria-label={t('workbench.nav.settings', 'Settings')}
+              className={GEAR}
+            >
+              <Settings size={18} aria-hidden="true" />
+            </Link>
           </div>
-          <nav className="flex flex-wrap gap-1 border-b border-cream-200 pb-2">
-            {tabs.map((tab) => (
-              <Link
-                key={tab.key}
-                to={tab.to}
-                params={{ workspaceId, workbenchId }}
-                activeOptions={'exact' in tab && tab.exact ? { exact: true } : undefined}
-                className={TAB}
-              >
-                {tab.label}
-              </Link>
-            ))}
-          </nav>
         </header>
         <Outlet />
       </div>
