@@ -364,7 +364,8 @@ func TestCreateWorkspace_SeedsRolesAndOwnerMember(t *testing.T) {
 		t.Errorf("Member role should be default")
 	}
 	if admin.Permissions != workspace.PermViewWorkspace|workspace.PermManageWorkspace|workspace.PermManageMembers|
-		workspace.PermManageRoles|workspace.PermCreateInvite|workspace.PermManageInvites|workspace.PermAdministrator {
+		workspace.PermManageRoles|workspace.PermCreateInvite|workspace.PermManageInvites|workspace.PermAdministrator|
+		workspace.PermViewWorkbenches|workspace.PermCreateWorkbench|workspace.PermManageWorkbenches {
 		t.Errorf("Admin role missing permissions: %b", admin.Permissions)
 	}
 	m, err := memRepo{s}.Find(context.Background(), ws.ID, "owner")
@@ -601,6 +602,21 @@ func TestJoinViaInviteLink_AlreadyMemberNoIncrement(t *testing.T) {
 	got, _ := linkRepo{s}.FindByID(context.Background(), link.ID)
 	if got.UseCount != 0 {
 		t.Errorf("use_count = %d, want 0 (already a member)", got.UseCount)
+	}
+}
+
+func TestCreateWorkspace_SeedsWorkbenchBitsOnDefaultRole(t *testing.T) {
+	svc, s, _ := newService(time.Hour)
+	ws, err := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
+	if err != nil {
+		t.Fatalf("CreateWorkspace: %v", err)
+	}
+	_, member := rolesOf(s, ws.ID)
+	if !member.Permissions.Has(workspace.PermViewWorkbenches) || !member.Permissions.Has(workspace.PermCreateWorkbench) {
+		t.Fatalf("default role missing workbench bits: %b", member.Permissions)
+	}
+	if member.Permissions.Has(workspace.PermManageWorkbenches) {
+		t.Fatalf("default role must not have ManageWorkbenches")
 	}
 }
 

@@ -33,13 +33,17 @@ const (
 	PermManageInvites   Permission = 1 << 5 // list / revoke invites and links
 	PermAdministrator   Permission = 1 << 6 // bypass all non-owner-only checks
 
-	// 1<<20 .. RESERVED for the workbench — do not assign.
+	// 1<<20.. — workbench feature bits (see internal/core/workbench).
+	PermViewWorkbenches   Permission = 1 << 20 // see shared workbenches in the workspace
+	PermCreateWorkbench   Permission = 1 << 21 // create new workbenches
+	PermManageWorkbenches Permission = 1 << 22 // admin over all workbenches (bypass per-workbench ACL)
 )
 
 // permAdminRole is every currently-defined bit; the seeded "Admin" role and the
 // workspace owner both hold this mask.
 const permAdminRole = PermViewWorkspace | PermManageWorkspace | PermManageMembers |
-	PermManageRoles | PermCreateInvite | PermManageInvites | PermAdministrator
+	PermManageRoles | PermCreateInvite | PermManageInvites | PermAdministrator |
+	PermViewWorkbenches | PermCreateWorkbench | PermManageWorkbenches
 
 // Has reports whether p contains every bit in need.
 func (p Permission) Has(need Permission) bool { return p&need == need }
@@ -332,7 +336,7 @@ func (s *Service) CreateWorkspace(ctx context.Context, userID, name, slug string
 		if err != nil {
 			return err
 		}
-		if _, err := r.Roles.Create(ctx, Role{WorkspaceID: ws.ID, Name: "Member", Permissions: PermViewWorkspace, IsDefault: true}); err != nil {
+		if _, err := r.Roles.Create(ctx, Role{WorkspaceID: ws.ID, Name: "Member", Permissions: PermViewWorkspace | PermViewWorkbenches | PermCreateWorkbench, IsDefault: true}); err != nil {
 			return err
 		}
 		if _, err := r.Members.Add(ctx, Member{WorkspaceID: ws.ID, UserID: userID, RoleID: admin.ID}); err != nil {
