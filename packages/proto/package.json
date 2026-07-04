@@ -9,7 +9,9 @@
     "./user/v1/user_pb": "./src/gen/user/v1/user_pb.js",
     "./user/v1/user_connect": "./src/gen/user/v1/user_connect.js",
     "./workspace/v1/workspace_pb": "./src/gen/workspace/v1/workspace_pb.js",
-    "./workspace/v1/workspace_connect": "./src/gen/workspace/v1/workspace_connect.js"
+    "./workspace/v1/workspace_connect": "./src/gen/workspace/v1/workspace_connect.js",
+    "./workbench/v1/workbench_pb": "./src/gen/workbench/v1/workbench_pb.js",
+    "./workbench/v1/workbench_connect": "./src/gen/workbench/v1/workbench_connect.js"
   },
   "peerDependencies": {
     "@bufbuild/protobuf": "^2.0.0",
