@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Field } from '~/features/auth/components/atoms/field';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
 import { authClient } from '~/lib/api/client';
+import { useRedirectParam } from '~/lib/redirect';
 
 const BTN =
   'mt-2 w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition data-[hovered]:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-60';
@@ -12,9 +13,14 @@ const BTN =
 export function SignupPage() {
   const { locale } = useParams({ from: '/$locale/auth/signup' });
   const { t } = useTranslation();
+  const { raw: redirectRaw } = useRedirectParam();
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [pending, setPending] = useState(false);
+
+  const loginHref = redirectRaw
+    ? `/${locale}/auth/login?redirect=${encodeURIComponent(redirectRaw)}`
+    : `/${locale}/auth/login`;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -52,10 +58,7 @@ export function SignupPage() {
           )}
         </p>
         <p className="mt-4 text-center text-sm text-ink-500">
-          <a
-            href={`/${locale}/auth/login`}
-            className="font-semibold text-brand-700 hover:text-brand-800"
-          >
+          <a href={loginHref} className="font-semibold text-brand-700 hover:text-brand-800">
             {t('auth.signup.backToLogin', 'Back to sign in')}
           </a>
         </p>
@@ -105,10 +108,7 @@ export function SignupPage() {
       </Form>
       <p className="mt-6 text-center text-sm text-ink-500">
         {t('auth.signup.login', 'Already have an account?')}{' '}
-        <a
-          href={`/${locale}/auth/login`}
-          className="font-semibold text-brand-700 hover:text-brand-800"
-        >
+        <a href={loginHref} className="font-semibold text-brand-700 hover:text-brand-800">
           {t('auth.signup.signIn', 'Sign in')}
         </a>
       </p>

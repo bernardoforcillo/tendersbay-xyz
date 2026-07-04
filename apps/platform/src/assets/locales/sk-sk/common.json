@@ -147,5 +147,129 @@
       "deadline": "Termín",
       "daysLeft": "{{count}} dní"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Načítava sa…",
+      "saving": "Ukladá sa…",
+      "save": "Uložiť",
+      "cancel": "Zrušiť",
+      "creating": "Vytvára sa…",
+      "edit": "Upraviť",
+      "delete": "Odstrániť",
+      "saved": "Uložené"
+    },
+    "nav": {
+      "overview": "Prehľad",
+      "members": "Členovia",
+      "roles": "Roly",
+      "invites": "Pozvánky",
+      "settings": "Nastavenia",
+      "allWorkspaces": "Všetky pracovné priestory"
+    },
+    "errors": {
+      "notFound": "Tento pracovný priestor nie je k dispozícii."
+    },
+    "list": {
+      "title": "Pracovné priestory",
+      "new": "Nový pracovný priestor",
+      "nameLabel": "Názov pracovného priestoru",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Vytvoriť pracovný priestor",
+      "empty": "Zatiaľ nie ste súčasťou žiadneho pracovného priestoru.",
+      "createFirst": "Vytvorte svoj prvý pracovný priestor"
+    },
+    "overview": {
+      "welcome": "Vitajte v",
+      "workbenchSoon": "Spoločné pracovné prostredie, kde môže váš tím spolupracovať na verejných súťažiach, bude čoskoro k dispozícii. Zatiaľ spravujte členov, roly a pozvánky na kartách vyššie."
+    },
+    "members": {
+      "title": "Členovia",
+      "owner": "Vlastník",
+      "role": "Rola",
+      "remove": "Odstrániť"
+    },
+    "roles": {
+      "title": "Roly",
+      "new": "Nová rola",
+      "createTitle": "Nová rola",
+      "editTitle": "Upraviť rolu",
+      "nameLabel": "Názov roly",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Oprávnenia",
+      "default": "Predvolená",
+      "permCount": "Oprávnenia: {{count}}"
+    },
+    "permissions": {
+      "viewWorkspace": "Zobraziť pracovný priestor",
+      "manageWorkspace": "Spravovať pracovný priestor",
+      "manageMembers": "Spravovať členov",
+      "manageRoles": "Spravovať roly",
+      "createInvite": "Vytvárať pozvánky",
+      "manageInvites": "Spravovať pozvánky",
+      "administrator": "Administrátor"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Zobraziť pracovný priestor a jeho obsah",
+      "manageWorkspace": "Premenovať a meniť nastavenia pracovného priestoru",
+      "manageMembers": "Meniť roly členov a odstraňovať členov",
+      "manageRoles": "Vytvárať, upravovať a odstraňovať roly",
+      "createInvite": "Pozývať ľudí e-mailom alebo odkazom",
+      "manageInvites": "Rušiť pozvánky a odkazy",
+      "administrator": "Plný prístup — obchádza každú kontrolu oprávnení"
+    },
+    "invites": {
+      "emailTitle": "Pozvať e-mailom",
+      "email": "E-mailová adresa",
+      "role": "Rola",
+      "send": "Odoslať pozvánku",
+      "revoke": "Zrušiť",
+      "linkTitle": "Zdieľané odkazy",
+      "maxUses": "Maximálny počet použití (0 = bez obmedzenia)",
+      "createLink": "Vytvoriť odkaz",
+      "copy": "Kopírovať",
+      "copied": "Skopírované",
+      "usesLimited": "Použitia: {{used}} / {{max}}",
+      "usesUnlimited": "Použitia: {{used}}",
+      "noPermission": "Nemáte oprávnenie spravovať pozvánky."
+    },
+    "settings": {
+      "detailsTitle": "Podrobnosti pracovného priestoru",
+      "name": "Názov",
+      "slug": "Slug",
+      "transferTitle": "Prevod vlastníctva",
+      "newOwner": "Nový vlastník",
+      "selectMember": "Vyberte člena…",
+      "transfer": "Previesť",
+      "dangerTitle": "Nebezpečná zóna",
+      "deleteHint": "Natrvalo odstrániť tento pracovný priestor a všetky jeho údaje.",
+      "delete": "Odstrániť pracovný priestor",
+      "leaveHint": "Opustiť tento pracovný priestor. Môžete sa znova pripojiť s novou pozvánkou.",
+      "leave": "Opustiť pracovný priestor"
+    },
+    "accept": {
+      "loading": "Kontroluje sa pozvánka…",
+      "invalidTitle": "Pozvánka nie je k dispozícii",
+      "invalidBody": "Táto pozvánka je neplatná alebo jej platnosť vypršala.",
+      "title": "Máte pozvánku",
+      "body": "Pripojte sa k {{workspace}} ako {{role}}.",
+      "accept": "Prijať pozvánku",
+      "accepting": "Pripája sa…",
+      "signIn": "Prihláste sa na prijatie"
+    },
+    "join": {
+      "loading": "Kontroluje sa odkaz…",
+      "invalidTitle": "Odkaz nie je k dispozícii",
+      "invalidBody": "Tento odkaz s pozvánkou je neplatný, jeho platnosť vypršala alebo bol plne využitý.",
+      "title": "Pripojiť sa k pracovnému priestoru",
+      "body": "Pripojte sa k {{workspace}} ako {{role}}.",
+      "join": "Pripojiť sa k pracovnému priestoru",
+      "joining": "Pripája sa…",
+      "signIn": "Prihláste sa na pripojenie"
+    },
+    "switcher": {
+      "label": "Pracovné priestory",
+      "manage": "Všetky pracovné priestory"
+    }
   }
 }

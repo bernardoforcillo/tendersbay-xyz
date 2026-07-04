@@ -6,7 +6,7 @@ import { Logo } from '~/features/landing/components/atoms';
 type AuthCardProps = {
   heading: string;
   description?: string;
-  children: ReactNode;
+  children?: ReactNode;
 };
 
 export function AuthCard({ heading, description, children }: AuthCardProps) {

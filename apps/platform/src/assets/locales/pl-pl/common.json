@@ -151,5 +151,129 @@
       "deadline": "Termin",
       "daysLeft": "{{count}} dni"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Ładowanie…",
+      "saving": "Zapisywanie…",
+      "save": "Zapisz",
+      "cancel": "Anuluj",
+      "creating": "Tworzenie…",
+      "edit": "Edytuj",
+      "delete": "Usuń",
+      "saved": "Zapisano"
+    },
+    "nav": {
+      "overview": "Przegląd",
+      "members": "Członkowie",
+      "roles": "Role",
+      "invites": "Zaproszenia",
+      "settings": "Ustawienia",
+      "allWorkspaces": "Wszystkie przestrzenie robocze"
+    },
+    "errors": {
+      "notFound": "Ta przestrzeń robocza jest niedostępna."
+    },
+    "list": {
+      "title": "Przestrzenie robocze",
+      "new": "Nowa przestrzeń robocza",
+      "nameLabel": "Nazwa przestrzeni roboczej",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Utwórz przestrzeń roboczą",
+      "empty": "Nie należysz jeszcze do żadnej przestrzeni roboczej.",
+      "createFirst": "Utwórz swoją pierwszą przestrzeń roboczą"
+    },
+    "overview": {
+      "welcome": "Witamy w",
+      "workbenchSoon": "Wspólne środowisko pracy, w którym Twój zespół może razem pracować nad przetargami, będzie dostępne wkrótce. Na razie zarządzaj członkami, rolami i zaproszeniami z zakładek powyżej."
+    },
+    "members": {
+      "title": "Członkowie",
+      "owner": "Właściciel",
+      "role": "Rola",
+      "remove": "Usuń"
+    },
+    "roles": {
+      "title": "Role",
+      "new": "Nowa rola",
+      "createTitle": "Nowa rola",
+      "editTitle": "Edytuj rolę",
+      "nameLabel": "Nazwa roli",
+      "namePlaceholder": "Edytor",
+      "permissionsLabel": "Uprawnienia",
+      "default": "Domyślna",
+      "permCount": "Uprawnienia: {{count}}"
+    },
+    "permissions": {
+      "viewWorkspace": "Wyświetlanie przestrzeni roboczej",
+      "manageWorkspace": "Zarządzanie przestrzenią roboczą",
+      "manageMembers": "Zarządzanie członkami",
+      "manageRoles": "Zarządzanie rolami",
+      "createInvite": "Tworzenie zaproszeń",
+      "manageInvites": "Zarządzanie zaproszeniami",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Wyświetlanie przestrzeni roboczej i jej zawartości",
+      "manageWorkspace": "Zmiana nazwy i ustawień przestrzeni roboczej",
+      "manageMembers": "Zmiana ról członków i usuwanie członków",
+      "manageRoles": "Tworzenie, edytowanie i usuwanie ról",
+      "createInvite": "Zapraszanie osób przez e-mail lub link",
+      "manageInvites": "Unieważnianie zaproszeń i linków",
+      "administrator": "Pełny dostęp — pomija każde sprawdzenie uprawnień"
+    },
+    "invites": {
+      "emailTitle": "Zaproś przez e-mail",
+      "email": "Adres e-mail",
+      "role": "Rola",
+      "send": "Wyślij zaproszenie",
+      "revoke": "Unieważnij",
+      "linkTitle": "Linki do udostępniania",
+      "maxUses": "Maksymalna liczba użyć (0 = bez limitu)",
+      "createLink": "Utwórz link",
+      "copy": "Kopiuj",
+      "copied": "Skopiowano",
+      "usesLimited": "Użycia: {{used}} / {{max}}",
+      "usesUnlimited": "Użycia: {{used}}",
+      "noPermission": "Nie masz uprawnień do zarządzania zaproszeniami."
+    },
+    "settings": {
+      "detailsTitle": "Szczegóły przestrzeni roboczej",
+      "name": "Nazwa",
+      "slug": "Slug",
+      "transferTitle": "Przeniesienie własności",
+      "newOwner": "Nowy właściciel",
+      "selectMember": "Wybierz członka…",
+      "transfer": "Przenieś",
+      "dangerTitle": "Strefa zagrożenia",
+      "deleteHint": "Trwale usuń tę przestrzeń roboczą i wszystkie jej dane.",
+      "delete": "Usuń przestrzeń roboczą",
+      "leaveHint": "Opuść tę przestrzeń roboczą. Możesz do niej dołączyć ponownie z nowym zaproszeniem.",
+      "leave": "Opuść przestrzeń roboczą"
+    },
+    "accept": {
+      "loading": "Sprawdzanie zaproszenia…",
+      "invalidTitle": "Zaproszenie niedostępne",
+      "invalidBody": "To zaproszenie jest nieprawidłowe lub wygasło.",
+      "title": "Masz zaproszenie",
+      "body": "Dołącz do {{workspace}} jako {{role}}.",
+      "accept": "Przyjmij zaproszenie",
+      "accepting": "Dołączanie…",
+      "signIn": "Zaloguj się, aby przyjąć"
+    },
+    "join": {
+      "loading": "Sprawdzanie linku…",
+      "invalidTitle": "Link niedostępny",
+      "invalidBody": "Ten link z zaproszeniem jest nieprawidłowy, wygasł lub został w pełni wykorzystany.",
+      "title": "Dołącz do przestrzeni roboczej",
+      "body": "Dołącz do {{workspace}} jako {{role}}.",
+      "join": "Dołącz do przestrzeni roboczej",
+      "joining": "Dołączanie…",
+      "signIn": "Zaloguj się, aby dołączyć"
+    },
+    "switcher": {
+      "label": "Przestrzenie robocze",
+      "manage": "Wszystkie przestrzenie robocze"
+    }
   }
 }

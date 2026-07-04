@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Field } from '~/features/auth/components/atoms/field';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
 import { authClient } from '~/lib/api/client';
+import { useRedirectParam } from '~/lib/redirect';
 import { useAuthStore } from '~/store/auth';
 
 const BTN =
@@ -15,6 +16,7 @@ export function LoginPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const setAuth = useAuthStore((s) => s.setAuth);
+  const { target, raw: redirectRaw } = useRedirectParam();
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -33,13 +35,24 @@ export function LoginPage() {
         email: res.user?.email ?? '',
         displayName: res.user?.displayName ?? '',
       });
-      await navigate({ to: '/' });
+      // Bounce back to the originally requested page when present; otherwise the
+      // account home. A full navigation keeps typed-router happy for arbitrary
+      // internal paths and re-bootstraps auth from the persisted token.
+      if (target === '/') {
+        await navigate({ to: '/' });
+      } else {
+        window.location.assign(target);
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
       setPending(false);
     }
   }
+
+  const signupHref = redirectRaw
+    ? `/${locale}/auth/signup?redirect=${encodeURIComponent(redirectRaw)}`
+    : `/${locale}/auth/signup`;
 
   return (
     <AuthCard
@@ -83,10 +96,7 @@ export function LoginPage() {
       </Form>
       <p className="mt-6 text-center text-sm text-ink-500">
         {t('auth.login.noAccount', "Don't have an account?")}{' '}
-        <a
-          href={`/${locale}/auth/signup`}
-          className="font-semibold text-brand-700 hover:text-brand-800"
-        >
+        <a href={signupHref} className="font-semibold text-brand-700 hover:text-brand-800">
           {t('auth.login.signUp', 'Sign up')}
         </a>
       </p>

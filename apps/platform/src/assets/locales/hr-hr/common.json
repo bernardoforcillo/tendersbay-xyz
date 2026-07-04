@@ -151,5 +151,129 @@
       "deadline": "Rok",
       "daysLeft": "{{count}} dana"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Učitavanje…",
+      "saving": "Spremanje…",
+      "save": "Spremi",
+      "cancel": "Odustani",
+      "creating": "Stvaranje…",
+      "edit": "Uredi",
+      "delete": "Izbriši",
+      "saved": "Spremljeno"
+    },
+    "nav": {
+      "overview": "Pregled",
+      "members": "Članovi",
+      "roles": "Uloge",
+      "invites": "Pozivnice",
+      "settings": "Postavke",
+      "allWorkspaces": "Svi radni prostori"
+    },
+    "errors": {
+      "notFound": "Ovaj radni prostor nije dostupan."
+    },
+    "list": {
+      "title": "Radni prostori",
+      "new": "Novi radni prostor",
+      "nameLabel": "Naziv radnog prostora",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Stvori radni prostor",
+      "empty": "Još niste dio nijednog radnog prostora.",
+      "createFirst": "Stvorite svoj prvi radni prostor"
+    },
+    "overview": {
+      "welcome": "Dobro došli u",
+      "workbenchSoon": "Zajedničko radno okruženje u kojem vaš tim može zajedno raditi na natječajima uskoro stiže. Za sada upravljajte članovima, ulogama i pozivnicama putem kartica iznad."
+    },
+    "members": {
+      "title": "Članovi",
+      "owner": "Vlasnik",
+      "role": "Uloga",
+      "remove": "Ukloni"
+    },
+    "roles": {
+      "title": "Uloge",
+      "new": "Nova uloga",
+      "createTitle": "Nova uloga",
+      "editTitle": "Uredi ulogu",
+      "nameLabel": "Naziv uloge",
+      "namePlaceholder": "Urednik",
+      "permissionsLabel": "Dozvole",
+      "default": "Zadana",
+      "permCount": "Dozvole: {{count}}"
+    },
+    "permissions": {
+      "viewWorkspace": "Pregled radnog prostora",
+      "manageWorkspace": "Upravljanje radnim prostorom",
+      "manageMembers": "Upravljanje članovima",
+      "manageRoles": "Upravljanje ulogama",
+      "createInvite": "Stvaranje pozivnica",
+      "manageInvites": "Upravljanje pozivnicama",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Pregled radnog prostora i njegova sadržaja",
+      "manageWorkspace": "Preimenovanje i promjena postavki radnog prostora",
+      "manageMembers": "Promjena uloga članova i uklanjanje članova",
+      "manageRoles": "Stvaranje, uređivanje i brisanje uloga",
+      "createInvite": "Pozivanje osoba putem e-pošte ili poveznice",
+      "manageInvites": "Opoziv pozivnica i poveznica",
+      "administrator": "Potpuni pristup — zaobilazi svaku provjeru dozvola"
+    },
+    "invites": {
+      "emailTitle": "Pozovi putem e-pošte",
+      "email": "Adresa e-pošte",
+      "role": "Uloga",
+      "send": "Pošalji pozivnicu",
+      "revoke": "Opozovi",
+      "linkTitle": "Poveznice za dijeljenje",
+      "maxUses": "Najveći broj upotreba (0 = neograničeno)",
+      "createLink": "Stvori poveznicu",
+      "copy": "Kopiraj",
+      "copied": "Kopirano",
+      "usesLimited": "Upotrebe: {{used}} / {{max}}",
+      "usesUnlimited": "Upotrebe: {{used}}",
+      "noPermission": "Nemate dozvolu za upravljanje pozivnicama."
+    },
+    "settings": {
+      "detailsTitle": "Pojedinosti radnog prostora",
+      "name": "Naziv",
+      "slug": "Slug",
+      "transferTitle": "Prijenos vlasništva",
+      "newOwner": "Novi vlasnik",
+      "selectMember": "Odaberite člana…",
+      "transfer": "Prenesi",
+      "dangerTitle": "Opasna zona",
+      "deleteHint": "Trajno izbriši ovaj radni prostor i sve njegove podatke.",
+      "delete": "Izbriši radni prostor",
+      "leaveHint": "Napusti ovaj radni prostor. Možete se ponovno pridružiti novom pozivnicom.",
+      "leave": "Napusti radni prostor"
+    },
+    "accept": {
+      "loading": "Provjera pozivnice…",
+      "invalidTitle": "Pozivnica nije dostupna",
+      "invalidBody": "Ova je pozivnica nevažeća ili je istekla.",
+      "title": "Pozvani ste",
+      "body": "Pridružite se {{workspace}} kao {{role}}.",
+      "accept": "Prihvati pozivnicu",
+      "accepting": "Pridruživanje…",
+      "signIn": "Prijavite se za prihvaćanje"
+    },
+    "join": {
+      "loading": "Provjera poveznice…",
+      "invalidTitle": "Poveznica nije dostupna",
+      "invalidBody": "Ova je poveznica za pozivnicu nevažeća, istekla ili u potpunosti iskorištena.",
+      "title": "Pridruži se radnom prostoru",
+      "body": "Pridružite se {{workspace}} kao {{role}}.",
+      "join": "Pridruži se radnom prostoru",
+      "joining": "Pridruživanje…",
+      "signIn": "Prijavite se za pridruživanje"
+    },
+    "switcher": {
+      "label": "Radni prostori",
+      "manage": "Svi radni prostori"
+    }
   }
 }

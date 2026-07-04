@@ -3,6 +3,7 @@ import { createClient } from '@connectrpc/connect';
 import { createConnectTransport } from '@connectrpc/connect-web';
 import { AuthService } from '@tendersbay/proto/auth/v1/auth_pb';
 import { UserService } from '@tendersbay/proto/user/v1/user_pb';
+import { WorkspaceService } from '@tendersbay/proto/workspace/v1/workspace_pb';
 import { useAuthStore } from '~/store/auth';
 
 const authInterceptor: Interceptor = (next) => async (req) => {
@@ -24,3 +25,4 @@ const transport = createConnectTransport({
 
 export const authClient = createClient(AuthService, transport);
 export const userClient = createClient(UserService, transport);
+export const workspaceClient = createClient(WorkspaceService, transport);

@@ -6,8 +6,8 @@ import (
 
 	"github.com/bernardoforcillo/drops/pg"
 	"github.com/bernardoforcillo/drops/stdlib"
-	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/migrations"
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 // New opens a PostgreSQL connection, pings it, runs pending migrations, and
@@ -25,5 +25,8 @@ func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 	if err := m.AddFS(migrations.Files, "."); err != nil {
 		return nil, nil, err
 	}
+	// 0002+ are managed programmatically via the drops schema DSL (see
+	// migrate_workspaces.go), mixed with the FS-based 0001 by version order.
+	m.Add(migrateWorkspaces())
 	return db, sqlDB, m.Up(ctx)
 }

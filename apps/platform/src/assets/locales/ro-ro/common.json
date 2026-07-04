@@ -147,5 +147,129 @@
       "deadline": "Termen limită",
       "daysLeft": "{{count}} zile"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Se încarcă…",
+      "saving": "Se salvează…",
+      "save": "Salvează",
+      "cancel": "Anulează",
+      "creating": "Se creează…",
+      "edit": "Editează",
+      "delete": "Șterge",
+      "saved": "Salvat"
+    },
+    "nav": {
+      "overview": "Prezentare generală",
+      "members": "Membri",
+      "roles": "Roluri",
+      "invites": "Invitații",
+      "settings": "Setări",
+      "allWorkspaces": "Toate spațiile de lucru"
+    },
+    "errors": {
+      "notFound": "Acest spațiu de lucru este indisponibil."
+    },
+    "list": {
+      "title": "Spații de lucru",
+      "new": "Spațiu de lucru nou",
+      "nameLabel": "Numele spațiului de lucru",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Creează spațiu de lucru",
+      "empty": "Nu faci încă parte din niciun spațiu de lucru.",
+      "createFirst": "Creează primul tău spațiu de lucru"
+    },
+    "overview": {
+      "welcome": "Bine ai venit în",
+      "workbenchSoon": "În curând va fi disponibil un spațiu colaborativ în care echipa ta va putea lucra împreună la licitații. Deocamdată, gestionează membrii, rolurile și invitațiile din filele de mai sus."
+    },
+    "members": {
+      "title": "Membri",
+      "owner": "Proprietar",
+      "role": "Rol",
+      "remove": "Elimină"
+    },
+    "roles": {
+      "title": "Roluri",
+      "new": "Rol nou",
+      "createTitle": "Rol nou",
+      "editTitle": "Editează rolul",
+      "nameLabel": "Numele rolului",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Permisiuni",
+      "default": "Implicit",
+      "permCount": "{{count}} permisiuni"
+    },
+    "permissions": {
+      "viewWorkspace": "Vizualizează spațiul de lucru",
+      "manageWorkspace": "Gestionează spațiul de lucru",
+      "manageMembers": "Gestionează membrii",
+      "manageRoles": "Gestionează rolurile",
+      "createInvite": "Creează invitații",
+      "manageInvites": "Gestionează invitațiile",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Vezi spațiul de lucru și conținutul acestuia",
+      "manageWorkspace": "Redenumește și modifică setările spațiului de lucru",
+      "manageMembers": "Modifică rolurile membrilor și elimină membri",
+      "manageRoles": "Creează, editează și șterge roluri",
+      "createInvite": "Invită persoane prin e-mail sau link",
+      "manageInvites": "Revocă invitațiile și linkurile",
+      "administrator": "Acces complet — ocolește orice verificare a permisiunilor"
+    },
+    "invites": {
+      "emailTitle": "Invită prin e-mail",
+      "email": "Adresă de e-mail",
+      "role": "Rol",
+      "send": "Trimite invitația",
+      "revoke": "Revocă",
+      "linkTitle": "Linkuri partajabile",
+      "maxUses": "Utilizări max. (0 = nelimitat)",
+      "createLink": "Creează link",
+      "copy": "Copiază",
+      "copied": "Copiat",
+      "usesLimited": "{{used}} / {{max}} utilizări",
+      "usesUnlimited": "{{used}} utilizări",
+      "noPermission": "Nu ai permisiunea de a gestiona invitațiile."
+    },
+    "settings": {
+      "detailsTitle": "Detaliile spațiului de lucru",
+      "name": "Nume",
+      "slug": "Slug",
+      "transferTitle": "Transferă proprietatea",
+      "newOwner": "Proprietar nou",
+      "selectMember": "Selectează un membru…",
+      "transfer": "Transferă",
+      "dangerTitle": "Zonă periculoasă",
+      "deleteHint": "Șterge definitiv acest spațiu de lucru și toate datele sale.",
+      "delete": "Șterge spațiul de lucru",
+      "leaveHint": "Părăsește acest spațiu de lucru. Poți reveni cu o invitație nouă.",
+      "leave": "Părăsește spațiul de lucru"
+    },
+    "accept": {
+      "loading": "Se verifică invitația…",
+      "invalidTitle": "Invitație indisponibilă",
+      "invalidBody": "Această invitație este invalidă sau a expirat.",
+      "title": "Ai fost invitat",
+      "body": "Alătură-te {{workspace}} ca {{role}}.",
+      "accept": "Acceptă invitația",
+      "accepting": "Se alătură…",
+      "signIn": "Autentifică-te pentru a accepta"
+    },
+    "join": {
+      "loading": "Se verifică linkul…",
+      "invalidTitle": "Link indisponibil",
+      "invalidBody": "Acest link de invitație este invalid, a expirat sau a fost utilizat complet.",
+      "title": "Alătură-te spațiului de lucru",
+      "body": "Alătură-te {{workspace}} ca {{role}}.",
+      "join": "Alătură-te spațiului de lucru",
+      "joining": "Se alătură…",
+      "signIn": "Autentifică-te pentru a te alătura"
+    },
+    "switcher": {
+      "label": "Spații de lucru",
+      "manage": "Toate spațiile de lucru"
+    }
   }
 }

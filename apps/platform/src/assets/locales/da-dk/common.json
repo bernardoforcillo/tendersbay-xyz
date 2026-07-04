@@ -147,5 +147,129 @@
       "deadline": "Frist",
       "daysLeft": "{{count}} dage"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Indlæser…",
+      "saving": "Gemmer…",
+      "save": "Gem",
+      "cancel": "Annuller",
+      "creating": "Opretter…",
+      "edit": "Rediger",
+      "delete": "Slet",
+      "saved": "Gemt"
+    },
+    "nav": {
+      "overview": "Oversigt",
+      "members": "Medlemmer",
+      "roles": "Roller",
+      "invites": "Invitationer",
+      "settings": "Indstillinger",
+      "allWorkspaces": "Alle arbejdsområder"
+    },
+    "errors": {
+      "notFound": "Dette arbejdsområde er ikke tilgængeligt."
+    },
+    "list": {
+      "title": "Arbejdsområder",
+      "new": "Nyt arbejdsområde",
+      "nameLabel": "Navn på arbejdsområde",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Opret arbejdsområde",
+      "empty": "Du er endnu ikke en del af noget arbejdsområde.",
+      "createFirst": "Opret dit første arbejdsområde"
+    },
+    "overview": {
+      "welcome": "Velkommen til",
+      "workbenchSoon": "En fælles arbejdsplads, hvor dit team kan arbejde sammen om udbud, er på vej. Indtil da kan du administrere medlemmer, roller og invitationer via fanerne ovenfor."
+    },
+    "members": {
+      "title": "Medlemmer",
+      "owner": "Ejer",
+      "role": "Rolle",
+      "remove": "Fjern"
+    },
+    "roles": {
+      "title": "Roller",
+      "new": "Ny rolle",
+      "createTitle": "Ny rolle",
+      "editTitle": "Rediger rolle",
+      "nameLabel": "Rollenavn",
+      "namePlaceholder": "Redaktør",
+      "permissionsLabel": "Tilladelser",
+      "default": "Standard",
+      "permCount": "{{count}} tilladelser"
+    },
+    "permissions": {
+      "viewWorkspace": "Se arbejdsområde",
+      "manageWorkspace": "Administrer arbejdsområde",
+      "manageMembers": "Administrer medlemmer",
+      "manageRoles": "Administrer roller",
+      "createInvite": "Opret invitationer",
+      "manageInvites": "Administrer invitationer",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Se arbejdsområdet og dets indhold",
+      "manageWorkspace": "Omdøb og skift indstillinger for arbejdsområdet",
+      "manageMembers": "Skift medlemmers roller og fjern medlemmer",
+      "manageRoles": "Opret, rediger og slet roller",
+      "createInvite": "Inviter personer via e-mail eller link",
+      "manageInvites": "Tilbagekald invitationer og links",
+      "administrator": "Fuld adgang — omgår enhver tilladelseskontrol"
+    },
+    "invites": {
+      "emailTitle": "Inviter via e-mail",
+      "email": "E-mailadresse",
+      "role": "Rolle",
+      "send": "Send invitation",
+      "revoke": "Tilbagekald",
+      "linkTitle": "Delbare links",
+      "maxUses": "Maks. antal anvendelser (0 = ubegrænset)",
+      "createLink": "Opret link",
+      "copy": "Kopier",
+      "copied": "Kopieret",
+      "usesLimited": "{{used}} / {{max}} anvendelser",
+      "usesUnlimited": "{{used}} anvendelser",
+      "noPermission": "Du har ikke tilladelse til at administrere invitationer."
+    },
+    "settings": {
+      "detailsTitle": "Oplysninger om arbejdsområde",
+      "name": "Navn",
+      "slug": "Slug",
+      "transferTitle": "Overdrag ejerskab",
+      "newOwner": "Ny ejer",
+      "selectMember": "Vælg et medlem…",
+      "transfer": "Overdrag",
+      "dangerTitle": "Farezone",
+      "deleteHint": "Slet dette arbejdsområde og alle dets data permanent.",
+      "delete": "Slet arbejdsområde",
+      "leaveHint": "Forlad dette arbejdsområde. Du kan deltage igen med en ny invitation.",
+      "leave": "Forlad arbejdsområde"
+    },
+    "accept": {
+      "loading": "Kontrollerer invitation…",
+      "invalidTitle": "Invitation ikke tilgængelig",
+      "invalidBody": "Denne invitation er ugyldig eller udløbet.",
+      "title": "Du er inviteret",
+      "body": "Deltag i {{workspace}} som {{role}}.",
+      "accept": "Accepter invitation",
+      "accepting": "Deltager…",
+      "signIn": "Log ind for at acceptere"
+    },
+    "join": {
+      "loading": "Kontrollerer link…",
+      "invalidTitle": "Link ikke tilgængeligt",
+      "invalidBody": "Dette invitationslink er ugyldigt, udløbet eller fuldt anvendt.",
+      "title": "Deltag i arbejdsområde",
+      "body": "Deltag i {{workspace}} som {{role}}.",
+      "join": "Deltag i arbejdsområde",
+      "joining": "Deltager…",
+      "signIn": "Log ind for at deltage"
+    },
+    "switcher": {
+      "label": "Arbejdsområder",
+      "manage": "Alle arbejdsområder"
+    }
   }
 }

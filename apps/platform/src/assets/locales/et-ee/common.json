@@ -147,5 +147,129 @@
       "deadline": "Tähtaeg",
       "daysLeft": "{{count}} päeva"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Laadimine…",
+      "saving": "Salvestamine…",
+      "save": "Salvesta",
+      "cancel": "Tühista",
+      "creating": "Loomine…",
+      "edit": "Muuda",
+      "delete": "Kustuta",
+      "saved": "Salvestatud"
+    },
+    "nav": {
+      "overview": "Ülevaade",
+      "members": "Liikmed",
+      "roles": "Rollid",
+      "invites": "Kutsed",
+      "settings": "Seaded",
+      "allWorkspaces": "Kõik tööruumid"
+    },
+    "errors": {
+      "notFound": "See tööruum pole saadaval."
+    },
+    "list": {
+      "title": "Tööruumid",
+      "new": "Uus tööruum",
+      "nameLabel": "Tööruumi nimi",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Loo tööruum",
+      "empty": "Sa ei kuulu veel ühessegi tööruumi.",
+      "createFirst": "Loo oma esimene tööruum"
+    },
+    "overview": {
+      "welcome": "Tere tulemast",
+      "workbenchSoon": "Peagi valmib ühine töölaud, kus su meeskond saab hankeid koos menetleda. Praegu halda liikmeid, rolle ja kutseid ülalolevatelt vahekaartidelt."
+    },
+    "members": {
+      "title": "Liikmed",
+      "owner": "Omanik",
+      "role": "Roll",
+      "remove": "Eemalda"
+    },
+    "roles": {
+      "title": "Rollid",
+      "new": "Uus roll",
+      "createTitle": "Uus roll",
+      "editTitle": "Muuda rolli",
+      "nameLabel": "Rolli nimi",
+      "namePlaceholder": "Toimetaja",
+      "permissionsLabel": "Õigused",
+      "default": "Vaikimisi",
+      "permCount": "{{count}} õigust"
+    },
+    "permissions": {
+      "viewWorkspace": "Vaata tööruumi",
+      "manageWorkspace": "Halda tööruumi",
+      "manageMembers": "Halda liikmeid",
+      "manageRoles": "Halda rolle",
+      "createInvite": "Loo kutseid",
+      "manageInvites": "Halda kutseid",
+      "administrator": "Administraator"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Näe tööruumi ja selle sisu",
+      "manageWorkspace": "Nimeta ümber ja muuda tööruumi seadeid",
+      "manageMembers": "Muuda liikmete rolle ja eemalda liikmeid",
+      "manageRoles": "Loo, muuda ja kustuta rolle",
+      "createInvite": "Kutsu inimesi e-posti või lingi kaudu",
+      "manageInvites": "Tühista kutseid ja linke",
+      "administrator": "Täielik juurdepääs — möödub igast õiguste kontrollist"
+    },
+    "invites": {
+      "emailTitle": "Kutsu e-posti teel",
+      "email": "E-posti aadress",
+      "role": "Roll",
+      "send": "Saada kutse",
+      "revoke": "Tühista",
+      "linkTitle": "Jagatavad lingid",
+      "maxUses": "Maks. kasutuskordi (0 = piiramatu)",
+      "createLink": "Loo link",
+      "copy": "Kopeeri",
+      "copied": "Kopeeritud",
+      "usesLimited": "{{used}} / {{max}} kasutuskorda",
+      "usesUnlimited": "{{used}} kasutuskorda",
+      "noPermission": "Sul pole õigust kutseid hallata."
+    },
+    "settings": {
+      "detailsTitle": "Tööruumi andmed",
+      "name": "Nimi",
+      "slug": "Slug",
+      "transferTitle": "Omandiõiguse üleandmine",
+      "newOwner": "Uus omanik",
+      "selectMember": "Vali liige…",
+      "transfer": "Anna üle",
+      "dangerTitle": "Ohutsoon",
+      "deleteHint": "Kustuta see tööruum ja kõik selle andmed jäädavalt.",
+      "delete": "Kustuta tööruum",
+      "leaveHint": "Lahku sellest tööruumist. Saad uue kutsega uuesti liituda.",
+      "leave": "Lahku tööruumist"
+    },
+    "accept": {
+      "loading": "Kutse kontrollimine…",
+      "invalidTitle": "Kutse pole saadaval",
+      "invalidBody": "See kutse on kehtetu või aegunud.",
+      "title": "Sind on kutsutud",
+      "body": "Liitu tööruumiga {{workspace}} rollis {{role}}.",
+      "accept": "Võta kutse vastu",
+      "accepting": "Liitumine…",
+      "signIn": "Vastuvõtmiseks logi sisse"
+    },
+    "join": {
+      "loading": "Lingi kontrollimine…",
+      "invalidTitle": "Link pole saadaval",
+      "invalidBody": "See kutselink on kehtetu, aegunud või täielikult ära kasutatud.",
+      "title": "Liitu tööruumiga",
+      "body": "Liitu tööruumiga {{workspace}} rollis {{role}}.",
+      "join": "Liitu tööruumiga",
+      "joining": "Liitumine…",
+      "signIn": "Liitumiseks logi sisse"
+    },
+    "switcher": {
+      "label": "Tööruumid",
+      "manage": "Kõik tööruumid"
+    }
   }
 }

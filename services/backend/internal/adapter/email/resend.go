@@ -39,6 +39,9 @@ var (
 	changeEmailTmpl = template.Must(template.New("").Parse(
 		`<p>Hi {{.Name}},</p><p>Click the link below to confirm your new email address:</p><p><a href="{{.Link}}">Confirm email</a></p>`,
 	))
+	workspaceInviteTmpl = template.Must(template.New("").Parse(
+		`<p>Hi,</p><p>{{.Inviter}} invited you to join the <strong>{{.Workspace}}</strong> workspace on Tendersbay.</p><p><a href="{{.Link}}">Accept invitation</a></p>`,
+	))
 )
 
 func renderEmail(tmpl *template.Template, name, link string) (string, error) {
@@ -69,6 +72,14 @@ func (r *ResendSender) SendEmailChangeVerification(ctx context.Context, to, disp
 		return fmt.Errorf("render email change email: %w", err)
 	}
 	return r.send(ctx, to, "Confirm your new email — Tendersbay", body)
+}
+
+func (r *ResendSender) SendWorkspaceInvite(ctx context.Context, to, workspaceName, inviterName, link string) error {
+	var buf bytes.Buffer
+	if err := workspaceInviteTmpl.Execute(&buf, struct{ Inviter, Workspace, Link string }{inviterName, workspaceName, link}); err != nil {
+		return fmt.Errorf("render workspace invite email: %w", err)
+	}
+	return r.send(ctx, to, "You've been invited to "+workspaceName+" — Tendersbay", buf.String())
 }
 
 func (r *ResendSender) send(ctx context.Context, to, subject, html string) error {

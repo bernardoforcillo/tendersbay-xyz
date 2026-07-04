@@ -76,3 +76,116 @@ type DBPasswordReset struct {
 	ExpiresAt time.Time `drop:"expires_at"`
 	CreatedAt time.Time `drop:"created_at"`
 }
+
+// ── Workspace tables ────────────────────────────────────────────────────────
+// These columns carry full DDL constraints (types, NOT NULL, UNIQUE, DEFAULT,
+// FOREIGN KEY) so drops generates the CREATE TABLE for the 0002 migration from
+// the same handles the repositories query with. Composite constraints (the
+// members composite PK and the (workspace_id, name)/(workspace_id, email)
+// uniques) are added as raw ALTER TABLE in migrate_workspaces.go — drops does
+// not emit them inline.
+var (
+	Workspaces         = pg.NewTable("workspaces")
+	WorkspaceID        = pg.Add(Workspaces, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	WorkspaceName      = pg.Add(Workspaces, pg.Text("name").NotNull())
+	WorkspaceSlug      = pg.Add(Workspaces, pg.Text("slug").NotNull().Unique())
+	WorkspaceOwnerID   = pg.Add(Workspaces, pg.UUID("owner_id").NotNull().References(UserID, pg.OnDelete("RESTRICT")))
+	WorkspaceCreatedAt = pg.Add(Workspaces, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	WorkspaceUpdatedAt = pg.Add(Workspaces, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	WorkspaceRoles   = pg.NewTable("workspace_roles")
+	WRoleID          = pg.Add(WorkspaceRoles, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	WRoleWorkspaceID = pg.Add(WorkspaceRoles, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	WRoleName        = pg.Add(WorkspaceRoles, pg.Text("name").NotNull())
+	WRolePermissions = pg.Add(WorkspaceRoles, pg.BigInt("permissions").NotNull().Default("0"))
+	WRoleIsDefault   = pg.Add(WorkspaceRoles, pg.Boolean("is_default").NotNull().Default("false"))
+	WRoleCreatedAt   = pg.Add(WorkspaceRoles, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+
+	WorkspaceMembers   = pg.NewTable("workspace_members")
+	WMemberWorkspaceID = pg.Add(WorkspaceMembers, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	WMemberUserID      = pg.Add(WorkspaceMembers, pg.UUID("user_id").NotNull().References(UserID, pg.OnDelete("CASCADE")))
+	WMemberRoleID      = pg.Add(WorkspaceMembers, pg.UUID("role_id").NotNull().References(WRoleID, pg.OnDelete("RESTRICT")))
+	WMemberJoinedAt    = pg.Add(WorkspaceMembers, pg.Timestamp("joined_at", true).NotNull().Default("now()"))
+
+	WorkspaceEmailInvites = pg.NewTable("workspace_email_invitations")
+	WEInviteID            = pg.Add(WorkspaceEmailInvites, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	WEInviteWorkspaceID   = pg.Add(WorkspaceEmailInvites, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	WEInviteEmail         = pg.Add(WorkspaceEmailInvites, pg.Text("email").NotNull())
+	WEInviteRoleID        = pg.Add(WorkspaceEmailInvites, pg.UUID("role_id").NotNull().References(WRoleID, pg.OnDelete("CASCADE")))
+	WEInviteTokenHash     = pg.Add(WorkspaceEmailInvites, pg.Text("token_hash").NotNull().Unique())
+	WEInviteInvitedBy     = pg.Add(WorkspaceEmailInvites, pg.UUID("invited_by").NotNull().References(UserID, pg.OnDelete("CASCADE")))
+	WEInviteExpiresAt     = pg.Add(WorkspaceEmailInvites, pg.Timestamp("expires_at", true).NotNull())
+	WEInviteCreatedAt     = pg.Add(WorkspaceEmailInvites, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+
+	WorkspaceInviteLinks = pg.NewTable("workspace_invite_links")
+	WLinkID              = pg.Add(WorkspaceInviteLinks, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	WLinkWorkspaceID     = pg.Add(WorkspaceInviteLinks, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	WLinkCode            = pg.Add(WorkspaceInviteLinks, pg.Text("code").NotNull().Unique())
+	WLinkRoleID          = pg.Add(WorkspaceInviteLinks, pg.UUID("role_id").NotNull().References(WRoleID, pg.OnDelete("CASCADE")))
+	WLinkCreatedBy       = pg.Add(WorkspaceInviteLinks, pg.UUID("created_by").NotNull().References(UserID, pg.OnDelete("CASCADE")))
+	WLinkMaxUses         = pg.Add(WorkspaceInviteLinks, pg.Integer("max_uses").NotNull().Default("0"))
+	WLinkUseCount        = pg.Add(WorkspaceInviteLinks, pg.Integer("use_count").NotNull().Default("0"))
+	WLinkExpiresAt       = pg.Add(WorkspaceInviteLinks, pg.Timestamp("expires_at", true)) // nullable
+	WLinkRevoked         = pg.Add(WorkspaceInviteLinks, pg.Boolean("revoked").NotNull().Default("false"))
+	WLinkCreatedAt       = pg.Add(WorkspaceInviteLinks, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+)
+
+type DBWorkspace struct {
+	ID        string    `drop:"id"`
+	Name      string    `drop:"name"`
+	Slug      string    `drop:"slug"`
+	OwnerID   string    `drop:"owner_id"`
+	CreatedAt time.Time `drop:"created_at"`
+	UpdatedAt time.Time `drop:"updated_at"`
+}
+
+type DBWorkspaceRole struct {
+	ID          string    `drop:"id"`
+	WorkspaceID string    `drop:"workspace_id"`
+	Name        string    `drop:"name"`
+	Permissions int64     `drop:"permissions"`
+	IsDefault   bool      `drop:"is_default"`
+	CreatedAt   time.Time `drop:"created_at"`
+}
+
+type DBWorkspaceMember struct {
+	WorkspaceID string    `drop:"workspace_id"`
+	UserID      string    `drop:"user_id"`
+	RoleID      string    `drop:"role_id"`
+	JoinedAt    time.Time `drop:"joined_at"`
+}
+
+type DBWorkspaceEmailInvite struct {
+	ID          string    `drop:"id"`
+	WorkspaceID string    `drop:"workspace_id"`
+	Email       string    `drop:"email"`
+	RoleID      string    `drop:"role_id"`
+	TokenHash   string    `drop:"token_hash"`
+	InvitedBy   string    `drop:"invited_by"`
+	ExpiresAt   time.Time `drop:"expires_at"`
+	CreatedAt   time.Time `drop:"created_at"`
+}
+
+type DBWorkspaceInviteLink struct {
+	ID          string     `drop:"id"`
+	WorkspaceID string     `drop:"workspace_id"`
+	Code        string     `drop:"code"`
+	RoleID      string     `drop:"role_id"`
+	CreatedBy   string     `drop:"created_by"`
+	MaxUses     int32      `drop:"max_uses"`
+	UseCount    int32      `drop:"use_count"`
+	ExpiresAt   *time.Time `drop:"expires_at"`
+	Revoked     bool       `drop:"revoked"`
+	CreatedAt   time.Time  `drop:"created_at"`
+}
+
+// DBMembership is the flat scan target for the workspace_members ⋈ workspace_roles
+// join used to load a caller's membership + role in one query.
+type DBMembership struct {
+	WorkspaceID string    `drop:"workspace_id"`
+	UserID      string    `drop:"user_id"`
+	RoleID      string    `drop:"role_id"`
+	RoleName    string    `drop:"name"`
+	Permissions int64     `drop:"permissions"`
+	JoinedAt    time.Time `drop:"joined_at"`
+}

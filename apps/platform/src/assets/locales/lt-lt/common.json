@@ -151,5 +151,129 @@
       "deadline": "Terminas",
       "daysLeft": "{{count}} dienos"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Įkeliama…",
+      "saving": "Įrašoma…",
+      "save": "Įrašyti",
+      "cancel": "Atšaukti",
+      "creating": "Kuriama…",
+      "edit": "Redaguoti",
+      "delete": "Ištrinti",
+      "saved": "Įrašyta"
+    },
+    "nav": {
+      "overview": "Apžvalga",
+      "members": "Nariai",
+      "roles": "Vaidmenys",
+      "invites": "Kvietimai",
+      "settings": "Nustatymai",
+      "allWorkspaces": "Visos darbo sritys"
+    },
+    "errors": {
+      "notFound": "Ši darbo sritis nepasiekiama."
+    },
+    "list": {
+      "title": "Darbo sritys",
+      "new": "Nauja darbo sritis",
+      "nameLabel": "Darbo srities pavadinimas",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Sukurti darbo sritį",
+      "empty": "Dar nepriklausote jokiai darbo sričiai.",
+      "createFirst": "Sukurkite pirmąją darbo sritį"
+    },
+    "overview": {
+      "welcome": "Sveiki atvykę į",
+      "workbenchSoon": "Netrukus atsiras bendra darbo aplinka, kurioje jūsų komanda galės kartu dirbti su viešaisiais pirkimais. Kol kas narius, vaidmenis ir kvietimus tvarkykite iš aukščiau esančių skirtukų."
+    },
+    "members": {
+      "title": "Nariai",
+      "owner": "Savininkas",
+      "role": "Vaidmuo",
+      "remove": "Pašalinti"
+    },
+    "roles": {
+      "title": "Vaidmenys",
+      "new": "Naujas vaidmuo",
+      "createTitle": "Naujas vaidmuo",
+      "editTitle": "Redaguoti vaidmenį",
+      "nameLabel": "Vaidmens pavadinimas",
+      "namePlaceholder": "Redaktorius",
+      "permissionsLabel": "Leidimai",
+      "default": "Numatytasis",
+      "permCount": "{{count}} leidimai"
+    },
+    "permissions": {
+      "viewWorkspace": "Peržiūrėti darbo sritį",
+      "manageWorkspace": "Tvarkyti darbo sritį",
+      "manageMembers": "Tvarkyti narius",
+      "manageRoles": "Tvarkyti vaidmenis",
+      "createInvite": "Kurti kvietimus",
+      "manageInvites": "Tvarkyti kvietimus",
+      "administrator": "Administratorius"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Matyti darbo sritį ir jos turinį",
+      "manageWorkspace": "Pervadinti ir keisti darbo srities nustatymus",
+      "manageMembers": "Keisti narių vaidmenis ir šalinti narius",
+      "manageRoles": "Kurti, redaguoti ir trinti vaidmenis",
+      "createInvite": "Kviesti žmones el. paštu arba nuoroda",
+      "manageInvites": "Atšaukti kvietimus ir nuorodas",
+      "administrator": "Visapusiška prieiga — apeina visus leidimų patikrinimus"
+    },
+    "invites": {
+      "emailTitle": "Kviesti el. paštu",
+      "email": "El. pašto adresas",
+      "role": "Vaidmuo",
+      "send": "Siųsti kvietimą",
+      "revoke": "Atšaukti",
+      "linkTitle": "Bendrinamos nuorodos",
+      "maxUses": "Maks. panaudojimų (0 = neribota)",
+      "createLink": "Sukurti nuorodą",
+      "copy": "Kopijuoti",
+      "copied": "Nukopijuota",
+      "usesLimited": "{{used}} / {{max}} panaudojimų",
+      "usesUnlimited": "{{used}} panaudojimų",
+      "noPermission": "Neturite leidimo tvarkyti kvietimų."
+    },
+    "settings": {
+      "detailsTitle": "Darbo srities informacija",
+      "name": "Pavadinimas",
+      "slug": "Slug",
+      "transferTitle": "Nuosavybės perdavimas",
+      "newOwner": "Naujas savininkas",
+      "selectMember": "Pasirinkite narį…",
+      "transfer": "Perduoti",
+      "dangerTitle": "Pavojaus zona",
+      "deleteHint": "Visam laikui ištrinti šią darbo sritį ir visus jos duomenis.",
+      "delete": "Ištrinti darbo sritį",
+      "leaveHint": "Palikti šią darbo sritį. Galėsite vėl prisijungti su nauju kvietimu.",
+      "leave": "Palikti darbo sritį"
+    },
+    "accept": {
+      "loading": "Tikrinamas kvietimas…",
+      "invalidTitle": "Kvietimas nepasiekiamas",
+      "invalidBody": "Šis kvietimas negalioja arba jo galiojimas baigėsi.",
+      "title": "Jūs pakviesti",
+      "body": "Prisijunkite prie {{workspace}} kaip {{role}}.",
+      "accept": "Priimti kvietimą",
+      "accepting": "Prisijungiama…",
+      "signIn": "Prisijunkite, kad priimtumėte"
+    },
+    "join": {
+      "loading": "Tikrinama nuoroda…",
+      "invalidTitle": "Nuoroda nepasiekiama",
+      "invalidBody": "Ši kvietimo nuoroda negalioja, jos galiojimas baigėsi arba ji visiškai panaudota.",
+      "title": "Prisijungti prie darbo srities",
+      "body": "Prisijunkite prie {{workspace}} kaip {{role}}.",
+      "join": "Prisijungti prie darbo srities",
+      "joining": "Prisijungiama…",
+      "signIn": "Prisijunkite, kad prisijungtumėte"
+    },
+    "switcher": {
+      "label": "Darbo sritys",
+      "manage": "Visos darbo sritys"
+    }
   }
 }

@@ -151,5 +151,129 @@
       "deadline": "Spriocdháta",
       "daysLeft": "{{count}} lá"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Á lódáil…",
+      "saving": "Á shábháil…",
+      "save": "Sábháil",
+      "cancel": "Cealaigh",
+      "creating": "Á chruthú…",
+      "edit": "Cuir in eagar",
+      "delete": "Scrios",
+      "saved": "Sábháilte"
+    },
+    "nav": {
+      "overview": "Forbhreathnú",
+      "members": "Baill",
+      "roles": "Róil",
+      "invites": "Cuirí",
+      "settings": "Socruithe",
+      "allWorkspaces": "Gach spás oibre"
+    },
+    "errors": {
+      "notFound": "Níl an spás oibre seo ar fáil."
+    },
+    "list": {
+      "title": "Spásanna oibre",
+      "new": "Spás oibre nua",
+      "nameLabel": "Ainm an spáis oibre",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Cruthaigh spás oibre",
+      "empty": "Níl tú i do bhall d'aon spás oibre fós.",
+      "createFirst": "Cruthaigh do chéad spás oibre"
+    },
+    "overview": {
+      "welcome": "Fáilte go",
+      "workbenchSoon": "Tá binse oibre comhoibríoch, áit ar féidir le do fhoireann oibriú ar thairiscintí le chéile, ag teacht go luath. Idir an dá linn, bainistigh baill, róil agus cuirí ó na cluaisíní thuas."
+    },
+    "members": {
+      "title": "Baill",
+      "owner": "Úinéir",
+      "role": "Ról",
+      "remove": "Bain"
+    },
+    "roles": {
+      "title": "Róil",
+      "new": "Ról nua",
+      "createTitle": "Ról nua",
+      "editTitle": "Cuir ról in eagar",
+      "nameLabel": "Ainm an róil",
+      "namePlaceholder": "Eagarthóir",
+      "permissionsLabel": "Ceadanna",
+      "default": "Réamhshocrú",
+      "permCount": "{{count}} cead"
+    },
+    "permissions": {
+      "viewWorkspace": "Féach ar an spás oibre",
+      "manageWorkspace": "Bainistigh an spás oibre",
+      "manageMembers": "Bainistigh baill",
+      "manageRoles": "Bainistigh róil",
+      "createInvite": "Cruthaigh cuirí",
+      "manageInvites": "Bainistigh cuirí",
+      "administrator": "Riarthóir"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Féach ar an spás oibre agus ar a bhfuil ann",
+      "manageWorkspace": "Athainmnigh agus athraigh socruithe an spáis oibre",
+      "manageMembers": "Athraigh róil na mball agus bain baill",
+      "manageRoles": "Cruthaigh, cuir in eagar agus scrios róil",
+      "createInvite": "Tabhair cuireadh do dhaoine trí ríomhphost nó nasc",
+      "manageInvites": "Cúlghair cuirí agus naisc",
+      "administrator": "Rochtain iomlán — seachnaíonn sé gach seiceáil cheada"
+    },
+    "invites": {
+      "emailTitle": "Tabhair cuireadh trí ríomhphost",
+      "email": "Seoladh ríomhphoist",
+      "role": "Ról",
+      "send": "Seol cuireadh",
+      "revoke": "Cúlghair",
+      "linkTitle": "Naisc inroinnte",
+      "maxUses": "Uasúsáidí (0 = gan teorainn)",
+      "createLink": "Cruthaigh nasc",
+      "copy": "Cóipeáil",
+      "copied": "Cóipeáilte",
+      "usesLimited": "{{used}} / {{max}} úsáid",
+      "usesUnlimited": "{{used}} úsáid",
+      "noPermission": "Níl cead agat cuirí a bhainistiú."
+    },
+    "settings": {
+      "detailsTitle": "Sonraí an spáis oibre",
+      "name": "Ainm",
+      "slug": "Slug",
+      "transferTitle": "Aistrigh úinéireacht",
+      "newOwner": "Úinéir nua",
+      "selectMember": "Roghnaigh ball…",
+      "transfer": "Aistrigh",
+      "dangerTitle": "Crios contúirte",
+      "deleteHint": "Scrios an spás oibre seo agus a shonraí go léir go buan.",
+      "delete": "Scrios an spás oibre",
+      "leaveHint": "Fág an spás oibre seo. Is féidir leat filleadh le cuireadh nua.",
+      "leave": "Fág an spás oibre"
+    },
+    "accept": {
+      "loading": "Cuireadh á sheiceáil…",
+      "invalidTitle": "Níl an cuireadh ar fáil",
+      "invalidBody": "Tá an cuireadh seo neamhbhailí nó tá sé imithe in éag.",
+      "title": "Fuair tú cuireadh",
+      "body": "Bí páirteach i {{workspace}} mar {{role}}.",
+      "accept": "Glac leis an gcuireadh",
+      "accepting": "Á cheangal…",
+      "signIn": "Sínigh isteach chun glacadh leis"
+    },
+    "join": {
+      "loading": "Nasc á sheiceáil…",
+      "invalidTitle": "Níl an nasc ar fáil",
+      "invalidBody": "Tá an nasc cuiridh seo neamhbhailí, imithe in éag, nó úsáidte go hiomlán.",
+      "title": "Bí páirteach sa spás oibre",
+      "body": "Bí páirteach i {{workspace}} mar {{role}}.",
+      "join": "Bí páirteach sa spás oibre",
+      "joining": "Á cheangal…",
+      "signIn": "Sínigh isteach chun bheith páirteach"
+    },
+    "switcher": {
+      "label": "Spásanna oibre",
+      "manage": "Gach spás oibre"
+    }
   }
 }

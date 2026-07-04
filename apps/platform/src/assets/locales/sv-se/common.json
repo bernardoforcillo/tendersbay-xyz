@@ -147,5 +147,129 @@
       "deadline": "Deadline",
       "daysLeft": "{{count}} dagar"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Läser in…",
+      "saving": "Sparar…",
+      "save": "Spara",
+      "cancel": "Avbryt",
+      "creating": "Skapar…",
+      "edit": "Redigera",
+      "delete": "Ta bort",
+      "saved": "Sparat"
+    },
+    "nav": {
+      "overview": "Översikt",
+      "members": "Medlemmar",
+      "roles": "Roller",
+      "invites": "Inbjudningar",
+      "settings": "Inställningar",
+      "allWorkspaces": "Alla arbetsytor"
+    },
+    "errors": {
+      "notFound": "Den här arbetsytan är inte tillgänglig."
+    },
+    "list": {
+      "title": "Arbetsytor",
+      "new": "Ny arbetsyta",
+      "nameLabel": "Namn på arbetsyta",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Skapa arbetsyta",
+      "empty": "Du är ännu inte med i någon arbetsyta.",
+      "createFirst": "Skapa din första arbetsyta"
+    },
+    "overview": {
+      "welcome": "Välkommen till",
+      "workbenchSoon": "En gemensam arbetsyta där ditt team kan arbeta med upphandlingar tillsammans kommer snart. Tills vidare kan du hantera medlemmar, roller och inbjudningar via flikarna ovan."
+    },
+    "members": {
+      "title": "Medlemmar",
+      "owner": "Ägare",
+      "role": "Roll",
+      "remove": "Ta bort"
+    },
+    "roles": {
+      "title": "Roller",
+      "new": "Ny roll",
+      "createTitle": "Ny roll",
+      "editTitle": "Redigera roll",
+      "nameLabel": "Rollnamn",
+      "namePlaceholder": "Redaktör",
+      "permissionsLabel": "Behörigheter",
+      "default": "Standard",
+      "permCount": "{{count}} behörigheter"
+    },
+    "permissions": {
+      "viewWorkspace": "Visa arbetsyta",
+      "manageWorkspace": "Hantera arbetsyta",
+      "manageMembers": "Hantera medlemmar",
+      "manageRoles": "Hantera roller",
+      "createInvite": "Skapa inbjudningar",
+      "manageInvites": "Hantera inbjudningar",
+      "administrator": "Administratör"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Se arbetsytan och dess innehåll",
+      "manageWorkspace": "Byt namn på och ändra inställningar för arbetsytan",
+      "manageMembers": "Ändra medlemmars roller och ta bort medlemmar",
+      "manageRoles": "Skapa, redigera och ta bort roller",
+      "createInvite": "Bjud in personer via e-post eller länk",
+      "manageInvites": "Återkalla inbjudningar och länkar",
+      "administrator": "Fullständig åtkomst — kringgår varje behörighetskontroll"
+    },
+    "invites": {
+      "emailTitle": "Bjud in via e-post",
+      "email": "E-postadress",
+      "role": "Roll",
+      "send": "Skicka inbjudan",
+      "revoke": "Återkalla",
+      "linkTitle": "Delbara länkar",
+      "maxUses": "Max antal användningar (0 = obegränsat)",
+      "createLink": "Skapa länk",
+      "copy": "Kopiera",
+      "copied": "Kopierat",
+      "usesLimited": "{{used}} / {{max}} användningar",
+      "usesUnlimited": "{{used}} användningar",
+      "noPermission": "Du har inte behörighet att hantera inbjudningar."
+    },
+    "settings": {
+      "detailsTitle": "Uppgifter om arbetsyta",
+      "name": "Namn",
+      "slug": "Slug",
+      "transferTitle": "Överför ägarskap",
+      "newOwner": "Ny ägare",
+      "selectMember": "Välj en medlem…",
+      "transfer": "Överför",
+      "dangerTitle": "Farozon",
+      "deleteHint": "Ta bort den här arbetsytan och all dess data permanent.",
+      "delete": "Ta bort arbetsyta",
+      "leaveHint": "Lämna den här arbetsytan. Du kan gå med igen med en ny inbjudan.",
+      "leave": "Lämna arbetsyta"
+    },
+    "accept": {
+      "loading": "Kontrollerar inbjudan…",
+      "invalidTitle": "Inbjudan inte tillgänglig",
+      "invalidBody": "Den här inbjudan är ogiltig eller har upphört att gälla.",
+      "title": "Du är inbjuden",
+      "body": "Gå med i {{workspace}} som {{role}}.",
+      "accept": "Acceptera inbjudan",
+      "accepting": "Går med…",
+      "signIn": "Logga in för att acceptera"
+    },
+    "join": {
+      "loading": "Kontrollerar länk…",
+      "invalidTitle": "Länk inte tillgänglig",
+      "invalidBody": "Den här inbjudningslänken är ogiltig, har upphört att gälla eller är fullt använd.",
+      "title": "Gå med i arbetsyta",
+      "body": "Gå med i {{workspace}} som {{role}}.",
+      "join": "Gå med i arbetsyta",
+      "joining": "Går med…",
+      "signIn": "Logga in för att gå med"
+    },
+    "switcher": {
+      "label": "Arbetsytor",
+      "manage": "Alla arbetsytor"
+    }
   }
 }

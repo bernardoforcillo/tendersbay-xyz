@@ -14,6 +14,7 @@ import { type ReactNode, useState } from 'react';
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '~/features/landing/components/atoms';
+import { WorkspaceSwitcher } from '~/features/workspace/components/organisms/workspace-switcher';
 import { detectLocale } from '~/i18n/detect-locale';
 import { authClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
@@ -82,6 +83,11 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
             <X size={16} aria-hidden="true" />
           </Button>
         )}
+      </div>
+
+      {/* Workspace switcher */}
+      <div className="px-4 pb-1">
+        <WorkspaceSwitcher />
       </div>
 
       {/* Nav */}

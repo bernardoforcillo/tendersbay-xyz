@@ -26,6 +26,8 @@ type Config struct {
 	ResendAPIKey  string
 	AppBaseURL    string
 	CORSOrigins   []string
+	// WorkspaceInviteExpiry is how long an email workspace invitation stays valid.
+	WorkspaceInviteExpiry time.Duration
 }
 
 // FromEnv builds a Config from environment variables, applying defaults for
@@ -39,8 +41,8 @@ func FromEnv() Config {
 		PostHogHost:   getenv("POSTHOG_HOST", defaultPostHogHost),
 		DatabaseURL:   os.Getenv("DATABASE_URL"),
 		JWTSecret:     os.Getenv("JWT_SECRET"),
-		ResendAPIKey: os.Getenv("RESEND_API_KEY"),
-		AppBaseURL:   os.Getenv("APP_BASE_URL"),
+		ResendAPIKey:  os.Getenv("RESEND_API_KEY"),
+		AppBaseURL:    os.Getenv("APP_BASE_URL"),
 	}
 
 	if raw := os.Getenv("CORS_ORIGINS"); raw != "" {
@@ -60,6 +62,12 @@ func FromEnv() Config {
 		refresh = "168h"
 	}
 	cfg.RefreshExpiry, _ = time.ParseDuration(refresh)
+
+	inviteExpiry := os.Getenv("WORKSPACE_INVITE_EXPIRY")
+	if inviteExpiry == "" {
+		inviteExpiry = "168h"
+	}
+	cfg.WorkspaceInviteExpiry, _ = time.ParseDuration(inviteExpiry)
 
 	return cfg
 }

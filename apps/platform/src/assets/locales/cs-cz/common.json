@@ -147,5 +147,129 @@
       "deadline": "Termín",
       "daysLeft": "{{count}} dní"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Načítání…",
+      "saving": "Ukládání…",
+      "save": "Uložit",
+      "cancel": "Zrušit",
+      "creating": "Vytváření…",
+      "edit": "Upravit",
+      "delete": "Odstranit",
+      "saved": "Uloženo"
+    },
+    "nav": {
+      "overview": "Přehled",
+      "members": "Členové",
+      "roles": "Role",
+      "invites": "Pozvánky",
+      "settings": "Nastavení",
+      "allWorkspaces": "Všechny pracovní prostory"
+    },
+    "errors": {
+      "notFound": "Tento pracovní prostor není k dispozici."
+    },
+    "list": {
+      "title": "Pracovní prostory",
+      "new": "Nový pracovní prostor",
+      "nameLabel": "Název pracovního prostoru",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Vytvořit pracovní prostor",
+      "empty": "Zatím nejste součástí žádného pracovního prostoru.",
+      "createFirst": "Vytvořte svůj první pracovní prostor"
+    },
+    "overview": {
+      "welcome": "Vítejte v",
+      "workbenchSoon": "Společné pracovní prostředí, kde může váš tým spolupracovat na výběrových řízeních, bude brzy k dispozici. Zatím spravujte členy, role a pozvánky na kartách výše."
+    },
+    "members": {
+      "title": "Členové",
+      "owner": "Vlastník",
+      "role": "Role",
+      "remove": "Odebrat"
+    },
+    "roles": {
+      "title": "Role",
+      "new": "Nová role",
+      "createTitle": "Nová role",
+      "editTitle": "Upravit roli",
+      "nameLabel": "Název role",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Oprávnění",
+      "default": "Výchozí",
+      "permCount": "Oprávnění: {{count}}"
+    },
+    "permissions": {
+      "viewWorkspace": "Zobrazit pracovní prostor",
+      "manageWorkspace": "Spravovat pracovní prostor",
+      "manageMembers": "Spravovat členy",
+      "manageRoles": "Spravovat role",
+      "createInvite": "Vytvářet pozvánky",
+      "manageInvites": "Spravovat pozvánky",
+      "administrator": "Administrátor"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Zobrazit pracovní prostor a jeho obsah",
+      "manageWorkspace": "Přejmenovat a měnit nastavení pracovního prostoru",
+      "manageMembers": "Měnit role členů a odebírat členy",
+      "manageRoles": "Vytvářet, upravovat a mazat role",
+      "createInvite": "Zvát lidi e-mailem nebo odkazem",
+      "manageInvites": "Rušit pozvánky a odkazy",
+      "administrator": "Plný přístup — obchází každou kontrolu oprávnění"
+    },
+    "invites": {
+      "emailTitle": "Pozvat e-mailem",
+      "email": "E-mailová adresa",
+      "role": "Role",
+      "send": "Odeslat pozvánku",
+      "revoke": "Zrušit",
+      "linkTitle": "Sdílené odkazy",
+      "maxUses": "Maximální počet použití (0 = bez omezení)",
+      "createLink": "Vytvořit odkaz",
+      "copy": "Kopírovat",
+      "copied": "Zkopírováno",
+      "usesLimited": "Použití: {{used}} / {{max}}",
+      "usesUnlimited": "Použití: {{used}}",
+      "noPermission": "Nemáte oprávnění spravovat pozvánky."
+    },
+    "settings": {
+      "detailsTitle": "Podrobnosti pracovního prostoru",
+      "name": "Název",
+      "slug": "Slug",
+      "transferTitle": "Převod vlastnictví",
+      "newOwner": "Nový vlastník",
+      "selectMember": "Vyberte člena…",
+      "transfer": "Převést",
+      "dangerTitle": "Nebezpečná zóna",
+      "deleteHint": "Trvale odstranit tento pracovní prostor a všechna jeho data.",
+      "delete": "Odstranit pracovní prostor",
+      "leaveHint": "Opustit tento pracovní prostor. Můžete se znovu připojit s novou pozvánkou.",
+      "leave": "Opustit pracovní prostor"
+    },
+    "accept": {
+      "loading": "Kontrola pozvánky…",
+      "invalidTitle": "Pozvánka není k dispozici",
+      "invalidBody": "Tato pozvánka je neplatná nebo vypršela.",
+      "title": "Jste pozváni",
+      "body": "Připojte se k {{workspace}} jako {{role}}.",
+      "accept": "Přijmout pozvánku",
+      "accepting": "Připojování…",
+      "signIn": "Přihlaste se pro přijetí"
+    },
+    "join": {
+      "loading": "Kontrola odkazu…",
+      "invalidTitle": "Odkaz není k dispozici",
+      "invalidBody": "Tento odkaz s pozvánkou je neplatný, vypršel nebo byl plně využit.",
+      "title": "Připojit se k pracovnímu prostoru",
+      "body": "Připojte se k {{workspace}} jako {{role}}.",
+      "join": "Připojit se k pracovnímu prostoru",
+      "joining": "Připojování…",
+      "signIn": "Přihlaste se pro připojení"
+    },
+    "switcher": {
+      "label": "Pracovní prostory",
+      "manage": "Všechny pracovní prostory"
+    }
   }
 }

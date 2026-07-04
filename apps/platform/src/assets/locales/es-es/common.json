@@ -147,5 +147,129 @@
       "deadline": "Plazo",
       "daysLeft": "{{count}} días"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Cargando…",
+      "saving": "Guardando…",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "creating": "Creando…",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "saved": "Guardado"
+    },
+    "nav": {
+      "overview": "Resumen",
+      "members": "Miembros",
+      "roles": "Roles",
+      "invites": "Invitaciones",
+      "settings": "Configuración",
+      "allWorkspaces": "Todos los espacios de trabajo"
+    },
+    "errors": {
+      "notFound": "Este espacio de trabajo no está disponible."
+    },
+    "list": {
+      "title": "Espacios de trabajo",
+      "new": "Nuevo espacio de trabajo",
+      "nameLabel": "Nombre del espacio de trabajo",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Crear espacio de trabajo",
+      "empty": "Todavía no formas parte de ningún espacio de trabajo.",
+      "createFirst": "Crea tu primer espacio de trabajo"
+    },
+    "overview": {
+      "welcome": "Te damos la bienvenida a",
+      "workbenchSoon": "Próximamente llegará un espacio colaborativo donde tu equipo podrá trabajar en licitaciones en conjunto. Por ahora, gestiona los miembros, los roles y las invitaciones desde las pestañas de arriba."
+    },
+    "members": {
+      "title": "Miembros",
+      "owner": "Propietario",
+      "role": "Rol",
+      "remove": "Eliminar"
+    },
+    "roles": {
+      "title": "Roles",
+      "new": "Nuevo rol",
+      "createTitle": "Nuevo rol",
+      "editTitle": "Editar rol",
+      "nameLabel": "Nombre del rol",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Permisos",
+      "default": "Predeterminado",
+      "permCount": "{{count}} permisos"
+    },
+    "permissions": {
+      "viewWorkspace": "Ver el espacio de trabajo",
+      "manageWorkspace": "Gestionar el espacio de trabajo",
+      "manageMembers": "Gestionar miembros",
+      "manageRoles": "Gestionar roles",
+      "createInvite": "Crear invitaciones",
+      "manageInvites": "Gestionar invitaciones",
+      "administrator": "Administrador"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Ver el espacio de trabajo y su contenido",
+      "manageWorkspace": "Cambiar el nombre y la configuración del espacio de trabajo",
+      "manageMembers": "Cambiar los roles de los miembros y eliminar miembros",
+      "manageRoles": "Crear, editar y eliminar roles",
+      "createInvite": "Invitar a personas por correo electrónico o enlace",
+      "manageInvites": "Revocar invitaciones y enlaces",
+      "administrator": "Acceso total — omite toda comprobación de permisos"
+    },
+    "invites": {
+      "emailTitle": "Invitar por correo electrónico",
+      "email": "Dirección de correo electrónico",
+      "role": "Rol",
+      "send": "Enviar invitación",
+      "revoke": "Revocar",
+      "linkTitle": "Enlaces para compartir",
+      "maxUses": "Usos máximos (0 = ilimitado)",
+      "createLink": "Crear enlace",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "usesLimited": "{{used}} / {{max}} usos",
+      "usesUnlimited": "{{used}} usos",
+      "noPermission": "No tienes permiso para gestionar las invitaciones."
+    },
+    "settings": {
+      "detailsTitle": "Detalles del espacio de trabajo",
+      "name": "Nombre",
+      "slug": "Slug",
+      "transferTitle": "Transferir la propiedad",
+      "newOwner": "Nuevo propietario",
+      "selectMember": "Selecciona un miembro…",
+      "transfer": "Transferir",
+      "dangerTitle": "Zona de peligro",
+      "deleteHint": "Eliminar de forma permanente este espacio de trabajo y todos sus datos.",
+      "delete": "Eliminar espacio de trabajo",
+      "leaveHint": "Abandonar este espacio de trabajo. Podrás volver a unirte con una nueva invitación.",
+      "leave": "Abandonar espacio de trabajo"
+    },
+    "accept": {
+      "loading": "Comprobando la invitación…",
+      "invalidTitle": "Invitación no disponible",
+      "invalidBody": "Esta invitación no es válida o ha caducado.",
+      "title": "Tienes una invitación",
+      "body": "Únete a {{workspace}} como {{role}}.",
+      "accept": "Aceptar invitación",
+      "accepting": "Uniéndote…",
+      "signIn": "Inicia sesión para aceptar"
+    },
+    "join": {
+      "loading": "Comprobando el enlace…",
+      "invalidTitle": "Enlace no disponible",
+      "invalidBody": "Este enlace de invitación no es válido, ha caducado o se ha utilizado por completo.",
+      "title": "Unirse al espacio de trabajo",
+      "body": "Únete a {{workspace}} como {{role}}.",
+      "join": "Unirse al espacio de trabajo",
+      "joining": "Uniéndote…",
+      "signIn": "Inicia sesión para unirte"
+    },
+    "switcher": {
+      "label": "Espacios de trabajo",
+      "manage": "Todos los espacios de trabajo"
+    }
   }
 }

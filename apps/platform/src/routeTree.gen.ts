@@ -13,6 +13,8 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
+import { Route as JoinCodeRouteImport } from './routes/join/$code'
+import { Route as AuthenticatedWorkspacesIndexRouteImport } from './routes/_authenticated/workspaces/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedExploreIndexRouteImport } from './routes/_authenticated/explore/index'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings/profile'
@@ -20,11 +22,18 @@ import { Route as AuthenticatedSettingsDeleteRouteImport } from './routes/_authe
 import { Route as AuthenticatedSettingsChangePasswordRouteImport } from './routes/_authenticated/settings/change-password'
 import { Route as AuthenticatedSettingsChangeEmailRouteImport } from './routes/_authenticated/settings/change-email'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as LocaleWorkspaceAcceptInviteRouteImport } from './routes/$locale/workspace/accept-invite'
 import { Route as LocaleAuthVerifyEmailRouteImport } from './routes/$locale/auth/verify-email'
 import { Route as LocaleAuthSignupRouteImport } from './routes/$locale/auth/signup'
 import { Route as LocaleAuthResetPasswordRouteImport } from './routes/$locale/auth/reset-password'
 import { Route as LocaleAuthLoginRouteImport } from './routes/$locale/auth/login'
 import { Route as LocaleAuthForgotPasswordRouteImport } from './routes/$locale/auth/forgot-password'
+import { Route as AuthenticatedWorkspacesWorkspaceIdRouteRouteImport } from './routes/_authenticated/workspaces/$workspaceId/route'
+import { Route as AuthenticatedWorkspacesWorkspaceIdIndexRouteImport } from './routes/_authenticated/workspaces/$workspaceId/index'
+import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings'
+import { Route as AuthenticatedWorkspacesWorkspaceIdRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/roles'
+import { Route as AuthenticatedWorkspacesWorkspaceIdMembersRouteImport } from './routes/_authenticated/workspaces/$workspaceId/members'
+import { Route as AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/invites'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -45,6 +54,17 @@ const LocaleIndexRoute = LocaleIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
+const JoinCodeRoute = JoinCodeRouteImport.update({
+  id: '/join/$code',
+  path: '/join/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedWorkspacesIndexRoute =
+  AuthenticatedWorkspacesIndexRouteImport.update({
+    id: '/workspaces/',
+    path: '/workspaces/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/settings/',
@@ -87,6 +107,12 @@ const AuthenticatedSettingsAccountRoute =
     path: '/settings/account',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const LocaleWorkspaceAcceptInviteRoute =
+  LocaleWorkspaceAcceptInviteRouteImport.update({
+    id: '/workspace/accept-invite',
+    path: '/workspace/accept-invite',
+    getParentRoute: () => LocaleRouteRoute,
+  } as any)
 const LocaleAuthVerifyEmailRoute = LocaleAuthVerifyEmailRouteImport.update({
   id: '/auth/verify-email',
   path: '/auth/verify-email',
@@ -113,16 +139,55 @@ const LocaleAuthForgotPasswordRoute =
     path: '/auth/forgot-password',
     getParentRoute: () => LocaleRouteRoute,
   } as any)
+const AuthenticatedWorkspacesWorkspaceIdRouteRoute =
+  AuthenticatedWorkspacesWorkspaceIdRouteRouteImport.update({
+    id: '/workspaces/$workspaceId',
+    path: '/workspaces/$workspaceId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdIndexRoute =
+  AuthenticatedWorkspacesWorkspaceIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdSettingsRoute =
+  AuthenticatedWorkspacesWorkspaceIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdRolesRoute =
+  AuthenticatedWorkspacesWorkspaceIdRolesRouteImport.update({
+    id: '/roles',
+    path: '/roles',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdMembersRoute =
+  AuthenticatedWorkspacesWorkspaceIdMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdInvitesRoute =
+  AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport.update({
+    id: '/invites',
+    path: '/invites',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
+  '/join/$code': typeof JoinCodeRoute
   '/$locale/': typeof LocaleIndexRoute
+  '/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren
   '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
   '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
@@ -130,15 +195,23 @@ export interface FileRoutesByFullPath {
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/explore/': typeof AuthenticatedExploreIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
+  '/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
+  '/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
+  '/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
+  '/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRoute
+  '/workspaces/$workspaceId/': typeof AuthenticatedWorkspacesWorkspaceIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/join/$code': typeof JoinCodeRoute
   '/$locale': typeof LocaleIndexRoute
   '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
   '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
@@ -146,18 +219,27 @@ export interface FileRoutesByTo {
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/explore': typeof AuthenticatedExploreIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/workspaces': typeof AuthenticatedWorkspacesIndexRoute
+  '/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
+  '/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
+  '/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
+  '/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRoute
+  '/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/join/$code': typeof JoinCodeRoute
   '/$locale/': typeof LocaleIndexRoute
+  '/_authenticated/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren
   '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
   '/_authenticated/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
@@ -165,18 +247,27 @@ export interface FileRoutesById {
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/_authenticated/explore/': typeof AuthenticatedExploreIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
+  '/_authenticated/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
+  '/_authenticated/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
+  '/_authenticated/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
+  '/_authenticated/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRoute
+  '/_authenticated/workspaces/$workspaceId/': typeof AuthenticatedWorkspacesWorkspaceIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/$locale'
+    | '/join/$code'
     | '/$locale/'
+    | '/workspaces/$workspaceId'
     | '/$locale/auth/forgot-password'
     | '/$locale/auth/login'
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/workspace/accept-invite'
     | '/settings/account'
     | '/settings/change-email'
     | '/settings/change-password'
@@ -184,15 +275,23 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/explore/'
     | '/settings/'
+    | '/workspaces/'
+    | '/workspaces/$workspaceId/invites'
+    | '/workspaces/$workspaceId/members'
+    | '/workspaces/$workspaceId/roles'
+    | '/workspaces/$workspaceId/settings'
+    | '/workspaces/$workspaceId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/join/$code'
     | '/$locale'
     | '/$locale/auth/forgot-password'
     | '/$locale/auth/login'
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/workspace/accept-invite'
     | '/settings/account'
     | '/settings/change-email'
     | '/settings/change-password'
@@ -200,17 +299,26 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/explore'
     | '/settings'
+    | '/workspaces'
+    | '/workspaces/$workspaceId/invites'
+    | '/workspaces/$workspaceId/members'
+    | '/workspaces/$workspaceId/roles'
+    | '/workspaces/$workspaceId/settings'
+    | '/workspaces/$workspaceId'
   id:
     | '__root__'
     | '/'
     | '/$locale'
     | '/_authenticated'
+    | '/join/$code'
     | '/$locale/'
+    | '/_authenticated/workspaces/$workspaceId'
     | '/$locale/auth/forgot-password'
     | '/$locale/auth/login'
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/workspace/accept-invite'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/change-email'
     | '/_authenticated/settings/change-password'
@@ -218,12 +326,19 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/profile'
     | '/_authenticated/explore/'
     | '/_authenticated/settings/'
+    | '/_authenticated/workspaces/'
+    | '/_authenticated/workspaces/$workspaceId/invites'
+    | '/_authenticated/workspaces/$workspaceId/members'
+    | '/_authenticated/workspaces/$workspaceId/roles'
+    | '/_authenticated/workspaces/$workspaceId/settings'
+    | '/_authenticated/workspaces/$workspaceId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  JoinCodeRoute: typeof JoinCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -255,6 +370,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/$locale/'
       preLoaderRoute: typeof LocaleIndexRouteImport
       parentRoute: typeof LocaleRouteRoute
+    }
+    '/join/$code': {
+      id: '/join/$code'
+      path: '/join/$code'
+      fullPath: '/join/$code'
+      preLoaderRoute: typeof JoinCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/workspaces/': {
+      id: '/_authenticated/workspaces/'
+      path: '/workspaces'
+      fullPath: '/workspaces/'
+      preLoaderRoute: typeof AuthenticatedWorkspacesIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
@@ -305,6 +434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/$locale/workspace/accept-invite': {
+      id: '/$locale/workspace/accept-invite'
+      path: '/workspace/accept-invite'
+      fullPath: '/$locale/workspace/accept-invite'
+      preLoaderRoute: typeof LocaleWorkspaceAcceptInviteRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
     '/$locale/auth/verify-email': {
       id: '/$locale/auth/verify-email'
       path: '/auth/verify-email'
@@ -340,6 +476,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleAuthForgotPasswordRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
+    '/_authenticated/workspaces/$workspaceId': {
+      id: '/_authenticated/workspaces/$workspaceId'
+      path: '/workspaces/$workspaceId'
+      fullPath: '/workspaces/$workspaceId'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/': {
+      id: '/_authenticated/workspaces/$workspaceId/'
+      path: '/'
+      fullPath: '/workspaces/$workspaceId/'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdIndexRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/settings': {
+      id: '/_authenticated/workspaces/$workspaceId/settings'
+      path: '/settings'
+      fullPath: '/workspaces/$workspaceId/settings'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/roles': {
+      id: '/_authenticated/workspaces/$workspaceId/roles'
+      path: '/roles'
+      fullPath: '/workspaces/$workspaceId/roles'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdRolesRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/members': {
+      id: '/_authenticated/workspaces/$workspaceId/members'
+      path: '/members'
+      fullPath: '/workspaces/$workspaceId/members'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdMembersRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/invites': {
+      id: '/_authenticated/workspaces/$workspaceId/invites'
+      path: '/invites'
+      fullPath: '/workspaces/$workspaceId/invites'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
   }
 }
 
@@ -350,6 +528,7 @@ interface LocaleRouteRouteChildren {
   LocaleAuthResetPasswordRoute: typeof LocaleAuthResetPasswordRoute
   LocaleAuthSignupRoute: typeof LocaleAuthSignupRoute
   LocaleAuthVerifyEmailRoute: typeof LocaleAuthVerifyEmailRoute
+  LocaleWorkspaceAcceptInviteRoute: typeof LocaleWorkspaceAcceptInviteRoute
 }
 
 const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
@@ -359,13 +538,42 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAuthResetPasswordRoute: LocaleAuthResetPasswordRoute,
   LocaleAuthSignupRoute: LocaleAuthSignupRoute,
   LocaleAuthVerifyEmailRoute: LocaleAuthVerifyEmailRoute,
+  LocaleWorkspaceAcceptInviteRoute: LocaleWorkspaceAcceptInviteRoute,
 }
 
 const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
   LocaleRouteRouteChildren,
 )
 
+interface AuthenticatedWorkspacesWorkspaceIdRouteRouteChildren {
+  AuthenticatedWorkspacesWorkspaceIdInvitesRoute: typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
+  AuthenticatedWorkspacesWorkspaceIdMembersRoute: typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
+  AuthenticatedWorkspacesWorkspaceIdRolesRoute: typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
+  AuthenticatedWorkspacesWorkspaceIdSettingsRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRoute
+  AuthenticatedWorkspacesWorkspaceIdIndexRoute: typeof AuthenticatedWorkspacesWorkspaceIdIndexRoute
+}
+
+const AuthenticatedWorkspacesWorkspaceIdRouteRouteChildren: AuthenticatedWorkspacesWorkspaceIdRouteRouteChildren =
+  {
+    AuthenticatedWorkspacesWorkspaceIdInvitesRoute:
+      AuthenticatedWorkspacesWorkspaceIdInvitesRoute,
+    AuthenticatedWorkspacesWorkspaceIdMembersRoute:
+      AuthenticatedWorkspacesWorkspaceIdMembersRoute,
+    AuthenticatedWorkspacesWorkspaceIdRolesRoute:
+      AuthenticatedWorkspacesWorkspaceIdRolesRoute,
+    AuthenticatedWorkspacesWorkspaceIdSettingsRoute:
+      AuthenticatedWorkspacesWorkspaceIdSettingsRoute,
+    AuthenticatedWorkspacesWorkspaceIdIndexRoute:
+      AuthenticatedWorkspacesWorkspaceIdIndexRoute,
+  }
+
+const AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren =
+  AuthenticatedWorkspacesWorkspaceIdRouteRoute._addFileChildren(
+    AuthenticatedWorkspacesWorkspaceIdRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
+  AuthenticatedWorkspacesWorkspaceIdRouteRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsChangeEmailRoute: typeof AuthenticatedSettingsChangeEmailRoute
   AuthenticatedSettingsChangePasswordRoute: typeof AuthenticatedSettingsChangePasswordRoute
@@ -373,9 +581,12 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
   AuthenticatedExploreIndexRoute: typeof AuthenticatedExploreIndexRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+  AuthenticatedWorkspacesIndexRoute: typeof AuthenticatedWorkspacesIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedWorkspacesWorkspaceIdRouteRoute:
+    AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren,
   AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
   AuthenticatedSettingsChangeEmailRoute: AuthenticatedSettingsChangeEmailRoute,
   AuthenticatedSettingsChangePasswordRoute:
@@ -384,6 +595,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
   AuthenticatedExploreIndexRoute: AuthenticatedExploreIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+  AuthenticatedWorkspacesIndexRoute: AuthenticatedWorkspacesIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -394,6 +606,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LocaleRouteRoute: LocaleRouteRouteWithChildren,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  JoinCodeRoute: JoinCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -147,5 +147,129 @@
       "deadline": "Skadenza",
       "daysLeft": "{{count}} jiem"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Qed jitgħabba…",
+      "saving": "Qed jinħażen…",
+      "save": "Issejvja",
+      "cancel": "Ikkanċella",
+      "creating": "Qed jinħoloq…",
+      "edit": "Editja",
+      "delete": "Ħassar",
+      "saved": "Issejvjat"
+    },
+    "nav": {
+      "overview": "Ħarsa ġenerali",
+      "members": "Membri",
+      "roles": "Rwoli",
+      "invites": "Stediniet",
+      "settings": "Settings",
+      "allWorkspaces": "L-ispazji tax-xogħol kollha"
+    },
+    "errors": {
+      "notFound": "Dan l-ispazju tax-xogħol mhux disponibbli."
+    },
+    "list": {
+      "title": "Spazji tax-xogħol",
+      "new": "Spazju tax-xogħol ġdid",
+      "nameLabel": "Isem l-ispazju tax-xogħol",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Oħloq spazju tax-xogħol",
+      "empty": "Għadek m'intix parti minn ebda spazju tax-xogħol.",
+      "createFirst": "Oħloq l-ewwel spazju tax-xogħol tiegħek"
+    },
+    "overview": {
+      "welcome": "Merħba fi",
+      "workbenchSoon": "Spazju tax-xogħol kollaborattiv fejn it-tim tiegħek jista' jaħdem fuq sejħiet għall-offerti flimkien qed jasal dalwaqt. Għalissa, immaniġġja membri, rwoli u stediniet mit-tabs ta' hawn fuq."
+    },
+    "members": {
+      "title": "Membri",
+      "owner": "Sid",
+      "role": "Rwol",
+      "remove": "Neħħi"
+    },
+    "roles": {
+      "title": "Rwoli",
+      "new": "Rwol ġdid",
+      "createTitle": "Rwol ġdid",
+      "editTitle": "Editja r-rwol",
+      "nameLabel": "Isem ir-rwol",
+      "namePlaceholder": "Editur",
+      "permissionsLabel": "Permessi",
+      "default": "Prestabbilit",
+      "permCount": "{{count}} permessi"
+    },
+    "permissions": {
+      "viewWorkspace": "Ara l-ispazju tax-xogħol",
+      "manageWorkspace": "Immaniġġja l-ispazju tax-xogħol",
+      "manageMembers": "Immaniġġja l-membri",
+      "manageRoles": "Immaniġġja r-rwoli",
+      "createInvite": "Oħloq stediniet",
+      "manageInvites": "Immaniġġja l-istediniet",
+      "administrator": "Amministratur"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Ara l-ispazju tax-xogħol u l-kontenut tiegħu",
+      "manageWorkspace": "Ibdel l-isem u s-settings tal-ispazju tax-xogħol",
+      "manageMembers": "Ibdel ir-rwoli tal-membri u neħħi membri",
+      "manageRoles": "Oħloq, editja u ħassar rwoli",
+      "createInvite": "Stieden nies bl-email jew b'link",
+      "manageInvites": "Irrevoka stediniet u links",
+      "administrator": "Aċċess sħiħ — jaqbeż kull verifika ta' permess"
+    },
+    "invites": {
+      "emailTitle": "Stieden bl-email",
+      "email": "Indirizz tal-email",
+      "role": "Rwol",
+      "send": "Ibgħat stedina",
+      "revoke": "Irrevoka",
+      "linkTitle": "Links li jistgħu jinqasmu",
+      "maxUses": "Użi massimi (0 = bla limitu)",
+      "createLink": "Oħloq link",
+      "copy": "Ikkopja",
+      "copied": "Ikkupjat",
+      "usesLimited": "{{used}} / {{max}} użi",
+      "usesUnlimited": "{{used}} użi",
+      "noPermission": "M'għandekx permess timmaniġġja l-istediniet."
+    },
+    "settings": {
+      "detailsTitle": "Dettalji tal-ispazju tax-xogħol",
+      "name": "Isem",
+      "slug": "Slug",
+      "transferTitle": "Ittrasferixxi s-sjieda",
+      "newOwner": "Sid ġdid",
+      "selectMember": "Agħżel membru…",
+      "transfer": "Ittrasferixxi",
+      "dangerTitle": "Żona ta' periklu",
+      "deleteHint": "Ħassar b'mod permanenti dan l-ispazju tax-xogħol u d-data kollha tiegħu.",
+      "delete": "Ħassar l-ispazju tax-xogħol",
+      "leaveHint": "Itlaq minn dan l-ispazju tax-xogħol. Tista' terġa' tissieħeb b'stedina ġdida.",
+      "leave": "Itlaq mill-ispazju tax-xogħol"
+    },
+    "accept": {
+      "loading": "Qed tiġi vverifikata l-istedina…",
+      "invalidTitle": "L-istedina mhux disponibbli",
+      "invalidBody": "Din l-istedina hija invalida jew skadiet.",
+      "title": "Int mistieden",
+      "body": "Issieħeb fi {{workspace}} bħala {{role}}.",
+      "accept": "Aċċetta l-istedina",
+      "accepting": "Qed tissieħeb…",
+      "signIn": "Idħol biex taċċetta"
+    },
+    "join": {
+      "loading": "Qed jiġi vverifikat il-link…",
+      "invalidTitle": "Il-link mhux disponibbli",
+      "invalidBody": "Dan il-link tal-istedina huwa invalidu, skadut, jew intuża kompletament.",
+      "title": "Issieħeb fl-ispazju tax-xogħol",
+      "body": "Issieħeb fi {{workspace}} bħala {{role}}.",
+      "join": "Issieħeb fl-ispazju tax-xogħol",
+      "joining": "Qed tissieħeb…",
+      "signIn": "Idħol biex tissieħeb"
+    },
+    "switcher": {
+      "label": "Spazji tax-xogħol",
+      "manage": "L-ispazji tax-xogħol kollha"
+    }
   }
 }

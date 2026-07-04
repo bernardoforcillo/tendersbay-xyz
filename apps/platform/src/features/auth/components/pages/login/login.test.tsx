@@ -4,6 +4,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { LoginPage } from './index';
 
 vi.mock('~/lib/api/client', () => ({ authClient: { login: vi.fn() } }));
+vi.mock('~/lib/redirect', () => ({
+  useRedirectParam: () => ({ target: '/', raw: null, setTarget: vi.fn() }),
+}));
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
   useParams: () => ({ locale: 'en-ie' }),
