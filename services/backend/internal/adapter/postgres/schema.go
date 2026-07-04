@@ -189,3 +189,73 @@ type DBMembership struct {
 	Permissions int64     `drop:"permissions"`
 	JoinedAt    time.Time `drop:"joined_at"`
 }
+
+// ── Workbench tables ────────────────────────────────────────────────────────
+// Mirrors the workspace tables above: full DDL constraints on the drops
+// handles so the 0003 migration generates CREATE TABLE from the same columns
+// the repositories query with. Composite constraints (the members composite
+// PK and the (workbench_id, name) unique) are added as raw ALTER TABLE in
+// migrate_workbenches.go — drops does not emit them inline.
+var (
+	Workbenches   = pg.NewTable("workbenches")
+	WBID          = pg.Add(Workbenches, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	WBWorkspaceID = pg.Add(Workbenches, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	WBName        = pg.Add(Workbenches, pg.Text("name").NotNull())
+	WBDescription = pg.Add(Workbenches, pg.Text("description").NotNull().Default("''"))
+	WBVisibility  = pg.Add(Workbenches, pg.Text("visibility").NotNull().Default("'private'"))
+	WBOwnerID     = pg.Add(Workbenches, pg.UUID("owner_id").NotNull().References(UserID, pg.OnDelete("RESTRICT")))
+	WBCreatedAt   = pg.Add(Workbenches, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	WBUpdatedAt   = pg.Add(Workbenches, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	WorkbenchRoles    = pg.NewTable("workbench_roles")
+	WBRoleID          = pg.Add(WorkbenchRoles, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	WBRoleWorkbenchID = pg.Add(WorkbenchRoles, pg.UUID("workbench_id").NotNull().References(WBID, pg.OnDelete("CASCADE")))
+	WBRoleName        = pg.Add(WorkbenchRoles, pg.Text("name").NotNull())
+	WBRolePermissions = pg.Add(WorkbenchRoles, pg.BigInt("permissions").NotNull().Default("0"))
+	WBRoleIsDefault   = pg.Add(WorkbenchRoles, pg.Boolean("is_default").NotNull().Default("false"))
+	WBRoleCreatedAt   = pg.Add(WorkbenchRoles, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+
+	WorkbenchMembers    = pg.NewTable("workbench_members")
+	WBMemberWorkbenchID = pg.Add(WorkbenchMembers, pg.UUID("workbench_id").NotNull().References(WBID, pg.OnDelete("CASCADE")))
+	WBMemberUserID      = pg.Add(WorkbenchMembers, pg.UUID("user_id").NotNull().References(UserID, pg.OnDelete("CASCADE")))
+	WBMemberRoleID      = pg.Add(WorkbenchMembers, pg.UUID("role_id").NotNull().References(WBRoleID, pg.OnDelete("RESTRICT")))
+	WBMemberAddedAt     = pg.Add(WorkbenchMembers, pg.Timestamp("added_at", true).NotNull().Default("now()"))
+)
+
+type DBWorkbench struct {
+	ID          string    `drop:"id"`
+	WorkspaceID string    `drop:"workspace_id"`
+	Name        string    `drop:"name"`
+	Description string    `drop:"description"`
+	Visibility  string    `drop:"visibility"`
+	OwnerID     string    `drop:"owner_id"`
+	CreatedAt   time.Time `drop:"created_at"`
+	UpdatedAt   time.Time `drop:"updated_at"`
+}
+
+type DBWorkbenchRole struct {
+	ID          string    `drop:"id"`
+	WorkbenchID string    `drop:"workbench_id"`
+	Name        string    `drop:"name"`
+	Permissions int64     `drop:"permissions"`
+	IsDefault   bool      `drop:"is_default"`
+	CreatedAt   time.Time `drop:"created_at"`
+}
+
+type DBWorkbenchMember struct {
+	WorkbenchID string    `drop:"workbench_id"`
+	UserID      string    `drop:"user_id"`
+	RoleID      string    `drop:"role_id"`
+	AddedAt     time.Time `drop:"added_at"`
+}
+
+// DBWorkbenchMembership is the flat scan target for the workbench_members ⋈
+// workbench_roles join used to load a caller's membership + role in one query.
+type DBWorkbenchMembership struct {
+	WorkbenchID string    `drop:"workbench_id"`
+	UserID      string    `drop:"user_id"`
+	RoleID      string    `drop:"role_id"`
+	RoleName    string    `drop:"name"`
+	Permissions int64     `drop:"permissions"`
+	AddedAt     time.Time `drop:"added_at"`
+}

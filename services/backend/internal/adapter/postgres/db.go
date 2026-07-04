@@ -28,5 +28,6 @@ func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 	// 0002+ are managed programmatically via the drops schema DSL (see
 	// migrate_workspaces.go), mixed with the FS-based 0001 by version order.
 	m.Add(migrateWorkspaces())
+	m.Add(migrateWorkbenches())
 	return db, sqlDB, m.Up(ctx)
 }
