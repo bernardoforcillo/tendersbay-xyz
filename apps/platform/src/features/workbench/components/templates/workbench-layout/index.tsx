@@ -61,11 +61,19 @@ export function WorkbenchLayout() {
             ]}
           />
           <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <h1 className="font-display text-2xl text-ink-900">{workbench.name}</h1>
-              {workbench.description && (
-                <p className="text-sm text-ink-500">{workbench.description}</p>
-              )}
+            <div className="flex min-w-0 items-center gap-3">
+              <span
+                aria-hidden="true"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-100 font-display text-lg font-semibold text-brand-700"
+              >
+                {workbench.name.charAt(0).toUpperCase()}
+              </span>
+              <div className="min-w-0">
+                <h1 className="font-display text-2xl text-ink-900">{workbench.name}</h1>
+                {workbench.description && (
+                  <p className="text-sm text-ink-500">{workbench.description}</p>
+                )}
+              </div>
             </div>
             <Link
               to="/workspaces/$workspaceId/workbench/$workbenchId/settings"

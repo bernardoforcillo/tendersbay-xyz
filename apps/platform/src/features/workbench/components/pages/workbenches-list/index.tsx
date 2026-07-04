@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
+import { LayoutGrid, Lock, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Button, Form, Input, Label, TextField } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
@@ -113,7 +114,10 @@ export function WorkbenchesListPage() {
         </p>
       )}
       {workbenches && workbenches.length === 0 && !loading && (
-        <p className="text-sm text-ink-500">{t('workbench.list.empty', 'No workbenches yet.')}</p>
+        <div className="flex flex-col items-center gap-2 py-10 text-center">
+          <LayoutGrid className="text-ink-300" size={22} aria-hidden="true" />
+          <p className="text-sm text-ink-500">{t('workbench.list.empty', 'No workbenches yet.')}</p>
+        </div>
       )}
       <ul className="flex flex-col gap-2">
         {workbenches?.map((wb) => (
@@ -121,15 +125,26 @@ export function WorkbenchesListPage() {
             <Link
               to="/workspaces/$workspaceId/workbench/$workbenchId"
               params={{ workspaceId, workbenchId: wb.id }}
-              className={`${CARD} flex items-center justify-between gap-3 no-underline outline-none transition hover:border-brand-300 focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2`}
+              className={`${CARD} flex items-center gap-4 no-underline outline-none transition hover:border-brand-300 focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2`}
             >
-              <span className="min-w-0">
+              <span
+                aria-hidden="true"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-100 font-display text-base font-semibold text-brand-700"
+              >
+                {wb.name.charAt(0).toUpperCase()}
+              </span>
+              <span className="min-w-0 flex-1">
                 <span className="block truncate font-medium text-ink-900">{wb.name}</span>
                 {wb.description && (
                   <span className="block truncate text-xs text-ink-500">{wb.description}</span>
                 )}
               </span>
-              <span className="shrink-0 rounded-full bg-cream-200 px-2 py-0.5 text-xs text-ink-600">
+              <span className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-ink-500">
+                {wb.visibility === 'shared' ? (
+                  <Users size={14} aria-hidden="true" />
+                ) : (
+                  <Lock size={14} aria-hidden="true" />
+                )}
                 {t(`workbench.visibility.${wb.visibility}`, wb.visibility)}
               </span>
             </Link>

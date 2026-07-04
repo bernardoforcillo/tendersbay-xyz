@@ -81,16 +81,24 @@ export function WorkbenchMembersPage() {
               key={m.userId}
               className={`${CARD} flex flex-wrap items-center justify-between gap-3 py-4`}
             >
-              <div className="min-w-0">
-                <p className="truncate font-medium text-ink-900">
-                  {m.user?.displayName || m.user?.email || m.userId}
-                  {isOwner && (
-                    <span className="ml-2 rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
-                      {t('workbench.members.owner', 'Owner')}
-                    </span>
-                  )}
-                </p>
-                <p className="truncate text-xs text-ink-500">{m.user?.email}</p>
+              <div className="flex min-w-0 items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cream-200 text-sm font-semibold text-ink-700"
+                >
+                  {(m.user?.displayName || m.user?.email || '?').charAt(0).toUpperCase()}
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-ink-900">
+                    {m.user?.displayName || m.user?.email || m.userId}
+                    {isOwner && (
+                      <span className="ml-2 rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
+                        {t('workbench.members.owner', 'Owner')}
+                      </span>
+                    )}
+                  </p>
+                  <p className="truncate text-xs text-ink-500">{m.user?.email}</p>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 {canManage && !isOwner ? (
