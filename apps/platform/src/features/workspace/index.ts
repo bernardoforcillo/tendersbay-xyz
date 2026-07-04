@@ -7,3 +7,4 @@ export { WorkspaceRolesPage } from './components/pages/workspace-roles';
 export { WorkspaceSettingsPage } from './components/pages/workspace-settings';
 export { WorkspacesListPage } from './components/pages/workspaces-list';
 export { WorkspaceLayout } from './components/templates/workspace-layout';
+export { WorkspaceSettingsLayout } from './components/templates/workspace-settings-layout';

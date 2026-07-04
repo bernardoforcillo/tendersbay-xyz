@@ -1,6 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { WorkspaceRolesPage } from '~/features/workspace';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authenticated/workspaces/$workspaceId/roles')({
-  component: WorkspaceRolesPage,
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/workspaces/$workspaceId/settings/roles',
+      params: { workspaceId: params.workspaceId },
+    });
+  },
 });

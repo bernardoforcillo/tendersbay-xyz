@@ -1,6 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { WorkspaceInvitesPage } from '~/features/workspace';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authenticated/workspaces/$workspaceId/invites')({
-  component: WorkspaceInvitesPage,
+  beforeLoad: ({ params }) => {
+    throw redirect({
+      to: '/workspaces/$workspaceId/settings/invites',
+      params: { workspaceId: params.workspaceId },
+    });
+  },
 });
