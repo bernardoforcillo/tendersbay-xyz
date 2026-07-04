@@ -3,6 +3,7 @@ import { Building2, ChevronsUpDown, Plus } from 'lucide-react';
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { useMyWorkspaces } from '~/features/workspace/hooks';
+import { useWorkspaceStore } from '~/store/workspace';
 
 const POPUP_LINK =
   'flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm no-underline text-ink-700 transition-colors hover:bg-cream-100 hover:text-ink-900';
@@ -10,8 +11,10 @@ const POPUP_LINK =
 export function WorkspaceSwitcher() {
   const { t } = useTranslation();
   const { data: workspaces } = useMyWorkspaces();
-  const { workspaceId } = useParams({ strict: false });
-  const current = workspaces?.find((w) => w.id === workspaceId);
+  const { workspaceId: routeWorkspaceId } = useParams({ strict: false });
+  const currentWorkspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
+  const activeId = routeWorkspaceId ?? currentWorkspaceId;
+  const current = workspaces?.find((w) => w.id === activeId);
   const label = current?.name ?? t('workspace.switcher.label', 'Workspaces');
 
   return (

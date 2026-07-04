@@ -18,6 +18,7 @@ import { WorkspaceSwitcher } from '~/features/workspace/components/organisms/wor
 import { detectLocale } from '~/i18n/detect-locale';
 import { authClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
+import { useWorkspaceStore } from '~/store/workspace';
 import { sidebarNavKeys } from './sidebar-nav';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -55,7 +56,12 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
   const user = useAuthStore((s) => s.user);
 
   const initial = (user?.displayName?.[0] ?? user?.email?.[0] ?? '?').toUpperCase();
-  const { workspaceId } = useParams({ strict: false });
+  // Keep the workspace nav visible even on workspace-agnostic routes (e.g. Explore)
+  // by falling back to the remembered active workspace — navigating there should
+  // not feel like leaving the workspace.
+  const { workspaceId: routeWorkspaceId } = useParams({ strict: false });
+  const currentWorkspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
+  const workspaceId = routeWorkspaceId ?? currentWorkspaceId ?? undefined;
   const keys = sidebarNavKeys(Boolean(workspaceId));
 
   async function handleLogout() {
