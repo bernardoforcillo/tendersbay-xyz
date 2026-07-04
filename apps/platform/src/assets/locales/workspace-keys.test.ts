@@ -36,5 +36,6 @@ describe('workspace locale keys', () => {
     // Spot-check the permission labels used by the role editor are all present.
     expect(ws?.permissions?.administrator, 'permissions.administrator').toBeTruthy();
     expect(ws?.accept?.body, 'accept.body').toBeTruthy();
+    expect(ws?.nav?.general, 'nav.general').toBeTruthy();
   });
 });
