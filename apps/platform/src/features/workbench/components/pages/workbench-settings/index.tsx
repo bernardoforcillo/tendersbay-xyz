@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from '@tanstack/react-router';
+import { ArrowLeftRight, Eye, SquarePen, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { Button, Form, Input, Label, TextField } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
@@ -124,7 +125,8 @@ export function WorkbenchSettingsPage() {
       )}
 
       <section className="flex flex-col gap-4">
-        <h2 className="font-display text-lg text-ink-900">
+        <h2 className="flex items-center gap-2 font-display text-lg text-ink-900">
+          <SquarePen size={18} aria-hidden="true" className="text-ink-400" />
           {t('workbench.settings.detailsTitle', 'Workbench details')}
         </h2>
         <div className={CARD}>
@@ -165,7 +167,8 @@ export function WorkbenchSettingsPage() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="font-display text-lg text-ink-900">
+        <h2 className="flex items-center gap-2 font-display text-lg text-ink-900">
+          <Eye size={18} aria-hidden="true" className="text-ink-400" />
           {t('workbench.settings.visibilityTitle', 'Visibility')}
         </h2>
         <div className={`${CARD} flex flex-wrap items-end gap-3`}>
@@ -186,7 +189,8 @@ export function WorkbenchSettingsPage() {
 
       {isOwner && (
         <section className="flex flex-col gap-4">
-          <h2 className="font-display text-lg text-ink-900">
+          <h2 className="flex items-center gap-2 font-display text-lg text-ink-900">
+            <ArrowLeftRight size={18} aria-hidden="true" className="text-ink-400" />
             {t('workbench.settings.transferTitle', 'Transfer ownership')}
           </h2>
           <div className={`${CARD} flex flex-wrap items-end gap-3`}>
@@ -213,7 +217,8 @@ export function WorkbenchSettingsPage() {
       )}
 
       <section className="flex flex-col gap-4">
-        <h2 className="font-display text-lg text-red-700">
+        <h2 className="flex items-center gap-2 font-display text-lg text-red-700">
+          <TriangleAlert size={18} aria-hidden="true" />
           {t('workbench.settings.dangerTitle', 'Danger zone')}
         </h2>
         <div className={`${CARD} flex flex-col gap-3`}>

@@ -1,4 +1,5 @@
 import type { Role } from '@tendersbay/proto/workbench/v1/workbench_pb';
+import { ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
@@ -114,20 +115,28 @@ export function WorkbenchRolesPage() {
             key={r.id}
             className={`${CARD} flex flex-wrap items-center justify-between gap-3 py-4`}
           >
-            <div>
-              <p className="font-medium text-ink-900">
-                {r.name}
-                {r.isDefault && (
-                  <span className="ml-2 rounded-full bg-cream-200 px-2 py-0.5 text-xs font-medium text-ink-600">
-                    {t('workbench.roles.default', 'Default')}
-                  </span>
-                )}
-              </p>
-              <p className="text-xs text-ink-500">
-                {t('workbench.roles.permCount', '{{count}} permissions', {
-                  count: permissionCount(r.permissions),
-                })}
-              </p>
+            <div className="flex min-w-0 items-center gap-3">
+              <span
+                aria-hidden="true"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cream-200 text-ink-500"
+              >
+                <ShieldCheck size={16} />
+              </span>
+              <div className="min-w-0">
+                <p className="font-medium text-ink-900">
+                  {r.name}
+                  {r.isDefault && (
+                    <span className="ml-2 rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
+                      {t('workbench.roles.default', 'Default')}
+                    </span>
+                  )}
+                </p>
+                <p className="text-xs text-ink-500">
+                  {t('workbench.roles.permCount', '{{count}} permissions', {
+                    count: permissionCount(r.permissions),
+                  })}
+                </p>
+              </div>
             </div>
             {canManage && (
               <div className="flex gap-2">
