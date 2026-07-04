@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import {
   ChevronsUpDown,
   Home,
+  LayoutGrid,
   LogOut,
   Menu,
   PanelLeftClose,
@@ -112,6 +113,18 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
               >
                 <Home size={16} aria-hidden="true" className="shrink-0" />
                 Overview
+              </Link>
+            </li>
+          )}
+          {keys.includes('workbenches') && workspaceId && (
+            <li>
+              <Link
+                to="/workspaces/$workspaceId/workbenches"
+                params={{ workspaceId }}
+                className={NAV_ITEM}
+              >
+                <LayoutGrid size={16} aria-hidden="true" className="shrink-0" />
+                Workbenches
               </Link>
             </li>
           )}
