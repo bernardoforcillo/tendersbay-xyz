@@ -1,4 +1,4 @@
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import {
   ChevronsUpDown,
   Home,
@@ -18,6 +18,7 @@ import { WorkspaceSwitcher } from '~/features/workspace/components/organisms/wor
 import { detectLocale } from '~/i18n/detect-locale';
 import { authClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
+import { sidebarNavKeys } from './sidebar-nav';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -54,6 +55,8 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
   const user = useAuthStore((s) => s.user);
 
   const initial = (user?.displayName?.[0] ?? user?.email?.[0] ?? '?').toUpperCase();
+  const { workspaceId } = useParams({ strict: false });
+  const keys = sidebarNavKeys(Boolean(workspaceId));
 
   async function handleLogout() {
     try {
@@ -93,18 +96,39 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-4 py-3">
         <ul className="space-y-0.5">
-          <li>
-            <Link to="/" className={NAV_ITEM}>
-              <Home size={16} aria-hidden="true" className="shrink-0" />
-              Overview
-            </Link>
-          </li>
-          <li>
-            <Link to="/explore" className={NAV_ITEM}>
-              <Sparkles size={16} aria-hidden="true" className="shrink-0" />
-              Explore
-            </Link>
-          </li>
+          {keys.includes('overview') && workspaceId && (
+            <li>
+              <Link
+                to="/workspaces/$workspaceId"
+                params={{ workspaceId }}
+                activeOptions={{ exact: true }}
+                className={NAV_ITEM}
+              >
+                <Home size={16} aria-hidden="true" className="shrink-0" />
+                Overview
+              </Link>
+            </li>
+          )}
+          {keys.includes('explore') && (
+            <li>
+              <Link to="/explore" className={NAV_ITEM}>
+                <Sparkles size={16} aria-hidden="true" className="shrink-0" />
+                Explore
+              </Link>
+            </li>
+          )}
+          {keys.includes('settings') && workspaceId && (
+            <li>
+              <Link
+                to="/workspaces/$workspaceId/settings"
+                params={{ workspaceId }}
+                className={NAV_ITEM}
+              >
+                <Settings size={16} aria-hidden="true" className="shrink-0" />
+                Settings
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 

@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 import { Building2, ChevronsUpDown, Plus } from 'lucide-react';
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,9 @@ const POPUP_LINK =
 export function WorkspaceSwitcher() {
   const { t } = useTranslation();
   const { data: workspaces } = useMyWorkspaces();
+  const { workspaceId } = useParams({ strict: false });
+  const current = workspaces?.find((w) => w.id === workspaceId);
+  const label = current?.name ?? t('workspace.switcher.label', 'Workspaces');
 
   return (
     <DialogTrigger>
@@ -17,9 +20,7 @@ export function WorkspaceSwitcher() {
         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand-100 text-brand-700">
           <Building2 size={15} aria-hidden="true" />
         </span>
-        <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink-800">
-          {t('workspace.switcher.label', 'Workspaces')}
-        </span>
+        <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink-800">{label}</span>
         <ChevronsUpDown size={14} className="shrink-0 text-ink-400" aria-hidden="true" />
       </Button>
 
