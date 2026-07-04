@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button, Form, Input, Label, TextField } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
@@ -118,16 +118,10 @@ export function WorkbenchesListPage() {
       <ul className="flex flex-col gap-2">
         {workbenches?.map((wb) => (
           <li key={wb.id}>
-            <a
-              href={`/workspaces/${workspaceId}/workbench/${wb.id}`}
-              onClick={(e) => {
-                e.preventDefault();
-                navigate({
-                  to: '/workspaces/$workspaceId/workbench/$workbenchId',
-                  params: { workspaceId, workbenchId: wb.id },
-                });
-              }}
-              className={`${CARD} flex items-center justify-between gap-3 no-underline transition hover:border-brand-300`}
+            <Link
+              to="/workspaces/$workspaceId/workbench/$workbenchId"
+              params={{ workspaceId, workbenchId: wb.id }}
+              className={`${CARD} flex items-center justify-between gap-3 no-underline outline-none transition hover:border-brand-300 focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2`}
             >
               <span className="min-w-0">
                 <span className="block truncate font-medium text-ink-900">{wb.name}</span>
@@ -138,7 +132,7 @@ export function WorkbenchesListPage() {
               <span className="shrink-0 rounded-full bg-cream-200 px-2 py-0.5 text-xs text-ink-600">
                 {t(`workbench.visibility.${wb.visibility}`, wb.visibility)}
               </span>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

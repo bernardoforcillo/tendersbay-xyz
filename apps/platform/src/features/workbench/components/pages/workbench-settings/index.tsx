@@ -5,7 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { useWorkbenchContext } from '~/features/workbench/context';
 import { useWorkbenchMembers } from '~/features/workbench/hooks';
 import { can, Permission } from '~/features/workbench/permissions';
-import { BTN_DANGER, BTN_PRIMARY, CARD, ERROR_BOX, INPUT, LABEL } from '~/features/workbench/ui';
+import {
+  BTN_DANGER,
+  BTN_PRIMARY,
+  BTN_SECONDARY,
+  CARD,
+  ERROR_BOX,
+  INPUT,
+  LABEL,
+} from '~/features/workbench/ui';
 import { workbenchClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
 
@@ -31,6 +39,7 @@ export function WorkbenchSettingsPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [confirming, setConfirming] = useState<'delete' | 'leave' | null>(null);
 
   const otherMembers = (members ?? []).filter((m) => m.userId !== workbench.ownerId);
 
@@ -209,28 +218,72 @@ export function WorkbenchSettingsPage() {
         </h2>
         <div className={`${CARD} flex flex-col gap-3`}>
           {isOwner ? (
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-ink-600">
                 {t(
                   'workbench.settings.deleteHint',
                   'Permanently delete this workbench and all its data.',
                 )}
               </p>
-              <Button isDisabled={busy} className={BTN_DANGER} onPress={destroy}>
-                {t('workbench.settings.delete', 'Delete workbench')}
-              </Button>
+              {confirming === 'delete' ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-red-700">
+                    {t('workbench.settings.confirmDelete', 'Delete this workbench?')}
+                  </span>
+                  <Button isDisabled={busy} className={BTN_DANGER} onPress={destroy}>
+                    {t('workbench.common.confirm', 'Confirm')}
+                  </Button>
+                  <Button
+                    isDisabled={busy}
+                    className={BTN_SECONDARY}
+                    onPress={() => setConfirming(null)}
+                  >
+                    {t('workbench.common.cancel', 'Cancel')}
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  isDisabled={busy}
+                  className={BTN_DANGER}
+                  onPress={() => setConfirming('delete')}
+                >
+                  {t('workbench.settings.delete', 'Delete workbench')}
+                </Button>
+              )}
             </div>
           ) : (
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-ink-600">
                 {t(
                   'workbench.settings.leaveHint',
                   'Leave this workbench. You can be re-added by a manager.',
                 )}
               </p>
-              <Button isDisabled={busy} className={BTN_DANGER} onPress={leave}>
-                {t('workbench.settings.leave', 'Leave workbench')}
-              </Button>
+              {confirming === 'leave' ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-red-700">
+                    {t('workbench.settings.confirmLeave', 'Leave this workbench?')}
+                  </span>
+                  <Button isDisabled={busy} className={BTN_DANGER} onPress={leave}>
+                    {t('workbench.common.confirm', 'Confirm')}
+                  </Button>
+                  <Button
+                    isDisabled={busy}
+                    className={BTN_SECONDARY}
+                    onPress={() => setConfirming(null)}
+                  >
+                    {t('workbench.common.cancel', 'Cancel')}
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  isDisabled={busy}
+                  className={BTN_DANGER}
+                  onPress={() => setConfirming('leave')}
+                >
+                  {t('workbench.settings.leave', 'Leave workbench')}
+                </Button>
+              )}
             </div>
           )}
         </div>
