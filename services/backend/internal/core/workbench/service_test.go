@@ -303,3 +303,48 @@ func TestLeaveWorkbench_OwnerCannotLeave(t *testing.T) {
 		t.Fatalf("want ErrLastOwner, got %v", err)
 	}
 }
+
+// ── role & member tests ────────────────────────────────────────────────────────
+
+func TestCreateRole_SubsetGuard(t *testing.T) {
+	svc, f := newTestService()
+	f.wb.items["wb1"] = Workbench{ID: "wb1", WorkspaceID: "ws1", OwnerID: "other"}
+	f.wsa.infos["ws1|editor"] = WorkspaceInfo{IsMember: true}
+	// editor has only ManageRoles + View, tries to create an admin role → escalation.
+	r, _ := f.roles.Create(context.Background(), Role{WorkbenchID: "wb1", Name: "ed", Permissions: PermViewWorkbench | PermManageRoles})
+	f.mem.items[mkey("wb1", "editor")] = Membership{Member: Member{WorkbenchID: "wb1", UserID: "editor", RoleID: r.ID}, Role: r}
+	if _, err := svc.CreateRole(context.Background(), "editor", "wb1", "super", permAdminRole); !errors.Is(err, ErrPrivilegeEscalation) {
+		t.Fatalf("want ErrPrivilegeEscalation, got %v", err)
+	}
+}
+
+func TestDeleteRole_DefaultAndInUse(t *testing.T) {
+	svc, f := newTestService()
+	f.wb.items["wb1"] = Workbench{ID: "wb1", WorkspaceID: "ws1", OwnerID: "owner"}
+	f.wsa.infos["ws1|owner"] = WorkspaceInfo{IsMember: true}
+	def, _ := f.roles.Create(context.Background(), Role{WorkbenchID: "wb1", Name: "Viewer", IsDefault: true})
+	if err := svc.DeleteRole(context.Background(), "owner", "wb1", def.ID); !errors.Is(err, ErrDefaultRole) {
+		t.Fatalf("want ErrDefaultRole, got %v", err)
+	}
+}
+
+func TestAddMember_MustBeWorkspaceMember(t *testing.T) {
+	svc, f := newTestService()
+	f.wb.items["wb1"] = Workbench{ID: "wb1", WorkspaceID: "ws1", OwnerID: "owner"}
+	f.wsa.infos["ws1|owner"] = WorkspaceInfo{IsMember: true}
+	role, _ := f.roles.Create(context.Background(), Role{WorkbenchID: "wb1", Name: "V", Permissions: PermViewWorkbench})
+	// target "outsider" is not a workspace member (fakeWSAccess default IsMember=false).
+	if _, err := svc.AddMember(context.Background(), "owner", "wb1", "outsider", role.ID); !errors.Is(err, ErrNotWorkspaceMember) {
+		t.Fatalf("want ErrNotWorkspaceMember, got %v", err)
+	}
+}
+
+func TestChangeMemberRole_OwnerProtected(t *testing.T) {
+	svc, f := newTestService()
+	f.wb.items["wb1"] = Workbench{ID: "wb1", WorkspaceID: "ws1", OwnerID: "owner"}
+	f.wsa.infos["ws1|owner"] = WorkspaceInfo{IsMember: true}
+	role, _ := f.roles.Create(context.Background(), Role{WorkbenchID: "wb1", Name: "V", Permissions: PermViewWorkbench})
+	if _, err := svc.ChangeMemberRole(context.Background(), "owner", "wb1", "owner", role.ID); !errors.Is(err, ErrLastOwner) {
+		t.Fatalf("want ErrLastOwner, got %v", err)
+	}
+}

@@ -265,3 +265,167 @@ func (s *Service) LeaveWorkbench(ctx context.Context, userID, workbenchID string
 	}
 	return s.members.Remove(ctx, workbenchID, userID)
 }
+
+func (s *Service) roleInWorkbench(ctx context.Context, workbenchID, roleID string) (Role, error) {
+	role, err := s.roles.FindByID(ctx, roleID)
+	if err != nil {
+		return Role{}, err
+	}
+	if role.WorkbenchID != workbenchID {
+		return Role{}, ErrRoleNotFound
+	}
+	return role, nil
+}
+
+func (s *Service) ListRoles(ctx context.Context, userID, workbenchID string) ([]Role, error) {
+	if _, err := s.authorize(ctx, workbenchID, userID, PermViewWorkbench); err != nil {
+		return nil, err
+	}
+	return s.roles.ListByWorkbench(ctx, workbenchID)
+}
+
+func (s *Service) CreateRole(ctx context.Context, userID, workbenchID, name string, perms Permission) (Role, error) {
+	a, err := s.authorize(ctx, workbenchID, userID, PermManageRoles)
+	if err != nil {
+		return Role{}, err
+	}
+	if !a.elevated && !perms.subsetOf(a.perms) {
+		return Role{}, ErrPrivilegeEscalation
+	}
+	return s.roles.Create(ctx, Role{WorkbenchID: workbenchID, Name: name, Permissions: perms})
+}
+
+func (s *Service) UpdateRole(ctx context.Context, userID, workbenchID, roleID, name string, perms Permission) (Role, error) {
+	a, err := s.authorize(ctx, workbenchID, userID, PermManageRoles)
+	if err != nil {
+		return Role{}, err
+	}
+	if _, err := s.roleInWorkbench(ctx, workbenchID, roleID); err != nil {
+		return Role{}, err
+	}
+	if !a.elevated && !perms.subsetOf(a.perms) {
+		return Role{}, ErrPrivilegeEscalation
+	}
+	return s.roles.Update(ctx, roleID, name, perms)
+}
+
+func (s *Service) DeleteRole(ctx context.Context, userID, workbenchID, roleID string) error {
+	if _, err := s.authorize(ctx, workbenchID, userID, PermManageRoles); err != nil {
+		return err
+	}
+	role, err := s.roleInWorkbench(ctx, workbenchID, roleID)
+	if err != nil {
+		return err
+	}
+	if role.IsDefault {
+		return ErrDefaultRole
+	}
+	n, err := s.roles.CountMembersUsing(ctx, roleID)
+	if err != nil {
+		return err
+	}
+	if n > 0 {
+		return ErrRoleInUse
+	}
+	return s.roles.Delete(ctx, roleID)
+}
+
+func (s *Service) ListMembers(ctx context.Context, userID, workbenchID string) ([]MemberView, error) {
+	if _, err := s.authorize(ctx, workbenchID, userID, PermViewWorkbench); err != nil {
+		return nil, err
+	}
+	members, err := s.members.ListByWorkbench(ctx, workbenchID)
+	if err != nil {
+		return nil, err
+	}
+	roles, err := s.roles.ListByWorkbench(ctx, workbenchID)
+	if err != nil {
+		return nil, err
+	}
+	byID := make(map[string]Role, len(roles))
+	for _, r := range roles {
+		byID[r.ID] = r
+	}
+	out := make([]MemberView, 0, len(members))
+	for _, m := range members {
+		u, err := s.users.FindByID(ctx, m.UserID)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, MemberView{Member: m, Role: byID[m.RoleID], User: u})
+	}
+	return out, nil
+}
+
+// AddMember adds an existing workspace member to the workbench with a role.
+func (s *Service) AddMember(ctx context.Context, userID, workbenchID, targetUserID, roleID string) (MemberView, error) {
+	a, err := s.authorize(ctx, workbenchID, userID, PermManageMembers)
+	if err != nil {
+		return MemberView{}, err
+	}
+	role, err := s.roleInWorkbench(ctx, workbenchID, roleID)
+	if err != nil {
+		return MemberView{}, err
+	}
+	if !a.elevated && !role.Permissions.subsetOf(a.perms) {
+		return MemberView{}, ErrPrivilegeEscalation
+	}
+	// Target must already belong to the parent workspace.
+	info, err := s.wsAccess.Lookup(ctx, a.wb.WorkspaceID, targetUserID)
+	if err != nil {
+		return MemberView{}, err
+	}
+	if !info.IsMember && !info.IsOwner {
+		return MemberView{}, ErrNotWorkspaceMember
+	}
+	if _, err := s.members.Add(ctx, Member{WorkbenchID: workbenchID, UserID: targetUserID, RoleID: roleID}); err != nil {
+		return MemberView{}, err
+	}
+	u, err := s.users.FindByID(ctx, targetUserID)
+	if err != nil {
+		return MemberView{}, err
+	}
+	return MemberView{Member: Member{WorkbenchID: workbenchID, UserID: targetUserID, RoleID: roleID}, Role: role, User: u}, nil
+}
+
+func (s *Service) ChangeMemberRole(ctx context.Context, userID, workbenchID, targetUserID, roleID string) (MemberView, error) {
+	a, err := s.authorize(ctx, workbenchID, userID, PermManageMembers)
+	if err != nil {
+		return MemberView{}, err
+	}
+	if targetUserID == a.wb.OwnerID {
+		return MemberView{}, ErrLastOwner
+	}
+	role, err := s.roleInWorkbench(ctx, workbenchID, roleID)
+	if err != nil {
+		return MemberView{}, err
+	}
+	if !a.elevated && !role.Permissions.subsetOf(a.perms) {
+		return MemberView{}, ErrPrivilegeEscalation
+	}
+	if _, err := s.members.Find(ctx, workbenchID, targetUserID); err != nil {
+		return MemberView{}, err
+	}
+	if err := s.members.UpdateRole(ctx, workbenchID, targetUserID, roleID); err != nil {
+		return MemberView{}, err
+	}
+	u, err := s.users.FindByID(ctx, targetUserID)
+	if err != nil {
+		return MemberView{}, err
+	}
+	return MemberView{Member: Member{WorkbenchID: workbenchID, UserID: targetUserID, RoleID: roleID}, Role: role, User: u}, nil
+}
+
+func (s *Service) RemoveMember(ctx context.Context, userID, workbenchID, targetUserID string) error {
+	a, err := s.authorize(ctx, workbenchID, userID, PermManageMembers)
+	if err != nil {
+		return err
+	}
+	if targetUserID == a.wb.OwnerID {
+		return ErrLastOwner
+	}
+	if _, err := s.members.Find(ctx, workbenchID, targetUserID); err != nil {
+		return err
+	}
+	return s.members.Remove(ctx, workbenchID, targetUserID)
+}
