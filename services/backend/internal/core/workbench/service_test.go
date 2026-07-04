@@ -236,3 +236,70 @@ func permPtr(p Permission) *Permission { return &p }
 
 // PermDeleteSentinel is a stand-in bit for "needs more than view"; use ManageRoles.
 func PermDeleteSentinel() Permission { return PermManageRoles }
+
+// ── lifecycle tests ────────────────────────────────────────────────────────────
+
+func TestCreateWorkbench_SeedsRolesAndOwner(t *testing.T) {
+	svc, f := newTestService()
+	f.wsa.infos["ws1|creator"] = WorkspaceInfo{IsMember: true, Perms: wsPermCreateWorkbench}
+	wb, err := svc.CreateWorkbench(context.Background(), "creator", "ws1", "Bids", "desc", "")
+	if err != nil {
+		t.Fatalf("create: %v", err)
+	}
+	if wb.Visibility != VisibilityPrivate {
+		t.Fatalf("default visibility should be private, got %q", wb.Visibility)
+	}
+	roles, _ := f.roles.ListByWorkbench(context.Background(), wb.ID)
+	if len(roles) != 2 {
+		t.Fatalf("expected 2 seeded roles, got %d", len(roles))
+	}
+	if _, err := f.mem.Find(context.Background(), wb.ID, "creator"); err != nil {
+		t.Fatalf("creator should be a member: %v", err)
+	}
+}
+
+func TestCreateWorkbench_DeniedWithoutPermission(t *testing.T) {
+	svc, f := newTestService()
+	f.wsa.infos["ws1|u"] = WorkspaceInfo{IsMember: true, Perms: 0}
+	if _, err := svc.CreateWorkbench(context.Background(), "u", "ws1", "X", "", ""); !errors.Is(err, ErrForbidden) {
+		t.Fatalf("want ErrForbidden, got %v", err)
+	}
+}
+
+func TestListWorkbenches_Visibility(t *testing.T) {
+	svc, f := newTestService()
+	f.wb.items["priv"] = Workbench{ID: "priv", WorkspaceID: "ws1", OwnerID: "other", Visibility: VisibilityPrivate}
+	f.wb.items["shared"] = Workbench{ID: "shared", WorkspaceID: "ws1", OwnerID: "other", Visibility: VisibilityShared}
+	f.wb.items["mine"] = Workbench{ID: "mine", WorkspaceID: "ws1", OwnerID: "u", Visibility: VisibilityPrivate}
+	f.wsa.infos["ws1|u"] = WorkspaceInfo{IsMember: true, Perms: wsPermViewWorkbenches}
+	list, err := svc.ListWorkbenches(context.Background(), "u", "ws1")
+	if err != nil {
+		t.Fatalf("list: %v", err)
+	}
+	ids := map[string]bool{}
+	for _, w := range list {
+		ids[w.ID] = true
+	}
+	if ids["priv"] || !ids["shared"] || !ids["mine"] {
+		t.Fatalf("unexpected visibility set: %v", ids)
+	}
+}
+
+func TestGetWorkbench_ReturnsPermsAndWorkspaceName(t *testing.T) {
+	svc, f := newTestService()
+	f.wb.items["wb1"] = Workbench{ID: "wb1", WorkspaceID: "ws1", OwnerID: "owner"}
+	f.wsa.infos["ws1|owner"] = WorkspaceInfo{IsMember: true, Name: "Acme"}
+	_, perms, wsName, err := svc.GetWorkbench(context.Background(), "owner", "wb1")
+	if err != nil || wsName != "Acme" || !perms.Has(PermAdministrator) {
+		t.Fatalf("get: perms=%b name=%q err=%v", perms, wsName, err)
+	}
+}
+
+func TestLeaveWorkbench_OwnerCannotLeave(t *testing.T) {
+	svc, f := newTestService()
+	f.wb.items["wb1"] = Workbench{ID: "wb1", WorkspaceID: "ws1", OwnerID: "owner"}
+	f.wsa.infos["ws1|owner"] = WorkspaceInfo{IsMember: true}
+	if err := svc.LeaveWorkbench(context.Background(), "owner", "wb1"); !errors.Is(err, ErrLastOwner) {
+		t.Fatalf("want ErrLastOwner, got %v", err)
+	}
+}
