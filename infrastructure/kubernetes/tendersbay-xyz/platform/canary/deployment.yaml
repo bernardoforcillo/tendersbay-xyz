@@ -29,7 +29,7 @@ spec:
           # built from the dev branch (see canary/update.yaml). The $imagepolicy
           # marker is rewritten by Flux image automation; until the first
           # reconcile the :latest placeholder is the stable image.
-          image: bernardoforcillo/tendersbay-platform:20260703203057-3ade7283307273eee0b03587c1cda1a3d0138191-canary@sha256:e9dd1001a783fc7eaa56b44eb6b0ae76d59461358bf9f5b50ec5f79a63da7c3d # {"$imagepolicy": "tendersbay-xyz:tendersbay-platform-canary-image-policy"}
+          image: bernardoforcillo/tendersbay-platform:20260705165526-ce15b1a2671ab4fb27819c038a7516a5e63eb3d2-canary@sha256:b470672470b99554be06d95f60d3f483e360d1cdadb2b5abb641ab07597f71bc # {"$imagepolicy": "tendersbay-xyz:tendersbay-platform-canary-image-policy"}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
