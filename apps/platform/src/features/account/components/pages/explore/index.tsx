@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchModeSwitch } from '~/features/account/components/molecules';
-import { SearchDock, type SearchMode } from '~/features/account/components/organisms';
+import { PageHeader, SearchDock, type SearchMode } from '~/features/account/components/organisms';
 import { AccountLayout } from '~/features/account/components/templates/account-layout';
 import { useAuthStore } from '~/store/auth';
 
@@ -15,6 +15,7 @@ export function AccountExplorePage() {
 
   return (
     <AccountLayout>
+      <PageHeader />
       {/* Centered empty-state — ChatGPT / Gemini / Claude layout. The dock animates
           up from Overview's bottom position via its shared layoutId. */}
       <div className="flex min-h-full flex-1 flex-col items-center justify-center gap-6 px-4 pb-16">
