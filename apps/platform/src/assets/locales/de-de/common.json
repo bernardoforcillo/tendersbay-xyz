@@ -147,5 +147,227 @@
       "deadline": "Frist",
       "daysLeft": "{{count}} Tage"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Wird geladen…",
+      "saving": "Wird gespeichert…",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "creating": "Wird erstellt…",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "saved": "Gespeichert"
+    },
+    "nav": {
+      "general": "Allgemein",
+      "overview": "Übersicht",
+      "members": "Mitglieder",
+      "roles": "Rollen",
+      "invites": "Einladungen",
+      "settings": "Einstellungen",
+      "allWorkspaces": "Alle Workspaces"
+    },
+    "errors": {
+      "notFound": "Dieser Workspace ist nicht verfügbar."
+    },
+    "list": {
+      "title": "Workspaces",
+      "new": "Neuer Workspace",
+      "nameLabel": "Workspace-Name",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Workspace erstellen",
+      "empty": "Sie gehören noch keinem Workspace an.",
+      "createFirst": "Erstellen Sie Ihren ersten Workspace"
+    },
+    "overview": {
+      "welcome": "Willkommen bei",
+      "workbenchSoon": "Eine kollaborative Arbeitsumgebung, in der Ihr Team gemeinsam an Ausschreibungen arbeiten kann, folgt in Kürze. Verwalten Sie bis dahin Mitglieder, Rollen und Einladungen über die Registerkarten oben."
+    },
+    "members": {
+      "title": "Mitglieder",
+      "owner": "Eigentümer",
+      "role": "Rolle",
+      "remove": "Entfernen"
+    },
+    "roles": {
+      "title": "Rollen",
+      "new": "Neue Rolle",
+      "createTitle": "Neue Rolle",
+      "editTitle": "Rolle bearbeiten",
+      "nameLabel": "Rollenname",
+      "namePlaceholder": "Bearbeiter",
+      "permissionsLabel": "Berechtigungen",
+      "default": "Standard",
+      "permCount": "{{count}} Berechtigungen"
+    },
+    "permissions": {
+      "viewWorkspace": "Workspace anzeigen",
+      "manageWorkspace": "Workspace verwalten",
+      "manageMembers": "Mitglieder verwalten",
+      "manageRoles": "Rollen verwalten",
+      "createInvite": "Einladungen erstellen",
+      "manageInvites": "Einladungen verwalten",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Den Workspace und seine Inhalte einsehen",
+      "manageWorkspace": "Workspace umbenennen und Einstellungen ändern",
+      "manageMembers": "Mitgliederrollen ändern und Mitglieder entfernen",
+      "manageRoles": "Rollen erstellen, bearbeiten und löschen",
+      "createInvite": "Personen per E-Mail oder Link einladen",
+      "manageInvites": "Einladungen und Links widerrufen",
+      "administrator": "Vollzugriff — umgeht jede Berechtigungsprüfung"
+    },
+    "invites": {
+      "emailTitle": "Per E-Mail einladen",
+      "email": "E-Mail-Adresse",
+      "role": "Rolle",
+      "send": "Einladung senden",
+      "revoke": "Widerrufen",
+      "linkTitle": "Teilbare Links",
+      "maxUses": "Max. Verwendungen (0 = unbegrenzt)",
+      "createLink": "Link erstellen",
+      "copy": "Kopieren",
+      "copied": "Kopiert",
+      "usesLimited": "{{used}} / {{max}} Verwendungen",
+      "usesUnlimited": "{{used}} Verwendungen",
+      "noPermission": "Sie sind nicht berechtigt, Einladungen zu verwalten."
+    },
+    "settings": {
+      "detailsTitle": "Workspace-Details",
+      "name": "Name",
+      "slug": "Slug",
+      "transferTitle": "Eigentum übertragen",
+      "newOwner": "Neuer Eigentümer",
+      "selectMember": "Mitglied auswählen…",
+      "transfer": "Übertragen",
+      "dangerTitle": "Gefahrenzone",
+      "deleteHint": "Diesen Workspace und alle zugehörigen Daten dauerhaft löschen.",
+      "delete": "Workspace löschen",
+      "leaveHint": "Diesen Workspace verlassen. Sie können mit einer neuen Einladung wieder beitreten.",
+      "leave": "Workspace verlassen"
+    },
+    "accept": {
+      "loading": "Einladung wird geprüft…",
+      "invalidTitle": "Einladung nicht verfügbar",
+      "invalidBody": "Diese Einladung ist ungültig oder abgelaufen.",
+      "title": "Sie sind eingeladen",
+      "body": "Treten Sie {{workspace}} als {{role}} bei.",
+      "accept": "Einladung annehmen",
+      "accepting": "Wird beigetreten…",
+      "signIn": "Zum Annehmen anmelden"
+    },
+    "join": {
+      "loading": "Link wird geprüft…",
+      "invalidTitle": "Link nicht verfügbar",
+      "invalidBody": "Dieser Einladungslink ist ungültig, abgelaufen oder vollständig aufgebraucht.",
+      "title": "Workspace beitreten",
+      "body": "Treten Sie {{workspace}} als {{role}} bei.",
+      "join": "Workspace beitreten",
+      "joining": "Wird beigetreten…",
+      "signIn": "Zum Beitreten anmelden"
+    },
+    "switcher": {
+      "label": "Workspaces",
+      "manage": "Alle Workspaces"
+    }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Wird geladen…",
+      "saving": "Wird gespeichert…",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "creating": "Wird erstellt…",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "saved": "Gespeichert",
+      "confirm": "Bestätigen"
+    },
+    "nav": {
+      "general": "Allgemein",
+      "members": "Mitglieder",
+      "roles": "Rollen",
+      "settings": "Einstellungen",
+      "allWorkbenches": "Alle Workbenches"
+    },
+    "errors": {
+      "notFound": "Diese Workbench ist nicht verfügbar."
+    },
+    "breadcrumb": {
+      "workspaces": "Workspaces",
+      "workbenches": "Workbenches"
+    },
+    "visibility": {
+      "label": "Sichtbarkeit",
+      "private": "Privat",
+      "shared": "Geteilt",
+      "makePrivate": "Privat machen",
+      "makeShared": "Teilen",
+      "hint": "Geteilte Workbenches sind für Workspace-Mitglieder sichtbar, die Workbenches einsehen dürfen."
+    },
+    "list": {
+      "title": "Workbenches",
+      "new": "Neue Workbench",
+      "nameLabel": "Workbench-Name",
+      "namePlaceholder": "Ausschreibungen Q3",
+      "descriptionLabel": "Beschreibung",
+      "create": "Workbench erstellen",
+      "empty": "Noch keine Workbenches vorhanden.",
+      "createFirst": "Erstellen Sie Ihre erste Workbench"
+    },
+    "members": {
+      "title": "Mitglieder",
+      "owner": "Eigentümer",
+      "role": "Rolle",
+      "remove": "Entfernen",
+      "add": "Hinzufügen",
+      "addLabel": "Mitglied hinzufügen",
+      "selectMember": "Mitglied auswählen…"
+    },
+    "roles": {
+      "title": "Rollen",
+      "new": "Neue Rolle",
+      "createTitle": "Neue Rolle",
+      "editTitle": "Rolle bearbeiten",
+      "nameLabel": "Rollenname",
+      "namePlaceholder": "Bearbeiter",
+      "permissionsLabel": "Berechtigungen",
+      "default": "Standard",
+      "permCount": "{{count}} Berechtigungen"
+    },
+    "permissions": {
+      "viewWorkbench": "Workbench anzeigen",
+      "manageWorkbench": "Workbench verwalten",
+      "manageMembers": "Mitglieder verwalten",
+      "manageRoles": "Rollen verwalten",
+      "administrator": "Administrator"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Die Workbench und ihre Inhalte einsehen",
+      "manageWorkbench": "Umbenennen, bearbeiten und Sichtbarkeit ändern",
+      "manageMembers": "Mitglieder hinzufügen, entfernen und neu zuordnen",
+      "manageRoles": "Rollen erstellen, bearbeiten und löschen",
+      "administrator": "Vollzugriff — umgeht jede Berechtigungsprüfung"
+    },
+    "settings": {
+      "detailsTitle": "Workbench-Details",
+      "name": "Name",
+      "description": "Beschreibung",
+      "visibilityTitle": "Sichtbarkeit",
+      "visibility": "Sichtbarkeit",
+      "transferTitle": "Eigentum übertragen",
+      "newOwner": "Neuer Eigentümer",
+      "selectMember": "Mitglied auswählen…",
+      "transfer": "Übertragen",
+      "dangerTitle": "Gefahrenzone",
+      "deleteHint": "Diese Workbench und alle zugehörigen Daten dauerhaft löschen.",
+      "delete": "Workbench löschen",
+      "leaveHint": "Diese Workbench verlassen. Ein Manager kann Sie erneut hinzufügen.",
+      "leave": "Workbench verlassen",
+      "confirmDelete": "Diese Workbench löschen?",
+      "confirmLeave": "Diese Workbench verlassen?"
+    }
   }
 }

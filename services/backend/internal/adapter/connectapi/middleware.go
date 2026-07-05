@@ -9,6 +9,8 @@ import (
 	"connectrpc.com/connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
 
 type contextKey string
@@ -96,6 +98,47 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeInvalidArgument, err)
 	case errors.Is(err, auth.ErrNotFound):
 		return connect.NewError(connect.CodeNotFound, err)
+
+	// Workspace domain
+	case errors.Is(err, workspace.ErrForbidden),
+		errors.Is(err, workspace.ErrNotMember),
+		errors.Is(err, workspace.ErrOwnerOnly),
+		errors.Is(err, workspace.ErrPrivilegeEscalation):
+		return connect.NewError(connect.CodePermissionDenied, err)
+	case errors.Is(err, workspace.ErrWorkspaceNotFound),
+		errors.Is(err, workspace.ErrRoleNotFound),
+		errors.Is(err, workspace.ErrInviteInvalid),
+		errors.Is(err, workspace.ErrLinkInvalid):
+		return connect.NewError(connect.CodeNotFound, err)
+	case errors.Is(err, workspace.ErrLastOwner),
+		errors.Is(err, workspace.ErrDefaultRole),
+		errors.Is(err, workspace.ErrRoleInUse),
+		errors.Is(err, workspace.ErrInviteExpired),
+		errors.Is(err, workspace.ErrLinkExpired):
+		return connect.NewError(connect.CodeFailedPrecondition, err)
+	case errors.Is(err, workspace.ErrAlreadyMember),
+		errors.Is(err, workspace.ErrSlugTaken):
+		return connect.NewError(connect.CodeAlreadyExists, err)
+	case errors.Is(err, workspace.ErrLinkExhausted):
+		return connect.NewError(connect.CodeResourceExhausted, err)
+
+	// Workbench domain
+	case errors.Is(err, workbench.ErrForbidden),
+		errors.Is(err, workbench.ErrNotMember),
+		errors.Is(err, workbench.ErrOwnerOnly),
+		errors.Is(err, workbench.ErrPrivilegeEscalation),
+		errors.Is(err, workbench.ErrNotWorkspaceMember):
+		return connect.NewError(connect.CodePermissionDenied, err)
+	case errors.Is(err, workbench.ErrWorkbenchNotFound),
+		errors.Is(err, workbench.ErrRoleNotFound):
+		return connect.NewError(connect.CodeNotFound, err)
+	case errors.Is(err, workbench.ErrLastOwner),
+		errors.Is(err, workbench.ErrDefaultRole),
+		errors.Is(err, workbench.ErrRoleInUse):
+		return connect.NewError(connect.CodeFailedPrecondition, err)
+	case errors.Is(err, workbench.ErrAlreadyMember):
+		return connect.NewError(connect.CodeAlreadyExists, err)
+
 	default:
 		return connect.NewError(connect.CodeInternal, err)
 	}

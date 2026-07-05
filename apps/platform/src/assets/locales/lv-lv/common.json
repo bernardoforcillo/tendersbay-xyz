@@ -147,5 +147,227 @@
       "deadline": "Termiņš",
       "daysLeft": "{{count}} dienas"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Notiek ielāde…",
+      "saving": "Notiek saglabāšana…",
+      "save": "Saglabāt",
+      "cancel": "Atcelt",
+      "creating": "Notiek izveide…",
+      "edit": "Rediģēt",
+      "delete": "Dzēst",
+      "saved": "Saglabāts"
+    },
+    "nav": {
+      "general": "Vispārīgi",
+      "overview": "Pārskats",
+      "members": "Dalībnieki",
+      "roles": "Lomas",
+      "invites": "Ielūgumi",
+      "settings": "Iestatījumi",
+      "allWorkspaces": "Visas darbvietas"
+    },
+    "errors": {
+      "notFound": "Šī darbvieta nav pieejama."
+    },
+    "list": {
+      "title": "Darbvietas",
+      "new": "Jauna darbvieta",
+      "nameLabel": "Darbvietas nosaukums",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Izveidot darbvietu",
+      "empty": "Jūs vēl neesat nevienā darbvietā.",
+      "createFirst": "Izveidojiet savu pirmo darbvietu"
+    },
+    "overview": {
+      "welcome": "Laipni lūdzam",
+      "workbenchSoon": "Drīzumā būs pieejama kopīga darba vide, kurā jūsu komanda varēs kopīgi strādāt ar iepirkumiem. Pagaidām pārvaldiet dalībniekus, lomas un ielūgumus no iepriekš esošajām cilnēm."
+    },
+    "members": {
+      "title": "Dalībnieki",
+      "owner": "Īpašnieks",
+      "role": "Loma",
+      "remove": "Noņemt"
+    },
+    "roles": {
+      "title": "Lomas",
+      "new": "Jauna loma",
+      "createTitle": "Jauna loma",
+      "editTitle": "Rediģēt lomu",
+      "nameLabel": "Lomas nosaukums",
+      "namePlaceholder": "Redaktors",
+      "permissionsLabel": "Atļaujas",
+      "default": "Noklusējums",
+      "permCount": "{{count}} atļaujas"
+    },
+    "permissions": {
+      "viewWorkspace": "Skatīt darbvietu",
+      "manageWorkspace": "Pārvaldīt darbvietu",
+      "manageMembers": "Pārvaldīt dalībniekus",
+      "manageRoles": "Pārvaldīt lomas",
+      "createInvite": "Izveidot ielūgumus",
+      "manageInvites": "Pārvaldīt ielūgumus",
+      "administrator": "Administrators"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Skatīt darbvietu un tās saturu",
+      "manageWorkspace": "Pārdēvēt un mainīt darbvietas iestatījumus",
+      "manageMembers": "Mainīt dalībnieku lomas un noņemt dalībniekus",
+      "manageRoles": "Izveidot, rediģēt un dzēst lomas",
+      "createInvite": "Uzaicināt cilvēkus pa e-pastu vai ar saiti",
+      "manageInvites": "Atsaukt ielūgumus un saites",
+      "administrator": "Pilna piekļuve — apiet katru atļauju pārbaudi"
+    },
+    "invites": {
+      "emailTitle": "Uzaicināt pa e-pastu",
+      "email": "E-pasta adrese",
+      "role": "Loma",
+      "send": "Nosūtīt ielūgumu",
+      "revoke": "Atsaukt",
+      "linkTitle": "Kopīgojamās saites",
+      "maxUses": "Maks. izmantošanas reižu (0 = neierobežoti)",
+      "createLink": "Izveidot saiti",
+      "copy": "Kopēt",
+      "copied": "Nokopēts",
+      "usesLimited": "{{used}} / {{max}} izmantošanas reizes",
+      "usesUnlimited": "{{used}} izmantošanas reizes",
+      "noPermission": "Jums nav atļaujas pārvaldīt ielūgumus."
+    },
+    "settings": {
+      "detailsTitle": "Darbvietas informācija",
+      "name": "Nosaukums",
+      "slug": "Slug",
+      "transferTitle": "Īpašumtiesību nodošana",
+      "newOwner": "Jaunais īpašnieks",
+      "selectMember": "Atlasiet dalībnieku…",
+      "transfer": "Nodot",
+      "dangerTitle": "Bīstamā zona",
+      "deleteHint": "Neatgriezeniski dzēst šo darbvietu un visus tās datus.",
+      "delete": "Dzēst darbvietu",
+      "leaveHint": "Pamest šo darbvietu. Jūs varat atkārtoti pievienoties ar jaunu ielūgumu.",
+      "leave": "Pamest darbvietu"
+    },
+    "accept": {
+      "loading": "Notiek ielūguma pārbaude…",
+      "invalidTitle": "Ielūgums nav pieejams",
+      "invalidBody": "Šis ielūgums nav derīgs vai tā termiņš ir beidzies.",
+      "title": "Jūs esat uzaicināts",
+      "body": "Pievienojieties {{workspace}} kā {{role}}.",
+      "accept": "Pieņemt ielūgumu",
+      "accepting": "Notiek pievienošanās…",
+      "signIn": "Piesakieties, lai pieņemtu"
+    },
+    "join": {
+      "loading": "Notiek saites pārbaude…",
+      "invalidTitle": "Saite nav pieejama",
+      "invalidBody": "Šī ielūguma saite nav derīga, tās termiņš ir beidzies vai tā ir pilnībā izmantota.",
+      "title": "Pievienoties darbvietai",
+      "body": "Pievienojieties {{workspace}} kā {{role}}.",
+      "join": "Pievienoties darbvietai",
+      "joining": "Notiek pievienošanās…",
+      "signIn": "Piesakieties, lai pievienotos"
+    },
+    "switcher": {
+      "label": "Darbvietas",
+      "manage": "Visas darbvietas"
+    }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Notiek ielāde…",
+      "saving": "Notiek saglabāšana…",
+      "save": "Saglabāt",
+      "cancel": "Atcelt",
+      "creating": "Notiek izveide…",
+      "edit": "Rediģēt",
+      "delete": "Dzēst",
+      "saved": "Saglabāts",
+      "confirm": "Apstiprināt"
+    },
+    "nav": {
+      "general": "Vispārīgi",
+      "members": "Dalībnieki",
+      "roles": "Lomas",
+      "settings": "Iestatījumi",
+      "allWorkbenches": "Visi darbagaldi"
+    },
+    "errors": {
+      "notFound": "Šis darbagalds nav pieejams."
+    },
+    "breadcrumb": {
+      "workspaces": "Darbvietas",
+      "workbenches": "Darbagaldi"
+    },
+    "visibility": {
+      "label": "Redzamība",
+      "private": "Privāts",
+      "shared": "Kopīgots",
+      "makePrivate": "Padarīt privātu",
+      "makeShared": "Padarīt kopīgotu",
+      "hint": "Kopīgoti darbagaldi ir redzami darbvietas dalībniekiem, kuri var skatīt darbagaldus."
+    },
+    "list": {
+      "title": "Darbagaldi",
+      "new": "Jauns darbagalds",
+      "nameLabel": "Darbagalda nosaukums",
+      "namePlaceholder": "Q3 piedāvājumi",
+      "descriptionLabel": "Apraksts",
+      "create": "Izveidot darbagaldu",
+      "empty": "Vēl nav darbagaldu.",
+      "createFirst": "Izveidojiet savu pirmo darbagaldu"
+    },
+    "members": {
+      "title": "Dalībnieki",
+      "owner": "Īpašnieks",
+      "role": "Loma",
+      "remove": "Noņemt",
+      "add": "Pievienot",
+      "addLabel": "Pievienot dalībnieku",
+      "selectMember": "Atlasiet dalībnieku…"
+    },
+    "roles": {
+      "title": "Lomas",
+      "new": "Jauna loma",
+      "createTitle": "Jauna loma",
+      "editTitle": "Rediģēt lomu",
+      "nameLabel": "Lomas nosaukums",
+      "namePlaceholder": "Redaktors",
+      "permissionsLabel": "Atļaujas",
+      "default": "Noklusējums",
+      "permCount": "{{count}} atļaujas"
+    },
+    "permissions": {
+      "viewWorkbench": "Skatīt darbagaldu",
+      "manageWorkbench": "Pārvaldīt darbagaldu",
+      "manageMembers": "Pārvaldīt dalībniekus",
+      "manageRoles": "Pārvaldīt lomas",
+      "administrator": "Administrators"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Skatīt darbagaldu un tā saturu",
+      "manageWorkbench": "Pārdēvēt, rediģēt un mainīt redzamību",
+      "manageMembers": "Pievienot, noņemt un mainīt dalībnieku lomas",
+      "manageRoles": "Izveidot, rediģēt un dzēst lomas",
+      "administrator": "Pilna piekļuve — apiet katru atļauju pārbaudi"
+    },
+    "settings": {
+      "detailsTitle": "Darbagalda informācija",
+      "name": "Nosaukums",
+      "description": "Apraksts",
+      "visibilityTitle": "Redzamība",
+      "visibility": "Redzamība",
+      "transferTitle": "Īpašumtiesību nodošana",
+      "newOwner": "Jaunais īpašnieks",
+      "selectMember": "Atlasiet dalībnieku…",
+      "transfer": "Nodot",
+      "dangerTitle": "Bīstamā zona",
+      "deleteHint": "Neatgriezeniski dzēst šo darbagaldu un visus tā datus.",
+      "delete": "Dzēst darbagaldu",
+      "leaveHint": "Pamest šo darbagaldu. Pārvaldnieks var jūs pievienot atkārtoti.",
+      "leave": "Pamest darbagaldu",
+      "confirmDelete": "Dzēst šo darbagaldu?",
+      "confirmLeave": "Pamest šo darbagaldu?"
+    }
   }
 }

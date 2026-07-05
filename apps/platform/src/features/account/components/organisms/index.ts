@@ -1,5 +1,7 @@
 export { DeleteForm } from './delete-form';
 export { EmailForm } from './email-form';
+export type { PageHeaderProps } from './page-header';
+export { PageHeader } from './page-header';
 export { PasswordForm } from './password-form';
 export { ProfileForm } from './profile-form';
 export type { SearchMode } from './search-dock';

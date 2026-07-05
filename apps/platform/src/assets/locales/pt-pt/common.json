@@ -147,5 +147,227 @@
       "deadline": "Prazo",
       "daysLeft": "{{count}} dias"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "A carregar…",
+      "saving": "A guardar…",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "creating": "A criar…",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "saved": "Guardado"
+    },
+    "nav": {
+      "general": "Geral",
+      "overview": "Visão geral",
+      "members": "Membros",
+      "roles": "Funções",
+      "invites": "Convites",
+      "settings": "Definições",
+      "allWorkspaces": "Todos os espaços de trabalho"
+    },
+    "errors": {
+      "notFound": "Este espaço de trabalho está indisponível."
+    },
+    "list": {
+      "title": "Espaços de trabalho",
+      "new": "Novo espaço de trabalho",
+      "nameLabel": "Nome do espaço de trabalho",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Criar espaço de trabalho",
+      "empty": "Ainda não faz parte de nenhum espaço de trabalho.",
+      "createFirst": "Crie o seu primeiro espaço de trabalho"
+    },
+    "overview": {
+      "welcome": "Bem-vindo a",
+      "workbenchSoon": "Em breve, um espaço colaborativo onde a sua equipa poderá trabalhar em concursos em conjunto. Por agora, faça a gestão de membros, funções e convites a partir dos separadores acima."
+    },
+    "members": {
+      "title": "Membros",
+      "owner": "Proprietário",
+      "role": "Função",
+      "remove": "Remover"
+    },
+    "roles": {
+      "title": "Funções",
+      "new": "Nova função",
+      "createTitle": "Nova função",
+      "editTitle": "Editar função",
+      "nameLabel": "Nome da função",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Permissões",
+      "default": "Predefinição",
+      "permCount": "{{count}} permissões"
+    },
+    "permissions": {
+      "viewWorkspace": "Ver o espaço de trabalho",
+      "manageWorkspace": "Gerir o espaço de trabalho",
+      "manageMembers": "Gerir membros",
+      "manageRoles": "Gerir funções",
+      "createInvite": "Criar convites",
+      "manageInvites": "Gerir convites",
+      "administrator": "Administrador"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Ver o espaço de trabalho e o respetivo conteúdo",
+      "manageWorkspace": "Mudar o nome e alterar as definições do espaço de trabalho",
+      "manageMembers": "Alterar as funções dos membros e remover membros",
+      "manageRoles": "Criar, editar e eliminar funções",
+      "createInvite": "Convidar pessoas por e-mail ou ligação",
+      "manageInvites": "Revogar convites e ligações",
+      "administrator": "Acesso total — ignora todas as verificações de permissões"
+    },
+    "invites": {
+      "emailTitle": "Convidar por e-mail",
+      "email": "Endereço de e-mail",
+      "role": "Função",
+      "send": "Enviar convite",
+      "revoke": "Revogar",
+      "linkTitle": "Ligações partilháveis",
+      "maxUses": "Utilizações máx. (0 = ilimitado)",
+      "createLink": "Criar ligação",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "usesLimited": "{{used}} / {{max}} utilizações",
+      "usesUnlimited": "{{used}} utilizações",
+      "noPermission": "Não tem permissão para gerir os convites."
+    },
+    "settings": {
+      "detailsTitle": "Detalhes do espaço de trabalho",
+      "name": "Nome",
+      "slug": "Slug",
+      "transferTitle": "Transferir a propriedade",
+      "newOwner": "Novo proprietário",
+      "selectMember": "Selecione um membro…",
+      "transfer": "Transferir",
+      "dangerTitle": "Zona de perigo",
+      "deleteHint": "Eliminar permanentemente este espaço de trabalho e todos os respetivos dados.",
+      "delete": "Eliminar espaço de trabalho",
+      "leaveHint": "Sair deste espaço de trabalho. Poderá voltar a entrar com um novo convite.",
+      "leave": "Sair do espaço de trabalho"
+    },
+    "accept": {
+      "loading": "A verificar o convite…",
+      "invalidTitle": "Convite indisponível",
+      "invalidBody": "Este convite é inválido ou expirou.",
+      "title": "Foi convidado",
+      "body": "Junte-se a {{workspace}} como {{role}}.",
+      "accept": "Aceitar convite",
+      "accepting": "A entrar…",
+      "signIn": "Inicie sessão para aceitar"
+    },
+    "join": {
+      "loading": "A verificar a ligação…",
+      "invalidTitle": "Ligação indisponível",
+      "invalidBody": "Esta ligação de convite é inválida, expirou ou foi totalmente utilizada.",
+      "title": "Entrar no espaço de trabalho",
+      "body": "Junte-se a {{workspace}} como {{role}}.",
+      "join": "Entrar no espaço de trabalho",
+      "joining": "A entrar…",
+      "signIn": "Inicie sessão para entrar"
+    },
+    "switcher": {
+      "label": "Espaços de trabalho",
+      "manage": "Todos os espaços de trabalho"
+    }
+  },
+  "workbench": {
+    "common": {
+      "loading": "A carregar…",
+      "saving": "A guardar…",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "creating": "A criar…",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "saved": "Guardado",
+      "confirm": "Confirmar"
+    },
+    "nav": {
+      "general": "Geral",
+      "members": "Membros",
+      "roles": "Funções",
+      "settings": "Definições",
+      "allWorkbenches": "Todos os workbenches"
+    },
+    "errors": {
+      "notFound": "Este workbench está indisponível."
+    },
+    "breadcrumb": {
+      "workspaces": "Espaços de trabalho",
+      "workbenches": "Workbenches"
+    },
+    "visibility": {
+      "label": "Visibilidade",
+      "private": "Privado",
+      "shared": "Partilhado",
+      "makePrivate": "Tornar privado",
+      "makeShared": "Tornar partilhado",
+      "hint": "Os workbenches partilhados são visíveis para os membros do espaço de trabalho que podem ver workbenches."
+    },
+    "list": {
+      "title": "Workbenches",
+      "new": "Novo workbench",
+      "nameLabel": "Nome do workbench",
+      "namePlaceholder": "Concursos Q3",
+      "descriptionLabel": "Descrição",
+      "create": "Criar workbench",
+      "empty": "Ainda não existem workbenches.",
+      "createFirst": "Crie o seu primeiro workbench"
+    },
+    "members": {
+      "title": "Membros",
+      "owner": "Proprietário",
+      "role": "Função",
+      "remove": "Remover",
+      "add": "Adicionar",
+      "addLabel": "Adicionar membro",
+      "selectMember": "Selecione um membro…"
+    },
+    "roles": {
+      "title": "Funções",
+      "new": "Nova função",
+      "createTitle": "Nova função",
+      "editTitle": "Editar função",
+      "nameLabel": "Nome da função",
+      "namePlaceholder": "Editor",
+      "permissionsLabel": "Permissões",
+      "default": "Predefinição",
+      "permCount": "{{count}} permissões"
+    },
+    "permissions": {
+      "viewWorkbench": "Ver o workbench",
+      "manageWorkbench": "Gerir o workbench",
+      "manageMembers": "Gerir membros",
+      "manageRoles": "Gerir funções",
+      "administrator": "Administrador"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Ver o workbench e o respetivo conteúdo",
+      "manageWorkbench": "Mudar o nome, editar e alterar a visibilidade",
+      "manageMembers": "Adicionar, remover e alterar a função de membros",
+      "manageRoles": "Criar, editar e eliminar funções",
+      "administrator": "Acesso total — ignora todas as verificações de permissões"
+    },
+    "settings": {
+      "detailsTitle": "Detalhes do workbench",
+      "name": "Nome",
+      "description": "Descrição",
+      "visibilityTitle": "Visibilidade",
+      "visibility": "Visibilidade",
+      "transferTitle": "Transferir a propriedade",
+      "newOwner": "Novo proprietário",
+      "selectMember": "Selecione um membro…",
+      "transfer": "Transferir",
+      "dangerTitle": "Zona de perigo",
+      "deleteHint": "Eliminar permanentemente este workbench e todos os respetivos dados.",
+      "delete": "Eliminar workbench",
+      "leaveHint": "Sair deste workbench. Um gestor pode voltar a adicioná-lo.",
+      "leave": "Sair do workbench",
+      "confirmDelete": "Eliminar este workbench?",
+      "confirmLeave": "Sair deste workbench?"
+    }
   }
 }

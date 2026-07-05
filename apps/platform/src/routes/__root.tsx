@@ -1,5 +1,6 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import { LayoutGroup } from 'motion/react';
+import { NuqsAdapter } from 'nuqs/adapters/tanstack-router';
 import type { AuthStore } from '~/store/auth';
 
 export const Route = createRootRouteWithContext<{ auth: AuthStore }>()({
@@ -7,11 +8,14 @@ export const Route = createRootRouteWithContext<{ auth: AuthStore }>()({
 });
 
 function RootLayout() {
-  // LayoutGroup persists motion's shared-layout context across route swaps, so a
-  // `layoutId` element (the account search dock) animates between pages.
+  // NuqsAdapter wires nuqs' URL query-state to TanStack Router. LayoutGroup
+  // persists motion's shared-layout context across route swaps, so a `layoutId`
+  // element (the account search dock) animates between pages.
   return (
-    <LayoutGroup>
-      <Outlet />
-    </LayoutGroup>
+    <NuqsAdapter>
+      <LayoutGroup>
+        <Outlet />
+      </LayoutGroup>
+    </NuqsAdapter>
   );
 }

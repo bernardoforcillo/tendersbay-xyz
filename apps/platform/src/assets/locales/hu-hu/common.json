@@ -151,5 +151,227 @@
       "deadline": "Határidő",
       "daysLeft": "{{count}} nap"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Betöltés…",
+      "saving": "Mentés…",
+      "save": "Mentés",
+      "cancel": "Mégse",
+      "creating": "Létrehozás…",
+      "edit": "Szerkesztés",
+      "delete": "Törlés",
+      "saved": "Mentve"
+    },
+    "nav": {
+      "general": "Általános",
+      "overview": "Áttekintés",
+      "members": "Tagok",
+      "roles": "Szerepkörök",
+      "invites": "Meghívók",
+      "settings": "Beállítások",
+      "allWorkspaces": "Összes munkaterület"
+    },
+    "errors": {
+      "notFound": "Ez a munkaterület nem érhető el."
+    },
+    "list": {
+      "title": "Munkaterületek",
+      "new": "Új munkaterület",
+      "nameLabel": "Munkaterület neve",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Munkaterület létrehozása",
+      "empty": "Még nem tagja egyetlen munkaterületnek sem.",
+      "createFirst": "Hozza létre első munkaterületét"
+    },
+    "overview": {
+      "welcome": "Üdvözöljük itt:",
+      "workbenchSoon": "Hamarosan elérhető lesz egy közös munkafelület, ahol csapata együtt dolgozhat a közbeszerzéseken. Egyelőre a tagokat, szerepköröket és meghívókat a fenti füleken kezelheti."
+    },
+    "members": {
+      "title": "Tagok",
+      "owner": "Tulajdonos",
+      "role": "Szerepkör",
+      "remove": "Eltávolítás"
+    },
+    "roles": {
+      "title": "Szerepkörök",
+      "new": "Új szerepkör",
+      "createTitle": "Új szerepkör",
+      "editTitle": "Szerepkör szerkesztése",
+      "nameLabel": "Szerepkör neve",
+      "namePlaceholder": "Szerkesztő",
+      "permissionsLabel": "Jogosultságok",
+      "default": "Alapértelmezett",
+      "permCount": "{{count}} jogosultság"
+    },
+    "permissions": {
+      "viewWorkspace": "Munkaterület megtekintése",
+      "manageWorkspace": "Munkaterület kezelése",
+      "manageMembers": "Tagok kezelése",
+      "manageRoles": "Szerepkörök kezelése",
+      "createInvite": "Meghívók létrehozása",
+      "manageInvites": "Meghívók kezelése",
+      "administrator": "Rendszergazda"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "A munkaterület és tartalmának megtekintése",
+      "manageWorkspace": "A munkaterület átnevezése és beállításainak módosítása",
+      "manageMembers": "Tagok szerepköreinek módosítása és tagok eltávolítása",
+      "manageRoles": "Szerepkörök létrehozása, szerkesztése és törlése",
+      "createInvite": "Emberek meghívása e-mailben vagy linkkel",
+      "manageInvites": "Meghívók és linkek visszavonása",
+      "administrator": "Teljes hozzáférés — minden jogosultsági ellenőrzést megkerül"
+    },
+    "invites": {
+      "emailTitle": "Meghívás e-mailben",
+      "email": "E-mail-cím",
+      "role": "Szerepkör",
+      "send": "Meghívó küldése",
+      "revoke": "Visszavonás",
+      "linkTitle": "Megosztható linkek",
+      "maxUses": "Max. felhasználás (0 = korlátlan)",
+      "createLink": "Link létrehozása",
+      "copy": "Másolás",
+      "copied": "Másolva",
+      "usesLimited": "{{used}} / {{max}} felhasználás",
+      "usesUnlimited": "{{used}} felhasználás",
+      "noPermission": "Nincs jogosultsága a meghívók kezelésére."
+    },
+    "settings": {
+      "detailsTitle": "Munkaterület adatai",
+      "name": "Név",
+      "slug": "Slug",
+      "transferTitle": "Tulajdonjog átruházása",
+      "newOwner": "Új tulajdonos",
+      "selectMember": "Válasszon tagot…",
+      "transfer": "Átruházás",
+      "dangerTitle": "Veszélyzóna",
+      "deleteHint": "A munkaterület és minden adatának végleges törlése.",
+      "delete": "Munkaterület törlése",
+      "leaveHint": "Kilépés ebből a munkaterületből. Új meghívóval újra csatlakozhat.",
+      "leave": "Kilépés a munkaterületből"
+    },
+    "accept": {
+      "loading": "Meghívó ellenőrzése…",
+      "invalidTitle": "A meghívó nem érhető el",
+      "invalidBody": "Ez a meghívó érvénytelen vagy lejárt.",
+      "title": "Meghívást kapott",
+      "body": "Csatlakozzon a(z) {{workspace}} munkaterülethez mint {{role}}.",
+      "accept": "Meghívó elfogadása",
+      "accepting": "Csatlakozás…",
+      "signIn": "Az elfogadáshoz jelentkezzen be"
+    },
+    "join": {
+      "loading": "Link ellenőrzése…",
+      "invalidTitle": "A link nem érhető el",
+      "invalidBody": "Ez a meghívólink érvénytelen, lejárt vagy teljesen felhasználták.",
+      "title": "Csatlakozás a munkaterülethez",
+      "body": "Csatlakozzon a(z) {{workspace}} munkaterülethez mint {{role}}.",
+      "join": "Csatlakozás a munkaterülethez",
+      "joining": "Csatlakozás…",
+      "signIn": "A csatlakozáshoz jelentkezzen be"
+    },
+    "switcher": {
+      "label": "Munkaterületek",
+      "manage": "Összes munkaterület"
+    }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Betöltés…",
+      "saving": "Mentés…",
+      "save": "Mentés",
+      "cancel": "Mégse",
+      "creating": "Létrehozás…",
+      "edit": "Szerkesztés",
+      "delete": "Törlés",
+      "saved": "Mentve",
+      "confirm": "Megerősítés"
+    },
+    "nav": {
+      "general": "Általános",
+      "members": "Tagok",
+      "roles": "Szerepkörök",
+      "settings": "Beállítások",
+      "allWorkbenches": "Összes munkafelület"
+    },
+    "errors": {
+      "notFound": "Ez a munkafelület nem érhető el."
+    },
+    "breadcrumb": {
+      "workspaces": "Munkaterületek",
+      "workbenches": "Munkafelületek"
+    },
+    "visibility": {
+      "label": "Láthatóság",
+      "private": "Privát",
+      "shared": "Megosztott",
+      "makePrivate": "Legyen privát",
+      "makeShared": "Legyen megosztott",
+      "hint": "A megosztott munkafelületek láthatók azon munkaterületi tagok számára, akik megtekinthetik a munkafelületeket."
+    },
+    "list": {
+      "title": "Munkafelületek",
+      "new": "Új munkafelület",
+      "nameLabel": "Munkafelület neve",
+      "namePlaceholder": "Q3 pályázatok",
+      "descriptionLabel": "Leírás",
+      "create": "Munkafelület létrehozása",
+      "empty": "Még nincs munkafelület.",
+      "createFirst": "Hozza létre első munkafelületét"
+    },
+    "members": {
+      "title": "Tagok",
+      "owner": "Tulajdonos",
+      "role": "Szerepkör",
+      "remove": "Eltávolítás",
+      "add": "Hozzáadás",
+      "addLabel": "Tag hozzáadása",
+      "selectMember": "Válasszon tagot…"
+    },
+    "roles": {
+      "title": "Szerepkörök",
+      "new": "Új szerepkör",
+      "createTitle": "Új szerepkör",
+      "editTitle": "Szerepkör szerkesztése",
+      "nameLabel": "Szerepkör neve",
+      "namePlaceholder": "Szerkesztő",
+      "permissionsLabel": "Jogosultságok",
+      "default": "Alapértelmezett",
+      "permCount": "{{count}} jogosultság"
+    },
+    "permissions": {
+      "viewWorkbench": "Munkafelület megtekintése",
+      "manageWorkbench": "Munkafelület kezelése",
+      "manageMembers": "Tagok kezelése",
+      "manageRoles": "Szerepkörök kezelése",
+      "administrator": "Rendszergazda"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "A munkafelület és tartalmának megtekintése",
+      "manageWorkbench": "Átnevezés, szerkesztés és láthatóság módosítása",
+      "manageMembers": "Tagok hozzáadása, eltávolítása és szerepkörének módosítása",
+      "manageRoles": "Szerepkörök létrehozása, szerkesztése és törlése",
+      "administrator": "Teljes hozzáférés — minden jogosultsági ellenőrzést megkerül"
+    },
+    "settings": {
+      "detailsTitle": "Munkafelület adatai",
+      "name": "Név",
+      "description": "Leírás",
+      "visibilityTitle": "Láthatóság",
+      "visibility": "Láthatóság",
+      "transferTitle": "Tulajdonjog átruházása",
+      "newOwner": "Új tulajdonos",
+      "selectMember": "Válasszon tagot…",
+      "transfer": "Átruházás",
+      "dangerTitle": "Veszélyzóna",
+      "deleteHint": "A munkafelület és minden adatának végleges törlése.",
+      "delete": "Munkafelület törlése",
+      "leaveHint": "Kilépés ebből a munkafelületből. Egy kezelő újra hozzáadhatja.",
+      "leave": "Kilépés a munkafelületből",
+      "confirmDelete": "Törli ezt a munkafelületet?",
+      "confirmLeave": "Kilép ebből a munkafelületből?"
+    }
   }
 }

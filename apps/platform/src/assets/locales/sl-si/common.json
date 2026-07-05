@@ -147,5 +147,227 @@
       "deadline": "Rok",
       "daysLeft": "{{count}} dni"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Nalaganje…",
+      "saving": "Shranjevanje…",
+      "save": "Shrani",
+      "cancel": "Prekliči",
+      "creating": "Ustvarjanje…",
+      "edit": "Uredi",
+      "delete": "Izbriši",
+      "saved": "Shranjeno"
+    },
+    "nav": {
+      "general": "Splošno",
+      "overview": "Pregled",
+      "members": "Člani",
+      "roles": "Vloge",
+      "invites": "Vabila",
+      "settings": "Nastavitve",
+      "allWorkspaces": "Vsi delovni prostori"
+    },
+    "errors": {
+      "notFound": "Ta delovni prostor ni na voljo."
+    },
+    "list": {
+      "title": "Delovni prostori",
+      "new": "Nov delovni prostor",
+      "nameLabel": "Ime delovnega prostora",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Ustvari delovni prostor",
+      "empty": "Še niste del nobenega delovnega prostora.",
+      "createFirst": "Ustvarite svoj prvi delovni prostor"
+    },
+    "overview": {
+      "welcome": "Dobrodošli v",
+      "workbenchSoon": "Skupno delovno okolje, kjer lahko vaša ekipa skupaj dela na javnih razpisih, bo kmalu na voljo. Zaenkrat upravljajte člane, vloge in vabila v zavihkih zgoraj."
+    },
+    "members": {
+      "title": "Člani",
+      "owner": "Lastnik",
+      "role": "Vloga",
+      "remove": "Odstrani"
+    },
+    "roles": {
+      "title": "Vloge",
+      "new": "Nova vloga",
+      "createTitle": "Nova vloga",
+      "editTitle": "Uredi vlogo",
+      "nameLabel": "Ime vloge",
+      "namePlaceholder": "Urejevalec",
+      "permissionsLabel": "Dovoljenja",
+      "default": "Privzeta",
+      "permCount": "Dovoljenja: {{count}}"
+    },
+    "permissions": {
+      "viewWorkspace": "Ogled delovnega prostora",
+      "manageWorkspace": "Upravljanje delovnega prostora",
+      "manageMembers": "Upravljanje članov",
+      "manageRoles": "Upravljanje vlog",
+      "createInvite": "Ustvarjanje vabil",
+      "manageInvites": "Upravljanje vabil",
+      "administrator": "Skrbnik"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Ogled delovnega prostora in njegove vsebine",
+      "manageWorkspace": "Preimenovanje in spreminjanje nastavitev delovnega prostora",
+      "manageMembers": "Spreminjanje vlog članov in odstranjevanje članov",
+      "manageRoles": "Ustvarjanje, urejanje in brisanje vlog",
+      "createInvite": "Vabljenje oseb prek e-pošte ali povezave",
+      "manageInvites": "Preklic vabil in povezav",
+      "administrator": "Popoln dostop — obide vsako preverjanje dovoljenj"
+    },
+    "invites": {
+      "emailTitle": "Povabi prek e-pošte",
+      "email": "E-poštni naslov",
+      "role": "Vloga",
+      "send": "Pošlji vabilo",
+      "revoke": "Prekliči",
+      "linkTitle": "Povezave za deljenje",
+      "maxUses": "Največje število uporab (0 = neomejeno)",
+      "createLink": "Ustvari povezavo",
+      "copy": "Kopiraj",
+      "copied": "Kopirano",
+      "usesLimited": "Uporabe: {{used}} / {{max}}",
+      "usesUnlimited": "Uporabe: {{used}}",
+      "noPermission": "Nimate dovoljenja za upravljanje vabil."
+    },
+    "settings": {
+      "detailsTitle": "Podrobnosti delovnega prostora",
+      "name": "Ime",
+      "slug": "Slug",
+      "transferTitle": "Prenos lastništva",
+      "newOwner": "Novi lastnik",
+      "selectMember": "Izberite člana…",
+      "transfer": "Prenesi",
+      "dangerTitle": "Nevarno območje",
+      "deleteHint": "Trajno izbriši ta delovni prostor in vse njegove podatke.",
+      "delete": "Izbriši delovni prostor",
+      "leaveHint": "Zapusti ta delovni prostor. Znova se lahko pridružite z novim vabilom.",
+      "leave": "Zapusti delovni prostor"
+    },
+    "accept": {
+      "loading": "Preverjanje vabila…",
+      "invalidTitle": "Vabilo ni na voljo",
+      "invalidBody": "To vabilo je neveljavno ali je poteklo.",
+      "title": "Povabljeni ste",
+      "body": "Pridružite se {{workspace}} kot {{role}}.",
+      "accept": "Sprejmi vabilo",
+      "accepting": "Pridruževanje…",
+      "signIn": "Prijavite se za sprejem"
+    },
+    "join": {
+      "loading": "Preverjanje povezave…",
+      "invalidTitle": "Povezava ni na voljo",
+      "invalidBody": "Ta povezava za vabilo je neveljavna, potekla ali v celoti izkoriščena.",
+      "title": "Pridruži se delovnemu prostoru",
+      "body": "Pridružite se {{workspace}} kot {{role}}.",
+      "join": "Pridruži se delovnemu prostoru",
+      "joining": "Pridruževanje…",
+      "signIn": "Prijavite se za pridružitev"
+    },
+    "switcher": {
+      "label": "Delovni prostori",
+      "manage": "Vsi delovni prostori"
+    }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Nalaganje…",
+      "saving": "Shranjevanje…",
+      "save": "Shrani",
+      "cancel": "Prekliči",
+      "creating": "Ustvarjanje…",
+      "edit": "Uredi",
+      "delete": "Izbriši",
+      "saved": "Shranjeno",
+      "confirm": "Potrdi"
+    },
+    "nav": {
+      "general": "Splošno",
+      "members": "Člani",
+      "roles": "Vloge",
+      "settings": "Nastavitve",
+      "allWorkbenches": "Vsi delovni pulti"
+    },
+    "errors": {
+      "notFound": "Ta delovni pult ni na voljo."
+    },
+    "breadcrumb": {
+      "workspaces": "Delovni prostori",
+      "workbenches": "Delovni pulti"
+    },
+    "visibility": {
+      "label": "Vidnost",
+      "private": "Zaseben",
+      "shared": "Skupen",
+      "makePrivate": "Naredi zasebno",
+      "makeShared": "Naredi skupno",
+      "hint": "Skupni delovni pulti so vidni članom delovnega prostora, ki lahko ogledujejo delovne pulte."
+    },
+    "list": {
+      "title": "Delovni pulti",
+      "new": "Nov delovni pult",
+      "nameLabel": "Ime delovnega pulta",
+      "namePlaceholder": "Razpisi Q3",
+      "descriptionLabel": "Opis",
+      "create": "Ustvari delovni pult",
+      "empty": "Delovnih pultov še ni.",
+      "createFirst": "Ustvarite svoj prvi delovni pult"
+    },
+    "members": {
+      "title": "Člani",
+      "owner": "Lastnik",
+      "role": "Vloga",
+      "remove": "Odstrani",
+      "add": "Dodaj",
+      "addLabel": "Dodaj člana",
+      "selectMember": "Izberite člana…"
+    },
+    "roles": {
+      "title": "Vloge",
+      "new": "Nova vloga",
+      "createTitle": "Nova vloga",
+      "editTitle": "Uredi vlogo",
+      "nameLabel": "Ime vloge",
+      "namePlaceholder": "Urejevalec",
+      "permissionsLabel": "Dovoljenja",
+      "default": "Privzeta",
+      "permCount": "Dovoljenja: {{count}}"
+    },
+    "permissions": {
+      "viewWorkbench": "Ogled delovnega pulta",
+      "manageWorkbench": "Upravljanje delovnega pulta",
+      "manageMembers": "Upravljanje članov",
+      "manageRoles": "Upravljanje vlog",
+      "administrator": "Skrbnik"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Ogled delovnega pulta in njegove vsebine",
+      "manageWorkbench": "Preimenovanje, urejanje in spreminjanje vidnosti",
+      "manageMembers": "Dodajanje, odstranjevanje in spreminjanje vlog članov",
+      "manageRoles": "Ustvarjanje, urejanje in brisanje vlog",
+      "administrator": "Popoln dostop — obide vsako preverjanje dovoljenj"
+    },
+    "settings": {
+      "detailsTitle": "Podrobnosti delovnega pulta",
+      "name": "Ime",
+      "description": "Opis",
+      "visibilityTitle": "Vidnost",
+      "visibility": "Vidnost",
+      "transferTitle": "Prenos lastništva",
+      "newOwner": "Novi lastnik",
+      "selectMember": "Izberite člana…",
+      "transfer": "Prenesi",
+      "dangerTitle": "Nevarno območje",
+      "deleteHint": "Trajno izbriši ta delovni pult in vse njegove podatke.",
+      "delete": "Izbriši delovni pult",
+      "leaveHint": "Zapusti ta delovni pult. Upravitelj vas lahko znova doda.",
+      "leave": "Zapusti delovni pult",
+      "confirmDelete": "Izbrisati ta delovni pult?",
+      "confirmLeave": "Zapustiti ta delovni pult?"
+    }
   }
 }

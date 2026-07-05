@@ -12,6 +12,8 @@ import (
 
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
+	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
+	workspacev1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1/workspacev1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/email"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/httpapi"
@@ -21,6 +23,8 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/telemetry"
 )
 
@@ -57,10 +61,18 @@ func main() {
 	evRepo := postgres.NewEVRepo(db)
 	prRepo := postgres.NewPRRepo(db)
 
+	workspaceRepo := postgres.NewWorkspaceRepo(db)
+	roleRepo := postgres.NewRoleRepo(db)
+	memberRepo := postgres.NewMemberRepo(db)
+	emailInviteRepo := postgres.NewEmailInviteRepo(db)
+	inviteLinkRepo := postgres.NewInviteLinkRepo(db)
+	workspaceUow := postgres.NewUnitOfWork(db)
+
 	var mailer interface {
 		SendVerification(ctx context.Context, to, displayName, link string) error
 		SendPasswordReset(ctx context.Context, to, displayName, link string) error
 		SendEmailChangeVerification(ctx context.Context, to, displayName, link string) error
+		SendWorkspaceInvite(ctx context.Context, to, workspaceName, inviterName, link string) error
 	}
 	if cfg.ResendAPIKey == "" {
 		slog.Warn("RESEND_API_KEY not set — emails will be logged to stdout only")
@@ -78,18 +90,40 @@ func main() {
 
 	authSvc := auth.NewService(userRepo, sessionRepo, evRepo, prRepo, mailer, authCfg)
 	userSvc := user.NewService(userRepo, sessionRepo, evRepo, mailer, authCfg)
+	workspaceSvc := workspace.NewService(
+		workspaceRepo, roleRepo, memberRepo, emailInviteRepo, inviteLinkRepo,
+		userRepo, mailer, workspaceUow,
+		workspace.Config{AppBaseURL: cfg.AppBaseURL, InviteExpiry: cfg.WorkspaceInviteExpiry},
+	)
+
+	workbenchWSAccess := postgres.NewWorkbenchWorkspaceAccess(db)
+	workbenchUow := postgres.NewWorkbenchUnitOfWork(db)
+	workbenchSvc := workbench.NewService(
+		postgres.NewWorkbenchRepo(db),
+		postgres.NewWorkbenchRoleRepo(db),
+		postgres.NewWorkbenchMemberRepo(db),
+		userRepo, // satisfies workbench.UserLookup (FindByID)
+		workbenchWSAccess,
+		workbenchUow,
+	)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
+	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc)
+	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
 
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
+	workspacePath, workspaceRPC := workspacev1connect.NewWorkspaceServiceHandler(workspaceHandler)
+	workbenchPath, workbenchRPC := workbenchv1connect.NewWorkbenchServiceHandler(workbenchHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
 	mux := http.NewServeMux()
 	mux.Handle(authPath, authRPC)
 	mux.Handle(userPath, userRPC)
+	mux.Handle(workspacePath, workspaceRPC)
+	mux.Handle(workbenchPath, workbenchRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
 	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(mux))

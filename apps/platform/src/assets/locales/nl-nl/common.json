@@ -147,5 +147,227 @@
       "deadline": "Deadline",
       "daysLeft": "{{count}} dagen"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Laden…",
+      "saving": "Opslaan…",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "creating": "Aanmaken…",
+      "edit": "Bewerken",
+      "delete": "Verwijderen",
+      "saved": "Opgeslagen"
+    },
+    "nav": {
+      "general": "Algemeen",
+      "overview": "Overzicht",
+      "members": "Leden",
+      "roles": "Rollen",
+      "invites": "Uitnodigingen",
+      "settings": "Instellingen",
+      "allWorkspaces": "Alle werkruimtes"
+    },
+    "errors": {
+      "notFound": "Deze werkruimte is niet beschikbaar."
+    },
+    "list": {
+      "title": "Werkruimtes",
+      "new": "Nieuwe werkruimte",
+      "nameLabel": "Naam werkruimte",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Werkruimte aanmaken",
+      "empty": "Je maakt nog geen deel uit van een werkruimte.",
+      "createFirst": "Maak je eerste werkruimte aan"
+    },
+    "overview": {
+      "welcome": "Welkom bij",
+      "workbenchSoon": "Een gezamenlijke werkomgeving waarin je team samen aan aanbestedingen kan werken, komt binnenkort. Beheer voorlopig leden, rollen en uitnodigingen via de tabbladen hierboven."
+    },
+    "members": {
+      "title": "Leden",
+      "owner": "Eigenaar",
+      "role": "Rol",
+      "remove": "Verwijderen"
+    },
+    "roles": {
+      "title": "Rollen",
+      "new": "Nieuwe rol",
+      "createTitle": "Nieuwe rol",
+      "editTitle": "Rol bewerken",
+      "nameLabel": "Naam rol",
+      "namePlaceholder": "Bewerker",
+      "permissionsLabel": "Rechten",
+      "default": "Standaard",
+      "permCount": "{{count}} rechten"
+    },
+    "permissions": {
+      "viewWorkspace": "Werkruimte bekijken",
+      "manageWorkspace": "Werkruimte beheren",
+      "manageMembers": "Leden beheren",
+      "manageRoles": "Rollen beheren",
+      "createInvite": "Uitnodigingen aanmaken",
+      "manageInvites": "Uitnodigingen beheren",
+      "administrator": "Beheerder"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "De werkruimte en de inhoud ervan bekijken",
+      "manageWorkspace": "Werkruimte hernoemen en instellingen wijzigen",
+      "manageMembers": "Rollen van leden wijzigen en leden verwijderen",
+      "manageRoles": "Rollen aanmaken, bewerken en verwijderen",
+      "createInvite": "Mensen uitnodigen via e-mail of link",
+      "manageInvites": "Uitnodigingen en links intrekken",
+      "administrator": "Volledige toegang — omzeilt elke rechtencontrole"
+    },
+    "invites": {
+      "emailTitle": "Uitnodigen via e-mail",
+      "email": "E-mailadres",
+      "role": "Rol",
+      "send": "Uitnodiging verzenden",
+      "revoke": "Intrekken",
+      "linkTitle": "Deelbare links",
+      "maxUses": "Max. gebruik (0 = onbeperkt)",
+      "createLink": "Link aanmaken",
+      "copy": "Kopiëren",
+      "copied": "Gekopieerd",
+      "usesLimited": "{{used}} / {{max}} keer gebruikt",
+      "usesUnlimited": "{{used}} keer gebruikt",
+      "noPermission": "Je hebt geen toestemming om uitnodigingen te beheren."
+    },
+    "settings": {
+      "detailsTitle": "Gegevens werkruimte",
+      "name": "Naam",
+      "slug": "Slug",
+      "transferTitle": "Eigendom overdragen",
+      "newOwner": "Nieuwe eigenaar",
+      "selectMember": "Selecteer een lid…",
+      "transfer": "Overdragen",
+      "dangerTitle": "Gevarenzone",
+      "deleteHint": "Deze werkruimte en alle bijbehorende gegevens permanent verwijderen.",
+      "delete": "Werkruimte verwijderen",
+      "leaveHint": "Deze werkruimte verlaten. Je kunt met een nieuwe uitnodiging opnieuw deelnemen.",
+      "leave": "Werkruimte verlaten"
+    },
+    "accept": {
+      "loading": "Uitnodiging controleren…",
+      "invalidTitle": "Uitnodiging niet beschikbaar",
+      "invalidBody": "Deze uitnodiging is ongeldig of verlopen.",
+      "title": "Je bent uitgenodigd",
+      "body": "Word lid van {{workspace}} als {{role}}.",
+      "accept": "Uitnodiging accepteren",
+      "accepting": "Deelnemen…",
+      "signIn": "Meld je aan om te accepteren"
+    },
+    "join": {
+      "loading": "Link controleren…",
+      "invalidTitle": "Link niet beschikbaar",
+      "invalidBody": "Deze uitnodigingslink is ongeldig, verlopen of volledig gebruikt.",
+      "title": "Deelnemen aan werkruimte",
+      "body": "Word lid van {{workspace}} als {{role}}.",
+      "join": "Deelnemen aan werkruimte",
+      "joining": "Deelnemen…",
+      "signIn": "Meld je aan om deel te nemen"
+    },
+    "switcher": {
+      "label": "Werkruimtes",
+      "manage": "Alle werkruimtes"
+    }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Laden…",
+      "saving": "Opslaan…",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "creating": "Aanmaken…",
+      "edit": "Bewerken",
+      "delete": "Verwijderen",
+      "saved": "Opgeslagen",
+      "confirm": "Bevestigen"
+    },
+    "nav": {
+      "general": "Algemeen",
+      "members": "Leden",
+      "roles": "Rollen",
+      "settings": "Instellingen",
+      "allWorkbenches": "Alle werkbanken"
+    },
+    "errors": {
+      "notFound": "Deze werkbank is niet beschikbaar."
+    },
+    "breadcrumb": {
+      "workspaces": "Werkruimtes",
+      "workbenches": "Werkbanken"
+    },
+    "visibility": {
+      "label": "Zichtbaarheid",
+      "private": "Privé",
+      "shared": "Gedeeld",
+      "makePrivate": "Maak privé",
+      "makeShared": "Maak gedeeld",
+      "hint": "Gedeelde werkbanken zijn zichtbaar voor werkruimteleden die werkbanken mogen bekijken."
+    },
+    "list": {
+      "title": "Werkbanken",
+      "new": "Nieuwe werkbank",
+      "nameLabel": "Naam werkbank",
+      "namePlaceholder": "Aanbestedingen Q3",
+      "descriptionLabel": "Beschrijving",
+      "create": "Werkbank aanmaken",
+      "empty": "Nog geen werkbanken.",
+      "createFirst": "Maak je eerste werkbank aan"
+    },
+    "members": {
+      "title": "Leden",
+      "owner": "Eigenaar",
+      "role": "Rol",
+      "remove": "Verwijderen",
+      "add": "Toevoegen",
+      "addLabel": "Lid toevoegen",
+      "selectMember": "Selecteer een lid…"
+    },
+    "roles": {
+      "title": "Rollen",
+      "new": "Nieuwe rol",
+      "createTitle": "Nieuwe rol",
+      "editTitle": "Rol bewerken",
+      "nameLabel": "Naam rol",
+      "namePlaceholder": "Bewerker",
+      "permissionsLabel": "Rechten",
+      "default": "Standaard",
+      "permCount": "{{count}} rechten"
+    },
+    "permissions": {
+      "viewWorkbench": "Werkbank bekijken",
+      "manageWorkbench": "Werkbank beheren",
+      "manageMembers": "Leden beheren",
+      "manageRoles": "Rollen beheren",
+      "administrator": "Beheerder"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "De werkbank en de inhoud ervan bekijken",
+      "manageWorkbench": "Werkbank hernoemen, bewerken en zichtbaarheid wijzigen",
+      "manageMembers": "Leden toevoegen, verwijderen en van rol wijzigen",
+      "manageRoles": "Rollen aanmaken, bewerken en verwijderen",
+      "administrator": "Volledige toegang — omzeilt elke rechtencontrole"
+    },
+    "settings": {
+      "detailsTitle": "Gegevens werkbank",
+      "name": "Naam",
+      "description": "Beschrijving",
+      "visibilityTitle": "Zichtbaarheid",
+      "visibility": "Zichtbaarheid",
+      "transferTitle": "Eigendom overdragen",
+      "newOwner": "Nieuwe eigenaar",
+      "selectMember": "Selecteer een lid…",
+      "transfer": "Overdragen",
+      "dangerTitle": "Gevarenzone",
+      "deleteHint": "Deze werkbank en alle bijbehorende gegevens permanent verwijderen.",
+      "delete": "Werkbank verwijderen",
+      "leaveHint": "Deze werkbank verlaten. Een beheerder kan je opnieuw toevoegen.",
+      "leave": "Werkbank verlaten",
+      "confirmDelete": "Deze werkbank verwijderen?",
+      "confirmLeave": "Deze werkbank verlaten?"
+    }
   }
 }

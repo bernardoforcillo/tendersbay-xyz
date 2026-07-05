@@ -13,6 +13,8 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as LocaleRouteRouteImport } from './routes/$locale/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
+import { Route as JoinCodeRouteImport } from './routes/join/$code'
+import { Route as AuthenticatedWorkspacesIndexRouteImport } from './routes/_authenticated/workspaces/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedExploreIndexRouteImport } from './routes/_authenticated/explore/index'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings/profile'
@@ -20,11 +22,29 @@ import { Route as AuthenticatedSettingsDeleteRouteImport } from './routes/_authe
 import { Route as AuthenticatedSettingsChangePasswordRouteImport } from './routes/_authenticated/settings/change-password'
 import { Route as AuthenticatedSettingsChangeEmailRouteImport } from './routes/_authenticated/settings/change-email'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as LocaleWorkspaceAcceptInviteRouteImport } from './routes/$locale/workspace/accept-invite'
 import { Route as LocaleAuthVerifyEmailRouteImport } from './routes/$locale/auth/verify-email'
 import { Route as LocaleAuthSignupRouteImport } from './routes/$locale/auth/signup'
 import { Route as LocaleAuthResetPasswordRouteImport } from './routes/$locale/auth/reset-password'
 import { Route as LocaleAuthLoginRouteImport } from './routes/$locale/auth/login'
 import { Route as LocaleAuthForgotPasswordRouteImport } from './routes/$locale/auth/forgot-password'
+import { Route as AuthenticatedWorkspacesWorkspaceIdRouteRouteImport } from './routes/_authenticated/workspaces/$workspaceId/route'
+import { Route as AuthenticatedWorkspacesWorkspaceIdIndexRouteImport } from './routes/_authenticated/workspaces/$workspaceId/index'
+import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbenches'
+import { Route as AuthenticatedWorkspacesWorkspaceIdRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/roles'
+import { Route as AuthenticatedWorkspacesWorkspaceIdMembersRouteImport } from './routes/_authenticated/workspaces/$workspaceId/members'
+import { Route as AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/invites'
+import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/route'
+import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsIndexRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/index'
+import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/roles'
+import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsMembersRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/members'
+import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/invites'
+import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/route'
+import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/index'
+import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/route'
+import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/index'
+import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
+import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -45,6 +65,17 @@ const LocaleIndexRoute = LocaleIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LocaleRouteRoute,
 } as any)
+const JoinCodeRoute = JoinCodeRouteImport.update({
+  id: '/join/$code',
+  path: '/join/$code',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedWorkspacesIndexRoute =
+  AuthenticatedWorkspacesIndexRouteImport.update({
+    id: '/workspaces/',
+    path: '/workspaces/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/settings/',
@@ -87,6 +118,12 @@ const AuthenticatedSettingsAccountRoute =
     path: '/settings/account',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const LocaleWorkspaceAcceptInviteRoute =
+  LocaleWorkspaceAcceptInviteRouteImport.update({
+    id: '/workspace/accept-invite',
+    path: '/workspace/accept-invite',
+    getParentRoute: () => LocaleRouteRoute,
+  } as any)
 const LocaleAuthVerifyEmailRoute = LocaleAuthVerifyEmailRouteImport.update({
   id: '/auth/verify-email',
   path: '/auth/verify-email',
@@ -113,16 +150,138 @@ const LocaleAuthForgotPasswordRoute =
     path: '/auth/forgot-password',
     getParentRoute: () => LocaleRouteRoute,
   } as any)
+const AuthenticatedWorkspacesWorkspaceIdRouteRoute =
+  AuthenticatedWorkspacesWorkspaceIdRouteRouteImport.update({
+    id: '/workspaces/$workspaceId',
+    path: '/workspaces/$workspaceId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdIndexRoute =
+  AuthenticatedWorkspacesWorkspaceIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchesRoute =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchesRouteImport.update({
+    id: '/workbenches',
+    path: '/workbenches',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdRolesRoute =
+  AuthenticatedWorkspacesWorkspaceIdRolesRouteImport.update({
+    id: '/roles',
+    path: '/roles',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdMembersRoute =
+  AuthenticatedWorkspacesWorkspaceIdMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdInvitesRoute =
+  AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport.update({
+    id: '/invites',
+    path: '/invites',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute =
+  AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute =
+  AuthenticatedWorkspacesWorkspaceIdSettingsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute =
+  AuthenticatedWorkspacesWorkspaceIdSettingsRolesRouteImport.update({
+    id: '/roles',
+    path: '/roles',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdSettingsMembersRoute =
+  AuthenticatedWorkspacesWorkspaceIdSettingsMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRoute =
+  AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRouteImport.update({
+    id: '/invites',
+    path: '/invites',
+    getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute,
+  } as any)
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteImport.update(
+    {
+      id: '/workbench/$workbenchId',
+      path: '/workbench/$workbenchId',
+      getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
+    } as any,
+  )
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRouteImport.update(
+    {
+      id: '/',
+      path: '/',
+      getParentRoute: () =>
+        AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute,
+    } as any,
+  )
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteImport.update(
+    {
+      id: '/settings',
+      path: '/settings',
+      getParentRoute: () =>
+        AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute,
+    } as any,
+  )
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRouteImport.update(
+    {
+      id: '/',
+      path: '/',
+      getParentRoute: () =>
+        AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute,
+    } as any,
+  )
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRouteImport.update(
+    {
+      id: '/roles',
+      path: '/roles',
+      getParentRoute: () =>
+        AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute,
+    } as any,
+  )
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRouteImport.update(
+    {
+      id: '/members',
+      path: '/members',
+      getParentRoute: () =>
+        AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
+  '/join/$code': typeof JoinCodeRoute
   '/$locale/': typeof LocaleIndexRoute
+  '/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren
   '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
   '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
@@ -130,15 +289,34 @@ export interface FileRoutesByFullPath {
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/explore/': typeof AuthenticatedExploreIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
+  '/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren
+  '/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
+  '/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
+  '/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
+  '/workspaces/$workspaceId/workbenches': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchesRoute
+  '/workspaces/$workspaceId/': typeof AuthenticatedWorkspacesWorkspaceIdIndexRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteWithChildren
+  '/workspaces/$workspaceId/settings/invites': typeof AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRoute
+  '/workspaces/$workspaceId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdSettingsMembersRoute
+  '/workspaces/$workspaceId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute
+  '/workspaces/$workspaceId/settings/': typeof AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/settings': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren
+  '/workspaces/$workspaceId/workbench/$workbenchId/': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/settings/': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/join/$code': typeof JoinCodeRoute
   '/$locale': typeof LocaleIndexRoute
   '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
   '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
@@ -146,18 +324,35 @@ export interface FileRoutesByTo {
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/explore': typeof AuthenticatedExploreIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/workspaces': typeof AuthenticatedWorkspacesIndexRoute
+  '/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
+  '/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
+  '/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
+  '/workspaces/$workspaceId/workbenches': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchesRoute
+  '/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdIndexRoute
+  '/workspaces/$workspaceId/settings/invites': typeof AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRoute
+  '/workspaces/$workspaceId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdSettingsMembersRoute
+  '/workspaces/$workspaceId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute
+  '/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/settings': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$locale': typeof LocaleRouteRouteWithChildren
   '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/join/$code': typeof JoinCodeRoute
   '/$locale/': typeof LocaleIndexRoute
+  '/_authenticated/workspaces/$workspaceId': typeof AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren
   '/$locale/auth/forgot-password': typeof LocaleAuthForgotPasswordRoute
   '/$locale/auth/login': typeof LocaleAuthLoginRoute
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
   '/_authenticated/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
@@ -165,18 +360,38 @@ export interface FileRoutesById {
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
   '/_authenticated/explore/': typeof AuthenticatedExploreIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
+  '/_authenticated/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren
+  '/_authenticated/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
+  '/_authenticated/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
+  '/_authenticated/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
+  '/_authenticated/workspaces/$workspaceId/workbenches': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchesRoute
+  '/_authenticated/workspaces/$workspaceId/': typeof AuthenticatedWorkspacesWorkspaceIdIndexRoute
+  '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteWithChildren
+  '/_authenticated/workspaces/$workspaceId/settings/invites': typeof AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRoute
+  '/_authenticated/workspaces/$workspaceId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdSettingsMembersRoute
+  '/_authenticated/workspaces/$workspaceId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute
+  '/_authenticated/workspaces/$workspaceId/settings/': typeof AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute
+  '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren
+  '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute
+  '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute
+  '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute
+  '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/$locale'
+    | '/join/$code'
     | '/$locale/'
+    | '/workspaces/$workspaceId'
     | '/$locale/auth/forgot-password'
     | '/$locale/auth/login'
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/workspace/accept-invite'
     | '/settings/account'
     | '/settings/change-email'
     | '/settings/change-password'
@@ -184,15 +399,34 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/explore/'
     | '/settings/'
+    | '/workspaces/'
+    | '/workspaces/$workspaceId/settings'
+    | '/workspaces/$workspaceId/invites'
+    | '/workspaces/$workspaceId/members'
+    | '/workspaces/$workspaceId/roles'
+    | '/workspaces/$workspaceId/workbenches'
+    | '/workspaces/$workspaceId/'
+    | '/workspaces/$workspaceId/workbench/$workbenchId'
+    | '/workspaces/$workspaceId/settings/invites'
+    | '/workspaces/$workspaceId/settings/members'
+    | '/workspaces/$workspaceId/settings/roles'
+    | '/workspaces/$workspaceId/settings/'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/settings'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/join/$code'
     | '/$locale'
     | '/$locale/auth/forgot-password'
     | '/$locale/auth/login'
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/workspace/accept-invite'
     | '/settings/account'
     | '/settings/change-email'
     | '/settings/change-password'
@@ -200,17 +434,34 @@ export interface FileRouteTypes {
     | '/settings/profile'
     | '/explore'
     | '/settings'
+    | '/workspaces'
+    | '/workspaces/$workspaceId/invites'
+    | '/workspaces/$workspaceId/members'
+    | '/workspaces/$workspaceId/roles'
+    | '/workspaces/$workspaceId/workbenches'
+    | '/workspaces/$workspaceId'
+    | '/workspaces/$workspaceId/settings/invites'
+    | '/workspaces/$workspaceId/settings/members'
+    | '/workspaces/$workspaceId/settings/roles'
+    | '/workspaces/$workspaceId/settings'
+    | '/workspaces/$workspaceId/workbench/$workbenchId'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/settings'
   id:
     | '__root__'
     | '/'
     | '/$locale'
     | '/_authenticated'
+    | '/join/$code'
     | '/$locale/'
+    | '/_authenticated/workspaces/$workspaceId'
     | '/$locale/auth/forgot-password'
     | '/$locale/auth/login'
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/workspace/accept-invite'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/change-email'
     | '/_authenticated/settings/change-password'
@@ -218,12 +469,30 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/profile'
     | '/_authenticated/explore/'
     | '/_authenticated/settings/'
+    | '/_authenticated/workspaces/'
+    | '/_authenticated/workspaces/$workspaceId/settings'
+    | '/_authenticated/workspaces/$workspaceId/invites'
+    | '/_authenticated/workspaces/$workspaceId/members'
+    | '/_authenticated/workspaces/$workspaceId/roles'
+    | '/_authenticated/workspaces/$workspaceId/workbenches'
+    | '/_authenticated/workspaces/$workspaceId/'
+    | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId'
+    | '/_authenticated/workspaces/$workspaceId/settings/invites'
+    | '/_authenticated/workspaces/$workspaceId/settings/members'
+    | '/_authenticated/workspaces/$workspaceId/settings/roles'
+    | '/_authenticated/workspaces/$workspaceId/settings/'
+    | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings'
+    | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/'
+    | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
+    | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
+    | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LocaleRouteRoute: typeof LocaleRouteRouteWithChildren
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  JoinCodeRoute: typeof JoinCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -255,6 +524,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/$locale/'
       preLoaderRoute: typeof LocaleIndexRouteImport
       parentRoute: typeof LocaleRouteRoute
+    }
+    '/join/$code': {
+      id: '/join/$code'
+      path: '/join/$code'
+      fullPath: '/join/$code'
+      preLoaderRoute: typeof JoinCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/workspaces/': {
+      id: '/_authenticated/workspaces/'
+      path: '/workspaces'
+      fullPath: '/workspaces/'
+      preLoaderRoute: typeof AuthenticatedWorkspacesIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
@@ -305,6 +588,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/$locale/workspace/accept-invite': {
+      id: '/$locale/workspace/accept-invite'
+      path: '/workspace/accept-invite'
+      fullPath: '/$locale/workspace/accept-invite'
+      preLoaderRoute: typeof LocaleWorkspaceAcceptInviteRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
     '/$locale/auth/verify-email': {
       id: '/$locale/auth/verify-email'
       path: '/auth/verify-email'
@@ -340,6 +630,125 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LocaleAuthForgotPasswordRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
+    '/_authenticated/workspaces/$workspaceId': {
+      id: '/_authenticated/workspaces/$workspaceId'
+      path: '/workspaces/$workspaceId'
+      fullPath: '/workspaces/$workspaceId'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/': {
+      id: '/_authenticated/workspaces/$workspaceId/'
+      path: '/'
+      fullPath: '/workspaces/$workspaceId/'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdIndexRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/workbenches': {
+      id: '/_authenticated/workspaces/$workspaceId/workbenches'
+      path: '/workbenches'
+      fullPath: '/workspaces/$workspaceId/workbenches'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchesRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/roles': {
+      id: '/_authenticated/workspaces/$workspaceId/roles'
+      path: '/roles'
+      fullPath: '/workspaces/$workspaceId/roles'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdRolesRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/members': {
+      id: '/_authenticated/workspaces/$workspaceId/members'
+      path: '/members'
+      fullPath: '/workspaces/$workspaceId/members'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdMembersRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/invites': {
+      id: '/_authenticated/workspaces/$workspaceId/invites'
+      path: '/invites'
+      fullPath: '/workspaces/$workspaceId/invites'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/settings': {
+      id: '/_authenticated/workspaces/$workspaceId/settings'
+      path: '/settings'
+      fullPath: '/workspaces/$workspaceId/settings'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/settings/': {
+      id: '/_authenticated/workspaces/$workspaceId/settings/'
+      path: '/'
+      fullPath: '/workspaces/$workspaceId/settings/'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/settings/roles': {
+      id: '/_authenticated/workspaces/$workspaceId/settings/roles'
+      path: '/roles'
+      fullPath: '/workspaces/$workspaceId/settings/roles'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRolesRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/settings/members': {
+      id: '/_authenticated/workspaces/$workspaceId/settings/members'
+      path: '/members'
+      fullPath: '/workspaces/$workspaceId/settings/members'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsMembersRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/settings/invites': {
+      id: '/_authenticated/workspaces/$workspaceId/settings/invites'
+      path: '/invites'
+      fullPath: '/workspaces/$workspaceId/settings/invites'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId': {
+      id: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId'
+      path: '/workbench/$workbenchId'
+      fullPath: '/workspaces/$workspaceId/workbench/$workbenchId'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/': {
+      id: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/'
+      path: '/'
+      fullPath: '/workspaces/$workspaceId/workbench/$workbenchId/'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings': {
+      id: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings'
+      path: '/settings'
+      fullPath: '/workspaces/$workspaceId/workbench/$workbenchId/settings'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/': {
+      id: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/'
+      path: '/'
+      fullPath: '/workspaces/$workspaceId/workbench/$workbenchId/settings/'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/roles': {
+      id: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
+      path: '/roles'
+      fullPath: '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute
+    }
+    '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/members': {
+      id: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
+      path: '/members'
+      fullPath: '/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute
+    }
   }
 }
 
@@ -350,6 +759,7 @@ interface LocaleRouteRouteChildren {
   LocaleAuthResetPasswordRoute: typeof LocaleAuthResetPasswordRoute
   LocaleAuthSignupRoute: typeof LocaleAuthSignupRoute
   LocaleAuthVerifyEmailRoute: typeof LocaleAuthVerifyEmailRoute
+  LocaleWorkspaceAcceptInviteRoute: typeof LocaleWorkspaceAcceptInviteRoute
 }
 
 const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
@@ -359,13 +769,111 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAuthResetPasswordRoute: LocaleAuthResetPasswordRoute,
   LocaleAuthSignupRoute: LocaleAuthSignupRoute,
   LocaleAuthVerifyEmailRoute: LocaleAuthVerifyEmailRoute,
+  LocaleWorkspaceAcceptInviteRoute: LocaleWorkspaceAcceptInviteRoute,
 }
 
 const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
   LocaleRouteRouteChildren,
 )
 
+interface AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteChildren {
+  AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRoute
+  AuthenticatedWorkspacesWorkspaceIdSettingsMembersRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsMembersRoute
+  AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute
+  AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute
+}
+
+const AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteChildren: AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteChildren =
+  {
+    AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRoute:
+      AuthenticatedWorkspacesWorkspaceIdSettingsInvitesRoute,
+    AuthenticatedWorkspacesWorkspaceIdSettingsMembersRoute:
+      AuthenticatedWorkspacesWorkspaceIdSettingsMembersRoute,
+    AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute:
+      AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute,
+    AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute:
+      AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute,
+  }
+
+const AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren =
+  AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute._addFileChildren(
+    AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteChildren,
+  )
+
+interface AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteChildren {
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute
+}
+
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteChildren: AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteChildren =
+  {
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute:
+      AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute,
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute:
+      AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute,
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute:
+      AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute,
+  }
+
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute._addFileChildren(
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteChildren,
+  )
+
+interface AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteChildren {
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute
+}
+
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteChildren: AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteChildren =
+  {
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute:
+      AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren,
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute:
+      AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute,
+  }
+
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteWithChildren =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute._addFileChildren(
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteChildren,
+  )
+
+interface AuthenticatedWorkspacesWorkspaceIdRouteRouteChildren {
+  AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute: typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren
+  AuthenticatedWorkspacesWorkspaceIdInvitesRoute: typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
+  AuthenticatedWorkspacesWorkspaceIdMembersRoute: typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
+  AuthenticatedWorkspacesWorkspaceIdRolesRoute: typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchesRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchesRoute
+  AuthenticatedWorkspacesWorkspaceIdIndexRoute: typeof AuthenticatedWorkspacesWorkspaceIdIndexRoute
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteWithChildren
+}
+
+const AuthenticatedWorkspacesWorkspaceIdRouteRouteChildren: AuthenticatedWorkspacesWorkspaceIdRouteRouteChildren =
+  {
+    AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute:
+      AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren,
+    AuthenticatedWorkspacesWorkspaceIdInvitesRoute:
+      AuthenticatedWorkspacesWorkspaceIdInvitesRoute,
+    AuthenticatedWorkspacesWorkspaceIdMembersRoute:
+      AuthenticatedWorkspacesWorkspaceIdMembersRoute,
+    AuthenticatedWorkspacesWorkspaceIdRolesRoute:
+      AuthenticatedWorkspacesWorkspaceIdRolesRoute,
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchesRoute:
+      AuthenticatedWorkspacesWorkspaceIdWorkbenchesRoute,
+    AuthenticatedWorkspacesWorkspaceIdIndexRoute:
+      AuthenticatedWorkspacesWorkspaceIdIndexRoute,
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute:
+      AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteWithChildren,
+  }
+
+const AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren =
+  AuthenticatedWorkspacesWorkspaceIdRouteRoute._addFileChildren(
+    AuthenticatedWorkspacesWorkspaceIdRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
+  AuthenticatedWorkspacesWorkspaceIdRouteRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsChangeEmailRoute: typeof AuthenticatedSettingsChangeEmailRoute
   AuthenticatedSettingsChangePasswordRoute: typeof AuthenticatedSettingsChangePasswordRoute
@@ -373,9 +881,12 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
   AuthenticatedExploreIndexRoute: typeof AuthenticatedExploreIndexRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+  AuthenticatedWorkspacesIndexRoute: typeof AuthenticatedWorkspacesIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedWorkspacesWorkspaceIdRouteRoute:
+    AuthenticatedWorkspacesWorkspaceIdRouteRouteWithChildren,
   AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
   AuthenticatedSettingsChangeEmailRoute: AuthenticatedSettingsChangeEmailRoute,
   AuthenticatedSettingsChangePasswordRoute:
@@ -384,6 +895,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
   AuthenticatedExploreIndexRoute: AuthenticatedExploreIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+  AuthenticatedWorkspacesIndexRoute: AuthenticatedWorkspacesIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -394,6 +906,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LocaleRouteRoute: LocaleRouteRouteWithChildren,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  JoinCodeRoute: JoinCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
