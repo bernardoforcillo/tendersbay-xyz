@@ -1,6 +1,7 @@
 import { Link, Outlet, useParams } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PageHeader } from '~/features/account/components/organisms';
 import { AccountLayout } from '~/features/account/components/templates/account-layout';
 import { WorkspaceContext } from '~/features/workspace/context';
 import { useWorkspace } from '~/features/workspace/hooks';
@@ -27,6 +28,7 @@ export function WorkspaceLayout() {
   if (loading) {
     return (
       <AccountLayout>
+        <PageHeader />
         <div className="p-8 text-sm text-ink-500">{t('workspace.common.loading', 'Loading…')}</div>
       </AccountLayout>
     );
@@ -35,6 +37,7 @@ export function WorkspaceLayout() {
   if (error || !data?.workspace) {
     return (
       <AccountLayout>
+        <PageHeader />
         <div className="flex flex-col items-start gap-4 p-8">
           <p className="text-sm text-ink-700">
             {error ?? t('workspace.errors.notFound', 'This workspace is unavailable.')}

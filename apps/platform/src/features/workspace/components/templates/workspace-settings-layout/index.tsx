@@ -1,5 +1,6 @@
 import { Link, Outlet } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
+import { PageHeader } from '~/features/account/components/organisms';
 import { useWorkspaceContext } from '~/features/workspace/context';
 import { can, Permission } from '~/features/workspace/permissions';
 import { settingsNavKeys } from './settings-nav';
@@ -15,13 +16,9 @@ export function WorkspaceSettingsLayout() {
   const keys = settingsNavKeys(canInvite);
 
   return (
-    <div className="flex flex-col gap-6 p-6 lg:p-8">
-      <header className="flex flex-col gap-4">
-        <div>
-          <h1 className="font-display text-2xl text-ink-900">{workspace.name}</h1>
-          <p className="text-sm text-ink-500">/{workspace.slug}</p>
-        </div>
-        <nav className="flex flex-wrap gap-1 border-b border-cream-200 pb-2">
+    <>
+      <PageHeader title={workspace.name} subtitle={`@${workspace.slug}`}>
+        <nav className="flex flex-wrap gap-1">
           {keys.includes('general') && (
             <Link
               to="/workspaces/$workspaceId/settings"
@@ -60,8 +57,10 @@ export function WorkspaceSettingsLayout() {
             </Link>
           )}
         </nav>
-      </header>
-      <Outlet />
-    </div>
+      </PageHeader>
+      <div className="flex flex-col gap-6 p-6 lg:p-8">
+        <Outlet />
+      </div>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button, Form, Input, Label, TextField } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
+import { PageHeader } from '~/features/account/components/organisms';
 import { AccountLayout } from '~/features/account/components/templates/account-layout';
 import { useMyWorkspaces } from '~/features/workspace/hooks';
 import { BTN_PRIMARY, CARD, ERROR_BOX, INPUT, LABEL } from '~/features/workspace/ui';
@@ -37,16 +38,15 @@ export function WorkspacesListPage() {
 
   return (
     <AccountLayout>
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6 lg:p-8">
-        <div className="flex items-center justify-between">
-          <h1 className="font-display text-2xl text-ink-900">
-            {t('workspace.list.title', 'Workspaces')}
-          </h1>
+      <PageHeader
+        title={t('workspace.list.title', 'Workspaces')}
+        actions={
           <Button className={BTN_PRIMARY} onPress={() => setShowForm((v) => !v)}>
             {t('workspace.list.new', 'New workspace')}
           </Button>
-        </div>
-
+        }
+      />
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6 lg:p-8">
         {showForm && (
           <div className={CARD}>
             <Form onSubmit={handleCreate} className="flex flex-col gap-4">
@@ -110,7 +110,7 @@ export function WorkspacesListPage() {
                   className={`${CARD} flex items-center justify-between no-underline transition hover:border-brand-300`}
                 >
                   <span className="font-medium text-ink-900">{w.name}</span>
-                  <span className="text-xs text-ink-400">/{w.slug}</span>
+                  <span className="text-xs text-ink-400">@{w.slug}</span>
                 </Link>
               </li>
             ))}
