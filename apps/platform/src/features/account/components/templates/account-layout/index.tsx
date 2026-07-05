@@ -11,7 +11,7 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '~/features/landing/components/atoms';
@@ -19,6 +19,7 @@ import { WorkspaceSwitcher } from '~/features/workspace/components/organisms/wor
 import { detectLocale } from '~/i18n/detect-locale';
 import { authClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
+import { useSidebarStore } from '~/store/sidebar';
 import { useWorkspaceStore } from '~/store/workspace';
 import { sidebarNavKeys } from './sidebar-nav';
 
@@ -211,36 +212,17 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
 
 export function AccountLayout({ children }: AccountLayoutProps) {
   const { i18n } = useTranslation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(() => {
-    try {
-      return localStorage.getItem('sidebar-collapsed') === 'true';
-    } catch {
-      return false;
-    }
-  });
-
-  function toggleCollapsed() {
-    setCollapsed((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem('sidebar-collapsed', String(next));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }
+  const collapsed = useSidebarStore((s) => s.collapsed);
+  const drawerOpen = useSidebarStore((s) => s.drawerOpen);
+  const openDrawer = useSidebarStore((s) => s.openDrawer);
+  const closeDrawer = useSidebarStore((s) => s.closeDrawer);
+  const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed);
 
   return (
     <div className="relative flex min-h-screen bg-cream-100 lg:h-screen lg:overflow-hidden">
       {/* ── Mobile header ── */}
       <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-cream-200 bg-cream-100 px-4 lg:hidden">
-        <Button
-          onPress={() => setSidebarOpen(true)}
-          aria-label="Open navigation"
-          className={ICON_BTN}
-        >
+        <Button onPress={openDrawer} aria-label="Open navigation" className={ICON_BTN}>
           <Menu size={18} aria-hidden="true" />
         </Button>
         <Link
@@ -254,20 +236,20 @@ export function AccountLayout({ children }: AccountLayoutProps) {
       </header>
 
       {/* ── Mobile overlay ── */}
-      {sidebarOpen && (
+      {drawerOpen && (
         <button
           type="button"
           className="fixed inset-0 z-40 cursor-default bg-black/20 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          onClick={closeDrawer}
           aria-label="Close navigation"
         />
       )}
 
       {/* ── Mobile sidebar drawer ── */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 overflow-hidden bg-cream-100 shadow-soft transition-transform duration-200 ease-in-out lg:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 overflow-hidden bg-cream-100 shadow-soft transition-transform duration-200 ease-in-out lg:hidden ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <SidebarContent showClose={true} onClose={() => setSidebarOpen(false)} />
+        <SidebarContent showClose={true} onClose={closeDrawer} />
       </aside>
 
       {/* ── Desktop sidebar — floating rounded card ── */}
@@ -275,7 +257,7 @@ export function AccountLayout({ children }: AccountLayoutProps) {
         className={`fixed inset-y-3 left-3 hidden overflow-hidden rounded-3xl bg-cream-100 transition-[width] duration-200 ease-in-out lg:block ${collapsed ? 'w-0' : 'w-64'}`}
       >
         <div className="h-full w-64">
-          <SidebarContent showClose={false} onClose={() => setSidebarOpen(false)} />
+          <SidebarContent showClose={false} onClose={closeDrawer} />
         </div>
       </aside>
 
