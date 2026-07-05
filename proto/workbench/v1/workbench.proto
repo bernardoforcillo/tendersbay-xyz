@@ -1,0 +1,161 @@
+syntax = "proto3";
+package workbench.v1;
+
+option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1;workbenchv1";
+
+import "auth/v1/auth.proto";
+
+// WorkbenchService manages workspace-scoped workbenches: personal-or-shared
+// containers with their own bitwise RBAC (custom roles), a member list drawn
+// from the parent workspace's members, and a private/shared visibility flag.
+// Every request carries `workbench_id` (or `workspace_id` for create/list); the
+// server resolves access through two layers — workspace RBAC OR per-workbench
+// roles — and enforces the required permission bit.
+service WorkbenchService {
+  rpc CreateWorkbench(CreateWorkbenchRequest) returns (CreateWorkbenchResponse);
+  rpc ListWorkbenches(ListWorkbenchesRequest) returns (ListWorkbenchesResponse);
+  rpc GetWorkbench(GetWorkbenchRequest) returns (GetWorkbenchResponse);
+  rpc UpdateWorkbench(UpdateWorkbenchRequest) returns (UpdateWorkbenchResponse);
+  rpc ChangeVisibility(ChangeVisibilityRequest) returns (ChangeVisibilityResponse);
+  rpc DeleteWorkbench(DeleteWorkbenchRequest) returns (DeleteWorkbenchResponse);
+  rpc TransferWorkbenchOwnership(TransferWorkbenchOwnershipRequest) returns (TransferWorkbenchOwnershipResponse);
+  rpc LeaveWorkbench(LeaveWorkbenchRequest) returns (LeaveWorkbenchResponse);
+
+  rpc ListWorkbenchMembers(ListWorkbenchMembersRequest) returns (ListWorkbenchMembersResponse);
+  rpc AddWorkbenchMember(AddWorkbenchMemberRequest) returns (AddWorkbenchMemberResponse);
+  rpc ChangeWorkbenchMemberRole(ChangeWorkbenchMemberRoleRequest) returns (ChangeWorkbenchMemberRoleResponse);
+  rpc RemoveWorkbenchMember(RemoveWorkbenchMemberRequest) returns (RemoveWorkbenchMemberResponse);
+
+  rpc ListWorkbenchRoles(ListWorkbenchRolesRequest) returns (ListWorkbenchRolesResponse);
+  rpc CreateWorkbenchRole(CreateWorkbenchRoleRequest) returns (CreateWorkbenchRoleResponse);
+  rpc UpdateWorkbenchRole(UpdateWorkbenchRoleRequest) returns (UpdateWorkbenchRoleResponse);
+  rpc DeleteWorkbenchRole(DeleteWorkbenchRoleRequest) returns (DeleteWorkbenchRoleResponse);
+}
+
+// ── Entities ────────────────────────────────────────────────────────────────
+
+message Workbench {
+  string id = 1;
+  string workspace_id = 2;
+  string name = 3;
+  string description = 4;
+  string visibility = 5; // "private" | "shared"
+  string owner_id = 6;
+  string created_at = 7; // RFC3339
+  string updated_at = 8; // RFC3339
+}
+
+message Role {
+  string id = 1;
+  string workbench_id = 2;
+  string name = 3;
+  uint64 permissions = 4; // bitmask
+  bool is_default = 5;
+  string created_at = 6; // RFC3339
+}
+
+message Member {
+  string user_id = 1;
+  string workbench_id = 2;
+  string role_id = 3;
+  string role_name = 4;
+  uint64 permissions = 5;
+  auth.v1.UserInfo user = 6;
+  string added_at = 7; // RFC3339
+}
+
+// ── Lifecycle ─────────────────────────────────────────────────────────────────
+
+message CreateWorkbenchRequest {
+  string workspace_id = 1;
+  string name = 2;
+  string description = 3;
+  string visibility = 4; // optional; "" ⇒ "private"
+}
+message CreateWorkbenchResponse { Workbench workbench = 1; }
+
+message ListWorkbenchesRequest { string workspace_id = 1; }
+message ListWorkbenchesResponse { repeated Workbench workbenches = 1; }
+
+message GetWorkbenchRequest { string workbench_id = 1; }
+message GetWorkbenchResponse {
+  Workbench workbench = 1;
+  uint64 my_permissions = 2; // caller's effective per-workbench permissions
+  string workspace_name = 3; // for the breadcrumb, no extra round-trip
+}
+
+message UpdateWorkbenchRequest {
+  string workbench_id = 1;
+  string name = 2;
+  string description = 3;
+}
+message UpdateWorkbenchResponse { Workbench workbench = 1; }
+
+message ChangeVisibilityRequest {
+  string workbench_id = 1;
+  string visibility = 2; // "private" | "shared"
+}
+message ChangeVisibilityResponse { Workbench workbench = 1; }
+
+message DeleteWorkbenchRequest { string workbench_id = 1; }
+message DeleteWorkbenchResponse {}
+
+message TransferWorkbenchOwnershipRequest {
+  string workbench_id = 1;
+  string new_owner_user_id = 2;
+}
+message TransferWorkbenchOwnershipResponse {}
+
+message LeaveWorkbenchRequest { string workbench_id = 1; }
+message LeaveWorkbenchResponse {}
+
+// ── Members ───────────────────────────────────────────────────────────────────
+
+message ListWorkbenchMembersRequest { string workbench_id = 1; }
+message ListWorkbenchMembersResponse { repeated Member members = 1; }
+
+message AddWorkbenchMemberRequest {
+  string workbench_id = 1;
+  string user_id = 2; // must already be a workspace member
+  string role_id = 3;
+}
+message AddWorkbenchMemberResponse { Member member = 1; }
+
+message ChangeWorkbenchMemberRoleRequest {
+  string workbench_id = 1;
+  string user_id = 2;
+  string role_id = 3;
+}
+message ChangeWorkbenchMemberRoleResponse { Member member = 1; }
+
+message RemoveWorkbenchMemberRequest {
+  string workbench_id = 1;
+  string user_id = 2;
+}
+message RemoveWorkbenchMemberResponse {}
+
+// ── Roles ─────────────────────────────────────────────────────────────────────
+
+message ListWorkbenchRolesRequest { string workbench_id = 1; }
+message ListWorkbenchRolesResponse { repeated Role roles = 1; }
+
+message CreateWorkbenchRoleRequest {
+  string workbench_id = 1;
+  string name = 2;
+  uint64 permissions = 3;
+}
+message CreateWorkbenchRoleResponse { Role role = 1; }
+
+message UpdateWorkbenchRoleRequest {
+  string workbench_id = 1;
+  string role_id = 2;
+  string name = 3;
+  uint64 permissions = 4;
+}
+message UpdateWorkbenchRoleResponse { Role role = 1; }
+
+message DeleteWorkbenchRoleRequest {
+  string workbench_id = 1;
+  string role_id = 2;
+}
+message DeleteWorkbenchRoleResponse {}

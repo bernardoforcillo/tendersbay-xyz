@@ -26,3 +26,8 @@ func (l *LogSender) SendEmailChangeVerification(_ context.Context, to, displayNa
 	slog.Info("[dev-email] email change verification", "to", to, "name", displayName, "link", link)
 	return nil
 }
+
+func (l *LogSender) SendWorkspaceInvite(_ context.Context, to, workspaceName, inviterName, link string) error {
+	slog.Info("[dev-email] workspace invite", "to", to, "workspace", workspaceName, "inviter", inviterName, "link", link)
+	return nil
+}

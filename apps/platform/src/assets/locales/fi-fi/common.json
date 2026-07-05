@@ -147,5 +147,227 @@
       "deadline": "Määräaika",
       "daysLeft": "{{count}} päivää"
     }
+  },
+  "workspace": {
+    "common": {
+      "loading": "Ladataan…",
+      "saving": "Tallennetaan…",
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "creating": "Luodaan…",
+      "edit": "Muokkaa",
+      "delete": "Poista",
+      "saved": "Tallennettu"
+    },
+    "nav": {
+      "general": "Yleiset",
+      "overview": "Yleiskatsaus",
+      "members": "Jäsenet",
+      "roles": "Roolit",
+      "invites": "Kutsut",
+      "settings": "Asetukset",
+      "allWorkspaces": "Kaikki työtilat"
+    },
+    "errors": {
+      "notFound": "Tämä työtila ei ole käytettävissä."
+    },
+    "list": {
+      "title": "Työtilat",
+      "new": "Uusi työtila",
+      "nameLabel": "Työtilan nimi",
+      "namePlaceholder": "Acme Procurement",
+      "create": "Luo työtila",
+      "empty": "Et kuulu vielä mihinkään työtilaan.",
+      "createFirst": "Luo ensimmäinen työtilasi"
+    },
+    "overview": {
+      "welcome": "Tervetuloa työtilaan",
+      "workbenchSoon": "Yhteinen työympäristö, jossa tiimisi voi työstää tarjouspyyntöjä yhdessä, on tulossa pian. Toistaiseksi voit hallita jäseniä, rooleja ja kutsuja yllä olevien välilehtien kautta."
+    },
+    "members": {
+      "title": "Jäsenet",
+      "owner": "Omistaja",
+      "role": "Rooli",
+      "remove": "Poista"
+    },
+    "roles": {
+      "title": "Roolit",
+      "new": "Uusi rooli",
+      "createTitle": "Uusi rooli",
+      "editTitle": "Muokkaa roolia",
+      "nameLabel": "Roolin nimi",
+      "namePlaceholder": "Muokkaaja",
+      "permissionsLabel": "Käyttöoikeudet",
+      "default": "Oletus",
+      "permCount": "{{count}} käyttöoikeutta"
+    },
+    "permissions": {
+      "viewWorkspace": "Näytä työtila",
+      "manageWorkspace": "Hallitse työtilaa",
+      "manageMembers": "Hallitse jäseniä",
+      "manageRoles": "Hallitse rooleja",
+      "createInvite": "Luo kutsuja",
+      "manageInvites": "Hallitse kutsuja",
+      "administrator": "Järjestelmänvalvoja"
+    },
+    "permissionsHint": {
+      "viewWorkspace": "Näe työtila ja sen sisältö",
+      "manageWorkspace": "Nimeä työtila uudelleen ja muuta sen asetuksia",
+      "manageMembers": "Muuta jäsenten rooleja ja poista jäseniä",
+      "manageRoles": "Luo, muokkaa ja poista rooleja",
+      "createInvite": "Kutsu ihmisiä sähköpostitse tai linkin avulla",
+      "manageInvites": "Peruuta kutsut ja linkit",
+      "administrator": "Täysi käyttöoikeus — ohittaa jokaisen käyttöoikeustarkistuksen"
+    },
+    "invites": {
+      "emailTitle": "Kutsu sähköpostitse",
+      "email": "Sähköpostiosoite",
+      "role": "Rooli",
+      "send": "Lähetä kutsu",
+      "revoke": "Peruuta",
+      "linkTitle": "Jaettavat linkit",
+      "maxUses": "Käyttökertojen enimmäismäärä (0 = rajoittamaton)",
+      "createLink": "Luo linkki",
+      "copy": "Kopioi",
+      "copied": "Kopioitu",
+      "usesLimited": "{{used}} / {{max}} käyttökertaa",
+      "usesUnlimited": "{{used}} käyttökertaa",
+      "noPermission": "Sinulla ei ole oikeutta hallita kutsuja."
+    },
+    "settings": {
+      "detailsTitle": "Työtilan tiedot",
+      "name": "Nimi",
+      "slug": "Slug",
+      "transferTitle": "Siirrä omistajuus",
+      "newOwner": "Uusi omistaja",
+      "selectMember": "Valitse jäsen…",
+      "transfer": "Siirrä",
+      "dangerTitle": "Vaaravyöhyke",
+      "deleteHint": "Poista tämä työtila ja kaikki sen tiedot pysyvästi.",
+      "delete": "Poista työtila",
+      "leaveHint": "Poistu tästä työtilasta. Voit liittyä uudelleen uudella kutsulla.",
+      "leave": "Poistu työtilasta"
+    },
+    "accept": {
+      "loading": "Tarkistetaan kutsua…",
+      "invalidTitle": "Kutsu ei ole käytettävissä",
+      "invalidBody": "Tämä kutsu on virheellinen tai vanhentunut.",
+      "title": "Sinut on kutsuttu",
+      "body": "Liity työtilaan {{workspace}} roolilla {{role}}.",
+      "accept": "Hyväksy kutsu",
+      "accepting": "Liitytään…",
+      "signIn": "Kirjaudu sisään hyväksyäksesi"
+    },
+    "join": {
+      "loading": "Tarkistetaan linkkiä…",
+      "invalidTitle": "Linkki ei ole käytettävissä",
+      "invalidBody": "Tämä kutsulinkki on virheellinen, vanhentunut tai kokonaan käytetty.",
+      "title": "Liity työtilaan",
+      "body": "Liity työtilaan {{workspace}} roolilla {{role}}.",
+      "join": "Liity työtilaan",
+      "joining": "Liitytään…",
+      "signIn": "Kirjaudu sisään liittyäksesi"
+    },
+    "switcher": {
+      "label": "Työtilat",
+      "manage": "Kaikki työtilat"
+    }
+  },
+  "workbench": {
+    "common": {
+      "loading": "Ladataan…",
+      "saving": "Tallennetaan…",
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "creating": "Luodaan…",
+      "edit": "Muokkaa",
+      "delete": "Poista",
+      "saved": "Tallennettu",
+      "confirm": "Vahvista"
+    },
+    "nav": {
+      "general": "Yleiset",
+      "members": "Jäsenet",
+      "roles": "Roolit",
+      "settings": "Asetukset",
+      "allWorkbenches": "Kaikki työpöydät"
+    },
+    "errors": {
+      "notFound": "Tämä työpöytä ei ole käytettävissä."
+    },
+    "breadcrumb": {
+      "workspaces": "Työtilat",
+      "workbenches": "Työpöydät"
+    },
+    "visibility": {
+      "label": "Näkyvyys",
+      "private": "Yksityinen",
+      "shared": "Jaettu",
+      "makePrivate": "Tee yksityiseksi",
+      "makeShared": "Tee jaetuksi",
+      "hint": "Jaetut työpöydät näkyvät työtilan jäsenille, joilla on oikeus tarkastella työpöytiä."
+    },
+    "list": {
+      "title": "Työpöydät",
+      "new": "Uusi työpöytä",
+      "nameLabel": "Työpöydän nimi",
+      "namePlaceholder": "Q3-tarjoukset",
+      "descriptionLabel": "Kuvaus",
+      "create": "Luo työpöytä",
+      "empty": "Ei vielä työpöytiä.",
+      "createFirst": "Luo ensimmäinen työpöytäsi"
+    },
+    "members": {
+      "title": "Jäsenet",
+      "owner": "Omistaja",
+      "role": "Rooli",
+      "remove": "Poista",
+      "add": "Lisää",
+      "addLabel": "Lisää jäsen",
+      "selectMember": "Valitse jäsen…"
+    },
+    "roles": {
+      "title": "Roolit",
+      "new": "Uusi rooli",
+      "createTitle": "Uusi rooli",
+      "editTitle": "Muokkaa roolia",
+      "nameLabel": "Roolin nimi",
+      "namePlaceholder": "Muokkaaja",
+      "permissionsLabel": "Käyttöoikeudet",
+      "default": "Oletus",
+      "permCount": "{{count}} käyttöoikeutta"
+    },
+    "permissions": {
+      "viewWorkbench": "Näytä työpöytä",
+      "manageWorkbench": "Hallitse työpöytää",
+      "manageMembers": "Hallitse jäseniä",
+      "manageRoles": "Hallitse rooleja",
+      "administrator": "Järjestelmänvalvoja"
+    },
+    "permissionsHint": {
+      "viewWorkbench": "Näe työpöytä ja sen sisältö",
+      "manageWorkbench": "Nimeä uudelleen, muokkaa ja vaihda näkyvyyttä",
+      "manageMembers": "Lisää, poista ja vaihda jäsenten rooleja",
+      "manageRoles": "Luo, muokkaa ja poista rooleja",
+      "administrator": "Täysi käyttöoikeus — ohittaa jokaisen käyttöoikeustarkistuksen"
+    },
+    "settings": {
+      "detailsTitle": "Työpöydän tiedot",
+      "name": "Nimi",
+      "description": "Kuvaus",
+      "visibilityTitle": "Näkyvyys",
+      "visibility": "Näkyvyys",
+      "transferTitle": "Siirrä omistajuus",
+      "newOwner": "Uusi omistaja",
+      "selectMember": "Valitse jäsen…",
+      "transfer": "Siirrä",
+      "dangerTitle": "Vaaravyöhyke",
+      "deleteHint": "Poista tämä työpöytä ja kaikki sen tiedot pysyvästi.",
+      "delete": "Poista työpöytä",
+      "leaveHint": "Poistu tästä työpöydästä. Ylläpitäjä voi lisätä sinut uudelleen.",
+      "leave": "Poistu työpöydästä",
+      "confirmDelete": "Poistetaanko tämä työpöytä?",
+      "confirmLeave": "Poistutaanko tästä työpöydästä?"
+    }
   }
 }

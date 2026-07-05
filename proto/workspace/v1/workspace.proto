@@ -1,0 +1,240 @@
+syntax = "proto3";
+package workspace.v1;
+
+option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1;workspacev1";
+
+import "auth/v1/auth.proto";
+
+// WorkspaceService manages multi-user workspaces with bitwise RBAC, membership,
+// and invitations. Every workspace-scoped request carries `workspace_id` as its
+// first field; the server resolves the caller's membership + role and enforces
+// the required permission bit per request. Accept/Join/Preview RPCs are keyed by
+// token/code instead. The two Preview RPCs are safe to call unauthenticated.
+service WorkspaceService {
+  // Workspace lifecycle
+  rpc CreateWorkspace(CreateWorkspaceRequest) returns (CreateWorkspaceResponse);
+  rpc ListMyWorkspaces(ListMyWorkspacesRequest) returns (ListMyWorkspacesResponse);
+  rpc GetWorkspace(GetWorkspaceRequest) returns (GetWorkspaceResponse);
+  rpc UpdateWorkspace(UpdateWorkspaceRequest) returns (UpdateWorkspaceResponse);
+  rpc DeleteWorkspace(DeleteWorkspaceRequest) returns (DeleteWorkspaceResponse);
+  rpc TransferOwnership(TransferOwnershipRequest) returns (TransferOwnershipResponse);
+  rpc LeaveWorkspace(LeaveWorkspaceRequest) returns (LeaveWorkspaceResponse);
+
+  // Members
+  rpc ListMembers(ListMembersRequest) returns (ListMembersResponse);
+  rpc ChangeMemberRole(ChangeMemberRoleRequest) returns (ChangeMemberRoleResponse);
+  rpc RemoveMember(RemoveMemberRequest) returns (RemoveMemberResponse);
+
+  // Roles
+  rpc ListRoles(ListRolesRequest) returns (ListRolesResponse);
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse);
+
+  // Email invitations
+  rpc InviteByEmail(InviteByEmailRequest) returns (InviteByEmailResponse);
+  rpc ListEmailInvitations(ListEmailInvitationsRequest) returns (ListEmailInvitationsResponse);
+  rpc RevokeEmailInvitation(RevokeEmailInvitationRequest) returns (RevokeEmailInvitationResponse);
+  rpc AcceptEmailInvite(AcceptEmailInviteRequest) returns (AcceptEmailInviteResponse);
+  rpc PreviewEmailInvite(PreviewEmailInviteRequest) returns (PreviewEmailInviteResponse);
+
+  // Invite links
+  rpc CreateInviteLink(CreateInviteLinkRequest) returns (CreateInviteLinkResponse);
+  rpc ListInviteLinks(ListInviteLinksRequest) returns (ListInviteLinksResponse);
+  rpc RevokeInviteLink(RevokeInviteLinkRequest) returns (RevokeInviteLinkResponse);
+  rpc PreviewInviteLink(PreviewInviteLinkRequest) returns (PreviewInviteLinkResponse);
+  rpc JoinViaInviteLink(JoinViaInviteLinkRequest) returns (JoinViaInviteLinkResponse);
+}
+
+// ── Entities ──────────────────────────────────────────────────────────────
+
+message Workspace {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+  string owner_id = 4;
+  string created_at = 5; // RFC3339
+  string updated_at = 6; // RFC3339
+}
+
+message Role {
+  string id = 1;
+  string workspace_id = 2;
+  string name = 3;
+  uint64 permissions = 4; // bitmask
+  bool is_default = 5;
+  string created_at = 6; // RFC3339
+}
+
+message Member {
+  string user_id = 1;
+  string workspace_id = 2;
+  string role_id = 3;
+  string role_name = 4;
+  uint64 permissions = 5; // effective bitmask of the assigned role
+  auth.v1.UserInfo user = 6;
+  string joined_at = 7; // RFC3339
+}
+
+message EmailInvitation {
+  string id = 1;
+  string workspace_id = 2;
+  string email = 3;
+  string role_id = 4;
+  string invited_by = 5;
+  string expires_at = 6; // RFC3339
+  string created_at = 7; // RFC3339
+  // the token is only ever mailed, never returned
+}
+
+message InviteLink {
+  string id = 1;
+  string workspace_id = 2;
+  string code = 3; // public, embedded in the shareable URL
+  string role_id = 4;
+  string created_by = 5;
+  int32 max_uses = 6; // 0 = unlimited
+  int32 use_count = 7;
+  string expires_at = 8; // RFC3339, empty = never
+  bool revoked = 9;
+  string created_at = 10; // RFC3339
+}
+
+// ── Workspace lifecycle ─────────────────────────────────────────────────────
+
+message CreateWorkspaceRequest {
+  string name = 1;
+  string slug = 2; // optional; derived from name when empty
+}
+message CreateWorkspaceResponse { Workspace workspace = 1; }
+
+message ListMyWorkspacesRequest {}
+message ListMyWorkspacesResponse { repeated Workspace workspaces = 1; }
+
+message GetWorkspaceRequest { string workspace_id = 1; }
+message GetWorkspaceResponse {
+  Workspace workspace = 1;
+  uint64 my_permissions = 2; // caller's effective permissions in this workspace
+}
+
+message UpdateWorkspaceRequest {
+  string workspace_id = 1;
+  string name = 2;
+  string slug = 3;
+}
+message UpdateWorkspaceResponse { Workspace workspace = 1; }
+
+message DeleteWorkspaceRequest { string workspace_id = 1; }
+message DeleteWorkspaceResponse {}
+
+message TransferOwnershipRequest {
+  string workspace_id = 1;
+  string new_owner_user_id = 2;
+}
+message TransferOwnershipResponse {}
+
+message LeaveWorkspaceRequest { string workspace_id = 1; }
+message LeaveWorkspaceResponse {}
+
+// ── Members ─────────────────────────────────────────────────────────────────
+
+message ListMembersRequest { string workspace_id = 1; }
+message ListMembersResponse { repeated Member members = 1; }
+
+message ChangeMemberRoleRequest {
+  string workspace_id = 1;
+  string user_id = 2;
+  string role_id = 3;
+}
+message ChangeMemberRoleResponse { Member member = 1; }
+
+message RemoveMemberRequest {
+  string workspace_id = 1;
+  string user_id = 2;
+}
+message RemoveMemberResponse {}
+
+// ── Roles ───────────────────────────────────────────────────────────────────
+
+message ListRolesRequest { string workspace_id = 1; }
+message ListRolesResponse { repeated Role roles = 1; }
+
+message CreateRoleRequest {
+  string workspace_id = 1;
+  string name = 2;
+  uint64 permissions = 3;
+}
+message CreateRoleResponse { Role role = 1; }
+
+message UpdateRoleRequest {
+  string workspace_id = 1;
+  string role_id = 2;
+  string name = 3;
+  uint64 permissions = 4;
+}
+message UpdateRoleResponse { Role role = 1; }
+
+message DeleteRoleRequest {
+  string workspace_id = 1;
+  string role_id = 2;
+}
+message DeleteRoleResponse {}
+
+// ── Email invitations ───────────────────────────────────────────────────────
+
+message InviteByEmailRequest {
+  string workspace_id = 1;
+  string email = 2;
+  string role_id = 3;
+  string locale = 4;
+}
+message InviteByEmailResponse { EmailInvitation invitation = 1; }
+
+message ListEmailInvitationsRequest { string workspace_id = 1; }
+message ListEmailInvitationsResponse { repeated EmailInvitation invitations = 1; }
+
+message RevokeEmailInvitationRequest {
+  string workspace_id = 1;
+  string invitation_id = 2;
+}
+message RevokeEmailInvitationResponse {}
+
+message AcceptEmailInviteRequest { string token = 1; }
+message AcceptEmailInviteResponse { Workspace workspace = 1; }
+
+message PreviewEmailInviteRequest { string token = 1; }
+message PreviewEmailInviteResponse {
+  string workspace_name = 1;
+  string role_name = 2;
+  string email = 3;
+  bool valid = 4;
+}
+
+// ── Invite links ────────────────────────────────────────────────────────────
+
+message CreateInviteLinkRequest {
+  string workspace_id = 1;
+  string role_id = 2;
+  int32 max_uses = 3; // 0 = unlimited
+  string expires_at = 4; // RFC3339, empty = never
+}
+message CreateInviteLinkResponse { InviteLink link = 1; }
+
+message ListInviteLinksRequest { string workspace_id = 1; }
+message ListInviteLinksResponse { repeated InviteLink links = 1; }
+
+message RevokeInviteLinkRequest {
+  string workspace_id = 1;
+  string link_id = 2;
+}
+message RevokeInviteLinkResponse {}
+
+message PreviewInviteLinkRequest { string code = 1; }
+message PreviewInviteLinkResponse {
+  string workspace_name = 1;
+  string role_name = 2;
+  bool valid = 3;
+}
+
+message JoinViaInviteLinkRequest { string code = 1; }
+message JoinViaInviteLinkResponse { Workspace workspace = 1; }

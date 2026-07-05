@@ -1,7 +1,8 @@
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate, useParams } from '@tanstack/react-router';
 import {
   ChevronsUpDown,
   Home,
+  LayoutGrid,
   LogOut,
   Menu,
   PanelLeftClose,
@@ -10,13 +11,17 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
-import { type ReactNode, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '~/features/landing/components/atoms';
+import { WorkspaceSwitcher } from '~/features/workspace/components/organisms/workspace-switcher';
 import { detectLocale } from '~/i18n/detect-locale';
 import { authClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
+import { useSidebarStore } from '~/store/sidebar';
+import { useWorkspaceStore } from '~/store/workspace';
+import { sidebarNavKeys } from './sidebar-nav';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -53,6 +58,13 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
   const user = useAuthStore((s) => s.user);
 
   const initial = (user?.displayName?.[0] ?? user?.email?.[0] ?? '?').toUpperCase();
+  // Keep the workspace nav visible even on workspace-agnostic routes (e.g. Explore)
+  // by falling back to the remembered active workspace — navigating there should
+  // not feel like leaving the workspace.
+  const { workspaceId: routeWorkspaceId } = useParams({ strict: false });
+  const currentWorkspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
+  const workspaceId = routeWorkspaceId ?? currentWorkspaceId ?? undefined;
+  const keys = sidebarNavKeys(Boolean(workspaceId));
 
   async function handleLogout() {
     try {
@@ -84,21 +96,59 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
         )}
       </div>
 
+      {/* Workspace switcher */}
+      <div className="px-4 pb-1">
+        <WorkspaceSwitcher />
+      </div>
+
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-4 py-3">
         <ul className="space-y-0.5">
-          <li>
-            <Link to="/" className={NAV_ITEM}>
-              <Home size={16} aria-hidden="true" className="shrink-0" />
-              Overview
-            </Link>
-          </li>
-          <li>
-            <Link to="/explore" className={NAV_ITEM}>
-              <Sparkles size={16} aria-hidden="true" className="shrink-0" />
-              Explore
-            </Link>
-          </li>
+          {keys.includes('overview') && workspaceId && (
+            <li>
+              <Link
+                to="/workspaces/$workspaceId"
+                params={{ workspaceId }}
+                activeOptions={{ exact: true }}
+                className={NAV_ITEM}
+              >
+                <Home size={16} aria-hidden="true" className="shrink-0" />
+                Overview
+              </Link>
+            </li>
+          )}
+          {keys.includes('workbenches') && workspaceId && (
+            <li>
+              <Link
+                to="/workspaces/$workspaceId/workbenches"
+                params={{ workspaceId }}
+                className={NAV_ITEM}
+              >
+                <LayoutGrid size={16} aria-hidden="true" className="shrink-0" />
+                Workbenches
+              </Link>
+            </li>
+          )}
+          {keys.includes('explore') && (
+            <li>
+              <Link to="/explore" className={NAV_ITEM}>
+                <Sparkles size={16} aria-hidden="true" className="shrink-0" />
+                Explore
+              </Link>
+            </li>
+          )}
+          {keys.includes('settings') && workspaceId && (
+            <li>
+              <Link
+                to="/workspaces/$workspaceId/settings"
+                params={{ workspaceId }}
+                className={NAV_ITEM}
+              >
+                <Settings size={16} aria-hidden="true" className="shrink-0" />
+                Settings
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 
@@ -162,36 +212,17 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
 
 export function AccountLayout({ children }: AccountLayoutProps) {
   const { i18n } = useTranslation();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(() => {
-    try {
-      return localStorage.getItem('sidebar-collapsed') === 'true';
-    } catch {
-      return false;
-    }
-  });
-
-  function toggleCollapsed() {
-    setCollapsed((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem('sidebar-collapsed', String(next));
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  }
+  const collapsed = useSidebarStore((s) => s.collapsed);
+  const drawerOpen = useSidebarStore((s) => s.drawerOpen);
+  const openDrawer = useSidebarStore((s) => s.openDrawer);
+  const closeDrawer = useSidebarStore((s) => s.closeDrawer);
+  const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed);
 
   return (
     <div className="relative flex min-h-screen bg-cream-100 lg:h-screen lg:overflow-hidden">
       {/* ── Mobile header ── */}
       <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-cream-200 bg-cream-100 px-4 lg:hidden">
-        <Button
-          onPress={() => setSidebarOpen(true)}
-          aria-label="Open navigation"
-          className={ICON_BTN}
-        >
+        <Button onPress={openDrawer} aria-label="Open navigation" className={ICON_BTN}>
           <Menu size={18} aria-hidden="true" />
         </Button>
         <Link
@@ -205,20 +236,20 @@ export function AccountLayout({ children }: AccountLayoutProps) {
       </header>
 
       {/* ── Mobile overlay ── */}
-      {sidebarOpen && (
+      {drawerOpen && (
         <button
           type="button"
           className="fixed inset-0 z-40 cursor-default bg-black/20 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
+          onClick={closeDrawer}
           aria-label="Close navigation"
         />
       )}
 
       {/* ── Mobile sidebar drawer ── */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 overflow-hidden bg-cream-100 shadow-soft transition-transform duration-200 ease-in-out lg:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`fixed inset-y-0 left-0 z-50 w-64 overflow-hidden bg-cream-100 shadow-soft transition-transform duration-200 ease-in-out lg:hidden ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <SidebarContent showClose={true} onClose={() => setSidebarOpen(false)} />
+        <SidebarContent showClose={true} onClose={closeDrawer} />
       </aside>
 
       {/* ── Desktop sidebar — floating rounded card ── */}
@@ -226,7 +257,7 @@ export function AccountLayout({ children }: AccountLayoutProps) {
         className={`fixed inset-y-3 left-3 hidden overflow-hidden rounded-3xl bg-cream-100 transition-[width] duration-200 ease-in-out lg:block ${collapsed ? 'w-0' : 'w-64'}`}
       >
         <div className="h-full w-64">
-          <SidebarContent showClose={false} onClose={() => setSidebarOpen(false)} />
+          <SidebarContent showClose={false} onClose={closeDrawer} />
         </div>
       </aside>
 

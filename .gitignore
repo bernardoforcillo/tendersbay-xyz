@@ -47,3 +47,4 @@ docs/superpowers/
 # The committed *secret.yaml under infrastructure/ are empty templates only.
 local.secret.yaml
 *.local.secret.yaml
+docs/postmortems/*
