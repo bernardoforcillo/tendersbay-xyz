@@ -63,17 +63,13 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-10 flex flex-col gap-4 border-b border-cream-200 bg-cream-100 px-4 py-3 lg:bg-white lg:px-6 lg:py-4">
-      <div className="flex items-start gap-2">
+      {breadcrumb}
+      <div className="flex items-center gap-3">
         <SidebarToggle />
+        {leading}
         <div className="min-w-0 flex-1">
-          {breadcrumb}
-          <div className="flex items-center gap-3">
-            {leading}
-            <div className="min-w-0">
-              {title && <h1 className="truncate font-display text-2xl text-ink-900">{title}</h1>}
-              {subtitle && <p className="truncate text-sm text-ink-500">{subtitle}</p>}
-            </div>
-          </div>
+          {title && <h1 className="truncate font-display text-2xl text-ink-900">{title}</h1>}
+          {subtitle && <p className="truncate text-sm text-ink-500">{subtitle}</p>}
         </div>
         {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
       </div>
