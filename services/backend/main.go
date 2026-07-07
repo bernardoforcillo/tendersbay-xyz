@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	agentv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
@@ -20,7 +21,9 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/probe"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/config"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
@@ -107,15 +110,29 @@ func main() {
 		workbenchUow,
 	)
 
+	// Agent / chat service
+	chatRepo := postgres.NewChatRepo(db)
+	creditRepo := postgres.NewWorkspaceCreditRepo(db)
+	pricingRepo := postgres.NewAgentPricingRepo(db)
+	usageRepo := postgres.NewTokenUsageRepo(db)
+
+	agentRegistry := agent.NewRegistry(cfg.FireworksAPIKey)
+	agentRegistry.RegisterDefaults()
+
+	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc)
+
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
+	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc)
 
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
 	workspacePath, workspaceRPC := workspacev1connect.NewWorkspaceServiceHandler(workspaceHandler)
 	workbenchPath, workbenchRPC := workbenchv1connect.NewWorkbenchServiceHandler(workbenchHandler)
+	agentPath, agentRPC := agentv1connect.NewAgentServiceHandler(agentHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
@@ -124,6 +141,7 @@ func main() {
 	mux.Handle(userPath, userRPC)
 	mux.Handle(workspacePath, workspaceRPC)
 	mux.Handle(workbenchPath, workbenchRPC)
+	mux.Handle(agentPath, agentRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
 	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(mux))
@@ -132,7 +150,7 @@ func main() {
 		Addr:         ":" + cfg.Port,
 		Handler:      handler,
 		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
+		WriteTimeout: 5 * time.Minute,
 		IdleTimeout:  120 * time.Second,
 	}
 

@@ -8,6 +8,7 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -138,6 +139,10 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeFailedPrecondition, err)
 	case errors.Is(err, workbench.ErrAlreadyMember):
 		return connect.NewError(connect.CodeAlreadyExists, err)
+
+	// Agent domain
+	case errors.Is(err, agent.ErrInsufficientCredits):
+		return connect.NewError(connect.CodeResourceExhausted, err)
 
 	default:
 		return connect.NewError(connect.CodeInternal, err)

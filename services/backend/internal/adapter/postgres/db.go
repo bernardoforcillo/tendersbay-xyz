@@ -29,5 +29,6 @@ func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 	// migrate_workspaces.go), mixed with the FS-based 0001 by version order.
 	m.Add(migrateWorkspaces())
 	m.Add(migrateWorkbenches())
+	m.Add(migrateAgent())
 	return db, sqlDB, m.Up(ctx)
 }
