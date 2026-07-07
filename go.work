@@ -6,4 +6,5 @@ use (
 	./go-services/token
 	./go-services/tender
 	./services/backend
+	./services/ingestion
 )
