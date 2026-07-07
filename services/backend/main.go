@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry"
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
@@ -25,7 +26,6 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
-	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/telemetry"
 )
 
 func main() {
