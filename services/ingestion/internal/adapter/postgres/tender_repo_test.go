@@ -169,6 +169,41 @@ func TestSave_DocumentAndLotUpsertAreIdempotent(t *testing.T) {
 	}
 }
 
+func TestSave_CPVSecondaryRoundTripsBackslashesAndQuotes(t *testing.T) {
+	repo, sqlDB := testRepo(t)
+	ctx := context.Background()
+	source, ref := "test-repo", "cpv-secondary-escaping-1"
+	cleanupTender(t, sqlDB, source, ref)
+
+	want := []string{`a\b`, `c"d`, `e\"f`}
+	t1 := tender.Tender{
+		Source: source, SourceRef: ref, Title: "CPV escaping", Status: tender.StatusOpen,
+		CPVSecondary: want,
+	}
+	if _, err := repo.Save(ctx, []tender.Tender{t1}); err != nil {
+		t.Fatalf("Save: %v", err)
+	}
+
+	// Index into the array directly rather than parsing Postgres's array-literal
+	// text format in Go — sidesteps needing a second array parser to test the
+	// first one.
+	var got1, got2, got3 string
+	row := sqlDB.QueryRowContext(ctx,
+		`SELECT cpv_secondary[1], cpv_secondary[2], cpv_secondary[3]
+		 FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2`,
+		source, ref)
+	if err := row.Scan(&got1, &got2, &got3); err != nil {
+		t.Fatalf("scan cpv_secondary elements: %v", err)
+	}
+
+	got := []string{got1, got2, got3}
+	for i := range want {
+		if got[i] != want[i] {
+			t.Fatalf("cpv_secondary[%d] = %q, want %q (backslash or quote was mangled)", i+1, got[i], want[i])
+		}
+	}
+}
+
 func TestRecordRun_WritesAuditRow(t *testing.T) {
 	repo, sqlDB := testRepo(t)
 	ctx := context.Background()

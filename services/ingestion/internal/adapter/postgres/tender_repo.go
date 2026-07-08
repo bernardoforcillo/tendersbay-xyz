@@ -89,7 +89,9 @@ VALUES ($1, $2, $3, $4, $5, $6, $7)
 func pgTextArray(vals []string) string {
 	quoted := make([]string, len(vals))
 	for i, v := range vals {
-		quoted[i] = `"` + strings.ReplaceAll(v, `"`, `\"`) + `"`
+		escaped := strings.ReplaceAll(v, `\`, `\\`)
+		escaped = strings.ReplaceAll(escaped, `"`, `\"`)
+		quoted[i] = `"` + escaped + `"`
 	}
 	return "{" + strings.Join(quoted, ",") + "}"
 }
