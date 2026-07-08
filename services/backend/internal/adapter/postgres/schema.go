@@ -265,7 +265,7 @@ type DBWorkbenchMembership struct {
 var (
 	ChatSessions           = pg.NewTable("chat_sessions")
 	ChatSessionID          = pg.Add(ChatSessions, pg.UUID("id").Default("gen_random_uuid()").PrimaryKey())
-	ChatSessionMemberID    = pg.Add(ChatSessions, pg.Text("member_id").NotNull().References(UserID, pg.OnDelete("CASCADE")))
+	ChatSessionMemberID    = pg.Add(ChatSessions, pg.UUID("member_id").NotNull().References(UserID, pg.OnDelete("CASCADE")))
 	ChatSessionWorkspaceID = pg.Add(ChatSessions, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
 	ChatSessionWorkbenchID = pg.Add(ChatSessions, pg.UUID("workbench_id").References(WBID, pg.OnDelete("SET NULL")))
 	ChatSessionAgentType   = pg.Add(ChatSessions, pg.Text("agent_type").NotNull())
