@@ -41,17 +41,23 @@ BACKEND_PID=$!
 (cd "$ROOT/apps/platform" && PORT=3000 VITE_API_URL=http://localhost:8080 pnpm dev) &
 PLATFORM_PID=$!
 
+# ── Ingestion (Air) — batch worker, no port; reruns one full cycle per rebuild,
+# scoped to its own `tenders` schema inside the same database as backend ─────
+(cd "$ROOT/services/ingestion" && air) &
+INGESTION_PID=$!
+
 echo ''
-echo '  Backend  (Air)  → http://localhost:8080'
-echo '  Platform (Air)  → http://localhost:3000'
-echo '  Frontend (Vite) → http://localhost:5173'
+echo '  Backend   (Air)  → http://localhost:8080'
+echo '  Platform  (Air)  → http://localhost:3000'
+echo '  Frontend  (Vite) → http://localhost:5173'
+echo '  Ingestion (Air)  → no port; runs one ingestion cycle per rebuild'
 echo '  Press Ctrl+C to stop everything.'
 echo ''
 
 cleanup() {
   echo 'Stopping…'
-  kill "$BACKEND_PID" "$PLATFORM_PID" 2>/dev/null || true
+  kill "$BACKEND_PID" "$PLATFORM_PID" "$INGESTION_PID" 2>/dev/null || true
   $COMPOSE stop
 }
 trap cleanup INT TERM
-wait "$BACKEND_PID" "$PLATFORM_PID"
+wait "$BACKEND_PID" "$PLATFORM_PID" "$INGESTION_PID"

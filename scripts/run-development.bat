@@ -49,10 +49,15 @@ set PORT=3000
 set VITE_API_URL=http://localhost:8080
 start "Platform (Vite+Air)" cmd /k "cd /d "%ROOT%\apps\platform" && pnpm dev"
 
+:: ── Ingestion (Air) — batch worker, no port; reruns one full cycle per rebuild,
+:: scoped to its own `tenders` schema inside the same database as backend ─────
+start "Ingestion (Air)" cmd /k "cd /d "%ROOT%\services\ingestion" && air"
+
 echo.
-echo   Backend  (Air)  ^>  http://localhost:8080
-echo   Platform (Air)  ^>  http://localhost:3000
-echo   Frontend (Vite) ^>  http://localhost:5173
+echo   Backend   (Air)  ^>  http://localhost:8080
+echo   Platform  (Air)  ^>  http://localhost:3000
+echo   Frontend  (Vite) ^>  http://localhost:5173
+echo   Ingestion (Air)  ^>  no port; runs one ingestion cycle per rebuild
 echo   Close the opened windows to stop the servers.
 echo   Run: %ENGINE% -f docker-compose.dev.yml stop   ^<-- to stop postgres
 echo.
