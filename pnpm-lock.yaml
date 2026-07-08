@@ -206,6 +206,8 @@ importers:
 
   services/backend: {}
 
+  services/ingestion: {}
+
 packages:
 
   '@adobe/css-tools@4.5.0':
