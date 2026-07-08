@@ -127,13 +127,13 @@ func main() {
 	agentRegistry.RegisterDefaults()
 
 	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
-	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
-	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc)
+	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, memberRepo)
 
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)

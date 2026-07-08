@@ -15,10 +15,11 @@ import (
 type AgentHandler struct {
 	svc       *agent.Service
 	creditSvc *credits.Service
+	members   agent.MemberRepository
 }
 
-func NewAgentHandler(svc *agent.Service, creditSvc *credits.Service) *AgentHandler {
-	return &AgentHandler{svc: svc, creditSvc: creditSvc}
+func NewAgentHandler(svc *agent.Service, creditSvc *credits.Service, members agent.MemberRepository) *AgentHandler {
+	return &AgentHandler{svc: svc, creditSvc: creditSvc, members: members}
 }
 
 var _ agentv1connect.AgentServiceHandler = (*AgentHandler)(nil)
@@ -44,9 +45,7 @@ func (h *AgentHandler) ListChats(ctx context.Context, req *connect.Request[agent
 	if err != nil {
 		return nil, err
 	}
-	_ = uid
-
-	sessions, err := h.svc.ListChats(ctx, req.Msg.WorkspaceId)
+	sessions, err := h.svc.ListChats(ctx, uid, req.Msg.WorkspaceId)
 	if err != nil {
 		return nil, toConnectError(err)
 	}
@@ -64,9 +63,7 @@ func (h *AgentHandler) GetChat(ctx context.Context, req *connect.Request[agentv1
 	if err != nil {
 		return nil, err
 	}
-	_ = uid
-
-	session, err := h.svc.GetChat(ctx, req.Msg.ChatId)
+	session, err := h.svc.GetChat(ctx, uid, req.Msg.ChatId)
 	if err != nil {
 		return nil, toConnectError(err)
 	}
@@ -81,9 +78,7 @@ func (h *AgentHandler) UpdateChat(ctx context.Context, req *connect.Request[agen
 	if err != nil {
 		return nil, err
 	}
-	_ = uid
-
-	session, err := h.svc.UpdateChat(ctx, req.Msg.ChatId, req.Msg.Title, req.Msg.WorkbenchId)
+	session, err := h.svc.UpdateChat(ctx, uid, req.Msg.ChatId, req.Msg.Title, req.Msg.WorkbenchId)
 	if err != nil {
 		return nil, toConnectError(err)
 	}
@@ -98,9 +93,7 @@ func (h *AgentHandler) DeleteChat(ctx context.Context, req *connect.Request[agen
 	if err != nil {
 		return nil, err
 	}
-	_ = uid
-
-	if err := h.svc.DeleteChat(ctx, req.Msg.ChatId); err != nil {
+	if err := h.svc.DeleteChat(ctx, uid, req.Msg.ChatId); err != nil {
 		return nil, toConnectError(err)
 	}
 
@@ -112,9 +105,7 @@ func (h *AgentHandler) GetMessages(ctx context.Context, req *connect.Request[age
 	if err != nil {
 		return nil, err
 	}
-	_ = uid
-
-	msgs, err := h.svc.GetMessages(ctx, req.Msg.ChatId)
+	msgs, err := h.svc.GetMessages(ctx, uid, req.Msg.ChatId)
 	if err != nil {
 		return nil, toConnectError(err)
 	}
@@ -133,7 +124,7 @@ func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agen
 		return err
 	}
 
-	session, err := h.svc.GetChat(ctx, req.Msg.ChatId)
+	session, err := h.svc.GetChat(ctx, uid, req.Msg.ChatId)
 	if err != nil {
 		return toConnectError(err)
 	}
@@ -193,7 +184,9 @@ func (h *AgentHandler) GetCredits(ctx context.Context, req *connect.Request[agen
 	if err != nil {
 		return nil, err
 	}
-	_ = uid
+	if _, err := h.members.LoadMembership(ctx, req.Msg.WorkspaceId, uid); err != nil {
+		return nil, toConnectError(err)
+	}
 
 	check, err := h.creditSvc.Check(ctx, req.Msg.WorkspaceId)
 	if err != nil {
