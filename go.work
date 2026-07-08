@@ -4,8 +4,8 @@ use (
 	./apps/platform
 	./go-services/password
 	./go-services/telemetry
-	./go-services/token
 	./go-services/tender
+	./go-services/token
 	./services/backend
 	./services/ingestion
 )
