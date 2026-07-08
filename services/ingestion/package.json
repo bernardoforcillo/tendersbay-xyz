@@ -1,0 +1,11 @@
+{
+  "name": "ingestion",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "go build -o ./bin/ingestion .",
+    "dev": "air",
+    "lint": "gofmt -l . && go vet ./...",
+    "test": "go test ./..."
+  }
+}
