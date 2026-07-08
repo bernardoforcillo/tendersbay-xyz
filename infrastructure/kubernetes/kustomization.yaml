@@ -34,3 +34,6 @@ resources:
   - tendersbay-xyz/backend/canary/certificate.yaml
   - tendersbay-xyz/backend/canary/ingress.yaml
   - tendersbay-xyz/backend/canary/update.yaml
+  # ingestion app — CronJob, main channel only (no canary — see design doc)
+  - tendersbay-xyz/ingestion/main/cronjob.yaml
+  - tendersbay-xyz/ingestion/main/update.yaml
