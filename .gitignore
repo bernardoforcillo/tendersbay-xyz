@@ -24,6 +24,7 @@ pnpm-debug.log*
 # Caches
 coverage/
 *.tsbuildinfo
+.gocache/
 
 # OS / editor
 .DS_Store

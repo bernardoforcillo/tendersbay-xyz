@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/joho/godotenv"
+
 	agentv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
@@ -32,6 +34,11 @@ import (
 )
 
 func main() {
+	// Load a local .env for secrets like FIREWORKS_API_KEY that
+	// scripts/run-development.sh doesn't export (gitignored; absent in
+	// CI/production, where the platform injects env vars directly).
+	_ = godotenv.Load()
+
 	cfg := config.FromEnv()
 
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
