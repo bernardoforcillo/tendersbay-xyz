@@ -27,7 +27,7 @@ export function ChatWindow() {
   useEffect(() => {
     const parent = bottomRef.current?.parentElement;
     if (parent) {
-      animate(parent, { scrollTop: parent.scrollHeight }, { duration: 0.3, easing: 'ease-out' });
+      animate(parent, { scrollTop: parent.scrollHeight }, { duration: 0.3, ease: 'easeOut' });
     }
   });
 
