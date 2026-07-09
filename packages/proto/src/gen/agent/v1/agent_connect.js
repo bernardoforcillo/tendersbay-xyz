@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ChatStreamRequest, ChatStreamResponse, CreateChatRequest, CreateChatResponse, DeleteChatRequest, DeleteChatResponse, GetChatRequest, GetChatResponse, GetCreditsRequest, GetCreditsResponse, GetMessagesRequest, GetMessagesResponse, ListChatsRequest, ListChatsResponse, SubmitChoiceRequest, SubmitChoiceResponse, UpdateChatRequest, UpdateChatResponse } from "./agent_pb.js";
+import { ChatStreamRequest, ChatStreamResponse, CreateChatRequest, CreateChatResponse, DeleteChatRequest, DeleteChatResponse, GetChatRequest, GetChatResponse, GetCreditsRequest, GetCreditsResponse, GetMessagesRequest, GetMessagesResponse, ListChatsRequest, ListChatsResponse, SubmitChoiceRequest, UpdateChatRequest, UpdateChatResponse } from "./agent_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -93,15 +93,17 @@ export const AgentService = {
       kind: MethodKind.ServerStreaming,
     },
     /**
-     * Human-in-the-loop: the user answers a question the agent asked.
+     * Human-in-the-loop: the user answers a question the agent asked. Resumes
+     * the same conversation and streams the continuation — identical event
+     * shapes to ChatStream (token / choice / error / done).
      *
      * @generated from rpc agent.v1.AgentService.SubmitChoice
      */
     submitChoice: {
       name: "SubmitChoice",
       I: SubmitChoiceRequest,
-      O: SubmitChoiceResponse,
-      kind: MethodKind.Unary,
+      O: ChatStreamResponse,
+      kind: MethodKind.ServerStreaming,
     },
     /**
      * Workspace token credits

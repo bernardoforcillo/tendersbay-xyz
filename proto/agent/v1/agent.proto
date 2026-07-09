@@ -27,8 +27,10 @@ service AgentService {
   // server streams zero or more response events until a StreamDone or error.
   rpc ChatStream(ChatStreamRequest) returns (stream ChatStreamResponse);
 
-  // Human-in-the-loop: the user answers a question the agent asked.
-  rpc SubmitChoice(SubmitChoiceRequest) returns (SubmitChoiceResponse);
+  // Human-in-the-loop: the user answers a question the agent asked. Resumes
+  // the same conversation and streams the continuation — identical event
+  // shapes to ChatStream (token / choice / error / done).
+  rpc SubmitChoice(SubmitChoiceRequest) returns (stream ChatStreamResponse);
 
   // Workspace token credits
   rpc GetCredits(GetCreditsRequest) returns (GetCreditsResponse);
@@ -141,7 +143,6 @@ message SubmitChoiceRequest {
   string selected_key = 2;  // "A" | "B" | "C" | "custom"
   string custom_value = 3;  // filled when selected_key == "custom"
 }
-message SubmitChoiceResponse {}
 
 // ── Credits ────────────────────────────────────────────────────────────────
 

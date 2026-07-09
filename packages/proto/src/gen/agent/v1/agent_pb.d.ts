@@ -586,18 +586,6 @@ export declare type SubmitChoiceRequest = Message<"agent.v1.SubmitChoiceRequest"
 export declare const SubmitChoiceRequestSchema: GenMessage<SubmitChoiceRequest>;
 
 /**
- * @generated from message agent.v1.SubmitChoiceResponse
- */
-export declare type SubmitChoiceResponse = Message<"agent.v1.SubmitChoiceResponse"> & {
-};
-
-/**
- * Describes the message agent.v1.SubmitChoiceResponse.
- * Use `create(SubmitChoiceResponseSchema)` to create a new message.
- */
-export declare const SubmitChoiceResponseSchema: GenMessage<SubmitChoiceResponse>;
-
-/**
  * @generated from message agent.v1.GetCreditsRequest
  */
 export declare type GetCreditsRequest = Message<"agent.v1.GetCreditsRequest"> & {
@@ -724,14 +712,16 @@ export declare const AgentService: GenService<{
     output: typeof ChatStreamResponseSchema;
   },
   /**
-   * Human-in-the-loop: the user answers a question the agent asked.
+   * Human-in-the-loop: the user answers a question the agent asked. Resumes
+   * the same conversation and streams the continuation — identical event
+   * shapes to ChatStream (token / choice / error / done).
    *
    * @generated from rpc agent.v1.AgentService.SubmitChoice
    */
   submitChoice: {
-    methodKind: "unary";
+    methodKind: "server_streaming";
     input: typeof SubmitChoiceRequestSchema;
-    output: typeof SubmitChoiceResponseSchema;
+    output: typeof ChatStreamResponseSchema;
   },
   /**
    * Workspace token credits

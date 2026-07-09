@@ -69,8 +69,10 @@ type AgentServiceClient interface {
 	// The client sends a single ChatStreamRequest (the user's message); the
 	// server streams zero or more response events until a StreamDone or error.
 	ChatStream(context.Context, *connect.Request[v1.ChatStreamRequest]) (*connect.ServerStreamForClient[v1.ChatStreamResponse], error)
-	// Human-in-the-loop: the user answers a question the agent asked.
-	SubmitChoice(context.Context, *connect.Request[v1.SubmitChoiceRequest]) (*connect.Response[v1.SubmitChoiceResponse], error)
+	// Human-in-the-loop: the user answers a question the agent asked. Resumes
+	// the same conversation and streams the continuation — identical event
+	// shapes to ChatStream (token / choice / error / done).
+	SubmitChoice(context.Context, *connect.Request[v1.SubmitChoiceRequest]) (*connect.ServerStreamForClient[v1.ChatStreamResponse], error)
 	// Workspace token credits
 	GetCredits(context.Context, *connect.Request[v1.GetCreditsRequest]) (*connect.Response[v1.GetCreditsResponse], error)
 }
@@ -128,7 +130,7 @@ func NewAgentServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 			connect.WithSchema(agentServiceMethods.ByName("ChatStream")),
 			connect.WithClientOptions(opts...),
 		),
-		submitChoice: connect.NewClient[v1.SubmitChoiceRequest, v1.SubmitChoiceResponse](
+		submitChoice: connect.NewClient[v1.SubmitChoiceRequest, v1.ChatStreamResponse](
 			httpClient,
 			baseURL+AgentServiceSubmitChoiceProcedure,
 			connect.WithSchema(agentServiceMethods.ByName("SubmitChoice")),
@@ -152,7 +154,7 @@ type agentServiceClient struct {
 	deleteChat   *connect.Client[v1.DeleteChatRequest, v1.DeleteChatResponse]
 	getMessages  *connect.Client[v1.GetMessagesRequest, v1.GetMessagesResponse]
 	chatStream   *connect.Client[v1.ChatStreamRequest, v1.ChatStreamResponse]
-	submitChoice *connect.Client[v1.SubmitChoiceRequest, v1.SubmitChoiceResponse]
+	submitChoice *connect.Client[v1.SubmitChoiceRequest, v1.ChatStreamResponse]
 	getCredits   *connect.Client[v1.GetCreditsRequest, v1.GetCreditsResponse]
 }
 
@@ -192,8 +194,8 @@ func (c *agentServiceClient) ChatStream(ctx context.Context, req *connect.Reques
 }
 
 // SubmitChoice calls agent.v1.AgentService.SubmitChoice.
-func (c *agentServiceClient) SubmitChoice(ctx context.Context, req *connect.Request[v1.SubmitChoiceRequest]) (*connect.Response[v1.SubmitChoiceResponse], error) {
-	return c.submitChoice.CallUnary(ctx, req)
+func (c *agentServiceClient) SubmitChoice(ctx context.Context, req *connect.Request[v1.SubmitChoiceRequest]) (*connect.ServerStreamForClient[v1.ChatStreamResponse], error) {
+	return c.submitChoice.CallServerStream(ctx, req)
 }
 
 // GetCredits calls agent.v1.AgentService.GetCredits.
@@ -215,8 +217,10 @@ type AgentServiceHandler interface {
 	// The client sends a single ChatStreamRequest (the user's message); the
 	// server streams zero or more response events until a StreamDone or error.
 	ChatStream(context.Context, *connect.Request[v1.ChatStreamRequest], *connect.ServerStream[v1.ChatStreamResponse]) error
-	// Human-in-the-loop: the user answers a question the agent asked.
-	SubmitChoice(context.Context, *connect.Request[v1.SubmitChoiceRequest]) (*connect.Response[v1.SubmitChoiceResponse], error)
+	// Human-in-the-loop: the user answers a question the agent asked. Resumes
+	// the same conversation and streams the continuation — identical event
+	// shapes to ChatStream (token / choice / error / done).
+	SubmitChoice(context.Context, *connect.Request[v1.SubmitChoiceRequest], *connect.ServerStream[v1.ChatStreamResponse]) error
 	// Workspace token credits
 	GetCredits(context.Context, *connect.Request[v1.GetCreditsRequest]) (*connect.Response[v1.GetCreditsResponse], error)
 }
@@ -270,7 +274,7 @@ func NewAgentServiceHandler(svc AgentServiceHandler, opts ...connect.HandlerOpti
 		connect.WithSchema(agentServiceMethods.ByName("ChatStream")),
 		connect.WithHandlerOptions(opts...),
 	)
-	agentServiceSubmitChoiceHandler := connect.NewUnaryHandler(
+	agentServiceSubmitChoiceHandler := connect.NewServerStreamHandler(
 		AgentServiceSubmitChoiceProcedure,
 		svc.SubmitChoice,
 		connect.WithSchema(agentServiceMethods.ByName("SubmitChoice")),
@@ -339,8 +343,8 @@ func (UnimplementedAgentServiceHandler) ChatStream(context.Context, *connect.Req
 	return connect.NewError(connect.CodeUnimplemented, errors.New("agent.v1.AgentService.ChatStream is not implemented"))
 }
 
-func (UnimplementedAgentServiceHandler) SubmitChoice(context.Context, *connect.Request[v1.SubmitChoiceRequest]) (*connect.Response[v1.SubmitChoiceResponse], error) {
-	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("agent.v1.AgentService.SubmitChoice is not implemented"))
+func (UnimplementedAgentServiceHandler) SubmitChoice(context.Context, *connect.Request[v1.SubmitChoiceRequest], *connect.ServerStream[v1.ChatStreamResponse]) error {
+	return connect.NewError(connect.CodeUnimplemented, errors.New("agent.v1.AgentService.SubmitChoice is not implemented"))
 }
 
 func (UnimplementedAgentServiceHandler) GetCredits(context.Context, *connect.Request[v1.GetCreditsRequest]) (*connect.Response[v1.GetCreditsResponse], error) {
