@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"sync"
 
 	bagent "github.com/buildwithgo/berrygem/agent"
 	"github.com/buildwithgo/berrygem/providers"
@@ -35,6 +36,31 @@ type ChatRepository interface {
 // workspace.MemberRepository interface, a superset of this one).
 type MemberRepository interface {
 	LoadMembership(ctx context.Context, workspaceID, userID string) (workspace.Membership, error)
+}
+
+// SendChoice is called when the agent asks a closed-ended question — the
+// ConnectRPC handler wires it to stream.Send, mirroring StreamToken.
+type SendChoice func(ChoicePrompt) error
+
+// pendingChoice is set by the ask_choice tool, synchronously, before it
+// cancels the turn's context — runTurn reads it afterward to tell a
+// deliberate pause (waiting on the user) apart from a genuine failure or
+// client disconnect, both of which surface identically as ctx.Done().
+type pendingChoice struct {
+	mu     sync.Mutex
+	prompt *ChoicePrompt
+}
+
+func (p *pendingChoice) set(cp ChoicePrompt) {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	p.prompt = &cp
+}
+
+func (p *pendingChoice) get() *ChoicePrompt {
+	p.mu.Lock()
+	defer p.mu.Unlock()
+	return p.prompt
 }
 
 type Service struct {
@@ -122,15 +148,19 @@ func (s *Service) GetMessages(ctx context.Context, userID, sessionID string) ([]
 // StreamToken is called by ChatStream for each token.
 type StreamToken func(string) error
 
-// ChatStream runs the Berrygem agent streaming loop. It trusts that the
-// caller has already authorized sessionID's workspace (the ConnectRPC
-// handler does this by calling GetChat, which is membership-checked, before
-// ChatStream) — it does not re-check membership itself, to avoid a redundant
-// FindSessionByID round trip on the hot path.
-func (s *Service) ChatStream(
+// runTurn drives one berrygem turn-loop invocation: builds the agent with
+// this session's tools, feeds turnMessage into its (possibly rehydrated)
+// conversation, and either persists the assistant's reply and reports full
+// usage, or — if the agent invoked ask_choice — leaves the chat live for a
+// later SubmitChoice to resume and reports the partial turn's (estimated)
+// usage. Callers persist turnMessage themselves first (ChatStream as a
+// "user" message, SubmitChoice's resume as a "choice_response" one) —
+// runTurn only persists what happens *after*.
+func (s *Service) runTurn(
 	ctx context.Context,
-	sessionID, message, agentType string,
+	sessionID, userID, workspaceID, agentType, turnMessage string,
 	sendToken StreamToken,
+	sendChoice SendChoice,
 	usageCh chan<- credits.Usage,
 ) error {
 	cfg, ok := s.registry.GetConfig(AgentType(agentType))
@@ -138,7 +168,34 @@ func (s *Service) ChatStream(
 		cfg = s.registry.configs[AgentTypeBaseChat]
 	}
 
-	ag, err := s.registry.BuildAgent(cfg)
+	streamCtx, cancelForChoice := context.WithCancel(ctx)
+	defer cancelForChoice()
+	pending := &pendingChoice{}
+
+	askChoice := func(question string, options []ChoiceOption, allowCustom bool) error {
+		choicesJSON, err := json.Marshal(options)
+		if err != nil {
+			return err
+		}
+		msg, err := s.chatRepo.InsertMessage(streamCtx, sessionID, "choice_prompt", question, choicesJSON, nil)
+		if err != nil {
+			return err
+		}
+		cp := ChoicePrompt{ID: msg.ID, Question: question, Options: options, AllowCustom: allowCustom}
+		pending.set(cp)
+		if err := sendChoice(cp); err != nil {
+			return err
+		}
+		cancelForChoice()
+		return nil
+	}
+
+	ag, err := s.registry.BuildAgent(cfg,
+		bagent.WithTools(
+			newAskChoiceTool(askChoice),
+			newCreateWorkbenchTool(s.workbenches, userID, workspaceID),
+		),
+	)
 	if err != nil {
 		return err
 	}
@@ -152,24 +209,30 @@ func (s *Service) ChatStream(
 		berrygemChat.SetMessages(dbMessagesToProviderMessages(history))
 	}
 
-	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "user", message, nil, nil); err != nil {
-		return err
-	}
-
-	result, err := berrygemChat.SendStream(ctx, message)
+	result, err := berrygemChat.SendStream(streamCtx, turnMessage)
 	if err != nil {
 		return err
 	}
 	defer result.Close()
 
-	fullContent, done, err := s.consumeStream(ctx, result.C, result.Err, result.Done, sendToken)
+	fullContent, done, err := s.consumeStream(streamCtx, result.C, result.Err, result.Done, sendToken)
 	if err != nil {
-		// The in-memory chat's message list now has a dangling user turn
-		// with no assistant reply (berrygem's SendStream appends the user
+		if pending.get() != nil {
+			// Deliberate pause: ask_choice cancelled streamCtx on purpose.
+			// The choice_prompt message is already persisted (inside
+			// askChoice, above) — keep the in-memory chat alive so
+			// SubmitChoice can resume it, and report this partial turn's
+			// usage the same estimated way a turn with no real provider
+			// usage already is (see sendUsage).
+			s.sendUsage(usageCh, sessionID, agentType, cfg.Model, turnMessage, fullContent, nil)
+			return nil
+		}
+		// The in-memory chat's message list now has a dangling turn with
+		// no assistant reply (berrygem's SendStream appends the input
 		// message before streaming and doesn't roll it back on error/
 		// cancellation — verified against its source). Evict it so the
 		// next message for this session rebuilds fresh via rehydration
-		// (see Task 4) instead of corrupting the next turn's context.
+		// instead of corrupting the next turn's context.
 		s.registry.RemoveChat(sessionID)
 		return err
 	}
@@ -177,32 +240,57 @@ func (s *Service) ChatStream(
 	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "assistant", fullContent, nil, nil); err != nil {
 		return err
 	}
-
-	if usageCh != nil && done != nil {
-		inputTokens := int32(done.Usage.PromptTokens)
-		outputTokens := int32(done.Usage.CompletionTokens)
-		totalTokens := int32(done.Usage.TotalTokens)
-		if totalTokens == 0 {
-			// berrygem's streaming client never sets stream_options.include_usage
-			// on the OpenAI-compatible request (verified against its vendored
-			// source), so Fireworks never returns usage in streaming mode and
-			// RunResult.Usage comes back all-zero. Falling through with zeros
-			// would hit credits.Service.Deduct's floor and silently bill a flat
-			// 1 token regardless of the real exchange size — estimate instead.
-			inputTokens = estimateTokens(message)
-			outputTokens = estimateTokens(fullContent)
-			totalTokens = inputTokens + outputTokens
-		}
-		usageCh <- credits.Usage{
-			AgentType:    agentType,
-			SessionID:    sessionID,
-			Model:        cfg.Model,
-			InputTokens:  inputTokens,
-			OutputTokens: outputTokens,
-			TotalTokens:  totalTokens,
-		}
-	}
+	s.sendUsage(usageCh, sessionID, agentType, cfg.Model, turnMessage, fullContent, done)
 	return nil
+}
+
+// sendUsage reports usage for a turn. When real is nil (a paused turn) or
+// carries zero usage (berrygem's streaming client never sets
+// stream_options.include_usage on the OpenAI-compatible request — verified
+// against its vendored source — so Fireworks never returns usage in
+// streaming mode), it falls back to a character-length estimate rather
+// than silently billing nothing.
+func (s *Service) sendUsage(usageCh chan<- credits.Usage, sessionID, agentType, model, inputText, outputText string, real *bagent.RunResult) {
+	if usageCh == nil {
+		return
+	}
+	var inputTokens, outputTokens, totalTokens int32
+	if real != nil {
+		inputTokens = int32(real.Usage.PromptTokens)
+		outputTokens = int32(real.Usage.CompletionTokens)
+		totalTokens = int32(real.Usage.TotalTokens)
+	}
+	if totalTokens == 0 {
+		inputTokens = estimateTokens(inputText)
+		outputTokens = estimateTokens(outputText)
+		totalTokens = inputTokens + outputTokens
+	}
+	usageCh <- credits.Usage{
+		AgentType:    agentType,
+		SessionID:    sessionID,
+		Model:        model,
+		InputTokens:  inputTokens,
+		OutputTokens: outputTokens,
+		TotalTokens:  totalTokens,
+	}
+}
+
+// ChatStream runs the Berrygem agent streaming loop for a fresh user
+// message. It trusts that the caller has already authorized sessionID's
+// workspace (the ConnectRPC handler does this by calling GetChat, which is
+// membership-checked, before ChatStream) — it does not re-check membership
+// itself, to avoid a redundant FindSessionByID round trip on the hot path.
+func (s *Service) ChatStream(
+	ctx context.Context,
+	sessionID, userID, workspaceID, message, agentType string,
+	sendToken StreamToken,
+	sendChoice SendChoice,
+	usageCh chan<- credits.Usage,
+) error {
+	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "user", message, nil, nil); err != nil {
+		return err
+	}
+	return s.runTurn(ctx, sessionID, userID, workspaceID, agentType, message, sendToken, sendChoice, usageCh)
 }
 
 // estimateTokens roughly approximates a token count from text length for the
