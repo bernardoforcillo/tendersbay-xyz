@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 
+	bagent "github.com/buildwithgo/berrygem/agent"
+
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -152,45 +154,114 @@ func (s *Service) ChatStream(
 	}
 	defer result.Close()
 
-	var fullContent string
+	fullContent, done, err := s.consumeStream(ctx, result.C, result.Err, result.Done, sendToken)
+	if err != nil {
+		// The in-memory chat's message list now has a dangling user turn
+		// with no assistant reply (berrygem's SendStream appends the user
+		// message before streaming and doesn't roll it back on error/
+		// cancellation — verified against its source). Evict it so the
+		// next message for this session rebuilds fresh via rehydration
+		// (see Task 4) instead of corrupting the next turn's context.
+		s.registry.RemoveChat(sessionID)
+		return err
+	}
+
+	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "assistant", fullContent, nil, nil); err != nil {
+		return err
+	}
+
+	if usageCh != nil && done != nil {
+		usageCh <- credits.Usage{
+			AgentType:    agentType,
+			SessionID:    sessionID,
+			Model:        cfg.Model,
+			InputTokens:  int32(done.Usage.PromptTokens),
+			OutputTokens: int32(done.Usage.CompletionTokens),
+			TotalTokens:  int32(done.Usage.TotalTokens),
+		}
+	}
+	return nil
+}
+
+// consumeStream drains a Berrygem stream's three channels, guarding against
+// re-selecting an already-exhausted (closed) channel — which berrygem closes
+// together, always, when its internal loop returns for any reason (success,
+// error, or ctx cancellation; verified against its source). Without this
+// guard, once all three close near-simultaneously, select's uniform-random
+// case choice can burn several iterations re-picking exhausted cases before
+// landing on the one real buffered value — wasteful, and in the (per
+// berrygem's contract, unreachable in practice) case where NONE of them ever
+// carried a value, it would hang forever instead of returning an error.
+//
+// Berrygem's producer goroutine sends every content chunk to `content` and
+// THEN sends the terminal value to `done`/`errs`, sequentially, from the
+// SAME goroutine — so by the time a `done`/`errs` value is observable,
+// every content chunk for this turn is already either received or sitting
+// in `content`'s buffer (capacity 64). But Go's `select` does NOT preserve
+// that producer-side ordering across DIFFERENT channels: if `content` and
+// `done` are simultaneously ready (reachable for any reply short enough to
+// fully fill the buffer before this goroutine's first scheduling turn),
+// `select` can pick `done` before `content` is fully drained, silently
+// truncating `fullContent` while still reporting success. Fix: on the
+// `errs`/`done` branches specifically, drain any remaining buffered
+// `content` — non-blockingly, since nothing new can arrive on it after
+// `errs`/`done` per berrygem's sequential-send contract — before returning.
+func (s *Service) consumeStream(
+	ctx context.Context,
+	content <-chan string,
+	errs <-chan error,
+	done <-chan *bagent.RunResult,
+	sendToken StreamToken,
+) (fullContent string, result *bagent.RunResult, err error) {
+	drainContent := func() {
+		for {
+			select {
+			case chunk, ok := <-content:
+				if !ok {
+					return
+				}
+				fullContent += chunk
+				_ = sendToken(chunk) // best-effort: the result is already decided either way
+			default:
+				return
+			}
+		}
+	}
 
 	for {
 		select {
-		case chunk, ok := <-result.C:
+		case chunk, ok := <-content:
 			if !ok {
-				continue
+				content = nil
+				break
 			}
 			fullContent += chunk
 			if err := sendToken(chunk); err != nil {
-				return err
+				return fullContent, nil, err
 			}
 
-		case err, ok := <-result.Err:
+		case e, ok := <-errs:
 			if !ok {
-				continue
+				errs = nil
+				break
 			}
-			return err
+			drainContent()
+			return fullContent, nil, e
 
-		case done, ok := <-result.Done:
+		case r, ok := <-done:
 			if !ok {
-				continue
+				done = nil
+				break
 			}
+			drainContent()
+			return fullContent, r, nil
 
-			if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "assistant", fullContent, nil, nil); err != nil {
-				return err
-			}
+		case <-ctx.Done():
+			return fullContent, nil, ctx.Err()
+		}
 
-			if usageCh != nil && done != nil {
-				usageCh <- credits.Usage{
-					AgentType:    agentType,
-					SessionID:    sessionID,
-					Model:        cfg.Model,
-					InputTokens:  int32(done.Usage.PromptTokens),
-					OutputTokens: int32(done.Usage.CompletionTokens),
-					TotalTokens:  int32(done.Usage.TotalTokens),
-				}
-			}
-			return nil
+		if content == nil && errs == nil && done == nil {
+			return fullContent, nil, errors.New("agent: stream ended without a result")
 		}
 	}
 }
