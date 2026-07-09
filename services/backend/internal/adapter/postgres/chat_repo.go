@@ -104,3 +104,9 @@ func (r *ChatRepo) ListMessagesBySession(ctx context.Context, sessionID string) 
 		All(ctx, &rows)
 	return rows, err
 }
+
+func (r *ChatRepo) FindMessageByID(ctx context.Context, id string) (DBChatMessage, error) {
+	var row DBChatMessage
+	err := r.db.Select().From(ChatMessages).Where(ChatMessageID.Eq(id)).One(ctx, &row)
+	return row, err
+}

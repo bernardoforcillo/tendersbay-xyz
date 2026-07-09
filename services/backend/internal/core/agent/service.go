@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"sync"
 
 	bagent "github.com/buildwithgo/berrygem/agent"
@@ -16,6 +17,8 @@ import (
 )
 
 var ErrInsufficientCredits = errors.New("insufficient credits")
+
+var ErrChoiceNotPending = errors.New("agent: choice already answered or not found")
 
 // ChatRepository is the port agent.Service uses to persist chat sessions and
 // messages. Satisfied by *postgres.ChatRepo without any changes there —
@@ -30,6 +33,7 @@ type ChatRepository interface {
 	DeleteSession(ctx context.Context, id string) error
 	InsertMessage(ctx context.Context, sessionID, role, content string, choices, metadata json.RawMessage) (postgres.DBChatMessage, error)
 	ListMessagesBySession(ctx context.Context, sessionID string) ([]postgres.DBChatMessage, error)
+	FindMessageByID(ctx context.Context, id string) (postgres.DBChatMessage, error)
 }
 
 // MemberRepository is the minimal membership-check port agent.Service needs
@@ -126,6 +130,90 @@ func (s *Service) GetChat(ctx context.Context, userID, chatID string) (postgres.
 		return postgres.DBChatSession{}, err
 	}
 	return session, nil
+}
+
+// GetChatForChoice resolves choiceID to its session, verifying it is a
+// choice_prompt that hasn't already been answered (i.e. it's still the
+// last message in its session), and checks userID is a member of the
+// session's workspace. Mirrors GetChat's membership-checked lookup so
+// SubmitChoice's handler can credit-check before running, the same way
+// ChatStream's handler does via GetChat.
+func (s *Service) GetChatForChoice(ctx context.Context, userID, choiceID string) (postgres.DBChatSession, error) {
+	promptMsg, err := s.chatRepo.FindMessageByID(ctx, choiceID)
+	if err != nil {
+		return postgres.DBChatSession{}, err
+	}
+	if promptMsg.Role != "choice_prompt" {
+		return postgres.DBChatSession{}, ErrChoiceNotPending
+	}
+	msgs, err := s.chatRepo.ListMessagesBySession(ctx, promptMsg.SessionID)
+	if err != nil {
+		return postgres.DBChatSession{}, err
+	}
+	if len(msgs) == 0 || msgs[len(msgs)-1].ID != promptMsg.ID {
+		return postgres.DBChatSession{}, ErrChoiceNotPending
+	}
+	session, err := s.chatRepo.FindSessionByID(ctx, promptMsg.SessionID)
+	if err != nil {
+		return postgres.DBChatSession{}, err
+	}
+	if err := s.requireMember(ctx, session.WorkspaceID, userID); err != nil {
+		return postgres.DBChatSession{}, err
+	}
+	return session, nil
+}
+
+// formatChoiceAnswer turns the user's SubmitChoice selection into the text
+// fed back to the agent as the next turn's message.
+func formatChoiceAnswer(promptMsg postgres.DBChatMessage, selectedKey, customValue string) (string, error) {
+	if selectedKey == "custom" {
+		if customValue == "" {
+			return "", fmt.Errorf("agent: custom_value is required when selected_key is \"custom\"")
+		}
+		return customValue, nil
+	}
+	if promptMsg.Choices == nil {
+		return "", fmt.Errorf("agent: choice prompt has no options")
+	}
+	var options []ChoiceOption
+	if err := json.Unmarshal(*promptMsg.Choices, &options); err != nil {
+		return "", err
+	}
+	for _, o := range options {
+		if o.Key == selectedKey {
+			return fmt.Sprintf("%s) %s", o.Key, o.Label), nil
+		}
+	}
+	return "", fmt.Errorf("agent: %q is not a valid option key", selectedKey)
+}
+
+// SubmitChoice resumes sessionID's conversation with the user's answer to
+// the choice_prompt at choiceID. It trusts that the caller has already
+// authorized session (via GetChatForChoice) — like ChatStream, it does not
+// re-check membership itself. It does re-fetch the prompt message (a
+// second, cheap indexed lookup after GetChatForChoice's) to read its
+// persisted options — accepted duplication rather than threading the row
+// through two service methods.
+func (s *Service) SubmitChoice(
+	ctx context.Context,
+	session postgres.DBChatSession,
+	userID, choiceID, selectedKey, customValue string,
+	sendToken StreamToken,
+	sendChoice SendChoice,
+	usageCh chan<- credits.Usage,
+) error {
+	promptMsg, err := s.chatRepo.FindMessageByID(ctx, choiceID)
+	if err != nil {
+		return err
+	}
+	answerText, err := formatChoiceAnswer(promptMsg, selectedKey, customValue)
+	if err != nil {
+		return err
+	}
+	if _, err := s.chatRepo.InsertMessage(ctx, session.ID, "choice_response", answerText, nil, nil); err != nil {
+		return err
+	}
+	return s.runTurn(ctx, session.ID, userID, session.WorkspaceID, session.AgentType, answerText, sendToken, sendChoice, usageCh)
 }
 
 func (s *Service) UpdateChat(ctx context.Context, userID, chatID, title, workbenchID string) (postgres.DBChatSession, error) {

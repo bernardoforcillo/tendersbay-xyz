@@ -118,6 +118,56 @@ func (h *AgentHandler) GetMessages(ctx context.Context, req *connect.Request[age
 	return connect.NewResponse(&agentv1.GetMessagesResponse{Messages: out}), nil
 }
 
+func newStreamCallbacks(stream *connect.ServerStream[agentv1.ChatStreamResponse]) (agent.StreamToken, agent.SendChoice) {
+	sendToken := func(token string) error {
+		return stream.Send(&agentv1.ChatStreamResponse{
+			Event: &agentv1.ChatStreamResponse_Token{Token: token},
+		})
+	}
+	sendChoice := func(cp agent.ChoicePrompt) error {
+		return stream.Send(&agentv1.ChatStreamResponse{
+			Event: &agentv1.ChatStreamResponse_Choice{Choice: toProtoChoicePrompt(cp)},
+		})
+	}
+	return sendToken, sendChoice
+}
+
+// runAndFinish runs a service-layer turn (ChatStream or SubmitChoice) and,
+// on success, drains its usage, deducts credits, and sends the terminal
+// Done event — the tail shared by both RPCs.
+func (h *AgentHandler) runAndFinish(
+	ctx context.Context,
+	uid, workspaceID string,
+	allowance int64,
+	stream *connect.ServerStream[agentv1.ChatStreamResponse],
+	run func(usageCh chan<- credits.Usage) error,
+) error {
+	usageCh := make(chan credits.Usage, 1)
+	if err := run(usageCh); err != nil {
+		return toConnectError(err)
+	}
+	usage := <-usageCh
+	usage.WorkspaceID = workspaceID
+	usage.UserID = uid
+
+	remaining, err := h.creditSvc.Deduct(ctx, usage)
+	if err != nil {
+		return toConnectError(err)
+	}
+
+	return stream.Send(&agentv1.ChatStreamResponse{
+		Event: &agentv1.ChatStreamResponse_Done{Done: &agentv1.StreamDone{
+			Usage: &agentv1.AgentUsage{
+				InputTokens:  usage.InputTokens,
+				OutputTokens: usage.OutputTokens,
+				TotalTokens:  usage.TotalTokens,
+			},
+			CreditsRemaining:  remaining,
+			CreditsMonthlyMax: allowance,
+		}},
+	})
+}
+
 func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agentv1.ChatStreamRequest], stream *connect.ServerStream[agentv1.ChatStreamResponse]) error {
 	uid, err := requireUser(ctx)
 	if err != nil {
@@ -137,46 +187,37 @@ func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agen
 		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
 	}
 
-	usageCh := make(chan credits.Usage, 1)
+	sendToken, sendChoice := newStreamCallbacks(stream)
 
-	sendToken := func(token string) error {
-		return stream.Send(&agentv1.ChatStreamResponse{
-			Event: &agentv1.ChatStreamResponse_Token{Token: token},
-		})
-	}
-
-	if err := h.svc.ChatStream(ctx, session.ID, req.Msg.Message, session.AgentType, sendToken, usageCh); err != nil {
-		return toConnectError(err)
-	}
-
-	usage := <-usageCh
-	usage.WorkspaceID = session.WorkspaceID
-	usage.UserID = uid
-
-	remaining, err := h.creditSvc.Deduct(ctx, usage)
-	if err != nil {
-		return toConnectError(err)
-	}
-
-	return stream.Send(&agentv1.ChatStreamResponse{
-		Event: &agentv1.ChatStreamResponse_Done{Done: &agentv1.StreamDone{
-			Usage: &agentv1.AgentUsage{
-				InputTokens:  usage.InputTokens,
-				OutputTokens: usage.OutputTokens,
-				TotalTokens:  usage.TotalTokens,
-			},
-			CreditsRemaining:  remaining,
-			CreditsMonthlyMax: check.Allowance,
-		}},
+	return h.runAndFinish(ctx, uid, session.WorkspaceID, check.Allowance, stream, func(usageCh chan<- credits.Usage) error {
+		return h.svc.ChatStream(ctx, session.ID, uid, session.WorkspaceID, req.Msg.Message, session.AgentType, sendToken, sendChoice, usageCh)
 	})
 }
 
-func (h *AgentHandler) SubmitChoice(ctx context.Context, _ *connect.Request[agentv1.SubmitChoiceRequest]) (*connect.Response[agentv1.SubmitChoiceResponse], error) {
-	_, err := requireUser(ctx)
+func (h *AgentHandler) SubmitChoice(ctx context.Context, req *connect.Request[agentv1.SubmitChoiceRequest], stream *connect.ServerStream[agentv1.ChatStreamResponse]) error {
+	uid, err := requireUser(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return nil, connect.NewError(connect.CodeUnimplemented, nil)
+
+	session, err := h.svc.GetChatForChoice(ctx, uid, req.Msg.ChoiceId)
+	if err != nil {
+		return toConnectError(err)
+	}
+
+	check, err := h.creditSvc.Check(ctx, session.WorkspaceID)
+	if err != nil {
+		return toConnectError(err)
+	}
+	if !check.OK {
+		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
+	}
+
+	sendToken, sendChoice := newStreamCallbacks(stream)
+
+	return h.runAndFinish(ctx, uid, session.WorkspaceID, check.Allowance, stream, func(usageCh chan<- credits.Usage) error {
+		return h.svc.SubmitChoice(ctx, session, uid, req.Msg.ChoiceId, req.Msg.SelectedKey, req.Msg.CustomValue, sendToken, sendChoice, usageCh)
+	})
 }
 
 func (h *AgentHandler) GetCredits(ctx context.Context, req *connect.Request[agentv1.GetCreditsRequest]) (*connect.Response[agentv1.GetCreditsResponse], error) {
@@ -236,6 +277,19 @@ func toProtoChatMessage(m postgres.DBChatMessage) *agentv1.ChatMessage {
 		p.Metadata = []byte(*m.Metadata)
 	}
 	return p
+}
+
+func toProtoChoicePrompt(cp agent.ChoicePrompt) *agentv1.ChoicePrompt {
+	options := make([]*agentv1.ChoiceOption, len(cp.Options))
+	for i, o := range cp.Options {
+		options[i] = &agentv1.ChoiceOption{Key: o.Key, Label: o.Label, Description: o.Description}
+	}
+	return &agentv1.ChoicePrompt{
+		Id:          cp.ID,
+		Question:    cp.Question,
+		Options:     options,
+		AllowCustom: cp.AllowCustom,
+	}
 }
 
 func nextMonthStart(t time.Time) string {

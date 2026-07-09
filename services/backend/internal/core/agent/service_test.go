@@ -79,14 +79,32 @@ func (f *fakeChatRepo) DeleteSession(_ context.Context, id string) error {
 	return nil
 }
 
-func (f *fakeChatRepo) InsertMessage(_ context.Context, sessionID, role, content string, _, _ json.RawMessage) (postgres.DBChatMessage, error) {
-	m := postgres.DBChatMessage{SessionID: sessionID, Role: role, Content: content}
+func (f *fakeChatRepo) InsertMessage(_ context.Context, sessionID, role, content string, choices, metadata json.RawMessage) (postgres.DBChatMessage, error) {
+	f.nextID++
+	m := postgres.DBChatMessage{ID: "msg-" + itoa(f.nextID), SessionID: sessionID, Role: role, Content: content}
+	if choices != nil {
+		m.Choices = &choices
+	}
+	if metadata != nil {
+		m.Metadata = &metadata
+	}
 	f.messages[sessionID] = append(f.messages[sessionID], m)
 	return m, nil
 }
 
 func (f *fakeChatRepo) ListMessagesBySession(_ context.Context, sessionID string) ([]postgres.DBChatMessage, error) {
 	return f.messages[sessionID], nil
+}
+
+func (f *fakeChatRepo) FindMessageByID(_ context.Context, id string) (postgres.DBChatMessage, error) {
+	for _, msgs := range f.messages {
+		for _, m := range msgs {
+			if m.ID == id {
+				return m, nil
+			}
+		}
+	}
+	return postgres.DBChatMessage{}, pg.ErrNoRows
 }
 
 func itoa(n int) string {
@@ -237,6 +255,77 @@ func TestDBMessagesToProviderMessages(t *testing.T) {
 	}
 	if string(got[1].Role) != "assistant" || got[1].Content != "Hello, how can I help?" {
 		t.Fatalf("got[1] = %+v, want {Role: assistant, Content: Hello, how can I help?}", got[1])
+	}
+}
+
+func TestGetChatForChoice_RejectsAlreadyAnswered(t *testing.T) {
+	chatRepo := newFakeChatRepo()
+	members := newFakeMemberRepo()
+	members.allow("ws-1", "user-1")
+	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
+
+	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
+	prompt, _ := chatRepo.InsertMessage(context.Background(), session.ID, "choice_prompt", "Q?", json.RawMessage(`[{"key":"A","label":"Yes"}]`), nil)
+	// Answered: another message follows it.
+	if _, err := chatRepo.InsertMessage(context.Background(), session.ID, "choice_response", "A) Yes", nil, nil); err != nil {
+		t.Fatalf("seed choice_response: %v", err)
+	}
+
+	if _, err := svc.GetChatForChoice(context.Background(), "user-1", prompt.ID); !errors.Is(err, ErrChoiceNotPending) {
+		t.Fatalf("GetChatForChoice: err = %v, want ErrChoiceNotPending", err)
+	}
+}
+
+func TestGetChatForChoice_AllowsStillPending(t *testing.T) {
+	chatRepo := newFakeChatRepo()
+	members := newFakeMemberRepo()
+	members.allow("ws-1", "user-1")
+	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
+
+	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
+	prompt, _ := chatRepo.InsertMessage(context.Background(), session.ID, "choice_prompt", "Q?", json.RawMessage(`[{"key":"A","label":"Yes"}]`), nil)
+
+	got, err := svc.GetChatForChoice(context.Background(), "user-1", prompt.ID)
+	if err != nil {
+		t.Fatalf("GetChatForChoice: %v", err)
+	}
+	if got.ID != session.ID {
+		t.Fatalf("session = %+v, want ID=%s", got, session.ID)
+	}
+}
+
+func TestFormatChoiceAnswer_LooksUpLabelByKey(t *testing.T) {
+	choices := json.RawMessage(`[{"key":"A","label":"Private"},{"key":"B","label":"Shared"}]`)
+	msg := postgres.DBChatMessage{Choices: &choices}
+
+	got, err := formatChoiceAnswer(msg, "B", "")
+	if err != nil {
+		t.Fatalf("formatChoiceAnswer: %v", err)
+	}
+	if got != "B) Shared" {
+		t.Fatalf("got = %q, want %q", got, "B) Shared")
+	}
+}
+
+func TestFormatChoiceAnswer_CustomValue(t *testing.T) {
+	choices := json.RawMessage(`[{"key":"A","label":"Private"}]`)
+	msg := postgres.DBChatMessage{Choices: &choices}
+
+	got, err := formatChoiceAnswer(msg, "custom", "Aziendale")
+	if err != nil {
+		t.Fatalf("formatChoiceAnswer: %v", err)
+	}
+	if got != "Aziendale" {
+		t.Fatalf("got = %q, want %q", got, "Aziendale")
+	}
+}
+
+func TestFormatChoiceAnswer_UnknownKeyErrors(t *testing.T) {
+	choices := json.RawMessage(`[{"key":"A","label":"Private"}]`)
+	msg := postgres.DBChatMessage{Choices: &choices}
+
+	if _, err := formatChoiceAnswer(msg, "Z", ""); err == nil {
+		t.Fatal("formatChoiceAnswer: want error for unknown key, got nil")
 	}
 }
 

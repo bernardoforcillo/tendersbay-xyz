@@ -63,3 +63,50 @@ func TestCreateSession_EmptyWorkbenchIDStoresNull(t *testing.T) {
 		t.Fatalf("WorkbenchID = %q, want nil (NULL)", *session.WorkbenchID)
 	}
 }
+
+func TestFindMessageByID_RoundTrips(t *testing.T) {
+	repo, sqlDB := testChatRepo(t)
+	ctx := context.Background()
+
+	var ownerID string
+	if err := sqlDB.QueryRowContext(ctx,
+		`INSERT INTO users (email, password_hash, display_name)
+		 VALUES ('chat-repo-msg-test@example.com', 'x', 'Chat Repo Msg Test User')
+		 ON CONFLICT (email) DO UPDATE SET email = EXCLUDED.email
+		 RETURNING id`,
+	).Scan(&ownerID); err != nil {
+		t.Fatalf("seed user: %v", err)
+	}
+	t.Cleanup(func() { _, _ = sqlDB.Exec(`DELETE FROM users WHERE id = $1`, ownerID) })
+
+	var workspaceID string
+	if err := sqlDB.QueryRowContext(ctx,
+		`INSERT INTO workspaces (name, slug, owner_id) VALUES ('Chat Repo Msg Test WS', 'chat-repo-msg-test-ws-1', $1) RETURNING id`,
+		ownerID,
+	).Scan(&workspaceID); err != nil {
+		t.Fatalf("seed workspace: %v", err)
+	}
+	t.Cleanup(func() { _, _ = sqlDB.Exec(`DELETE FROM workspaces WHERE id = $1`, workspaceID) })
+
+	session, err := repo.CreateSession(ctx, ownerID, workspaceID, "", "base-chat", "Test chat")
+	if err != nil {
+		t.Fatalf("CreateSession: %v", err)
+	}
+	t.Cleanup(func() { _, _ = sqlDB.Exec(`DELETE FROM chat_sessions WHERE id = $1`, session.ID) })
+
+	inserted, err := repo.InsertMessage(ctx, session.ID, "choice_prompt", "Private or shared?", []byte(`[{"key":"A","label":"Private"}]`), nil)
+	if err != nil {
+		t.Fatalf("InsertMessage: %v", err)
+	}
+
+	got, err := repo.FindMessageByID(ctx, inserted.ID)
+	if err != nil {
+		t.Fatalf("FindMessageByID: %v", err)
+	}
+	if got.ID != inserted.ID || got.Role != "choice_prompt" || got.Content != "Private or shared?" {
+		t.Fatalf("got = %+v", got)
+	}
+	if got.Choices == nil {
+		t.Fatal("Choices = nil, want the persisted JSON")
+	}
+}
