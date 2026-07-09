@@ -1,6 +1,6 @@
 import { ArrowUp } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
-import { Button, TextField } from 'react-aria-components';
+import { Button, Input, TextField } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 
 type ChatInputProps = {
@@ -29,7 +29,7 @@ export function ChatInput({ onSend, disabled, placeholder }: ChatInputProps) {
         aria-label={t('account.explore.chatInputLabel', { defaultValue: 'Message' })}
         className="flex-1"
       >
-        <input
+        <Input
           disabled={disabled}
           placeholder={
             placeholder ??
