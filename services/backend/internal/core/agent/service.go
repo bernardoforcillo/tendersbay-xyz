@@ -39,6 +39,12 @@ type MemberRepository interface {
 	LoadMembership(ctx context.Context, workspaceID, userID string) (workspace.Membership, error)
 }
 
+// WorkbenchCreator is the narrow port the create_workbench tool needs —
+// satisfied by *workbench.Service unchanged.
+type WorkbenchCreator interface {
+	CreateWorkbench(ctx context.Context, userID, workspaceID, name, description string, visibility workbench.Visibility) (workbench.Workbench, error)
+}
+
 // SendChoice is called when the agent asks a closed-ended question — the
 // ConnectRPC handler wires it to stream.Send, mirroring StreamToken.
 type SendChoice func(ChoicePrompt) error
@@ -69,17 +75,19 @@ type Service struct {
 	chatRepo     ChatRepository
 	creditSvc    *credits.Service
 	members      MemberRepository
+	workbenches  WorkbenchCreator
 	turnStates   map[string]*turnState
 	turnStatesMu sync.Mutex
 }
 
-func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository) *Service {
+func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches WorkbenchCreator) *Service {
 	return &Service{
-		registry:   registry,
-		chatRepo:   chatRepo,
-		creditSvc:  creditSvc,
-		members:    members,
-		turnStates: make(map[string]*turnState),
+		registry:    registry,
+		chatRepo:    chatRepo,
+		creditSvc:   creditSvc,
+		members:     members,
+		workbenches: workbenches,
+		turnStates:  make(map[string]*turnState),
 	}
 }
 

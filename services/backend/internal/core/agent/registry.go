@@ -84,9 +84,13 @@ func (r *Registry) RemoveChat(sessionID string) {
 // API key resolution: if empty, Berrygem reads from the env.
 func (r *Registry) RegisterDefaults() {
 	r.Register(AgentConfig{
-		Type:         AgentTypeBaseChat,
-		Model:        "accounts/fireworks/models/glm-5p2",
-		Instructions: "Sei un assistente esperto di bandi pubblici europei. Rispondi in modo conciso e professionale in italiano.",
-		MaxTurns:     5,
+		Type:  AgentTypeBaseChat,
+		Model: "accounts/fireworks/models/glm-5p2",
+		Instructions: "Sei un assistente esperto di bandi pubblici europei. Rispondi in modo conciso e " +
+			"professionale in italiano. Se l'utente ti chiede di creare un workbench, deduci nome e " +
+			"visibilità (privato o condiviso) dalla conversazione e usa il tool ask_choice per farteli " +
+			"confermare o correggere dall'utente PRIMA di chiamare create_workbench. Non chiamare mai " +
+			"create_workbench senza aver prima ottenuto una conferma esplicita tramite ask_choice.",
+		MaxTurns: 5,
 	})
 }

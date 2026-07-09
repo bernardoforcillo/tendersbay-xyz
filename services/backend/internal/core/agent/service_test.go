@@ -9,6 +9,7 @@ import (
 	"github.com/bernardoforcillo/drops/pg"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
 
@@ -118,15 +119,21 @@ func (f *fakeMemberRepo) LoadMembership(_ context.Context, workspaceID, userID s
 	return workspace.Membership{}, workspace.ErrNotMember
 }
 
-func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo) *Service {
+type fakeWorkbenchCreator struct{}
+
+func (fakeWorkbenchCreator) CreateWorkbench(context.Context, string, string, string, string, workbench.Visibility) (workbench.Workbench, error) {
+	return workbench.Workbench{}, nil
+}
+
+func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches WorkbenchCreator) *Service {
 	registry := NewRegistry("")
-	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members)
+	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches)
 }
 
 func TestListChats_RejectsNonMember(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
-	svc := newTestService(chatRepo, members)
+	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
 
 	_, err := svc.ListChats(context.Background(), "user-1", "workspace-1")
 	if !errors.Is(err, workspace.ErrNotMember) {
@@ -138,7 +145,7 @@ func TestListChats_AllowsMember(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
 	members.allow("workspace-1", "user-1")
-	svc := newTestService(chatRepo, members)
+	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
 
 	if _, err := chatRepo.CreateSession(context.Background(), "user-1", "workspace-1", "", "base-chat", "Test"); err != nil {
 		t.Fatalf("seed CreateSession: %v", err)
@@ -154,7 +161,7 @@ func TestListChats_AllowsMember(t *testing.T) {
 }
 
 func TestCreateChat_RejectsNonMember(t *testing.T) {
-	svc := newTestService(newFakeChatRepo(), newFakeMemberRepo())
+	svc := newTestService(newFakeChatRepo(), newFakeMemberRepo(), fakeWorkbenchCreator{})
 	_, err := svc.CreateChat(context.Background(), "user-1", "workspace-1", "", "base-chat", "Test")
 	if !errors.Is(err, workspace.ErrNotMember) {
 		t.Fatalf("err = %v, want workspace.ErrNotMember", err)
@@ -165,7 +172,7 @@ func TestGetChat_RejectsNonMemberOfChatsWorkspace(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
 	members.allow("workspace-1", "owner")
-	svc := newTestService(chatRepo, members)
+	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
 
 	session, err := chatRepo.CreateSession(context.Background(), "owner", "workspace-1", "", "base-chat", "Test")
 	if err != nil {
@@ -185,7 +192,7 @@ func TestGetChat_RejectsNonMemberOfChatsWorkspace(t *testing.T) {
 }
 
 func TestGetChat_UnknownChatReturnsNoRows(t *testing.T) {
-	svc := newTestService(newFakeChatRepo(), newFakeMemberRepo())
+	svc := newTestService(newFakeChatRepo(), newFakeMemberRepo(), fakeWorkbenchCreator{})
 	if _, err := svc.GetChat(context.Background(), "user-1", "does-not-exist"); !errors.Is(err, pg.ErrNoRows) {
 		t.Fatalf("err = %v, want pg.ErrNoRows", err)
 	}
@@ -195,7 +202,7 @@ func TestDeleteChat_RejectsNonMemberAndEvictsRegistryOnSuccess(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
 	members.allow("workspace-1", "owner")
-	svc := newTestService(chatRepo, members)
+	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
 
 	session, err := chatRepo.CreateSession(context.Background(), "owner", "workspace-1", "", "base-chat", "Test")
 	if err != nil {
