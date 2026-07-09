@@ -1,16 +1,5 @@
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
-import {
-  ChevronsUpDown,
-  Home,
-  LayoutGrid,
-  LogOut,
-  Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
-  Settings,
-  Sparkles,
-  X,
-} from 'lucide-react';
+import { ChevronsUpDown, Home, LayoutGrid, LogOut, Settings, Sparkles, X } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
@@ -211,30 +200,12 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
 // ─── AccountLayout ────────────────────────────────────────────────────────────
 
 export function AccountLayout({ children }: AccountLayoutProps) {
-  const { i18n } = useTranslation();
   const collapsed = useSidebarStore((s) => s.collapsed);
   const drawerOpen = useSidebarStore((s) => s.drawerOpen);
-  const openDrawer = useSidebarStore((s) => s.openDrawer);
   const closeDrawer = useSidebarStore((s) => s.closeDrawer);
-  const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed);
 
   return (
     <div className="relative flex min-h-screen bg-cream-100 lg:h-screen lg:overflow-hidden">
-      {/* ── Mobile header ── */}
-      <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-cream-200 bg-cream-100 px-4 lg:hidden">
-        <Button onPress={openDrawer} aria-label="Open navigation" className={ICON_BTN}>
-          <Menu size={18} aria-hidden="true" />
-        </Button>
-        <Link
-          to="/$locale"
-          params={{ locale: i18n.language }}
-          aria-label="tendersbay home"
-          className="no-underline outline-none"
-        >
-          <Logo />
-        </Link>
-      </header>
-
       {/* ── Mobile overlay ── */}
       {drawerOpen && (
         <button
@@ -266,19 +237,6 @@ export function AccountLayout({ children }: AccountLayoutProps) {
         className={`flex min-h-screen flex-1 flex-col transition-[padding-left] duration-200 ease-in-out lg:h-screen lg:min-h-0 ${collapsed ? 'lg:pl-0' : 'lg:pl-[calc(16rem+0.75rem)]'}`}
       >
         <div className="relative flex flex-1 flex-col lg:m-3 lg:min-h-0 lg:overflow-hidden lg:rounded-xl lg:bg-white lg:shadow-sm">
-          {/* Toggle — no background, sits at the top-left corner of the card */}
-          <Button
-            onPress={toggleCollapsed}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className="absolute left-0 top-0 z-10 hidden h-11 w-11 items-center justify-center text-ink-400 outline-none data-[hovered]:text-ink-700 data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600 lg:flex"
-          >
-            {collapsed ? (
-              <PanelLeftOpen size={16} aria-hidden="true" />
-            ) : (
-              <PanelLeftClose size={16} aria-hidden="true" />
-            )}
-          </Button>
-
           {/* Scroll region — content scrolls inside the fixed-height card */}
           <div className="flex flex-1 flex-col lg:min-h-0 lg:overflow-y-auto">{children}</div>
         </div>
