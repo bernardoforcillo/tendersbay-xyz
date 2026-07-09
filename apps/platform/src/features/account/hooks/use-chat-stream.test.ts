@@ -61,6 +61,17 @@ describe('useChatStream', () => {
       ],
       allowCustom: false,
     });
+    expect(state.messages).toContainEqual(
+      expect.objectContaining({
+        id: 'choice-1',
+        role: 'choice_prompt',
+        content: 'Private or shared?',
+        choices: [
+          { key: 'A', label: 'Private', description: '' },
+          { key: 'B', label: 'Shared', description: '' },
+        ],
+      }),
+    );
   });
 
   it('submitChoice clears pendingChoice and streams the continuation through the same handling as sendMessage', async () => {

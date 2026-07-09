@@ -1,11 +1,26 @@
+import { ChoicePromptCard } from '~/features/account/components/molecules/choice-prompt-card';
 import type { ChatMessage } from '~/store/chat';
 
 type MessageBubbleProps = {
   message: ChatMessage;
+  isPendingChoice: boolean;
+  onSubmitChoice: (choiceId: string, selectedKey: string, customValue?: string) => void;
 };
 
-export function MessageBubble({ message }: MessageBubbleProps) {
-  const isUser = message.role === 'user';
+export function MessageBubble({ message, isPendingChoice, onSubmitChoice }: MessageBubbleProps) {
+  if (message.role === 'choice_prompt') {
+    return (
+      <ChoicePromptCard
+        message={message}
+        isPending={isPendingChoice}
+        onSubmit={(selectedKey, customValue) =>
+          onSubmitChoice(message.id, selectedKey, customValue)
+        }
+      />
+    );
+  }
+
+  const isUser = message.role === 'user' || message.role === 'choice_response';
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}>

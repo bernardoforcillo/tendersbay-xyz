@@ -45,16 +45,24 @@ export function useChatStream() {
             fullContent += event.value;
             useChatStore.getState().appendStreamToken(event.value);
           } else if (event.case === 'choice') {
+            const options = event.value.options.map((o) => ({
+              key: o.key,
+              label: o.label,
+              description: o.description,
+            }));
             useChatStore.getState().setStreaming(false);
             useChatStore.getState().setStreamingContent('');
+            useChatStore.getState().addMessage({
+              id: event.value.id,
+              role: 'choice_prompt',
+              content: event.value.question,
+              createdAt: new Date().toISOString(),
+              choices: options,
+            });
             useChatStore.getState().setPendingChoice({
               id: event.value.id,
               question: event.value.question,
-              options: event.value.options.map((o) => ({
-                key: o.key,
-                label: o.label,
-                description: o.description,
-              })),
+              options,
               allowCustom: event.value.allowCustom,
             });
             return null;
@@ -138,16 +146,24 @@ export function useChatStream() {
             fullContent += event.value;
             useChatStore.getState().appendStreamToken(event.value);
           } else if (event.case === 'choice') {
+            const options = event.value.options.map((o) => ({
+              key: o.key,
+              label: o.label,
+              description: o.description,
+            }));
             useChatStore.getState().setStreaming(false);
             useChatStore.getState().setStreamingContent('');
+            useChatStore.getState().addMessage({
+              id: event.value.id,
+              role: 'choice_prompt',
+              content: event.value.question,
+              createdAt: new Date().toISOString(),
+              choices: options,
+            });
             useChatStore.getState().setPendingChoice({
               id: event.value.id,
               question: event.value.question,
-              options: event.value.options.map((o) => ({
-                key: o.key,
-                label: o.label,
-                description: o.description,
-              })),
+              options,
               allowCustom: event.value.allowCustom,
             });
             return null;

@@ -17,10 +17,11 @@ export function ChatWindow() {
   const streamingContent = useChatStore((s) => s.streamingContent);
   const currentChatId = useChatStore((s) => s.currentChatId);
   const credits = useChatStore((s) => s.credits);
+  const pendingChoice = useChatStore((s) => s.pendingChoice);
   const setCurrentChat = useChatStore((s) => s.setCurrentChat);
   const setCredits = useChatStore((s) => s.setCredits);
   const workspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
-  const { sendMessage } = useChatStream();
+  const { sendMessage, submitChoice } = useChatStream();
   const [creating, setCreating] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
@@ -38,6 +39,7 @@ export function ChatWindow() {
         .getMessages({ chatId: currentChatId })
         .then((res) => {
           const store = useChatStore.getState();
+          let lastChoicePrompt: (typeof res.messages)[number] | null = null;
           for (const m of res.messages) {
             if (m.role === 'user' || m.role === 'assistant') {
               store.addMessage({
@@ -46,7 +48,45 @@ export function ChatWindow() {
                 content: m.content,
                 createdAt: m.createdAt,
               });
+              lastChoicePrompt = null;
+            } else if (m.role === 'choice_prompt') {
+              const choices = m.choices.length
+                ? (JSON.parse(new TextDecoder().decode(m.choices)) as {
+                    key: string;
+                    label: string;
+                    description: string;
+                  }[])
+                : [];
+              store.addMessage({
+                id: m.id,
+                role: 'choice_prompt',
+                content: m.content,
+                createdAt: m.createdAt,
+                choices,
+              });
+              lastChoicePrompt = m;
+            } else if (m.role === 'choice_response') {
+              store.addMessage({
+                id: m.id,
+                role: 'choice_response',
+                content: m.content,
+                createdAt: m.createdAt,
+              });
+              lastChoicePrompt = null;
             }
+          }
+          if (lastChoicePrompt) {
+            const choices = JSON.parse(new TextDecoder().decode(lastChoicePrompt.choices)) as {
+              key: string;
+              label: string;
+              description: string;
+            }[];
+            store.setPendingChoice({
+              id: lastChoicePrompt.id,
+              question: lastChoicePrompt.content,
+              options: choices,
+              allowCustom: false,
+            });
           }
         })
         .catch(() => {});
@@ -111,6 +151,10 @@ export function ChatWindow() {
     }
   }
 
+  async function handleSubmitChoice(choiceId: string, selectedKey: string, customValue?: string) {
+    await submitChoice(choiceId, selectedKey, customValue);
+  }
+
   const hasMessages = messages.length > 0 || streaming;
 
   return (
@@ -129,7 +173,12 @@ export function ChatWindow() {
       {hasMessages ? (
         <div className="flex-1 space-y-4 overflow-y-auto px-4 py-6">
           {messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} />
+            <MessageBubble
+              key={msg.id}
+              message={msg}
+              isPendingChoice={pendingChoice?.id === msg.id}
+              onSubmitChoice={handleSubmitChoice}
+            />
           ))}
           {streaming && streamingContent && (
             <div className="flex justify-start">
@@ -154,7 +203,7 @@ export function ChatWindow() {
       <div className="border-t border-ink-100 p-4">
         <ChatInput
           onSend={handleSend}
-          disabled={streaming || creating}
+          disabled={streaming || creating || pendingChoice !== null}
           placeholder={
             creating
               ? t('account.explore.creatingChat', { defaultValue: 'Creating chat…' })
