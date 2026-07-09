@@ -21,14 +21,24 @@ func (r *WorkspaceCreditRepo) FindByWorkspace(ctx context.Context, workspaceID s
 	return row, err
 }
 
-func (r *WorkspaceCreditRepo) Deduct(ctx context.Context, workspaceID string, tokens int64) (DBWorkspaceCredits, error) {
-	if _, err := r.db.Exec(ctx,
+func (r *WorkspaceCreditRepo) Deduct(ctx context.Context, workspaceID string, tokens int64) (DBWorkspaceCredits, bool, error) {
+	res, err := r.db.Exec(ctx,
 		`UPDATE workspace_credits
 		 SET current_cycle_tokens = current_cycle_tokens + $1, updated_at = now()
-		 WHERE workspace_id = $2`, tokens, workspaceID); err != nil {
-		return DBWorkspaceCredits{}, err
+		 WHERE workspace_id = $2 AND current_cycle_tokens + $1 <= monthly_token_allowance`,
+		tokens, workspaceID)
+	if err != nil {
+		return DBWorkspaceCredits{}, false, err
 	}
-	return r.FindByWorkspace(ctx, workspaceID)
+	affected, err := res.RowsAffected()
+	if err != nil {
+		return DBWorkspaceCredits{}, false, err
+	}
+	row, err := r.FindByWorkspace(ctx, workspaceID)
+	if err != nil {
+		return DBWorkspaceCredits{}, false, err
+	}
+	return row, affected > 0, nil
 }
 
 func (r *WorkspaceCreditRepo) ResetCycle(ctx context.Context, workspaceID string) (DBWorkspaceCredits, error) {
