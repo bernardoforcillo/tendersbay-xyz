@@ -27,7 +27,13 @@ type CreditRepo interface {
 	FindByWorkspace(ctx context.Context, workspaceID string) (postgres.DBWorkspaceCredits, error)
 	Deduct(ctx context.Context, workspaceID string, tokens int64) (postgres.DBWorkspaceCredits, bool, error)
 	ResetCycle(ctx context.Context, workspaceID string) (postgres.DBWorkspaceCredits, error)
+	Upsert(ctx context.Context, workspaceID string, allowance int64) (postgres.DBWorkspaceCredits, error)
 }
+
+// DefaultMonthlyTokenAllowance matches the `workspace_credits.monthly_token_allowance`
+// column default (see schema.go) — kept in sync manually since Seed always
+// passes it explicitly rather than relying on the column default.
+const DefaultMonthlyTokenAllowance int64 = 2_000_000
 
 type PricingRepo interface {
 	FindByAgentType(ctx context.Context, agentType string) (postgres.DBAgentPricing, error)
@@ -124,5 +130,13 @@ func (s *Service) Deduct(ctx context.Context, usage Usage) (int64, error) {
 
 func (s *Service) ResetMonthly(ctx context.Context, workspaceID string) error {
 	_, err := s.creditRepo.ResetCycle(ctx, workspaceID)
+	return err
+}
+
+// Seed ensures workspaceID has a workspace_credits row at the default monthly
+// allowance. It is idempotent (backed by an upsert) — safe to call every time
+// a workspace is created, including a retry after a partial failure.
+func (s *Service) Seed(ctx context.Context, workspaceID string) error {
+	_, err := s.creditRepo.Upsert(ctx, workspaceID, DefaultMonthlyTokenAllowance)
 	return err
 }

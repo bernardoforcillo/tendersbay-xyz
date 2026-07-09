@@ -131,7 +131,7 @@ func main() {
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
-	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc)
+	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
 	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, memberRepo)
 

@@ -9,8 +9,9 @@ import (
 )
 
 type fakeCreditRepo struct {
-	row     postgres.DBWorkspaceCredits
-	applied bool
+	row         postgres.DBWorkspaceCredits
+	applied     bool
+	upsertCalls int
 }
 
 func (f *fakeCreditRepo) FindByWorkspace(_ context.Context, _ string) (postgres.DBWorkspaceCredits, error) {
@@ -26,6 +27,13 @@ func (f *fakeCreditRepo) Deduct(_ context.Context, _ string, tokens int64) (post
 
 func (f *fakeCreditRepo) ResetCycle(_ context.Context, _ string) (postgres.DBWorkspaceCredits, error) {
 	f.row.CurrentCycleTokens = 0
+	return f.row, nil
+}
+
+func (f *fakeCreditRepo) Upsert(_ context.Context, workspaceID string, allowance int64) (postgres.DBWorkspaceCredits, error) {
+	f.row.WorkspaceID = workspaceID
+	f.row.MonthlyAllowance = allowance
+	f.upsertCalls++
 	return f.row, nil
 }
 
@@ -114,5 +122,23 @@ func TestDeduct_MissingPricingDefaultsToOnePerToken(t *testing.T) {
 	}
 	if got := creditRepo.row.CurrentCycleTokens; got != 7 {
 		t.Fatalf("CurrentCycleTokens = %d, want 7 (3*1 + 4*1, default costs)", got)
+	}
+}
+
+func TestSeed_UpsertsDefaultAllowance(t *testing.T) {
+	creditRepo := &fakeCreditRepo{}
+	svc := NewService(creditRepo, &fakePricingRepo{}, &fakeUsageRepo{})
+
+	if err := svc.Seed(context.Background(), "ws-1"); err != nil {
+		t.Fatalf("Seed: %v", err)
+	}
+	if creditRepo.upsertCalls != 1 {
+		t.Fatalf("upsertCalls = %d, want 1", creditRepo.upsertCalls)
+	}
+	if creditRepo.row.WorkspaceID != "ws-1" {
+		t.Fatalf("row.WorkspaceID = %q, want ws-1", creditRepo.row.WorkspaceID)
+	}
+	if creditRepo.row.MonthlyAllowance != DefaultMonthlyTokenAllowance {
+		t.Fatalf("row.MonthlyAllowance = %d, want %d", creditRepo.row.MonthlyAllowance, DefaultMonthlyTokenAllowance)
 	}
 }
