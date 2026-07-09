@@ -14,12 +14,20 @@ type ChatRepo struct{ db *pg.DB }
 func NewChatRepo(db *pg.DB) *ChatRepo { return &ChatRepo{db: db} }
 
 func (r *ChatRepo) CreateSession(ctx context.Context, memberID, workspaceID, workbenchID, agentType, title string) (DBChatSession, error) {
+	// A workspace-level chat (not tied to a specific workbench) arrives with
+	// workbenchID == "" — bind SQL NULL rather than the empty string, which
+	// Postgres rejects for a uuid column (SQLSTATE 22P02).
+	workbenchVal := ChatSessionWorkbenchID.SetDefault()
+	if workbenchID != "" {
+		workbenchVal = ChatSessionWorkbenchID.Val(workbenchID)
+	}
+
 	var row DBChatSession
 	err := r.db.Insert(ChatSessions).
 		Row(
 			ChatSessionMemberID.Val(memberID),
 			ChatSessionWorkspaceID.Val(workspaceID),
-			ChatSessionWorkbenchID.Val(workbenchID),
+			workbenchVal,
 			ChatSessionAgentType.Val(agentType),
 			ChatSessionTitle.Val(title),
 		).
