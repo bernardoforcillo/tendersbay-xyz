@@ -3,9 +3,10 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 
 export interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'choice_prompt' | 'choice_response';
   content: string;
   createdAt: string;
+  choices?: { key: string; label: string; description: string }[];
 }
 
 interface ChatStore {
@@ -19,12 +20,19 @@ interface ChatStore {
     used: number;
     resetDate: string;
   } | null;
+  pendingChoice: {
+    id: string;
+    question: string;
+    options: { key: string; label: string; description: string }[];
+    allowCustom: boolean;
+  } | null;
   setCurrentChat: (id: string | null) => void;
   addMessage: (msg: ChatMessage) => void;
   setStreaming: (v: boolean) => void;
   appendStreamToken: (token: string) => void;
   setStreamingContent: (content: string) => void;
   setCredits: (credits: ChatStore['credits']) => void;
+  setPendingChoice: (choice: ChatStore['pendingChoice']) => void;
   reset: () => void;
 }
 
@@ -36,18 +44,21 @@ export const useChatStore = create<ChatStore>()(
       streaming: false,
       streamingContent: '',
       credits: null,
+      pendingChoice: null,
       setCurrentChat: (id) => set({ currentChatId: id }),
       addMessage: (msg) => set((s) => ({ messages: [...s.messages, msg] })),
       setStreaming: (v) => set({ streaming: v }),
       appendStreamToken: (token) => set((s) => ({ streamingContent: s.streamingContent + token })),
       setStreamingContent: (content) => set({ streamingContent: content }),
       setCredits: (credits) => set({ credits }),
+      setPendingChoice: (pendingChoice) => set({ pendingChoice }),
       reset: () =>
         set({
           messages: [],
           streaming: false,
           streamingContent: '',
           currentChatId: null,
+          pendingChoice: null,
         }),
     }),
     {

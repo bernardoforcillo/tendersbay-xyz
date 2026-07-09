@@ -44,6 +44,20 @@ export function useChatStream() {
           if (event.case === 'token') {
             fullContent += event.value;
             useChatStore.getState().appendStreamToken(event.value);
+          } else if (event.case === 'choice') {
+            useChatStore.getState().setStreaming(false);
+            useChatStore.getState().setStreamingContent('');
+            useChatStore.getState().setPendingChoice({
+              id: event.value.id,
+              question: event.value.question,
+              options: event.value.options.map((o) => ({
+                key: o.key,
+                label: o.label,
+                description: o.description,
+              })),
+              allowCustom: event.value.allowCustom,
+            });
+            return null;
           } else if (event.case === 'done') {
             if (fullContent) {
               useChatStore.getState().addMessage({
@@ -94,5 +108,98 @@ export function useChatStream() {
     [],
   );
 
-  return { sendMessage, cancel };
+  const submitChoice = useCallback(
+    async (
+      choiceId: string,
+      selectedKey: string,
+      customValue = '',
+    ): Promise<CreditsData | null> => {
+      abortRef.current?.abort();
+      const abort = new AbortController();
+      abortRef.current = abort;
+
+      const store = useChatStore.getState();
+      store.setPendingChoice(null);
+      store.setStreaming(true);
+      store.setStreamingContent('');
+
+      try {
+        const stream = agentClient.submitChoice(
+          { choiceId, selectedKey, customValue },
+          { signal: abort.signal },
+        );
+        let fullContent = '';
+
+        for await (const response of stream) {
+          if (abort.signal.aborted) break;
+
+          const event = response.event;
+          if (event.case === 'token') {
+            fullContent += event.value;
+            useChatStore.getState().appendStreamToken(event.value);
+          } else if (event.case === 'choice') {
+            useChatStore.getState().setStreaming(false);
+            useChatStore.getState().setStreamingContent('');
+            useChatStore.getState().setPendingChoice({
+              id: event.value.id,
+              question: event.value.question,
+              options: event.value.options.map((o) => ({
+                key: o.key,
+                label: o.label,
+                description: o.description,
+              })),
+              allowCustom: event.value.allowCustom,
+            });
+            return null;
+          } else if (event.case === 'done') {
+            if (fullContent) {
+              useChatStore.getState().addMessage({
+                id: crypto.randomUUID(),
+                role: 'assistant',
+                content: fullContent,
+                createdAt: new Date().toISOString(),
+              });
+            }
+            useChatStore.getState().setStreamingContent('');
+            useChatStore.getState().setStreaming(false);
+
+            const done = event.value;
+            const credits: CreditsData = {
+              remaining: Number(done.creditsRemaining),
+              monthlyMax: Number(done.creditsMonthlyMax),
+              inputTokens: Number(done.usage?.totalTokens ?? 0),
+              outputTokens: Number(done.usage?.outputTokens ?? 0),
+            };
+            useChatStore.getState().setCredits({
+              remaining: Number(done.creditsRemaining),
+              monthlyMax: Number(done.creditsMonthlyMax),
+              used: Number(done.creditsMonthlyMax) - Number(done.creditsRemaining),
+              resetDate: '',
+            });
+            return credits;
+          } else if (event.case === 'error') {
+            useChatStore.getState().setStreaming(false);
+            useChatStore.getState().setStreamingContent('');
+            throw new Error(event.value.message);
+          }
+        }
+      } catch (e: unknown) {
+        if (abort.signal.aborted) return null;
+        useChatStore.getState().setStreaming(false);
+        useChatStore.getState().setStreamingContent('');
+        useChatStore.getState().addMessage({
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: e instanceof Error ? e.message : 'Something went wrong',
+          createdAt: new Date().toISOString(),
+        });
+        return null;
+      }
+
+      return null;
+    },
+    [],
+  );
+
+  return { sendMessage, submitChoice, cancel };
 }
