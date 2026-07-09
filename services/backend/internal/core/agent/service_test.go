@@ -216,3 +216,19 @@ func TestDeleteChat_RejectsNonMemberAndEvictsRegistryOnSuccess(t *testing.T) {
 		t.Fatal("session still present after owner deleted it")
 	}
 }
+
+func TestDBMessagesToProviderMessages(t *testing.T) {
+	got := dbMessagesToProviderMessages([]postgres.DBChatMessage{
+		{Role: "user", Content: "Hi"},
+		{Role: "assistant", Content: "Hello, how can I help?"},
+	})
+	if len(got) != 2 {
+		t.Fatalf("len(got) = %d, want 2", len(got))
+	}
+	if string(got[0].Role) != "user" || got[0].Content != "Hi" {
+		t.Fatalf("got[0] = %+v, want {Role: user, Content: Hi}", got[0])
+	}
+	if string(got[1].Role) != "assistant" || got[1].Content != "Hello, how can I help?" {
+		t.Fatalf("got[1] = %+v, want {Role: assistant, Content: Hello, how can I help?}", got[1])
+	}
+}

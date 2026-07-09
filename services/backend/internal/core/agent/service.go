@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	bagent "github.com/buildwithgo/berrygem/agent"
+	"github.com/buildwithgo/berrygem/providers"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
@@ -142,7 +143,14 @@ func (s *Service) ChatStream(
 		return err
 	}
 
-	berrygemChat := s.registry.GetOrCreateChat(sessionID, ag)
+	berrygemChat, wasCreated := s.registry.GetOrCreateChat(sessionID, ag)
+	if wasCreated {
+		history, err := s.chatRepo.ListMessagesBySession(ctx, sessionID)
+		if err != nil {
+			return err
+		}
+		berrygemChat.SetMessages(dbMessagesToProviderMessages(history))
+	}
 
 	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "user", message, nil, nil); err != nil {
 		return err
@@ -181,6 +189,19 @@ func (s *Service) ChatStream(
 		}
 	}
 	return nil
+}
+
+// dbMessagesToProviderMessages converts persisted chat history into the
+// shape berrygem's Chat.SetMessages expects. DBChatMessage.Role is already
+// the plain strings "user"/"assistant"/"system" — identical to
+// providers.RoleUser/RoleAssistant/RoleSystem's underlying values — so this
+// is a direct conversion, not a lookup table.
+func dbMessagesToProviderMessages(msgs []postgres.DBChatMessage) []providers.Message {
+	out := make([]providers.Message, len(msgs))
+	for i, m := range msgs {
+		out[i] = providers.Message{Role: providers.Role(m.Role), Content: m.Content}
+	}
+	return out
 }
 
 // consumeStream drains a Berrygem stream's three channels, guarding against

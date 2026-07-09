@@ -63,15 +63,15 @@ func (r *Registry) BuildAgent(cfg AgentConfig, tools ...agent.Option) (*agent.Ag
 	return agent.New(opts...)
 }
 
-func (r *Registry) GetOrCreateChat(sessionID string, ag *agent.Agent) *chat.Chat {
+func (r *Registry) GetOrCreateChat(sessionID string, ag *agent.Agent) (*chat.Chat, bool) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	if c, ok := r.chatSessions[sessionID]; ok {
-		return c
+		return c, false
 	}
 	c := chat.New(ag)
 	r.chatSessions[sessionID] = c
-	return c
+	return c, true
 }
 
 func (r *Registry) RemoveChat(sessionID string) {
