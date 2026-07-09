@@ -74,3 +74,23 @@ func TestPendingChoice_GetReturnsNilUntilSet(t *testing.T) {
 		t.Fatalf("get() = %+v, want ID=abc", got)
 	}
 }
+
+// TestTurnStateFor_ReturnsSamePointerAcrossCalls proves the core invariant
+// the turnState pause/resume fix depends on: turnStateFor must hand back the
+// SAME *turnState for a given sessionID on every call (including a
+// GetOrCreateChat cache hit on turn 2+), so runTurn's field writes on the
+// most recent call are visible to whichever tool closure berrygem actually
+// invokes — see the "Why turnState exists" note on runTurn in service.go.
+// Without this, the whole fix is a no-op.
+func TestTurnStateFor_ReturnsSamePointerAcrossCalls(t *testing.T) {
+	svc := &Service{turnStates: make(map[string]*turnState)}
+	first := svc.turnStateFor("session-1")
+	second := svc.turnStateFor("session-1")
+	if first != second {
+		t.Fatal("turnStateFor returned different pointers for the same sessionID")
+	}
+	other := svc.turnStateFor("session-2")
+	if other == first {
+		t.Fatal("turnStateFor returned the same pointer for a different sessionID")
+	}
+}

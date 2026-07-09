@@ -11,6 +11,7 @@ import (
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
 
@@ -64,14 +65,22 @@ func (p *pendingChoice) get() *ChoicePrompt {
 }
 
 type Service struct {
-	registry  *Registry
-	chatRepo  ChatRepository
-	creditSvc *credits.Service
-	members   MemberRepository
+	registry     *Registry
+	chatRepo     ChatRepository
+	creditSvc    *credits.Service
+	members      MemberRepository
+	turnStates   map[string]*turnState
+	turnStatesMu sync.Mutex
 }
 
 func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository) *Service {
-	return &Service{registry: registry, chatRepo: chatRepo, creditSvc: creditSvc, members: members}
+	return &Service{
+		registry:   registry,
+		chatRepo:   chatRepo,
+		creditSvc:  creditSvc,
+		members:    members,
+		turnStates: make(map[string]*turnState),
+	}
 }
 
 // requireMember returns workspace.ErrNotMember if userID is not a member of
@@ -130,7 +139,7 @@ func (s *Service) DeleteChat(ctx context.Context, userID, chatID string) error {
 	if err := s.requireMember(ctx, session.WorkspaceID, userID); err != nil {
 		return err
 	}
-	s.registry.RemoveChat(chatID)
+	s.evictChat(chatID)
 	return s.chatRepo.DeleteSession(ctx, chatID)
 }
 
@@ -148,6 +157,52 @@ func (s *Service) GetMessages(ctx context.Context, userID, sessionID string) ([]
 // StreamToken is called by ChatStream for each token.
 type StreamToken func(string) error
 
+// turnState holds one chat session's current-turn callbacks/context, kept
+// alive and refreshed for the session's whole lifetime — see the "Why
+// turnState exists" note above runTurn for why this indirection is
+// necessary. The SAME *turnState pointer is returned by turnStateFor on
+// every call for a given sessionID; runTurn overwrites its fields (under
+// its mutex) at the start of every turn, including a GetOrCreateChat cache
+// hit where the freshly-built agent/tools are otherwise discarded.
+type turnState struct {
+	mu          sync.Mutex
+	userID      string
+	workspaceID string
+	ctx         context.Context
+	sendChoice  SendChoice
+	cancel      context.CancelFunc
+	pending     *pendingChoice
+}
+
+func (t *turnState) snapshot() (userID, workspaceID string, ctx context.Context, sendChoice SendChoice, cancel context.CancelFunc, pending *pendingChoice) {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	return t.userID, t.workspaceID, t.ctx, t.sendChoice, t.cancel, t.pending
+}
+
+// turnStateFor returns sessionID's turnState, creating it on first use.
+func (s *Service) turnStateFor(sessionID string) *turnState {
+	s.turnStatesMu.Lock()
+	defer s.turnStatesMu.Unlock()
+	if ts, ok := s.turnStates[sessionID]; ok {
+		return ts
+	}
+	ts := &turnState{}
+	s.turnStates[sessionID] = ts
+	return ts
+}
+
+// evictChat removes sessionID's in-memory chat AND its turnState together —
+// use this instead of calling s.registry.RemoveChat directly anywhere in
+// this package, so a rebuilt chat never inherits a stale turnState left
+// over from before eviction.
+func (s *Service) evictChat(sessionID string) {
+	s.registry.RemoveChat(sessionID)
+	s.turnStatesMu.Lock()
+	delete(s.turnStates, sessionID)
+	s.turnStatesMu.Unlock()
+}
+
 // runTurn drives one berrygem turn-loop invocation: builds the agent with
 // this session's tools, feeds turnMessage into its (possibly rehydrated)
 // conversation, and either persists the assistant's reply and reports full
@@ -156,6 +211,17 @@ type StreamToken func(string) error
 // usage. Callers persist turnMessage themselves first (ChatStream as a
 // "user" message, SubmitChoice's resume as a "choice_response" one) —
 // runTurn only persists what happens *after*.
+//
+// Why turnState exists: Registry.GetOrCreateChat(sessionID, ag) discards
+// the *agent.Agent (and its tools) passed on every call after a session's
+// first — chat.Chat binds its Agent once, at chat.New(ag) time, with no way
+// to swap it later. So the ask_choice/create_workbench tool closures built
+// here on turn 2+ are silently unused; only turn 1's closures are ever
+// actually invoked by berrygem. Reading everything through the session's
+// single long-lived *turnState (refreshed at the start of every runTurn
+// call, including a cache hit) means whichever closure berrygem ends up
+// calling always sees the MOST RECENT turn's context/callbacks, not turn
+// 1's stale, already-cancelled ones.
 func (s *Service) runTurn(
 	ctx context.Context,
 	sessionID, userID, workspaceID, agentType, turnMessage string,
@@ -172,28 +238,42 @@ func (s *Service) runTurn(
 	defer cancelForChoice()
 	pending := &pendingChoice{}
 
+	ts := s.turnStateFor(sessionID)
+	ts.mu.Lock()
+	ts.userID, ts.workspaceID, ts.ctx, ts.sendChoice, ts.cancel, ts.pending = userID, workspaceID, streamCtx, sendChoice, cancelForChoice, pending
+	ts.mu.Unlock()
+
 	askChoice := func(question string, options []ChoiceOption, allowCustom bool) error {
+		_, _, curCtx, curSendChoice, curCancel, curPending := ts.snapshot()
 		choicesJSON, err := json.Marshal(options)
 		if err != nil {
 			return err
 		}
-		msg, err := s.chatRepo.InsertMessage(streamCtx, sessionID, "choice_prompt", question, choicesJSON, nil)
+		msg, err := s.chatRepo.InsertMessage(curCtx, sessionID, "choice_prompt", question, choicesJSON, nil)
 		if err != nil {
 			return err
 		}
 		cp := ChoicePrompt{ID: msg.ID, Question: question, Options: options, AllowCustom: allowCustom}
-		pending.set(cp)
-		if err := sendChoice(cp); err != nil {
+		if err := curSendChoice(cp); err != nil {
 			return err
 		}
-		cancelForChoice()
+		// Set pending only AFTER sendChoice succeeds — if the push to the
+		// client fails (e.g. mid-disconnect), this turn must still be
+		// classified as a genuine failure below, not a delivered pause.
+		curPending.set(cp)
+		curCancel()
 		return nil
+	}
+
+	createWorkbench := func(name, description string, visibility workbench.Visibility) (workbench.Workbench, error) {
+		curUserID, curWorkspaceID, curCtx, _, _, _ := ts.snapshot()
+		return s.workbenches.CreateWorkbench(curCtx, curUserID, curWorkspaceID, name, description, visibility)
 	}
 
 	ag, err := s.registry.BuildAgent(cfg,
 		bagent.WithTools(
 			newAskChoiceTool(askChoice),
-			newCreateWorkbenchTool(s.workbenches, userID, workspaceID),
+			newCreateWorkbenchTool(createWorkbench),
 		),
 	)
 	if err != nil {
@@ -230,10 +310,11 @@ func (s *Service) runTurn(
 		// The in-memory chat's message list now has a dangling turn with
 		// no assistant reply (berrygem's SendStream appends the input
 		// message before streaming and doesn't roll it back on error/
-		// cancellation — verified against its source). Evict it so the
-		// next message for this session rebuilds fresh via rehydration
-		// instead of corrupting the next turn's context.
-		s.registry.RemoveChat(sessionID)
+		// cancellation — verified against its source). Evict it (chat AND
+		// turnState together) so the next message for this session rebuilds
+		// fresh via rehydration instead of corrupting the next turn's
+		// context.
+		s.evictChat(sessionID)
 		return err
 	}
 
