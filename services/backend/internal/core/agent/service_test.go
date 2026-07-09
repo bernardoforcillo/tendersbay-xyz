@@ -232,3 +232,22 @@ func TestDBMessagesToProviderMessages(t *testing.T) {
 		t.Fatalf("got[1] = %+v, want {Role: assistant, Content: Hello, how can I help?}", got[1])
 	}
 }
+
+func TestEstimateTokens(t *testing.T) {
+	cases := []struct {
+		name string
+		in   string
+		want int32
+	}{
+		{"empty string still costs one token", "", 1},
+		{"short string floors to one token", "hi", 1},
+		{"16 chars is 4 tokens at ~4 chars/token", "0123456789abcdef", 4},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			if got := estimateTokens(c.in); got != c.want {
+				t.Fatalf("estimateTokens(%q) = %d, want %d", c.in, got, c.want)
+			}
+		})
+	}
+}

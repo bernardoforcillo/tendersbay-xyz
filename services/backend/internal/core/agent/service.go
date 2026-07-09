@@ -179,16 +179,42 @@ func (s *Service) ChatStream(
 	}
 
 	if usageCh != nil && done != nil {
+		inputTokens := int32(done.Usage.PromptTokens)
+		outputTokens := int32(done.Usage.CompletionTokens)
+		totalTokens := int32(done.Usage.TotalTokens)
+		if totalTokens == 0 {
+			// berrygem's streaming client never sets stream_options.include_usage
+			// on the OpenAI-compatible request (verified against its vendored
+			// source), so Fireworks never returns usage in streaming mode and
+			// RunResult.Usage comes back all-zero. Falling through with zeros
+			// would hit credits.Service.Deduct's floor and silently bill a flat
+			// 1 token regardless of the real exchange size — estimate instead.
+			inputTokens = estimateTokens(message)
+			outputTokens = estimateTokens(fullContent)
+			totalTokens = inputTokens + outputTokens
+		}
 		usageCh <- credits.Usage{
 			AgentType:    agentType,
 			SessionID:    sessionID,
 			Model:        cfg.Model,
-			InputTokens:  int32(done.Usage.PromptTokens),
-			OutputTokens: int32(done.Usage.CompletionTokens),
-			TotalTokens:  int32(done.Usage.TotalTokens),
+			InputTokens:  inputTokens,
+			OutputTokens: outputTokens,
+			TotalTokens:  totalTokens,
 		}
 	}
 	return nil
+}
+
+// estimateTokens roughly approximates a token count from text length for the
+// stream_options.include_usage fallback above — ~4 characters per token is a
+// standard rough approximation for GPT-style tokenizers. Never zero, so even
+// a short real exchange still costs at least one token.
+func estimateTokens(s string) int32 {
+	n := int32(len(s) / 4)
+	if n < 1 {
+		return 1
+	}
+	return n
 }
 
 // dbMessagesToProviderMessages converts persisted chat history into the
