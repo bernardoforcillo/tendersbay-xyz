@@ -6,7 +6,7 @@ import { CreditDisplay } from '~/features/account/components/molecules/credit-di
 import { MessageBubble } from '~/features/account/components/molecules/message-bubble';
 import { useChatStream } from '~/features/account/hooks/use-chat-stream';
 import { agentClient } from '~/lib/api/client';
-import { useChatStore } from '~/store/chat';
+import { type ChatMessage, useChatStore } from '~/store/chat';
 import { useWorkspaceStore } from '~/store/workspace';
 
 export function ChatWindow() {
@@ -23,7 +23,7 @@ export function ChatWindow() {
   const workspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
   const { sendMessage, submitChoice } = useChatStream();
   const [creating, setCreating] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const loadedChatIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     const parent = bottomRef.current?.parentElement;
@@ -33,16 +33,23 @@ export function ChatWindow() {
   });
 
   useEffect(() => {
-    if (currentChatId && workspaceId && !loaded) {
-      setLoaded(true);
+    if (currentChatId && workspaceId && loadedChatIdRef.current !== currentChatId) {
+      loadedChatIdRef.current = currentChatId;
       agentClient
         .getMessages({ chatId: currentChatId })
         .then((res) => {
           const store = useChatStore.getState();
+          // The backend is the source of truth for persisted history — replace
+          // the store's messages wholesale rather than appending. A live-sent
+          // user/assistant message was optimistically added with a
+          // client-generated id (crypto.randomUUID(), see useChatStream), which
+          // never matches the real id GetMessages returns for that same row, so
+          // an append here would duplicate it even with addMessage's id dedup.
+          const nextMessages: ChatMessage[] = [];
           let lastChoicePrompt: (typeof res.messages)[number] | null = null;
           for (const m of res.messages) {
             if (m.role === 'user' || m.role === 'assistant') {
-              store.addMessage({
+              nextMessages.push({
                 id: m.id,
                 role: m.role,
                 content: m.content,
@@ -57,7 +64,7 @@ export function ChatWindow() {
                     description: string;
                   }[])
                 : [];
-              store.addMessage({
+              nextMessages.push({
                 id: m.id,
                 role: 'choice_prompt',
                 content: m.content,
@@ -66,7 +73,7 @@ export function ChatWindow() {
               });
               lastChoicePrompt = m;
             } else if (m.role === 'choice_response') {
-              store.addMessage({
+              nextMessages.push({
                 id: m.id,
                 role: 'choice_response',
                 content: m.content,
@@ -75,6 +82,7 @@ export function ChatWindow() {
               lastChoicePrompt = null;
             }
           }
+          store.setMessages(nextMessages);
           if (lastChoicePrompt) {
             const choices = JSON.parse(new TextDecoder().decode(lastChoicePrompt.choices)) as {
               key: string;
@@ -87,11 +95,13 @@ export function ChatWindow() {
               options: choices,
               allowCustom: false,
             });
+          } else {
+            store.setPendingChoice(null);
           }
         })
         .catch(() => {});
     }
-  }, [currentChatId, workspaceId, loaded]);
+  }, [currentChatId, workspaceId]);
 
   useEffect(() => {
     if (workspaceId) {
@@ -123,7 +133,6 @@ export function ChatWindow() {
         chatId = res.chat?.id ?? null;
         if (chatId) {
           setCurrentChat(chatId);
-          setLoaded(false);
         }
       } catch {
         return;

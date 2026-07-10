@@ -28,6 +28,7 @@ interface ChatStore {
   } | null;
   setCurrentChat: (id: string | null) => void;
   addMessage: (msg: ChatMessage) => void;
+  setMessages: (messages: ChatMessage[]) => void;
   setStreaming: (v: boolean) => void;
   appendStreamToken: (token: string) => void;
   setStreamingContent: (content: string) => void;
@@ -46,7 +47,11 @@ export const useChatStore = create<ChatStore>()(
       credits: null,
       pendingChoice: null,
       setCurrentChat: (id) => set({ currentChatId: id }),
-      addMessage: (msg) => set((s) => ({ messages: [...s.messages, msg] })),
+      addMessage: (msg) =>
+        set((s) =>
+          s.messages.some((m) => m.id === msg.id) ? s : { messages: [...s.messages, msg] },
+        ),
+      setMessages: (messages) => set({ messages }),
       setStreaming: (v) => set({ streaming: v }),
       appendStreamToken: (token) => set((s) => ({ streamingContent: s.streamingContent + token })),
       setStreamingContent: (content) => set({ streamingContent: content }),
