@@ -1,4 +1,4 @@
-// Package telemetry wires the backend's slog output to PostHog via the
+// Package telemetry wires a service's slog output to PostHog via the
 // OpenTelemetry OTLP logs exporter. It is a no-op when the API key is unset.
 package telemetry
 
@@ -23,8 +23,8 @@ type Config struct {
 }
 
 // Setup installs the default slog logger. With an API key, slog records are
-// exported to PostHog's OTLP logs endpoint; without one, slog writes to stdout
-// and the returned shutdown is a no-op.
+// exported to PostHog's OTLP logs endpoint; without one, slog writes to
+// stdout and the returned shutdown is a no-op.
 func Setup(ctx context.Context, cfg Config) (func(context.Context) error, error) {
 	noop := func(context.Context) error { return nil }
 

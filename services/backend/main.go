@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry"
 	"github.com/joho/godotenv"
 
 	agentv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
@@ -30,7 +31,6 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
-	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/telemetry"
 )
 
 func main() {

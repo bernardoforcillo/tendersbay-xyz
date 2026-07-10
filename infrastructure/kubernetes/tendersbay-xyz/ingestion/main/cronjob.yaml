@@ -1,0 +1,71 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ingestion
+  namespace: tendersbay-xyz
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 300
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      # 3000s = 50m, leaving headroom before the next hourly fire. Fixed
+      # here (not an app env var) — see the design doc for why
+      # INGESTION_TIMEOUT was dropped in favor of Kubernetes owning the cap.
+      activeDeadlineSeconds: 3000
+      ttlSecondsAfterFinished: 3600
+      template:
+        metadata:
+          labels:
+            app: tendersbay-xyz
+            tier: ingestion
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            # gcr.io/distroless/static-debian12:nonroot is UID/GID 65532.
+            runAsUser: 65532
+            runAsGroup: 65532
+            runAsNonRoot: true
+            fsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: ingestion
+              # Image published by .github/workflows/ci-ingestion.yml; tag
+              # rewritten by Flux image automation once the first build
+              # lands (see update.yaml). :latest is a bootstrap placeholder.
+              image: bernardoforcillo/tendersbay-ingestion:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                limits:
+                  memory: '128Mi'
+                  cpu: '200m'
+                requests:
+                  memory: '64Mi'
+                  cpu: '50m'
+              envFrom:
+                - secretRef:
+                    name: ingestion-secrets
+              env:
+                - name: SERVICE_NAME
+                  value: 'tendersbay-ingestion'
+                # PostHog project key is a public client key (phc_…); plaintext is fine.
+                - name: POSTHOG_API_KEY
+                  value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
+                - name: POSTHOG_HOST
+                  value: 'https://eu.i.posthog.com'
+              imagePullPolicy: Always
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: tmp
+              emptyDir: {}
