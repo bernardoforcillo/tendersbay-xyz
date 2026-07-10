@@ -5,7 +5,6 @@ import { PageHeader } from '~/features/account/components/organisms';
 import { WorkbenchContext } from '~/features/workbench/context';
 import { useWorkbench } from '~/features/workbench/hooks';
 import { BTN_SECONDARY } from '~/features/workbench/ui';
-import { Breadcrumb } from '~/features/workspace/components/molecules/breadcrumb';
 
 const GEAR =
   'shrink-0 rounded-lg p-2 text-ink-400 no-underline transition-colors hover:bg-cream-200 hover:text-ink-900 [&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
@@ -54,20 +53,6 @@ export function WorkbenchLayout() {
       value={{ workbenchId, workbench, myPermissions, workspaceName, refetch }}
     >
       <PageHeader
-        breadcrumb={
-          <Breadcrumb
-            items={[
-              { label: t('workbench.breadcrumb.workspaces', 'Workspaces'), to: '/workspaces' },
-              { label: workspaceName, to: '/workspaces/$workspaceId', params: { workspaceId } },
-              {
-                label: t('workbench.breadcrumb.workbenches', 'Workbenches'),
-                to: '/workspaces/$workspaceId/workbenches',
-                params: { workspaceId },
-              },
-              { label: workbench.name },
-            ]}
-          />
-        }
         leading={
           <span
             aria-hidden="true"

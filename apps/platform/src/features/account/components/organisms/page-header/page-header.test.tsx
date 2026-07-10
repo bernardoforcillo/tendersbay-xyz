@@ -33,18 +33,12 @@ describe('PageHeader', () => {
     expect(useSidebarStore.getState().drawerOpen).toBe(true);
   });
 
-  it('renders breadcrumb, subtitle, actions and children slots', () => {
+  it('renders subtitle, actions and children slots', () => {
     render(
-      <PageHeader
-        breadcrumb={<nav>crumbs</nav>}
-        subtitle="@acme"
-        actions={<button type="button">New</button>}
-        title="Workspace"
-      >
+      <PageHeader subtitle="@acme" actions={<button type="button">New</button>} title="Workspace">
         <div>tabs</div>
       </PageHeader>,
     );
-    expect(screen.getByText('crumbs')).toBeInTheDocument();
     expect(screen.getByText('@acme')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'New' })).toBeInTheDocument();
     expect(screen.getByText('tabs')).toBeInTheDocument();
