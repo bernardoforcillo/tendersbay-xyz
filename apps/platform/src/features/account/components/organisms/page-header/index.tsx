@@ -4,8 +4,6 @@ import { Button } from 'react-aria-components';
 import { useSidebarStore } from '~/store/sidebar';
 
 type PageHeaderProps = {
-  /** Row above the title (e.g. a breadcrumb). */
-  breadcrumb?: ReactNode;
   /** Element before the title (e.g. a monogram tile). */
   leading?: ReactNode;
   /** Main heading. Omit for a toggle-only bar. */
@@ -53,17 +51,9 @@ function SidebarToggle() {
   );
 }
 
-export function PageHeader({
-  breadcrumb,
-  leading,
-  title,
-  subtitle,
-  actions,
-  children,
-}: PageHeaderProps) {
+export function PageHeader({ leading, title, subtitle, actions, children }: PageHeaderProps) {
   return (
     <header className="sticky top-0 z-10 flex flex-col gap-4 border-b border-cream-200 bg-cream-100 px-4 py-3 lg:bg-white lg:px-6 lg:py-4">
-      {breadcrumb}
       <div className="flex items-center gap-3">
         <SidebarToggle />
         {leading}

@@ -1,3 +1,4 @@
+export { ChatWindow } from './chat-window';
 export { DeleteForm } from './delete-form';
 export { EmailForm } from './email-form';
 export type { PageHeaderProps } from './page-header';

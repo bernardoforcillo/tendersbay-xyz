@@ -15,17 +15,18 @@ const (
 
 // Config holds the runtime configuration for the backend service.
 type Config struct {
-	Port          string
-	ServiceName   string
-	PostHogAPIKey string
-	PostHogHost   string
-	DatabaseURL   string
-	JWTSecret     string
-	JWTExpiry     time.Duration
-	RefreshExpiry time.Duration
-	ResendAPIKey  string
-	AppBaseURL    string
-	CORSOrigins   []string
+	Port            string
+	ServiceName     string
+	PostHogAPIKey   string
+	PostHogHost     string
+	DatabaseURL     string
+	JWTSecret       string
+	JWTExpiry       time.Duration
+	RefreshExpiry   time.Duration
+	ResendAPIKey    string
+	FireworksAPIKey string
+	AppBaseURL      string
+	CORSOrigins     []string
 	// WorkspaceInviteExpiry is how long an email workspace invitation stays valid.
 	WorkspaceInviteExpiry time.Duration
 }
@@ -35,14 +36,15 @@ type Config struct {
 // POSTHOG_API_KEY has no default; an empty key disables telemetry export.
 func FromEnv() Config {
 	cfg := Config{
-		Port:          getenv("PORT", defaultPort),
-		ServiceName:   getenv("SERVICE_NAME", defaultServiceName),
-		PostHogAPIKey: os.Getenv("POSTHOG_API_KEY"),
-		PostHogHost:   getenv("POSTHOG_HOST", defaultPostHogHost),
-		DatabaseURL:   os.Getenv("DATABASE_URL"),
-		JWTSecret:     os.Getenv("JWT_SECRET"),
-		ResendAPIKey:  os.Getenv("RESEND_API_KEY"),
-		AppBaseURL:    os.Getenv("APP_BASE_URL"),
+		Port:            getenv("PORT", defaultPort),
+		ServiceName:     getenv("SERVICE_NAME", defaultServiceName),
+		PostHogAPIKey:   os.Getenv("POSTHOG_API_KEY"),
+		PostHogHost:     getenv("POSTHOG_HOST", defaultPostHogHost),
+		DatabaseURL:     os.Getenv("DATABASE_URL"),
+		JWTSecret:       os.Getenv("JWT_SECRET"),
+		ResendAPIKey:    os.Getenv("RESEND_API_KEY"),
+		FireworksAPIKey: os.Getenv("FIREWORKS_API_KEY"),
+		AppBaseURL:      os.Getenv("APP_BASE_URL"),
 	}
 
 	if raw := os.Getenv("CORS_ORIGINS"); raw != "" {

@@ -2,6 +2,7 @@ package connectapi
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"connectrpc.com/connect"
@@ -10,10 +11,19 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
 
-type WorkspaceHandler struct{ svc *workspace.Service }
+// CreditSeeder is the narrow slice of credits.Service the workspace handler
+// needs: giving a newly created workspace its default credit allowance.
+type CreditSeeder interface {
+	Seed(ctx context.Context, workspaceID string) error
+}
 
-func NewWorkspaceHandler(svc *workspace.Service) *WorkspaceHandler {
-	return &WorkspaceHandler{svc: svc}
+type WorkspaceHandler struct {
+	svc     *workspace.Service
+	credits CreditSeeder
+}
+
+func NewWorkspaceHandler(svc *workspace.Service, credits CreditSeeder) *WorkspaceHandler {
+	return &WorkspaceHandler{svc: svc, credits: credits}
 }
 
 var _ workspacev1connect.WorkspaceServiceHandler = (*WorkspaceHandler)(nil)
@@ -36,6 +46,12 @@ func (h *WorkspaceHandler) CreateWorkspace(ctx context.Context, req *connect.Req
 	ws, err := h.svc.CreateWorkspace(ctx, uid, req.Msg.Name, req.Msg.Slug)
 	if err != nil {
 		return nil, toConnectError(err)
+	}
+	// Best-effort: the workspace itself is the primary result. If seeding its
+	// credit allowance fails, the workspace still exists and Check() degrades
+	// gracefully to 0/0 rather than the whole creation failing after commit.
+	if err := h.credits.Seed(ctx, ws.ID); err != nil {
+		slog.ErrorContext(ctx, "failed to seed workspace credits", "workspace_id", ws.ID, "error", err)
 	}
 	return connect.NewResponse(&workspacev1.CreateWorkspaceResponse{Workspace: toProtoWorkspace(ws)}), nil
 }
