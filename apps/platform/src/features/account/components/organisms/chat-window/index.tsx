@@ -133,6 +133,13 @@ export function ChatWindow() {
         chatId = res.chat?.id ?? null;
         if (chatId) {
           setCurrentChat(chatId);
+          // A brand-new chat has no history to restore. Mark it as already
+          // loaded so the reload effect doesn't fire a concurrent
+          // GetMessages call that could race the very first sendMessage
+          // below and win with a stale (still-empty) response, wiping the
+          // just-rendered optimistic user message via setMessages' now-
+          // destructive replace.
+          loadedChatIdRef.current = chatId;
         }
       } catch {
         return;
