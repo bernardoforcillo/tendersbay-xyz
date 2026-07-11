@@ -21,6 +21,12 @@ const defaultBaseURL = "https://api.ted.europa.eu/v3/notices/search"
 // verified live.
 const pageLimit = 250
 
+// maxPages is the safety cap on pagination to guard against a stuck or
+// repeating iterationNextToken. TED's documented limit is at most 15,000
+// notices retrievable per query; 15,000 / 250-per-page = 60 pages, so
+// 100 pages is comfortably above any legitimate response.
+const maxPages = 100
+
 // searchFields is the exact field set eforms.Notice's json tags decode —
 // keep these in sync. Verified live against api.ted.europa.eu (requesting
 // an unsupported field name returns a 400 listing every valid one, which
@@ -70,7 +76,12 @@ func (c *Client) FetchSince(ctx context.Context, since time.Time) ([]eforms.Noti
 
 	var notices []eforms.Notice
 	token := ""
+	pages := 0
 	for {
+		pages++
+		if pages > maxPages {
+			return nil, fmt.Errorf("tedapi: exceeded %d pages without exhausting iterationNextToken — possible pagination loop", maxPages)
+		}
 		resp, err := c.do(ctx, searchRequest{
 			Query:              query,
 			Fields:             searchFields,

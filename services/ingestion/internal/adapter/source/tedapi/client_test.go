@@ -102,3 +102,23 @@ func TestFetchSince_ContextCancelled(t *testing.T) {
 		t.Fatal("FetchSince did not return after ctx cancellation")
 	}
 }
+
+func TestFetchSince_PaginationLoopSafetyCap(t *testing.T) {
+	calls := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		w.Header().Set("Content-Type", "application/json")
+		// Always return a non-empty iterationNextToken, simulating a stuck pagination loop.
+		_, _ = w.Write([]byte(`{"notices":[{"publication-number":"1-2026","procedure-identifier":"proc-1"}],"totalNoticeCount":999999,"iterationNextToken":"tok-stuck"}`))
+	}))
+	defer srv.Close()
+
+	c := tedapi.NewWithURL(srv.URL)
+	_, err := c.FetchSince(context.Background(), time.Now())
+	if err == nil {
+		t.Fatal("FetchSince: want error on stuck pagination loop, got nil")
+	}
+	if calls != 100 {
+		t.Fatalf("server got %d calls, want 100 (maxPages cap)", calls)
+	}
+}
