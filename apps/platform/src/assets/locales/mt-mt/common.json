@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} jiem"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Illum",
+      "explore": "Esplora",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Riċenti",
+    "palette": {
+      "trigger": "Fittex jew staqsi…",
+      "label": "Paletta tal-kmandi",
+      "placeholder": "Fittex jew staqsi kwalunkwe ħaġa…",
+      "askAgent": "Staqsi lill-aġent: “{{query}}”",
+      "sections": {
+        "navigate": "Mur għal",
+        "recent": "Workbenches riċenti",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Settings tal-workspace",
+      "accountSettings": "Settings tal-kont",
+      "allWorkspaces": "Il-workspaces kollha"
+    },
+    "user": {
+      "settings": "Settings",
+      "logout": "Oħroġ"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Qed jitgħabba…",
@@ -269,6 +295,7 @@
       "signIn": "Idħol biex tissieħeb"
     },
     "switcher": {
+      "settings": "Settings tal-workspace",
       "label": "Spazji tax-xogħol",
       "manage": "L-ispazji tax-xogħol kollha"
     }

@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} dagen"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Vandaag",
+      "explore": "Ontdekken",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Recent",
+    "palette": {
+      "trigger": "Zoeken of vragen…",
+      "label": "Opdrachtenpalet",
+      "placeholder": "Zoek of vraag iets…",
+      "askAgent": "Vraag het de agent: „{{query}}”",
+      "sections": {
+        "navigate": "Ga naar",
+        "recent": "Recente workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-instellingen",
+      "accountSettings": "Accountinstellingen",
+      "allWorkspaces": "Alle workspaces"
+    },
+    "user": {
+      "settings": "Instellingen",
+      "logout": "Uitloggen"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Laden…",
@@ -269,6 +295,7 @@
       "signIn": "Meld je aan om deel te nemen"
     },
     "switcher": {
+      "settings": "Workspace-instellingen",
       "label": "Werkruimtes",
       "manage": "Alle werkruimtes"
     }

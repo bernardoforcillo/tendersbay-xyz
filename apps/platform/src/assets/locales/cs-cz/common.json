@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} dní"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Dnes",
+      "explore": "Prozkoumat",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Nedávné",
+    "palette": {
+      "trigger": "Hledat nebo se zeptat…",
+      "label": "Paleta příkazů",
+      "placeholder": "Hledat nebo se zeptat na cokoli…",
+      "askAgent": "Zeptejte se agenta: „{{query}}“",
+      "sections": {
+        "navigate": "Přejít na",
+        "recent": "Nedávné workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Nastavení workspace",
+      "accountSettings": "Nastavení účtu",
+      "allWorkspaces": "Všechny workspace"
+    },
+    "user": {
+      "settings": "Nastavení",
+      "logout": "Odhlásit se"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Načítání…",
@@ -269,6 +295,7 @@
       "signIn": "Přihlaste se pro připojení"
     },
     "switcher": {
+      "settings": "Nastavení workspace",
       "label": "Pracovní prostory",
       "manage": "Všechny pracovní prostory"
     }

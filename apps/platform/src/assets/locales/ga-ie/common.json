@@ -152,6 +152,32 @@
       "daysLeft": "{{count}} lá"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Inniu",
+      "explore": "Iniúchadh",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Le déanaí",
+    "palette": {
+      "trigger": "Cuardaigh nó fiafraigh…",
+      "label": "Pailéad na n-orduithe",
+      "placeholder": "Cuardaigh nó fiafraigh rud ar bith…",
+      "askAgent": "Fiafraigh den ghníomhaire: “{{query}}”",
+      "sections": {
+        "navigate": "Téigh go dtí",
+        "recent": "Workbenches le déanaí",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Socruithe workspace",
+      "accountSettings": "Socruithe cuntais",
+      "allWorkspaces": "Gach workspace"
+    },
+    "user": {
+      "settings": "Socruithe",
+      "logout": "Logáil amach"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Á lódáil…",
@@ -273,6 +299,7 @@
       "signIn": "Sínigh isteach chun bheith páirteach"
     },
     "switcher": {
+      "settings": "Socruithe workspace",
       "label": "Spásanna oibre",
       "manage": "Gach spás oibre"
     }

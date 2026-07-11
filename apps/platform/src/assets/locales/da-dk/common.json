@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} dage"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "I dag",
+      "explore": "Udforsk",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Seneste",
+    "palette": {
+      "trigger": "Søg eller spørg…",
+      "label": "Kommandopalet",
+      "placeholder": "Søg eller spørg om hvad som helst…",
+      "askAgent": "Spørg agenten: »{{query}}«",
+      "sections": {
+        "navigate": "Gå til",
+        "recent": "Seneste workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-indstillinger",
+      "accountSettings": "Kontoindstillinger",
+      "allWorkspaces": "Alle workspaces"
+    },
+    "user": {
+      "settings": "Indstillinger",
+      "logout": "Log ud"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Indlæser…",
@@ -269,6 +295,7 @@
       "signIn": "Log ind for at deltage"
     },
     "switcher": {
+      "settings": "Workspace-indstillinger",
       "label": "Arbejdsområder",
       "manage": "Alle arbejdsområder"
     }

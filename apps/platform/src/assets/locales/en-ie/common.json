@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} days"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Today",
+      "explore": "Explore",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Recent",
+    "palette": {
+      "trigger": "Search or ask…",
+      "label": "Command palette",
+      "placeholder": "Search or ask anything…",
+      "askAgent": "Ask the agent: “{{query}}”",
+      "sections": {
+        "navigate": "Go to",
+        "recent": "Recent workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace settings",
+      "accountSettings": "Account settings",
+      "allWorkspaces": "All workspaces"
+    },
+    "user": {
+      "settings": "Settings",
+      "logout": "Log out"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Loading…",
@@ -269,6 +295,7 @@
       "signIn": "Sign in to join"
     },
     "switcher": {
+      "settings": "Workspace settings",
       "label": "Workspaces",
       "manage": "All workspaces"
     }

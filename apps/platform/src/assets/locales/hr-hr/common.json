@@ -152,6 +152,32 @@
       "daysLeft": "{{count}} dana"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Danas",
+      "explore": "Istraži",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Nedavno",
+    "palette": {
+      "trigger": "Pretraži ili pitaj…",
+      "label": "Paleta naredbi",
+      "placeholder": "Pretraži ili pitaj bilo što…",
+      "askAgent": "Pitaj agenta: „{{query}}”",
+      "sections": {
+        "navigate": "Idi na",
+        "recent": "Nedavni workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Postavke workspace",
+      "accountSettings": "Postavke računa",
+      "allWorkspaces": "Svi workspace"
+    },
+    "user": {
+      "settings": "Postavke",
+      "logout": "Odjava"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Učitavanje…",
@@ -273,6 +299,7 @@
       "signIn": "Prijavite se za pridruživanje"
     },
     "switcher": {
+      "settings": "Postavke workspace",
       "label": "Radni prostori",
       "manage": "Svi radni prostori"
     }

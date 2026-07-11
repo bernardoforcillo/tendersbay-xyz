@@ -152,6 +152,32 @@
       "daysLeft": "{{count}} dienos"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Šiandien",
+      "explore": "Naršyti",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Naujausi",
+    "palette": {
+      "trigger": "Ieškoti arba klausti…",
+      "label": "Komandų paletė",
+      "placeholder": "Ieškoti arba klausti bet ko…",
+      "askAgent": "Paklauskite agento: „{{query}}“",
+      "sections": {
+        "navigate": "Eiti į",
+        "recent": "Naujausi workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace nustatymai",
+      "accountSettings": "Paskyros nustatymai",
+      "allWorkspaces": "Visi workspace"
+    },
+    "user": {
+      "settings": "Nustatymai",
+      "logout": "Atsijungti"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Įkeliama…",
@@ -273,6 +299,7 @@
       "signIn": "Prisijunkite, kad prisijungtumėte"
     },
     "switcher": {
+      "settings": "Workspace nustatymai",
       "label": "Darbo sritys",
       "manage": "Visos darbo sritys"
     }
