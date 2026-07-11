@@ -1,4 +1,4 @@
 {
   "extends": "@tendersbay/tsconfig/react",
-  "include": ["src"]
+  "include": ["src", "vitest.setup.ts"]
 }
