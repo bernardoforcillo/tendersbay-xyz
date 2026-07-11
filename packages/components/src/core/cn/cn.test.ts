@@ -14,6 +14,11 @@ describe('cn', () => {
     expect(cn('p-2 text-sm', 'p-4')).toBe('text-sm p-4');
   });
 
+  it('treats the theme shadow-soft scale as shadow utilities', () => {
+    expect(cn('shadow-soft', 'shadow-lg')).toBe('shadow-lg');
+    expect(cn('shadow-soft', 'shadow-soft-md')).toBe('shadow-soft-md');
+  });
+
   it('returns an empty string with no truthy args', () => {
     expect(cn(false, undefined)).toBe('');
   });

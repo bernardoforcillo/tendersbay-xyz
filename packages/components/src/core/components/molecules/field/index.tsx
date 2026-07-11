@@ -45,7 +45,9 @@ export function Field({
           {description}
         </Text>
       )}
-      <FieldError className="text-xs font-medium text-red-600">{errorMessage}</FieldError>
+      <FieldError className="text-xs font-medium text-red-600 empty:hidden">
+        {errorMessage}
+      </FieldError>
     </TextField>
   );
 }

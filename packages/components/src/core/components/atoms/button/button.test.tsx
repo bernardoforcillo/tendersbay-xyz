@@ -30,6 +30,13 @@ describe('Button', () => {
     expect(button.className).toContain('h-10');
   });
 
+  it('lets a consumer className override the defaults', () => {
+    render(<Button className="h-12">Big</Button>);
+    const button = screen.getByRole('button', { name: 'Big' });
+    expect(button.className).toContain('h-12');
+    expect(button.className).not.toContain('h-10');
+  });
+
   it('disables interaction with isDisabled', async () => {
     const user = userEvent.setup();
     const onPress = vi.fn();
