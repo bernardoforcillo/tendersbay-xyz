@@ -159,7 +159,7 @@
       "trigger": "Suchen oder fragen…",
       "label": "Befehlspalette",
       "placeholder": "Suchen oder alles fragen…",
-      "askAgent": "Frag den Agenten: „{{query}}“",
+      "askAgent": "Fragen Sie den Agenten: „{{query}}“",
       "sections": {
         "navigate": "Gehe zu",
         "recent": "Letzte Workbenches",
