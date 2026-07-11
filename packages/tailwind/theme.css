@@ -41,7 +41,7 @@
   --color-cream-950: #332b20;
 
   /* Type system — editorial display serif + clean sans + mono for data labels */
-  --font-display: "Calistoga", ui-serif, Georgia, "Times New Roman", serif;
+  --font-display: "Fraunces Variable", ui-serif, Georgia, "Times New Roman", serif;
   --font-sans:
     "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;
