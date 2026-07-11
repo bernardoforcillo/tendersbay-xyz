@@ -1,0 +1,26 @@
+{
+  "publication-number": "472143-2026",
+  "procedure-identifier": "proc-can-multilot-1",
+  "notice-type": "can-standard",
+  "procedure-type": "open",
+  "notice-title": { "ron": "Materiale sanitare", "eng": "Medical supplies" },
+  "buyer-name": { "ron": ["Spitalul Clinic de Urgenta"], "eng": ["Emergency Clinical Hospital"] },
+  "organisation-identifier-buyer": ["4204178"],
+  "official-language": ["RON"],
+  "buyer-country": ["ROU"],
+  "classification-cpv": ["33162200", "33162200", "33181500", "33181500", "33169100"],
+  "estimated-value-proc": "17694115.2",
+  "estimated-value-cur-proc": "RON",
+  "publication-date": "2026-07-09+02:00",
+  "identifier-lot": ["LOT-0001", "LOT-0002", "LOT-0003"],
+  "title-lot": {
+    "ron": ["Instrumente chirurgicale", "Consumabile sterile", "Echipament protectie"],
+    "eng": ["Surgical instruments", "Sterile consumables", "Protective equipment"]
+  },
+  "links": {
+    "pdf": {
+      "RON": "https://ted.europa.eu/ro/notice/472143-2026/pdf",
+      "ENG": "https://ted.europa.eu/en/notice/472143-2026/pdf"
+    }
+  }
+}

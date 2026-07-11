@@ -6,9 +6,12 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/source"
 )
 
-func TestNewRegistryHasNoBuiltInProvidersYet(t *testing.T) {
+func TestNewRegistryRegistersTED(t *testing.T) {
 	got := source.NewRegistry()
-	if len(got) != 0 {
-		t.Fatalf("NewRegistry() = %d providers, want 0 (no connectors yet)", len(got))
+	if len(got) != 1 {
+		t.Fatalf("NewRegistry() = %d providers, want 1", len(got))
+	}
+	if got[0].Name() != "ted" {
+		t.Errorf("provider[0].Name() = %q, want %q", got[0].Name(), "ted")
 	}
 }
