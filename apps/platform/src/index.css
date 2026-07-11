@@ -2,6 +2,8 @@
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
 @import "@tendersbay/tailwind";
+/* Tailwind v4 does not auto-scan node_modules — pull in the shared kit's classes. */
+@source "../node_modules/@tendersbay/components/src";
 
 @layer base {
   html {
