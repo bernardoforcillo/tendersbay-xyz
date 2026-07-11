@@ -8,24 +8,24 @@ import "encoding/json"
 // — see the design doc for the request/response samples this was built
 // from.
 type Notice struct {
-	PublicationNumber           string              `json:"publication-number"`
-	ProcedureIdentifier         string              `json:"procedure-identifier"`
-	NoticeType                  string              `json:"notice-type"`
-	ProcedureType               string              `json:"procedure-type"`
-	NoticeTitle                 map[string]string   `json:"notice-title"`
-	BuyerName                   map[string][]string `json:"buyer-name"`
-	OrganisationIdentifierBuyer []string            `json:"organisation-identifier-buyer"`
-	OfficialLanguage            []string            `json:"official-language"`
-	BuyerCountry                []string            `json:"buyer-country"`
-	ClassificationCPV           []string            `json:"classification-cpv"`
-	EstimatedValueProc          string              `json:"estimated-value-proc"`
-	EstimatedValueCurProc       string              `json:"estimated-value-cur-proc"`
-	PublicationDate             string              `json:"publication-date"`
-	IdentifierLot               []string            `json:"identifier-lot"`
-	TitleLot                    map[string][]string `json:"title-lot"`
-	DeadlineReceiptTenderDateLot []string           `json:"deadline-receipt-tender-date-lot"`
-	DeadlineReceiptTenderTimeLot []string           `json:"deadline-receipt-tender-time-lot"`
-	Links                       Links               `json:"links"`
+	PublicationNumber            string              `json:"publication-number"`
+	ProcedureIdentifier          string              `json:"procedure-identifier"`
+	NoticeType                   string              `json:"notice-type"`
+	ProcedureType                string              `json:"procedure-type"`
+	NoticeTitle                  map[string]string   `json:"notice-title"`
+	BuyerName                    map[string][]string `json:"buyer-name"`
+	OrganisationIdentifierBuyer  []string            `json:"organisation-identifier-buyer"`
+	OfficialLanguage             []string            `json:"official-language"`
+	BuyerCountry                 []string            `json:"buyer-country"`
+	ClassificationCPV            []string            `json:"classification-cpv"`
+	EstimatedValueProc           string              `json:"estimated-value-proc"`
+	EstimatedValueCurProc        string              `json:"estimated-value-cur-proc"`
+	PublicationDate              string              `json:"publication-date"`
+	IdentifierLot                []string            `json:"identifier-lot"`
+	TitleLot                     map[string][]string `json:"title-lot"`
+	DeadlineReceiptTenderDateLot []string            `json:"deadline-receipt-tender-date-lot"`
+	DeadlineReceiptTenderTimeLot []string            `json:"deadline-receipt-tender-time-lot"`
+	Links                        Links               `json:"links"`
 
 	// Raw holds the exact bytes this Notice was decoded from, set by
 	// Decode. Excluded from normal (un)marshalling — it's provenance, not

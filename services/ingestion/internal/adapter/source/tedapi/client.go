@@ -65,8 +65,8 @@ type searchRequest struct {
 
 type searchResponse struct {
 	Notices            []json.RawMessage `json:"notices"`
-	TotalNoticeCount    int               `json:"totalNoticeCount"`
-	IterationNextToken  *string           `json:"iterationNextToken"`
+	TotalNoticeCount   int               `json:"totalNoticeCount"`
+	IterationNextToken *string           `json:"iterationNextToken"`
 }
 
 // FetchSince returns every notice published at or after since, paging
