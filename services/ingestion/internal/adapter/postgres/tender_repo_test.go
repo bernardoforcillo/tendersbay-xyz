@@ -229,3 +229,86 @@ func TestRecordRun_WritesAuditRow(t *testing.T) {
 		t.Fatalf("audit row = fetched=%d inserted=%d updated=%d, want 3/2/1", fetched, inserted, updated)
 	}
 }
+
+func TestSaveDocumentParts_UpsertIsIdempotent(t *testing.T) {
+	repo, sqlDB := testRepo(t)
+	ctx := context.Background()
+	source, ref := "test-repo", "doc-parts-1"
+	cleanupTender(t, sqlDB, source, ref)
+
+	tenderResult, err := repo.Save(ctx, []tender.Tender{{
+		Source: source, SourceRef: ref, Title: "Doc parts test", Status: tender.StatusOpen,
+		Documents: []tender.Document{{URL: "https://example.org/notice.pdf", Type: "notice"}},
+	}})
+	if err != nil {
+		t.Fatalf("Save: %v", err)
+	}
+	if tenderResult.Inserted != 1 {
+		t.Fatalf("Save result = %+v, want Inserted=1", tenderResult)
+	}
+
+	var documentID int64
+	row := sqlDB.QueryRowContext(ctx,
+		`SELECT d.id FROM tenders.ingested_tender_documents d
+		 JOIN tenders.ingested_tenders t ON t.id = d.tender_id
+		 WHERE t.source = $1 AND t.source_ref = $2`,
+		source, ref)
+	if err := row.Scan(&documentID); err != nil {
+		t.Fatalf("find document id: %v", err)
+	}
+
+	if err := repo.SaveDocumentParts(ctx, documentID, []string{"part one", "part two"}); err != nil {
+		t.Fatalf("SaveDocumentParts (insert): %v", err)
+	}
+	got, err := repo.DocumentParts(ctx, documentID)
+	if err != nil {
+		t.Fatalf("DocumentParts: %v", err)
+	}
+	if len(got) != 2 || got[0] != "part one" || got[1] != "part two" {
+		t.Fatalf("DocumentParts = %v, want [part one, part two]", got)
+	}
+
+	// Re-saving the same parts is an idempotent update, not a duplicate.
+	if err := repo.SaveDocumentParts(ctx, documentID, []string{"part one updated", "part two"}); err != nil {
+		t.Fatalf("SaveDocumentParts (update): %v", err)
+	}
+	got, err = repo.DocumentParts(ctx, documentID)
+	if err != nil {
+		t.Fatalf("DocumentParts after update: %v", err)
+	}
+	if len(got) != 2 || got[0] != "part one updated" {
+		t.Fatalf("DocumentParts after update = %v, want [part one updated, part two]", got)
+	}
+}
+
+func TestDocumentParts_EmptyWhenNoneSaved(t *testing.T) {
+	repo, sqlDB := testRepo(t)
+	ctx := context.Background()
+	source, ref := "test-repo", "doc-parts-empty"
+	cleanupTender(t, sqlDB, source, ref)
+
+	if _, err := repo.Save(ctx, []tender.Tender{{
+		Source: source, SourceRef: ref, Title: "No parts yet", Status: tender.StatusOpen,
+		Documents: []tender.Document{{URL: "https://example.org/notice2.pdf", Type: "notice"}},
+	}}); err != nil {
+		t.Fatalf("Save: %v", err)
+	}
+
+	var documentID int64
+	row := sqlDB.QueryRowContext(ctx,
+		`SELECT d.id FROM tenders.ingested_tender_documents d
+		 JOIN tenders.ingested_tenders t ON t.id = d.tender_id
+		 WHERE t.source = $1 AND t.source_ref = $2`,
+		source, ref)
+	if err := row.Scan(&documentID); err != nil {
+		t.Fatalf("find document id: %v", err)
+	}
+
+	got, err := repo.DocumentParts(ctx, documentID)
+	if err != nil {
+		t.Fatalf("DocumentParts: %v", err)
+	}
+	if len(got) != 0 {
+		t.Fatalf("DocumentParts = %v, want empty", got)
+	}
+}

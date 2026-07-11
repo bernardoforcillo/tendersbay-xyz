@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/bernardoforcillo/drops/pg"
@@ -79,6 +80,17 @@ ON CONFLICT (tender_id, ref) DO UPDATE SET
 const insertRunSQL = `
 INSERT INTO tenders.ingestion_runs (source, started_at, finished_at, fetched, inserted, updated, error)
 VALUES ($1, $2, $3, $4, $5, $6, $7)
+`
+
+const upsertDocumentPartSQL = `
+INSERT INTO tenders.ingested_tender_document_parts (document_id, index, content)
+VALUES ($1, $2, $3)
+ON CONFLICT (document_id, index) DO UPDATE SET content = EXCLUDED.content
+`
+
+const selectDocumentPartsSQL = `
+SELECT content FROM tenders.ingested_tender_document_parts
+WHERE document_id = $1 ORDER BY index
 `
 
 // pgTextArray renders a Go string slice as a PostgreSQL array literal, e.g.
@@ -164,4 +176,36 @@ func (r *TenderRepo) RecordRun(ctx context.Context, rec ingestion.RunRecord) err
 		rec.Source, rec.StartedAt, rec.FinishedAt, rec.Fetched, rec.Inserted, rec.Updated, errMsg,
 	)
 	return err
+}
+
+// SaveDocumentParts upserts the extracted text parts of one document,
+// keyed by (document_id, index) — idempotent, so re-extracting the same
+// document updates content in place rather than duplicating rows.
+func (r *TenderRepo) SaveDocumentParts(ctx context.Context, documentID int64, parts []string) error {
+	for i, p := range parts {
+		if _, err := r.db.Exec(ctx, upsertDocumentPartSQL, documentID, i, p); err != nil {
+			return fmt.Errorf("postgres: save document part %d for document %d: %w", i, documentID, err)
+		}
+	}
+	return nil
+}
+
+// DocumentParts returns the previously-extracted text parts of one
+// document, in order — an empty slice if none have been saved yet.
+func (r *TenderRepo) DocumentParts(ctx context.Context, documentID int64) ([]string, error) {
+	rows, err := r.db.Query(ctx, selectDocumentPartsSQL, documentID)
+	if err != nil {
+		return nil, fmt.Errorf("postgres: document parts for document %d: %w", documentID, err)
+	}
+	defer rows.Close()
+
+	var parts []string
+	for rows.Next() {
+		var p string
+		if err := rows.Scan(&p); err != nil {
+			return nil, err
+		}
+		parts = append(parts, p)
+	}
+	return parts, rows.Err()
 }
