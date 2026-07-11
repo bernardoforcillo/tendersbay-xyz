@@ -6,7 +6,24 @@ import (
 
 	"github.com/bernardoforcillo/drops/qdrant"
 	"github.com/buildwithgo/berrygem/rag"
+	"github.com/google/uuid"
 )
+
+// pointNamespace is a fixed namespace UUID used to derive deterministic
+// Qdrant point IDs. Qdrant only accepts a 64-bit unsigned integer or a UUID
+// as a point ID — arbitrary strings like "42_chunk_0" are rejected with
+// HTTP 400 — so a human-readable "<docID>_chunk_<index>" key is hashed into
+// a stable UUIDv5 instead. The same input always produces the same UUID,
+// which is what preserves Ingest's idempotent-upsert property (re-ingesting
+// the same tender updates its existing points rather than duplicating them).
+var pointNamespace = uuid.MustParse("99753bb2-77f9-4686-a470-c3cbfc566fa6")
+
+// pointID derives a deterministic Qdrant point ID for one chunk of one
+// document.
+func pointID(docID string, index int) string {
+	key := fmt.Sprintf("%s_chunk_%d", docID, index)
+	return uuid.NewSHA1(pointNamespace, []byte(key)).String()
+}
 
 // Ingest embeds and upserts every chunk of doc as a Qdrant point. If
 // doc.Chunks is empty, doc.Content is used as a single chunk (index 0) —
@@ -29,22 +46,21 @@ func (kb *KnowledgeBase) Ingest(ctx context.Context, doc *rag.Document) error {
 			return fmt.Errorf("knowledge: embed chunk %s: %w", c.ID, err)
 		}
 
-		payload := map[string]any{
-			"content":     c.Content,
-			"tender_id":   doc.ID,
-			"chunk_index": c.Index,
-		}
+		payload := map[string]any{}
 		for k, v := range doc.Metadata {
 			payload[k] = v
 		}
+		payload["content"] = c.Content
+		payload["tender_id"] = doc.ID
+		payload["chunk_index"] = c.Index
 
 		points[i] = qdrant.Point{
-			ID:      fmt.Sprintf("%s_chunk_%d", doc.ID, c.Index),
+			ID:      pointID(doc.ID, c.Index),
 			Vector:  vec,
 			Payload: payload,
 		}
 
-		if doc.Chunks != nil {
+		if len(doc.Chunks) > 0 {
 			embedding := make([]float64, len(vec))
 			for j, f := range vec {
 				embedding[j] = float64(f)
@@ -53,7 +69,10 @@ func (kb *KnowledgeBase) Ingest(ctx context.Context, doc *rag.Document) error {
 		}
 	}
 
-	return kb.qdrant.Upsert(ctx, kb.collection, points, qdrant.WriteOptions{Wait: true})
+	if err := kb.qdrant.Upsert(ctx, kb.collection, points, qdrant.WriteOptions{Wait: true}); err != nil {
+		return fmt.Errorf("knowledge: upsert: %w", err)
+	}
+	return nil
 }
 
 // Search embeds query and returns the limit nearest chunks by cosine
@@ -94,7 +113,10 @@ func (kb *KnowledgeBase) Search(ctx context.Context, query string, limit int) ([
 
 // Delete removes every chunk belonging to docID.
 func (kb *KnowledgeBase) Delete(ctx context.Context, docID string) error {
-	return kb.qdrant.DeleteByFilter(ctx, kb.collection, qdrant.Must(qdrant.Eq("tender_id", docID)))
+	if err := kb.qdrant.DeleteByFilter(ctx, kb.collection, qdrant.Must(qdrant.Eq("tender_id", docID)), qdrant.WriteOptions{Wait: true}); err != nil {
+		return fmt.Errorf("knowledge: delete: %w", err)
+	}
+	return nil
 }
 
 // scrollPageSize is the page size used internally by List when scrolling

@@ -3,15 +3,31 @@ package knowledge_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
 	"github.com/buildwithgo/berrygem/rag"
+	"github.com/google/uuid"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
 )
+
+// pointNamespace mirrors the unexported namespace UUID knowledgebase.go uses
+// to derive deterministic Qdrant point IDs (see Ingest). knowledgebase_test.go
+// is package knowledge_test (external), so it can't call the unexported
+// pointID helper directly — recomputing the UUID here with the same fixed
+// namespace is safe since the namespace value isn't itself sensitive.
+var pointNamespace = uuid.MustParse("99753bb2-77f9-4686-a470-c3cbfc566fa6")
+
+// wantPointID computes the expected deterministic Qdrant point ID for one
+// chunk of one document, matching knowledgebase.go's pointID helper.
+func wantPointID(docID string, index int) string {
+	key := fmt.Sprintf("%s_chunk_%d", docID, index)
+	return uuid.NewSHA1(pointNamespace, []byte(key)).String()
+}
 
 // newTestKnowledgeBase wires a KnowledgeBase against fake Qdrant and Ollama
 // servers, both driven by the handler functions supplied by each test.
@@ -83,8 +99,9 @@ func TestIngest_WithPreChunkedDocument(t *testing.T) {
 		t.Fatalf("points = %v, want 2 points", gotBody["points"])
 	}
 	p0 := points[0].(map[string]any)
-	if p0["id"] != "42_chunk_0" {
-		t.Errorf("points[0].id = %v, want 42_chunk_0", p0["id"])
+	wantID := wantPointID("42", 0)
+	if p0["id"] != wantID {
+		t.Errorf("points[0].id = %v, want %v (deterministic UUIDv5 of 42_chunk_0)", p0["id"], wantID)
 	}
 	payload := p0["payload"].(map[string]any)
 	if payload["content"] != "Titolo: Lavori stradali" {
@@ -127,12 +144,29 @@ func TestIngest_WithNoPreChunkedContent_UsesSingleSummaryChunk(t *testing.T) {
 		t.Fatalf("points = %d, want 1 (Content used as a single chunk when Chunks is empty)", len(points))
 	}
 	p0 := points[0].(map[string]any)
-	if p0["id"] != "7_chunk_0" {
-		t.Errorf("points[0].id = %v, want 7_chunk_0", p0["id"])
+	wantID := wantPointID("7", 0)
+	if p0["id"] != wantID {
+		t.Errorf("points[0].id = %v, want %v (deterministic UUIDv5 of 7_chunk_0)", p0["id"], wantID)
 	}
 	payload := p0["payload"].(map[string]any)
 	if payload["content"] != "Comune di Roma — Appalto pulizie" {
 		t.Errorf("points[0].payload.content = %v, want doc.Content", payload["content"])
+	}
+}
+
+func TestIngest_WithEmptyNonNilChunks_DoesNotPanic(t *testing.T) {
+	kb := newTestKnowledgeBase(t,
+		alwaysExistingCollectionHandler(t, nil),
+		fakeOllamaEmbed([]float32{0.3}),
+	)
+
+	// doc.Chunks is non-nil but zero-length: Ingest falls back to a single
+	// chunk built from doc.Content, so the write-back guard must not index
+	// into the original empty slice.
+	doc := &rag.Document{ID: "9", Content: "Comune di Milano — Fornitura arredi", Chunks: []rag.Chunk{}}
+
+	if err := kb.Ingest(context.Background(), doc); err != nil {
+		t.Fatalf("Ingest: %v", err)
 	}
 }
 

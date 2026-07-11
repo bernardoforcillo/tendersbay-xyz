@@ -42,11 +42,11 @@ type embedResponse struct {
 func (e *Embedder) Embed(ctx context.Context, text string) ([]float32, error) {
 	payload, err := json.Marshal(embedRequest{Model: e.model, Input: text})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("knowledge: marshal embed request: %w", err)
 	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, e.baseURL+"/api/embed", bytes.NewReader(payload))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("knowledge: build embed request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	resp, err := e.http.Do(req)
