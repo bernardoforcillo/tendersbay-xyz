@@ -1,5 +1,5 @@
 import { Link, useParams } from '@tanstack/react-router';
-import { Building2, ChevronsUpDown, Plus } from 'lucide-react';
+import { Building2, ChevronsUpDown, Plus, Settings } from 'lucide-react';
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { useMyWorkspaces } from '~/features/workspace/hooks';
@@ -49,6 +49,16 @@ export function WorkspaceSwitcher() {
             </div>
           )}
           <div className="border-t border-cream-200 p-1.5">
+            {activeId && (
+              <Link
+                to="/workspaces/$workspaceId/settings"
+                params={{ workspaceId: activeId }}
+                className={POPUP_LINK}
+              >
+                <Settings size={14} aria-hidden="true" className="shrink-0 text-ink-400" />
+                {t('workspace.switcher.settings', 'Workspace settings')}
+              </Link>
+            )}
             <Link to="/workspaces" className={POPUP_LINK}>
               <Plus size={14} aria-hidden="true" className="shrink-0 text-ink-400" />
               {t('workspace.switcher.manage', 'All workspaces')}

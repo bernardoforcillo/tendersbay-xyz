@@ -152,6 +152,32 @@
       "daysLeft": "{{count}} nap"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Ma",
+      "explore": "Felfedezés",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Legutóbbi",
+    "palette": {
+      "trigger": "Keresés vagy kérdés…",
+      "label": "Parancspaletta",
+      "placeholder": "Keressen vagy kérdezzen bármit…",
+      "askAgent": "Kérdezze meg az ügynököt: „{{query}}”",
+      "sections": {
+        "navigate": "Ugrás",
+        "recent": "Legutóbbi workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-beállítások",
+      "accountSettings": "Fiókbeállítások",
+      "allWorkspaces": "Minden workspace"
+    },
+    "user": {
+      "settings": "Beállítások",
+      "logout": "Kijelentkezés"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Betöltés…",
@@ -273,6 +299,7 @@
       "signIn": "A csatlakozáshoz jelentkezzen be"
     },
     "switcher": {
+      "settings": "Workspace-beállítások",
       "label": "Munkaterületek",
       "manage": "Összes munkaterület"
     }

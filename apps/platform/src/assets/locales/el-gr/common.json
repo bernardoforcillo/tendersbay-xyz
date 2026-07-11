@@ -152,6 +152,32 @@
       "daysLeft": "{{count}} ημέρες"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Σήμερα",
+      "explore": "Εξερεύνηση",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Πρόσφατα",
+    "palette": {
+      "trigger": "Αναζήτηση ή ερώτηση…",
+      "label": "Παλέτα εντολών",
+      "placeholder": "Αναζητήστε ή ρωτήστε οτιδήποτε…",
+      "askAgent": "Ρωτήστε τον πράκτορα: «{{query}}»",
+      "sections": {
+        "navigate": "Μετάβαση σε",
+        "recent": "Πρόσφατα workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Ρυθμίσεις workspace",
+      "accountSettings": "Ρυθμίσεις λογαριασμού",
+      "allWorkspaces": "Όλα τα workspace"
+    },
+    "user": {
+      "settings": "Ρυθμίσεις",
+      "logout": "Αποσύνδεση"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Φόρτωση…",
@@ -273,6 +299,7 @@
       "signIn": "Συνδεθείτε για ένταξη"
     },
     "switcher": {
+      "settings": "Ρυθμίσεις workspace",
       "label": "Χώροι εργασίας",
       "manage": "Όλοι οι χώροι εργασίας"
     }

@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} dias"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Hoje",
+      "explore": "Explorar",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Recentes",
+    "palette": {
+      "trigger": "Pesquisar ou perguntar…",
+      "label": "Paleta de comandos",
+      "placeholder": "Pesquisar ou perguntar qualquer coisa…",
+      "askAgent": "Perguntar ao agente: «{{query}}»",
+      "sections": {
+        "navigate": "Ir para",
+        "recent": "Workbenches recentes",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Definições do workspace",
+      "accountSettings": "Definições da conta",
+      "allWorkspaces": "Todos os workspaces"
+    },
+    "user": {
+      "settings": "Definições",
+      "logout": "Terminar sessão"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "A carregar…",
@@ -269,6 +295,7 @@
       "signIn": "Inicie sessão para entrar"
     },
     "switcher": {
+      "settings": "Definições do workspace",
       "label": "Espaços de trabalho",
       "manage": "Todos os espaços de trabalho"
     }

@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} päeva"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Täna",
+      "explore": "Avasta",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Hiljutised",
+    "palette": {
+      "trigger": "Otsi või küsi…",
+      "label": "Käsupalett",
+      "placeholder": "Otsi või küsi ükskõik mida…",
+      "askAgent": "Küsi agendilt: „{{query}}“",
+      "sections": {
+        "navigate": "Mine",
+        "recent": "Hiljutised workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace'i seaded",
+      "accountSettings": "Konto seaded",
+      "allWorkspaces": "Kõik workspace'id"
+    },
+    "user": {
+      "settings": "Seaded",
+      "logout": "Logi välja"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Laadimine…",
@@ -269,6 +295,7 @@
       "signIn": "Liitumiseks logi sisse"
     },
     "switcher": {
+      "settings": "Workspace'i seaded",
       "label": "Tööruumid",
       "manage": "Kõik tööruumid"
     }

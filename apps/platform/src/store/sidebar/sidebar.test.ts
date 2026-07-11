@@ -35,3 +35,13 @@ describe('useSidebarStore', () => {
     expect(stored.state.drawerOpen).toBeUndefined();
   });
 });
+
+describe('useSidebarStore palette state', () => {
+  it('opens and closes the palette', () => {
+    expect(useSidebarStore.getState().paletteOpen).toBe(false);
+    useSidebarStore.getState().setPaletteOpen(true);
+    expect(useSidebarStore.getState().paletteOpen).toBe(true);
+    useSidebarStore.getState().setPaletteOpen(false);
+    expect(useSidebarStore.getState().paletteOpen).toBe(false);
+  });
+});

@@ -1,4 +1,4 @@
-@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/fraunces/opsz.css";
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
 @import "@tendersbay/tailwind";
@@ -16,6 +16,7 @@
   }
   body {
     font-family: var(--font-sans);
+    font-optical-sizing: auto;
     background-color: var(--color-cream-100);
     color: var(--color-ink-900);
     -webkit-font-smoothing: antialiased;

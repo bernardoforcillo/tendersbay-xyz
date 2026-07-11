@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} дни"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Днес",
+      "explore": "Разглеждане",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Скорошни",
+    "palette": {
+      "trigger": "Търси или попитай…",
+      "label": "Палитра за команди",
+      "placeholder": "Търси или попитай каквото и да е…",
+      "askAgent": "Попитай агента: „{{query}}“",
+      "sections": {
+        "navigate": "Отиди на",
+        "recent": "Скорошни workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Настройки на workspace",
+      "accountSettings": "Настройки на акаунта",
+      "allWorkspaces": "Всички workspace"
+    },
+    "user": {
+      "settings": "Настройки",
+      "logout": "Изход"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Зареждане…",
@@ -269,6 +295,7 @@
       "signIn": "Влезте, за да се присъедините"
     },
     "switcher": {
+      "settings": "Настройки на workspace",
       "label": "Работни пространства",
       "manage": "Всички работни пространства"
     }

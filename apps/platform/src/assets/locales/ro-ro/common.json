@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} zile"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Astăzi",
+      "explore": "Explorează",
+      "workbenches": "Workbench"
+    },
+    "recent": "Recente",
+    "palette": {
+      "trigger": "Caută sau întreabă…",
+      "label": "Paletă de comenzi",
+      "placeholder": "Caută sau întreabă orice…",
+      "askAgent": "Întreabă agentul: „{{query}}”",
+      "sections": {
+        "navigate": "Mergi la",
+        "recent": "Workbench recente",
+        "workspaces": "Workspace"
+      },
+      "workspaceSettings": "Setări workspace",
+      "accountSettings": "Setări cont",
+      "allWorkspaces": "Toate workspace"
+    },
+    "user": {
+      "settings": "Setări",
+      "logout": "Deconectare"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Se încarcă…",
@@ -269,6 +295,7 @@
       "signIn": "Autentifică-te pentru a te alătura"
     },
     "switcher": {
+      "settings": "Setări workspace",
       "label": "Spații de lucru",
       "manage": "Toate spațiile de lucru"
     }

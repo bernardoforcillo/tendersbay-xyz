@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} dní"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Dnes",
+      "explore": "Preskúmať",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Nedávne",
+    "palette": {
+      "trigger": "Hľadať alebo sa opýtať…",
+      "label": "Paleta príkazov",
+      "placeholder": "Hľadať alebo sa opýtať na čokoľvek…",
+      "askAgent": "Opýtajte sa agenta: „{{query}}“",
+      "sections": {
+        "navigate": "Prejsť na",
+        "recent": "Nedávne workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Nastavenia workspace",
+      "accountSettings": "Nastavenia účtu",
+      "allWorkspaces": "Všetky workspace"
+    },
+    "user": {
+      "settings": "Nastavenia",
+      "logout": "Odhlásiť sa"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Načítava sa…",
@@ -269,6 +295,7 @@
       "signIn": "Prihláste sa na pripojenie"
     },
     "switcher": {
+      "settings": "Nastavenia workspace",
       "label": "Pracovné priestory",
       "manage": "Všetky pracovné priestory"
     }

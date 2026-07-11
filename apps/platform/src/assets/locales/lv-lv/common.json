@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} dienas"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Šodien",
+      "explore": "Pārlūkot",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Nesenie",
+    "palette": {
+      "trigger": "Meklēt vai jautāt…",
+      "label": "Komandu palete",
+      "placeholder": "Meklēt vai jautāt jebko…",
+      "askAgent": "Jautājiet aģentam: „{{query}}“",
+      "sections": {
+        "navigate": "Iet uz",
+        "recent": "Nesenie workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace iestatījumi",
+      "accountSettings": "Konta iestatījumi",
+      "allWorkspaces": "Visi workspace"
+    },
+    "user": {
+      "settings": "Iestatījumi",
+      "logout": "Izrakstīties"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Notiek ielāde…",
@@ -269,6 +295,7 @@
       "signIn": "Piesakieties, lai pievienotos"
     },
     "switcher": {
+      "settings": "Workspace iestatījumi",
       "label": "Darbvietas",
       "manage": "Visas darbvietas"
     }

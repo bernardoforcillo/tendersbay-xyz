@@ -1,12 +1,10 @@
-/**
- * Which primary sidebar items are visible. Overview, Workbenches and Settings
- * are workspace-scoped, so they show whenever a workspace is active — either
- * the current route's workspace or the remembered active one — so
- * workspace-agnostic routes like Explore keep them. Explore is always
- * available.
- */
-export type SidebarNavKey = 'overview' | 'workbenches' | 'explore' | 'settings';
+export type SidebarNavKey = 'today' | 'explore' | 'workbenches';
 
+/**
+ * Primary nav for the app shell. Three destinations max (working-memory rule);
+ * workspace settings live in the switcher popover, account settings in the
+ * user footer. Without an active workspace only Explore is reachable.
+ */
 export function sidebarNavKeys(hasWorkspace: boolean): SidebarNavKey[] {
-  return hasWorkspace ? ['overview', 'workbenches', 'explore', 'settings'] : ['explore'];
+  return hasWorkspace ? ['today', 'explore', 'workbenches'] : ['explore'];
 }

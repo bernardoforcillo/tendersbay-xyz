@@ -148,6 +148,32 @@
       "daysLeft": "{{count}} päivää"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Tänään",
+      "explore": "Tutustu",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Viimeisimmät",
+    "palette": {
+      "trigger": "Hae tai kysy…",
+      "label": "Komentopaletti",
+      "placeholder": "Hae tai kysy mitä tahansa…",
+      "askAgent": "Kysy agentilta: ”{{query}}”",
+      "sections": {
+        "navigate": "Siirry",
+        "recent": "Viimeisimmät workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-asetukset",
+      "accountSettings": "Tilin asetukset",
+      "allWorkspaces": "Kaikki workspacet"
+    },
+    "user": {
+      "settings": "Asetukset",
+      "logout": "Kirjaudu ulos"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Ladataan…",
@@ -269,6 +295,7 @@
       "signIn": "Kirjaudu sisään liittyäksesi"
     },
     "switcher": {
+      "settings": "Workspace-asetukset",
       "label": "Työtilat",
       "manage": "Kaikki työtilat"
     }
