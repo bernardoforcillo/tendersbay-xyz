@@ -24,6 +24,7 @@ export function ChatWindow() {
   const { sendMessage, submitChoice } = useChatStream();
   const [creating, setCreating] = useState(false);
   const loadedChatIdRef = useRef<string | null>(null);
+  const draftConsumedRef = useRef(false);
 
   useEffect(() => {
     const parent = bottomRef.current?.parentElement;
@@ -118,6 +119,16 @@ export function ChatWindow() {
         .catch(() => {});
     }
   }, [workspaceId, setCredits]);
+
+  // Consume a ⌘K palette draft exactly once: send it as the first message.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: one-shot on mount by design
+  useEffect(() => {
+    const { draft, setDraft } = useChatStore.getState();
+    if (!draft || draftConsumedRef.current) return;
+    draftConsumedRef.current = true;
+    setDraft(null);
+    void handleSend(draft);
+  }, []);
 
   async function handleSend(message: string) {
     let chatId = currentChatId;

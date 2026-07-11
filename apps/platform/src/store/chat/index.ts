@@ -35,6 +35,9 @@ interface ChatStore {
   setCredits: (credits: ChatStore['credits']) => void;
   setPendingChoice: (choice: ChatStore['pendingChoice']) => void;
   reset: () => void;
+  /** One-shot message handed off from the ⌘K palette; consumed by ChatWindow on mount. */
+  draft: string | null;
+  setDraft: (draft: string | null) => void;
 }
 
 export const useChatStore = create<ChatStore>()(
@@ -65,6 +68,8 @@ export const useChatStore = create<ChatStore>()(
           currentChatId: null,
           pendingChoice: null,
         }),
+      draft: null,
+      setDraft: (draft) => set({ draft }),
     }),
     {
       name: 'chat',

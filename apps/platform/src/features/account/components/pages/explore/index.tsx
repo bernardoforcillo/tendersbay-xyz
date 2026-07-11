@@ -18,7 +18,8 @@ export function AccountExplorePage() {
   const user = useAuthStore((s) => s.user);
   const name = user?.displayName?.split(' ')[0];
   const hasChats = useChatStore((s) => s.messages.length > 0 || s.currentChatId !== null);
-  const [mode, setMode] = useState<SearchMode>(hasChats ? 'chat' : 'search');
+  const hasDraft = useChatStore((s) => s.draft !== null);
+  const [mode, setMode] = useState<SearchMode>(hasChats || hasDraft ? 'chat' : 'search');
 
   return (
     <AccountLayout>
