@@ -91,3 +91,53 @@ func (kb *KnowledgeBase) Search(ctx context.Context, query string, limit int) ([
 	}
 	return chunks, nil
 }
+
+// Delete removes every chunk belonging to docID.
+func (kb *KnowledgeBase) Delete(ctx context.Context, docID string) error {
+	return kb.qdrant.DeleteByFilter(ctx, kb.collection, qdrant.Must(qdrant.Eq("tender_id", docID)))
+}
+
+// scrollPageSize is the page size used internally by List when scrolling
+// through the full collection.
+const scrollPageSize = 100
+
+// List returns every indexed document, reconstructed by grouping Qdrant
+// points on their "tender_id" payload key. This is a low-usage admin/debug
+// path, not on the hot ingest or search path — it pages through the entire
+// collection via Scroll.
+func (kb *KnowledgeBase) List(ctx context.Context) ([]rag.Document, error) {
+	docs := map[string]*rag.Document{}
+	var offset any
+	for {
+		page, err := kb.qdrant.Scroll(ctx, kb.collection, qdrant.ScrollRequest{
+			Limit:       scrollPageSize,
+			Offset:      offset,
+			WithPayload: true,
+		})
+		if err != nil {
+			return nil, fmt.Errorf("knowledge: scroll: %w", err)
+		}
+		for _, p := range page.Points {
+			docID, _ := p.Payload["tender_id"].(string)
+			content, _ := p.Payload["content"].(string)
+			d, ok := docs[docID]
+			if !ok {
+				d = &rag.Document{ID: docID}
+				docs[docID] = d
+			}
+			d.Chunks = append(d.Chunks, rag.Chunk{ID: fmt.Sprint(p.ID), DocID: docID, Content: content})
+		}
+		if page.NextPageOffset == nil {
+			break
+		}
+		offset = page.NextPageOffset
+	}
+
+	result := make([]rag.Document, 0, len(docs))
+	for _, d := range docs {
+		result = append(result, *d)
+	}
+	return result, nil
+}
+
+var _ rag.KnowledgeBase = (*KnowledgeBase)(nil)

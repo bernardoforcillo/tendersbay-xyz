@@ -206,3 +206,80 @@ func TestSearch_DefaultsLimitWhenZero(t *testing.T) {
 		t.Errorf("search request limit = %v, want 10 (drops/qdrant's own default)", gotSearchBody["limit"])
 	}
 }
+
+func TestDelete_FiltersByTenderID(t *testing.T) {
+	var gotDeleteBody map[string]any
+	qdrantHandler := func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodGet && r.URL.Path == "/collections/tenders":
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"green","vectors_count":0,"points_count":0,"segments_count":1,"config":{}},"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPost && r.URL.Path == "/collections/tenders/points/delete":
+			_ = json.NewDecoder(r.Body).Decode(&gotDeleteBody)
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"operation_id":1,"status":"completed"},"status":"ok","time":0.01}`))
+		default:
+			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
+		}
+	}
+	kb := newTestKnowledgeBase(t, qdrantHandler, fakeOllamaEmbed([]float32{0}))
+
+	if err := kb.Delete(context.Background(), "42"); err != nil {
+		t.Fatalf("Delete: %v", err)
+	}
+
+	filter, ok := gotDeleteBody["filter"].(map[string]any)
+	if !ok {
+		t.Fatalf("delete request has no filter: %v", gotDeleteBody)
+	}
+	must, _ := filter["must"].([]any)
+	if len(must) != 1 {
+		t.Fatalf("filter.must = %v, want one condition", must)
+	}
+	cond := must[0].(map[string]any)
+	if cond["key"] != "tender_id" {
+		t.Errorf("filter condition key = %v, want tender_id", cond["key"])
+	}
+	match := cond["match"].(map[string]any)
+	if match["value"] != "42" {
+		t.Errorf("filter condition match.value = %v, want 42", match["value"])
+	}
+}
+
+func TestList_GroupsChunksByTenderID(t *testing.T) {
+	qdrantHandler := func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodGet && r.URL.Path == "/collections/tenders":
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"green","vectors_count":0,"points_count":0,"segments_count":1,"config":{}},"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPost && r.URL.Path == "/collections/tenders/points/scroll":
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"points":[
+				{"id":"42_chunk_0","payload":{"content":"parte 1","tender_id":"42"}},
+				{"id":"42_chunk_1","payload":{"content":"parte 2","tender_id":"42"}},
+				{"id":"7_chunk_0","payload":{"content":"altro tender","tender_id":"7"}}
+			],"next_page_offset":null},"status":"ok","time":0.01}`))
+		default:
+			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
+		}
+	}
+	kb := newTestKnowledgeBase(t, qdrantHandler, fakeOllamaEmbed([]float32{0}))
+
+	docs, err := kb.List(context.Background())
+	if err != nil {
+		t.Fatalf("List: %v", err)
+	}
+	if len(docs) != 2 {
+		t.Fatalf("len(docs) = %d, want 2 (grouped by tender_id)", len(docs))
+	}
+	byID := map[string]int{}
+	for _, d := range docs {
+		byID[d.ID] = len(d.Chunks)
+	}
+	if byID["42"] != 2 {
+		t.Errorf("doc 42 has %d chunks, want 2", byID["42"])
+	}
+	if byID["7"] != 1 {
+		t.Errorf("doc 7 has %d chunks, want 1", byID["7"])
+	}
+}
