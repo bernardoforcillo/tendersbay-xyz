@@ -2,7 +2,6 @@ package knowledge
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/bernardoforcillo/drops/qdrant"
@@ -50,7 +49,3 @@ func NewKnowledgeBase(ctx context.Context, qdrantURL, ollamaBaseURL, embeddingMo
 		collection: collectionName,
 	}, nil
 }
-
-// errNotImplemented is a placeholder used only until Tasks 3-5 implement the
-// remaining berrygem/rag.KnowledgeBase methods.
-var errNotImplemented = errors.New("knowledge: not implemented yet")
