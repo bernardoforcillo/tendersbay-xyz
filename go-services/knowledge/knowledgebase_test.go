@@ -135,3 +135,74 @@ func TestIngest_WithNoPreChunkedContent_UsesSingleSummaryChunk(t *testing.T) {
 		t.Errorf("points[0].payload.content = %v, want doc.Content", payload["content"])
 	}
 }
+
+func TestSearch_ReconstructsChunksFromPayload(t *testing.T) {
+	var gotSearchBody map[string]any
+	qdrantHandler := func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodGet && r.URL.Path == "/collections/tenders":
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"green","vectors_count":0,"points_count":0,"segments_count":1,"config":{}},"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPost && r.URL.Path == "/collections/tenders/points/search":
+			_ = json.NewDecoder(r.Body).Decode(&gotSearchBody)
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":[{"id":"42_chunk_0","score":0.87,"payload":{"content":"Lavori stradali","tender_id":"42","chunk_index":0,"source":"ted"}}],"status":"ok","time":0.01}`))
+		default:
+			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+	}
+	kb := newTestKnowledgeBase(t, qdrantHandler, fakeOllamaEmbed([]float32{0.9, 0.1}))
+
+	chunks, err := kb.Search(context.Background(), "lavori stradali Blaj", 5)
+	if err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if len(chunks) != 1 {
+		t.Fatalf("len(chunks) = %d, want 1", len(chunks))
+	}
+	if chunks[0].Content != "Lavori stradali" {
+		t.Errorf("chunks[0].Content = %q, want %q", chunks[0].Content, "Lavori stradali")
+	}
+	if chunks[0].DocID != "42" {
+		t.Errorf("chunks[0].DocID = %q, want %q", chunks[0].DocID, "42")
+	}
+	if chunks[0].Index != 0 {
+		t.Errorf("chunks[0].Index = %d, want 0", chunks[0].Index)
+	}
+
+	if gotSearchBody["limit"] != float64(5) {
+		t.Errorf("search request limit = %v, want 5", gotSearchBody["limit"])
+	}
+	vec, _ := gotSearchBody["vector"].([]any)
+	if len(vec) != 2 {
+		t.Errorf("search request vector = %v, want the 2-element embedded query vector", gotSearchBody["vector"])
+	}
+}
+
+func TestSearch_DefaultsLimitWhenZero(t *testing.T) {
+	var gotSearchBody map[string]any
+	qdrantHandler := func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodGet && r.URL.Path == "/collections/tenders":
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"green","vectors_count":0,"points_count":0,"segments_count":1,"config":{}},"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPost && r.URL.Path == "/collections/tenders/points/search":
+			_ = json.NewDecoder(r.Body).Decode(&gotSearchBody)
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":[],"status":"ok","time":0.01}`))
+		default:
+			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
+		}
+	}
+	kb := newTestKnowledgeBase(t, qdrantHandler, fakeOllamaEmbed([]float32{0.1}))
+
+	if _, err := kb.Search(context.Background(), "query", 0); err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	// drops/qdrant.Client.Search defaults Limit to 10 when <= 0 — confirm
+	// that default reaches the wire request via this KnowledgeBase.
+	if gotSearchBody["limit"] != float64(10) {
+		t.Errorf("search request limit = %v, want 10 (drops/qdrant's own default)", gotSearchBody["limit"])
+	}
+}
