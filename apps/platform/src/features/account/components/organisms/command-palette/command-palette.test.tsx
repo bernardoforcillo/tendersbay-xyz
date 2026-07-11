@@ -60,4 +60,18 @@ describe('CommandPalette', () => {
     await user.keyboard('{Control>}k{/Control}');
     expect(useSidebarStore.getState().paletteOpen).toBe(true);
   });
+
+  it('closes and clears the query on Ctrl+K, and reopens with an empty input', async () => {
+    const user = userEvent.setup();
+    render(<CommandPalette />);
+    await user.type(screen.getByRole('searchbox'), 'expl');
+    expect(screen.getByRole('searchbox')).toHaveValue('expl');
+
+    await user.keyboard('{Control>}k{/Control}');
+    expect(useSidebarStore.getState().paletteOpen).toBe(false);
+
+    await user.keyboard('{Control>}k{/Control}');
+    expect(useSidebarStore.getState().paletteOpen).toBe(true);
+    expect(screen.getByRole('searchbox')).toHaveValue('');
+  });
 });

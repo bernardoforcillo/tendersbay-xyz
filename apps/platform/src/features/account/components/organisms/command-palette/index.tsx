@@ -46,7 +46,12 @@ export function CommandPalette() {
     function onKeyDown(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setOpen(!useSidebarStore.getState().paletteOpen);
+        if (useSidebarStore.getState().paletteOpen) {
+          setOpen(false);
+          setQuery('');
+        } else {
+          setOpen(true);
+        }
       }
     }
     window.addEventListener('keydown', onKeyDown);
@@ -136,7 +141,7 @@ export function CommandPalette() {
                   </MenuSection>
                 );
               })}
-              <MenuSection>
+              <MenuSection aria-label={t('shell.palette.trigger', 'Search or ask…')}>
                 <MenuItem
                   id="ask-agent"
                   textValue={query || t('shell.palette.trigger', 'Search or ask…')}

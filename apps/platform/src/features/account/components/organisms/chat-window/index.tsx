@@ -22,9 +22,10 @@ export function ChatWindow() {
   const setCredits = useChatStore((s) => s.setCredits);
   const workspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
   const { sendMessage, submitChoice } = useChatStream();
+  const draft = useChatStore((s) => s.draft);
   const [creating, setCreating] = useState(false);
+  const [historyReady, setHistoryReady] = useState(false);
   const loadedChatIdRef = useRef<string | null>(null);
-  const draftConsumedRef = useRef(false);
 
   useEffect(() => {
     const parent = bottomRef.current?.parentElement;
@@ -36,6 +37,7 @@ export function ChatWindow() {
   useEffect(() => {
     if (currentChatId && workspaceId && loadedChatIdRef.current !== currentChatId) {
       loadedChatIdRef.current = currentChatId;
+      setHistoryReady(false);
       agentClient
         .getMessages({ chatId: currentChatId })
         .then((res) => {
@@ -99,8 +101,13 @@ export function ChatWindow() {
           } else {
             store.setPendingChoice(null);
           }
+          setHistoryReady(true);
         })
-        .catch(() => {});
+        .catch(() => {
+          setHistoryReady(true);
+        });
+    } else {
+      setHistoryReady(true);
     }
   }, [currentChatId, workspaceId]);
 
@@ -120,15 +127,15 @@ export function ChatWindow() {
     }
   }, [workspaceId, setCredits]);
 
-  // Consume a ⌘K palette draft exactly once: send it as the first message.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: one-shot on mount by design
+  // Consume a palette draft once history is settled: for an existing chat the
+  // reload's wholesale setMessages would wipe the optimistic message this
+  // send adds (same race handleSend pre-marks loadedChatIdRef for new chats).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: handleSend is a stable function declaration
   useEffect(() => {
-    const { draft, setDraft } = useChatStore.getState();
-    if (!draft || draftConsumedRef.current) return;
-    draftConsumedRef.current = true;
-    setDraft(null);
+    if (!draft || !historyReady) return;
+    useChatStore.getState().setDraft(null);
     void handleSend(draft);
-  }, []);
+  }, [draft, historyReady]);
 
   async function handleSend(message: string) {
     let chatId = currentChatId;

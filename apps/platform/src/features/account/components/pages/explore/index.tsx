@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchModeSwitch } from '~/features/account/components/molecules';
 import {
@@ -20,6 +20,12 @@ export function AccountExplorePage() {
   const hasChats = useChatStore((s) => s.messages.length > 0 || s.currentChatId !== null);
   const hasDraft = useChatStore((s) => s.draft !== null);
   const [mode, setMode] = useState<SearchMode>(hasChats || hasDraft ? 'chat' : 'search');
+
+  // A palette ask can arrive while already on /explore — flip to chat so
+  // ChatWindow mounts and consumes the draft.
+  useEffect(() => {
+    if (hasDraft) setMode('chat');
+  }, [hasDraft]);
 
   return (
     <AccountLayout>
