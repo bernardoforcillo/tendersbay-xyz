@@ -9,6 +9,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"time"
 
@@ -26,6 +27,12 @@ const pageLimit = 250
 // notices retrievable per query; 15,000 / 250-per-page = 60 pages, so
 // 100 pages is comfortably above any legitimate response.
 const maxPages = 100
+
+// maxErrorBodyBytes bounds how much of a non-2xx response body is read into
+// an error message — TED returns a body on error (e.g. a 400 for an invalid
+// field name lists every valid field name), which is worth surfacing, but
+// unbounded reads risk bloating the error on a pathological response.
+const maxErrorBodyBytes = 2048
 
 // searchFields is the exact field set eforms.Notice's json tags decode —
 // keep these in sync. Verified live against api.ted.europa.eu (requesting
@@ -123,7 +130,8 @@ func (c *Client) do(ctx context.Context, body searchRequest) (*searchResponse, e
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode >= 400 {
-		return nil, fmt.Errorf("tedapi: unexpected status %d", resp.StatusCode)
+		snippet, _ := io.ReadAll(io.LimitReader(resp.Body, maxErrorBodyBytes))
+		return nil, fmt.Errorf("tedapi: unexpected status %d: %s", resp.StatusCode, snippet)
 	}
 	var out searchResponse
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {

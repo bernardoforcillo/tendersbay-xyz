@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 	"time"
 
@@ -65,6 +66,7 @@ func TestFetchSince_PagesUntilTokenIsNull(t *testing.T) {
 func TestFetchSince_NonOKStatus(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte(`{"message":"invalid field name: bogus-field"}`))
 	}))
 	defer srv.Close()
 
@@ -72,6 +74,9 @@ func TestFetchSince_NonOKStatus(t *testing.T) {
 	_, err := c.FetchSince(context.Background(), time.Now())
 	if err == nil {
 		t.Fatal("FetchSince: want error on 400 response, got nil")
+	}
+	if !strings.Contains(err.Error(), "bogus-field") {
+		t.Errorf("error = %q, want it to include the response body", err.Error())
 	}
 }
 
