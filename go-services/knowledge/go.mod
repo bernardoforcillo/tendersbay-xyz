@@ -1,3 +1,3 @@
 module github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge
 
-go 1.26.4
+go 1.26
