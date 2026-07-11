@@ -1,10 +1,12 @@
 import { Link, Outlet, useParams } from '@tanstack/react-router';
 import { Settings } from 'lucide-react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '~/features/account/components/organisms';
 import { WorkbenchContext } from '~/features/workbench/context';
 import { useWorkbench } from '~/features/workbench/hooks';
 import { BTN_SECONDARY } from '~/features/workbench/ui';
+import { useRecentWorkbenchesStore } from '~/store/recent-workbenches';
 
 const GEAR =
   'shrink-0 rounded-lg p-2 text-ink-400 no-underline transition-colors hover:bg-cream-200 hover:text-ink-900 [&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
@@ -15,6 +17,18 @@ export function WorkbenchLayout() {
   });
   const { t } = useTranslation();
   const { data, loading, error, refetch } = useWorkbench(workbenchId);
+
+  const record = useRecentWorkbenchesStore((s) => s.record);
+  const workbench = data?.workbench;
+  useEffect(() => {
+    if (workbench) {
+      record({
+        workbenchId: workbench.id,
+        workspaceId: workbench.workspaceId,
+        name: workbench.name,
+      });
+    }
+  }, [workbench, record]);
 
   if (loading) {
     return (
@@ -46,7 +60,8 @@ export function WorkbenchLayout() {
     );
   }
 
-  const { workbench, myPermissions, workspaceName } = data;
+  const { myPermissions, workspaceName } = data;
+  if (!workbench) return null;
 
   return (
     <WorkbenchContext.Provider
