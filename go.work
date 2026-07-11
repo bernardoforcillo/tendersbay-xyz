@@ -1,7 +1,8 @@
-go 1.26
+go 1.26.4
 
 use (
 	./apps/platform
+	./go-services/knowledge
 	./go-services/password
 	./go-services/telemetry
 	./go-services/tender
