@@ -1,4 +1,5 @@
 export { ChatWindow } from './chat-window';
+export { CommandPalette } from './command-palette';
 export { DeleteForm } from './delete-form';
 export { EmailForm } from './email-form';
 export type { PageHeaderProps } from './page-header';
