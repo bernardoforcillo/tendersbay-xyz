@@ -281,6 +281,103 @@ func TestSaveDocumentParts_UpsertIsIdempotent(t *testing.T) {
 	}
 }
 
+func TestListUnindexed_ReturnsOnlyNullIndexedAtWithDocuments(t *testing.T) {
+	repo, sqlDB := testRepo(t)
+	ctx := context.Background()
+	source := "test-repo"
+	unindexedRef, indexedRef := "unindexed-1", "already-indexed-1"
+	cleanupTender(t, sqlDB, source, unindexedRef)
+	cleanupTender(t, sqlDB, source, indexedRef)
+
+	if _, err := repo.Save(ctx, []tender.Tender{
+		{
+			Source: source, SourceRef: unindexedRef, Title: "Needs indexing",
+			Buyer: tender.Buyer{Name: "Comune di Roma"}, CPV: "45233220",
+			ProcedureType: "open", Country: "IT", Status: tender.StatusOpen,
+			Documents: []tender.Document{{URL: "https://example.org/a.pdf", Type: "notice"}},
+		},
+		{
+			Source: source, SourceRef: indexedRef, Title: "Already indexed",
+			Status: tender.StatusOpen,
+		},
+	}); err != nil {
+		t.Fatalf("Save: %v", err)
+	}
+
+	var indexedID int64
+	row := sqlDB.QueryRowContext(ctx,
+		`SELECT id FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2`,
+		source, indexedRef)
+	if err := row.Scan(&indexedID); err != nil {
+		t.Fatalf("find indexed tender id: %v", err)
+	}
+	if err := repo.MarkIndexed(ctx, indexedID); err != nil {
+		t.Fatalf("MarkIndexed: %v", err)
+	}
+
+	unindexed, err := repo.ListUnindexed(ctx, 100)
+	if err != nil {
+		t.Fatalf("ListUnindexed: %v", err)
+	}
+
+	var found *postgres.UnindexedTender
+	for i := range unindexed {
+		if unindexed[i].SourceRef == unindexedRef {
+			found = &unindexed[i]
+		}
+		if unindexed[i].SourceRef == indexedRef {
+			t.Fatalf("ListUnindexed returned the already-indexed tender %q", indexedRef)
+		}
+	}
+	if found == nil {
+		t.Fatal("ListUnindexed did not return the unindexed tender")
+	}
+	if found.Title != "Needs indexing" || found.BuyerName != "Comune di Roma" ||
+		found.CPV != "45233220" || found.ProcedureType != "open" || found.Country != "IT" ||
+		found.Status != "open" || found.Source != source || found.SourceRef != unindexedRef {
+		t.Errorf("found tender = %+v, want matching structured fields", found)
+	}
+	if len(found.Documents) != 1 || found.Documents[0].URL != "https://example.org/a.pdf" {
+		t.Errorf("found.Documents = %+v, want one document with the saved URL", found.Documents)
+	}
+}
+
+func TestListUnindexed_RespectsLimit(t *testing.T) {
+	repo, sqlDB := testRepo(t)
+	ctx := context.Background()
+	source := "test-repo"
+	refs := []string{"limit-1", "limit-2", "limit-3"}
+	for _, ref := range refs {
+		cleanupTender(t, sqlDB, source, ref)
+	}
+
+	batch := make([]tender.Tender, len(refs))
+	for i, ref := range refs {
+		batch[i] = tender.Tender{Source: source, SourceRef: ref, Title: "Limit test", Status: tender.StatusOpen}
+	}
+	if _, err := repo.Save(ctx, batch); err != nil {
+		t.Fatalf("Save: %v", err)
+	}
+
+	unindexed, err := repo.ListUnindexed(ctx, 2)
+	if err != nil {
+		t.Fatalf("ListUnindexed: %v", err)
+	}
+	count := 0
+	for _, u := range unindexed {
+		if u.Source == source {
+			for _, ref := range refs {
+				if u.SourceRef == ref {
+					count++
+				}
+			}
+		}
+	}
+	if count > 2 {
+		t.Errorf("ListUnindexed(limit=2) returned %d of our 3 test tenders, want at most 2", count)
+	}
+}
+
 func TestDocumentParts_EmptyWhenNoneSaved(t *testing.T) {
 	repo, sqlDB := testRepo(t)
 	ctx := context.Background()
