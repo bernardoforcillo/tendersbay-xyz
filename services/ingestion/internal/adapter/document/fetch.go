@@ -8,7 +8,10 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 )
+
+var httpClient = &http.Client{Timeout: 30 * time.Second}
 
 // Fetch downloads url to a temp file and returns its path. The caller must
 // call the returned cleanup function (typically via defer) to remove the
@@ -18,7 +21,7 @@ func Fetch(ctx context.Context, url string) (path string, cleanup func(), err er
 	if err != nil {
 		return "", nil, err
 	}
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return "", nil, err
 	}
