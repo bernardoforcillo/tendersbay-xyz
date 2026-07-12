@@ -26,4 +26,10 @@ describe('Switch', () => {
     render(<Switch>Push notifications</Switch>);
     expect(screen.getByText('Push notifications')).toBeInTheDocument();
   });
+
+  it('keeps the 40px minimum interactive target', () => {
+    render(<Switch>Email alerts</Switch>);
+    const root = screen.getByRole('switch', { name: 'Email alerts' }).closest('label');
+    expect(root?.className).toContain('min-h-10');
+  });
 });

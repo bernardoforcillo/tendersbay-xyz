@@ -12,7 +12,7 @@ export function Switch({ children, className, ...props }: SwitchProps) {
     <RACSwitch
       {...props}
       className={cn(
-        'group inline-flex items-center gap-2 text-sm font-medium text-ink-900 outline-none',
+        'group inline-flex min-h-10 items-center gap-2 text-sm font-medium text-ink-900 outline-none',
         'data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600 data-[focus-visible]:ring-offset-2',
         'data-[focus-visible]:ring-offset-cream-100',
         className,
