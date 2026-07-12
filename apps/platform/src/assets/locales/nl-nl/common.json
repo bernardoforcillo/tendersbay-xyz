@@ -174,6 +174,25 @@
       "logout": "Uitloggen"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Goedemorgen.",
+      "afternoon": "Goedemiddag.",
+      "evening": "Goedenavond.",
+      "morningNamed": "Goedemorgen, {{name}}.",
+      "afternoonNamed": "Goedemiddag, {{name}}.",
+      "eveningNamed": "Goedenavond, {{name}}."
+    },
+    "resume": {
+      "title": "Ga verder waar u gebleven was",
+      "untitled": "Gesprek zonder titel"
+    },
+    "explore": {
+      "title": "Vind uw volgende aanbesteding",
+      "description": "Vraag de agent naar markten, vereisten of een specifieke aanbesteding — persoonlijke aanbevelingen verschijnen hier zodra uw zoekprofielen vorm krijgen.",
+      "action": "Open Ontdekken"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Laden…",

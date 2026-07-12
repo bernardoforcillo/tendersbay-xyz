@@ -178,6 +178,25 @@
       "logout": "Odjava"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Dobro jutro.",
+      "afternoon": "Dobar dan.",
+      "evening": "Dobra večer.",
+      "morningNamed": "Dobro jutro, {{name}}.",
+      "afternoonNamed": "Dobar dan, {{name}}.",
+      "eveningNamed": "Dobra večer, {{name}}."
+    },
+    "resume": {
+      "title": "Nastavite ondje gdje ste stali",
+      "untitled": "Razgovor bez naziva"
+    },
+    "explore": {
+      "title": "Pronađite svoj sljedeći natječaj",
+      "description": "Pitajte agenta o tržištima, zahtjevima ili određenom natječaju — personalizirane preporuke pojavit će se ovdje dok se oblikuju vaši profili pretraživanja.",
+      "action": "Otvorite Istraži"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Učitavanje…",

@@ -174,6 +174,25 @@
       "logout": "Oħroġ"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "L-għodwa t-tajba.",
+      "afternoon": "Wara nofsinhar it-tajjeb.",
+      "evening": "Il-lejla t-tajba.",
+      "morningNamed": "L-għodwa t-tajba, {{name}}.",
+      "afternoonNamed": "Wara nofsinhar it-tajjeb, {{name}}.",
+      "eveningNamed": "Il-lejla t-tajba, {{name}}."
+    },
+    "resume": {
+      "title": "Kompli minn fejn ħallejt",
+      "untitled": "Konversazzjoni mingħajr titlu"
+    },
+    "explore": {
+      "title": "Sib l-offerta li jmiss tiegħek",
+      "description": "Staqsi lill-aġent dwar swieq, rekwiżiti, jew offerta speċifika — rakkomandazzjonijiet personalizzati jidhru hawn hekk kif jieħdu forma l-profili tat-tiftix tiegħek.",
+      "action": "Iftaħ Esplora"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Qed jitgħabba…",

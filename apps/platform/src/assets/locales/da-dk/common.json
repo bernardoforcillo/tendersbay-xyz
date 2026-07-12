@@ -174,6 +174,25 @@
       "logout": "Log ud"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Godmorgen.",
+      "afternoon": "God eftermiddag.",
+      "evening": "God aften.",
+      "morningNamed": "Godmorgen, {{name}}.",
+      "afternoonNamed": "God eftermiddag, {{name}}.",
+      "eveningNamed": "God aften, {{name}}."
+    },
+    "resume": {
+      "title": "Fortsæt hvor du slap",
+      "untitled": "Samtale uden titel"
+    },
+    "explore": {
+      "title": "Find dit næste udbud",
+      "description": "Spørg agenten om markeder, krav eller et konkret udbud — personlige anbefalinger vises her, efterhånden som dine søgeprofiler tager form.",
+      "action": "Åbn Udforsk"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Indlæser…",

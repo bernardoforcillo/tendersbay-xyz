@@ -178,6 +178,25 @@
       "logout": "Wyloguj się"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Dzień dobry.",
+      "afternoon": "Miłego popołudnia.",
+      "evening": "Dobry wieczór.",
+      "morningNamed": "Dzień dobry, {{name}}.",
+      "afternoonNamed": "Miłego popołudnia, {{name}}.",
+      "eveningNamed": "Dobry wieczór, {{name}}."
+    },
+    "resume": {
+      "title": "Kontynuuj od miejsca przerwania",
+      "untitled": "Rozmowa bez tytułu"
+    },
+    "explore": {
+      "title": "Znajdź swój następny przetarg",
+      "description": "Zapytaj agenta o rynki, wymagania lub konkretny przetarg — spersonalizowane rekomendacje pojawią się tutaj, gdy ukształtują się twoje profile wyszukiwania.",
+      "action": "Otwórz Odkrywaj"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Ładowanie…",

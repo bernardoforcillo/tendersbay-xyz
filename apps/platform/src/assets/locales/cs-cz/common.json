@@ -174,6 +174,25 @@
       "logout": "Odhlásit se"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Dobré ráno.",
+      "afternoon": "Dobré odpoledne.",
+      "evening": "Dobrý večer.",
+      "morningNamed": "Dobré ráno, {{name}}.",
+      "afternoonNamed": "Dobré odpoledne, {{name}}.",
+      "eveningNamed": "Dobrý večer, {{name}}."
+    },
+    "resume": {
+      "title": "Pokračujte tam, kde jste přestali",
+      "untitled": "Konverzace bez názvu"
+    },
+    "explore": {
+      "title": "Najděte svou další zakázku",
+      "description": "Zeptejte se agenta na trhy, požadavky nebo konkrétní zakázku — personalizovaná doporučení se zde zobrazí, jakmile se zformují vaše vyhledávací profily.",
+      "action": "Otevřete Prozkoumat"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Načítání…",

@@ -178,6 +178,25 @@
       "logout": "Logáil amach"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Maidin mhaith.",
+      "afternoon": "Tráthnóna maith.",
+      "evening": "Oíche mhaith.",
+      "morningNamed": "Maidin mhaith, {{name}}.",
+      "afternoonNamed": "Tráthnóna maith, {{name}}.",
+      "eveningNamed": "Oíche mhaith, {{name}}."
+    },
+    "resume": {
+      "title": "Lean leat ón áit ar stad tú",
+      "untitled": "Comhrá gan teideal"
+    },
+    "explore": {
+      "title": "Aimsigh an chéad tairiscint eile agat",
+      "description": "Fiafraigh den ghníomhaire faoi mhargaí, riachtanais, nó tairiscint ar leith — beidh moltaí pearsantaithe le feiceáil anseo de réir mar a fhorbraíonn do phróifílí cuardaigh.",
+      "action": "Oscail Iniúchadh"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Á lódáil…",
