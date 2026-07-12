@@ -203,9 +203,12 @@ func (r *TenderRepo) DocumentParts(ctx context.Context, documentID int64) ([]str
 	for rows.Next() {
 		var p string
 		if err := rows.Scan(&p); err != nil {
-			return nil, err
+			return nil, fmt.Errorf("postgres: scan document part for document %d: %w", documentID, err)
 		}
 		parts = append(parts, p)
 	}
-	return parts, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("postgres: document parts for document %d: %w", documentID, err)
+	}
+	return parts, nil
 }
