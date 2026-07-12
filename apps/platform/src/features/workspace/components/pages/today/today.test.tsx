@@ -47,11 +47,17 @@ describe('WorkspaceTodayPage', () => {
     expect(screen.getByTestId('search-dock')).toBeInTheDocument();
   });
 
-  it('resuming a chat sets it current and navigates to Explore', async () => {
+  it('resuming a chat clears the previous chat state and navigates to Explore', async () => {
     const { default: userEvent } = await import('@testing-library/user-event');
     const user = userEvent.setup();
+    useChatStore.setState({
+      messages: [{ id: 'old', role: 'user', content: 'stale', createdAt: '' }],
+      pendingChoice: { id: 'p', question: 'q', options: [], allowCustom: false },
+    });
     render(<WorkspaceTodayPage />);
     await user.click(screen.getByText('Bandi cloud Lombardia'));
+    expect(useChatStore.getState().messages).toEqual([]);
+    expect(useChatStore.getState().pendingChoice).toBeNull();
     expect(useChatStore.getState().currentChatId).toBe('c1');
     expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
   });

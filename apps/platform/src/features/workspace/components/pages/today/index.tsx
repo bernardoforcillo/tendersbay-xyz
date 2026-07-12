@@ -21,6 +21,8 @@ export function WorkspaceTodayPage() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const setCurrentChat = useChatStore((s) => s.setCurrentChat);
+  const setMessages = useChatStore((s) => s.setMessages);
+  const setPendingChoice = useChatStore((s) => s.setPendingChoice);
   const { data: chats } = useWorkspaceChats(workspace.id);
 
   const name = user?.displayName?.split(' ')[0];
@@ -37,6 +39,10 @@ export function WorkspaceTodayPage() {
   const recent = (chats ?? []).slice(0, 3);
 
   function resume(chatId: string) {
+    // Clear the previous chat's residue so ChatWindow never renders another
+    // conversation's transcript while (or if) the resumed history loads.
+    setMessages([]);
+    setPendingChoice(null);
     setCurrentChat(chatId);
     void navigate({ to: '/explore' });
   }
