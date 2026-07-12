@@ -178,6 +178,25 @@
       "logout": "Atsijungti"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Labas rytas.",
+      "afternoon": "Laba diena.",
+      "evening": "Labas vakaras.",
+      "morningNamed": "Labas rytas, {{name}}.",
+      "afternoonNamed": "Laba diena, {{name}}.",
+      "eveningNamed": "Labas vakaras, {{name}}."
+    },
+    "resume": {
+      "title": "Tęskite nuo ten, kur baigėte",
+      "untitled": "Pokalbis be pavadinimo"
+    },
+    "explore": {
+      "title": "Raskite savo kitą pirkimą",
+      "description": "Paklauskite agento apie rinkas, reikalavimus arba konkretų pirkimą — čia atsiras personalizuotos rekomendacijos, kai formuosis jūsų paieškos profiliai.",
+      "action": "Atidarykite Naršyti"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Įkeliama…",

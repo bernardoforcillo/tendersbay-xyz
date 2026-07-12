@@ -174,6 +174,25 @@
       "logout": "Terminar sessão"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Bom dia.",
+      "afternoon": "Boa tarde.",
+      "evening": "Boa noite.",
+      "morningNamed": "Bom dia, {{name}}.",
+      "afternoonNamed": "Boa tarde, {{name}}.",
+      "eveningNamed": "Boa noite, {{name}}."
+    },
+    "resume": {
+      "title": "Continue de onde parou",
+      "untitled": "Conversa sem título"
+    },
+    "explore": {
+      "title": "Encontre o seu próximo concurso",
+      "description": "Pergunte ao agente sobre mercados, requisitos ou um concurso específico — recomendações personalizadas vão aparecer aqui à medida que os seus perfis de pesquisa tomam forma.",
+      "action": "Abra Explorar"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "A carregar…",

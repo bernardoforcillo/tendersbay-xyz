@@ -178,6 +178,25 @@
       "logout": "Kijelentkezés"
     }
   },
+  "today": {
+    "greeting": {
+      "morning": "Jó reggelt.",
+      "afternoon": "Jó napot.",
+      "evening": "Jó estét.",
+      "morningNamed": "Jó reggelt, {{name}}.",
+      "afternoonNamed": "Jó napot, {{name}}.",
+      "eveningNamed": "Jó estét, {{name}}."
+    },
+    "resume": {
+      "title": "Folytassa ott, ahol abbahagyta",
+      "untitled": "Névtelen beszélgetés"
+    },
+    "explore": {
+      "title": "Találja meg a következő pályázatát",
+      "description": "Kérdezze meg az ügynököt a piacokról, követelményekről vagy egy adott pályázati felhívásról — személyre szabott ajánlások jelennek meg itt, ahogy az Ön keresési profiljai formát öltenek.",
+      "action": "Nyissa meg a Felfedezést"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Betöltés…",
