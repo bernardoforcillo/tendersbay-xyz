@@ -62,6 +62,12 @@ spec:
                   value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
                 - name: POSTHOG_HOST
                   value: 'https://eu.i.posthog.com'
+                - name: QDRANT_URL
+                  value: 'http://qdrant-release.qdrant.svc.cluster.local:6333'
+                - name: OLLAMA_BASE_URL
+                  value: 'http://ollama-release.ollama.svc.cluster.local:11434'
+                - name: EMBEDDING_MODEL
+                  value: 'embeddinggemma:latest'
               imagePullPolicy: Always
               volumeMounts:
                 - name: tmp
