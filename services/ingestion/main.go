@@ -10,7 +10,10 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/document"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/index"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/source"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/config"
@@ -54,6 +57,20 @@ func run() int {
 
 	report := svc.RunOnce(ctx)
 	slog.Info("ingestion complete", "providers", len(sources), "summary", report.Summary())
+
+	// Indexing failures never affect the process exit code — Postgres is
+	// the source of truth for ingestion; a Qdrant/Ollama outage delays
+	// search indexing, it doesn't fail the ingestion run.
+	kb, kbErr := knowledge.NewKnowledgeBase(ctx, cfg.QdrantURL, cfg.OllamaBaseURL, cfg.EmbeddingModel)
+	if kbErr != nil {
+		slog.ErrorContext(ctx, "failed to connect to knowledge base, skipping indexing this cycle", "error", kbErr)
+	} else {
+		idx := index.New(sink, kb, document.NewClient())
+		if idxErr := idx.RunOnce(ctx); idxErr != nil {
+			slog.ErrorContext(ctx, "indexing pass failed", "error", idxErr)
+		}
+	}
+
 	if report.Failed() {
 		return 1
 	}
