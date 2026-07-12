@@ -34,7 +34,7 @@ func NewClient() *Client { return &Client{} }
 func (c *Client) FetchAndExtract(ctx context.Context, url string) ([]string, error) {
 	path, cleanup, err := Fetch(ctx, url)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("document: fetch %s: %w", url, err)
 	}
 	defer cleanup()
 	return Extract(path)
