@@ -5,6 +5,48 @@
     "accept": "Glac",
     "reject": "Diúltaigh"
   },
+  "account": {
+    "settings": {
+      "title": "Socruithe cuntais"
+    },
+    "profile": {
+      "title": "Próifíl",
+      "description": "Nuashonraigh d'ainm taispeána agus an chaoi a bhfeiceann daoine eile thú.",
+      "displayName": "Ainm taispeána",
+      "saved": "Sábháilte!",
+      "submitting": "Á shábháil…",
+      "submit": "Sábháil athruithe"
+    },
+    "changeEmail": {
+      "checkEmail": "Seiceáil do ríomhphost nua",
+      "title": "Athraigh ríomhphost",
+      "prompt": "Sheol muid nasc deimhnithe chuig do sheoladh nua. Cliceáil air chun an t-athrú a dhearbhú.",
+      "description": "Seolfaimid nasc deimhnithe chuig an seoladh nua.",
+      "hint": "Fanann do ríomhphost reatha gníomhach go dtí go ndeimhníonn tú an ceann nua.",
+      "newEmail": "Ríomhphost nua",
+      "password": "Focal faire reatha",
+      "submitting": "Á shábháil…",
+      "submit": "Athraigh ríomhphost"
+    },
+    "changePassword": {
+      "successTitle": "Focal faire nuashonraithe",
+      "title": "Athraigh focal faire",
+      "successBody": "Athraíodh d'fhocal faire. Sínigh isteach arís ar ghléasanna eile.",
+      "description": "Caithfidh an focal faire nua a bheith 12 charachtar ar a laghad.",
+      "successHint": "Fanann seisiúin ghníomhacha eile bailí go dtí go rachaidh siad in éag.",
+      "current": "Focal faire reatha",
+      "new": "Focal faire nua",
+      "submitting": "Á shábháil…",
+      "submit": "Athraigh focal faire"
+    },
+    "delete": {
+      "title": "Scrios cuntas",
+      "description": "Tá an gníomh seo buan agus ní féidir é a chur ar ceal. Scriosfar do chuid sonraí, spásanna oibre agus socruithe go léir go buan.",
+      "password": "Deimhnigh le d'fhocal faire",
+      "submitting": "Á scriosadh…",
+      "submit": "Scrios mo chuntas"
+    }
+  },
   "landing": {
     "search": {
       "label": "Cuardaigh",

@@ -5,6 +5,48 @@
     "accept": "Accetta",
     "reject": "Rifiuta"
   },
+  "account": {
+    "settings": {
+      "title": "Impostazioni account"
+    },
+    "profile": {
+      "title": "Profilo",
+      "description": "Aggiorna il tuo nome visualizzato e il modo in cui gli altri ti vedono.",
+      "displayName": "Nome visualizzato",
+      "saved": "Salvato!",
+      "submitting": "Salvataggio…",
+      "submit": "Salva modifiche"
+    },
+    "changeEmail": {
+      "checkEmail": "Controlla la tua nuova email",
+      "title": "Cambia email",
+      "prompt": "Abbiamo inviato un link di verifica al tuo nuovo indirizzo. Fai clic per confermare la modifica.",
+      "description": "Invieremo un link di verifica al nuovo indirizzo.",
+      "hint": "La tua email attuale resta attiva finché non verifichi quella nuova.",
+      "newEmail": "Nuova email",
+      "password": "Password attuale",
+      "submitting": "Salvataggio…",
+      "submit": "Cambia email"
+    },
+    "changePassword": {
+      "successTitle": "Password aggiornata",
+      "title": "Cambia password",
+      "successBody": "La tua password è stata modificata. Accedi di nuovo sugli altri dispositivi.",
+      "description": "La nuova password deve contenere almeno 12 caratteri.",
+      "successHint": "Le altre sessioni attive restano valide fino alla scadenza.",
+      "current": "Password attuale",
+      "new": "Nuova password",
+      "submitting": "Salvataggio…",
+      "submit": "Cambia password"
+    },
+    "delete": {
+      "title": "Elimina account",
+      "description": "Questa azione è permanente e non può essere annullata. Tutti i tuoi dati, spazi di lavoro e impostazioni verranno eliminati definitivamente.",
+      "password": "Conferma con la tua password",
+      "submitting": "Eliminazione…",
+      "submit": "Elimina il mio account"
+    }
+  },
   "landing": {
     "search": {
       "label": "Cerca",

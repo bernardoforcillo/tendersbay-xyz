@@ -5,6 +5,48 @@
     "accept": "Aċċetta",
     "reject": "Irrifjuta"
   },
+  "account": {
+    "settings": {
+      "title": "Settings tal-kont"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Aġġorna l-isem li jidher tiegħek u kif ħaddieħor jarak.",
+      "displayName": "Isem li jidher",
+      "saved": "Issejvjat!",
+      "submitting": "Qed jinħażen…",
+      "submit": "Issejvja l-bidliet"
+    },
+    "changeEmail": {
+      "checkEmail": "Iċċekkja l-email il-ġdida tiegħek",
+      "title": "Biddel l-email",
+      "prompt": "Bgħatna link ta' verifika lill-indirizz il-ġdid tiegħek. Ikklikkja fuqu biex tikkonferma l-bidla.",
+      "description": "Nibagħtu link ta' verifika lill-indirizz il-ġdid.",
+      "hint": "L-email attwali tiegħek tibqa' attiva sakemm tivverifika dik il-ġdida.",
+      "newEmail": "Email ġdida",
+      "password": "Password attwali",
+      "submitting": "Qed jinħażen…",
+      "submit": "Biddel l-email"
+    },
+    "changePassword": {
+      "successTitle": "Password aġġornata",
+      "title": "Biddel il-password",
+      "successBody": "Il-password tiegħek inbidlet. Erġa' idħol fuq apparati oħra.",
+      "description": "Il-password il-ġdida trid tkun mill-inqas 12-il karattru.",
+      "successHint": "Sessjonijiet attivi oħra jibqgħu validi sakemm jiskadu.",
+      "current": "Password attwali",
+      "new": "Password ġdida",
+      "submitting": "Qed jinħażen…",
+      "submit": "Biddel il-password"
+    },
+    "delete": {
+      "title": "Ħassar il-kont",
+      "description": "Din l-azzjoni hija permanenti u ma tistax titħassar. Id-data, l-ispazji tax-xogħol u s-settings kollha tiegħek jitħassru b'mod permanenti.",
+      "password": "Ikkonferma bil-password tiegħek",
+      "submitting": "Qed jitħassar…",
+      "submit": "Ħassar il-kont tiegħi"
+    }
+  },
   "landing": {
     "search": {
       "label": "Fittex",

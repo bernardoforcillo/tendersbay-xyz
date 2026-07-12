@@ -5,6 +5,48 @@
     "accept": "Prijať",
     "reject": "Odmietnuť"
   },
+  "account": {
+    "settings": {
+      "title": "Nastavenia účtu"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Aktualizujte svoje zobrazované meno a spôsob, akým vás vidia ostatní.",
+      "displayName": "Zobrazované meno",
+      "saved": "Uložené!",
+      "submitting": "Ukladá sa…",
+      "submit": "Uložiť zmeny"
+    },
+    "changeEmail": {
+      "checkEmail": "Skontrolujte svoj nový e-mail",
+      "title": "Zmena e-mailu",
+      "prompt": "Na vašu novú adresu sme odoslali overovací odkaz. Kliknutím naň potvrdíte zmenu.",
+      "description": "Na novú adresu zašleme overovací odkaz.",
+      "hint": "Váš súčasný e-mail zostáva aktívny, kým nepotvrdíte nový.",
+      "newEmail": "Nový e-mail",
+      "password": "Súčasné heslo",
+      "submitting": "Ukladá sa…",
+      "submit": "Zmeniť e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Heslo bolo aktualizované",
+      "title": "Zmena hesla",
+      "successBody": "Vaše heslo bolo zmenené. Na ostatných zariadeniach sa prihláste znova.",
+      "description": "Nové heslo musí mať aspoň 12 znakov.",
+      "successHint": "Ostatné aktívne relácie zostávajú platné až do vypršania.",
+      "current": "Súčasné heslo",
+      "new": "Nové heslo",
+      "submitting": "Ukladá sa…",
+      "submit": "Zmeniť heslo"
+    },
+    "delete": {
+      "title": "Odstrániť účet",
+      "description": "Táto akcia je trvalá a nedá sa vrátiť späť. Všetky vaše údaje, pracovné priestory a nastavenia budú natrvalo odstránené.",
+      "password": "Potvrďte svojím heslom",
+      "submitting": "Odstraňuje sa…",
+      "submit": "Odstrániť môj účet"
+    }
+  },
   "landing": {
     "search": {
       "label": "Hľadať",

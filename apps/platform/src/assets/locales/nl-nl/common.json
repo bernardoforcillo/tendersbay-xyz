@@ -5,6 +5,48 @@
     "accept": "Accepteren",
     "reject": "Weigeren"
   },
+  "account": {
+    "settings": {
+      "title": "Accountinstellingen"
+    },
+    "profile": {
+      "title": "Profiel",
+      "description": "Werk je weergavenaam bij en hoe anderen je zien.",
+      "displayName": "Weergavenaam",
+      "saved": "Opgeslagen!",
+      "submitting": "Opslaan…",
+      "submit": "Wijzigingen opslaan"
+    },
+    "changeEmail": {
+      "checkEmail": "Controleer je nieuwe e-mail",
+      "title": "E-mail wijzigen",
+      "prompt": "We hebben een bevestigingslink naar je nieuwe adres gestuurd. Klik erop om de wijziging te bevestigen.",
+      "description": "We sturen een bevestigingslink naar het nieuwe adres.",
+      "hint": "Je huidige e-mail blijft actief totdat je de nieuwe bevestigt.",
+      "newEmail": "Nieuwe e-mail",
+      "password": "Huidig wachtwoord",
+      "submitting": "Opslaan…",
+      "submit": "E-mail wijzigen"
+    },
+    "changePassword": {
+      "successTitle": "Wachtwoord bijgewerkt",
+      "title": "Wachtwoord wijzigen",
+      "successBody": "Je wachtwoord is gewijzigd. Log opnieuw in op andere apparaten.",
+      "description": "Het nieuwe wachtwoord moet minstens 12 tekens bevatten.",
+      "successHint": "Andere actieve sessies blijven geldig tot ze verlopen.",
+      "current": "Huidig wachtwoord",
+      "new": "Nieuw wachtwoord",
+      "submitting": "Opslaan…",
+      "submit": "Wachtwoord wijzigen"
+    },
+    "delete": {
+      "title": "Account verwijderen",
+      "description": "Deze actie is permanent en kan niet ongedaan worden gemaakt. Al je gegevens, werkruimtes en instellingen worden definitief verwijderd.",
+      "password": "Bevestig met je wachtwoord",
+      "submitting": "Verwijderen…",
+      "submit": "Mijn account verwijderen"
+    }
+  },
   "landing": {
     "search": {
       "label": "Zoeken",

@@ -5,6 +5,48 @@
     "accept": "Sprejmi",
     "reject": "Zavrni"
   },
+  "account": {
+    "settings": {
+      "title": "Nastavitve računa"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Posodobite prikazano ime in način, kako vas vidijo drugi.",
+      "displayName": "Prikazano ime",
+      "saved": "Shranjeno!",
+      "submitting": "Shranjevanje…",
+      "submit": "Shrani spremembe"
+    },
+    "changeEmail": {
+      "checkEmail": "Preverite svoj nov e-poštni naslov",
+      "title": "Sprememba e-pošte",
+      "prompt": "Na vaš nov naslov smo poslali potrditveno povezavo. Kliknite nanjo, da potrdite spremembo.",
+      "description": "Na nov naslov bomo poslali potrditveno povezavo.",
+      "hint": "Vaša trenutna e-pošta ostane aktivna, dokler ne potrdite nove.",
+      "newEmail": "Nov e-poštni naslov",
+      "password": "Trenutno geslo",
+      "submitting": "Shranjevanje…",
+      "submit": "Spremeni e-pošto"
+    },
+    "changePassword": {
+      "successTitle": "Geslo posodobljeno",
+      "title": "Sprememba gesla",
+      "successBody": "Vaše geslo je bilo spremenjeno. Na drugih napravah se ponovno prijavite.",
+      "description": "Novo geslo mora imeti vsaj 12 znakov.",
+      "successHint": "Ostale aktivne seje ostanejo veljavne do poteka.",
+      "current": "Trenutno geslo",
+      "new": "Novo geslo",
+      "submitting": "Shranjevanje…",
+      "submit": "Spremeni geslo"
+    },
+    "delete": {
+      "title": "Izbriši račun",
+      "description": "To dejanje je trajno in ga ni mogoče razveljaviti. Vsi vaši podatki, delovni prostori in nastavitve bodo trajno izbrisani.",
+      "password": "Potrdite s svojim geslom",
+      "submitting": "Brisanje…",
+      "submit": "Izbriši moj račun"
+    }
+  },
   "landing": {
     "search": {
       "label": "Iskanje",

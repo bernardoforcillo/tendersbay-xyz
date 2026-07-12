@@ -5,6 +5,48 @@
     "accept": "Aceitar",
     "reject": "Rejeitar"
   },
+  "account": {
+    "settings": {
+      "title": "Definições da conta"
+    },
+    "profile": {
+      "title": "Perfil",
+      "description": "Atualize o seu nome apresentado e a forma como os outros o veem.",
+      "displayName": "Nome apresentado",
+      "saved": "Guardado!",
+      "submitting": "A guardar…",
+      "submit": "Guardar alterações"
+    },
+    "changeEmail": {
+      "checkEmail": "Verifique o seu novo e-mail",
+      "title": "Alterar e-mail",
+      "prompt": "Enviámos uma ligação de verificação para o seu novo endereço. Clique nela para confirmar a alteração.",
+      "description": "Enviaremos uma ligação de verificação para o novo endereço.",
+      "hint": "O seu e-mail atual permanece ativo até verificar o novo.",
+      "newEmail": "Novo e-mail",
+      "password": "Palavra-passe atual",
+      "submitting": "A guardar…",
+      "submit": "Alterar e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Palavra-passe atualizada",
+      "title": "Alterar palavra-passe",
+      "successBody": "A sua palavra-passe foi alterada. Inicie sessão novamente nos outros dispositivos.",
+      "description": "A nova palavra-passe deve ter pelo menos 12 carateres.",
+      "successHint": "As restantes sessões ativas permanecem válidas até expirarem.",
+      "current": "Palavra-passe atual",
+      "new": "Nova palavra-passe",
+      "submitting": "A guardar…",
+      "submit": "Alterar palavra-passe"
+    },
+    "delete": {
+      "title": "Eliminar conta",
+      "description": "Esta ação é permanente e não pode ser anulada. Todos os seus dados, espaços de trabalho e definições serão eliminados permanentemente.",
+      "password": "Confirme com a sua palavra-passe",
+      "submitting": "A eliminar…",
+      "submit": "Eliminar a minha conta"
+    }
+  },
   "landing": {
     "search": {
       "label": "Pesquisar",

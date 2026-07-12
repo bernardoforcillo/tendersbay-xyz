@@ -5,6 +5,48 @@
     "accept": "Akceptuj",
     "reject": "Odrzuć"
   },
+  "account": {
+    "settings": {
+      "title": "Ustawienia konta"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Zaktualizuj wyświetlaną nazwę i to, jak widzą Cię inni.",
+      "displayName": "Wyświetlana nazwa",
+      "saved": "Zapisano!",
+      "submitting": "Zapisywanie…",
+      "submit": "Zapisz zmiany"
+    },
+    "changeEmail": {
+      "checkEmail": "Sprawdź swój nowy e-mail",
+      "title": "Zmiana e-maila",
+      "prompt": "Wysłaliśmy link weryfikacyjny na Twój nowy adres. Kliknij go, aby potwierdzić zmianę.",
+      "description": "Wyślemy link weryfikacyjny na nowy adres.",
+      "hint": "Twój obecny e-mail pozostaje aktywny, dopóki nie zweryfikujesz nowego.",
+      "newEmail": "Nowy e-mail",
+      "password": "Obecne hasło",
+      "submitting": "Zapisywanie…",
+      "submit": "Zmień e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Hasło zaktualizowane",
+      "title": "Zmiana hasła",
+      "successBody": "Twoje hasło zostało zmienione. Zaloguj się ponownie na innych urządzeniach.",
+      "description": "Nowe hasło musi mieć co najmniej 12 znaków.",
+      "successHint": "Pozostałe aktywne sesje pozostają ważne do czasu wygaśnięcia.",
+      "current": "Obecne hasło",
+      "new": "Nowe hasło",
+      "submitting": "Zapisywanie…",
+      "submit": "Zmień hasło"
+    },
+    "delete": {
+      "title": "Usuń konto",
+      "description": "Ta czynność jest nieodwracalna i nie można jej cofnąć. Wszystkie Twoje dane, przestrzenie robocze i ustawienia zostaną trwale usunięte.",
+      "password": "Potwierdź swoim hasłem",
+      "submitting": "Usuwanie…",
+      "submit": "Usuń moje konto"
+    }
+  },
   "landing": {
     "search": {
       "label": "Szukaj",

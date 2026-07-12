@@ -5,6 +5,48 @@
     "accept": "Accept",
     "reject": "Reject"
   },
+  "account": {
+    "settings": {
+      "title": "Account settings"
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "Update your display name and how others see you.",
+      "displayName": "Display name",
+      "saved": "Saved!",
+      "submitting": "Saving…",
+      "submit": "Save changes"
+    },
+    "changeEmail": {
+      "checkEmail": "Check your new email",
+      "title": "Change email",
+      "prompt": "We sent a verification link to your new address. Click it to confirm the change.",
+      "description": "We'll send a verification link to the new address.",
+      "hint": "Your current email stays active until you verify the new one.",
+      "newEmail": "New email",
+      "password": "Current password",
+      "submitting": "Saving…",
+      "submit": "Change email"
+    },
+    "changePassword": {
+      "successTitle": "Password updated",
+      "title": "Change password",
+      "successBody": "Your password has been changed. Sign in again on other devices.",
+      "description": "New password must be at least 12 characters.",
+      "successHint": "Other active sessions remain valid until they expire.",
+      "current": "Current password",
+      "new": "New password",
+      "submitting": "Saving…",
+      "submit": "Change password"
+    },
+    "delete": {
+      "title": "Delete account",
+      "description": "This action is permanent and cannot be undone. All your data, workspaces, and settings will be permanently deleted.",
+      "password": "Confirm with your password",
+      "submitting": "Deleting…",
+      "submit": "Delete my account"
+    }
+  },
   "landing": {
     "search": {
       "label": "Search",

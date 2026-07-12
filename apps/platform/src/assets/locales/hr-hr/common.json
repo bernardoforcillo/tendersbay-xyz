@@ -5,6 +5,48 @@
     "accept": "Prihvati",
     "reject": "Odbij"
   },
+  "account": {
+    "settings": {
+      "title": "Postavke računa"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Ažurirajte svoje prikazano ime i način na koji vas drugi vide.",
+      "displayName": "Prikazano ime",
+      "saved": "Spremljeno!",
+      "submitting": "Spremanje…",
+      "submit": "Spremi promjene"
+    },
+    "changeEmail": {
+      "checkEmail": "Provjerite svoju novu e-poštu",
+      "title": "Promjena e-pošte",
+      "prompt": "Poslali smo poveznicu za potvrdu na vašu novu adresu. Kliknite na nju kako biste potvrdili promjenu.",
+      "description": "Poslat ćemo poveznicu za potvrdu na novu adresu.",
+      "hint": "Vaša trenutna e-pošta ostaje aktivna dok ne potvrdite novu.",
+      "newEmail": "Nova e-pošta",
+      "password": "Trenutna lozinka",
+      "submitting": "Spremanje…",
+      "submit": "Promijeni e-poštu"
+    },
+    "changePassword": {
+      "successTitle": "Lozinka je ažurirana",
+      "title": "Promjena lozinke",
+      "successBody": "Vaša je lozinka promijenjena. Ponovno se prijavite na drugim uređajima.",
+      "description": "Nova lozinka mora imati najmanje 12 znakova.",
+      "successHint": "Ostale aktivne sesije ostaju valjane do isteka.",
+      "current": "Trenutna lozinka",
+      "new": "Nova lozinka",
+      "submitting": "Spremanje…",
+      "submit": "Promijeni lozinku"
+    },
+    "delete": {
+      "title": "Izbriši račun",
+      "description": "Ova je radnja trajna i ne može se poništiti. Svi vaši podaci, radni prostori i postavke bit će trajno izbrisani.",
+      "password": "Potvrdite svojom lozinkom",
+      "submitting": "Brisanje…",
+      "submit": "Izbriši moj račun"
+    }
+  },
   "landing": {
     "search": {
       "label": "Pretraži",

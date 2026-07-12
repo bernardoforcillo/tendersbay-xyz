@@ -5,6 +5,48 @@
     "accept": "Elfogadom",
     "reject": "Elutasítom"
   },
+  "account": {
+    "settings": {
+      "title": "Fiókbeállítások"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Frissítse a megjelenített nevét és azt, ahogyan mások látják Önt.",
+      "displayName": "Megjelenített név",
+      "saved": "Mentve!",
+      "submitting": "Mentés…",
+      "submit": "Módosítások mentése"
+    },
+    "changeEmail": {
+      "checkEmail": "Ellenőrizze új e-mail címét",
+      "title": "E-mail módosítása",
+      "prompt": "Megerősítő linket küldtünk az új címére. Kattintson rá a módosítás megerősítéséhez.",
+      "description": "Megerősítő linket küldünk az új címre.",
+      "hint": "Jelenlegi e-mail címe aktív marad, amíg meg nem erősíti az újat.",
+      "newEmail": "Új e-mail",
+      "password": "Jelenlegi jelszó",
+      "submitting": "Mentés…",
+      "submit": "E-mail módosítása"
+    },
+    "changePassword": {
+      "successTitle": "Jelszó frissítve",
+      "title": "Jelszó módosítása",
+      "successBody": "Jelszava megváltozott. Jelentkezzen be újra a többi eszközön.",
+      "description": "Az új jelszónak legalább 12 karakterből kell állnia.",
+      "successHint": "A többi aktív munkamenet érvényes marad a lejáratukig.",
+      "current": "Jelenlegi jelszó",
+      "new": "Új jelszó",
+      "submitting": "Mentés…",
+      "submit": "Jelszó módosítása"
+    },
+    "delete": {
+      "title": "Fiók törlése",
+      "description": "Ez a művelet végleges, és nem vonható vissza. Minden adata, munkaterülete és beállítása véglegesen törlésre kerül.",
+      "password": "Erősítse meg jelszavával",
+      "submitting": "Törlés…",
+      "submit": "Fiókom törlése"
+    }
+  },
   "landing": {
     "search": {
       "label": "Keresés",

@@ -5,6 +5,48 @@
     "accept": "Akzeptieren",
     "reject": "Ablehnen"
   },
+  "account": {
+    "settings": {
+      "title": "Kontoeinstellungen"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Aktualisieren Sie Ihren Anzeigenamen und wie andere Sie sehen.",
+      "displayName": "Anzeigename",
+      "saved": "Gespeichert!",
+      "submitting": "Wird gespeichert…",
+      "submit": "Änderungen speichern"
+    },
+    "changeEmail": {
+      "checkEmail": "Prüfen Sie Ihre neue E-Mail",
+      "title": "E-Mail ändern",
+      "prompt": "Wir haben einen Bestätigungslink an Ihre neue Adresse gesendet. Klicken Sie darauf, um die Änderung zu bestätigen.",
+      "description": "Wir senden einen Bestätigungslink an die neue Adresse.",
+      "hint": "Ihre aktuelle E-Mail bleibt aktiv, bis Sie die neue bestätigen.",
+      "newEmail": "Neue E-Mail",
+      "password": "Aktuelles Passwort",
+      "submitting": "Wird gespeichert…",
+      "submit": "E-Mail ändern"
+    },
+    "changePassword": {
+      "successTitle": "Passwort aktualisiert",
+      "title": "Passwort ändern",
+      "successBody": "Ihr Passwort wurde geändert. Melden Sie sich auf anderen Geräten erneut an.",
+      "description": "Das neue Passwort muss mindestens 12 Zeichen lang sein.",
+      "successHint": "Andere aktive Sitzungen bleiben bis zu ihrem Ablauf gültig.",
+      "current": "Aktuelles Passwort",
+      "new": "Neues Passwort",
+      "submitting": "Wird gespeichert…",
+      "submit": "Passwort ändern"
+    },
+    "delete": {
+      "title": "Konto löschen",
+      "description": "Diese Aktion ist endgültig und kann nicht rückgängig gemacht werden. Alle Ihre Daten, Workspaces und Einstellungen werden dauerhaft gelöscht.",
+      "password": "Mit Ihrem Passwort bestätigen",
+      "submitting": "Wird gelöscht…",
+      "submit": "Mein Konto löschen"
+    }
+  },
   "landing": {
     "search": {
       "label": "Suchen",

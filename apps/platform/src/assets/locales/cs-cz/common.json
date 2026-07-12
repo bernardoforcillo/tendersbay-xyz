@@ -5,6 +5,48 @@
     "accept": "Přijmout",
     "reject": "Odmítnout"
   },
+  "account": {
+    "settings": {
+      "title": "Nastavení účtu"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Aktualizujte své zobrazované jméno a způsob, jakým vás vidí ostatní.",
+      "displayName": "Zobrazované jméno",
+      "saved": "Uloženo!",
+      "submitting": "Ukládání…",
+      "submit": "Uložit změny"
+    },
+    "changeEmail": {
+      "checkEmail": "Zkontrolujte svůj nový e-mail",
+      "title": "Změna e-mailu",
+      "prompt": "Na vaši novou adresu jsme odeslali ověřovací odkaz. Kliknutím na něj změnu potvrdíte.",
+      "description": "Na novou adresu zašleme ověřovací odkaz.",
+      "hint": "Váš současný e-mail zůstává aktivní, dokud neověříte nový.",
+      "newEmail": "Nový e-mail",
+      "password": "Současné heslo",
+      "submitting": "Ukládání…",
+      "submit": "Změnit e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Heslo bylo aktualizováno",
+      "title": "Změna hesla",
+      "successBody": "Vaše heslo bylo změněno. Na ostatních zařízeních se přihlaste znovu.",
+      "description": "Nové heslo musí mít alespoň 12 znaků.",
+      "successHint": "Ostatní aktivní relace zůstávají platné až do vypršení.",
+      "current": "Současné heslo",
+      "new": "Nové heslo",
+      "submitting": "Ukládání…",
+      "submit": "Změnit heslo"
+    },
+    "delete": {
+      "title": "Smazat účet",
+      "description": "Tato akce je trvalá a nelze ji vrátit zpět. Všechna vaše data, pracovní prostory a nastavení budou trvale smazána.",
+      "password": "Potvrďte svým heslem",
+      "submitting": "Mazání…",
+      "submit": "Smazat můj účet"
+    }
+  },
   "landing": {
     "search": {
       "label": "Hledat",

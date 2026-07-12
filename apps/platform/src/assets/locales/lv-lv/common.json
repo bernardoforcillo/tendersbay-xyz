@@ -5,6 +5,48 @@
     "accept": "Pieņemt",
     "reject": "Noraidīt"
   },
+  "account": {
+    "settings": {
+      "title": "Konta iestatījumi"
+    },
+    "profile": {
+      "title": "Profils",
+      "description": "Atjauniniet savu attēloto vārdu un to, kā citi jūs redz.",
+      "displayName": "Attēlotais vārds",
+      "saved": "Saglabāts!",
+      "submitting": "Notiek saglabāšana…",
+      "submit": "Saglabāt izmaiņas"
+    },
+    "changeEmail": {
+      "checkEmail": "Pārbaudiet savu jauno e-pastu",
+      "title": "Mainīt e-pastu",
+      "prompt": "Mēs nosūtījām apstiprinājuma saiti uz jūsu jauno adresi. Noklikšķiniet uz tās, lai apstiprinātu izmaiņas.",
+      "description": "Mēs nosūtīsim apstiprinājuma saiti uz jauno adresi.",
+      "hint": "Jūsu pašreizējais e-pasts paliek aktīvs, līdz apstiprināt jauno.",
+      "newEmail": "Jauns e-pasts",
+      "password": "Pašreizējā parole",
+      "submitting": "Notiek saglabāšana…",
+      "submit": "Mainīt e-pastu"
+    },
+    "changePassword": {
+      "successTitle": "Parole atjaunināta",
+      "title": "Mainīt paroli",
+      "successBody": "Jūsu parole ir mainīta. Citās ierīcēs piesakieties atkārtoti.",
+      "description": "Jaunajai parolei jābūt vismaz 12 rakstzīmēm.",
+      "successHint": "Citas aktīvās sesijas paliek derīgas līdz to termiņa beigām.",
+      "current": "Pašreizējā parole",
+      "new": "Jaunā parole",
+      "submitting": "Notiek saglabāšana…",
+      "submit": "Mainīt paroli"
+    },
+    "delete": {
+      "title": "Dzēst kontu",
+      "description": "Šī darbība ir neatgriezeniska un to nevar atsaukt. Visi jūsu dati, darbvietas un iestatījumi tiks neatgriezeniski dzēsti.",
+      "password": "Apstipriniet ar savu paroli",
+      "submitting": "Notiek dzēšana…",
+      "submit": "Dzēst manu kontu"
+    }
+  },
   "landing": {
     "search": {
       "label": "Meklēt",

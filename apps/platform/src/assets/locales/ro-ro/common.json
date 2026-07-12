@@ -5,6 +5,48 @@
     "accept": "Acceptă",
     "reject": "Respinge"
   },
+  "account": {
+    "settings": {
+      "title": "Setările contului"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Actualizați numele afișat și modul în care vă văd ceilalți.",
+      "displayName": "Nume afișat",
+      "saved": "Salvat!",
+      "submitting": "Se salvează…",
+      "submit": "Salvează modificările"
+    },
+    "changeEmail": {
+      "checkEmail": "Verificați noul e-mail",
+      "title": "Schimbare e-mail",
+      "prompt": "Am trimis un link de verificare la noua adresă. Faceți clic pe el pentru a confirma modificarea.",
+      "description": "Vom trimite un link de verificare la noua adresă.",
+      "hint": "E-mailul dumneavoastră actual rămâne activ până când îl confirmați pe cel nou.",
+      "newEmail": "E-mail nou",
+      "password": "Parola actuală",
+      "submitting": "Se salvează…",
+      "submit": "Schimbă e-mailul"
+    },
+    "changePassword": {
+      "successTitle": "Parolă actualizată",
+      "title": "Schimbare parolă",
+      "successBody": "Parola dumneavoastră a fost schimbată. Autentificați-vă din nou pe celelalte dispozitive.",
+      "description": "Noua parolă trebuie să aibă cel puțin 12 caractere.",
+      "successHint": "Celelalte sesiuni active rămân valabile până la expirare.",
+      "current": "Parola actuală",
+      "new": "Parolă nouă",
+      "submitting": "Se salvează…",
+      "submit": "Schimbă parola"
+    },
+    "delete": {
+      "title": "Șterge contul",
+      "description": "Această acțiune este permanentă și nu poate fi anulată. Toate datele, spațiile de lucru și setările dumneavoastră vor fi șterse definitiv.",
+      "password": "Confirmați cu parola dumneavoastră",
+      "submitting": "Se șterge…",
+      "submit": "Șterge contul meu"
+    }
+  },
   "landing": {
     "search": {
       "label": "Caută",
