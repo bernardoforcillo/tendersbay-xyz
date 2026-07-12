@@ -192,6 +192,59 @@ func TestRunOnce_LogsAndContinuesOnIngestFailure(t *testing.T) {
 	}
 }
 
+func TestRunOnce_ChunkIndexContinuesAcrossMultipleDocuments(t *testing.T) {
+	repo := &fakeRepo{
+		unindexed: []postgres.UnindexedTender{
+			{ID: 1, Title: "T", Documents: []postgres.UnindexedDocument{
+				{ID: 100, URL: "https://example.org/a.pdf"},
+				{ID: 200, URL: "https://example.org/b.pdf"},
+			}},
+		},
+		parts: map[int64][]string{
+			100: {"doc one part"},
+			200: {"doc two part a", "doc two part b"},
+		},
+	}
+	kb := &fakeKnowledgeBase{}
+	fetcher := &fakeFetcher{}
+
+	idx := index.New(repo, kb, fetcher)
+	if err := idx.RunOnce(context.Background()); err != nil {
+		t.Fatalf("RunOnce: %v", err)
+	}
+
+	doc := kb.ingested[0]
+	if len(doc.Chunks) != 4 { // summary + 1 (doc 100) + 2 (doc 200)
+		t.Fatalf("len(doc.Chunks) = %d, want 4 (summary + 1 + 2)", len(doc.Chunks))
+	}
+	for i, chunk := range doc.Chunks {
+		if chunk.Index != i {
+			t.Errorf("doc.Chunks[%d].Index = %d, want %d (continuous across documents, not reset per-document)",
+				i, chunk.Index, i)
+		}
+	}
+}
+
+func TestRunOnce_LogsAndContinuesOnMarkIndexedFailure(t *testing.T) {
+	repo := &fakeRepo{
+		unindexed:      []postgres.UnindexedTender{{ID: 1, Title: "T"}},
+		markIndexedErr: errors.New("db unreachable"),
+	}
+	kb := &fakeKnowledgeBase{}
+	fetcher := &fakeFetcher{}
+
+	idx := index.New(repo, kb, fetcher)
+	if err := idx.RunOnce(context.Background()); err != nil {
+		t.Fatalf("RunOnce: want nil error even when MarkIndexed fails, got %v", err)
+	}
+	if len(kb.ingested) != 1 {
+		t.Fatalf("len(kb.ingested) = %d, want 1 (ingest itself succeeded)", len(kb.ingested))
+	}
+	if len(repo.indexedIDs) != 0 {
+		t.Errorf("repo.indexedIDs = %v, want none (MarkIndexed failed, so the fake never appended)", repo.indexedIDs)
+	}
+}
+
 func contains(s, substr string) bool {
 	return len(s) >= len(substr) && (s == substr || indexOf(s, substr) >= 0)
 }
