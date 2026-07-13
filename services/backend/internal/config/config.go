@@ -8,9 +8,13 @@ import (
 )
 
 const (
-	defaultPort        = "8080"
-	defaultServiceName = "tendersbay-backend"
-	defaultPostHogHost = "https://eu.i.posthog.com"
+	defaultPort           = "8080"
+	defaultServiceName    = "tendersbay-backend"
+	defaultPostHogHost    = "https://eu.i.posthog.com"
+	defaultQdrantURL      = "http://localhost:6333"
+	defaultOllamaBaseURL  = "http://localhost:11434"
+	defaultEmbeddingModel = "embeddinggemma:latest"
+	defaultRedisURL       = "redis://localhost:6379"
 )
 
 // Config holds the runtime configuration for the backend service.
@@ -29,6 +33,10 @@ type Config struct {
 	CORSOrigins     []string
 	// WorkspaceInviteExpiry is how long an email workspace invitation stays valid.
 	WorkspaceInviteExpiry time.Duration
+	QdrantURL             string
+	OllamaBaseURL         string
+	EmbeddingModel        string
+	RedisURL              string
 }
 
 // FromEnv builds a Config from environment variables, applying defaults for
@@ -45,6 +53,10 @@ func FromEnv() Config {
 		ResendAPIKey:    os.Getenv("RESEND_API_KEY"),
 		FireworksAPIKey: os.Getenv("FIREWORKS_API_KEY"),
 		AppBaseURL:      os.Getenv("APP_BASE_URL"),
+		QdrantURL:       getenv("QDRANT_URL", defaultQdrantURL),
+		OllamaBaseURL:   getenv("OLLAMA_BASE_URL", defaultOllamaBaseURL),
+		EmbeddingModel:  getenv("EMBEDDING_MODEL", defaultEmbeddingModel),
+		RedisURL:        getenv("REDIS_URL", defaultRedisURL),
 	}
 
 	if raw := os.Getenv("CORS_ORIGINS"); raw != "" {
