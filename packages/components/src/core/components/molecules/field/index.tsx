@@ -27,7 +27,7 @@ export function Field({
   return (
     <TextField
       {...props}
-      isInvalid={props.isInvalid ?? Boolean(errorMessage)}
+      isInvalid={props.isInvalid ?? (errorMessage ? true : undefined)}
       className={cn('flex flex-col gap-1.5', className)}
     >
       <Label className="text-sm font-medium text-ink-700">{label}</Label>
