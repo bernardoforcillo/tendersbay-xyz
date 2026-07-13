@@ -1,3 +1,4 @@
+import { cn } from '@tendersbay/components/core';
 import {
   ArrowRight,
   Check,
@@ -13,7 +14,6 @@ import {
   Trophy,
 } from 'lucide-react';
 import type { ComponentType } from 'react';
-import { cx } from '~/features/landing/cx';
 
 // Brand icons removed from lucide-react; ship minimal inline glyphs that
 // follow the same LucideIcon prop signature so the ICONS map stays uniform.
@@ -120,7 +120,7 @@ export function Icon({ name, className }: IconProps) {
     <LucideGlyph
       aria-hidden="true"
       strokeWidth={1.75}
-      className={cx('h-[1em] w-[1em]', className)}
+      className={cn('h-[1em] w-[1em]', className)}
     />
   );
 }

@@ -1,8 +1,8 @@
+import { cn } from '@tendersbay/components/core';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { Button, Tooltip, TooltipTrigger } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '~/features/landing/components/atoms';
-import { cx } from '~/features/landing/cx';
 import { useHideNearFooter } from './use-hide-near-footer';
 import { useRotatingPlaceholder } from './use-rotating-placeholder';
 
@@ -15,7 +15,7 @@ export function SearchDock() {
 
   return (
     <motion.div
-      className={cx(
+      className={cn(
         'fixed inset-x-0 bottom-5 z-40 flex justify-center px-4',
         hidden && 'pointer-events-none',
       )}
@@ -29,7 +29,7 @@ export function SearchDock() {
           aria-disabled="true"
           aria-label={t('landing.search.label')}
           onPress={() => {}}
-          className={cx(
+          className={cn(
             'group flex w-full max-w-md cursor-default items-center gap-3 rounded-full text-left',
             'border border-ink-200 bg-white/80 px-5 py-3.5 shadow-soft backdrop-blur grayscale',
             'outline-none data-[focus-visible]:ring-2 data-[focus-visible]:ring-ink-300',

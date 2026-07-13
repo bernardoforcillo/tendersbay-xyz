@@ -1,6 +1,6 @@
+import { cn } from '@tendersbay/components/core';
 import { Link } from 'react-aria-components';
 import { Icon, type IconName } from '~/features/landing/components/atoms';
-import { cx } from '~/features/landing/cx';
 
 type Social = { name: string; href: string; icon: IconName };
 
@@ -15,7 +15,7 @@ type SocialLinksProps = { label: string; className?: string };
 
 export function SocialLinks({ label, className }: SocialLinksProps) {
   return (
-    <nav aria-label={label} className={cx('flex items-center gap-2', className)}>
+    <nav aria-label={label} className={cn('flex items-center gap-2', className)}>
       {SOCIALS.map((social) => (
         <Link
           key={social.name}

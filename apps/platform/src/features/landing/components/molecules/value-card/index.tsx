@@ -1,5 +1,5 @@
+import { cn } from '@tendersbay/components/core';
 import { Icon, type IconName } from '~/features/landing/components/atoms';
-import { cx } from '~/features/landing/cx';
 
 type Tone = 'solution' | 'muted';
 type ValueCardProps = {
@@ -23,14 +23,14 @@ const ICON_TILE: Record<Tone, string> = {
 export function ValueCard({ icon, title, body, tone = 'solution', className }: ValueCardProps) {
   return (
     <div
-      className={cx(
+      className={cn(
         'group h-full rounded-3xl border p-7 transition-all duration-300 hover:-translate-y-1',
         SURFACE[tone],
         className,
       )}
     >
       <span
-        className={cx(
+        className={cn(
           'inline-flex h-12 w-12 items-center justify-center rounded-2xl text-[21px] ring-1 transition-colors duration-300',
           ICON_TILE[tone],
         )}

@@ -1,6 +1,6 @@
+import { cn } from '@tendersbay/components/core';
 import { Link } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
-import { cx } from '~/features/landing/cx';
 
 const LINKS = [
   { href: '#problem', key: 'landing.nav.problem' },
@@ -11,7 +11,7 @@ const LINKS = [
 export function NavLinks({ className }: { className?: string }) {
   const { t } = useTranslation();
   return (
-    <nav className={cx('flex items-center gap-6', className)}>
+    <nav className={cn('flex items-center gap-6', className)}>
       {LINKS.map((link) => (
         <Link
           key={link.href}
