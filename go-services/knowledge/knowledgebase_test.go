@@ -214,6 +214,42 @@ func TestSearch_ReconstructsChunksFromPayload(t *testing.T) {
 	}
 }
 
+func TestSearchWithScores_IncludesRelevanceScore(t *testing.T) {
+	var gotSearchBody map[string]any
+	qdrantHandler := func(w http.ResponseWriter, r *http.Request) {
+		switch {
+		case r.Method == http.MethodGet && r.URL.Path == "/collections/tenders":
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"green","vectors_count":0,"points_count":0,"segments_count":1,"config":{}},"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPost && r.URL.Path == "/collections/tenders/points/search":
+			_ = json.NewDecoder(r.Body).Decode(&gotSearchBody)
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":[{"id":"42_chunk_0","score":0.87,"payload":{"content":"Lavori stradali","tender_id":"42","chunk_index":0,"source":"ted"}}],"status":"ok","time":0.01}`))
+		default:
+			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
+			w.WriteHeader(http.StatusInternalServerError)
+		}
+	}
+	kb := newTestKnowledgeBase(t, qdrantHandler, fakeOllamaEmbed([]float32{0.9, 0.1}))
+
+	results, err := kb.SearchWithScores(context.Background(), "lavori stradali Blaj", 5)
+	if err != nil {
+		t.Fatalf("SearchWithScores: %v", err)
+	}
+	if len(results) != 1 {
+		t.Fatalf("len(results) = %d, want 1", len(results))
+	}
+	if results[0].Content != "Lavori stradali" {
+		t.Errorf("results[0].Content = %q, want %q", results[0].Content, "Lavori stradali")
+	}
+	if results[0].DocID != "42" {
+		t.Errorf("results[0].DocID = %q, want %q", results[0].DocID, "42")
+	}
+	if results[0].Score != 0.87 {
+		t.Errorf("results[0].Score = %v, want 0.87", results[0].Score)
+	}
+}
+
 func TestSearch_DefaultsLimitWhenZero(t *testing.T) {
 	var gotSearchBody map[string]any
 	qdrantHandler := func(w http.ResponseWriter, r *http.Request) {

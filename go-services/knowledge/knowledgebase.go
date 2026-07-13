@@ -75,15 +75,52 @@ func (kb *KnowledgeBase) Ingest(ctx context.Context, doc *rag.Document) error {
 	return nil
 }
 
+// SearchResult is one Search hit: a chunk of ingested content plus its
+// Qdrant relevance score. Search itself can't carry this — its signature
+// is fixed by berrygem/rag.KnowledgeBase (see the var _ assertion below),
+// which no caller outside this package needs the score for.
+type SearchResult struct {
+	rag.Chunk
+	Score float32
+}
+
 // Search embeds query and returns the limit nearest chunks by cosine
 // similarity, reconstructed from each hit's payload (see Ingest — payload
 // always carries "content", "tender_id", "chunk_index").
 func (kb *KnowledgeBase) Search(ctx context.Context, query string, limit int) ([]rag.Chunk, error) {
+	hits, err := kb.search(ctx, query, limit)
+	if err != nil {
+		return nil, err
+	}
+	chunks := make([]rag.Chunk, len(hits))
+	for i, h := range hits {
+		chunks[i] = chunkFromHit(h)
+	}
+	return chunks, nil
+}
+
+// SearchWithScores is like Search but also returns each hit's Qdrant
+// relevance score, for callers (e.g. services/backend's search API) that
+// need to rank results.
+func (kb *KnowledgeBase) SearchWithScores(ctx context.Context, query string, limit int) ([]SearchResult, error) {
+	hits, err := kb.search(ctx, query, limit)
+	if err != nil {
+		return nil, err
+	}
+	results := make([]SearchResult, len(hits))
+	for i, h := range hits {
+		results[i] = SearchResult{Chunk: chunkFromHit(h), Score: h.Score}
+	}
+	return results, nil
+}
+
+// search does the embed-then-Qdrant-search work shared by Search and
+// SearchWithScores.
+func (kb *KnowledgeBase) search(ctx context.Context, query string, limit int) ([]qdrant.Hit, error) {
 	vec, err := kb.embedder.Embed(ctx, query)
 	if err != nil {
 		return nil, fmt.Errorf("knowledge: embed query: %w", err)
 	}
-
 	hits, err := kb.qdrant.Search(ctx, kb.collection, qdrant.SearchRequest{
 		Vector:      vec,
 		Limit:       limit,
@@ -92,23 +129,23 @@ func (kb *KnowledgeBase) Search(ctx context.Context, query string, limit int) ([
 	if err != nil {
 		return nil, fmt.Errorf("knowledge: search: %w", err)
 	}
+	return hits, nil
+}
 
-	chunks := make([]rag.Chunk, len(hits))
-	for i, h := range hits {
-		content, _ := h.Payload["content"].(string)
-		docID, _ := h.Payload["tender_id"].(string)
-		index := 0
-		if idx, ok := h.Payload["chunk_index"].(float64); ok {
-			index = int(idx)
-		}
-		chunks[i] = rag.Chunk{
-			ID:      fmt.Sprint(h.ID),
-			DocID:   docID,
-			Index:   index,
-			Content: content,
-		}
+// chunkFromHit reconstructs a rag.Chunk from one Qdrant hit's payload.
+func chunkFromHit(h qdrant.Hit) rag.Chunk {
+	content, _ := h.Payload["content"].(string)
+	docID, _ := h.Payload["tender_id"].(string)
+	index := 0
+	if idx, ok := h.Payload["chunk_index"].(float64); ok {
+		index = int(idx)
 	}
-	return chunks, nil
+	return rag.Chunk{
+		ID:      fmt.Sprint(h.ID),
+		DocID:   docID,
+		Index:   index,
+		Content: content,
+	}
 }
 
 // Delete removes every chunk belonging to docID.
