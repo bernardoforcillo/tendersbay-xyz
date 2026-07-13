@@ -1,3 +1,4 @@
+import { PageHeader as KitPageHeader } from '@tendersbay/components/core';
 import { Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Button } from 'react-aria-components';
@@ -53,18 +54,20 @@ function SidebarToggle() {
 
 export function PageHeader({ leading, title, subtitle, actions, children }: PageHeaderProps) {
   return (
-    <header className="sticky top-0 z-10 flex flex-col gap-4 border-b border-cream-200 bg-cream-100 px-4 py-3 lg:bg-white lg:px-6 lg:py-4">
-      <div className="flex items-center gap-3">
-        <SidebarToggle />
-        {leading}
-        <div className="min-w-0 flex-1">
-          {title && <h1 className="truncate font-display text-2xl text-ink-900">{title}</h1>}
-          {subtitle && <p className="truncate text-sm text-ink-500">{subtitle}</p>}
-        </div>
-        {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
-      </div>
+    <KitPageHeader
+      leading={
+        <>
+          <SidebarToggle />
+          {leading}
+        </>
+      }
+      title={title}
+      subtitle={subtitle}
+      actions={actions}
+      className="sticky top-0 z-10 bg-cream-100 lg:bg-white"
+    >
       {children}
-    </header>
+    </KitPageHeader>
   );
 }
 
