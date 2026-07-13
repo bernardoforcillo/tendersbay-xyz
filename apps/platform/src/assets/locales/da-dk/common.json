@@ -47,7 +47,68 @@
       "submit": "Slet min konto"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Log ind",
+      "description": "Velkommen tilbage til tendersbay.",
+      "email": "E-mail",
+      "password": "Adgangskode",
+      "forgotPassword": "Glemt adgangskode?",
+      "submitting": "Logger ind…",
+      "submit": "Log ind",
+      "noAccount": "Har du ikke en konto?",
+      "signUp": "Opret konto"
+    },
+    "signup": {
+      "checkEmail": "Tjek din e-mail",
+      "verifyPrompt": "Vi har sendt dig et bekræftelseslink. Klik på det for at aktivere din konto.",
+      "checkEmailHint": "Linket udløber om 24 timer. Tjek din spammappe, hvis du ikke kan se det.",
+      "backToLogin": "Tilbage til login",
+      "title": "Opret konto",
+      "description": "Begynd at vinde EU-udbud med AI-agenter.",
+      "displayName": "Navn",
+      "email": "E-mail",
+      "password": "Adgangskode",
+      "submitting": "Opretter…",
+      "submit": "Opret konto",
+      "login": "Har du allerede en konto?",
+      "signIn": "Log ind"
+    },
+    "forgot": {
+      "checkEmail": "Tjek din e-mail",
+      "checkEmailBody": "Hvis der findes en konto til den adresse, modtager du snart et nulstillingslink.",
+      "checkEmailHint": "Linket udløber om 1 time. Tjek din spammappe, hvis du ikke kan se det.",
+      "backToLogin": "Tilbage til login",
+      "title": "Nulstil adgangskode",
+      "description": "Indtast din e-mail, så sender vi dig et nulstillingslink.",
+      "email": "E-mail",
+      "submitting": "Sender…",
+      "submit": "Send nulstillingslink"
+    },
+    "reset": {
+      "invalidTitle": "Ugyldigt link",
+      "invalid": "Dette nulstillingslink mangler eller er udløbet.",
+      "requestNew": "Anmod om et nyt link",
+      "title": "Angiv ny adgangskode",
+      "description": "Vælg en stærk adgangskode på mindst 12 tegn.",
+      "password": "Ny adgangskode",
+      "submitting": "Gemmer…",
+      "submit": "Angiv adgangskode"
+    },
+    "verify": {
+      "errorTitle": "Linket er udløbet",
+      "error": "Dette link er ugyldigt eller er udløbet. Anmod om et nyt.",
+      "successTitle": "E-mail bekræftet",
+      "success": "Alt er klar. Du bliver omdirigeret nu…",
+      "loadingTitle": "Bekræfter din e-mail…",
+      "loading": "Et øjeblik."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Log ind",
+      "signup": "Opret konto"
+    },
     "search": {
       "label": "Søg",
       "hint": "AI-søgning — kommer snart",

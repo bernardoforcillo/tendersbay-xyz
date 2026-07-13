@@ -47,7 +47,68 @@
       "submit": "Delete my account"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "description": "Welcome back to tendersbay.",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "submitting": "Signing in…",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "signup": {
+      "checkEmail": "Check your email",
+      "verifyPrompt": "We sent you a verification link. Click it to activate your account.",
+      "checkEmailHint": "The link expires in 24 hours. Check your spam folder if you don't see it.",
+      "backToLogin": "Back to sign in",
+      "title": "Create account",
+      "description": "Start winning EU tenders with AI agents.",
+      "displayName": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submitting": "Creating…",
+      "submit": "Create account",
+      "login": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "forgot": {
+      "checkEmail": "Check your email",
+      "checkEmailBody": "If an account exists for that address, you'll receive a reset link shortly.",
+      "checkEmailHint": "The link expires in 1 hour. Check your spam folder if you don't see it.",
+      "backToLogin": "Back to sign in",
+      "title": "Reset password",
+      "description": "Enter your email and we'll send you a reset link.",
+      "email": "Email",
+      "submitting": "Sending…",
+      "submit": "Send reset link"
+    },
+    "reset": {
+      "invalidTitle": "Invalid link",
+      "invalid": "This reset link is missing or has expired.",
+      "requestNew": "Request a new link",
+      "title": "Set new password",
+      "description": "Choose a strong password of at least 12 characters.",
+      "password": "New password",
+      "submitting": "Saving…",
+      "submit": "Set password"
+    },
+    "verify": {
+      "errorTitle": "Link expired",
+      "error": "This link is invalid or has expired. Request a new one.",
+      "successTitle": "Email verified",
+      "success": "You're all set. Redirecting you now…",
+      "loadingTitle": "Verifying your email…",
+      "loading": "Just a moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Log in",
+      "signup": "Sign up"
+    },
     "search": {
       "label": "Search",
       "hint": "AI-powered search — coming soon",

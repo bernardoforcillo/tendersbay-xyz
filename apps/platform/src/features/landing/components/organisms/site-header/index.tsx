@@ -15,7 +15,7 @@ const NO_SHADOW = '0 4px 8px rgba(19, 50, 44, 0), 0 22px 48px rgba(19, 50, 44, 0
 export function SiteHeader() {
   const scrolled = useScrolled();
   const reduce = useReducedMotion();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const locale = i18n.language;
 
   return (
@@ -46,14 +46,14 @@ export function SiteHeader() {
             params={{ locale }}
             className="hidden rounded-full px-4 py-2 text-sm font-semibold text-ink-700 no-underline transition-colors hover:bg-ink-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 sm:inline-flex"
           >
-            Log in
+            {t('landing.header.login', 'Log in')}
           </RouterLink>
           <RouterLink
             to="/$locale/auth/signup"
             params={{ locale }}
             className="inline-flex rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
           >
-            Sign up
+            {t('landing.header.signup', 'Sign up')}
           </RouterLink>
           <LanguageSwitcher />
         </div>

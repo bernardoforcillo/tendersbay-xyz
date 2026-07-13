@@ -47,7 +47,68 @@
       "submit": "Usuń moje konto"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Zaloguj się",
+      "description": "Witaj z powrotem w tendersbay.",
+      "email": "E-mail",
+      "password": "Hasło",
+      "forgotPassword": "Nie pamiętasz hasła?",
+      "submitting": "Logowanie…",
+      "submit": "Zaloguj się",
+      "noAccount": "Nie masz konta?",
+      "signUp": "Zarejestruj się"
+    },
+    "signup": {
+      "checkEmail": "Sprawdź swoją skrzynkę e-mail",
+      "verifyPrompt": "Wysłaliśmy Ci link weryfikacyjny. Kliknij go, aby aktywować konto.",
+      "checkEmailHint": "Link wygasa za 24 godziny. Sprawdź folder ze spamem, jeśli go nie widzisz.",
+      "backToLogin": "Powrót do logowania",
+      "title": "Utwórz konto",
+      "description": "Zacznij wygrywać unijne przetargi z agentami AI.",
+      "displayName": "Imię",
+      "email": "E-mail",
+      "password": "Hasło",
+      "submitting": "Tworzenie…",
+      "submit": "Utwórz konto",
+      "login": "Masz już konto?",
+      "signIn": "Zaloguj się"
+    },
+    "forgot": {
+      "checkEmail": "Sprawdź swoją skrzynkę e-mail",
+      "checkEmailBody": "Jeśli konto dla tego adresu istnieje, wkrótce otrzymasz link do resetowania hasła.",
+      "checkEmailHint": "Link wygasa za 1 godzinę. Sprawdź folder ze spamem, jeśli go nie widzisz.",
+      "backToLogin": "Powrót do logowania",
+      "title": "Zresetuj hasło",
+      "description": "Podaj swój e-mail, a wyślemy Ci link do resetowania hasła.",
+      "email": "E-mail",
+      "submitting": "Wysyłanie…",
+      "submit": "Wyślij link do resetowania hasła"
+    },
+    "reset": {
+      "invalidTitle": "Nieprawidłowy link",
+      "invalid": "Ten link do resetowania hasła jest nieprawidłowy lub wygasł.",
+      "requestNew": "Poproś o nowy link",
+      "title": "Ustaw nowe hasło",
+      "description": "Wybierz silne hasło zawierające co najmniej 12 znaków.",
+      "password": "Nowe hasło",
+      "submitting": "Zapisywanie…",
+      "submit": "Ustaw hasło"
+    },
+    "verify": {
+      "errorTitle": "Link wygasł",
+      "error": "Ten link jest nieprawidłowy lub wygasł. Poproś o nowy.",
+      "successTitle": "E-mail zweryfikowany",
+      "success": "Wszystko gotowe. Trwa przekierowywanie…",
+      "loadingTitle": "Weryfikowanie Twojego e-maila…",
+      "loading": "Chwileczkę."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Zaloguj się",
+      "signup": "Zarejestruj się"
+    },
     "search": {
       "label": "Szukaj",
       "hint": "Wyszukiwanie z AI — już wkrótce",

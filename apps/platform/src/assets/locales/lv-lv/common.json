@@ -47,7 +47,68 @@
       "submit": "Dzēst manu kontu"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Pieteikties",
+      "description": "Laipni lūdzam atpakaļ tendersbay.",
+      "email": "E-pasts",
+      "password": "Parole",
+      "forgotPassword": "Aizmirsāt paroli?",
+      "submitting": "Notiek pieteikšanās…",
+      "submit": "Pieteikties",
+      "noAccount": "Nav konta?",
+      "signUp": "Reģistrēties"
+    },
+    "signup": {
+      "checkEmail": "Pārbaudiet savu e-pastu",
+      "verifyPrompt": "Mēs jums nosūtījām apstiprinājuma saiti. Noklikšķiniet uz tās, lai aktivizētu savu kontu.",
+      "checkEmailHint": "Saites derīgums beidzas pēc 24 stundām. Ja to neredzat, pārbaudiet surogātpasta mapi.",
+      "backToLogin": "Atpakaļ uz pieteikšanos",
+      "title": "Izveidot kontu",
+      "description": "Sāciet uzvarēt ES iepirkumos ar MI aģentiem.",
+      "displayName": "Vārds",
+      "email": "E-pasts",
+      "password": "Parole",
+      "submitting": "Notiek izveide…",
+      "submit": "Izveidot kontu",
+      "login": "Vai jums jau ir konts?",
+      "signIn": "Pieteikties"
+    },
+    "forgot": {
+      "checkEmail": "Pārbaudiet savu e-pastu",
+      "checkEmailBody": "Ja šai adresei ir konts, drīz saņemsiet atiestatīšanas saiti.",
+      "checkEmailHint": "Saites derīgums beidzas pēc 1 stundas. Ja to neredzat, pārbaudiet surogātpasta mapi.",
+      "backToLogin": "Atpakaļ uz pieteikšanos",
+      "title": "Atiestatīt paroli",
+      "description": "Ievadiet savu e-pastu, un mēs nosūtīsim atiestatīšanas saiti.",
+      "email": "E-pasts",
+      "submitting": "Notiek sūtīšana…",
+      "submit": "Sūtīt atiestatīšanas saiti"
+    },
+    "reset": {
+      "invalidTitle": "Nederīga saite",
+      "invalid": "Šī atiestatīšanas saite trūkst vai ir beigusies.",
+      "requestNew": "Pieprasīt jaunu saiti",
+      "title": "Iestatīt jaunu paroli",
+      "description": "Izvēlieties spēcīgu paroli, kas satur vismaz 12 rakstzīmes.",
+      "password": "Jauna parole",
+      "submitting": "Notiek saglabāšana…",
+      "submit": "Iestatīt paroli"
+    },
+    "verify": {
+      "errorTitle": "Saites derīgums beidzies",
+      "error": "Šī saite nav derīga vai ir beigusies. Pieprasiet jaunu.",
+      "successTitle": "E-pasts apstiprināts",
+      "success": "Viss gatavs. Jūs tiksiet novirzīts…",
+      "loadingTitle": "Notiek jūsu e-pasta apstiprināšana…",
+      "loading": "Vēl mirklis."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Pieteikties",
+      "signup": "Reģistrēties"
+    },
     "search": {
       "label": "Meklēt",
       "hint": "AI meklēšana — drīzumā",

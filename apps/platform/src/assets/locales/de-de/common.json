@@ -47,7 +47,68 @@
       "submit": "Mein Konto löschen"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Anmelden",
+      "description": "Willkommen zurück bei tendersbay.",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "forgotPassword": "Passwort vergessen?",
+      "submitting": "Anmeldung läuft…",
+      "submit": "Anmelden",
+      "noAccount": "Noch kein Konto?",
+      "signUp": "Registrieren"
+    },
+    "signup": {
+      "checkEmail": "Prüfen Sie Ihre E-Mails",
+      "verifyPrompt": "Wir haben Ihnen einen Bestätigungslink gesendet. Klicken Sie darauf, um Ihr Konto zu aktivieren.",
+      "checkEmailHint": "Der Link läuft in 24 Stunden ab. Prüfen Sie Ihren Spam-Ordner, falls Sie ihn nicht sehen.",
+      "backToLogin": "Zurück zur Anmeldung",
+      "title": "Konto erstellen",
+      "description": "Gewinnen Sie EU-Ausschreibungen mit KI-Agenten.",
+      "displayName": "Name",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submitting": "Wird erstellt…",
+      "submit": "Konto erstellen",
+      "login": "Bereits ein Konto?",
+      "signIn": "Anmelden"
+    },
+    "forgot": {
+      "checkEmail": "Prüfen Sie Ihre E-Mails",
+      "checkEmailBody": "Falls für diese Adresse ein Konto besteht, erhalten Sie in Kürze einen Link zum Zurücksetzen.",
+      "checkEmailHint": "Der Link läuft in 1 Stunde ab. Prüfen Sie Ihren Spam-Ordner, falls Sie ihn nicht sehen.",
+      "backToLogin": "Zurück zur Anmeldung",
+      "title": "Passwort zurücksetzen",
+      "description": "Geben Sie Ihre E-Mail-Adresse ein, und wir senden Ihnen einen Link zum Zurücksetzen.",
+      "email": "E-Mail",
+      "submitting": "Wird gesendet…",
+      "submit": "Link zum Zurücksetzen senden"
+    },
+    "reset": {
+      "invalidTitle": "Ungültiger Link",
+      "invalid": "Dieser Link zum Zurücksetzen fehlt oder ist abgelaufen.",
+      "requestNew": "Neuen Link anfordern",
+      "title": "Neues Passwort festlegen",
+      "description": "Wählen Sie ein sicheres Passwort mit mindestens 12 Zeichen.",
+      "password": "Neues Passwort",
+      "submitting": "Wird gespeichert…",
+      "submit": "Passwort festlegen"
+    },
+    "verify": {
+      "errorTitle": "Link abgelaufen",
+      "error": "Dieser Link ist ungültig oder abgelaufen. Fordern Sie einen neuen an.",
+      "successTitle": "E-Mail bestätigt",
+      "success": "Alles bereit. Sie werden jetzt weitergeleitet…",
+      "loadingTitle": "Ihre E-Mail wird verifiziert…",
+      "loading": "Einen Moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Anmelden",
+      "signup": "Registrieren"
+    },
     "search": {
       "label": "Suchen",
       "hint": "KI-gestützte Suche — bald verfügbar",

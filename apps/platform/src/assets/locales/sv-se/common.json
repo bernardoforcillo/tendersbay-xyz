@@ -47,7 +47,68 @@
       "submit": "Ta bort mitt konto"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Logga in",
+      "description": "Välkommen tillbaka till tendersbay.",
+      "email": "E-post",
+      "password": "Lösenord",
+      "forgotPassword": "Glömt lösenordet?",
+      "submitting": "Loggar in…",
+      "submit": "Logga in",
+      "noAccount": "Har du inget konto?",
+      "signUp": "Registrera dig"
+    },
+    "signup": {
+      "checkEmail": "Kontrollera din e-post",
+      "verifyPrompt": "Vi har skickat en verifieringslänk till dig. Klicka på den för att aktivera ditt konto.",
+      "checkEmailHint": "Länken slutar gälla om 24 timmar. Kolla din skräppost om du inte ser den.",
+      "backToLogin": "Tillbaka till inloggning",
+      "title": "Skapa konto",
+      "description": "Börja vinna EU-upphandlingar med AI-agenter.",
+      "displayName": "Namn",
+      "email": "E-post",
+      "password": "Lösenord",
+      "submitting": "Skapar…",
+      "submit": "Skapa konto",
+      "login": "Har du redan ett konto?",
+      "signIn": "Logga in"
+    },
+    "forgot": {
+      "checkEmail": "Kontrollera din e-post",
+      "checkEmailBody": "Om det finns ett konto för den adressen får du snart en återställningslänk.",
+      "checkEmailHint": "Länken slutar gälla om 1 timme. Kolla din skräppost om du inte ser den.",
+      "backToLogin": "Tillbaka till inloggning",
+      "title": "Återställ lösenord",
+      "description": "Ange din e-postadress så skickar vi en återställningslänk.",
+      "email": "E-post",
+      "submitting": "Skickar…",
+      "submit": "Skicka återställningslänk"
+    },
+    "reset": {
+      "invalidTitle": "Ogiltig länk",
+      "invalid": "Den här återställningslänken saknas eller har gått ut.",
+      "requestNew": "Begär en ny länk",
+      "title": "Ange nytt lösenord",
+      "description": "Välj ett starkt lösenord på minst 12 tecken.",
+      "password": "Nytt lösenord",
+      "submitting": "Sparar…",
+      "submit": "Ange lösenord"
+    },
+    "verify": {
+      "errorTitle": "Länken har gått ut",
+      "error": "Den här länken är ogiltig eller har gått ut. Begär en ny.",
+      "successTitle": "E-post verifierad",
+      "success": "Allt klart. Du omdirigeras nu…",
+      "loadingTitle": "Verifierar din e-post…",
+      "loading": "Ett ögonblick."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Logga in",
+      "signup": "Registrera dig"
+    },
     "search": {
       "label": "Sök",
       "hint": "AI-sökning — kommer snart",

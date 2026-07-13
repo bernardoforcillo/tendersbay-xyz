@@ -47,7 +47,68 @@
       "submit": "Ħassar il-kont tiegħi"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Idħol",
+      "description": "Merħba lura għal tendersbay.",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Insejt il-password?",
+      "submitting": "Qed tidħol…",
+      "submit": "Idħol",
+      "noAccount": "M'għandekx kont?",
+      "signUp": "Irreġistra"
+    },
+    "signup": {
+      "checkEmail": "Iċċekkja l-email tiegħek",
+      "verifyPrompt": "Bgħatnielek link ta' verifika. Ikklikkjah biex tattiva l-kont tiegħek.",
+      "checkEmailHint": "Il-link jiskadi wara 24 siegħa. Iċċekkja l-folder tal-ispam jekk ma tarahx.",
+      "backToLogin": "Lura għal-login",
+      "title": "Oħloq kont",
+      "description": "Ibda tirbaħ offerti pubbliċi tal-UE b'aġenti tal-AI.",
+      "displayName": "Isem",
+      "email": "Email",
+      "password": "Password",
+      "submitting": "Qed joħloq…",
+      "submit": "Oħloq kont",
+      "login": "Diġà għandek kont?",
+      "signIn": "Idħol"
+    },
+    "forgot": {
+      "checkEmail": "Iċċekkja l-email tiegħek",
+      "checkEmailBody": "Jekk jeżisti kont għal dan l-indirizz, dalwaqt tirċievi link ta' rissettjar.",
+      "checkEmailHint": "Il-link jiskadi wara siegħa. Iċċekkja l-folder tal-ispam jekk ma tarahx.",
+      "backToLogin": "Lura għal-login",
+      "title": "Irrisettja l-password",
+      "description": "Daħħal l-email tiegħek u nibagħtulek link ta' rissettjar.",
+      "email": "Email",
+      "submitting": "Qed jintbagħat…",
+      "submit": "Ibgħat link ta' rissettjar"
+    },
+    "reset": {
+      "invalidTitle": "Link mhux validu",
+      "invalid": "Dan il-link ta' rissettjar nieqes jew skada.",
+      "requestNew": "Itlob link ġdid",
+      "title": "Issettja password ġdida",
+      "description": "Agħżel password b'saħħitha ta' mill-inqas 12-il karattru.",
+      "password": "Password ġdida",
+      "submitting": "Qed jissejvja…",
+      "submit": "Issettja l-password"
+    },
+    "verify": {
+      "errorTitle": "Il-link skada",
+      "error": "Dan il-link mhux validu jew skada. Itlob wieħed ġdid.",
+      "successTitle": "Email ivverifikata",
+      "success": "Kollox lest. Se tiġi rredirezzjonat issa…",
+      "loadingTitle": "Qed tiġi vverifikata l-email tiegħek…",
+      "loading": "Mument."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Idħol",
+      "signup": "Irreġistra"
+    },
     "search": {
       "label": "Fittex",
       "hint": "Tfittxija bl-IA — dalwaqt disponibbli",

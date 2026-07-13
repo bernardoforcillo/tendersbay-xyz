@@ -47,7 +47,68 @@
       "submit": "Izbriši moj račun"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Prijava",
+      "description": "Dobrodošli nazaj na tendersbay.",
+      "email": "E-poštni naslov",
+      "password": "Geslo",
+      "forgotPassword": "Ste pozabili geslo?",
+      "submitting": "Prijavljanje…",
+      "submit": "Prijava",
+      "noAccount": "Nimate računa?",
+      "signUp": "Registrirajte se"
+    },
+    "signup": {
+      "checkEmail": "Preverite svojo e-pošto",
+      "verifyPrompt": "Poslali smo vam potrditveno povezavo. Kliknite nanjo, da aktivirate svoj račun.",
+      "checkEmailHint": "Povezava poteče čez 24 ur. Če je ne vidite, preverite mapo z neželeno pošto.",
+      "backToLogin": "Nazaj na prijavo",
+      "title": "Ustvarite račun",
+      "description": "Začnite zmagovati na razpisih EU z agenti UI.",
+      "displayName": "Ime",
+      "email": "E-poštni naslov",
+      "password": "Geslo",
+      "submitting": "Ustvarjanje…",
+      "submit": "Ustvarite račun",
+      "login": "Že imate račun?",
+      "signIn": "Prijava"
+    },
+    "forgot": {
+      "checkEmail": "Preverite svojo e-pošto",
+      "checkEmailBody": "Če za ta naslov obstaja račun, boste kmalu prejeli povezavo za ponastavitev.",
+      "checkEmailHint": "Povezava poteče čez 1 uro. Če je ne vidite, preverite mapo z neželeno pošto.",
+      "backToLogin": "Nazaj na prijavo",
+      "title": "Ponastavite geslo",
+      "description": "Vnesite svoj e-poštni naslov in poslali vam bomo povezavo za ponastavitev.",
+      "email": "E-poštni naslov",
+      "submitting": "Pošiljanje…",
+      "submit": "Pošlji povezavo za ponastavitev"
+    },
+    "reset": {
+      "invalidTitle": "Neveljavna povezava",
+      "invalid": "Ta povezava za ponastavitev manjka ali je potekla.",
+      "requestNew": "Zahtevajte novo povezavo",
+      "title": "Nastavite novo geslo",
+      "description": "Izberite močno geslo z vsaj 12 znaki.",
+      "password": "Novo geslo",
+      "submitting": "Shranjevanje…",
+      "submit": "Nastavi geslo"
+    },
+    "verify": {
+      "errorTitle": "Povezava je potekla",
+      "error": "Ta povezava ni veljavna ali je potekla. Zahtevajte novo.",
+      "successTitle": "E-pošta potrjena",
+      "success": "Vse je pripravljeno. Zdaj boste preusmerjeni…",
+      "loadingTitle": "Preverjanje vaše e-pošte…",
+      "loading": "Trenutek."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Prijava",
+      "signup": "Registracija"
+    },
     "search": {
       "label": "Iskanje",
       "hint": "Iskanje z UI — kmalu na voljo",

@@ -47,7 +47,68 @@
       "submit": "Ištrinti mano paskyrą"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Prisijungti",
+      "description": "Sveiki sugrįžę į tendersbay.",
+      "email": "El. paštas",
+      "password": "Slaptažodis",
+      "forgotPassword": "Pamiršote slaptažodį?",
+      "submitting": "Jungiamasi…",
+      "submit": "Prisijungti",
+      "noAccount": "Neturite paskyros?",
+      "signUp": "Registruotis"
+    },
+    "signup": {
+      "checkEmail": "Patikrinkite savo el. paštą",
+      "verifyPrompt": "Išsiuntėme jums patvirtinimo nuorodą. Spustelėkite ją, kad aktyvuotumėte paskyrą.",
+      "checkEmailHint": "Nuorodos galiojimas baigiasi po 24 valandų. Jei jos nematote, patikrinkite šlamšto aplanką.",
+      "backToLogin": "Grįžti į prisijungimą",
+      "title": "Sukurti paskyrą",
+      "description": "Pradėkite laimėti ES viešuosius pirkimus su DI agentais.",
+      "displayName": "Vardas",
+      "email": "El. paštas",
+      "password": "Slaptažodis",
+      "submitting": "Kuriama…",
+      "submit": "Sukurti paskyrą",
+      "login": "Jau turite paskyrą?",
+      "signIn": "Prisijungti"
+    },
+    "forgot": {
+      "checkEmail": "Patikrinkite savo el. paštą",
+      "checkEmailBody": "Jei paskyra su šiuo adresu egzistuoja, netrukus gausite atkūrimo nuorodą.",
+      "checkEmailHint": "Nuorodos galiojimas baigiasi po 1 valandos. Jei jos nematote, patikrinkite šlamšto aplanką.",
+      "backToLogin": "Grįžti į prisijungimą",
+      "title": "Atkurti slaptažodį",
+      "description": "Įveskite savo el. paštą ir atsiųsime atkūrimo nuorodą.",
+      "email": "El. paštas",
+      "submitting": "Siunčiama…",
+      "submit": "Siųsti atkūrimo nuorodą"
+    },
+    "reset": {
+      "invalidTitle": "Neteisinga nuoroda",
+      "invalid": "Ši atkūrimo nuoroda trūksta arba nebegalioja.",
+      "requestNew": "Prašyti naujos nuorodos",
+      "title": "Nustatyti naują slaptažodį",
+      "description": "Pasirinkite stiprų, ne trumpesnį kaip 12 simbolių slaptažodį.",
+      "password": "Naujas slaptažodis",
+      "submitting": "Įrašoma…",
+      "submit": "Nustatyti slaptažodį"
+    },
+    "verify": {
+      "errorTitle": "Nuorodos galiojimas baigėsi",
+      "error": "Ši nuoroda neteisinga arba nebegalioja. Paprašykite naujos.",
+      "successTitle": "El. paštas patvirtintas",
+      "success": "Viskas paruošta. Netrukus būsite nukreipti…",
+      "loadingTitle": "Tvirtinamas jūsų el. paštas…",
+      "loading": "Palaukite akimirką."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Prisijungti",
+      "signup": "Registruotis"
+    },
     "search": {
       "label": "Ieškoti",
       "hint": "AI paieška — netrukus",

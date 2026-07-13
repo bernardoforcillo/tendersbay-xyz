@@ -47,7 +47,68 @@
       "submit": "Scrios mo chuntas"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Sínigh isteach",
+      "description": "Fáilte ar ais chuig tendersbay.",
+      "email": "Ríomhphost",
+      "password": "Focal faire",
+      "forgotPassword": "Focal faire dearmadta?",
+      "submitting": "Ag síniú isteach…",
+      "submit": "Sínigh isteach",
+      "noAccount": "Nach bhfuil cuntas agat?",
+      "signUp": "Cláraigh"
+    },
+    "signup": {
+      "checkEmail": "Seiceáil do ríomhphost",
+      "verifyPrompt": "Chuireamar nasc fíoraithe chugat. Cliceáil air chun do chuntas a ghníomhachtú.",
+      "checkEmailHint": "Rachaidh an nasc as feidhm i gceann 24 uair an chloig. Seiceáil d'fhillteán turscair mura bhfeiceann tú é.",
+      "backToLogin": "Ar ais chuig an síniú isteach",
+      "title": "Cruthaigh cuntas",
+      "description": "Tosaigh ag buachan tairiscintí AE le gníomhairí AI.",
+      "displayName": "Ainm",
+      "email": "Ríomhphost",
+      "password": "Focal faire",
+      "submitting": "Ag cruthú…",
+      "submit": "Cruthaigh cuntas",
+      "login": "Cuntas agat cheana féin?",
+      "signIn": "Sínigh isteach"
+    },
+    "forgot": {
+      "checkEmail": "Seiceáil do ríomhphost",
+      "checkEmailBody": "Má tá cuntas ann don seoladh sin, gheobhaidh tú nasc athshocraithe go luath.",
+      "checkEmailHint": "Rachaidh an nasc as feidhm i gceann uair an chloig. Seiceáil d'fhillteán turscair mura bhfeiceann tú é.",
+      "backToLogin": "Ar ais chuig an síniú isteach",
+      "title": "Athshocraigh an focal faire",
+      "description": "Cuir isteach do ríomhphost agus seolfaimid nasc athshocraithe chugat.",
+      "email": "Ríomhphost",
+      "submitting": "Ag seoladh…",
+      "submit": "Seol nasc athshocraithe"
+    },
+    "reset": {
+      "invalidTitle": "Nasc neamhbhailí",
+      "invalid": "Tá an nasc athshocraithe seo ar iarraidh nó imithe as feidhm.",
+      "requestNew": "Iarr nasc nua",
+      "title": "Socraigh focal faire nua",
+      "description": "Roghnaigh focal faire láidir ar a laghad 12 charachtar.",
+      "password": "Focal faire nua",
+      "submitting": "Ag sábháil…",
+      "submit": "Socraigh focal faire"
+    },
+    "verify": {
+      "errorTitle": "Nasc imithe as feidhm",
+      "error": "Tá an nasc seo neamhbhailí nó imithe as feidhm. Iarr ceann nua.",
+      "successTitle": "Ríomhphost fíoraithe",
+      "success": "Gach rud réidh. Á atreorú anois…",
+      "loadingTitle": "Do ríomhphost á fhíorú…",
+      "loading": "Nóiméad amháin."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Sínigh isteach",
+      "signup": "Cláraigh"
+    },
     "search": {
       "label": "Cuardaigh",
       "hint": "Cuardach AI — ar fáil go luath",
