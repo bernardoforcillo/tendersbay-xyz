@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router';
+import { Card } from '@tendersbay/components/core';
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '~/features/landing/components/atoms';
@@ -23,13 +24,13 @@ export function AuthCard({ heading, description, children }: AuthCardProps) {
         >
           <Logo />
         </Link>
-        <div className="rounded-2xl border border-cream-200 bg-white px-8 py-8 shadow-soft-md">
-          <h1 className="font-display text-2xl leading-tight text-ink-900">{heading}</h1>
+        <Card className="border border-cream-200 px-8 py-8 shadow-soft-md">
+          <h1 className="font-display text-3xl leading-tight text-ink-900">{heading}</h1>
           {description && (
             <p className="mt-1.5 text-sm leading-relaxed text-ink-500">{description}</p>
           )}
           <div className="mt-6">{children}</div>
-        </div>
+        </Card>
       </div>
     </div>
   );

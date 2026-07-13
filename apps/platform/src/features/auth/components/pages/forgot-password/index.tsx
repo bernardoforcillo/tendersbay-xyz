@@ -1,13 +1,10 @@
 import { useParams } from '@tanstack/react-router';
+import { Banner, Button, Field } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, Form } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
-import { Field } from '~/features/auth/components/atoms/field';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
 import { authClient } from '~/lib/api/client';
-
-const BTN =
-  'mt-2 w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition data-[hovered]:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-60';
 
 export function ForgotPasswordPage() {
   const { locale } = useParams({ from: '/$locale/auth/forgot-password' });
@@ -38,12 +35,12 @@ export function ForgotPasswordPage() {
           "If an account exists for that address, you'll receive a reset link shortly.",
         )}
       >
-        <div className="rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800">
+        <Banner tone="success">
           {t(
             'auth.forgot.checkEmailHint',
             "The link expires in 1 hour. Check your spam folder if you don't see it.",
           )}
-        </div>
+        </Banner>
         <p className="mt-4 text-center text-sm text-ink-500">
           <a
             href={`/${locale}/auth/login`}
@@ -72,7 +69,7 @@ export function ForgotPasswordPage() {
           autoComplete="email"
           isRequired
         />
-        <Button type="submit" isDisabled={pending} className={BTN}>
+        <Button type="submit" isDisabled={pending} className="mt-2 w-full">
           {pending
             ? t('auth.forgot.submitting', 'Sending…')
             : t('auth.forgot.submit', 'Send reset link')}

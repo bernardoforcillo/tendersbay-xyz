@@ -1,13 +1,10 @@
 import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import { Banner, Button, Field } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, Form } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
-import { Field } from '~/features/auth/components/atoms/field';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
 import { authClient } from '~/lib/api/client';
-
-const BTN =
-  'mt-2 w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition data-[hovered]:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-60';
 
 export function ResetPasswordPage() {
   const { token } = useSearch({ from: '/$locale/auth/reset-password' }) as { token?: string };
@@ -39,12 +36,9 @@ export function ResetPasswordPage() {
   if (!token) {
     return (
       <AuthCard heading={t('auth.reset.invalidTitle', 'Invalid link')}>
-        <div
-          role="alert"
-          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-        >
+        <Banner tone="error">
           {t('auth.reset.invalid', 'This reset link is missing or has expired.')}
-        </div>
+        </Banner>
         <p className="mt-4 text-center text-sm text-ink-500">
           <a
             href={`/${locale}/auth/forgot-password`}
@@ -73,15 +67,8 @@ export function ResetPasswordPage() {
           autoComplete="new-password"
           isRequired
         />
-        {error && (
-          <p
-            role="alert"
-            className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
-          >
-            {error}
-          </p>
-        )}
-        <Button type="submit" isDisabled={pending} className={BTN}>
+        {error && <Banner tone="error">{error}</Banner>}
+        <Button type="submit" isDisabled={pending} className="mt-2 w-full">
           {pending ? t('auth.reset.submitting', 'Saving…') : t('auth.reset.submit', 'Set password')}
         </Button>
       </Form>
