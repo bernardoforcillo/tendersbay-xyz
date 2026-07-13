@@ -87,7 +87,7 @@
     },
     "reset": {
       "invalidTitle": "Neteisinga nuoroda",
-      "invalid": "Ši atkūrimo nuoroda trūksta arba nebegalioja.",
+      "invalid": "Šios atkūrimo nuorodos trūksta arba ji nebegalioja.",
       "requestNew": "Prašyti naujos nuorodos",
       "title": "Nustatyti naują slaptažodį",
       "description": "Pasirinkite stiprų, ne trumpesnį kaip 12 simbolių slaptažodį.",

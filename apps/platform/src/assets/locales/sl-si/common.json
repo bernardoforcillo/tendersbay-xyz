@@ -93,7 +93,7 @@
       "description": "Izberite močno geslo z vsaj 12 znaki.",
       "password": "Novo geslo",
       "submitting": "Shranjevanje…",
-      "submit": "Nastavi geslo"
+      "submit": "Nastavite geslo"
     },
     "verify": {
       "errorTitle": "Povezava je potekla",
