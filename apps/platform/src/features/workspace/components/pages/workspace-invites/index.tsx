@@ -168,6 +168,7 @@ export function WorkspaceInvitesPage() {
             <Field
               label={t('workspace.invites.maxUses', 'Max uses (0 = unlimited)')}
               type="number"
+              inputMode="numeric"
               value={maxUses}
               onChange={setMaxUses}
             />
