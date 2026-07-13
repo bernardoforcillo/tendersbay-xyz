@@ -47,7 +47,68 @@
       "submit": "Șterge contul meu"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Autentificare",
+      "description": "Bine ai revenit pe tendersbay.",
+      "email": "E-mail",
+      "password": "Parolă",
+      "forgotPassword": "Ai uitat parola?",
+      "submitting": "Se autentifică…",
+      "submit": "Autentifică-te",
+      "noAccount": "Nu ai cont?",
+      "signUp": "Înregistrează-te"
+    },
+    "signup": {
+      "checkEmail": "Verifică-ți e-mailul",
+      "verifyPrompt": "Ți-am trimis un link de verificare. Apasă pe el pentru a-ți activa contul.",
+      "checkEmailHint": "Linkul expiră în 24 de ore. Verifică folderul de spam dacă nu îl vezi.",
+      "backToLogin": "Înapoi la autentificare",
+      "title": "Creează cont",
+      "description": "Începe să câștigi licitații din UE cu agenți IA.",
+      "displayName": "Nume",
+      "email": "E-mail",
+      "password": "Parolă",
+      "submitting": "Se creează…",
+      "submit": "Creează cont",
+      "login": "Ai deja un cont?",
+      "signIn": "Autentifică-te"
+    },
+    "forgot": {
+      "checkEmail": "Verifică-ți e-mailul",
+      "checkEmailBody": "Dacă există un cont pentru această adresă, vei primi în curând un link de resetare.",
+      "checkEmailHint": "Linkul expiră într-o oră. Verifică folderul de spam dacă nu îl vezi.",
+      "backToLogin": "Înapoi la autentificare",
+      "title": "Resetează parola",
+      "description": "Introdu adresa de e-mail și îți vom trimite un link de resetare.",
+      "email": "E-mail",
+      "submitting": "Se trimite…",
+      "submit": "Trimite linkul de resetare"
+    },
+    "reset": {
+      "invalidTitle": "Link nevalid",
+      "invalid": "Acest link de resetare lipsește sau a expirat.",
+      "requestNew": "Solicită un link nou",
+      "title": "Setează o parolă nouă",
+      "description": "Alege o parolă puternică de cel puțin 12 caractere.",
+      "password": "Parolă nouă",
+      "submitting": "Se salvează…",
+      "submit": "Setează parola"
+    },
+    "verify": {
+      "errorTitle": "Link expirat",
+      "error": "Acest link nu este valid sau a expirat. Solicită unul nou.",
+      "successTitle": "E-mail verificat",
+      "success": "Totul este gata. Vei fi redirecționat acum…",
+      "loadingTitle": "Se verifică e-mailul tău…",
+      "loading": "Un moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Autentificare",
+      "signup": "Înregistrează-te"
+    },
     "search": {
       "label": "Caută",
       "hint": "Căutare cu IA — în curând",

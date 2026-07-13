@@ -47,7 +47,68 @@
       "submit": "Mijn account verwijderen"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Inloggen",
+      "description": "Welkom terug bij tendersbay.",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "forgotPassword": "Wachtwoord vergeten?",
+      "submitting": "Bezig met inloggen…",
+      "submit": "Inloggen",
+      "noAccount": "Nog geen account?",
+      "signUp": "Registreren"
+    },
+    "signup": {
+      "checkEmail": "Controleer je e-mail",
+      "verifyPrompt": "We hebben je een verificatielink gestuurd. Klik erop om je account te activeren.",
+      "checkEmailHint": "De link verloopt over 24 uur. Kijk in je spamfolder als je hem niet ziet.",
+      "backToLogin": "Terug naar inloggen",
+      "title": "Account aanmaken",
+      "description": "Begin met het winnen van EU-aanbestedingen met AI-agenten.",
+      "displayName": "Naam",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "submitting": "Bezig met aanmaken…",
+      "submit": "Account aanmaken",
+      "login": "Heb je al een account?",
+      "signIn": "Inloggen"
+    },
+    "forgot": {
+      "checkEmail": "Controleer je e-mail",
+      "checkEmailBody": "Als er een account bestaat voor dit adres, ontvang je binnenkort een resetlink.",
+      "checkEmailHint": "De link verloopt over 1 uur. Kijk in je spamfolder als je hem niet ziet.",
+      "backToLogin": "Terug naar inloggen",
+      "title": "Wachtwoord resetten",
+      "description": "Voer je e-mailadres in en we sturen je een resetlink.",
+      "email": "E-mail",
+      "submitting": "Bezig met verzenden…",
+      "submit": "Resetlink versturen"
+    },
+    "reset": {
+      "invalidTitle": "Ongeldige link",
+      "invalid": "Deze resetlink ontbreekt of is verlopen.",
+      "requestNew": "Nieuwe link aanvragen",
+      "title": "Nieuw wachtwoord instellen",
+      "description": "Kies een sterk wachtwoord van minstens 12 tekens.",
+      "password": "Nieuw wachtwoord",
+      "submitting": "Bezig met opslaan…",
+      "submit": "Wachtwoord instellen"
+    },
+    "verify": {
+      "errorTitle": "Link verlopen",
+      "error": "Deze link is ongeldig of verlopen. Vraag een nieuwe aan.",
+      "successTitle": "E-mail geverifieerd",
+      "success": "Helemaal klaar. Je wordt nu doorgestuurd…",
+      "loadingTitle": "Je e-mail wordt geverifieerd…",
+      "loading": "Een moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Inloggen",
+      "signup": "Registreren"
+    },
     "search": {
       "label": "Zoeken",
       "hint": "AI-zoekfunctie — binnenkort beschikbaar",

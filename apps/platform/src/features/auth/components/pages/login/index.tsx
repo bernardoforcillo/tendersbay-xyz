@@ -1,15 +1,12 @@
 import { useNavigate, useParams } from '@tanstack/react-router';
+import { Banner, Button, Field } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, Form } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
-import { Field } from '~/features/auth/components/atoms/field';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
 import { authClient } from '~/lib/api/client';
 import { useRedirectParam } from '~/lib/redirect';
 import { useAuthStore } from '~/store/auth';
-
-const BTN =
-  'mt-2 w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition data-[hovered]:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-60';
 
 export function LoginPage() {
   const { locale } = useParams({ from: '/$locale/auth/login' });
@@ -82,15 +79,8 @@ export function LoginPage() {
             {t('auth.login.forgotPassword', 'Forgot password?')}
           </a>
         </div>
-        {error && (
-          <p
-            role="alert"
-            className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
-          >
-            {error}
-          </p>
-        )}
-        <Button type="submit" isDisabled={pending} className={BTN}>
+        {error && <Banner tone="error">{error}</Banner>}
+        <Button type="submit" isDisabled={pending} className="mt-2 w-full">
           {pending ? t('auth.login.submitting', 'Signing in…') : t('auth.login.submit', 'Sign in')}
         </Button>
       </Form>

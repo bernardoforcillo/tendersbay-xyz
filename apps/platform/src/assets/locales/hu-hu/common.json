@@ -47,7 +47,68 @@
       "submit": "Fiókom törlése"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Bejelentkezés",
+      "description": "Üdvözöljük ismét a tendersbayen.",
+      "email": "E-mail",
+      "password": "Jelszó",
+      "forgotPassword": "Elfelejtette a jelszavát?",
+      "submitting": "Bejelentkezés…",
+      "submit": "Bejelentkezés",
+      "noAccount": "Még nincs fiókja?",
+      "signUp": "Regisztráció"
+    },
+    "signup": {
+      "checkEmail": "Ellenőrizze az e-mailjét",
+      "verifyPrompt": "Küldtünk Önnek egy megerősítő linket. Kattintson rá a fiókja aktiválásához.",
+      "checkEmailHint": "A link 24 óra múlva lejár. Ha nem látja, ellenőrizze a spam mappát.",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "title": "Fiók létrehozása",
+      "description": "Kezdjen el uniós közbeszerzéseket nyerni MI-ügynökökkel.",
+      "displayName": "Név",
+      "email": "E-mail",
+      "password": "Jelszó",
+      "submitting": "Létrehozás…",
+      "submit": "Fiók létrehozása",
+      "login": "Már van fiókja?",
+      "signIn": "Bejelentkezés"
+    },
+    "forgot": {
+      "checkEmail": "Ellenőrizze az e-mailjét",
+      "checkEmailBody": "Ha létezik fiók ehhez a címhez, hamarosan kap egy visszaállítási linket.",
+      "checkEmailHint": "A link 1 óra múlva lejár. Ha nem látja, ellenőrizze a spam mappát.",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "title": "Jelszó visszaállítása",
+      "description": "Adja meg az e-mail címét, és küldünk egy visszaállítási linket.",
+      "email": "E-mail",
+      "submitting": "Küldés…",
+      "submit": "Visszaállítási link küldése"
+    },
+    "reset": {
+      "invalidTitle": "Érvénytelen link",
+      "invalid": "Ez a visszaállítási link hiányzik vagy lejárt.",
+      "requestNew": "Új link kérése",
+      "title": "Új jelszó beállítása",
+      "description": "Válasszon egy erős, legalább 12 karakteres jelszót.",
+      "password": "Új jelszó",
+      "submitting": "Mentés…",
+      "submit": "Jelszó beállítása"
+    },
+    "verify": {
+      "errorTitle": "A link lejárt",
+      "error": "Ez a link érvénytelen vagy lejárt. Kérjen egy újat.",
+      "successTitle": "E-mail megerősítve",
+      "success": "Minden készen áll. Átirányítjuk…",
+      "loadingTitle": "E-mail megerősítése folyamatban…",
+      "loading": "Egy pillanat."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Bejelentkezés",
+      "signup": "Regisztráció"
+    },
     "search": {
       "label": "Keresés",
       "hint": "MI-alapú keresés — hamarosan",

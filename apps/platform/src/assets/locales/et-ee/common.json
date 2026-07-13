@@ -47,7 +47,68 @@
       "submit": "Kustuta minu konto"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Logi sisse",
+      "description": "Tere tulemast tagasi tendersbaysse.",
+      "email": "E-post",
+      "password": "Parool",
+      "forgotPassword": "Unustasid parooli?",
+      "submitting": "Sisselogimine…",
+      "submit": "Logi sisse",
+      "noAccount": "Kas sul pole kontot?",
+      "signUp": "Registreeru"
+    },
+    "signup": {
+      "checkEmail": "Kontrolli oma e-posti",
+      "verifyPrompt": "Saatsime sulle kinnituslingi. Klõpsa sellel, et konto aktiveerida.",
+      "checkEmailHint": "Link aegub 24 tunni pärast. Kontrolli rämpspostikausta, kui sa seda ei näe.",
+      "backToLogin": "Tagasi sisselogimise juurde",
+      "title": "Loo konto",
+      "description": "Hakka võitma ELi hankeid tehisintellekti agentidega.",
+      "displayName": "Nimi",
+      "email": "E-post",
+      "password": "Parool",
+      "submitting": "Loomine…",
+      "submit": "Loo konto",
+      "login": "Kas sul on juba konto?",
+      "signIn": "Logi sisse"
+    },
+    "forgot": {
+      "checkEmail": "Kontrolli oma e-posti",
+      "checkEmailBody": "Kui selle aadressiga konto on olemas, saad peagi lähtestamislingi.",
+      "checkEmailHint": "Link aegub 1 tunni pärast. Kontrolli rämpspostikausta, kui sa seda ei näe.",
+      "backToLogin": "Tagasi sisselogimise juurde",
+      "title": "Lähtesta parool",
+      "description": "Sisesta oma e-post ja saadame sulle lähtestamislingi.",
+      "email": "E-post",
+      "submitting": "Saatmine…",
+      "submit": "Saada lähtestamislink"
+    },
+    "reset": {
+      "invalidTitle": "Vigane link",
+      "invalid": "See lähtestamislink puudub või on aegunud.",
+      "requestNew": "Küsi uus link",
+      "title": "Määra uus parool",
+      "description": "Vali tugev parool, mis on vähemalt 12 tähemärki pikk.",
+      "password": "Uus parool",
+      "submitting": "Salvestamine…",
+      "submit": "Määra parool"
+    },
+    "verify": {
+      "errorTitle": "Link on aegunud",
+      "error": "See link on vigane või aegunud. Küsi uus.",
+      "successTitle": "E-post kinnitatud",
+      "success": "Kõik on valmis. Sind suunatakse nüüd ümber…",
+      "loadingTitle": "Sinu e-posti kinnitamine…",
+      "loading": "Hetk veel."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Logi sisse",
+      "signup": "Registreeru"
+    },
     "search": {
       "label": "Otsi",
       "hint": "AI-otsing — peagi saadaval",

@@ -1,3 +1,4 @@
+import { cn } from '@tendersbay/components/core';
 import {
   motion,
   useAnimationFrame,
@@ -15,7 +16,6 @@ import {
   useRef,
   useState,
 } from 'react';
-import { cx } from '~/features/landing/cx';
 
 /** Inter-item / inter-track gap in px — must match the `gap-3` utility (0.75rem). */
 const GAP_PX = 12;
@@ -78,7 +78,7 @@ export function Marquee({ children, reverse, durationSec = 40, className }: Marq
     // biome-ignore lint/a11y/noStaticElementInteractions: pause-on-hover/focus is a non-essential enhancement; the marquee items are individually focusable buttons.
     <div
       ref={containerRef}
-      className={cx('flex gap-3 overflow-hidden', className)}
+      className={cn('flex gap-3 overflow-hidden', className)}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}

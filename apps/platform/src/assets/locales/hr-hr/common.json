@@ -47,7 +47,68 @@
       "submit": "Izbriši moj račun"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Prijava",
+      "description": "Dobrodošli natrag na tendersbay.",
+      "email": "E-pošta",
+      "password": "Lozinka",
+      "forgotPassword": "Zaboravili ste lozinku?",
+      "submitting": "Prijava u tijeku…",
+      "submit": "Prijava",
+      "noAccount": "Nemate račun?",
+      "signUp": "Registrirajte se"
+    },
+    "signup": {
+      "checkEmail": "Provjerite svoju e-poštu",
+      "verifyPrompt": "Poslali smo vam poveznicu za potvrdu. Kliknite je za aktivaciju računa.",
+      "checkEmailHint": "Poveznica istječe za 24 sata. Ako je ne vidite, provjerite mapu neželjene pošte.",
+      "backToLogin": "Natrag na prijavu",
+      "title": "Izradite račun",
+      "description": "Počnite osvajati javne nabave EU-a uz AI agente.",
+      "displayName": "Ime",
+      "email": "E-pošta",
+      "password": "Lozinka",
+      "submitting": "Izrada u tijeku…",
+      "submit": "Izradite račun",
+      "login": "Već imate račun?",
+      "signIn": "Prijava"
+    },
+    "forgot": {
+      "checkEmail": "Provjerite svoju e-poštu",
+      "checkEmailBody": "Ako za tu adresu postoji račun, uskoro ćete primiti poveznicu za resetiranje.",
+      "checkEmailHint": "Poveznica istječe za 1 sat. Ako je ne vidite, provjerite mapu neželjene pošte.",
+      "backToLogin": "Natrag na prijavu",
+      "title": "Resetirajte lozinku",
+      "description": "Unesite svoju e-poštu i poslat ćemo vam poveznicu za resetiranje.",
+      "email": "E-pošta",
+      "submitting": "Slanje u tijeku…",
+      "submit": "Pošaljite poveznicu za resetiranje"
+    },
+    "reset": {
+      "invalidTitle": "Nevažeća poveznica",
+      "invalid": "Ova poveznica za resetiranje nedostaje ili je istekla.",
+      "requestNew": "Zatražite novu poveznicu",
+      "title": "Postavite novu lozinku",
+      "description": "Odaberite jaku lozinku od najmanje 12 znakova.",
+      "password": "Nova lozinka",
+      "submitting": "Spremanje u tijeku…",
+      "submit": "Postavite lozinku"
+    },
+    "verify": {
+      "errorTitle": "Poveznica je istekla",
+      "error": "Ova poveznica nije važeća ili je istekla. Zatražite novu.",
+      "successTitle": "E-pošta potvrđena",
+      "success": "Sve je spremno. Uskoro slijedi preusmjeravanje…",
+      "loadingTitle": "Potvrđivanje vaše e-pošte…",
+      "loading": "Trenutak."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Prijava",
+      "signup": "Registracija"
+    },
     "search": {
       "label": "Pretraži",
       "hint": "Pretraga s umjetnom inteligencijom — uskoro",

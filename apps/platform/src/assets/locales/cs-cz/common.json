@@ -47,7 +47,68 @@
       "submit": "Smazat můj účet"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Přihlásit se",
+      "description": "Vítejte zpět na tendersbay.",
+      "email": "E-mail",
+      "password": "Heslo",
+      "forgotPassword": "Zapomněli jste heslo?",
+      "submitting": "Přihlašování…",
+      "submit": "Přihlásit se",
+      "noAccount": "Nemáte účet?",
+      "signUp": "Zaregistrovat se"
+    },
+    "signup": {
+      "checkEmail": "Zkontrolujte svůj e-mail",
+      "verifyPrompt": "Zaslali jsme vám ověřovací odkaz. Kliknutím na něj aktivujete svůj účet.",
+      "checkEmailHint": "Platnost odkazu vyprší za 24 hodin. Pokud jej nevidíte, zkontrolujte složku se spamem.",
+      "backToLogin": "Zpět na přihlášení",
+      "title": "Vytvořit účet",
+      "description": "Začněte vyhrávat unijní zakázky s AI agenty.",
+      "displayName": "Jméno",
+      "email": "E-mail",
+      "password": "Heslo",
+      "submitting": "Vytváření…",
+      "submit": "Vytvořit účet",
+      "login": "Máte již účet?",
+      "signIn": "Přihlásit se"
+    },
+    "forgot": {
+      "checkEmail": "Zkontrolujte svůj e-mail",
+      "checkEmailBody": "Pokud pro tuto adresu existuje účet, brzy obdržíte odkaz na obnovení hesla.",
+      "checkEmailHint": "Platnost odkazu vyprší za 1 hodinu. Pokud jej nevidíte, zkontrolujte složku se spamem.",
+      "backToLogin": "Zpět na přihlášení",
+      "title": "Obnovit heslo",
+      "description": "Zadejte svůj e-mail a my vám zašleme odkaz na obnovení hesla.",
+      "email": "E-mail",
+      "submitting": "Odesílání…",
+      "submit": "Odeslat odkaz na obnovení hesla"
+    },
+    "reset": {
+      "invalidTitle": "Neplatný odkaz",
+      "invalid": "Tento odkaz na obnovení hesla chybí nebo vypršel.",
+      "requestNew": "Vyžádat nový odkaz",
+      "title": "Nastavit nové heslo",
+      "description": "Zvolte silné heslo o délce alespoň 12 znaků.",
+      "password": "Nové heslo",
+      "submitting": "Ukládání…",
+      "submit": "Nastavit heslo"
+    },
+    "verify": {
+      "errorTitle": "Odkaz vypršel",
+      "error": "Tento odkaz je neplatný nebo vypršel. Vyžádejte si nový.",
+      "successTitle": "E-mail ověřen",
+      "success": "Vše je připraveno. Nyní budete přesměrováni…",
+      "loadingTitle": "Ověřování vašeho e-mailu…",
+      "loading": "Okamžik."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Přihlásit se",
+      "signup": "Zaregistrovat se"
+    },
     "search": {
       "label": "Hledat",
       "hint": "Vyhledávání s AI — již brzy",

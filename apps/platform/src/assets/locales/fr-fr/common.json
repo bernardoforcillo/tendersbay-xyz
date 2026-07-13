@@ -47,7 +47,68 @@
       "submit": "Supprimer mon compte"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "description": "Ravis de vous revoir sur tendersbay.",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submitting": "Connexion en cours…",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "signUp": "S'inscrire"
+    },
+    "signup": {
+      "checkEmail": "Vérifiez votre e-mail",
+      "verifyPrompt": "Nous vous avons envoyé un lien de vérification. Cliquez dessus pour activer votre compte.",
+      "checkEmailHint": "Le lien expire dans 24 heures. Vérifiez votre dossier spam si vous ne le voyez pas.",
+      "backToLogin": "Retour à la connexion",
+      "title": "Créer un compte",
+      "description": "Commencez à remporter des marchés publics européens avec des agents IA.",
+      "displayName": "Nom",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submitting": "Création en cours…",
+      "submit": "Créer un compte",
+      "login": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter"
+    },
+    "forgot": {
+      "checkEmail": "Vérifiez votre e-mail",
+      "checkEmailBody": "Si un compte existe pour cette adresse, vous recevrez bientôt un lien de réinitialisation.",
+      "checkEmailHint": "Le lien expire dans 1 heure. Vérifiez votre dossier spam si vous ne le voyez pas.",
+      "backToLogin": "Retour à la connexion",
+      "title": "Réinitialiser le mot de passe",
+      "description": "Saisissez votre e-mail et nous vous enverrons un lien de réinitialisation.",
+      "email": "E-mail",
+      "submitting": "Envoi en cours…",
+      "submit": "Envoyer le lien de réinitialisation"
+    },
+    "reset": {
+      "invalidTitle": "Lien invalide",
+      "invalid": "Ce lien de réinitialisation est manquant ou a expiré.",
+      "requestNew": "Demander un nouveau lien",
+      "title": "Définir un nouveau mot de passe",
+      "description": "Choisissez un mot de passe fort d'au moins 12 caractères.",
+      "password": "Nouveau mot de passe",
+      "submitting": "Enregistrement en cours…",
+      "submit": "Définir le mot de passe"
+    },
+    "verify": {
+      "errorTitle": "Lien expiré",
+      "error": "Ce lien est invalide ou a expiré. Demandez-en un nouveau.",
+      "successTitle": "E-mail vérifié",
+      "success": "Tout est prêt. Vous allez être redirigé…",
+      "loadingTitle": "Vérification de votre e-mail…",
+      "loading": "Un instant."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Connexion",
+      "signup": "S'inscrire"
+    },
     "search": {
       "label": "Rechercher",
       "hint": "Recherche par IA — bientôt disponible",

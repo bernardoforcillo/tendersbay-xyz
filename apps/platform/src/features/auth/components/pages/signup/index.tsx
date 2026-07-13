@@ -1,14 +1,11 @@
 import { useParams } from '@tanstack/react-router';
+import { Banner, Button, Field } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, Form } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
-import { Field } from '~/features/auth/components/atoms/field';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
 import { authClient } from '~/lib/api/client';
 import { useRedirectParam } from '~/lib/redirect';
-
-const BTN =
-  'mt-2 w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition data-[hovered]:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-60';
 
 export function SignupPage() {
   const { locale } = useParams({ from: '/$locale/auth/signup' });
@@ -51,12 +48,12 @@ export function SignupPage() {
           'We sent you a verification link. Click it to activate your account.',
         )}
       >
-        <p className="rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800">
+        <Banner tone="success">
           {t(
             'auth.signup.checkEmailHint',
             "The link expires in 24 hours. Check your spam folder if you don't see it.",
           )}
-        </p>
+        </Banner>
         <p className="mt-4 text-center text-sm text-ink-500">
           <a href={loginHref} className="font-semibold text-brand-700 hover:text-brand-800">
             {t('auth.signup.backToLogin', 'Back to sign in')}
@@ -92,15 +89,8 @@ export function SignupPage() {
           autoComplete="new-password"
           isRequired
         />
-        {error && (
-          <p
-            role="alert"
-            className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
-          >
-            {error}
-          </p>
-        )}
-        <Button type="submit" isDisabled={pending} className={BTN}>
+        {error && <Banner tone="error">{error}</Banner>}
+        <Button type="submit" isDisabled={pending} className="mt-2 w-full">
           {pending
             ? t('auth.signup.submitting', 'Creating…')
             : t('auth.signup.submit', 'Create account')}

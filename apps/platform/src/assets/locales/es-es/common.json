@@ -47,7 +47,68 @@
       "submit": "Eliminar mi cuenta"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "description": "Bienvenido de nuevo a tendersbay.",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "submitting": "Iniciando sesión…",
+      "submit": "Iniciar sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUp": "Regístrate"
+    },
+    "signup": {
+      "checkEmail": "Revisa tu correo",
+      "verifyPrompt": "Te hemos enviado un enlace de verificación. Haz clic en él para activar tu cuenta.",
+      "checkEmailHint": "El enlace caduca en 24 horas. Revisa tu carpeta de spam si no lo ves.",
+      "backToLogin": "Volver a iniciar sesión",
+      "title": "Crear cuenta",
+      "description": "Empieza a ganar licitaciones de la UE con agentes de IA.",
+      "displayName": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submitting": "Creando…",
+      "submit": "Crear cuenta",
+      "login": "¿Ya tienes una cuenta?",
+      "signIn": "Iniciar sesión"
+    },
+    "forgot": {
+      "checkEmail": "Revisa tu correo",
+      "checkEmailBody": "Si existe una cuenta con esa dirección, recibirás en breve un enlace de restablecimiento.",
+      "checkEmailHint": "El enlace caduca en 1 hora. Revisa tu carpeta de spam si no lo ves.",
+      "backToLogin": "Volver a iniciar sesión",
+      "title": "Restablecer contraseña",
+      "description": "Introduce tu correo y te enviaremos un enlace de restablecimiento.",
+      "email": "Correo electrónico",
+      "submitting": "Enviando…",
+      "submit": "Enviar enlace de restablecimiento"
+    },
+    "reset": {
+      "invalidTitle": "Enlace no válido",
+      "invalid": "Este enlace de restablecimiento falta o ha caducado.",
+      "requestNew": "Solicitar un nuevo enlace",
+      "title": "Establecer nueva contraseña",
+      "description": "Elige una contraseña segura de al menos 12 caracteres.",
+      "password": "Nueva contraseña",
+      "submitting": "Guardando…",
+      "submit": "Establecer contraseña"
+    },
+    "verify": {
+      "errorTitle": "Enlace caducado",
+      "error": "Este enlace no es válido o ha caducado. Solicita uno nuevo.",
+      "successTitle": "Correo verificado",
+      "success": "Todo listo. Te estamos redirigiendo…",
+      "loadingTitle": "Verificando tu correo…",
+      "loading": "Un momento."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Iniciar sesión",
+      "signup": "Regístrate"
+    },
     "search": {
       "label": "Buscar",
       "hint": "Búsqueda con IA — próximamente",

@@ -47,7 +47,68 @@
       "submit": "Elimina il mio account"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Accedi",
+      "description": "Bentornato su tendersbay.",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Password dimenticata?",
+      "submitting": "Accesso in corso…",
+      "submit": "Accedi",
+      "noAccount": "Non hai un account?",
+      "signUp": "Registrati"
+    },
+    "signup": {
+      "checkEmail": "Controlla la tua email",
+      "verifyPrompt": "Ti abbiamo inviato un link di verifica. Cliccalo per attivare il tuo account.",
+      "checkEmailHint": "Il link scade tra 24 ore. Controlla la cartella spam se non lo vedi.",
+      "backToLogin": "Torna al login",
+      "title": "Crea account",
+      "description": "Inizia a vincere gare d'appalto UE con agenti IA.",
+      "displayName": "Nome",
+      "email": "Email",
+      "password": "Password",
+      "submitting": "Creazione in corso…",
+      "submit": "Crea account",
+      "login": "Hai già un account?",
+      "signIn": "Accedi"
+    },
+    "forgot": {
+      "checkEmail": "Controlla la tua email",
+      "checkEmailBody": "Se esiste un account per questo indirizzo, riceverai a breve un link di reimpostazione.",
+      "checkEmailHint": "Il link scade tra 1 ora. Controlla la cartella spam se non lo vedi.",
+      "backToLogin": "Torna al login",
+      "title": "Reimposta password",
+      "description": "Inserisci la tua email e ti invieremo un link di reimpostazione.",
+      "email": "Email",
+      "submitting": "Invio in corso…",
+      "submit": "Invia link di reimpostazione"
+    },
+    "reset": {
+      "invalidTitle": "Link non valido",
+      "invalid": "Questo link di reimpostazione è mancante o scaduto.",
+      "requestNew": "Richiedi un nuovo link",
+      "title": "Imposta una nuova password",
+      "description": "Scegli una password sicura di almeno 12 caratteri.",
+      "password": "Nuova password",
+      "submitting": "Salvataggio in corso…",
+      "submit": "Imposta password"
+    },
+    "verify": {
+      "errorTitle": "Link scaduto",
+      "error": "Questo link non è valido o è scaduto. Richiedine uno nuovo.",
+      "successTitle": "Email verificata",
+      "success": "Tutto pronto. Reindirizzamento in corso…",
+      "loadingTitle": "Verifica della tua email in corso…",
+      "loading": "Un momento."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Accedi",
+      "signup": "Registrati"
+    },
     "search": {
       "label": "Cerca",
       "hint": "Ricerca con IA — presto disponibile",

@@ -47,7 +47,68 @@
       "submit": "Eliminar a minha conta"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Iniciar sessão",
+      "description": "Bem-vindo de volta ao tendersbay.",
+      "email": "E-mail",
+      "password": "Palavra-passe",
+      "forgotPassword": "Esqueceu-se da palavra-passe?",
+      "submitting": "A iniciar sessão…",
+      "submit": "Iniciar sessão",
+      "noAccount": "Ainda não tem conta?",
+      "signUp": "Criar conta"
+    },
+    "signup": {
+      "checkEmail": "Verifique o seu e-mail",
+      "verifyPrompt": "Enviámos-lhe um link de verificação. Clique nele para ativar a sua conta.",
+      "checkEmailHint": "O link expira em 24 horas. Verifique a pasta de spam se não o encontrar.",
+      "backToLogin": "Voltar ao início de sessão",
+      "title": "Criar conta",
+      "description": "Comece a ganhar concursos públicos da UE com agentes de IA.",
+      "displayName": "Nome",
+      "email": "E-mail",
+      "password": "Palavra-passe",
+      "submitting": "A criar…",
+      "submit": "Criar conta",
+      "login": "Já tem conta?",
+      "signIn": "Iniciar sessão"
+    },
+    "forgot": {
+      "checkEmail": "Verifique o seu e-mail",
+      "checkEmailBody": "Se existir uma conta com esse endereço, receberá em breve um link de reposição.",
+      "checkEmailHint": "O link expira em 1 hora. Verifique a pasta de spam se não o encontrar.",
+      "backToLogin": "Voltar ao início de sessão",
+      "title": "Repor palavra-passe",
+      "description": "Introduza o seu e-mail e enviaremos um link de reposição.",
+      "email": "E-mail",
+      "submitting": "A enviar…",
+      "submit": "Enviar link de reposição"
+    },
+    "reset": {
+      "invalidTitle": "Link inválido",
+      "invalid": "Este link de reposição está em falta ou expirou.",
+      "requestNew": "Pedir um novo link",
+      "title": "Definir nova palavra-passe",
+      "description": "Escolha uma palavra-passe forte com pelo menos 12 carateres.",
+      "password": "Nova palavra-passe",
+      "submitting": "A guardar…",
+      "submit": "Definir palavra-passe"
+    },
+    "verify": {
+      "errorTitle": "Link expirado",
+      "error": "Este link é inválido ou expirou. Peça um novo.",
+      "successTitle": "E-mail verificado",
+      "success": "Está tudo pronto. Vai ser redirecionado…",
+      "loadingTitle": "A verificar o seu e-mail…",
+      "loading": "Um momento."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Iniciar sessão",
+      "signup": "Criar conta"
+    },
     "search": {
       "label": "Pesquisar",
       "hint": "Pesquisa com IA — em breve",

@@ -47,7 +47,68 @@
       "submit": "Poista tilini"
     }
   },
+  "auth": {
+    "login": {
+      "title": "Kirjaudu sisään",
+      "description": "Tervetuloa takaisin tendersbayhin.",
+      "email": "Sähköposti",
+      "password": "Salasana",
+      "forgotPassword": "Unohditko salasanan?",
+      "submitting": "Kirjaudutaan…",
+      "submit": "Kirjaudu sisään",
+      "noAccount": "Eikö sinulla ole tiliä?",
+      "signUp": "Rekisteröidy"
+    },
+    "signup": {
+      "checkEmail": "Tarkista sähköpostisi",
+      "verifyPrompt": "Lähetimme sinulle vahvistuslinkin. Aktivoi tilisi klikkaamalla sitä.",
+      "checkEmailHint": "Linkki vanhenee 24 tunnissa. Tarkista roskapostikansio, jos et näe sitä.",
+      "backToLogin": "Takaisin kirjautumiseen",
+      "title": "Luo tili",
+      "description": "Ala voittaa EU-hankintoja tekoälyagenttien avulla.",
+      "displayName": "Nimi",
+      "email": "Sähköposti",
+      "password": "Salasana",
+      "submitting": "Luodaan…",
+      "submit": "Luo tili",
+      "login": "Onko sinulla jo tili?",
+      "signIn": "Kirjaudu sisään"
+    },
+    "forgot": {
+      "checkEmail": "Tarkista sähköpostisi",
+      "checkEmailBody": "Jos kyseiselle osoitteelle on tili, saat pian palautuslinkin.",
+      "checkEmailHint": "Linkki vanhenee 1 tunnissa. Tarkista roskapostikansio, jos et näe sitä.",
+      "backToLogin": "Takaisin kirjautumiseen",
+      "title": "Nollaa salasana",
+      "description": "Anna sähköpostiosoitteesi, niin lähetämme sinulle palautuslinkin.",
+      "email": "Sähköposti",
+      "submitting": "Lähetetään…",
+      "submit": "Lähetä palautuslinkki"
+    },
+    "reset": {
+      "invalidTitle": "Virheellinen linkki",
+      "invalid": "Tämä palautuslinkki puuttuu tai on vanhentunut.",
+      "requestNew": "Pyydä uusi linkki",
+      "title": "Aseta uusi salasana",
+      "description": "Valitse vahva salasana, jossa on vähintään 12 merkkiä.",
+      "password": "Uusi salasana",
+      "submitting": "Tallennetaan…",
+      "submit": "Aseta salasana"
+    },
+    "verify": {
+      "errorTitle": "Linkki vanhentunut",
+      "error": "Tämä linkki on virheellinen tai vanhentunut. Pyydä uusi.",
+      "successTitle": "Sähköposti vahvistettu",
+      "success": "Kaikki valmista. Sinut ohjataan eteenpäin…",
+      "loadingTitle": "Vahvistetaan sähköpostiasi…",
+      "loading": "Hetki vielä."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Kirjaudu sisään",
+      "signup": "Rekisteröidy"
+    },
     "search": {
       "label": "Hae",
       "hint": "Tekoälyhaku — pian saatavilla",
