@@ -1,0 +1,142 @@
+package postgres_test
+
+import (
+	"context"
+	"database/sql"
+	"os"
+	"testing"
+	"time"
+
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
+)
+
+func testTenderRepo(t *testing.T) (*postgres.TenderRepo, *sql.DB) {
+	t.Helper()
+	dsn := os.Getenv("TEST_DATABASE_URL")
+	if dsn == "" {
+		t.Skip("TEST_DATABASE_URL not set")
+	}
+	db, sqlDB, err := postgres.New(context.Background(), dsn)
+	if err != nil {
+		t.Fatalf("postgres.New: %v", err)
+	}
+	t.Cleanup(func() { sqlDB.Close() })
+	return postgres.NewTenderRepo(db), sqlDB
+}
+
+// insertTestTender writes directly into tenders.ingested_tenders (bypassing
+// services/ingestion's own repo, which this test module doesn't import) so
+// the search repo has real rows to query. Cleans itself up via t.Cleanup.
+func insertTestTender(t *testing.T, sqlDB *sql.DB, sourceRef string, opts ...func(*testTenderRow)) int64 {
+	t.Helper()
+	row := testTenderRow{
+		source: "test-repo", sourceRef: sourceRef, title: "Test tender " + sourceRef,
+		buyerName: "Test Buyer", status: "open", procedureType: "open",
+		country: "ITA", cpv: "45000000", currency: "EUR",
+	}
+	for _, o := range opts {
+		o(&row)
+	}
+	var id int64
+	err := sqlDB.QueryRow(
+		`INSERT INTO tenders.ingested_tenders
+		 (source, source_ref, title, buyer_name, status, procedure_type, country, cpv, value, currency, published_at, deadline)
+		 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+		 RETURNING id`,
+		row.source, row.sourceRef, row.title, row.buyerName, row.status, row.procedureType,
+		row.country, row.cpv, row.value, row.currency, row.publishedAt, row.deadline,
+	).Scan(&id)
+	if err != nil {
+		t.Fatalf("insertTestTender: %v", err)
+	}
+	t.Cleanup(func() {
+		_, _ = sqlDB.Exec(`DELETE FROM tenders.ingested_tenders WHERE id = $1`, id)
+	})
+	return id
+}
+
+type testTenderRow struct {
+	source, sourceRef, title, buyerName, status, procedureType, country, cpv, currency string
+	value                                                                              *int64
+	publishedAt, deadline                                                              *time.Time
+}
+
+func withCountry(c string) func(*testTenderRow) { return func(r *testTenderRow) { r.country = c } }
+func withStatus(s string) func(*testTenderRow)  { return func(r *testTenderRow) { r.status = s } }
+func withPublishedAt(ts time.Time) func(*testTenderRow) {
+	return func(r *testTenderRow) { r.publishedAt = &ts }
+}
+
+func TestSearchByFilters_FiltersByCountryAndOrdersByPublishedAtDesc(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+
+	older := time.Now().Add(-48 * time.Hour)
+	newer := time.Now().Add(-1 * time.Hour)
+	idIT1 := insertTestTender(t, sqlDB, "search-1", withCountry("ITA"), withPublishedAt(older))
+	idIT2 := insertTestTender(t, sqlDB, "search-2", withCountry("ITA"), withPublishedAt(newer))
+	_ = insertTestTender(t, sqlDB, "search-3", withCountry("FRA"), withPublishedAt(newer))
+
+	rows, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "ITA"}, 10, 0)
+	if err != nil {
+		t.Fatalf("SearchByFilters: %v", err)
+	}
+	if len(rows) != 2 {
+		t.Fatalf("len(rows) = %d, want 2 (only ITA tenders)", len(rows))
+	}
+	if rows[0].ID != idIT2 || rows[1].ID != idIT1 {
+		t.Errorf("rows = [%d, %d], want [%d, %d] (newest published_at first)", rows[0].ID, rows[1].ID, idIT2, idIT1)
+	}
+}
+
+func TestSearchByFilters_RespectsLimitAndOffset(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+
+	for i := 0; i < 3; i++ {
+		insertTestTender(t, sqlDB, "page-"+string(rune('a'+i)), withCountry("DEU"), withPublishedAt(time.Now().Add(-time.Duration(i)*time.Hour)))
+	}
+
+	page1, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "DEU"}, 2, 0)
+	if err != nil {
+		t.Fatalf("SearchByFilters page1: %v", err)
+	}
+	if len(page1) != 2 {
+		t.Fatalf("len(page1) = %d, want 2", len(page1))
+	}
+	page2, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "DEU"}, 2, 2)
+	if err != nil {
+		t.Fatalf("SearchByFilters page2: %v", err)
+	}
+	if len(page2) != 1 {
+		t.Fatalf("len(page2) = %d, want 1 (3 total, page size 2, offset 2)", len(page2))
+	}
+}
+
+func TestFindByIDs_ReturnsOnlyMatchingIDsAndFilters(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+
+	idMatch := insertTestTender(t, sqlDB, "ids-1", withStatus("open"))
+	idWrongStatus := insertTestTender(t, sqlDB, "ids-2", withStatus("awarded"))
+	_ = idWrongStatus
+
+	rows, err := repo.FindByIDs(ctx, []int64{idMatch, idWrongStatus, 999999}, postgres.TenderFilters{Status: "open"})
+	if err != nil {
+		t.Fatalf("FindByIDs: %v", err)
+	}
+	if len(rows) != 1 || rows[0].ID != idMatch {
+		t.Errorf("rows = %+v, want exactly [id=%d] (status filter excludes idWrongStatus, 999999 doesn't exist)", rows, idMatch)
+	}
+}
+
+func TestFindByIDs_EmptyIDsReturnsEmptyNoQuery(t *testing.T) {
+	repo, _ := testTenderRepo(t)
+	rows, err := repo.FindByIDs(context.Background(), nil, postgres.TenderFilters{})
+	if err != nil {
+		t.Fatalf("FindByIDs: %v", err)
+	}
+	if len(rows) != 0 {
+		t.Errorf("len(rows) = %d, want 0", len(rows))
+	}
+}
