@@ -44,12 +44,16 @@ spec:
                 capabilities:
                   drop:
                     - ALL
+              # Memory bumped for PDF download+extraction (tabula parses whole
+              # notice PDFs in memory, tens of MB for large bundles). A
+              # conservative estimate, not a measured value — revisit once
+              # load-tested against production-size PDF notices.
               resources:
                 limits:
-                  memory: '128Mi'
+                  memory: '256Mi'
                   cpu: '200m'
                 requests:
-                  memory: '64Mi'
+                  memory: '128Mi'
                   cpu: '50m'
               envFrom:
                 - secretRef:
@@ -62,6 +66,12 @@ spec:
                   value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
                 - name: POSTHOG_HOST
                   value: 'https://eu.i.posthog.com'
+                - name: QDRANT_URL
+                  value: 'http://qdrant-release.qdrant.svc.cluster.local:6333'
+                - name: OLLAMA_BASE_URL
+                  value: 'http://ollama-release.ollama.svc.cluster.local:11434'
+                - name: EMBEDDING_MODEL
+                  value: 'embeddinggemma:latest'
               imagePullPolicy: Always
               volumeMounts:
                 - name: tmp

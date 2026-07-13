@@ -14,7 +14,7 @@ else
 fi
 COMPOSE="$ENGINE -f $ROOT/docker-compose.dev.yml"
 
-# ── Postgres ─────────────────────────────────────────────────────────────────
+# ── Postgres + Qdrant ──────────────────────────────────────────────────────────
 $COMPOSE up -d
 
 printf 'Waiting for postgres'
@@ -23,6 +23,10 @@ until $COMPOSE exec -T postgres pg_isready -U root -d tendersbay >/dev/null 2>&1
   sleep 1
 done
 echo ' ready.'
+# Qdrant has no wait loop: the official image ships without curl/wget (no
+# in-container healthcheck command), and search indexing is best-effort —
+# ingestion logs and skips indexing if it isn't reachable yet, retrying on
+# the next Air rebuild.
 
 # ── Backend env ───────────────────────────────────────────────────────────────
 export DATABASE_URL="postgres://root:toor@localhost:5432/tendersbay?sslmode=disable"
@@ -51,6 +55,10 @@ echo '  Backend   (Air)  → http://localhost:8080'
 echo '  Platform  (Air)  → http://localhost:3000'
 echo '  Frontend  (Vite) → http://localhost:5173'
 echo '  Ingestion (Air)  → no port; runs one ingestion cycle per rebuild'
+echo '  Qdrant           → http://localhost:6333 (search indexing)'
+echo '  Search indexing also needs Ollama running locally with'
+echo '  embeddinggemma:latest pulled (`ollama pull embeddinggemma`) — optional,'
+echo '  ingestion runs fine without it, just skips indexing until reachable.'
 echo '  Press Ctrl+C to stop everything.'
 echo ''
 

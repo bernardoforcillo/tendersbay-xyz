@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"github.com/bernardoforcillo/drops/pg"
@@ -12,6 +13,29 @@ import (
 // TenderRepo implements ingestion.Sink against the `tenders` schema.
 type TenderRepo struct {
 	db *pg.DB
+}
+
+// UnindexedTender is one row from ListUnindexed — a tender that hasn't
+// been successfully indexed into the vector search collection yet, either
+// because it was just ingested or a prior indexing attempt failed. Both
+// cases look identical (indexed_at IS NULL), so ListUnindexed serves both.
+type UnindexedTender struct {
+	ID            int64
+	Title         string
+	BuyerName     string
+	CPV           string
+	ProcedureType string
+	Country       string
+	Status        string
+	Source        string
+	SourceRef     string
+	Documents     []UnindexedDocument
+}
+
+// UnindexedDocument is one document attached to an UnindexedTender.
+type UnindexedDocument struct {
+	ID  int64
+	URL string
 }
 
 // NewTenderRepo builds a TenderRepo over db.
@@ -55,7 +79,15 @@ ON CONFLICT (source, source_ref) DO UPDATE SET
 	                    )
 	               ELSE tenders.ingested_tenders.history END,
 	status = EXCLUDED.status,
-	last_seen_at = now()
+	last_seen_at = now(),
+	indexed_at = CASE WHEN tenders.ingested_tenders.title IS DISTINCT FROM EXCLUDED.title
+	                    OR tenders.ingested_tenders.buyer_name IS DISTINCT FROM EXCLUDED.buyer_name
+	                    OR tenders.ingested_tenders.cpv IS DISTINCT FROM EXCLUDED.cpv
+	                    OR tenders.ingested_tenders.procedure_type IS DISTINCT FROM EXCLUDED.procedure_type
+	                    OR tenders.ingested_tenders.country IS DISTINCT FROM EXCLUDED.country
+	                    OR tenders.ingested_tenders.status IS DISTINCT FROM EXCLUDED.status
+	               THEN NULL
+	               ELSE tenders.ingested_tenders.indexed_at END
 RETURNING id, (xmax = 0) AS inserted
 `
 
@@ -79,6 +111,33 @@ ON CONFLICT (tender_id, ref) DO UPDATE SET
 const insertRunSQL = `
 INSERT INTO tenders.ingestion_runs (source, started_at, finished_at, fetched, inserted, updated, error)
 VALUES ($1, $2, $3, $4, $5, $6, $7)
+`
+
+const upsertDocumentPartSQL = `
+INSERT INTO tenders.ingested_tender_document_parts (document_id, index, content)
+VALUES ($1, $2, $3)
+ON CONFLICT (document_id, index) DO UPDATE SET content = EXCLUDED.content
+`
+
+const selectDocumentPartsSQL = `
+SELECT content FROM tenders.ingested_tender_document_parts
+WHERE document_id = $1 ORDER BY index
+`
+
+const selectUnindexedTendersSQL = `
+SELECT id, title, buyer_name, cpv, procedure_type, country, status, source, source_ref
+FROM tenders.ingested_tenders
+WHERE indexed_at IS NULL
+ORDER BY id
+LIMIT $1
+`
+
+const selectDocumentsForTenderSQL = `
+SELECT id, url FROM tenders.ingested_tender_documents WHERE tender_id = $1 ORDER BY id
+`
+
+const markIndexedSQL = `
+UPDATE tenders.ingested_tenders SET indexed_at = now() WHERE id = $1
 `
 
 // pgTextArray renders a Go string slice as a PostgreSQL array literal, e.g.
@@ -164,4 +223,101 @@ func (r *TenderRepo) RecordRun(ctx context.Context, rec ingestion.RunRecord) err
 		rec.Source, rec.StartedAt, rec.FinishedAt, rec.Fetched, rec.Inserted, rec.Updated, errMsg,
 	)
 	return err
+}
+
+// SaveDocumentParts upserts the extracted text parts of one document,
+// keyed by (document_id, index) — idempotent, so re-extracting the same
+// document updates content in place rather than duplicating rows. All
+// parts are saved in a single transaction so a mid-loop failure can't
+// commit a partial set of parts: a partial commit would look
+// indistinguishable from a complete one to indexOne's len(parts) == 0
+// reuse-gate check on the next cycle, causing it to skip re-fetching and
+// index the tender with incomplete text.
+func (r *TenderRepo) SaveDocumentParts(ctx context.Context, documentID int64, parts []string) error {
+	err := r.db.InTx(ctx, func(tx *pg.DB) error {
+		for i, p := range parts {
+			if _, err := tx.Exec(ctx, upsertDocumentPartSQL, documentID, i, p); err != nil {
+				return fmt.Errorf("postgres: save document part %d for document %d: %w", i, documentID, err)
+			}
+		}
+		return nil
+	})
+	return err
+}
+
+// DocumentParts returns the previously-extracted text parts of one
+// document, in order — an empty slice if none have been saved yet.
+func (r *TenderRepo) DocumentParts(ctx context.Context, documentID int64) ([]string, error) {
+	rows, err := r.db.Query(ctx, selectDocumentPartsSQL, documentID)
+	if err != nil {
+		return nil, fmt.Errorf("postgres: document parts for document %d: %w", documentID, err)
+	}
+	defer rows.Close()
+
+	var parts []string
+	for rows.Next() {
+		var p string
+		if err := rows.Scan(&p); err != nil {
+			return nil, fmt.Errorf("postgres: scan document part for document %d: %w", documentID, err)
+		}
+		parts = append(parts, p)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("postgres: document parts for document %d: %w", documentID, err)
+	}
+	return parts, nil
+}
+
+// ListUnindexed returns up to limit tenders that haven't been indexed
+// yet, each with its attached documents.
+func (r *TenderRepo) ListUnindexed(ctx context.Context, limit int) ([]UnindexedTender, error) {
+	rows, err := r.db.Query(ctx, selectUnindexedTendersSQL, limit)
+	if err != nil {
+		return nil, fmt.Errorf("postgres: list unindexed tenders: %w", err)
+	}
+	var tenders []UnindexedTender
+	for rows.Next() {
+		var t UnindexedTender
+		if err := rows.Scan(&t.ID, &t.Title, &t.BuyerName, &t.CPV, &t.ProcedureType,
+			&t.Country, &t.Status, &t.Source, &t.SourceRef); err != nil {
+			rows.Close()
+			return nil, fmt.Errorf("postgres: scan unindexed tender: %w", err)
+		}
+		tenders = append(tenders, t)
+	}
+	if err := rows.Err(); err != nil {
+		rows.Close()
+		return nil, fmt.Errorf("postgres: list unindexed tenders: %w", err)
+	}
+	rows.Close()
+
+	for i := range tenders {
+		docRows, err := r.db.Query(ctx, selectDocumentsForTenderSQL, tenders[i].ID)
+		if err != nil {
+			return nil, fmt.Errorf("postgres: documents for tender %d: %w", tenders[i].ID, err)
+		}
+		for docRows.Next() {
+			var d UnindexedDocument
+			if err := docRows.Scan(&d.ID, &d.URL); err != nil {
+				docRows.Close()
+				return nil, fmt.Errorf("postgres: scan document for tender %d: %w", tenders[i].ID, err)
+			}
+			tenders[i].Documents = append(tenders[i].Documents, d)
+		}
+		if err := docRows.Err(); err != nil {
+			docRows.Close()
+			return nil, fmt.Errorf("postgres: documents for tender %d: %w", tenders[i].ID, err)
+		}
+		docRows.Close()
+	}
+	return tenders, nil
+}
+
+// MarkIndexed records that a tender was successfully indexed into the
+// vector search collection.
+func (r *TenderRepo) MarkIndexed(ctx context.Context, tenderID int64) error {
+	if _, err := r.db.Exec(ctx, markIndexedSQL, tenderID); err != nil {
+		return fmt.Errorf("postgres: mark tender %d indexed: %w", tenderID, err)
+	}
+	return nil
 }
