@@ -44,12 +44,16 @@ spec:
                 capabilities:
                   drop:
                     - ALL
+              # Memory bumped for PDF download+extraction (tabula parses whole
+              # notice PDFs in memory, tens of MB for large bundles). A
+              # conservative estimate, not a measured value — revisit once
+              # load-tested against production-size PDF notices.
               resources:
                 limits:
-                  memory: '128Mi'
+                  memory: '256Mi'
                   cpu: '200m'
                 requests:
-                  memory: '64Mi'
+                  memory: '128Mi'
                   cpu: '50m'
               envFrom:
                 - secretRef:

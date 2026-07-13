@@ -17,12 +17,21 @@ const (
 // every registered provider runs every cycle, and the run's time cap is the
 // CronJob's activeDeadlineSeconds, not an app-level setting.
 type Config struct {
-	ServiceName    string
-	PostHogAPIKey  string
-	PostHogHost    string
-	DatabaseURL    string
-	QdrantURL      string
-	OllamaBaseURL  string
+	ServiceName   string
+	PostHogAPIKey string
+	PostHogHost   string
+	DatabaseURL   string
+	QdrantURL     string
+	OllamaBaseURL string
+	// EmbeddingModel selects the Ollama model used to embed document text.
+	// It must produce 768-dimensional embeddings: go-services/knowledge's
+	// Qdrant collection is created with a hard-coded vectorSize of 768
+	// (sized for the default embeddinggemma:latest), and Qdrant rejects any
+	// vector of a different dimension. Because indexing failures are only
+	// logged, not fatal (see index.Indexer.RunOnce), overriding
+	// EMBEDDING_MODEL to a model with a different output dimension makes
+	// every Ingest call fail silently — indexing stops advancing with no
+	// obvious error surfaced.
 	EmbeddingModel string
 }
 

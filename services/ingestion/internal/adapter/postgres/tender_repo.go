@@ -79,7 +79,15 @@ ON CONFLICT (source, source_ref) DO UPDATE SET
 	                    )
 	               ELSE tenders.ingested_tenders.history END,
 	status = EXCLUDED.status,
-	last_seen_at = now()
+	last_seen_at = now(),
+	indexed_at = CASE WHEN tenders.ingested_tenders.title IS DISTINCT FROM EXCLUDED.title
+	                    OR tenders.ingested_tenders.buyer_name IS DISTINCT FROM EXCLUDED.buyer_name
+	                    OR tenders.ingested_tenders.cpv IS DISTINCT FROM EXCLUDED.cpv
+	                    OR tenders.ingested_tenders.procedure_type IS DISTINCT FROM EXCLUDED.procedure_type
+	                    OR tenders.ingested_tenders.country IS DISTINCT FROM EXCLUDED.country
+	                    OR tenders.ingested_tenders.status IS DISTINCT FROM EXCLUDED.status
+	               THEN NULL
+	               ELSE tenders.ingested_tenders.indexed_at END
 RETURNING id, (xmax = 0) AS inserted
 `
 
@@ -219,14 +227,22 @@ func (r *TenderRepo) RecordRun(ctx context.Context, rec ingestion.RunRecord) err
 
 // SaveDocumentParts upserts the extracted text parts of one document,
 // keyed by (document_id, index) — idempotent, so re-extracting the same
-// document updates content in place rather than duplicating rows.
+// document updates content in place rather than duplicating rows. All
+// parts are saved in a single transaction so a mid-loop failure can't
+// commit a partial set of parts: a partial commit would look
+// indistinguishable from a complete one to indexOne's len(parts) == 0
+// reuse-gate check on the next cycle, causing it to skip re-fetching and
+// index the tender with incomplete text.
 func (r *TenderRepo) SaveDocumentParts(ctx context.Context, documentID int64, parts []string) error {
-	for i, p := range parts {
-		if _, err := r.db.Exec(ctx, upsertDocumentPartSQL, documentID, i, p); err != nil {
-			return fmt.Errorf("postgres: save document part %d for document %d: %w", i, documentID, err)
+	err := r.db.InTx(ctx, func(tx *pg.DB) error {
+		for i, p := range parts {
+			if _, err := tx.Exec(ctx, upsertDocumentPartSQL, documentID, i, p); err != nil {
+				return fmt.Errorf("postgres: save document part %d for document %d: %w", i, documentID, err)
+			}
 		}
-	}
-	return nil
+		return nil
+	})
+	return err
 }
 
 // DocumentParts returns the previously-extracted text parts of one

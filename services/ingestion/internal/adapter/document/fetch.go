@@ -27,7 +27,7 @@ func Fetch(ctx context.Context, url string) (path string, cleanup func(), err er
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode >= 400 {
-		return "", nil, fmt.Errorf("document: fetch %s: unexpected status %d", url, resp.StatusCode)
+		return "", nil, fmt.Errorf("unexpected status %d", resp.StatusCode)
 	}
 
 	f, err := os.CreateTemp("", "ingestion-doc-*.pdf")

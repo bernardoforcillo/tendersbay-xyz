@@ -378,6 +378,67 @@ func TestListUnindexed_RespectsLimit(t *testing.T) {
 	}
 }
 
+func TestSave_ResetsIndexedAtWhenSummaryFieldsChange(t *testing.T) {
+	repo, sqlDB := testRepo(t)
+	ctx := context.Background()
+	source, ref := "test-repo", "reindex-on-change-1"
+	cleanupTender(t, sqlDB, source, ref)
+
+	open := tender.Tender{Source: source, SourceRef: ref, Title: "Needs reindex", Status: tender.StatusOpen}
+	if _, err := repo.Save(ctx, []tender.Tender{open}); err != nil {
+		t.Fatalf("Save (insert): %v", err)
+	}
+
+	markIndexed := func() {
+		t.Helper()
+		if _, err := sqlDB.ExecContext(ctx,
+			`UPDATE tenders.ingested_tenders SET indexed_at = now() WHERE source = $1 AND source_ref = $2`,
+			source, ref); err != nil {
+			t.Fatalf("mark indexed: %v", err)
+		}
+	}
+	indexedAt := func() sql.NullTime {
+		t.Helper()
+		var got sql.NullTime
+		if err := sqlDB.QueryRowContext(ctx,
+			`SELECT indexed_at FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2`,
+			source, ref).Scan(&got); err != nil {
+			t.Fatalf("query indexed_at: %v", err)
+		}
+		return got
+	}
+
+	// A changed summary-affecting field (Status) must reset indexed_at to
+	// NULL so ListUnindexed's indexed_at IS NULL filter picks the tender
+	// back up.
+	markIndexed()
+	if got := indexedAt(); !got.Valid {
+		t.Fatal("indexed_at not set after MarkIndexed")
+	}
+
+	changed := open
+	changed.Status = tender.StatusAwarded
+	if _, err := repo.Save(ctx, []tender.Tender{changed}); err != nil {
+		t.Fatalf("Save (status change): %v", err)
+	}
+	if got := indexedAt(); got.Valid {
+		t.Fatalf("indexed_at = %v, want NULL after a summary-affecting field changed", got.Time)
+	}
+
+	// An unchanged re-save of an already-indexed tender must NOT reset
+	// indexed_at — the CASE must not blindly reset on every save.
+	markIndexed()
+	if got := indexedAt(); !got.Valid {
+		t.Fatal("indexed_at not set after second MarkIndexed")
+	}
+	if _, err := repo.Save(ctx, []tender.Tender{changed}); err != nil {
+		t.Fatalf("Save (no change): %v", err)
+	}
+	if got := indexedAt(); !got.Valid {
+		t.Fatal("indexed_at was reset to NULL despite no summary-affecting field changing")
+	}
+}
+
 func TestDocumentParts_EmptyWhenNoneSaved(t *testing.T) {
 	repo, sqlDB := testRepo(t)
 	ctx := context.Background()
