@@ -163,13 +163,18 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 		limit = tier.MaxResults
 	}
 
-	if p.Query == "" {
-		return s.searchByFiltersOnly(ctx, p.Filters, limit, p.Offset)
+	offset := p.Offset
+	if offset < 0 {
+		offset = 0
 	}
 
-	out, err := s.searchSemantic(ctx, p.Query, p.Filters, limit, p.Offset)
+	if p.Query == "" {
+		return s.searchByFiltersOnly(ctx, p.Filters, limit, offset)
+	}
+
+	out, err := s.searchSemantic(ctx, p.Query, p.Filters, limit, offset)
 	if err != nil {
-		return s.searchByFiltersOnly(ctx, p.Filters, limit, p.Offset)
+		return s.searchByFiltersOnly(ctx, p.Filters, limit, offset)
 	}
 	return out, nil
 }

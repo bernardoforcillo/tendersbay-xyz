@@ -46,11 +46,13 @@ func (f *fakeRepo) EnrichTenders(_ context.Context, ids []string, _ tender.Filte
 }
 
 type fakeKnowledgeBase struct {
-	results []tender.ScoredChunk
-	err     error
+	results  []tender.ScoredChunk
+	err      error
+	gotLimit int
 }
 
-func (f *fakeKnowledgeBase) SearchWithScores(_ context.Context, _ string, _ int) ([]tender.ScoredChunk, error) {
+func (f *fakeKnowledgeBase) SearchWithScores(_ context.Context, _ string, limit int) ([]tender.ScoredChunk, error) {
+	f.gotLimit = limit
 	if f.err != nil {
 		return nil, f.err
 	}
@@ -181,6 +183,62 @@ func TestSearch_ClampsLimitToAuthTier(t *testing.T) {
 	}
 	if repo.gotLimit != 11 {
 		t.Errorf("SearchTenders called with limit=%d, want 11 (10 clamped + 1)", repo.gotLimit)
+	}
+}
+
+func TestSearch_ClampsNegativeOffsetToZero(t *testing.T) {
+	repo := &fakeRepo{byIDs: map[string]tender.Tender{"1": {ID: "1", Title: "T"}}}
+	kb := &fakeKnowledgeBase{results: []tender.ScoredChunk{{DocID: "1", Score: 0.5}}}
+	rl := &fakeRateLimiter{allow: true}
+	svc := tender.NewService(repo, kb, rl, testConfig())
+
+	// Must not panic, and must behave as if offset were 0.
+	out, err := svc.Search(context.Background(), tender.SearchParams{
+		Query: "q", Limit: 10, Offset: -5, RateLimitKey: "k",
+	})
+	if err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if len(out.Results) != 1 || out.Results[0].ID != "1" {
+		t.Errorf("out.Results = %+v, want the single result (negative offset treated as 0)", out.Results)
+	}
+}
+
+func TestSearch_OverFetchesCandidatesByFiveX(t *testing.T) {
+	repo := &fakeRepo{}
+	kb := &fakeKnowledgeBase{}
+	rl := &fakeRateLimiter{allow: true}
+	svc := tender.NewService(repo, kb, rl, testConfig())
+
+	// Authenticated tier max is 50; Limit: 20 stays under that, so effective
+	// limit is 20, and candidateLimit should be 20*5 = 100.
+	_, err := svc.Search(context.Background(), tender.SearchParams{
+		Query: "q", Limit: 20, RateLimitKey: "k", Authenticated: true,
+	})
+	if err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if kb.gotLimit != 100 {
+		t.Errorf("SearchWithScores called with limit=%d, want 100 (20*5)", kb.gotLimit)
+	}
+}
+
+func TestSearch_CapsCandidatesAt250(t *testing.T) {
+	repo := &fakeRepo{}
+	kb := &fakeKnowledgeBase{}
+	rl := &fakeRateLimiter{allow: true}
+	svc := tender.NewService(repo, kb, rl, testConfig())
+
+	// Authenticated tier max is 50; even at the max, 50*5 = 250 exactly hits
+	// the cap. Confirm it's capped, not left uncapped past 250.
+	_, err := svc.Search(context.Background(), tender.SearchParams{
+		Query: "q", Limit: 50, RateLimitKey: "k", Authenticated: true,
+	})
+	if err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if kb.gotLimit != 250 {
+		t.Errorf("SearchWithScores called with limit=%d, want 250 (capped)", kb.gotLimit)
 	}
 }
 
