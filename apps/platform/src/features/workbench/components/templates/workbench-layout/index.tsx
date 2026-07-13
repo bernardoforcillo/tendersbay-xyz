@@ -1,21 +1,19 @@
-import { Link, Outlet, useParams } from '@tanstack/react-router';
+import { Link, Outlet, useNavigate, useParams } from '@tanstack/react-router';
+import { Button, tabClass } from '@tendersbay/components/core';
 import { Settings } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '~/features/account/components/organisms';
 import { WorkbenchContext } from '~/features/workbench/context';
 import { useWorkbench } from '~/features/workbench/hooks';
-import { BTN_SECONDARY } from '~/features/workbench/ui';
 import { useRecentWorkbenchesStore } from '~/store/recent-workbenches';
-
-const GEAR =
-  'shrink-0 rounded-lg p-2 text-ink-400 no-underline transition-colors hover:bg-cream-200 hover:text-ink-900 [&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
 
 export function WorkbenchLayout() {
   const { workspaceId, workbenchId } = useParams({
     from: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId',
   });
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data, loading, error, refetch } = useWorkbench(workbenchId);
 
   const record = useRecentWorkbenchesStore((s) => s.record);
@@ -48,13 +46,17 @@ export function WorkbenchLayout() {
           <p className="text-sm text-ink-700">
             {error ?? t('workbench.errors.notFound', 'This workbench is unavailable.')}
           </p>
-          <Link
-            to="/workspaces/$workspaceId/workbenches"
-            params={{ workspaceId }}
-            className={BTN_SECONDARY}
+          <Button
+            variant="ghost"
+            onPress={() =>
+              void navigate({
+                to: '/workspaces/$workspaceId/workbenches',
+                params: { workspaceId },
+              })
+            }
           >
             {t('workbench.nav.allWorkbenches', 'All workbenches')}
-          </Link>
+          </Button>
         </div>
       </>
     );
@@ -83,7 +85,7 @@ export function WorkbenchLayout() {
             to="/workspaces/$workspaceId/workbench/$workbenchId/settings"
             params={{ workspaceId, workbenchId }}
             aria-label={t('workbench.nav.settings', 'Settings')}
-            className={GEAR}
+            className={tabClass}
           >
             <Settings size={18} aria-hidden="true" />
           </Link>
