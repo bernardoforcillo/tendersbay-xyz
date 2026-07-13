@@ -4,10 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"os"
+	"strconv"
 	"testing"
 	"time"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
 func testTenderRepo(t *testing.T) (*postgres.TenderRepo, *sql.DB) {
@@ -138,5 +140,36 @@ func TestFindByIDs_EmptyIDsReturnsEmptyNoQuery(t *testing.T) {
 	}
 	if len(rows) != 0 {
 		t.Errorf("len(rows) = %d, want 0", len(rows))
+	}
+}
+
+func TestSearchTenders_RoundTripsStringIDs(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+	insertTestTender(t, sqlDB, "domain-1", withCountry("ITA"), withPublishedAt(time.Now()))
+
+	rows, err := repo.SearchTenders(ctx, tender.Filters{Country: "ITA"}, 10, 0)
+	if err != nil {
+		t.Fatalf("SearchTenders: %v", err)
+	}
+	if len(rows) != 1 {
+		t.Fatalf("len(rows) = %d, want 1", len(rows))
+	}
+	if _, err := strconv.ParseInt(rows[0].ID, 10, 64); err != nil {
+		t.Errorf("rows[0].ID = %q, want a valid decimal string", rows[0].ID)
+	}
+}
+
+func TestEnrichTenders_RoundTripsStringIDs(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+	id := insertTestTender(t, sqlDB, "domain-2", withStatus("open"))
+
+	rows, err := repo.EnrichTenders(ctx, []string{strconv.FormatInt(id, 10)}, tender.Filters{Status: "open"})
+	if err != nil {
+		t.Fatalf("EnrichTenders: %v", err)
+	}
+	if len(rows) != 1 || rows[0].ID != strconv.FormatInt(id, 10) {
+		t.Errorf("rows = %+v, want exactly one tender with ID %d", rows, id)
 	}
 }

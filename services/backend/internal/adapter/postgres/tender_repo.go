@@ -12,6 +12,7 @@ import (
 
 	"github.com/bernardoforcillo/drops"
 	"github.com/bernardoforcillo/drops/pg"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
 // TenderFilters narrows a tender search. Zero-value fields are ignored
@@ -129,4 +130,55 @@ func tenderIDFromString(s string) (id int64, ok bool) {
 		return 0, false
 	}
 	return n, true
+}
+
+var _ tender.Repo = (*TenderRepo)(nil)
+
+// SearchTenders satisfies tender.Repo, adapting this file's
+// Postgres-shaped SearchByFilters (int64 ids, TenderFilters) to
+// core/tender's domain-shaped types (string ids, tender.Filters).
+func (r *TenderRepo) SearchTenders(ctx context.Context, filters tender.Filters, limit, offset int) ([]tender.Tender, error) {
+	rows, err := r.SearchByFilters(ctx, toTenderFilters(filters), limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	return rowsToTenders(rows), nil
+}
+
+// EnrichTenders satisfies tender.Repo, adapting FindByIDs the same way.
+// Malformed or unparseable entries in ids are silently skipped (see
+// tenderIDFromString) rather than failing the whole search.
+func (r *TenderRepo) EnrichTenders(ctx context.Context, ids []string, filters tender.Filters) ([]tender.Tender, error) {
+	numeric := make([]int64, 0, len(ids))
+	for _, id := range ids {
+		if n, ok := tenderIDFromString(id); ok {
+			numeric = append(numeric, n)
+		}
+	}
+	rows, err := r.FindByIDs(ctx, numeric, toTenderFilters(filters))
+	if err != nil {
+		return nil, err
+	}
+	return rowsToTenders(rows), nil
+}
+
+func toTenderFilters(f tender.Filters) TenderFilters {
+	return TenderFilters{
+		Country: f.Country, CPV: f.CPV, Status: f.Status,
+		DeadlineFrom: f.DeadlineFrom, DeadlineTo: f.DeadlineTo,
+	}
+}
+
+func rowsToTenders(rows []TenderResultRow) []tender.Tender {
+	out := make([]tender.Tender, len(rows))
+	for i, row := range rows {
+		out[i] = tender.Tender{
+			ID: strconv.FormatInt(row.ID, 10), Title: row.Title, BuyerName: row.BuyerName,
+			Status: row.Status, ProcedureType: row.ProcedureType, Country: row.Country,
+			CPV: row.CPV, Value: row.Value, Currency: row.Currency,
+			PublishedAt: row.PublishedAt, Deadline: row.Deadline,
+			Source: row.Source, SourceRef: row.SourceRef,
+		}
+	}
+	return out
 }
