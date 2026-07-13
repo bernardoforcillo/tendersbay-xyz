@@ -54,7 +54,7 @@ export function WorkspaceInvitesPage() {
       await workspaceClient.createInviteLink({
         workspaceId,
         roleId: linkRole || defaultRoleId,
-        maxUses: Number.parseInt(maxUses, 10) || 0,
+        maxUses: Math.max(0, Number.parseInt(maxUses, 10) || 0),
         expiresAt: '',
       });
       refetchLinks();

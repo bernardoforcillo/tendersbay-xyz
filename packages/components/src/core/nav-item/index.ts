@@ -15,7 +15,7 @@ export const navItemClass =
  * sidebar list.
  */
 export const tabClass =
-  'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium no-underline ' +
+  'flex items-center gap-2 min-h-10 rounded-lg px-3 py-2 text-sm font-medium no-underline ' +
   'text-ink-500 transition-colors duration-150 hover:bg-cream-200 hover:text-ink-900 ' +
   'outline-none focus-visible:ring-2 focus-visible:ring-brand-600 ' +
   '[&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
