@@ -1,16 +1,13 @@
 import { useNavigate } from '@tanstack/react-router';
+import { Banner, Button, Card, Field, Select } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, Form, Input, Label, TextField } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceContext } from '~/features/workspace/context';
 import { useMembers } from '~/features/workspace/hooks';
 import { can, Permission } from '~/features/workspace/permissions';
-import { BTN_DANGER, BTN_PRIMARY, CARD, ERROR_BOX, INPUT, LABEL } from '~/features/workspace/ui';
 import { workspaceClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
-
-const SELECT =
-  'rounded-lg border border-cream-300 bg-cream-50 px-2.5 py-2 text-sm text-ink-800 outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100';
 
 export function WorkspaceSettingsPage() {
   const { t } = useTranslation();
@@ -86,40 +83,30 @@ export function WorkspaceSettingsPage() {
 
   return (
     <div className="flex max-w-2xl flex-col gap-8">
-      {error && (
-        <p role="alert" className={ERROR_BOX}>
-          {error}
-        </p>
-      )}
+      {error && <Banner tone="error">{error}</Banner>}
 
       <section className="flex flex-col gap-4">
         <h2 className="font-display text-lg text-ink-900">
           {t('workspace.settings.detailsTitle', 'Workspace details')}
         </h2>
-        <div className={CARD}>
+        <Card>
           <Form onSubmit={saveDetails} className="flex flex-col gap-4">
-            <TextField
+            <Field
+              label={t('workspace.settings.name', 'Name')}
               value={name}
               onChange={setName}
               isRequired
               isDisabled={!canManage}
-              className="flex flex-col gap-1.5"
-            >
-              <Label className={LABEL}>{t('workspace.settings.name', 'Name')}</Label>
-              <Input className={INPUT} />
-            </TextField>
-            <TextField
+            />
+            <Field
+              label={t('workspace.settings.slug', 'Slug')}
               value={slug}
               onChange={setSlug}
               isDisabled={!canManage}
-              className="flex flex-col gap-1.5"
-            >
-              <Label className={LABEL}>{t('workspace.settings.slug', 'Slug')}</Label>
-              <Input className={INPUT} />
-            </TextField>
+            />
             {canManage && (
               <div className="flex items-center gap-3">
-                <Button type="submit" isDisabled={busy} className={BTN_PRIMARY}>
+                <Button type="submit" isDisabled={busy}>
                   {t('workspace.common.save', 'Save')}
                 </Button>
                 {saved && (
@@ -130,7 +117,7 @@ export function WorkspaceSettingsPage() {
               </div>
             )}
           </Form>
-        </div>
+        </Card>
       </section>
 
       {isOwner && (
@@ -138,11 +125,11 @@ export function WorkspaceSettingsPage() {
           <h2 className="font-display text-lg text-ink-900">
             {t('workspace.settings.transferTitle', 'Transfer ownership')}
           </h2>
-          <div className={`${CARD} flex flex-wrap items-end gap-3`}>
-            <label className="flex flex-1 flex-col gap-1.5">
-              <span className={LABEL}>{t('workspace.settings.newOwner', 'New owner')}</span>
-              <select
-                className={SELECT}
+          <Card className="flex flex-wrap items-end gap-3">
+            <div className="flex-1">
+              <Select
+                label={t('workspace.settings.newOwner', 'New owner')}
+                className="w-full"
                 value={newOwner}
                 onChange={(e) => setNewOwner(e.target.value)}
               >
@@ -152,12 +139,12 @@ export function WorkspaceSettingsPage() {
                     {m.user?.displayName || m.user?.email || m.userId}
                   </option>
                 ))}
-              </select>
-            </label>
-            <Button isDisabled={busy || !newOwner} className={BTN_PRIMARY} onPress={transfer}>
+              </Select>
+            </div>
+            <Button isDisabled={busy || !newOwner} onPress={transfer}>
               {t('workspace.settings.transfer', 'Transfer')}
             </Button>
-          </div>
+          </Card>
         </section>
       )}
 
@@ -165,7 +152,7 @@ export function WorkspaceSettingsPage() {
         <h2 className="font-display text-lg text-red-700">
           {t('workspace.settings.dangerTitle', 'Danger zone')}
         </h2>
-        <div className={`${CARD} flex flex-col gap-3`}>
+        <Card className="flex flex-col gap-3">
           {isOwner ? (
             <div className="flex items-center justify-between gap-3">
               <p className="text-sm text-ink-600">
@@ -174,7 +161,7 @@ export function WorkspaceSettingsPage() {
                   'Permanently delete this workspace and all its data.',
                 )}
               </p>
-              <Button isDisabled={busy} className={BTN_DANGER} onPress={destroy}>
+              <Button variant="danger" isDisabled={busy} onPress={destroy}>
                 {t('workspace.settings.delete', 'Delete workspace')}
               </Button>
             </div>
@@ -186,12 +173,12 @@ export function WorkspaceSettingsPage() {
                   'Leave this workspace. You can rejoin with a new invite.',
                 )}
               </p>
-              <Button isDisabled={busy} className={BTN_DANGER} onPress={leave}>
+              <Button variant="danger" isDisabled={busy} onPress={leave}>
                 {t('workspace.settings.leave', 'Leave workspace')}
               </Button>
             </div>
           )}
-        </div>
+        </Card>
       </section>
     </div>
   );

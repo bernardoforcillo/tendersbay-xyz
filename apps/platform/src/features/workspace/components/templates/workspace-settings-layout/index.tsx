@@ -1,12 +1,10 @@
 import { Link, Outlet } from '@tanstack/react-router';
+import { tabClass } from '@tendersbay/components/core';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '~/features/account/components/organisms';
 import { useWorkspaceContext } from '~/features/workspace/context';
 import { can, Permission } from '~/features/workspace/permissions';
 import { settingsNavKeys } from './settings-nav';
-
-const TAB =
-  'rounded-lg px-3 py-2 text-sm font-medium text-ink-500 no-underline transition-colors hover:bg-cream-200 hover:text-ink-900 [&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
 
 export function WorkspaceSettingsLayout() {
   const { t } = useTranslation();
@@ -24,7 +22,7 @@ export function WorkspaceSettingsLayout() {
               to="/workspaces/$workspaceId/settings"
               params={{ workspaceId }}
               activeOptions={{ exact: true }}
-              className={TAB}
+              className={tabClass}
             >
               {t('workspace.nav.general', 'General')}
             </Link>
@@ -33,7 +31,7 @@ export function WorkspaceSettingsLayout() {
             <Link
               to="/workspaces/$workspaceId/settings/members"
               params={{ workspaceId }}
-              className={TAB}
+              className={tabClass}
             >
               {t('workspace.nav.members', 'Members')}
             </Link>
@@ -42,7 +40,7 @@ export function WorkspaceSettingsLayout() {
             <Link
               to="/workspaces/$workspaceId/settings/roles"
               params={{ workspaceId }}
-              className={TAB}
+              className={tabClass}
             >
               {t('workspace.nav.roles', 'Roles')}
             </Link>
@@ -51,7 +49,7 @@ export function WorkspaceSettingsLayout() {
             <Link
               to="/workspaces/$workspaceId/settings/invites"
               params={{ workspaceId }}
-              className={TAB}
+              className={tabClass}
             >
               {t('workspace.nav.invites', 'Invites')}
             </Link>

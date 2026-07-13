@@ -1,22 +1,11 @@
+import { Banner, Button, Card, Field, Select } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, Form, Input, Label, TextField } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceContext } from '~/features/workspace/context';
 import { useEmailInvites, useInviteLinks, useRoles } from '~/features/workspace/hooks';
 import { can, Permission } from '~/features/workspace/permissions';
-import {
-  BTN_DANGER,
-  BTN_PRIMARY,
-  BTN_SECONDARY,
-  CARD,
-  ERROR_BOX,
-  INPUT,
-  LABEL,
-} from '~/features/workspace/ui';
 import { workspaceClient } from '~/lib/api/client';
-
-const SELECT =
-  'rounded-lg border border-cream-300 bg-cream-50 px-2.5 py-2 text-sm text-ink-800 outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100';
 
 export function WorkspaceInvitesPage() {
   const { t, i18n } = useTranslation();
@@ -110,55 +99,49 @@ export function WorkspaceInvitesPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      {error && (
-        <p role="alert" className={ERROR_BOX}>
-          {error}
-        </p>
-      )}
+      {error && <Banner tone="error">{error}</Banner>}
 
       {/* Email invitations */}
       <section className="flex flex-col gap-4">
         <h2 className="font-display text-lg text-ink-900">
           {t('workspace.invites.emailTitle', 'Invite by email')}
         </h2>
-        <div className={CARD}>
+        <Card>
           <Form onSubmit={sendEmailInvite} className="flex flex-col gap-4 sm:flex-row sm:items-end">
-            <TextField
+            <Field
+              label={t('workspace.invites.email', 'Email address')}
+              placeholder="teammate@company.eu"
+              type="email"
               value={email}
               onChange={setEmail}
-              type="email"
               isRequired
-              className="flex flex-1 flex-col gap-1.5"
+              className="flex-1"
+            />
+            <Select
+              label={t('workspace.invites.role', 'Role')}
+              value={emailRole || defaultRoleId}
+              onChange={(e) => setEmailRole(e.target.value)}
             >
-              <Label className={LABEL}>{t('workspace.invites.email', 'Email address')}</Label>
-              <Input className={INPUT} placeholder="teammate@company.eu" />
-            </TextField>
-            <label className="flex flex-col gap-1.5">
-              <span className={LABEL}>{t('workspace.invites.role', 'Role')}</span>
-              <select
-                className={SELECT}
-                value={emailRole || defaultRoleId}
-                onChange={(e) => setEmailRole(e.target.value)}
-              >
-                {roleOptions.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <Button type="submit" isDisabled={busy} className={BTN_PRIMARY}>
+              {roleOptions.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
+            </Select>
+            <Button type="submit" isDisabled={busy}>
               {t('workspace.invites.send', 'Send invite')}
             </Button>
           </Form>
-        </div>
+        </Card>
         <ul className="flex flex-col gap-2">
           {invites?.map((inv) => (
-            <li key={inv.id} className={`${CARD} flex items-center justify-between gap-3 py-3`}>
-              <span className="truncate text-sm text-ink-800">{inv.email}</span>
-              <Button className={BTN_DANGER} onPress={() => revokeInvite(inv.id)}>
-                {t('workspace.invites.revoke', 'Revoke')}
-              </Button>
+            <li key={inv.id}>
+              <Card className="flex items-center justify-between gap-3 py-3">
+                <span className="truncate text-sm text-ink-800">{inv.email}</span>
+                <Button variant="danger" onPress={() => revokeInvite(inv.id)}>
+                  {t('workspace.invites.revoke', 'Revoke')}
+                </Button>
+              </Card>
             </li>
           ))}
         </ul>
@@ -169,67 +152,60 @@ export function WorkspaceInvitesPage() {
         <h2 className="font-display text-lg text-ink-900">
           {t('workspace.invites.linkTitle', 'Shareable links')}
         </h2>
-        <div className={CARD}>
+        <Card>
           <Form onSubmit={createLink} className="flex flex-col gap-4 sm:flex-row sm:items-end">
-            <label className="flex flex-col gap-1.5">
-              <span className={LABEL}>{t('workspace.invites.role', 'Role')}</span>
-              <select
-                className={SELECT}
-                value={linkRole || defaultRoleId}
-                onChange={(e) => setLinkRole(e.target.value)}
-              >
-                {roleOptions.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <TextField
+            <Select
+              label={t('workspace.invites.role', 'Role')}
+              value={linkRole || defaultRoleId}
+              onChange={(e) => setLinkRole(e.target.value)}
+            >
+              {roleOptions.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
+            </Select>
+            <Field
+              label={t('workspace.invites.maxUses', 'Max uses (0 = unlimited)')}
+              type="number"
               value={maxUses}
               onChange={setMaxUses}
-              type="number"
-              className="flex flex-col gap-1.5"
-            >
-              <Label className={LABEL}>
-                {t('workspace.invites.maxUses', 'Max uses (0 = unlimited)')}
-              </Label>
-              <Input className={INPUT} inputMode="numeric" min={0} />
-            </TextField>
-            <Button type="submit" isDisabled={busy} className={BTN_PRIMARY}>
+            />
+            <Button type="submit" isDisabled={busy}>
               {t('workspace.invites.createLink', 'Create link')}
             </Button>
           </Form>
-        </div>
+        </Card>
         <ul className="flex flex-col gap-2">
           {links
             ?.filter((l) => !l.revoked)
             .map((l) => (
-              <li
-                key={l.id}
-                className={`${CARD} flex flex-wrap items-center justify-between gap-3 py-3`}
-              >
-                <div className="min-w-0">
-                  <p className="truncate font-mono text-xs text-ink-700">{linkUrl(l.code)}</p>
-                  <p className="text-xs text-ink-500">
-                    {l.maxUses > 0
-                      ? t('workspace.invites.usesLimited', '{{used}} / {{max}} uses', {
-                          used: l.useCount,
-                          max: l.maxUses,
-                        })
-                      : t('workspace.invites.usesUnlimited', '{{used}} uses', { used: l.useCount })}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button className={BTN_SECONDARY} onPress={() => copy(l.code)}>
-                    {copied === l.code
-                      ? t('workspace.invites.copied', 'Copied')
-                      : t('workspace.invites.copy', 'Copy')}
-                  </Button>
-                  <Button className={BTN_DANGER} onPress={() => revokeLink(l.id)}>
-                    {t('workspace.invites.revoke', 'Revoke')}
-                  </Button>
-                </div>
+              <li key={l.id}>
+                <Card className="flex flex-wrap items-center justify-between gap-3 py-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-mono text-xs text-ink-700">{linkUrl(l.code)}</p>
+                    <p className="text-xs text-ink-500">
+                      {l.maxUses > 0
+                        ? t('workspace.invites.usesLimited', '{{used}} / {{max}} uses', {
+                            used: l.useCount,
+                            max: l.maxUses,
+                          })
+                        : t('workspace.invites.usesUnlimited', '{{used}} uses', {
+                            used: l.useCount,
+                          })}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" onPress={() => copy(l.code)}>
+                      {copied === l.code
+                        ? t('workspace.invites.copied', 'Copied')
+                        : t('workspace.invites.copy', 'Copy')}
+                    </Button>
+                    <Button variant="danger" onPress={() => revokeLink(l.id)}>
+                      {t('workspace.invites.revoke', 'Revoke')}
+                    </Button>
+                  </div>
+                </Card>
               </li>
             ))}
         </ul>
