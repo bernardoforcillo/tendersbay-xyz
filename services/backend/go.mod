@@ -18,6 +18,7 @@ require (
 	go.opentelemetry.io/otel/sdk v1.44.0
 	go.opentelemetry.io/otel/sdk/log v0.20.0
 	google.golang.org/protobuf v1.36.11
+	github.com/redis/go-redis/v9 v9.21.0
 )
 
 require (
@@ -34,7 +35,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/openai/openai-go/v3 v3.30.0 // indirect
-	github.com/redis/go-redis/v9 v9.21.0 // indirect
 	github.com/tidwall/gjson v1.18.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
