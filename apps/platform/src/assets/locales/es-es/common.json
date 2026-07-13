@@ -5,6 +5,48 @@
     "accept": "Aceptar",
     "reject": "Rechazar"
   },
+  "account": {
+    "settings": {
+      "title": "Ajustes de la cuenta"
+    },
+    "profile": {
+      "title": "Perfil",
+      "description": "Actualiza tu nombre visible y cómo te ven los demás.",
+      "displayName": "Nombre visible",
+      "saved": "¡Guardado!",
+      "submitting": "Guardando…",
+      "submit": "Guardar cambios"
+    },
+    "changeEmail": {
+      "checkEmail": "Revisa tu nuevo correo",
+      "title": "Cambiar correo electrónico",
+      "prompt": "Hemos enviado un enlace de verificación a tu nueva dirección. Haz clic en él para confirmar el cambio.",
+      "description": "Enviaremos un enlace de verificación a la nueva dirección.",
+      "hint": "Tu correo actual permanece activo hasta que verifiques el nuevo.",
+      "newEmail": "Nuevo correo electrónico",
+      "password": "Contraseña actual",
+      "submitting": "Guardando…",
+      "submit": "Cambiar correo"
+    },
+    "changePassword": {
+      "successTitle": "Contraseña actualizada",
+      "title": "Cambiar contraseña",
+      "successBody": "Tu contraseña ha sido cambiada. Vuelve a iniciar sesión en otros dispositivos.",
+      "description": "La nueva contraseña debe tener al menos 12 caracteres.",
+      "successHint": "El resto de sesiones activas seguirán siendo válidas hasta que caduquen.",
+      "current": "Contraseña actual",
+      "new": "Nueva contraseña",
+      "submitting": "Guardando…",
+      "submit": "Cambiar contraseña"
+    },
+    "delete": {
+      "title": "Eliminar cuenta",
+      "description": "Esta acción es permanente y no se puede deshacer. Todos tus datos, espacios de trabajo y ajustes se eliminarán de forma definitiva.",
+      "password": "Confirma con tu contraseña",
+      "submitting": "Eliminando…",
+      "submit": "Eliminar mi cuenta"
+    }
+  },
   "landing": {
     "search": {
       "label": "Buscar",

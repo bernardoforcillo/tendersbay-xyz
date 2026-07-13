@@ -1,14 +1,10 @@
+import { Banner, Button, Card, Pill, Select } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceContext } from '~/features/workspace/context';
 import { useMembers, useRoles } from '~/features/workspace/hooks';
 import { can, Permission } from '~/features/workspace/permissions';
-import { BTN_DANGER, CARD, ERROR_BOX } from '~/features/workspace/ui';
 import { workspaceClient } from '~/lib/api/client';
-
-const SELECT =
-  'rounded-lg border border-cream-300 bg-cream-50 px-2.5 py-1.5 text-sm text-ink-800 outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100 disabled:opacity-50';
 
 export function WorkspaceMembersPage() {
   const { t } = useTranslation();
@@ -50,66 +46,56 @@ export function WorkspaceMembersPage() {
       <h2 className="font-display text-lg text-ink-900">
         {t('workspace.members.title', 'Members')}
       </h2>
-      {actionError && (
-        <p role="alert" className={ERROR_BOX}>
-          {actionError}
-        </p>
-      )}
+      {actionError && <Banner tone="error">{actionError}</Banner>}
       {loading && (
         <p className="text-sm text-ink-500">{t('workspace.common.loading', 'Loading…')}</p>
       )}
-      {error && (
-        <p role="alert" className={ERROR_BOX}>
-          {error}
-        </p>
-      )}
+      {error && <Banner tone="error">{error}</Banner>}
       <ul className="flex flex-col gap-2">
         {members?.map((m) => {
           const isOwner = m.userId === workspace.ownerId;
           return (
-            <li
-              key={m.userId}
-              className={`${CARD} flex flex-wrap items-center justify-between gap-3 py-4`}
-            >
-              <div className="min-w-0">
-                <p className="truncate font-medium text-ink-900">
-                  {m.user?.displayName || m.user?.email || m.userId}
-                  {isOwner && (
-                    <span className="ml-2 rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
-                      {t('workspace.members.owner', 'Owner')}
-                    </span>
+            <li key={m.userId}>
+              <Card className="flex flex-wrap items-center justify-between gap-3 py-4">
+                <div className="min-w-0">
+                  <p className="truncate font-medium text-ink-900">
+                    {m.user?.displayName || m.user?.email || m.userId}
+                    {isOwner && (
+                      <Pill tone="match" className="ml-2">
+                        {t('workspace.members.owner', 'Owner')}
+                      </Pill>
+                    )}
+                  </p>
+                  <p className="truncate text-xs text-ink-500">{m.user?.email}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  {canManage && !isOwner ? (
+                    <Select
+                      label={t('workspace.members.role', 'Role')}
+                      value={m.roleId}
+                      disabled={busy === m.userId}
+                      onChange={(e) => changeRole(m.userId, e.target.value)}
+                    >
+                      {roles?.map((r) => (
+                        <option key={r.id} value={r.id}>
+                          {r.name}
+                        </option>
+                      ))}
+                    </Select>
+                  ) : (
+                    <span className="text-sm text-ink-600">{m.roleName}</span>
                   )}
-                </p>
-                <p className="truncate text-xs text-ink-500">{m.user?.email}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                {canManage && !isOwner ? (
-                  <select
-                    aria-label={t('workspace.members.role', 'Role')}
-                    className={SELECT}
-                    value={m.roleId}
-                    disabled={busy === m.userId}
-                    onChange={(e) => changeRole(m.userId, e.target.value)}
-                  >
-                    {roles?.map((r) => (
-                      <option key={r.id} value={r.id}>
-                        {r.name}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <span className="text-sm text-ink-600">{m.roleName}</span>
-                )}
-                {canManage && !isOwner && (
-                  <Button
-                    className={BTN_DANGER}
-                    isDisabled={busy === m.userId}
-                    onPress={() => remove(m.userId)}
-                  >
-                    {t('workspace.members.remove', 'Remove')}
-                  </Button>
-                )}
-              </div>
+                  {canManage && !isOwner && (
+                    <Button
+                      variant="danger"
+                      isDisabled={busy === m.userId}
+                      onPress={() => remove(m.userId)}
+                    >
+                      {t('workspace.members.remove', 'Remove')}
+                    </Button>
+                  )}
+                </div>
+              </Card>
             </li>
           );
         })}

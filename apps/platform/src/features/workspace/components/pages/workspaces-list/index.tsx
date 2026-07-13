@@ -1,11 +1,12 @@
 import { Link, useNavigate } from '@tanstack/react-router';
+import { Banner, Button, Card, EmptyState, Field } from '@tendersbay/components/core';
+import { Building2 } from 'lucide-react';
 import { useState } from 'react';
-import { Button, Form, Input, Label, TextField } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '~/features/account/components/organisms';
 import { AccountLayout } from '~/features/account/components/templates/account-layout';
 import { useMyWorkspaces } from '~/features/workspace/hooks';
-import { BTN_PRIMARY, CARD, ERROR_BOX, INPUT, LABEL } from '~/features/workspace/ui';
 import { workspaceClient } from '~/lib/api/client';
 
 export function WorkspacesListPage() {
@@ -41,77 +42,63 @@ export function WorkspacesListPage() {
       <PageHeader
         title={t('workspace.list.title', 'Workspaces')}
         actions={
-          <Button className={BTN_PRIMARY} onPress={() => setShowForm((v) => !v)}>
+          <Button onPress={() => setShowForm((v) => !v)}>
             {t('workspace.list.new', 'New workspace')}
           </Button>
         }
       />
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 p-6 lg:p-8">
         {showForm && (
-          <div className={CARD}>
+          <Card>
             <Form onSubmit={handleCreate} className="flex flex-col gap-4">
-              <TextField
+              <Field
+                label={t('workspace.list.nameLabel', 'Workspace name')}
+                placeholder={t('workspace.list.namePlaceholder', 'Acme Procurement')}
                 value={name}
                 onChange={setName}
                 isRequired
-                className="flex flex-col gap-1.5"
-              >
-                <Label className={LABEL}>{t('workspace.list.nameLabel', 'Workspace name')}</Label>
-                <Input
-                  className={INPUT}
-                  placeholder={t('workspace.list.namePlaceholder', 'Acme Procurement')}
-                />
-              </TextField>
-              {createError && (
-                <p role="alert" className={ERROR_BOX}>
-                  {createError}
-                </p>
-              )}
-              <Button
-                type="submit"
-                isDisabled={creating || name.trim() === ''}
-                className={BTN_PRIMARY}
-              >
+              />
+              {createError && <Banner tone="error">{createError}</Banner>}
+              <Button type="submit" isDisabled={creating || name.trim() === ''}>
                 {creating
                   ? t('workspace.common.creating', 'Creating…')
                   : t('workspace.list.create', 'Create workspace')}
               </Button>
             </Form>
-          </div>
+          </Card>
         )}
 
         {loading && (
           <p className="text-sm text-ink-500">{t('workspace.common.loading', 'Loading…')}</p>
         )}
-        {error && (
-          <p role="alert" className={ERROR_BOX}>
-            {error}
-          </p>
-        )}
+        {error && <Banner tone="error">{error}</Banner>}
 
         {workspaces && workspaces.length === 0 && !showForm && (
-          <div className={`${CARD} text-center`}>
-            <p className="text-sm text-ink-600">
-              {t('workspace.list.empty', 'You are not part of any workspace yet.')}
-            </p>
-            <Button className={`${BTN_PRIMARY} mt-4`} onPress={() => setShowForm(true)}>
-              {t('workspace.list.createFirst', 'Create your first workspace')}
-            </Button>
-          </div>
+          <EmptyState
+            icon={<Building2 size={28} />}
+            title={t('workspace.list.empty', 'You are not part of any workspace yet.')}
+            action={
+              <Button onPress={() => setShowForm(true)}>
+                {t('workspace.list.createFirst', 'Create your first workspace')}
+              </Button>
+            }
+          />
         )}
 
         {workspaces && workspaces.length > 0 && (
           <ul className="flex flex-col gap-2">
             {workspaces.map((w) => (
               <li key={w.id}>
-                <Link
-                  to="/workspaces/$workspaceId"
-                  params={{ workspaceId: w.id }}
-                  className={`${CARD} flex items-center justify-between no-underline transition hover:border-brand-300`}
-                >
-                  <span className="font-medium text-ink-900">{w.name}</span>
-                  <span className="text-xs text-ink-400">@{w.slug}</span>
-                </Link>
+                <Card padding="none">
+                  <Link
+                    to="/workspaces/$workspaceId"
+                    params={{ workspaceId: w.id }}
+                    className="flex items-center justify-between gap-3 rounded-2xl p-5 no-underline outline-none transition-colors duration-150 hover:bg-cream-50 focus-visible:ring-2 focus-visible:ring-brand-600"
+                  >
+                    <span className="font-medium text-ink-900">{w.name}</span>
+                    <span className="text-xs text-ink-400">@{w.slug}</span>
+                  </Link>
+                </Card>
               </li>
             ))}
           </ul>

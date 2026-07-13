@@ -5,6 +5,48 @@
     "accept": "Priimti",
     "reject": "Atmesti"
   },
+  "account": {
+    "settings": {
+      "title": "Paskyros nustatymai"
+    },
+    "profile": {
+      "title": "Profilis",
+      "description": "Atnaujinkite rodomą vardą ir tai, kaip jus mato kiti.",
+      "displayName": "Rodomas vardas",
+      "saved": "Įrašyta!",
+      "submitting": "Įrašoma…",
+      "submit": "Įrašyti pakeitimus"
+    },
+    "changeEmail": {
+      "checkEmail": "Patikrinkite naują el. paštą",
+      "title": "El. pašto keitimas",
+      "prompt": "Išsiuntėme patvirtinimo nuorodą jūsų naujam adresui. Spustelėkite ją, kad patvirtintumėte pakeitimą.",
+      "description": "Naujam adresui atsiųsime patvirtinimo nuorodą.",
+      "hint": "Dabartinis el. paštas lieka aktyvus, kol patvirtinsite naują.",
+      "newEmail": "Naujas el. paštas",
+      "password": "Dabartinis slaptažodis",
+      "submitting": "Įrašoma…",
+      "submit": "Keisti el. paštą"
+    },
+    "changePassword": {
+      "successTitle": "Slaptažodis atnaujintas",
+      "title": "Slaptažodžio keitimas",
+      "successBody": "Jūsų slaptažodis pakeistas. Kituose įrenginiuose prisijunkite iš naujo.",
+      "description": "Naują slaptažodį turi sudaryti bent 12 simbolių.",
+      "successHint": "Kiti aktyvūs seansai lieka galioti, kol nesibaigs jų galiojimas.",
+      "current": "Dabartinis slaptažodis",
+      "new": "Naujas slaptažodis",
+      "submitting": "Įrašoma…",
+      "submit": "Keisti slaptažodį"
+    },
+    "delete": {
+      "title": "Ištrinti paskyrą",
+      "description": "Šis veiksmas negrįžtamas ir jo atšaukti negalima. Visi jūsų duomenys, darbo sritys ir nustatymai bus visam laikui ištrinti.",
+      "password": "Patvirtinkite slaptažodžiu",
+      "submitting": "Trinama…",
+      "submit": "Ištrinti mano paskyrą"
+    }
+  },
   "landing": {
     "search": {
       "label": "Ieškoti",

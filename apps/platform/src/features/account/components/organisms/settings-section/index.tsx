@@ -1,3 +1,4 @@
+import { Card } from '@tendersbay/components/core';
 import type { ReactNode } from 'react';
 
 export type SettingsSectionProps = {
@@ -23,11 +24,12 @@ export function SettingsSection({
         {description && <p className="mt-1 text-sm leading-relaxed text-ink-500">{description}</p>}
       </div>
       <div className="md:col-span-2">
-        <div
-          className={`rounded-2xl border p-6 ${isDanger ? 'border-red-200 bg-red-50/40' : 'border-cream-200 bg-white shadow-soft'}`}
+        <Card
+          padding="md"
+          className={isDanger ? 'border border-red-200 bg-red-50/40 shadow-none' : undefined}
         >
           {children}
-        </div>
+        </Card>
       </div>
     </div>
   );

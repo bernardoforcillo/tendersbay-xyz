@@ -1,7 +1,7 @@
+import { Banner, Button, Card, Pill } from '@tendersbay/components/core';
 import type { Role } from '@tendersbay/proto/workbench/v1/workbench_pb';
 import { ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
-import { Button } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { RoleEditor } from '~/features/workbench/components/organisms/role-editor';
 import { useWorkbenchContext } from '~/features/workbench/context';
@@ -13,7 +13,6 @@ import {
   PERMISSION_KEYS,
   Permission,
 } from '~/features/workbench/permissions';
-import { BTN_DANGER, BTN_PRIMARY, BTN_SECONDARY, CARD, ERROR_BOX } from '~/features/workbench/ui';
 import { workbenchClient } from '~/lib/api/client';
 
 function permissionCount(perms: bigint): number {
@@ -71,7 +70,7 @@ export function WorkbenchRolesPage() {
             ? t('workbench.roles.createTitle', 'New role')
             : t('workbench.roles.editTitle', 'Edit role')}
         </h2>
-        <div className={CARD}>
+        <Card>
           <RoleEditor
             initialName={editing === 'new' ? '' : editing.name}
             initialPermissions={editing === 'new' ? 0n : editing.permissions}
@@ -81,7 +80,7 @@ export function WorkbenchRolesPage() {
             onSubmit={submit}
             onCancel={() => setEditing(null)}
           />
-        </div>
+        </Card>
       </div>
     );
   }
@@ -91,65 +90,54 @@ export function WorkbenchRolesPage() {
       <div className="flex items-center justify-between">
         <h2 className="font-display text-lg text-ink-900">{t('workbench.roles.title', 'Roles')}</h2>
         {canManage && (
-          <Button className={BTN_PRIMARY} onPress={() => setEditing('new')}>
-            {t('workbench.roles.new', 'New role')}
-          </Button>
+          <Button onPress={() => setEditing('new')}>{t('workbench.roles.new', 'New role')}</Button>
         )}
       </div>
-      {actionError && (
-        <p role="alert" className={ERROR_BOX}>
-          {actionError}
-        </p>
-      )}
+      {actionError && <Banner tone="error">{actionError}</Banner>}
       {loading && (
         <p className="text-sm text-ink-500">{t('workbench.common.loading', 'Loading…')}</p>
       )}
-      {error && (
-        <p role="alert" className={ERROR_BOX}>
-          {error}
-        </p>
-      )}
+      {error && <Banner tone="error">{error}</Banner>}
       <ul className="flex flex-col gap-2">
         {roles?.map((r) => (
-          <li
-            key={r.id}
-            className={`${CARD} flex flex-wrap items-center justify-between gap-3 py-4`}
-          >
-            <div className="flex min-w-0 items-center gap-3">
-              <span
-                aria-hidden="true"
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cream-200 text-ink-500"
-              >
-                <ShieldCheck size={16} />
-              </span>
-              <div className="min-w-0">
-                <p className="font-medium text-ink-900">
-                  {r.name}
-                  {r.isDefault && (
-                    <span className="ml-2 rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
-                      {t('workbench.roles.default', 'Default')}
-                    </span>
-                  )}
-                </p>
-                <p className="text-xs text-ink-500">
-                  {t('workbench.roles.permCount', '{{count}} permissions', {
-                    count: permissionCount(r.permissions),
-                  })}
-                </p>
+          <li key={r.id}>
+            <Card className="flex flex-wrap items-center justify-between gap-3 py-4">
+              <div className="flex min-w-0 items-center gap-3">
+                <span
+                  aria-hidden="true"
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cream-200 text-ink-500"
+                >
+                  <ShieldCheck size={16} />
+                </span>
+                <div className="min-w-0">
+                  <p className="font-medium text-ink-900">
+                    {r.name}
+                    {r.isDefault && (
+                      <Pill tone="neutral" className="ml-2">
+                        {t('workbench.roles.default', 'Default')}
+                      </Pill>
+                    )}
+                  </p>
+                  <p className="text-xs text-ink-500">
+                    {t('workbench.roles.permCount', '{{count}} permissions', {
+                      count: permissionCount(r.permissions),
+                    })}
+                  </p>
+                </div>
               </div>
-            </div>
-            {canManage && (
-              <div className="flex gap-2">
-                <Button className={BTN_SECONDARY} onPress={() => setEditing(r)}>
-                  {t('workbench.common.edit', 'Edit')}
-                </Button>
-                {!r.isDefault && (
-                  <Button className={BTN_DANGER} onPress={() => remove(r.id)}>
-                    {t('workbench.common.delete', 'Delete')}
+              {canManage && (
+                <div className="flex gap-2">
+                  <Button variant="ghost" onPress={() => setEditing(r)}>
+                    {t('workbench.common.edit', 'Edit')}
                   </Button>
-                )}
-              </div>
-            )}
+                  {!r.isDefault && (
+                    <Button variant="danger" onPress={() => remove(r.id)}>
+                      {t('workbench.common.delete', 'Delete')}
+                    </Button>
+                  )}
+                </div>
+              )}
+            </Card>
           </li>
         ))}
       </ul>

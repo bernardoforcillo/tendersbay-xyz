@@ -1,13 +1,9 @@
+import { Banner, Button, Field } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, FieldError, Form, Input, Label, TextField } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { SettingsSection } from '~/features/account/components/organisms/settings-section';
 import { userClient } from '~/lib/api/client';
-
-const INPUT =
-  'w-full rounded-xl border border-cream-300 bg-cream-50 px-3.5 py-2.5 text-sm text-ink-900 outline-none transition placeholder:text-ink-300 focus:border-brand-400 focus:ring-2 focus:ring-brand-100';
-const BTN =
-  'mt-2 w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition data-[hovered]:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-60';
 
 export function PasswordForm() {
   const { t } = useTranslation();
@@ -50,48 +46,31 @@ export function PasswordForm() {
       }
     >
       {done ? (
-        <div className="rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-800">
+        <Banner tone="success">
           {t(
             'account.changePassword.successHint',
             'Other active sessions remain valid until they expire.',
           )}
-        </div>
+        </Banner>
       ) : (
         <Form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <TextField
+          <Field
             name="currentPassword"
             type="password"
             isRequired
-            className="flex flex-col gap-1.5"
-          >
-            <Label className="text-sm font-medium text-ink-700">
-              {t('account.changePassword.current', 'Current password')}
-            </Label>
-            <Input autoComplete="current-password" className={INPUT} />
-            <FieldError className="text-xs text-red-600" />
-          </TextField>
-          <TextField
+            autoComplete="current-password"
+            label={t('account.changePassword.current', 'Current password')}
+          />
+          <Field
             name="newPassword"
             type="password"
             isRequired
             minLength={12}
-            className="flex flex-col gap-1.5"
-          >
-            <Label className="text-sm font-medium text-ink-700">
-              {t('account.changePassword.new', 'New password')}
-            </Label>
-            <Input autoComplete="new-password" className={INPUT} />
-            <FieldError className="text-xs text-red-600" />
-          </TextField>
-          {error && (
-            <p
-              role="alert"
-              className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
-            >
-              {error}
-            </p>
-          )}
-          <Button type="submit" isDisabled={pending} className={BTN}>
+            autoComplete="new-password"
+            label={t('account.changePassword.new', 'New password')}
+          />
+          {error && <Banner tone="error">{error}</Banner>}
+          <Button type="submit" isDisabled={pending}>
             {pending
               ? t('account.changePassword.submitting', 'Saving…')
               : t('account.changePassword.submit', 'Change password')}

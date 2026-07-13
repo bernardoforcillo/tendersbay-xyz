@@ -5,6 +5,48 @@
     "accept": "Acceptera",
     "reject": "Avvisa"
   },
+  "account": {
+    "settings": {
+      "title": "Kontoinställningar"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Uppdatera ditt visningsnamn och hur andra ser dig.",
+      "displayName": "Visningsnamn",
+      "saved": "Sparat!",
+      "submitting": "Sparar…",
+      "submit": "Spara ändringar"
+    },
+    "changeEmail": {
+      "checkEmail": "Kontrollera din nya e-post",
+      "title": "Byt e-post",
+      "prompt": "Vi har skickat en verifieringslänk till din nya adress. Klicka på den för att bekräfta ändringen.",
+      "description": "Vi skickar en verifieringslänk till den nya adressen.",
+      "hint": "Din nuvarande e-post förblir aktiv tills du verifierar den nya.",
+      "newEmail": "Ny e-post",
+      "password": "Nuvarande lösenord",
+      "submitting": "Sparar…",
+      "submit": "Byt e-post"
+    },
+    "changePassword": {
+      "successTitle": "Lösenordet har uppdaterats",
+      "title": "Byt lösenord",
+      "successBody": "Ditt lösenord har ändrats. Logga in igen på andra enheter.",
+      "description": "Det nya lösenordet måste vara minst 12 tecken långt.",
+      "successHint": "Andra aktiva sessioner förblir giltiga tills de går ut.",
+      "current": "Nuvarande lösenord",
+      "new": "Nytt lösenord",
+      "submitting": "Sparar…",
+      "submit": "Byt lösenord"
+    },
+    "delete": {
+      "title": "Ta bort konto",
+      "description": "Denna åtgärd är permanent och kan inte ångras. All din data, dina arbetsytor och inställningar tas bort permanent.",
+      "password": "Bekräfta med ditt lösenord",
+      "submitting": "Tar bort…",
+      "submit": "Ta bort mitt konto"
+    }
+  },
   "landing": {
     "search": {
       "label": "Sök",

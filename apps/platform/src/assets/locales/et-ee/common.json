@@ -5,6 +5,48 @@
     "accept": "Nõustu",
     "reject": "Keeldu"
   },
+  "account": {
+    "settings": {
+      "title": "Konto seaded"
+    },
+    "profile": {
+      "title": "Profiil",
+      "description": "Uuendage oma kuvatavat nime ja seda, kuidas teised teid näevad.",
+      "displayName": "Kuvatav nimi",
+      "saved": "Salvestatud!",
+      "submitting": "Salvestamine…",
+      "submit": "Salvesta muudatused"
+    },
+    "changeEmail": {
+      "checkEmail": "Kontrollige oma uut e-posti",
+      "title": "E-posti muutmine",
+      "prompt": "Saatsime kinnituslingi teie uuele aadressile. Muudatuse kinnitamiseks klõpsake sellel.",
+      "description": "Saadame kinnituslingi uuele aadressile.",
+      "hint": "Teie praegune e-post jääb aktiivseks, kuni kinnitate uue.",
+      "newEmail": "Uus e-post",
+      "password": "Praegune parool",
+      "submitting": "Salvestamine…",
+      "submit": "Muuda e-posti"
+    },
+    "changePassword": {
+      "successTitle": "Parool on uuendatud",
+      "title": "Parooli muutmine",
+      "successBody": "Teie parool on muudetud. Logige teistes seadmetes uuesti sisse.",
+      "description": "Uus parool peab olema vähemalt 12 tähemärki pikk.",
+      "successHint": "Teised aktiivsed seansid jäävad kehtima kuni nende aegumiseni.",
+      "current": "Praegune parool",
+      "new": "Uus parool",
+      "submitting": "Salvestamine…",
+      "submit": "Muuda parooli"
+    },
+    "delete": {
+      "title": "Kustuta konto",
+      "description": "See toiming on lõplik ja seda ei saa tagasi võtta. Kõik teie andmed, tööruumid ja seaded kustutatakse jäädavalt.",
+      "password": "Kinnitage oma parooliga",
+      "submitting": "Kustutamine…",
+      "submit": "Kustuta minu konto"
+    }
+  },
   "landing": {
     "search": {
       "label": "Otsi",

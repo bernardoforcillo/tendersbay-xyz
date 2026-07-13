@@ -5,6 +5,48 @@
     "accept": "Hyväksy",
     "reject": "Hylkää"
   },
+  "account": {
+    "settings": {
+      "title": "Tilin asetukset"
+    },
+    "profile": {
+      "title": "Profiili",
+      "description": "Päivitä näyttönimesi ja se, miten muut näkevät sinut.",
+      "displayName": "Näyttönimi",
+      "saved": "Tallennettu!",
+      "submitting": "Tallennetaan…",
+      "submit": "Tallenna muutokset"
+    },
+    "changeEmail": {
+      "checkEmail": "Tarkista uusi sähköpostisi",
+      "title": "Vaihda sähköposti",
+      "prompt": "Lähetimme vahvistuslinkin uuteen osoitteeseesi. Vahvista muutos napsauttamalla sitä.",
+      "description": "Lähetämme vahvistuslinkin uuteen osoitteeseen.",
+      "hint": "Nykyinen sähköpostisi pysyy aktiivisena, kunnes vahvistat uuden.",
+      "newEmail": "Uusi sähköposti",
+      "password": "Nykyinen salasana",
+      "submitting": "Tallennetaan…",
+      "submit": "Vaihda sähköposti"
+    },
+    "changePassword": {
+      "successTitle": "Salasana päivitetty",
+      "title": "Vaihda salasana",
+      "successBody": "Salasanasi on vaihdettu. Kirjaudu uudelleen muilla laitteilla.",
+      "description": "Uuden salasanan on oltava vähintään 12 merkkiä pitkä.",
+      "successHint": "Muut aktiiviset istunnot pysyvät voimassa, kunnes ne vanhenevat.",
+      "current": "Nykyinen salasana",
+      "new": "Uusi salasana",
+      "submitting": "Tallennetaan…",
+      "submit": "Vaihda salasana"
+    },
+    "delete": {
+      "title": "Poista tili",
+      "description": "Tämä toiminto on pysyvä eikä sitä voi perua. Kaikki tietosi, työtilasi ja asetuksesi poistetaan pysyvästi.",
+      "password": "Vahvista salasanallasi",
+      "submitting": "Poistetaan…",
+      "submit": "Poista tilini"
+    }
+  },
   "landing": {
     "search": {
       "label": "Hae",

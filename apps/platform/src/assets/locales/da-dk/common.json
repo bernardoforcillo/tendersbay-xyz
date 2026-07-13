@@ -5,6 +5,48 @@
     "accept": "Accepter",
     "reject": "Afvis"
   },
+  "account": {
+    "settings": {
+      "title": "Kontoindstillinger"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Opdater dit viste navn og den måde, andre ser dig på.",
+      "displayName": "Vist navn",
+      "saved": "Gemt!",
+      "submitting": "Gemmer…",
+      "submit": "Gem ændringer"
+    },
+    "changeEmail": {
+      "checkEmail": "Tjek din nye e-mail",
+      "title": "Skift e-mail",
+      "prompt": "Vi har sendt et bekræftelseslink til din nye adresse. Klik på det for at bekræfte ændringen.",
+      "description": "Vi sender et bekræftelseslink til den nye adresse.",
+      "hint": "Din nuværende e-mail forbliver aktiv, indtil du bekræfter den nye.",
+      "newEmail": "Ny e-mail",
+      "password": "Nuværende adgangskode",
+      "submitting": "Gemmer…",
+      "submit": "Skift e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Adgangskode opdateret",
+      "title": "Skift adgangskode",
+      "successBody": "Din adgangskode er blevet ændret. Log ind igen på andre enheder.",
+      "description": "Den nye adgangskode skal være mindst 12 tegn.",
+      "successHint": "Andre aktive sessioner forbliver gyldige, indtil de udløber.",
+      "current": "Nuværende adgangskode",
+      "new": "Ny adgangskode",
+      "submitting": "Gemmer…",
+      "submit": "Skift adgangskode"
+    },
+    "delete": {
+      "title": "Slet konto",
+      "description": "Denne handling er permanent og kan ikke fortrydes. Alle dine data, arbejdsområder og indstillinger bliver slettet permanent.",
+      "password": "Bekræft med din adgangskode",
+      "submitting": "Sletter…",
+      "submit": "Slet min konto"
+    }
+  },
   "landing": {
     "search": {
       "label": "Søg",
