@@ -281,8 +281,8 @@
     "results_one": "{{count}} offerta",
     "results_two": "{{count}} offerti",
     "results_few": "{{count}} offerti",
-    "results_many": "{{count}} offerti",
-    "results_other": "{{count}} offerti",
+    "results_many": "{{count}} offerta",
+    "results_other": "{{count}} offerta",
     "searching": "Qed infittxu…",
     "empty": {
       "title": "L-ebda offerta ma nstabet",
@@ -294,8 +294,8 @@
       "days_one": "{{count}} jum fadal",
       "days_two": "{{count}} jiem fadal",
       "days_few": "{{count}} jiem fadal",
-      "days_many": "{{count}} jiem fadal",
-      "days_other": "{{count}} jiem fadal",
+      "days_many": "{{count}} jum fadal",
+      "days_other": "{{count}} jum fadal",
       "today": "Tagħlaq illum",
       "expired": "Magħluqa"
     },

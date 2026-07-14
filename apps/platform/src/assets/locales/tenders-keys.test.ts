@@ -49,13 +49,19 @@ describe('tenders locale keys', () => {
 
   it.each(entries)('%s defines the required plural forms', (_path, mod) => {
     for (const stem of PLURAL_STEMS) {
-      const other = get(mod.default, `${stem}_other`);
-      expect(other, `${stem}_other`).toBeTruthy();
-      expect(other, `${stem}_other`).toContain('{{count}}');
-
-      const one = get(mod.default, `${stem}_one`);
-      if (one !== undefined) {
-        expect(one, `${stem}_one`).toBeTruthy();
+      // Every locale in this app has CLDR `one` and `other` categories.
+      for (const suffix of ['one', 'other'] as const) {
+        const form = get(mod.default, `${stem}_${suffix}`);
+        expect(form, `${stem}_${suffix}`).toBeTruthy();
+        expect(form, `${stem}_${suffix}`).toContain('{{count}}');
+      }
+      // Extra CLDR categories are optional per language, but when present
+      // they must interpolate the count too.
+      for (const suffix of ['two', 'few', 'many', 'zero'] as const) {
+        const form = get(mod.default, `${stem}_${suffix}`);
+        if (form !== undefined) {
+          expect(form, `${stem}_${suffix}`).toContain('{{count}}');
+        }
       }
     }
   });
