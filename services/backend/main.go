@@ -10,24 +10,29 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry"
 	"github.com/joho/godotenv"
 
 	agentv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
+	tenderv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
 	workspacev1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1/workspacev1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/email"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/httpapi"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/knowledgekb"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/probe"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/redis"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/config"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -129,17 +134,42 @@ func main() {
 	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
 	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc)
 
+	// Tender search service
+	tenderRepo := postgres.NewTenderRepo(db)
+
+	rateLimiter, rlErr := redis.NewRateLimiter(cfg.RedisURL)
+	if rlErr != nil {
+		slog.Error("failed to configure rate limiter", "error", rlErr)
+		os.Exit(1)
+	}
+
+	// Non-fatal: a Qdrant/Ollama outage at startup degrades tender search
+	// to filters-only rather than blocking the whole service from booting.
+	var searchKB tender.KnowledgeBase = knowledgekb.Unavailable{}
+	if kb, kbErr := knowledge.NewKnowledgeBase(ctx, cfg.QdrantURL, cfg.OllamaBaseURL, cfg.EmbeddingModel); kbErr != nil {
+		slog.WarnContext(ctx, "knowledge base unavailable, tender search degrades to filters-only", "error", kbErr)
+	} else {
+		searchKB = knowledgekb.New(kb)
+	}
+
+	tenderSvc := tender.NewService(tenderRepo, searchKB, rateLimiter, tender.Config{
+		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: time.Minute},
+		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 120, RateWindow: time.Minute},
+	})
+
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
 	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, memberRepo)
+	tenderHandler := connectapi.NewTenderHandler(tenderSvc)
 
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
 	workspacePath, workspaceRPC := workspacev1connect.NewWorkspaceServiceHandler(workspaceHandler)
 	workbenchPath, workbenchRPC := workbenchv1connect.NewWorkbenchServiceHandler(workbenchHandler)
 	agentPath, agentRPC := agentv1connect.NewAgentServiceHandler(agentHandler)
+	tenderPath, tenderRPC := tenderv1connect.NewTenderServiceHandler(tenderHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
@@ -149,6 +179,7 @@ func main() {
 	mux.Handle(workspacePath, workspaceRPC)
 	mux.Handle(workbenchPath, workbenchRPC)
 	mux.Handle(agentPath, agentRPC)
+	mux.Handle(tenderPath, tenderRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
 	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(mux))

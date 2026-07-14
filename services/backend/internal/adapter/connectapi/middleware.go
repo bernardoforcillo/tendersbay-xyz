@@ -10,6 +10,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
@@ -145,6 +146,12 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeResourceExhausted, err)
 	case errors.Is(err, agent.ErrChoiceNotPending):
 		return connect.NewError(connect.CodeFailedPrecondition, err)
+
+	// Tender domain
+	case errors.Is(err, tender.ErrInvalidFilters):
+		return connect.NewError(connect.CodeInvalidArgument, err)
+	case errors.Is(err, tender.ErrRateLimited):
+		return connect.NewError(connect.CodeResourceExhausted, err)
 
 	default:
 		return connect.NewError(connect.CodeInternal, err)
