@@ -364,3 +364,42 @@ type DBTokenUsage struct {
 	CostMultiplier int64     `drop:"cost_multiplier"`
 	CreatedAt      time.Time `drop:"created_at"`
 }
+
+// Tenders references tenders.ingested_tenders, owned and migrated by
+// services/ingestion — this service only ever reads it (never migrates,
+// never writes). Only the columns this service's search API actually
+// needs are declared; the real table has more (raw, history, version,
+// first_seen_at, last_seen_at, indexed_at, ...) that this service doesn't
+// touch.
+var (
+	Tenders             = pg.NewSchemaTable("tenders", "ingested_tenders")
+	TenderID            = pg.Add(Tenders, pg.BigInt("id").PrimaryKey())
+	TenderSource        = pg.Add(Tenders, pg.Text("source").NotNull())
+	TenderSourceRef     = pg.Add(Tenders, pg.Text("source_ref").NotNull())
+	TenderTitle         = pg.Add(Tenders, pg.Text("title").NotNull())
+	TenderBuyerName     = pg.Add(Tenders, pg.Text("buyer_name").NotNull())
+	TenderStatus        = pg.Add(Tenders, pg.Text("status").NotNull())
+	TenderProcedureType = pg.Add(Tenders, pg.Text("procedure_type").NotNull())
+	TenderCountry       = pg.Add(Tenders, pg.Text("country").NotNull())
+	TenderCPV           = pg.Add(Tenders, pg.Text("cpv").NotNull())
+	TenderValue         = pg.Add(Tenders, pg.BigInt("value")) // nullable
+	TenderCurrency      = pg.Add(Tenders, pg.Text("currency").NotNull())
+	TenderPublishedAt   = pg.Add(Tenders, pg.Timestamp("published_at", true)) // nullable
+	TenderDeadline      = pg.Add(Tenders, pg.Timestamp("deadline", true))     // nullable
+)
+
+type DBTender struct {
+	ID            int64      `drop:"id"`
+	Source        string     `drop:"source"`
+	SourceRef     string     `drop:"source_ref"`
+	Title         string     `drop:"title"`
+	BuyerName     string     `drop:"buyer_name"`
+	Status        string     `drop:"status"`
+	ProcedureType string     `drop:"procedure_type"`
+	Country       string     `drop:"country"`
+	CPV           string     `drop:"cpv"`
+	Value         *int64     `drop:"value"`
+	Currency      string     `drop:"currency"`
+	PublishedAt   *time.Time `drop:"published_at"`
+	Deadline      *time.Time `drop:"deadline"`
+}
