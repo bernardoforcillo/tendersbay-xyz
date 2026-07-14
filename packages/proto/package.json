@@ -13,7 +13,9 @@
     "./workbench/v1/workbench_pb": "./src/gen/workbench/v1/workbench_pb.js",
     "./workbench/v1/workbench_connect": "./src/gen/workbench/v1/workbench_connect.js",
     "./agent/v1/agent_pb": "./src/gen/agent/v1/agent_pb.js",
-    "./agent/v1/agent_connect": "./src/gen/agent/v1/agent_connect.js"
+    "./agent/v1/agent_connect": "./src/gen/agent/v1/agent_connect.js",
+    "./tender/v1/tender_pb": "./src/gen/tender/v1/tender_pb.js",
+    "./tender/v1/tender_connect": "./src/gen/tender/v1/tender_connect.js"
   },
   "peerDependencies": {
     "@bufbuild/protobuf": "^2.0.0",
