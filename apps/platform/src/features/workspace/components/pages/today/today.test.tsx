@@ -31,7 +31,9 @@ vi.mock('~/features/account/hooks/use-workspace-chats', () => ({
 }));
 vi.mock('~/features/account/components/organisms', () => ({
   PageHeader: () => <header data-testid="page-header" />,
-  SearchDock: () => <div data-testid="search-dock" />,
+  SearchDock: ({ onPress }: { onPress?: () => void }) => (
+    <button type="button" data-testid="search-dock" onClick={onPress} />
+  ),
 }));
 
 import { useChatStore } from '~/store/chat';
@@ -59,6 +61,14 @@ describe('WorkspaceTodayPage', () => {
     expect(useChatStore.getState().messages).toEqual([]);
     expect(useChatStore.getState().pendingChoice).toBeNull();
     expect(useChatStore.getState().currentChatId).toBe('c1');
+    expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
+  });
+
+  it('pressing the search dock navigates to Explore', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const user = userEvent.setup();
+    render(<WorkspaceTodayPage />);
+    await user.click(screen.getByTestId('search-dock'));
     expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
   });
 });
