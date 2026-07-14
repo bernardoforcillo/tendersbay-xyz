@@ -10,11 +10,13 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry"
 	"github.com/joho/godotenv"
 
 	agentv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
+	tenderv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
 	workspacev1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1/workspacev1connect"
@@ -23,11 +25,13 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/httpapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/probe"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/redis"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/config"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -129,6 +133,40 @@ func main() {
 	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
 	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc)
 
+	// Tender search — Qdrant/Ollama/Redis unreachable at startup is logged,
+	// not fatal: search degrades to Postgres-only filtering via
+	// knowledgeBaseAdapter's nil handling (for Qdrant/Ollama) or fails
+	// rate-limit checks via unavailableRateLimiter (for Redis) — neither
+	// blocks the whole service from starting over an optional dependency.
+	kb, kbErr := knowledge.NewKnowledgeBase(ctx, cfg.QdrantURL, cfg.OllamaBaseURL, cfg.EmbeddingModel)
+	if kbErr != nil {
+		slog.Warn("failed to connect to knowledge base, semantic search will be degraded", "error", kbErr)
+	}
+
+	var rl tender.RateLimiter
+	rateLimiter, rlErr := redis.NewRateLimiter(cfg.RedisURL)
+	if rlErr != nil {
+		slog.Warn("failed to connect to redis, search will be rate-limited to zero", "error", rlErr)
+		rl = unavailableRateLimiter{err: rlErr}
+	} else {
+		rl = rateLimiter
+	}
+	if rateLimiter != nil {
+		defer rateLimiter.Close()
+	}
+
+	tenderRepo := postgres.NewTenderRepo(db)
+	tenderSvc := tender.NewService(
+		tenderRepo,
+		knowledgeBaseAdapter{kb},
+		rl,
+		tender.Config{
+			AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
+			AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+		},
+	)
+	tenderHandler := connectapi.NewTenderHandler(tenderSvc)
+
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc)
@@ -140,6 +178,7 @@ func main() {
 	workspacePath, workspaceRPC := workspacev1connect.NewWorkspaceServiceHandler(workspaceHandler)
 	workbenchPath, workbenchRPC := workbenchv1connect.NewWorkbenchServiceHandler(workbenchHandler)
 	agentPath, agentRPC := agentv1connect.NewAgentServiceHandler(agentHandler)
+	tenderPath, tenderRPC := tenderv1connect.NewTenderServiceHandler(tenderHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
@@ -149,9 +188,10 @@ func main() {
 	mux.Handle(workspacePath, workspaceRPC)
 	mux.Handle(workbenchPath, workbenchRPC)
 	mux.Handle(agentPath, agentRPC)
+	mux.Handle(tenderPath, tenderRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
-	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(mux))
+	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(connectapi.ClientIPMiddleware(mux)))
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.Port,
@@ -182,4 +222,39 @@ func main() {
 			os.Exit(1)
 		}
 	}
+}
+
+// knowledgeBaseAdapter converts *knowledge.KnowledgeBase's
+// []knowledge.SearchResult into the []tender.ScoredChunk shape
+// tender.KnowledgeBase expects, and turns a nil KnowledgeBase (Qdrant/Ollama
+// unreachable at startup) into a clean error instead of a nil-pointer panic
+// — tender.Service.Search already falls back to the filters-only path
+// whenever the knowledge base returns an error.
+type knowledgeBaseAdapter struct {
+	kb *knowledge.KnowledgeBase
+}
+
+func (a knowledgeBaseAdapter) SearchWithScores(ctx context.Context, query string, limit int) ([]tender.ScoredChunk, error) {
+	if a.kb == nil {
+		return nil, errors.New("knowledge base unavailable")
+	}
+	results, err := a.kb.SearchWithScores(ctx, query, limit)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]tender.ScoredChunk, len(results))
+	for i, r := range results {
+		out[i] = tender.ScoredChunk{DocID: r.DocID, Score: r.Score}
+	}
+	return out, nil
+}
+
+// unavailableRateLimiter denies every request with an explanatory error,
+// used only when redis.NewRateLimiter itself failed (malformed REDIS_URL)
+// — an actually-unreachable-but-parseable Redis is handled by
+// *redis.RateLimiter.Allow's own error return instead.
+type unavailableRateLimiter struct{ err error }
+
+func (u unavailableRateLimiter) Allow(context.Context, string, int64, time.Duration) (bool, error) {
+	return false, u.err
 }
