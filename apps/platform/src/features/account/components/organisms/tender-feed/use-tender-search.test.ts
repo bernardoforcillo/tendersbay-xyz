@@ -115,6 +115,29 @@ describe('useTenderSearch', () => {
     expect(result.current.hasMore).toBe(false);
   });
 
+  it('ignores loadMore while a request is in flight, so a pending search keeps its page', async () => {
+    const deferred = createDeferred<{ results: FakeResult[]; hasMore: boolean }>();
+    searchTenders.mockImplementationOnce(() => deferred.promise);
+
+    const { result } = renderHook(() => useTenderSearch());
+
+    let searchPromise!: Promise<void>;
+    act(() => {
+      searchPromise = result.current.search('roads');
+    });
+    await act(async () => {
+      await result.current.loadMore();
+    });
+    expect(searchTenders).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      deferred.resolve({ results: [fakeResult('1')], hasMore: true });
+      await searchPromise;
+    });
+    expect(result.current.results).toEqual([fakeResult('1')]);
+    expect(result.current.hasMore).toBe(true);
+  });
+
   it('sets an error message when search rejects', async () => {
     searchTenders.mockRejectedValueOnce(new Error('network down'));
     const { result } = renderHook(() => useTenderSearch());

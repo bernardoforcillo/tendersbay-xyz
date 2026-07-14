@@ -30,9 +30,11 @@ export function useTenderSearch(): {
   const queryRef = useRef('');
   const offsetRef = useRef(0);
   const requestIdRef = useRef(0);
+  const inFlightRef = useRef(false);
 
   const search = useCallback(async (query: string) => {
     const requestId = ++requestIdRef.current;
+    inFlightRef.current = true;
     queryRef.current = query;
     offsetRef.current = 0;
     setLoading(true);
@@ -48,12 +50,20 @@ export function useTenderSearch(): {
       if (requestIdRef.current !== requestId) return;
       setError(errorMessage(e));
     } finally {
-      if (requestIdRef.current === requestId) setLoading(false);
+      if (requestIdRef.current === requestId) {
+        inFlightRef.current = false;
+        setLoading(false);
+      }
     }
   }, []);
 
   const loadMore = useCallback(async () => {
+    // A loadMore racing an in-flight request would page from a stale offset
+    // and could win the id race against a pending search, dropping its
+    // page-1 results — no-op instead (a search may still preempt loadMore).
+    if (inFlightRef.current) return;
     const requestId = ++requestIdRef.current;
+    inFlightRef.current = true;
     const nextOffset = offsetRef.current + PAGE_SIZE;
     setLoading(true);
 
@@ -72,7 +82,10 @@ export function useTenderSearch(): {
       if (requestIdRef.current !== requestId) return;
       setError(errorMessage(e));
     } finally {
-      if (requestIdRef.current === requestId) setLoading(false);
+      if (requestIdRef.current === requestId) {
+        inFlightRef.current = false;
+        setLoading(false);
+      }
     }
   }, []);
 
