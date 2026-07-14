@@ -10,6 +10,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
@@ -22,6 +23,35 @@ const userIDKey contextKey = "user_id"
 func UserIDFromContext(ctx context.Context) (string, bool) {
 	id, ok := ctx.Value(userIDKey).(string)
 	return id, ok && id != ""
+}
+
+const clientIPKey contextKey = "client_ip"
+
+// ClientIPFromContext extracts the client IP injected by ClientIPMiddleware.
+func ClientIPFromContext(ctx context.Context) string {
+	ip, _ := ctx.Value(clientIPKey).(string)
+	return ip
+}
+
+// ClientIPMiddleware injects the caller's real IP (from X-Forwarded-For,
+// set by Traefik at the ingress edge — trustworthy here because external
+// clients reach this service only through Traefik, never directly) into
+// the request context, for handlers that rate-limit by IP. Falls back to
+// r.RemoteAddr (host:port) if the header is absent, e.g. local dev with
+// no proxy in front of the server.
+func ClientIPMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ip := r.RemoteAddr
+		if fwd := r.Header.Get("X-Forwarded-For"); fwd != "" {
+			if i := strings.Index(fwd, ","); i != -1 {
+				ip = strings.TrimSpace(fwd[:i])
+			} else {
+				ip = strings.TrimSpace(fwd)
+			}
+		}
+		ctx := context.WithValue(r.Context(), clientIPKey, ip)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }
 
 // JWTMiddleware parses the Bearer token and injects user_id into the request context.
@@ -145,6 +175,12 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeResourceExhausted, err)
 	case errors.Is(err, agent.ErrChoiceNotPending):
 		return connect.NewError(connect.CodeFailedPrecondition, err)
+
+	// ── tender ──
+	case errors.Is(err, tender.ErrRateLimited):
+		return connect.NewError(connect.CodeResourceExhausted, err)
+	case errors.Is(err, tender.ErrInvalidFilters):
+		return connect.NewError(connect.CodeInvalidArgument, err)
 
 	default:
 		return connect.NewError(connect.CodeInternal, err)
