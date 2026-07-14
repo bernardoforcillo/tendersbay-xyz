@@ -108,6 +108,41 @@ func TestFetchSince_ContextCancelled(t *testing.T) {
 	}
 }
 
+func TestFetchSince_StopsOnEmptyPageDespiteToken(t *testing.T) {
+	// Real TED behavior (observed live 2026-07-14): ITERATION mode never
+	// returns a null iterationNextToken — the end-of-results signal is an
+	// empty notices page (still carrying a token), and iterating past it
+	// wraps back around to the first page.
+	calls := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		calls++
+		w.Header().Set("Content-Type", "application/json")
+		switch calls {
+		case 1:
+			_, _ = w.Write([]byte(`{"notices":[{"publication-number":"1-2026","procedure-identifier":"proc-1"}],"totalNoticeCount":2,"iterationNextToken":"tok-1"}`))
+		case 2:
+			_, _ = w.Write([]byte(`{"notices":[{"publication-number":"2-2026","procedure-identifier":"proc-2"}],"totalNoticeCount":2,"iterationNextToken":"tok-2"}`))
+		case 3:
+			_, _ = w.Write([]byte(`{"notices":[],"totalNoticeCount":2,"iterationNextToken":"tok-3"}`))
+		default: // wrap-around: the iteration restarts from the first page
+			_, _ = w.Write([]byte(`{"notices":[{"publication-number":"1-2026","procedure-identifier":"proc-1"}],"totalNoticeCount":2,"iterationNextToken":"tok-4"}`))
+		}
+	}))
+	defer srv.Close()
+
+	c := tedapi.NewWithURL(srv.URL)
+	notices, err := c.FetchSince(context.Background(), time.Now())
+	if err != nil {
+		t.Fatalf("FetchSince: %v", err)
+	}
+	if calls != 3 {
+		t.Fatalf("server got %d calls, want 3 (stop at the empty page)", calls)
+	}
+	if len(notices) != 2 {
+		t.Fatalf("len(notices) = %d, want 2", len(notices))
+	}
+}
+
 func TestFetchSince_PaginationLoopSafetyCap(t *testing.T) {
 	calls := 0
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
