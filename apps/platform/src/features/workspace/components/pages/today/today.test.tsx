@@ -1,7 +1,10 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { navigateMock } = vi.hoisted(() => ({ navigateMock: vi.fn() }));
+const { navigateMock, recommendedMock } = vi.hoisted(() => ({
+  navigateMock: vi.fn(),
+  recommendedMock: vi.fn(),
+}));
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigateMock,
   useParams: () => ({}),
@@ -34,12 +37,24 @@ vi.mock('~/features/account/components/organisms', () => ({
   SearchDock: ({ onPress }: { onPress?: () => void }) => (
     <button type="button" data-testid="search-dock" onClick={onPress} />
   ),
+  TenderResultCard: ({ tender }: { tender: { id: string; title: string } }) => (
+    <article data-testid="tender-card">{tender.title}</article>
+  ),
+}));
+vi.mock('./use-recommended-tenders', () => ({
+  useRecommendedTenders: () => recommendedMock(),
 }));
 
 import { useChatStore } from '~/store/chat';
 import { WorkspaceTodayPage } from './index';
 
 describe('WorkspaceTodayPage', () => {
+  beforeEach(() => {
+    navigateMock.mockReset();
+    recommendedMock.mockReset();
+    recommendedMock.mockReturnValue({ tenders: [], loading: false, error: null });
+  });
+
   it('greets, lists resumable chats, teaches Explore, keeps the dock', () => {
     render(<WorkspaceTodayPage />);
     expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/Good/);
@@ -69,6 +84,43 @@ describe('WorkspaceTodayPage', () => {
     const user = userEvent.setup();
     render(<WorkspaceTodayPage />);
     await user.click(screen.getByTestId('search-dock'));
+    expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
+  });
+
+  it('shows the recommended tenders and the see-all link, hiding the Explore teaser', () => {
+    recommendedMock.mockReturnValue({
+      tenders: [
+        { id: 't1', title: 'Cloud migration framework' },
+        { id: 't2', title: 'Road resurfacing works' },
+      ],
+      loading: false,
+      error: null,
+    });
+    render(<WorkspaceTodayPage />);
+    expect(screen.getByText('Recommended for you')).toBeInTheDocument();
+    expect(screen.getByText('All in Explore →')).toBeInTheDocument();
+    expect(screen.getAllByTestId('tender-card')).toHaveLength(2);
+    expect(screen.queryByText('Find your next tender')).not.toBeInTheDocument();
+  });
+
+  it('falls back to the Explore teaser and hides the recommended section with no tenders', () => {
+    recommendedMock.mockReturnValue({ tenders: [], loading: false, error: null });
+    render(<WorkspaceTodayPage />);
+    expect(screen.getByText('Find your next tender')).toBeInTheDocument();
+    expect(screen.queryByText('Recommended for you')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('tender-card')).not.toBeInTheDocument();
+  });
+
+  it('pressing see-all navigates to Explore', async () => {
+    recommendedMock.mockReturnValue({
+      tenders: [{ id: 't1', title: 'Cloud migration framework' }],
+      loading: false,
+      error: null,
+    });
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const user = userEvent.setup();
+    render(<WorkspaceTodayPage />);
+    await user.click(screen.getByText('All in Explore →'));
     expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
   });
 });
