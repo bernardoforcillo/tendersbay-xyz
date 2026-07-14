@@ -277,7 +277,38 @@
       "logout": "Esci"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} gara",
+    "results_other": "{{count}} gare",
+    "searching": "Ricerca in corso…",
+    "empty": {
+      "title": "Nessuna gara trovata",
+      "description": "Prova con una ricerca più ampia o meno filtri."
+    },
+    "error": "La ricerca non è disponibile al momento — riprova tra poco.",
+    "loadMore": "Carica altri",
+    "deadline": {
+      "days_one": "{{count}} giorno rimanente",
+      "days_other": "{{count}} giorni rimanenti",
+      "today": "Scade oggi",
+      "expired": "Chiusa"
+    },
+    "value": {
+      "unknown": "Valore non divulgato"
+    },
+    "status": {
+      "open": "Aperta",
+      "awarded": "Aggiudicata",
+      "cancelled": "Annullata",
+      "closed": "Chiusa",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Consigliate per te",
+      "seeAll": "Tutto in Esplora →"
+    },
     "greeting": {
       "morning": "Buongiorno.",
       "afternoon": "Buon pomeriggio.",

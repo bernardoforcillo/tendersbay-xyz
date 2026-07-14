@@ -277,7 +277,40 @@
       "logout": "Odhlásit se"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} zakázka",
+    "results_few": "{{count}} zakázky",
+    "results_other": "{{count}} zakázek",
+    "searching": "Vyhledávání…",
+    "empty": {
+      "title": "Nenalezeny žádné zakázky",
+      "description": "Zkuste širší dotaz nebo méně filtrů."
+    },
+    "error": "Vyhledávání je momentálně nedostupné — zkuste to za chvíli znovu.",
+    "loadMore": "Načíst další",
+    "deadline": {
+      "days_one": "{{count}} den zbývá",
+      "days_few": "{{count}} dny zbývají",
+      "days_other": "{{count}} dní zbývá",
+      "today": "Uzávěrka dnes",
+      "expired": "Uzavřeno"
+    },
+    "value": {
+      "unknown": "Hodnota nezveřejněna"
+    },
+    "status": {
+      "open": "Otevřená",
+      "awarded": "Zadaná",
+      "cancelled": "Zrušená",
+      "closed": "Uzavřená",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Doporučeno pro vás",
+      "seeAll": "Vše v sekci Prozkoumat →"
+    },
     "greeting": {
       "morning": "Dobré ráno.",
       "afternoon": "Dobré odpoledne.",

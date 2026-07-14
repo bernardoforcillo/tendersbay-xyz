@@ -277,7 +277,38 @@
       "logout": "Logga ut"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} upphandling",
+    "results_other": "{{count}} upphandlingar",
+    "searching": "Söker…",
+    "empty": {
+      "title": "Inga upphandlingar hittades",
+      "description": "Prova en bredare sökning eller färre filter."
+    },
+    "error": "Sökningen är inte tillgänglig just nu — försök igen om en stund.",
+    "loadMore": "Ladda fler",
+    "deadline": {
+      "days_one": "{{count}} dag kvar",
+      "days_other": "{{count}} dagar kvar",
+      "today": "Stänger idag",
+      "expired": "Stängd"
+    },
+    "value": {
+      "unknown": "Värde ej redovisat"
+    },
+    "status": {
+      "open": "Öppen",
+      "awarded": "Tilldelad",
+      "cancelled": "Avbruten",
+      "closed": "Stängd",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Rekommenderat för dig",
+      "seeAll": "Allt i Utforska →"
+    },
     "greeting": {
       "morning": "God morgon.",
       "afternoon": "God eftermiddag.",

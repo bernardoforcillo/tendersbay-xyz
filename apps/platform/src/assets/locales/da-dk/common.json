@@ -277,7 +277,38 @@
       "logout": "Log ud"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} udbud",
+    "results_other": "{{count}} udbud",
+    "searching": "Søger…",
+    "empty": {
+      "title": "Ingen udbud fundet",
+      "description": "Prøv en bredere søgning eller færre filtre."
+    },
+    "error": "Søgning er ikke tilgængelig lige nu — prøv igen om et øjeblik.",
+    "loadMore": "Indlæs flere",
+    "deadline": {
+      "days_one": "{{count}} dag tilbage",
+      "days_other": "{{count}} dage tilbage",
+      "today": "Udløber i dag",
+      "expired": "Lukket"
+    },
+    "value": {
+      "unknown": "Værdi ikke oplyst"
+    },
+    "status": {
+      "open": "Åbent",
+      "awarded": "Tildelt",
+      "cancelled": "Annulleret",
+      "closed": "Lukket",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Anbefalet til dig",
+      "seeAll": "Alt i Udforsk →"
+    },
     "greeting": {
       "morning": "Godmorgen.",
       "afternoon": "God eftermiddag.",

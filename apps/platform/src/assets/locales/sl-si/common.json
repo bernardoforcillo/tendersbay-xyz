@@ -277,7 +277,42 @@
       "logout": "Odjava"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} razpis",
+    "results_two": "{{count}} razpisa",
+    "results_few": "{{count}} razpisi",
+    "results_other": "{{count}} razpisov",
+    "searching": "Iskanje…",
+    "empty": {
+      "title": "Ni najdenih razpisov",
+      "description": "Poskusite širše poizvedbo ali manj filtrov."
+    },
+    "error": "Iskanje trenutno ni na voljo — poskusite znova čez trenutek.",
+    "loadMore": "Naloži več",
+    "deadline": {
+      "days_one": "{{count}} dan preostane",
+      "days_two": "{{count}} dneva preostaneta",
+      "days_few": "{{count}} dnevi preostanejo",
+      "days_other": "{{count}} dni preostane",
+      "today": "Zapre se danes",
+      "expired": "Zaprto"
+    },
+    "value": {
+      "unknown": "Vrednost ni razkrita"
+    },
+    "status": {
+      "open": "Odprt",
+      "awarded": "Oddan",
+      "cancelled": "Preklican",
+      "closed": "Zaprt",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Priporočeno za vas",
+      "seeAll": "Vse v razdelku Razišči →"
+    },
     "greeting": {
       "morning": "Dobro jutro.",
       "afternoon": "Dober dan.",

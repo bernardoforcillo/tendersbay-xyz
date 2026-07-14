@@ -277,7 +277,38 @@
       "logout": "Cerrar sesión"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} licitación",
+    "results_other": "{{count}} licitaciones",
+    "searching": "Buscando…",
+    "empty": {
+      "title": "No se encontraron licitaciones",
+      "description": "Prueba con una búsqueda más amplia o menos filtros."
+    },
+    "error": "La búsqueda no está disponible en este momento — inténtalo de nuevo en un momento.",
+    "loadMore": "Cargar más",
+    "deadline": {
+      "days_one": "{{count}} día restante",
+      "days_other": "{{count}} días restantes",
+      "today": "Cierra hoy",
+      "expired": "Cerrada"
+    },
+    "value": {
+      "unknown": "Valor no divulgado"
+    },
+    "status": {
+      "open": "Abierta",
+      "awarded": "Adjudicada",
+      "cancelled": "Cancelada",
+      "closed": "Cerrada",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Recomendadas para ti",
+      "seeAll": "Todo en Explorar →"
+    },
     "greeting": {
       "morning": "Buenos días.",
       "afternoon": "Buenas tardes.",

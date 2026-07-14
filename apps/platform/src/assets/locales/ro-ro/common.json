@@ -277,7 +277,40 @@
       "logout": "Deconectare"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} licitație",
+    "results_few": "{{count}} licitații",
+    "results_other": "{{count}} de licitații",
+    "searching": "Se caută…",
+    "empty": {
+      "title": "Nu s-au găsit licitații",
+      "description": "Încercați o căutare mai amplă sau mai puține filtre."
+    },
+    "error": "Căutarea nu este disponibilă momentan — încercați din nou peste puțin timp.",
+    "loadMore": "Încarcă mai multe",
+    "deadline": {
+      "days_one": "{{count}} zi rămasă",
+      "days_few": "{{count}} zile rămase",
+      "days_other": "{{count}} de zile rămase",
+      "today": "Se închide astăzi",
+      "expired": "Închisă"
+    },
+    "value": {
+      "unknown": "Valoare nedivulgată"
+    },
+    "status": {
+      "open": "Deschisă",
+      "awarded": "Atribuită",
+      "cancelled": "Anulată",
+      "closed": "Închisă",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Recomandate pentru dumneavoastră",
+      "seeAll": "Toate în secțiunea Explorează →"
+    },
     "greeting": {
       "morning": "Bună dimineața.",
       "afternoon": "Bună ziua.",

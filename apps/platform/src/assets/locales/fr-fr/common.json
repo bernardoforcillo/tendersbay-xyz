@@ -277,7 +277,38 @@
       "logout": "Déconnexion"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} marché",
+    "results_other": "{{count}} marchés",
+    "searching": "Recherche en cours…",
+    "empty": {
+      "title": "Aucun marché trouvé",
+      "description": "Essayez une recherche plus large ou moins de filtres."
+    },
+    "error": "La recherche est indisponible pour le moment — réessayez dans un instant.",
+    "loadMore": "Charger plus",
+    "deadline": {
+      "days_one": "{{count}} jour restant",
+      "days_other": "{{count}} jours restants",
+      "today": "Clôture aujourd'hui",
+      "expired": "Clôturé"
+    },
+    "value": {
+      "unknown": "Valeur non communiquée"
+    },
+    "status": {
+      "open": "Ouvert",
+      "awarded": "Attribué",
+      "cancelled": "Annulé",
+      "closed": "Clôturé",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Recommandés pour vous",
+      "seeAll": "Tout dans Explorer →"
+    },
     "greeting": {
       "morning": "Bonjour.",
       "afternoon": "Bon après-midi.",

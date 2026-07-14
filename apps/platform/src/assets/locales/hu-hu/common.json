@@ -281,7 +281,38 @@
       "logout": "Kijelentkezés"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} pályázat",
+    "results_other": "{{count}} pályázat",
+    "searching": "Keresés…",
+    "empty": {
+      "title": "Nem található pályázat",
+      "description": "Próbáljon tágabb keresést vagy kevesebb szűrőt."
+    },
+    "error": "A keresés jelenleg nem érhető el — próbálja újra egy pillanat múlva.",
+    "loadMore": "Továbbiak betöltése",
+    "deadline": {
+      "days_one": "{{count}} nap van hátra",
+      "days_other": "{{count}} nap van hátra",
+      "today": "Ma zárul",
+      "expired": "Lezárva"
+    },
+    "value": {
+      "unknown": "Érték nincs közzétéve"
+    },
+    "status": {
+      "open": "Nyitott",
+      "awarded": "Odaítélve",
+      "cancelled": "Törölve",
+      "closed": "Lezárva",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Önnek ajánlott",
+      "seeAll": "Minden a Felfedezésben →"
+    },
     "greeting": {
       "morning": "Jó reggelt.",
       "afternoon": "Jó napot.",

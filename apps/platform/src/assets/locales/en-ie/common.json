@@ -277,7 +277,38 @@
       "logout": "Log out"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} tender",
+    "results_other": "{{count}} tenders",
+    "searching": "Searching…",
+    "empty": {
+      "title": "No tenders found",
+      "description": "Try a broader query or fewer filters."
+    },
+    "error": "Search is unavailable right now — try again in a moment.",
+    "loadMore": "Load more",
+    "deadline": {
+      "days_one": "{{count}} day left",
+      "days_other": "{{count}} days left",
+      "today": "Closes today",
+      "expired": "Closed"
+    },
+    "value": {
+      "unknown": "Value undisclosed"
+    },
+    "status": {
+      "open": "Open",
+      "awarded": "Awarded",
+      "cancelled": "Cancelled",
+      "closed": "Closed",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Recommended for you",
+      "seeAll": "All in Explore →"
+    },
     "greeting": {
       "morning": "Good morning.",
       "afternoon": "Good afternoon.",
