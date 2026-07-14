@@ -120,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — European tenders, awarded by your AI agents",
-      "description": "AI agents that hunt down the right European public tenders, demolish the paperwork, and walk your SME all the way to the award."
+      "title": "tendersbay — EU public tenders, awarded by your AI agents",
+      "description": "AI agents that hunt down the right public tenders across Europe, demolish the paperwork, and walk your SME from the first tender opportunity all the way to the award."
     },
     "nav": {
       "problem": "The cost",
@@ -145,7 +145,7 @@
         },
         {
           "title": "Drowning in paperwork",
-          "body": "Specs, certificates, DGUE, deadlines. Miss one line and weeks of work hit the bin."
+          "body": "Specs, certificates, ESPD, deadlines. Miss one line and weeks of work hit the bin."
         },
         {
           "title": "No bid office, no shot",
@@ -162,7 +162,7 @@
         },
         {
           "title": "Prepare",
-          "body": "Requirements, certificates, DGUE, deadlines: extracted, cross-checked, assembled. The paperwork that broke you, handled."
+          "body": "Requirements, certificates, ESPD, deadlines: extracted, cross-checked, assembled. The paperwork that broke you, handled."
         },
         {
           "title": "Win",
@@ -175,7 +175,7 @@
       "items": [
         {
           "title": "You run the bids",
-          "body": "Midnight, another DGUE by hand. Hand the documents to the agents. Spend your hours on the offer that actually wins."
+          "body": "Midnight, another ESPD by hand. Hand the documents to the agents. Spend your hours on the offer that actually wins."
         },
         {
           "title": "You own the number",

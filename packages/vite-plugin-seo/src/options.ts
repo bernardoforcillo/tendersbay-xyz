@@ -8,7 +8,14 @@ export interface SeoOptions {
   routeMeta?: Record<string, { changefreq?: string; priority?: number }>;
   lastmod?: boolean | string;
   siteName: string;
+  /** Default-locale page title for og:title/twitter:title; falls back to siteName. */
+  title?: string;
   description: string;
+  /**
+   * Per-locale <title>/description overrides. When set, the plugin re-emits the
+   * built index.html as dist/<locale>/index.html with localized head tags.
+   */
+  localeMeta?: Record<string, { title: string; description: string }>;
   ogImage?: string;
   twitterSite?: string;
   themeColor?: string;

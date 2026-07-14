@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
@@ -5,6 +6,27 @@ import { seo } from '@tendersbay/vite-plugin-seo';
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from './src/i18n/locales';
+
+// Per-locale <title>/description for the seo plugin's dist/<locale>/index.html
+// emission. Read with fs at config time (not imported as modules — config-time
+// module resolution is fragile for raw-TS/JSON workspace imports).
+const localeMeta = Object.fromEntries(
+  SUPPORTED_LOCALES.map((locale) => {
+    const file = fileURLToPath(
+      new URL(`./src/assets/locales/${locale}/common.json`, import.meta.url),
+    );
+    const meta = JSON.parse(readFileSync(file, 'utf8')).landing?.meta;
+    if (!meta?.title || !meta?.description) {
+      throw new Error(`${locale}/common.json is missing landing.meta.title/description`);
+    }
+    return [locale, { title: meta.title as string, description: meta.description as string }];
+  }),
+);
+
+const defaultMeta = localeMeta[DEFAULT_LOCALE];
+if (!defaultMeta) {
+  throw new Error(`default locale ${DEFAULT_LOCALE} has no landing.meta entry`);
+}
 
 export default defineConfig({
   plugins: [
@@ -16,8 +38,9 @@ export default defineConfig({
       locales: SUPPORTED_LOCALES,
       defaultLocale: DEFAULT_LOCALE,
       siteName: 'tendersbay',
-      description:
-        'AI agents that find, prepare, and help you win EU public tenders — across all 24 official EU languages.',
+      title: defaultMeta.title,
+      description: defaultMeta.description,
+      localeMeta,
       themeColor: '#0f172a',
       organization: {
         name: 'tendersbay',

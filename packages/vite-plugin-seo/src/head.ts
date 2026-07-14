@@ -3,6 +3,8 @@ import type { HtmlTagDescriptor } from 'vite';
 export interface HeadOptions {
   hostname: string;
   siteName: string;
+  /** Page title for og:title/twitter:title; falls back to siteName when absent. */
+  title?: string;
   description: string;
   ogImage?: string;
   twitterSite?: string;
@@ -31,14 +33,15 @@ export function headTags(options: HeadOptions): HtmlTagDescriptor[] {
     injectTo: 'head',
   });
   const image = options.ogImage ? absolutize(options.hostname, options.ogImage) : undefined;
+  const title = options.title ?? options.siteName;
   const tags: HtmlTagDescriptor[] = [
     meta({ name: 'description', content: options.description }),
     meta({ property: 'og:type', content: 'website' }),
     meta({ property: 'og:site_name', content: options.siteName }),
-    meta({ property: 'og:title', content: options.siteName }),
+    meta({ property: 'og:title', content: title }),
     meta({ property: 'og:description', content: options.description }),
     meta({ name: 'twitter:card', content: 'summary_large_image' }),
-    meta({ name: 'twitter:title', content: options.siteName }),
+    meta({ name: 'twitter:title', content: title }),
     meta({ name: 'twitter:description', content: options.description }),
   ];
   if (image) {

@@ -15,14 +15,18 @@ import (
 )
 
 // New returns an http.Handler that serves static files from fsys. Requests
-// for existing files are served as-is. A request for a path that does not
-// exist falls back to index.html when it has no file extension (so client-side
-// SPA routes resolve); a missing path that looks like an asset returns 404.
+// for existing files are served as-is. A request whose first path segment is a
+// locale with a prepared <locale>/index.html (emitted per locale by the seo
+// plugin) serves that locale's index, including for extensionless SPA paths
+// below it. Any other path that does not exist falls back to the root
+// index.html when it has no file extension (so client-side SPA routes
+// resolve); a missing path that looks like an asset returns 404.
 func New(fsys fs.FS) http.Handler {
-	index, err := indexHTML(fsys)
+	index, err := indexHTML(fsys, "index.html")
 	if err != nil {
 		slog.Error("failed to prepare index.html", "error", err)
 	}
+	locales := localeIndexes(fsys)
 
 	fileServer := http.FileServer(http.FS(fsys))
 
@@ -38,6 +42,16 @@ func New(fsys fs.FS) http.Handler {
 		if name == "index.html" {
 			serveIndex(w, r, index)
 			return
+		}
+
+		// /<locale>, /<locale>/index.html, and extensionless SPA paths below a
+		// locale serve that locale's prepared index (same env injection).
+		segment, rest, _ := strings.Cut(name, "/")
+		if prepared, ok := locales[segment]; ok {
+			if rest == "" || rest == "index.html" || path.Ext(rest) == "" {
+				serveIndex(w, r, prepared)
+				return
+			}
 		}
 
 		if fileExists(fsys, name) {
@@ -70,13 +84,55 @@ func serveIndex(w http.ResponseWriter, r *http.Request, index []byte) {
 	_, _ = w.Write(index)
 }
 
-// indexHTML loads index.html and injects runtime configuration into the
-// window.__ENV__ placeholder, so the browser receives values such as the API
-// URL at serve time — no rebuild required. When no runtime config is set the
-// embedded bytes are returned unchanged and the app falls back to its
+// isLocaleDir reports whether name has the locale shape (`xx-yy`), so stale or
+// unexpected top-level directories are never served as locale pages.
+func isLocaleDir(name string) bool {
+	if len(name) != 5 || name[2] != '-' {
+		return false
+	}
+	for _, i := range []int{0, 1, 3, 4} {
+		if name[i] < 'a' || name[i] > 'z' {
+			return false
+		}
+	}
+	return true
+}
+
+// localeIndexes prepares every top-level locale-shaped <dir>/index.html found
+// in the embedded FS (the seo plugin emits one per locale with localized head
+// tags), keyed by the directory name, with the same env injection as the root
+// index.
+func localeIndexes(fsys fs.FS) map[string][]byte {
+	entries, err := fs.ReadDir(fsys, ".")
+	if err != nil {
+		return nil
+	}
+	prepared := map[string][]byte{}
+	for _, entry := range entries {
+		if !entry.IsDir() || !isLocaleDir(entry.Name()) {
+			continue
+		}
+		name := entry.Name() + "/index.html"
+		if !fileExists(fsys, name) {
+			continue
+		}
+		data, err := indexHTML(fsys, name)
+		if err != nil {
+			slog.Error("failed to prepare locale index", "name", name, "error", err)
+			continue
+		}
+		prepared[entry.Name()] = data
+	}
+	return prepared
+}
+
+// indexHTML loads the named index.html and injects runtime configuration into
+// the window.__ENV__ placeholder, so the browser receives values such as the
+// API URL at serve time — no rebuild required. When no runtime config is set
+// the embedded bytes are returned unchanged and the app falls back to its
 // build-time (import.meta.env) configuration.
-func indexHTML(fsys fs.FS) ([]byte, error) {
-	data, err := fs.ReadFile(fsys, "index.html")
+func indexHTML(fsys fs.FS, name string) ([]byte, error) {
+	data, err := fs.ReadFile(fsys, name)
 	if err != nil {
 		return nil, err
 	}
