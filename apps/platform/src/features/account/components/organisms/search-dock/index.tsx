@@ -65,7 +65,10 @@ export function SearchDock({
             e.preventDefault();
             onSubmit?.();
           }}
-          className={PILL_BASE}
+          // The form isn't focusable, so PILL_BASE's own data-focus-visible ring
+          // never fires — light the whole pill when its text input is focused
+          // (the submit button keeps its own brand ring).
+          className={`${PILL_BASE} has-[input:focus-visible]:ring-2 has-[input:focus-visible]:ring-ink-300 has-[input:focus-visible]:ring-offset-2 has-[input:focus-visible]:ring-offset-cream-100`}
         >
           <Icon name="sparkle" className="shrink-0 text-[18px] text-ink-400" />
           <span className="relative block flex-1 overflow-hidden">
@@ -85,6 +88,7 @@ export function SearchDock({
               <AnimatePresence mode="wait" initial={false}>
                 <motion.span
                   key={example}
+                  aria-hidden="true"
                   className="pointer-events-none absolute inset-0 flex items-center truncate bg-white/80 text-[15px] text-ink-400"
                   initial={reduce ? false : { opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
