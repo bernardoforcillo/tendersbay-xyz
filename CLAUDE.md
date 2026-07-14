@@ -43,6 +43,11 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, standalone backend se
   `apps/platform/src/assets/locales/<locale>/common.json`; 24 official EU locales,
   default `en-ie`; public routes are locale-prefixed (`/<locale>/`).
 - **Frontend tests:** vitest + jsdom (the app's `test` runs `vitest run` then `go test ./...`).
+- **MCP servers:** project-scoped in `.mcp.json` — `posthog` (hosted,
+  `https://mcp.posthog.com/mcp`, OAuth: authenticate once via `/mcp`, data
+  region auto-routed) and `playwright` (stdio, launched from the root dev dep
+  `@playwright/mcp`; run `pnpm exec playwright install chromium` once per
+  machine — the browser cache is machine-global, shared across worktrees).
 
 ## Conventions
 
