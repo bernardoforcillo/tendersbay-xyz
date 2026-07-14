@@ -3,7 +3,7 @@ module github.com/bernardoforcillo/tendersbay-xyz/services/ingestion
 go 1.26
 
 require (
-	github.com/bernardoforcillo/drops v0.2.1
+	github.com/bernardoforcillo/drops v0.4.1
 	github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge v0.0.0-20260711225059-711b6b13f4ef
 	github.com/buildwithgo/berrygem v0.0.0-20260505193244-810711e4a49b
 	github.com/jackc/pgx/v5 v5.10.0
