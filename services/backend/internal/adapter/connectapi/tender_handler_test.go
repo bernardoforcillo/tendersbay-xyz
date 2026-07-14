@@ -3,12 +3,15 @@ package connectapi
 import (
 	"context"
 	"errors"
+	"net"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 
 	"connectrpc.com/connect"
 	tenderv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
@@ -51,7 +54,7 @@ func TestSearchTenders_AuthenticatedUsesUserIDAsRateLimitKey(t *testing.T) {
 	}
 }
 
-func TestSearchTenders_AnonymousUsesXFFFirstHopAsRateLimitKey(t *testing.T) {
+func TestSearchTenders_AnonymousUsesXFFLastHopAsRateLimitKey(t *testing.T) {
 	fake := &fakeTenderSearcher{}
 	h := NewTenderHandler(fake)
 
@@ -65,8 +68,68 @@ func TestSearchTenders_AnonymousUsesXFFFirstHopAsRateLimitKey(t *testing.T) {
 	if fake.gotParams.Authenticated {
 		t.Error("Authenticated = true, want false")
 	}
-	if fake.gotParams.RateLimitKey != "203.0.113.5" {
-		t.Errorf("RateLimitKey = %q, want %q", fake.gotParams.RateLimitKey, "203.0.113.5")
+	if fake.gotParams.RateLimitKey != "10.0.0.1" {
+		t.Errorf("RateLimitKey = %q, want %q", fake.gotParams.RateLimitKey, "10.0.0.1")
+	}
+}
+
+// TestSearchTenders_AnonymousIgnoresClientForgedFirstXFFHop is the spoof
+// regression: a client that sends its own X-Forwarded-For prefix must not be
+// able to pick its own rate-limit key (bypass) or a victim's (bucket
+// griefing). Traefik appends the true peer as the last hop; only that hop is
+// trustworthy.
+func TestSearchTenders_AnonymousIgnoresClientForgedFirstXFFHop(t *testing.T) {
+	fake := &fakeTenderSearcher{}
+	h := NewTenderHandler(fake)
+
+	req := connect.NewRequest(&tenderv1.SearchTendersRequest{})
+	req.Header().Set("X-Forwarded-For", "6.6.6.6, 203.0.113.9")
+
+	_, err := h.SearchTenders(context.Background(), req)
+	if err != nil {
+		t.Fatalf("SearchTenders: %v", err)
+	}
+	if fake.gotParams.RateLimitKey != "203.0.113.9" {
+		t.Errorf("RateLimitKey = %q, want the proxy-appended hop %q, not the client-forged first hop", fake.gotParams.RateLimitKey, "203.0.113.9")
+	}
+}
+
+// TestSearchTenders_EndToEndAnonymousWithNoXFFUsesPeerAddr drives a request
+// through the real handler entry point over an actual HTTP connection (not
+// just the clientKey unit or a hand-built connect.Request), so connect
+// populates Peer() from the genuine RemoteAddr the way it does in
+// production. With no X-Forwarded-For header at all, the RateLimitKey the
+// handler passes to Search must come from that peer address — this
+// end-to-end path was previously untested.
+func TestSearchTenders_EndToEndAnonymousWithNoXFFUsesPeerAddr(t *testing.T) {
+	fake := &fakeTenderSearcher{}
+	h := NewTenderHandler(fake)
+	path, connectHandler := tenderv1connect.NewTenderServiceHandler(h)
+
+	var capturedRemoteAddr string
+	mux := http.NewServeMux()
+	mux.Handle(path, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		capturedRemoteAddr = r.RemoteAddr
+		connectHandler.ServeHTTP(w, r)
+	}))
+	server := httptest.NewServer(mux)
+	defer server.Close()
+
+	client := tenderv1connect.NewTenderServiceClient(server.Client(), server.URL)
+	_, err := client.SearchTenders(context.Background(), connect.NewRequest(&tenderv1.SearchTendersRequest{}))
+	if err != nil {
+		t.Fatalf("SearchTenders: %v", err)
+	}
+
+	wantHost, _, err := net.SplitHostPort(capturedRemoteAddr)
+	if err != nil {
+		t.Fatalf("net.SplitHostPort(%q): %v", capturedRemoteAddr, err)
+	}
+	if fake.gotParams.Authenticated {
+		t.Error("Authenticated = true, want false")
+	}
+	if fake.gotParams.RateLimitKey != wantHost {
+		t.Errorf("RateLimitKey = %q, want the peer address host %q", fake.gotParams.RateLimitKey, wantHost)
 	}
 }
 
@@ -190,10 +253,31 @@ type fakeRequestPeer struct {
 func (f fakeRequestPeer) Header() http.Header { return f.header }
 func (f fakeRequestPeer) Peer() connect.Peer  { return f.peer }
 
-func TestClientKey_PrefersXFFFirstHopTrimmed(t *testing.T) {
-	req := fakeRequestPeer{header: http.Header{"X-Forwarded-For": []string{" 198.51.100.7 , 10.0.0.2"}}}
-	if got := clientKey(req); got != "198.51.100.7" {
-		t.Errorf("clientKey = %q, want %q", got, "198.51.100.7")
+func TestClientKey_PrefersXFFLastHopTrimmed(t *testing.T) {
+	req := fakeRequestPeer{header: http.Header{"X-Forwarded-For": []string{" 198.51.100.7 , 10.0.0.2 "}}}
+	if got := clientKey(req); got != "10.0.0.2" {
+		t.Errorf("clientKey = %q, want %q", got, "10.0.0.2")
+	}
+}
+
+// TestClientKey_IgnoresClientForgedFirstHop is the spoof regression: the
+// first XFF entry is attacker-controlled (a client can send any prefix it
+// likes), so it must never be used as the rate-limit key. Only the last hop
+// — the one Traefik appends — is trustworthy.
+func TestClientKey_IgnoresClientForgedFirstHop(t *testing.T) {
+	req := fakeRequestPeer{header: http.Header{"X-Forwarded-For": []string{"6.6.6.6, 203.0.113.9"}}}
+	if got := clientKey(req); got != "203.0.113.9" {
+		t.Errorf("clientKey = %q, want the proxy-appended hop %q, not the client-forged first hop", got, "203.0.113.9")
+	}
+}
+
+// TestClientKey_SkipsTrailingEmptyHop covers a trailing comma (an empty
+// final segment, e.g. "203.0.113.9,") — the last non-empty hop must still
+// win, not the empty string.
+func TestClientKey_SkipsTrailingEmptyHop(t *testing.T) {
+	req := fakeRequestPeer{header: http.Header{"X-Forwarded-For": []string{"6.6.6.6, 203.0.113.9, "}}}
+	if got := clientKey(req); got != "203.0.113.9" {
+		t.Errorf("clientKey = %q, want %q", got, "203.0.113.9")
 	}
 }
 

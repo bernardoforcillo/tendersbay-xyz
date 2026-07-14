@@ -72,14 +72,22 @@ type requestPeer interface {
 	Peer() connect.Peer
 }
 
-// clientKey resolves an anonymous caller's rate-limit key: the first hop of
-// X-Forwarded-For (set by Traefik in front of the cluster — see
-// infrastructure/kubernetes) if present, else the host part of the RPC
-// peer's address.
+// clientKey resolves an anonymous caller's rate-limit key: the LAST hop of
+// X-Forwarded-For if present, else the host part of the RPC peer's address.
+// The last hop is the one Traefik appends (it doesn't strip client-sent XFF,
+// it appends the true peer) — see the ipStrategy.depth: 1 (rightmost hop)
+// convention on the `rate-limit` middleware in
+// infrastructure/kubernetes/tendersbay-xyz/commons.yaml. Earlier hops are
+// client-controlled and must not be trusted: trusting them lets a caller
+// rotate its own key to dodge the anonymous rate limit, or forge a victim's
+// IP to burn their bucket.
 func clientKey(req requestPeer) string {
 	if xff := req.Header().Get("X-Forwarded-For"); xff != "" {
-		if hop := strings.TrimSpace(strings.Split(xff, ",")[0]); hop != "" {
-			return hop
+		hops := strings.Split(xff, ",")
+		for i := len(hops) - 1; i >= 0; i-- {
+			if hop := strings.TrimSpace(hops[i]); hop != "" {
+				return hop
+			}
 		}
 	}
 	addr := req.Peer().Addr
