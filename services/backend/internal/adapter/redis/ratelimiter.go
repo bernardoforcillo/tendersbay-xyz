@@ -15,6 +15,13 @@ import (
 	goredis "github.com/redis/go-redis/v9"
 )
 
+// keyPrefix namespaces every key this package touches. redis-release-master
+// (namespace redis) may be shared with other workloads on the same DB 0; an
+// unprefixed bare IP/user-ID key could collide with an unrelated workload's
+// key and silently cross-contaminate counters. Applied inside Allow/Reset
+// themselves so every caller gets it for free.
+const keyPrefix = "tb:backend:ratelimit:"
+
 // RateLimiter enforces a fixed-window request cap per key.
 type RateLimiter struct {
 	client *goredis.Client
@@ -36,6 +43,7 @@ func NewRateLimiter(redisURL string) (*RateLimiter, error) {
 // client hammering just under the limit can't indefinitely extend it);
 // later calls within the same window share its remaining TTL.
 func (rl *RateLimiter) Allow(ctx context.Context, key string, limit int64, window time.Duration) (bool, error) {
+	key = keyPrefix + key
 	count, err := rl.client.Incr(ctx, key).Result()
 	if err != nil {
 		return false, fmt.Errorf("redis: incr %s: %w", key, err)
@@ -51,7 +59,7 @@ func (rl *RateLimiter) Allow(ctx context.Context, key string, limit int64, windo
 // Reset removes key's counter entirely — used by tests to isolate runs;
 // production callers never need this (windows expire on their own).
 func (rl *RateLimiter) Reset(ctx context.Context, key string) error {
-	return rl.client.Del(ctx, key).Err()
+	return rl.client.Del(ctx, keyPrefix+key).Err()
 }
 
 // Ping verifies Redis is reachable.

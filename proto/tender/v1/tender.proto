@@ -16,7 +16,9 @@ message SearchTendersRequest {
   string query = 1;          // optional; empty = filters-only search
   TenderFilters filters = 2; // optional
   int32 limit = 3;           // optional, server-clamped by auth tier
-  int32 offset = 4;          // optional, default 0
+  int32 offset = 4;          // optional, default 0; for semantic (non-empty query) searches,
+                              // paging is bounded by the candidate window (~250 results) —
+                              // very deep pages may return empty even with more matches server-side
 }
 
 message TenderFilters {

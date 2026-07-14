@@ -36,7 +36,7 @@ export declare type SearchTendersRequest = Message<"tender.v1.SearchTendersReque
   limit: number;
 
   /**
-   * optional, default 0
+   * optional, default 0; for semantic (non-empty query) searches,
    *
    * @generated from field: int32 offset = 4;
    */

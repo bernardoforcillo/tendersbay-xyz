@@ -21,6 +21,12 @@ import (
 var (
 	ErrRateLimited    = errors.New("tender: rate limit exceeded")
 	ErrInvalidFilters = errors.New("tender: deadline_from is after deadline_to")
+	// ErrRateLimiterUnavailable wraps a failure of the rate-limit CHECK
+	// itself (e.g. Redis unreachable), as opposed to ErrRateLimited, which
+	// means the check succeeded and reported "over limit". Distinguished so
+	// callers can map it to a retryable status instead of a generic
+	// internal error.
+	ErrRateLimiterUnavailable = errors.New("tender: rate limiter unavailable")
 )
 
 // candidateMultiplier over-fetches Qdrant candidates so a restrictive
@@ -152,7 +158,7 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 
 	allowed, err := s.rl.Allow(ctx, p.RateLimitKey, tier.RateLimit, tier.RateWindow)
 	if err != nil {
-		return SearchOutput{}, fmt.Errorf("tender: rate limit check: %w", err)
+		return SearchOutput{}, fmt.Errorf("%w: %v", ErrRateLimiterUnavailable, err)
 	}
 	if !allowed {
 		return SearchOutput{}, ErrRateLimited

@@ -33,18 +33,28 @@ func ClientIPFromContext(ctx context.Context) string {
 	return ip
 }
 
-// ClientIPMiddleware injects the caller's real IP (from X-Forwarded-For,
-// set by Traefik at the ingress edge — trustworthy here because external
-// clients reach this service only through Traefik, never directly) into
-// the request context, for handlers that rate-limit by IP. Falls back to
-// r.RemoteAddr (host:port) if the header is absent, e.g. local dev with
+// ClientIPMiddleware injects the caller's real IP (from X-Forwarded-For)
+// into the request context, for handlers that rate-limit by IP. Falls back
+// to r.RemoteAddr (host:port) if the header is absent, e.g. local dev with
 // no proxy in front of the server.
+//
+// It takes the RIGHTMOST comma-separated entry, not the leftmost. External
+// clients reach this service only through Traefik, and Traefik appends its
+// own view of the caller's address as the last hop when it forwards the
+// request — that hop cannot be forged by the client. Any earlier entry in
+// the header (including the leftmost one) may simply be a value the client
+// sent verbatim in its own request, so trusting it would let an anonymous
+// caller defeat the Redis-backed rate limiter by sending a different fake
+// X-Forwarded-For on every request. This matches Traefik's own
+// `ipStrategy.depth: 1` convention (see
+// infrastructure/kubernetes/tendersbay-xyz/commons.yaml), which likewise
+// trusts the rightmost hop for its own rate limiting.
 func ClientIPMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ip := r.RemoteAddr
 		if fwd := r.Header.Get("X-Forwarded-For"); fwd != "" {
-			if i := strings.Index(fwd, ","); i != -1 {
-				ip = strings.TrimSpace(fwd[:i])
+			if i := strings.LastIndex(fwd, ","); i != -1 {
+				ip = strings.TrimSpace(fwd[i+1:])
 			} else {
 				ip = strings.TrimSpace(fwd)
 			}
@@ -181,6 +191,8 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeResourceExhausted, err)
 	case errors.Is(err, tender.ErrInvalidFilters):
 		return connect.NewError(connect.CodeInvalidArgument, err)
+	case errors.Is(err, tender.ErrRateLimiterUnavailable):
+		return connect.NewError(connect.CodeUnavailable, err)
 
 	default:
 		return connect.NewError(connect.CodeInternal, err)

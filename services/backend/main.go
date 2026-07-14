@@ -150,6 +150,9 @@ func main() {
 		rl = unavailableRateLimiter{err: rlErr}
 	} else {
 		rl = rateLimiter
+		if pingErr := rateLimiter.Ping(ctx); pingErr != nil {
+			slog.Warn("redis ping failed at startup, rate limiting may be degraded", "error", pingErr)
+		}
 	}
 	if rateLimiter != nil {
 		defer rateLimiter.Close()

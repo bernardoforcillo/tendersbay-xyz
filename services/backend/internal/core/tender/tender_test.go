@@ -242,6 +242,18 @@ func TestSearch_CapsCandidatesAt250(t *testing.T) {
 	}
 }
 
+func TestSearch_WrapsRateLimiterUnavailableWhenAllowErrors(t *testing.T) {
+	repo := &fakeRepo{}
+	kb := &fakeKnowledgeBase{}
+	rl := &fakeRateLimiter{err: errors.New("redis: connection refused")}
+	svc := tender.NewService(repo, kb, rl, testConfig())
+
+	_, err := svc.Search(context.Background(), tender.SearchParams{RateLimitKey: "k"})
+	if !errors.Is(err, tender.ErrRateLimiterUnavailable) {
+		t.Errorf("Search error = %v, want ErrRateLimiterUnavailable", err)
+	}
+}
+
 func TestSearch_RejectsInvalidDeadlineRange(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}

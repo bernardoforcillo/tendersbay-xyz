@@ -26,7 +26,7 @@ type SearchTendersRequest struct {
 	Query         string                 `protobuf:"bytes,1,opt,name=query,proto3" json:"query,omitempty"`     // optional; empty = filters-only search
 	Filters       *TenderFilters         `protobuf:"bytes,2,opt,name=filters,proto3" json:"filters,omitempty"` // optional
 	Limit         int32                  `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`    // optional, server-clamped by auth tier
-	Offset        int32                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`  // optional, default 0
+	Offset        int32                  `protobuf:"varint,4,opt,name=offset,proto3" json:"offset,omitempty"`  // optional, default 0; for semantic (non-empty query) searches,
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
