@@ -57,4 +57,26 @@ describe('headTags', () => {
     const ld = tags.find((t) => t.tag === 'script');
     expect(ld?.children).toContain('"@type":"Organization"');
   });
+
+  it('adds a Service node to the @graph when service is set, provider -> Organization', () => {
+    const tags = headTags({
+      ...opts,
+      service: {
+        name: 'tendersbay',
+        description: 'AI agents that find, prepare and help SMEs win EU public tenders',
+        serviceType: 'Public procurement tender discovery',
+        areaServed: 'European Union',
+      },
+    });
+    const ld = tags.find((t) => t.tag === 'script');
+    expect(ld?.children).toContain('"@type":"Service"');
+    expect(ld?.children).toContain('"serviceType":"Public procurement tender discovery"');
+    expect(ld?.children).toContain('"areaServed":"European Union"');
+    expect(ld?.children).toContain('"provider":{"@type":"Organization"');
+  });
+
+  it('omits the Service node when service is absent', () => {
+    const ld = headTags(opts).find((t) => t.tag === 'script');
+    expect(ld?.children).not.toContain('"@type":"Service"');
+  });
 });

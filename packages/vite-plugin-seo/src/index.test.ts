@@ -52,6 +52,12 @@ describe('seo', () => {
       localeMeta: {
         'it-it': { title: 'Bandi di gara — tendersbay', description: 'Gare pubbliche europee.' },
       },
+      localeFaq: {
+        'it-it': [{ question: 'I miei dati addestrano la AI?', answer: 'No. Restano tuoi.' }],
+      },
+      localeHero: {
+        'it-it': { headline: 'La gara data per loro? Aggiudicata.', subtitle: 'Finisce qui.' },
+      },
     });
     const dir = mkdtempSync(path.join(tmpdir(), 'seo-plugin-'));
     writeFileSync(
@@ -69,6 +75,33 @@ describe('seo', () => {
     expect(emitted).toContain('<meta name="description" content="Gare pubbliche europee.">');
     expect(emitted).toContain('<html lang="it-IT">');
     expect(emitted).toContain('<meta property="og:locale" content="it_IT">');
+    // Per-locale self-canonical + hreflang + FAQPage + noscript content block.
+    expect(emitted).toContain('<link rel="canonical" href="https://tendersbay.xyz/it-it/">');
+    expect(emitted).toContain('hreflang="x-default" href="https://tendersbay.xyz/en-ie/"');
+    expect(emitted).toContain('"@type":"FAQPage"');
+    expect(emitted).toContain('<noscript>');
+    expect(emitted).toContain('<h1>La gara data per loro? Aggiudicata.</h1>');
+  });
+
+  it('generateBundle emits robots.txt, sitemap.xml, and llms.txt', () => {
+    const plugin = seo({ ...base, locales: ['en-ie', 'it-it'] as const });
+    const emitted: Record<string, string> = {};
+    const ctx = {
+      emitFile: (asset: { fileName: string; source: string }) => {
+        emitted[asset.fileName] = asset.source;
+      },
+      warn: vi.fn(),
+    };
+    const hook = plugin.generateBundle;
+    const handler = typeof hook === 'function' ? hook : hook?.handler;
+    handler?.call(ctx as never, {} as never, {} as never, {} as never);
+
+    expect(Object.keys(emitted).sort()).toEqual(['llms.txt', 'robots.txt', 'sitemap.xml']);
+    expect(emitted['robots.txt']).toContain('User-agent: GPTBot');
+    expect(emitted['robots.txt']).toContain('https://tendersbay.xyz/llms.txt');
+    expect(emitted['llms.txt']).toContain('# tendersbay');
+    expect(emitted['llms.txt']).toContain('## Key pages');
+    expect(emitted['llms.txt']).toContain('- [it-IT](https://tendersbay.xyz/it-it/)');
   });
 
   it('writeBundle warns and emits nothing when index.html is missing', () => {

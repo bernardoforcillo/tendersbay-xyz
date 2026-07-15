@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import path from 'node:path';
 import type { Plugin } from 'vite';
 import { headTags } from './head.ts';
+import { buildLlmsTxt } from './llms.ts';
 import { localizeIndexHtml } from './locale-pages.ts';
 import { normalizeOptions, type SeoOptions } from './options.ts';
 import { buildRobots } from './robots.ts';
@@ -32,6 +33,7 @@ export function seo(options: SeoOptions): Plugin {
       const paths = discoverRoutes(routesDir, { include: opts.include, exclude: opts.exclude });
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: buildRobots(opts) });
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: buildSitemap(paths, opts) });
+      this.emitFile({ type: 'asset', fileName: 'llms.txt', source: buildLlmsTxt(opts) });
     },
     // Runs after the bundle hits disk: re-emit index.html per locale with
     // localized head tags, so crawlers get locale-correct titles/descriptions
@@ -51,7 +53,14 @@ export function seo(options: SeoOptions): Plugin {
       for (const [locale, meta] of Object.entries(localeMeta)) {
         let localized: string;
         try {
-          localized = localizeIndexHtml(html, locale, meta);
+          localized = localizeIndexHtml(html, locale, {
+            hostname: opts.hostname,
+            locales: opts.locales,
+            defaultLocale: opts.defaultLocale,
+            meta,
+            faq: opts.localeFaq?.[locale],
+            hero: opts.localeHero?.[locale],
+          });
         } catch (cause) {
           // A failed rewrite means head-shape drift: fail the build rather than
           // ship every locale page with default-locale copy.
