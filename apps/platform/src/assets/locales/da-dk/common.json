@@ -116,8 +116,18 @@
         "Renovering af offentlige skoler",
         "IT-modernisering af hospitaler",
         "Opførelse af solcelleparker",
-        "Flåder af elbusser"
-      ]
+        "Flåder af elbusser",
+        "Jernbanearbejde, Milano",
+        "Cloud-tjenester, Warszawa",
+        "Energirenovering, Wien",
+        "Parkvedligeholdelse, Athen"
+      ],
+      "filters": {
+        "country": "Land",
+        "sector": "Sektor",
+        "deadline": "Frist",
+        "value": "Værdi"
+      }
     },
     "meta": {
       "title": "tendersbay — Offentlige udbud, tildelt af dine AI-agenter",

@@ -116,8 +116,18 @@
         "Rénovation d'écoles publiques",
         "Modernisation IT des hôpitaux",
         "Construction de fermes solaires",
-        "Flottes de bus électriques"
-      ]
+        "Flottes de bus électriques",
+        "Travaux ferroviaires, Milan",
+        "Services cloud, Varsovie",
+        "Rénovation énergétique, Vienne",
+        "Entretien des parcs, Athènes"
+      ],
+      "filters": {
+        "country": "Pays",
+        "sector": "Secteur",
+        "deadline": "Échéance",
+        "value": "Valeur"
+      }
     },
     "meta": {
       "title": "tendersbay — Appels d'offres publics, attribués par vos agents IA",

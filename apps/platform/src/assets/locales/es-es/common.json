@@ -116,8 +116,18 @@
         "Renovación de escuelas públicas",
         "Modernización TI de hospitales",
         "Construcción de plantas solares",
-        "Flotas de autobuses eléctricos"
-      ]
+        "Flotas de autobuses eléctricos",
+        "Obras ferroviarias, Milán",
+        "Servicios en la nube, Varsovia",
+        "Mejoras energéticas, Viena",
+        "Mantenimiento de parques, Atenas"
+      ],
+      "filters": {
+        "country": "País",
+        "sector": "Sector",
+        "deadline": "Plazo",
+        "value": "Valor"
+      }
     },
     "meta": {
       "title": "tendersbay — Licitaciones públicas, adjudicadas por agentes de IA",

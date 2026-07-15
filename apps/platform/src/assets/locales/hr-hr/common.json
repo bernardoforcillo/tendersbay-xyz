@@ -116,8 +116,18 @@
         "Obnova javnih škola",
         "IT modernizacija bolnica",
         "Izgradnja solarnih parkova",
-        "Flote električnih autobusa"
-      ]
+        "Flote električnih autobusa",
+        "Željeznički radovi, Milano",
+        "Usluge u oblaku, Varšava",
+        "Energetska obnova, Beč",
+        "Održavanje parkova, Atena"
+      ],
+      "filters": {
+        "country": "Država",
+        "sector": "Sektor",
+        "deadline": "Rok",
+        "value": "Vrijednost"
+      }
     },
     "meta": {
       "title": "tendersbay — Javni natječaji, dodijeljeni uz vaše AI agente",

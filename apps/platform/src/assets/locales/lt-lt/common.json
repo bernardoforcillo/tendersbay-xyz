@@ -116,8 +116,18 @@
         "Viešųjų mokyklų renovacija",
         "Ligoninių IT modernizavimas",
         "Saulės parkų statyba",
-        "Elektrinių autobusų parkai"
-      ]
+        "Elektrinių autobusų parkai",
+        "Geležinkelio darbai, Milanas",
+        "Debesijos paslaugos, Varšuva",
+        "Energijos vartojimo efektyvumas, Viena",
+        "Parkų priežiūra, Atėnai"
+      ],
+      "filters": {
+        "country": "Šalis",
+        "sector": "Sektorius",
+        "deadline": "Terminas",
+        "value": "Vertė"
+      }
     },
     "meta": {
       "title": "tendersbay — Europos viešieji pirkimai su jūsų DI agentais",

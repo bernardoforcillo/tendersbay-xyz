@@ -116,8 +116,18 @@
         "Prenova javnih šol",
         "IT posodobitev bolnišnic",
         "Gradnja sončnih elektrarn",
-        "Flote električnih avtobusov"
-      ]
+        "Flote električnih avtobusov",
+        "Železniška dela, Milano",
+        "Storitve v oblaku, Varšava",
+        "Energetska prenova, Dunaj",
+        "Vzdrževanje parkov, Atene"
+      ],
+      "filters": {
+        "country": "Država",
+        "sector": "Sektor",
+        "deadline": "Rok",
+        "value": "Vrednost"
+      }
     },
     "meta": {
       "title": "tendersbay — Javna naročila v Evropi, dodeljena z agenti UI",

@@ -116,8 +116,18 @@
         "Publisko skolu renovācija",
         "Slimnīcu IT modernizācija",
         "Saules parku būvniecība",
-        "Elektrisko autobusu parki"
-      ]
+        "Elektrisko autobusu parki",
+        "Dzelzceļa darbi, Milāna",
+        "Mākoņpakalpojumi, Varšava",
+        "Energoefektivitātes uzlabojumi, Vīne",
+        "Parku uzturēšana, Atēnas"
+      ],
+      "filters": {
+        "country": "Valsts",
+        "sector": "Nozare",
+        "deadline": "Termiņš",
+        "value": "Vērtība"
+      }
     },
     "meta": {
       "title": "tendersbay — Publiskie iepirkumi Eiropā ar jūsu MI aģentiem",

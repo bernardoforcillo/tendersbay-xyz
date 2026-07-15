@@ -116,8 +116,18 @@
         "Rinnovazzjoni ta' skejjel pubbliċi",
         "Modernizzazzjoni tal-IT tal-isptarijiet",
         "Kostruzzjoni ta' impjanti solari",
-        "Flotot ta' karozzi tal-linja elettriċi"
-      ]
+        "Flotot ta' karozzi tal-linja elettriċi",
+        "Xogħlijiet ferrovjarji, Milan",
+        "Servizzi tal-cloud, Varsavja",
+        "Titjib fl-enerġija, Vjenna",
+        "Manutenzjoni tal-parkijiet, Ateni"
+      ],
+      "filters": {
+        "country": "Pajjiż",
+        "sector": "Settur",
+        "deadline": "Skadenza",
+        "value": "Valur"
+      }
     },
     "meta": {
       "title": "tendersbay — Sejħiet għall-offerti, mogħtija mill-aġenti AI",
