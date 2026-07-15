@@ -43,6 +43,9 @@ export function useTenderSearch(): {
     try {
       const res = await tenderClient.searchTenders({ query, limit: PAGE_SIZE, offset: 0 });
       if (requestIdRef.current !== requestId) return;
+      // Page by rows actually received, not by PAGE_SIZE: the server clamps
+      // `limit` to the caller's auth tier (anon < 20), so a page can be short.
+      offsetRef.current = res.results.length;
       setResults(res.results);
       setHasMore(res.hasMore);
       setError(null);
@@ -64,7 +67,10 @@ export function useTenderSearch(): {
     if (inFlightRef.current) return;
     const requestId = ++requestIdRef.current;
     inFlightRef.current = true;
-    const nextOffset = offsetRef.current + PAGE_SIZE;
+    // Offset is the count of rows already held, not page*PAGE_SIZE — the server
+    // may return fewer than PAGE_SIZE rows per page (tier clamp), so a fixed
+    // stride would skip the rows between the clamp and PAGE_SIZE.
+    const nextOffset = offsetRef.current;
     setLoading(true);
 
     try {
@@ -74,7 +80,7 @@ export function useTenderSearch(): {
         offset: nextOffset,
       });
       if (requestIdRef.current !== requestId) return;
-      offsetRef.current = nextOffset;
+      offsetRef.current = nextOffset + res.results.length;
       setResults((prev) => [...prev, ...res.results]);
       setHasMore(res.hasMore);
       setError(null);

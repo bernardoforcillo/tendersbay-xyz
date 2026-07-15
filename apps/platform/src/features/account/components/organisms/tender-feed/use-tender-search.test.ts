@@ -44,21 +44,46 @@ describe('useTenderSearch', () => {
     expect(result.current.error).toBeNull();
   });
 
-  it('loadMore appends the next page at offset 20 for the same query', async () => {
-    searchTenders.mockResolvedValueOnce({ results: [fakeResult('1')], hasMore: true });
+  it('loadMore pages from the rows already received, not a fixed stride', async () => {
+    // A full first page: 20 rows received -> next offset is 20.
+    searchTenders.mockResolvedValueOnce({
+      results: Array.from({ length: 20 }, (_, i) => fakeResult(String(i))),
+      hasMore: true,
+    });
     const { result } = renderHook(() => useTenderSearch());
     await act(async () => {
       await result.current.search('roads');
     });
 
-    searchTenders.mockResolvedValueOnce({ results: [fakeResult('2')], hasMore: false });
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('20')], hasMore: false });
     await act(async () => {
       await result.current.loadMore();
     });
 
     expect(searchTenders).toHaveBeenLastCalledWith({ query: 'roads', limit: 20, offset: 20 });
-    expect(result.current.results).toEqual([fakeResult('1'), fakeResult('2')]);
+    expect(result.current.results).toHaveLength(21);
     expect(result.current.hasMore).toBe(false);
+  });
+
+  it('pages by actual rows when the server returns a short page (tier clamp)', async () => {
+    // Anon tier clamps limit to 10: a short page must advance the offset by 10,
+    // not PAGE_SIZE, or rows 10-19 would be skipped forever.
+    searchTenders.mockResolvedValueOnce({
+      results: Array.from({ length: 10 }, (_, i) => fakeResult(String(i))),
+      hasMore: true,
+    });
+    const { result } = renderHook(() => useTenderSearch());
+    await act(async () => {
+      await result.current.search('roads');
+    });
+
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('10')], hasMore: false });
+    await act(async () => {
+      await result.current.loadMore();
+    });
+
+    expect(searchTenders).toHaveBeenLastCalledWith({ query: 'roads', limit: 20, offset: 10 });
+    expect(result.current.results).toHaveLength(11);
   });
 
   it('a new search resets the offset and replaces results instead of appending', async () => {
