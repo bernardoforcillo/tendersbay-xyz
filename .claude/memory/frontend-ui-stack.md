@@ -3,7 +3,7 @@ name: frontend-ui-stack
 description: "Standard UI stack for tendersbay frontend apps — motion + react-aria-components, no emoji"
 metadata:
   type: reference
-  updated: 2026-07-01
+  updated: 2026-07-11
   sources: []
 ---
 
@@ -25,4 +25,6 @@ primitives + real animation, with a clean icon set (lucide) instead of emoji.
 
 **How to apply:** default to these for any new UI work in tendersbay apps. Add deps with
 `pnpm add <pkg> --filter <workspace>`. Pair with the design language in
-[[landing-page-design]].
+[[landing-page-design]]. Since the redesign's Phase 0, reusable primitives built on this
+stack (Button, Pill, Card, Field, EmptyState, PageHeader, `cn`) live in the shared kit —
+see [[core-component-kit]] before hand-rolling one in an app.

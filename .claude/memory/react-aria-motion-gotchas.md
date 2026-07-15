@@ -1,14 +1,23 @@
 ---
 name: react-aria-motion-gotchas
-description: "RAC tooltip warmup, inert-vs-aria-hidden for marquees, jsdom mocks, and reduced-motion test trick"
+description: "RAC tooltip warmup, TextField isInvalid vs native validation, inert-vs-aria-hidden, jsdom mocks, reduced-motion test trick"
 metadata:
   type: reference
-  updated: 2026-07-01
-  sources: []
+  updated: 2026-07-13
+  sources: [docs/superpowers/plans/2026-07-12-redesign-surfaces.md]
 ---
 
 Hard-won interaction/animation gotchas for `apps/platform` (react-aria-components
 + motion), pairing with [[frontend-ui-stack]]:
+
+- **A concrete `isInvalid` boolean on RAC `TextField` — even `false` — permanently
+  disables native constraint-validation display.** Required/minLength/`type=email`
+  failures stop surfacing: no `aria-invalid`, no `FieldError` text. A wrapper with an
+  optional `errorMessage` prop must forward `undefined` when uncontrolled:
+  `isInvalid={props.isInvalid ?? (errorMessage ? true : undefined)}` — this is what
+  the kit `Field` does ([[core-component-kit]]). Regression-test pattern: render a RAC
+  `Form` with an `isRequired` field, submit, expect `aria-invalid` on the input.
+  (Caught in review, not by the implementer — it silently broke all five account forms.)
 
 - **RAC `TooltipTrigger` has a ~1.5s global hover warmup that `delay={0}` does
   NOT bypass** — the first hover feels dead. For instant hover cards, make the
