@@ -47,13 +47,29 @@ function fixture(overrides: Partial<TenderResult> = {}): TenderResult {
 }
 
 describe('TenderResultCard', () => {
-  it('renders the title, buyer, mono meta tag, and the value + status line', () => {
+  it('renders the title, buyer, country flag, source stamp, value, status and CPV', () => {
     render(<TenderResultCard tender={fixture()} />);
 
     expect(screen.getByText('Supply of road maintenance services')).toBeInTheDocument();
     expect(screen.getByText('City of Lisbon')).toBeInTheDocument();
-    expect(screen.getByText('45233141 · PT')).toBeInTheDocument();
-    expect(screen.getByText('€240,000 · open')).toBeInTheDocument();
+    // Country renders as a flag labelled with the localised country name (no
+    // more bare alpha code), the source becomes an uppercased stamp.
+    expect(screen.getByTitle('Portugal')).toBeInTheDocument();
+    expect(screen.getByText('TED')).toBeInTheDocument();
+    expect(screen.getByText('45233141')).toBeInTheDocument();
+    expect(screen.getByText('€240,000')).toBeInTheDocument();
+    expect(screen.getByText('open')).toBeInTheDocument();
+  });
+
+  it('falls back to the country code when no flag is known', () => {
+    render(<TenderResultCard tender={fixture({ country: 'ZZZ' })} />);
+    expect(screen.getByText('ZZZ')).toBeInTheDocument();
+    expect(screen.queryByTitle(/./)).not.toBeInTheDocument();
+  });
+
+  it('maps the alpha-3 country code the backend sends to a flag', () => {
+    render(<TenderResultCard tender={fixture({ country: 'ITA' })} />);
+    expect(screen.getByTitle('Italy')).toBeInTheDocument();
   });
 
   it('omits the buyer line when buyerName is empty', () => {
@@ -95,6 +111,6 @@ describe('TenderResultCard', () => {
 
   it('falls back to "Value undisclosed" when the value is zero', () => {
     render(<TenderResultCard tender={fixture({ value: 0n })} />);
-    expect(screen.getByText('Value undisclosed · open')).toBeInTheDocument();
+    expect(screen.getByText('Value undisclosed')).toBeInTheDocument();
   });
 });

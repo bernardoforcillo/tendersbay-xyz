@@ -1,3 +1,4 @@
+export { countryFlag, countryName } from './country';
 export type { DeadlineTone } from './deadline';
 export { deadlineInfo } from './deadline';
 export { formatTenderValue } from './format';
