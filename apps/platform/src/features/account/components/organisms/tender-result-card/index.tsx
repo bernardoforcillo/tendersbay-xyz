@@ -1,7 +1,13 @@
 import { Card, cn, Pill } from '@tendersbay/components/core';
 import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { useTranslation } from 'react-i18next';
-import { countryFlag, countryName, deadlineInfo, formatTenderValue } from '../tender-feed';
+import {
+  countryFlag,
+  countryName,
+  deadlineInfo,
+  formatTenderValue,
+  tenderTitle,
+} from '../tender-feed';
 
 export type TenderResultCardProps = {
   tender: TenderResult;
@@ -72,7 +78,7 @@ export function TenderResultCard({ tender, className }: TenderResultCardProps) {
       </div>
 
       <p className="mt-2.5 line-clamp-2 text-sm font-medium leading-snug text-ink-900">
-        {tender.title}
+        {tenderTitle(tender.title, tender.country)}
       </p>
       {tender.buyerName && (
         <p className="mt-0.5 truncate text-xs text-ink-500">{tender.buyerName}</p>
