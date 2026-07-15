@@ -24,15 +24,27 @@ COPY . .
 RUN pnpm --filter platform exec vite build
 
 # ---- Stage 2: compile the Go binary that embeds dist ----
+# Built from the repo root so the Go workspace (go.work) resolves the app's
+# sibling module go-services/telemetry. It's wired in through the workspace —
+# not via `replace` in go.mod — so the whole tree is copied and go.work drives
+# resolution (mirrors services/backend + services/ingestion).
 FROM golang:1.26-alpine AS backend
-WORKDIR /src
+# git is required for Go to resolve the GOPRIVATE internal modules through
+# go.work; the alpine image ships without it, so the build otherwise fails with
+# `exec: "git": executable file not found in $PATH`.
+RUN apk add --no-cache git
+WORKDIR /workspace
 
-# The Go module has no external deps, so no `go mod download` is needed.
-# `.dockerignore` excludes dist/bin, so this copy brings source only.
-COPY apps/platform/ ./
-# Provide the freshly built SPA where `//go:embed all:dist` expects it.
-COPY --from=frontend /repo/apps/platform/dist ./dist
+# Internal monorepo modules resolve locally through go.work, so keep them off
+# the public proxy/sumdb.
+ENV GOPRIVATE=github.com/bernardoforcillo/tendersbay-xyz
+COPY . .
+RUN go mod download
+# Provide the freshly built SPA where `//go:embed all:dist` expects it
+# (.dockerignore excludes dist, so `COPY . .` above brought no stale copy).
+COPY --from=frontend /repo/apps/platform/dist ./apps/platform/dist
 
+WORKDIR /workspace/apps/platform
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /platform .
 
 # ---- Stage 3: minimal runtime ----
