@@ -116,8 +116,18 @@
         "Sanierung öffentlicher Schulen",
         "IT-Modernisierung von Krankenhäusern",
         "Bau von Solarparks",
-        "Elektrobus-Flotten"
-      ]
+        "Elektrobus-Flotten",
+        "Gleisbauarbeiten, Mailand",
+        "Cloud-Dienste, Warschau",
+        "Energetische Sanierung, Wien",
+        "Parkpflege, Athen"
+      ],
+      "filters": {
+        "country": "Land",
+        "sector": "Branche",
+        "deadline": "Frist",
+        "value": "Wert"
+      }
     },
     "meta": {
       "title": "tendersbay — Öffentliche Ausschreibungen, zugeschlagen von KI-Agenten",

@@ -116,8 +116,18 @@
         "Avalike koolide renoveerimine",
         "Haiglate IT-uuendus",
         "Päikeseparkide ehitus",
-        "Elektribusside pargid"
-      ]
+        "Elektribusside pargid",
+        "Raudteetööd, Milano",
+        "Pilveteenused, Varssavi",
+        "Energiatõhususe parandamine, Viin",
+        "Parkide hooldus, Ateena"
+      ],
+      "filters": {
+        "country": "Riik",
+        "sector": "Sektor",
+        "deadline": "Tähtaeg",
+        "value": "Väärtus"
+      }
     },
     "meta": {
       "title": "tendersbay — Euroopa riigihanked, lepinguni teie AI-agentide abil",

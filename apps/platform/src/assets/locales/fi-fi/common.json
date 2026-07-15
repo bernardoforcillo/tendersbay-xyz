@@ -116,8 +116,18 @@
         "Julkisten koulujen peruskorjaukset",
         "Sairaaloiden IT-uudistus",
         "Aurinkovoimaloiden rakentaminen",
-        "Sähköbussikalustot"
-      ]
+        "Sähköbussikalustot",
+        "Ratatyöt, Milano",
+        "Pilvipalvelut, Varsova",
+        "Energiaparannukset, Wien",
+        "Puistojen kunnossapito, Ateena"
+      ],
+      "filters": {
+        "country": "Maa",
+        "sector": "Toimiala",
+        "deadline": "Määräaika",
+        "value": "Arvo"
+      }
     },
     "meta": {
       "title": "tendersbay — Julkiset hankinnat, tekoälyagenttiesi valmistelemina",

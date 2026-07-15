@@ -116,8 +116,18 @@
         "Public school renovations",
         "Hospital IT modernisation",
         "Solar farm construction",
-        "Electric bus fleets"
-      ]
+        "Electric bus fleets",
+        "Rail works, Milan",
+        "Cloud services, Warsaw",
+        "Energy upgrades, Vienna",
+        "Park maintenance, Athens"
+      ],
+      "filters": {
+        "country": "Country",
+        "sector": "Sector",
+        "deadline": "Deadline",
+        "value": "Value"
+      }
     },
     "meta": {
       "title": "tendersbay — EU public tenders, awarded by your AI agents",

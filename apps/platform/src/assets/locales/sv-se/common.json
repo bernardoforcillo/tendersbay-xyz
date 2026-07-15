@@ -116,8 +116,18 @@
         "Renovering av offentliga skolor",
         "IT-modernisering av sjukhus",
         "Byggnation av solparker",
-        "Elbussflottor"
-      ]
+        "Elbussflottor",
+        "Järnvägsarbeten, Milano",
+        "Molntjänster, Warszawa",
+        "Energieffektivisering, Wien",
+        "Parkskötsel, Aten"
+      ],
+      "filters": {
+        "country": "Land",
+        "sector": "Sektor",
+        "deadline": "Sista dag",
+        "value": "Värde"
+      }
     },
     "meta": {
       "title": "tendersbay — Offentliga upphandlingar, tilldelade av AI-agenter",

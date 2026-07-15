@@ -116,8 +116,18 @@
         "Renovarea școlilor publice",
         "Modernizarea IT a spitalelor",
         "Construcția de parcuri solare",
-        "Flote de autobuze electrice"
-      ]
+        "Flote de autobuze electrice",
+        "Lucrări feroviare, Milano",
+        "Servicii cloud, Varșovia",
+        "Modernizare energetică, Viena",
+        "Întreținerea parcurilor, Atena"
+      ],
+      "filters": {
+        "country": "Țară",
+        "sector": "Sector",
+        "deadline": "Termen",
+        "value": "Valoare"
+      }
     },
     "meta": {
       "title": "tendersbay — Licitații publice, atribuite de agenții dvs. AI",

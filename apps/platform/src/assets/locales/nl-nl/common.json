@@ -116,8 +116,18 @@
         "Renovatie van openbare scholen",
         "IT-modernisering van ziekenhuizen",
         "Bouw van zonneparken",
-        "Elektrische busvloten"
-      ]
+        "Elektrische busvloten",
+        "Spoorwerkzaamheden, Milaan",
+        "Clouddiensten, Warschau",
+        "Energierenovatie, Wenen",
+        "Parkonderhoud, Athene"
+      ],
+      "filters": {
+        "country": "Land",
+        "sector": "Sector",
+        "deadline": "Deadline",
+        "value": "Waarde"
+      }
     },
     "meta": {
       "title": "tendersbay — Openbare aanbestedingen, gegund door uw AI-agenten",

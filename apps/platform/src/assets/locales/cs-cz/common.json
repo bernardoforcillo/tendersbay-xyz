@@ -116,8 +116,18 @@
         "Rekonstrukce veřejných škol",
         "IT modernizace nemocnic",
         "Výstavba solárních parků",
-        "Flotily elektrobusů"
-      ]
+        "Flotily elektrobusů",
+        "Železniční práce, Milán",
+        "Cloudové služby, Varšava",
+        "Energetické úspory, Vídeň",
+        "Údržba parků, Atény"
+      ],
+      "filters": {
+        "country": "Země",
+        "sector": "Sektor",
+        "deadline": "Termín",
+        "value": "Hodnota"
+      }
     },
     "meta": {
       "title": "tendersbay — Veřejné zakázky v Evropě, přidělené AI agenty",

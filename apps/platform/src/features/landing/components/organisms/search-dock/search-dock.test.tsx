@@ -27,4 +27,21 @@ describe('SearchDock', () => {
     renderWithI18n(<SearchDock />, 'en-ie');
     expect(screen.queryByText("Soon you'll be able to search…")).not.toBeInTheDocument();
   });
+
+  it('renders the four localized, disabled-but-focusable filter chips', () => {
+    renderWithI18n(<SearchDock />, 'en-ie');
+    for (const label of ['Country', 'Sector', 'Deadline', 'Value']) {
+      const chip = screen.getByRole('button', { name: label });
+      expect(chip).toHaveAttribute('aria-disabled', 'true');
+      expect(chip.className).toContain('grayscale');
+      chip.focus();
+      expect(chip).toHaveFocus();
+    }
+  });
+
+  it('localizes the filter chips (it-it)', () => {
+    renderWithI18n(<SearchDock />, 'it-it');
+    expect(screen.getByRole('button', { name: 'Paese' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Scadenza' })).toBeInTheDocument();
+  });
 });

@@ -116,8 +116,18 @@
         "Renovação de escolas públicas",
         "Modernização de TI hospitalar",
         "Construção de centrais solares",
-        "Frotas de autocarros elétricos"
-      ]
+        "Frotas de autocarros elétricos",
+        "Obras ferroviárias, Milão",
+        "Serviços na nuvem, Varsóvia",
+        "Eficiência energética, Viena",
+        "Manutenção de parques, Atenas"
+      ],
+      "filters": {
+        "country": "País",
+        "sector": "Setor",
+        "deadline": "Prazo",
+        "value": "Valor"
+      }
     },
     "meta": {
       "title": "tendersbay — Concursos públicos, adjudicados por agentes de IA",

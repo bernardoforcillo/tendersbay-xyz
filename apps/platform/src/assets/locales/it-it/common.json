@@ -116,8 +116,18 @@
         "Ristrutturazione di scuole pubbliche",
         "Modernizzazione IT degli ospedali",
         "Costruzione di impianti solari",
-        "Flotte di autobus elettrici"
-      ]
+        "Flotte di autobus elettrici",
+        "Lavori ferroviari, Milano",
+        "Servizi cloud, Varsavia",
+        "Riqualificazione energetica, Vienna",
+        "Manutenzione dei parchi, Atene"
+      ],
+      "filters": {
+        "country": "Paese",
+        "sector": "Settore",
+        "deadline": "Scadenza",
+        "value": "Valore"
+      }
     },
     "meta": {
       "title": "tendersbay — Bandi di gara, aggiudicati dai tuoi agenti AI",

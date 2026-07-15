@@ -116,8 +116,18 @@
         "Athchóiriú scoileanna poiblí",
         "Nuachóiriú TF ospidéal",
         "Tógáil feirmeacha gréine",
-        "Flíteanna bus leictreach"
-      ]
+        "Flíteanna bus leictreach",
+        "Oibreacha iarnróid, Milano",
+        "Seirbhísí scamaill, Vársá",
+        "Uasghrádú fuinnimh, Vín",
+        "Cothabháil páirceanna, An Aithin"
+      ],
+      "filters": {
+        "country": "Tír",
+        "sector": "Earnáil",
+        "deadline": "Spriocdháta",
+        "value": "Luach"
+      }
     },
     "meta": {
       "title": "tendersbay — Tairiscintí poiblí, bronnta ag do ghníomhairí AI",

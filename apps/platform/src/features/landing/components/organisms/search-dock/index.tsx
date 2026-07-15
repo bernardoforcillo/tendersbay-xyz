@@ -1,22 +1,36 @@
 import { cn } from '@tendersbay/components/core';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { usePostHog } from 'posthog-js/react';
+import { useRef } from 'react';
 import { Button, Tooltip, TooltipTrigger } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '~/features/landing/components/atoms';
+import { FilterChips } from './filter-chips';
 import { useHideNearFooter } from './use-hide-near-footer';
 import { useRotatingPlaceholder } from './use-rotating-placeholder';
 
 export function SearchDock() {
   const { t } = useTranslation();
+  const posthog = usePostHog();
   const reduce = useReducedMotion();
   const hidden = useHideNearFooter();
   const examples = t('landing.search.examples', { returnObjects: true }) as string[];
   const { example } = useRotatingPlaceholder(examples, !reduce);
 
+  // Fire the teaser-engagement event at most once per focus cycle: focus covers
+  // keyboard + desktop click (a press is always preceded by focus), press covers
+  // touch taps that don't move DOM focus. The flag resets on blur.
+  const engaged = useRef(false);
+  const captureEngaged = () => {
+    if (engaged.current) return;
+    engaged.current = true;
+    posthog?.capture('landing_search_teaser_focused', { location: 'search_dock' });
+  };
+
   return (
     <motion.div
       className={cn(
-        'fixed inset-x-0 bottom-5 z-40 flex justify-center px-4',
+        'fixed inset-x-0 bottom-5 z-40 flex flex-col items-center gap-2.5 px-4',
         hidden && 'pointer-events-none',
       )}
       initial={reduce ? false : { opacity: 0, y: 16 }}
@@ -28,7 +42,11 @@ export function SearchDock() {
           type="button"
           aria-disabled="true"
           aria-label={t('landing.search.label')}
-          onPress={() => {}}
+          onPress={captureEngaged}
+          onFocus={captureEngaged}
+          onBlur={() => {
+            engaged.current = false;
+          }}
           className={cn(
             'group flex w-full max-w-md cursor-default items-center gap-3 rounded-full text-left',
             'border border-ink-200 bg-white/80 px-5 py-3.5 shadow-soft backdrop-blur grayscale',
@@ -59,6 +77,8 @@ export function SearchDock() {
           {t('landing.search.hint')}
         </Tooltip>
       </TooltipTrigger>
+
+      <FilterChips />
     </motion.div>
   );
 }

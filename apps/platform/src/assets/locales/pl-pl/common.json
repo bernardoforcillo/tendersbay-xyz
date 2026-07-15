@@ -116,8 +116,18 @@
         "Remonty szkół publicznych",
         "Modernizacja IT szpitali",
         "Budowa farm słonecznych",
-        "Floty autobusów elektrycznych"
-      ]
+        "Floty autobusów elektrycznych",
+        "Prace kolejowe, Mediolan",
+        "Usługi chmurowe, Warszawa",
+        "Modernizacja energetyczna, Wiedeń",
+        "Utrzymanie parków, Ateny"
+      ],
+      "filters": {
+        "country": "Kraj",
+        "sector": "Sektor",
+        "deadline": "Termin",
+        "value": "Wartość"
+      }
     },
     "meta": {
       "title": "tendersbay — Przetargi w Europie, rozstrzygnięte z agentami AI",

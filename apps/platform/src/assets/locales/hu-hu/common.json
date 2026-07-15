@@ -116,8 +116,18 @@
         "Köziskolák felújítása",
         "Kórházak IT-korszerűsítése",
         "Naperőművek építése",
-        "Elektromos buszflották"
-      ]
+        "Elektromos buszflották",
+        "Vasúti munkák, Milánó",
+        "Felhőszolgáltatások, Varsó",
+        "Energetikai korszerűsítés, Bécs",
+        "Parkfenntartás, Athén"
+      ],
+      "filters": {
+        "country": "Ország",
+        "sector": "Ágazat",
+        "deadline": "Határidő",
+        "value": "Érték"
+      }
     },
     "meta": {
       "title": "tendersbay — Közbeszerzések az odaítélésig, MI-ügynökök csapatával",
