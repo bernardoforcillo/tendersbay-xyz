@@ -277,7 +277,38 @@
       "logout": "Изход"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} поръчка",
+    "results_other": "{{count}} поръчки",
+    "searching": "Търсене…",
+    "empty": {
+      "title": "Няма намерени поръчки",
+      "description": "Опитайте с по-обща заявка или по-малко филтри."
+    },
+    "error": "Търсенето временно не е налично — опитайте отново след малко.",
+    "loadMore": "Заредете още",
+    "deadline": {
+      "days_one": "{{count}} ден остава",
+      "days_other": "{{count}} дни остават",
+      "today": "Приключва днес",
+      "expired": "Затворена"
+    },
+    "value": {
+      "unknown": "Стойността не е оповестена"
+    },
+    "status": {
+      "open": "Отворена",
+      "awarded": "Възложена",
+      "cancelled": "Отменена",
+      "closed": "Затворена",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Препоръчани за вас",
+      "seeAll": "Всички в Разглеждане →"
+    },
     "greeting": {
       "morning": "Добро утро.",
       "afternoon": "Добър ден.",

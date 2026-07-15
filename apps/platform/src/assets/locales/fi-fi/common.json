@@ -277,7 +277,38 @@
       "logout": "Kirjaudu ulos"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} hankinta",
+    "results_other": "{{count}} hankintaa",
+    "searching": "Haetaan…",
+    "empty": {
+      "title": "Hankintoja ei löytynyt",
+      "description": "Kokeile laajempaa hakua tai vähemmän suodattimia."
+    },
+    "error": "Haku ei ole juuri nyt käytettävissä — yritä hetken kuluttua uudelleen.",
+    "loadMore": "Lataa lisää",
+    "deadline": {
+      "days_one": "{{count}} päivä jäljellä",
+      "days_other": "{{count}} päivää jäljellä",
+      "today": "Päättyy tänään",
+      "expired": "Päättynyt"
+    },
+    "value": {
+      "unknown": "Arvoa ei ilmoitettu"
+    },
+    "status": {
+      "open": "Avoinna",
+      "awarded": "Ratkaistu",
+      "cancelled": "Peruttu",
+      "closed": "Päättynyt",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Suositeltu sinulle",
+      "seeAll": "Kaikki Tutustu-osiossa →"
+    },
     "greeting": {
       "morning": "Hyvää huomenta.",
       "afternoon": "Hyvää päivää.",

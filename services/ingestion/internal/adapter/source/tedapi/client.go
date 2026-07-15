@@ -106,7 +106,11 @@ func (c *Client) FetchSince(ctx context.Context, since time.Time) ([]eforms.Noti
 			}
 			notices = append(notices, n)
 		}
-		if resp.IterationNextToken == nil || *resp.IterationNextToken == "" {
+		// TED never nulls iterationNextToken (verified live): the
+		// end-of-results signal is an empty page, and iterating past it
+		// wraps back around to the first page. The token check stays as
+		// a backstop in case TED ever adopts the documented behavior.
+		if len(resp.Notices) == 0 || resp.IterationNextToken == nil || *resp.IterationNextToken == "" {
 			break
 		}
 		token = *resp.IterationNextToken

@@ -277,7 +277,44 @@
       "logout": "Oħroġ"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} offerta",
+    "results_two": "{{count}} offerti",
+    "results_few": "{{count}} offerti",
+    "results_many": "{{count}} offerta",
+    "results_other": "{{count}} offerta",
+    "searching": "Qed infittxu…",
+    "empty": {
+      "title": "L-ebda offerta ma nstabet",
+      "description": "Ipprova tfittxija usa' jew inqas filtri."
+    },
+    "error": "It-tfittxija mhix disponibbli bħalissa — erġa' pprova fi ftit ħin.",
+    "loadMore": "Tella' aktar",
+    "deadline": {
+      "days_one": "{{count}} jum fadal",
+      "days_two": "{{count}} jiem fadal",
+      "days_few": "{{count}} jiem fadal",
+      "days_many": "{{count}} jum fadal",
+      "days_other": "{{count}} jum fadal",
+      "today": "Tagħlaq illum",
+      "expired": "Magħluqa"
+    },
+    "value": {
+      "unknown": "Valur mhux żvelat"
+    },
+    "status": {
+      "open": "Miftuħa",
+      "awarded": "Mogħtija",
+      "cancelled": "Ikkanċellata",
+      "closed": "Magħluqa",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Rakkomandati għalik",
+      "seeAll": "Kollox f'Esplora →"
+    },
     "greeting": {
       "morning": "L-għodwa t-tajba.",
       "afternoon": "Wara nofsinhar it-tajjeb.",

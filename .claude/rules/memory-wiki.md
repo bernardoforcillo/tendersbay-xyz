@@ -57,17 +57,17 @@ page yet is a to-write marker. For project pages, prefer stating the why.>
 | Reusable multi-step workflow | **propose** a `.claude/skills/<name>/` skill |
 | Only-this-feature detail | note beside the plan in `docs/superpowers/`, or skip |
 
-## Optional: reminder hook (opt-in, not enabled by default)
+## Reminder hook (enabled in project settings)
 
-A guarded `Stop` hook can nudge you to run `/capture-learnings` after plan work.
-It only prints a reminder — it never writes the wiki. To enable, add to
-`.claude/settings.json` (or `settings.local.json`):
+A guarded `Stop` hook nudges you to run `/capture-learnings` after plan work — the
+skill then dispatches the `librarian` subagent for the ingest. The hook only prints
+a reminder; it never writes the wiki. It is enabled in `.claude/settings.json`:
 
 ```json
 {
   "hooks": {
     "Stop": [
-      { "hooks": [ { "type": "command", "command": ".claude/hooks/capture-learnings-nudge.sh" } ] }
+      { "hooks": [ { "type": "command", "command": ".claude/hooks/capture-learnings-nudge.sh", "shell": "bash" } ] }
     ]
   }
 }

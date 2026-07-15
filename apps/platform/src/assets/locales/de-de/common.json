@@ -277,7 +277,38 @@
       "logout": "Abmelden"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} Ausschreibung",
+    "results_other": "{{count}} Ausschreibungen",
+    "searching": "Suche läuft…",
+    "empty": {
+      "title": "Keine Ausschreibungen gefunden",
+      "description": "Versuchen Sie eine breitere Suche oder weniger Filter."
+    },
+    "error": "Die Suche ist momentan nicht verfügbar — versuchen Sie es in Kürze erneut.",
+    "loadMore": "Mehr laden",
+    "deadline": {
+      "days_one": "{{count}} Tag verbleibend",
+      "days_other": "{{count}} Tage verbleibend",
+      "today": "Endet heute",
+      "expired": "Geschlossen"
+    },
+    "value": {
+      "unknown": "Wert nicht angegeben"
+    },
+    "status": {
+      "open": "Offen",
+      "awarded": "Vergeben",
+      "cancelled": "Storniert",
+      "closed": "Geschlossen",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Für Sie empfohlen",
+      "seeAll": "Alles in Entdecken →"
+    },
     "greeting": {
       "morning": "Guten Morgen.",
       "afternoon": "Guten Tag.",

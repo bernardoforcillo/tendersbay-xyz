@@ -277,7 +277,38 @@
       "logout": "Uitloggen"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} aanbesteding",
+    "results_other": "{{count}} aanbestedingen",
+    "searching": "Zoeken…",
+    "empty": {
+      "title": "Geen aanbestedingen gevonden",
+      "description": "Probeer een bredere zoekopdracht of minder filters."
+    },
+    "error": "Zoeken is nu niet beschikbaar — probeer het zo weer.",
+    "loadMore": "Meer laden",
+    "deadline": {
+      "days_one": "{{count}} dag over",
+      "days_other": "{{count}} dagen over",
+      "today": "Sluit vandaag",
+      "expired": "Gesloten"
+    },
+    "value": {
+      "unknown": "Waarde niet bekendgemaakt"
+    },
+    "status": {
+      "open": "Open",
+      "awarded": "Gegund",
+      "cancelled": "Geannuleerd",
+      "closed": "Gesloten",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Aanbevolen voor jou",
+      "seeAll": "Alles in Ontdekken →"
+    },
     "greeting": {
       "morning": "Goedemorgen.",
       "afternoon": "Goedemiddag.",

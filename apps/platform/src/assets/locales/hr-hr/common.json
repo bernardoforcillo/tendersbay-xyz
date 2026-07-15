@@ -281,7 +281,40 @@
       "logout": "Odjava"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} natječaj",
+    "results_few": "{{count}} natječaja",
+    "results_other": "{{count}} natječaja",
+    "searching": "Pretraživanje…",
+    "empty": {
+      "title": "Nema pronađenih natječaja",
+      "description": "Pokušajte širi upit ili manje filtara."
+    },
+    "error": "Pretraživanje trenutačno nije dostupno — pokušajte ponovno za trenutak.",
+    "loadMore": "Učitaj više",
+    "deadline": {
+      "days_one": "{{count}} dan preostao",
+      "days_few": "{{count}} dana preostala",
+      "days_other": "{{count}} dana preostalo",
+      "today": "Zatvara se danas",
+      "expired": "Zatvoreno"
+    },
+    "value": {
+      "unknown": "Vrijednost nije objavljena"
+    },
+    "status": {
+      "open": "Otvoren",
+      "awarded": "Dodijeljen",
+      "cancelled": "Otkazan",
+      "closed": "Zatvoren",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Preporučeno za vas",
+      "seeAll": "Sve u odjeljku Istraži →"
+    },
     "greeting": {
       "morning": "Dobro jutro.",
       "afternoon": "Dobar dan.",

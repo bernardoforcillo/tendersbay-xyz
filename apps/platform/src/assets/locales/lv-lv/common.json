@@ -277,7 +277,40 @@
       "logout": "Izrakstīties"
     }
   },
+  "tenders": {
+    "results_zero": "{{count}} iepirkumu",
+    "results_one": "{{count}} iepirkums",
+    "results_other": "{{count}} iepirkumi",
+    "searching": "Meklē…",
+    "empty": {
+      "title": "Iepirkumi nav atrasti",
+      "description": "Mēģiniet plašāku vaicājumu vai mazāk filtru."
+    },
+    "error": "Meklēšana pašlaik nav pieejama — mēģiniet vēlreiz pēc brīža.",
+    "loadMore": "Ielādēt vairāk",
+    "deadline": {
+      "days_zero": "{{count}} dienu atlikušas",
+      "days_one": "{{count}} diena atlikusi",
+      "days_other": "{{count}} dienas atlikušas",
+      "today": "Beidzas šodien",
+      "expired": "Slēgts"
+    },
+    "value": {
+      "unknown": "Vērtība nav norādīta"
+    },
+    "status": {
+      "open": "Atvērts",
+      "awarded": "Piešķirts",
+      "cancelled": "Atcelts",
+      "closed": "Slēgts",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Ieteikts jums",
+      "seeAll": "Viss sadaļā Pārlūkot →"
+    },
     "greeting": {
       "morning": "Labrīt.",
       "afternoon": "Labdien.",

@@ -1,5 +1,7 @@
 github.com/bernardoforcillo/drops v0.2.1 h1:StF1ZHCuhWInRz74Alkls4w4dJMEbpYS/dz4M9NS+sc=
 github.com/bernardoforcillo/drops v0.2.1/go.mod h1:9r+/t5MUZa+V0w5uwvrojHO6CCrSMfeFUuIn+18L9V4=
+github.com/bernardoforcillo/drops v0.4.1 h1:hbaC9GrshtcADCG4oo0BDrVkCCL8kYJgSgAMe9VBSpA=
+github.com/bernardoforcillo/drops v0.4.1/go.mod h1:9r+/t5MUZa+V0w5uwvrojHO6CCrSMfeFUuIn+18L9V4=
 github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge v0.0.0-20260711225059-711b6b13f4ef h1:K3G21yBsbm7xKIx7QWIEOM+pk2kczvHXnSuSNkmyZmY=
 github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge v0.0.0-20260711225059-711b6b13f4ef/go.mod h1:eyaBujPqOm+xd3i4GNXPQV3WglbMp0XDap3lrVOqVTM=
 github.com/buildwithgo/berrygem v0.0.0-20260505193244-810711e4a49b h1:4Az1+Ewo8+upUC4LT3IFJFZ9R7Tm6H8wDcerC68MDlk=

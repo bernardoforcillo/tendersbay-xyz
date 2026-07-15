@@ -277,7 +277,38 @@
       "logout": "Terminar sessão"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} concurso",
+    "results_other": "{{count}} concursos",
+    "searching": "A pesquisar…",
+    "empty": {
+      "title": "Não foram encontrados concursos",
+      "description": "Experimente uma pesquisa mais ampla ou menos filtros."
+    },
+    "error": "A pesquisa não está disponível de momento — tente novamente daqui a instantes.",
+    "loadMore": "Carregar mais",
+    "deadline": {
+      "days_one": "{{count}} dia restante",
+      "days_other": "{{count}} dias restantes",
+      "today": "Termina hoje",
+      "expired": "Encerrado"
+    },
+    "value": {
+      "unknown": "Valor não divulgado"
+    },
+    "status": {
+      "open": "Aberto",
+      "awarded": "Adjudicado",
+      "cancelled": "Cancelado",
+      "closed": "Encerrado",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Recomendado para si",
+      "seeAll": "Tudo em Explorar →"
+    },
     "greeting": {
       "morning": "Bom dia.",
       "afternoon": "Boa tarde.",

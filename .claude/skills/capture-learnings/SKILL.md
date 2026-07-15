@@ -17,6 +17,12 @@ dedup — so the next session starts with accumulated knowledge. Conventions liv
 
 ## Ingest
 
+**Main session: delegate, don't ingest inline.** Resolve the plan path (step 1),
+dispatch the `librarian` subagent (Agent tool, `subagent_type: librarian`) with that
+path as its prompt, then relay its "what I saved and where" summary to the user
+verbatim. Steps 2–8 are the ingest procedure the librarian executes. Run them inline
+only when the Agent tool is unavailable (e.g. you are already a subagent).
+
 1. **Locate the source.** Use `plan-path` if given; else pick the most recently
    completed plan in `docs/superpowers/plans/` (confirm with the user if ambiguous).
 2. **Read + reflect.** Read the plan/spec and reconstruct the session's lessons:

@@ -281,7 +281,42 @@
       "logout": "Wyloguj się"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} przetarg",
+    "results_few": "{{count}} przetargi",
+    "results_many": "{{count}} przetargów",
+    "results_other": "{{count}} przetargu",
+    "searching": "Wyszukiwanie…",
+    "empty": {
+      "title": "Nie znaleziono przetargów",
+      "description": "Spróbuj szerszego zapytania lub mniejszej liczby filtrów."
+    },
+    "error": "Wyszukiwanie jest obecnie niedostępne — spróbuj ponownie za chwilę.",
+    "loadMore": "Wczytaj więcej",
+    "deadline": {
+      "days_one": "{{count}} dzień pozostał",
+      "days_few": "{{count}} dni pozostały",
+      "days_many": "{{count}} dni pozostało",
+      "days_other": "{{count}} dnia pozostało",
+      "today": "Zamyka się dziś",
+      "expired": "Zamknięty"
+    },
+    "value": {
+      "unknown": "Wartość nieujawniona"
+    },
+    "status": {
+      "open": "Otwarty",
+      "awarded": "Udzielony",
+      "cancelled": "Anulowany",
+      "closed": "Zamknięty",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Polecane dla Ciebie",
+      "seeAll": "Wszystko w sekcji Odkrywaj →"
+    },
     "greeting": {
       "morning": "Dzień dobry.",
       "afternoon": "Miłego popołudnia.",

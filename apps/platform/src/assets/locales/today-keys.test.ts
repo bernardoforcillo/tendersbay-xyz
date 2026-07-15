@@ -26,6 +26,8 @@ const REQUIRED_KEYS = [
   'today.explore.title',
   'today.explore.description',
   'today.explore.action',
+  'today.recommended.title',
+  'today.recommended.seeAll',
 ] as const;
 
 describe('today locale keys', () => {

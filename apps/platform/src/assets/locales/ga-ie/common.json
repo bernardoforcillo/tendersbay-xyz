@@ -281,7 +281,44 @@
       "logout": "Logáil amach"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} thairiscint",
+    "results_two": "{{count}} thairiscint",
+    "results_few": "{{count}} thairiscint",
+    "results_many": "{{count}} dtairiscint",
+    "results_other": "{{count}} tairiscint",
+    "searching": "Ag cuardach…",
+    "empty": {
+      "title": "Níor aimsíodh aon tairiscint",
+      "description": "Bain triail as cuardach níos leithne nó níos lú scagairí."
+    },
+    "error": "Níl an cuardach ar fáil faoi láthair — bain triail eile as i gceann nóiméid.",
+    "loadMore": "Luchtaigh tuilleadh",
+    "deadline": {
+      "days_one": "{{count}} lá fágtha",
+      "days_two": "{{count}} lá fágtha",
+      "days_few": "{{count}} lá fágtha",
+      "days_many": "{{count}} lá fágtha",
+      "days_other": "{{count}} lá fágtha",
+      "today": "Dúnann inniu",
+      "expired": "Dúnta"
+    },
+    "value": {
+      "unknown": "Luach neamhnochta"
+    },
+    "status": {
+      "open": "Oscailte",
+      "awarded": "Bronnta",
+      "cancelled": "Cealaithe",
+      "closed": "Dúnta",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Molta duit",
+      "seeAll": "Gach rud in Iniúchadh →"
+    },
     "greeting": {
       "morning": "Maidin mhaith.",
       "afternoon": "Tráthnóna maith.",

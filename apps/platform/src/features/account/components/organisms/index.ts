@@ -10,3 +10,5 @@ export type { SearchMode } from './search-dock';
 export { SearchDock } from './search-dock';
 export type { SettingsSectionProps } from './settings-section';
 export { SettingsSection } from './settings-section';
+export type { TenderResultCardProps } from './tender-result-card';
+export { TenderResultCard } from './tender-result-card';

@@ -277,7 +277,40 @@
       "logout": "Odhlásiť sa"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} zákazka",
+    "results_few": "{{count}} zákazky",
+    "results_other": "{{count}} zákaziek",
+    "searching": "Vyhľadávanie…",
+    "empty": {
+      "title": "Nenašli sa žiadne zákazky",
+      "description": "Skúste širší dopyt alebo menej filtrov."
+    },
+    "error": "Vyhľadávanie je momentálne nedostupné — skúste to o chvíľu znova.",
+    "loadMore": "Načítať ďalšie",
+    "deadline": {
+      "days_one": "{{count}} deň zostáva",
+      "days_few": "{{count}} dni zostávajú",
+      "days_other": "{{count}} dní zostáva",
+      "today": "Uzávierka dnes",
+      "expired": "Uzavretá"
+    },
+    "value": {
+      "unknown": "Hodnota nezverejnená"
+    },
+    "status": {
+      "open": "Otvorená",
+      "awarded": "Pridelená",
+      "cancelled": "Zrušená",
+      "closed": "Uzavretá",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Odporúčané pre vás",
+      "seeAll": "Všetko v sekcii Preskúmať →"
+    },
     "greeting": {
       "morning": "Dobré ráno.",
       "afternoon": "Dobrý deň.",

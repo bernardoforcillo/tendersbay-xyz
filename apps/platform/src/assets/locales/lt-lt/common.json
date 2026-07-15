@@ -281,7 +281,40 @@
       "logout": "Atsijungti"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} pirkimas",
+    "results_few": "{{count}} pirkimai",
+    "results_other": "{{count}} pirkimų",
+    "searching": "Ieškoma…",
+    "empty": {
+      "title": "Pirkimų nerasta",
+      "description": "Pabandykite platesnę užklausą arba mažiau filtrų."
+    },
+    "error": "Paieška šiuo metu nepasiekiama — pabandykite dar kartą po akimirkos.",
+    "loadMore": "Įkelti daugiau",
+    "deadline": {
+      "days_one": "{{count}} diena liko",
+      "days_few": "{{count}} dienos liko",
+      "days_other": "{{count}} dienų liko",
+      "today": "Baigiasi šiandien",
+      "expired": "Uždaryta"
+    },
+    "value": {
+      "unknown": "Vertė neatskleista"
+    },
+    "status": {
+      "open": "Atviras",
+      "awarded": "Laimėtas",
+      "cancelled": "Atšauktas",
+      "closed": "Uždarytas",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Rekomenduojama jums",
+      "seeAll": "Visi skiltyje Naršyti →"
+    },
     "greeting": {
       "morning": "Labas rytas.",
       "afternoon": "Laba diena.",

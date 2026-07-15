@@ -21,5 +21,18 @@
       "Bash(git log *)"
     ],
     "deny": ["Bash(rm -rf *)"]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/capture-learnings-nudge.sh",
+            "shell": "bash"
+          }
+        ]
+      }
+    ]
   }
 }

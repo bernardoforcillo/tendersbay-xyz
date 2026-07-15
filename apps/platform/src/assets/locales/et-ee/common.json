@@ -277,7 +277,38 @@
       "logout": "Logi välja"
     }
   },
+  "tenders": {
+    "results_one": "{{count}} hange",
+    "results_other": "{{count}} hanget",
+    "searching": "Otsimine…",
+    "empty": {
+      "title": "Hankeid ei leitud",
+      "description": "Proovige laiemat otsingut või vähem filtreid."
+    },
+    "error": "Otsing ei ole hetkel saadaval — proovige veidi hiljem uuesti.",
+    "loadMore": "Laadi rohkem",
+    "deadline": {
+      "days_one": "{{count}} päev jäänud",
+      "days_other": "{{count}} päeva jäänud",
+      "today": "Tähtaeg täna",
+      "expired": "Suletud"
+    },
+    "value": {
+      "unknown": "Väärtus avaldamata"
+    },
+    "status": {
+      "open": "Avatud",
+      "awarded": "Sõlmitud",
+      "cancelled": "Tühistatud",
+      "closed": "Suletud",
+      "unknown": "—"
+    }
+  },
   "today": {
+    "recommended": {
+      "title": "Teile soovitatud",
+      "seeAll": "Kõik jaotises Avasta →"
+    },
     "greeting": {
       "morning": "Tere hommikust.",
       "afternoon": "Tere päevast.",
