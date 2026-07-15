@@ -5,7 +5,110 @@
     "accept": "Akzeptieren",
     "reject": "Ablehnen"
   },
+  "account": {
+    "settings": {
+      "title": "Kontoeinstellungen"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Aktualisieren Sie Ihren Anzeigenamen und wie andere Sie sehen.",
+      "displayName": "Anzeigename",
+      "saved": "Gespeichert!",
+      "submitting": "Wird gespeichert…",
+      "submit": "Änderungen speichern"
+    },
+    "changeEmail": {
+      "checkEmail": "Prüfen Sie Ihre neue E-Mail",
+      "title": "E-Mail ändern",
+      "prompt": "Wir haben einen Bestätigungslink an Ihre neue Adresse gesendet. Klicken Sie darauf, um die Änderung zu bestätigen.",
+      "description": "Wir senden einen Bestätigungslink an die neue Adresse.",
+      "hint": "Ihre aktuelle E-Mail bleibt aktiv, bis Sie die neue bestätigen.",
+      "newEmail": "Neue E-Mail",
+      "password": "Aktuelles Passwort",
+      "submitting": "Wird gespeichert…",
+      "submit": "E-Mail ändern"
+    },
+    "changePassword": {
+      "successTitle": "Passwort aktualisiert",
+      "title": "Passwort ändern",
+      "successBody": "Ihr Passwort wurde geändert. Melden Sie sich auf anderen Geräten erneut an.",
+      "description": "Das neue Passwort muss mindestens 12 Zeichen lang sein.",
+      "successHint": "Andere aktive Sitzungen bleiben bis zu ihrem Ablauf gültig.",
+      "current": "Aktuelles Passwort",
+      "new": "Neues Passwort",
+      "submitting": "Wird gespeichert…",
+      "submit": "Passwort ändern"
+    },
+    "delete": {
+      "title": "Konto löschen",
+      "description": "Diese Aktion ist endgültig und kann nicht rückgängig gemacht werden. Alle Ihre Daten, Workspaces und Einstellungen werden dauerhaft gelöscht.",
+      "password": "Mit Ihrem Passwort bestätigen",
+      "submitting": "Wird gelöscht…",
+      "submit": "Mein Konto löschen"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Anmelden",
+      "description": "Willkommen zurück bei tendersbay.",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "forgotPassword": "Passwort vergessen?",
+      "submitting": "Anmeldung läuft…",
+      "submit": "Anmelden",
+      "noAccount": "Noch kein Konto?",
+      "signUp": "Registrieren"
+    },
+    "signup": {
+      "checkEmail": "Prüfen Sie Ihre E-Mails",
+      "verifyPrompt": "Wir haben Ihnen einen Bestätigungslink gesendet. Klicken Sie darauf, um Ihr Konto zu aktivieren.",
+      "checkEmailHint": "Der Link läuft in 24 Stunden ab. Prüfen Sie Ihren Spam-Ordner, falls Sie ihn nicht sehen.",
+      "backToLogin": "Zurück zur Anmeldung",
+      "title": "Konto erstellen",
+      "description": "Gewinnen Sie EU-Ausschreibungen mit KI-Agenten.",
+      "displayName": "Name",
+      "email": "E-Mail",
+      "password": "Passwort",
+      "submitting": "Wird erstellt…",
+      "submit": "Konto erstellen",
+      "login": "Bereits ein Konto?",
+      "signIn": "Anmelden"
+    },
+    "forgot": {
+      "checkEmail": "Prüfen Sie Ihre E-Mails",
+      "checkEmailBody": "Falls für diese Adresse ein Konto besteht, erhalten Sie in Kürze einen Link zum Zurücksetzen.",
+      "checkEmailHint": "Der Link läuft in 1 Stunde ab. Prüfen Sie Ihren Spam-Ordner, falls Sie ihn nicht sehen.",
+      "backToLogin": "Zurück zur Anmeldung",
+      "title": "Passwort zurücksetzen",
+      "description": "Geben Sie Ihre E-Mail-Adresse ein, und wir senden Ihnen einen Link zum Zurücksetzen.",
+      "email": "E-Mail",
+      "submitting": "Wird gesendet…",
+      "submit": "Link zum Zurücksetzen senden"
+    },
+    "reset": {
+      "invalidTitle": "Ungültiger Link",
+      "invalid": "Dieser Link zum Zurücksetzen fehlt oder ist abgelaufen.",
+      "requestNew": "Neuen Link anfordern",
+      "title": "Neues Passwort festlegen",
+      "description": "Wählen Sie ein sicheres Passwort mit mindestens 12 Zeichen.",
+      "password": "Neues Passwort",
+      "submitting": "Wird gespeichert…",
+      "submit": "Passwort festlegen"
+    },
+    "verify": {
+      "errorTitle": "Link abgelaufen",
+      "error": "Dieser Link ist ungültig oder abgelaufen. Fordern Sie einen neuen an.",
+      "successTitle": "E-Mail bestätigt",
+      "success": "Alles bereit. Sie werden jetzt weitergeleitet…",
+      "loadingTitle": "Ihre E-Mail wird verifiziert…",
+      "loading": "Einen Moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Anmelden",
+      "signup": "Registrieren"
+    },
     "search": {
       "label": "Suchen",
       "hint": "KI-gestützte Suche — bald verfügbar",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Europäische Ausschreibungen, von Ihren KI-Agenten zugeschlagen",
-      "description": "KI-Agenten, die die richtigen europäischen öffentlichen Ausschreibungen aufspüren, den Papierkram zerlegen und Ihr KMU bis zum Zuschlag bringen."
+      "title": "tendersbay — Öffentliche Ausschreibungen, zugeschlagen von KI-Agenten",
+      "description": "KI-Agenten, die die richtigen öffentlichen Ausschreibungen und Aufträge in Europa aufspüren, den Papierkram zerlegen und Ihr KMU bis zum Zuschlag bringen."
     },
     "nav": {
       "problem": "Die Kosten",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} Tage"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Heute",
+      "explore": "Entdecken",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Zuletzt",
+    "palette": {
+      "trigger": "Suchen oder fragen…",
+      "label": "Befehlspalette",
+      "placeholder": "Suchen oder alles fragen…",
+      "askAgent": "Fragen Sie den Agenten: „{{query}}“",
+      "sections": {
+        "navigate": "Gehe zu",
+        "recent": "Letzte Workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-Einstellungen",
+      "accountSettings": "Kontoeinstellungen",
+      "allWorkspaces": "Alle Workspaces"
+    },
+    "user": {
+      "settings": "Einstellungen",
+      "logout": "Abmelden"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} Ausschreibung",
+    "results_other": "{{count}} Ausschreibungen",
+    "searching": "Suche läuft…",
+    "empty": {
+      "title": "Keine Ausschreibungen gefunden",
+      "description": "Versuchen Sie eine breitere Suche oder weniger Filter."
+    },
+    "error": "Die Suche ist momentan nicht verfügbar — versuchen Sie es in Kürze erneut.",
+    "loadMore": "Mehr laden",
+    "deadline": {
+      "days_one": "{{count}} Tag verbleibend",
+      "days_other": "{{count}} Tage verbleibend",
+      "today": "Endet heute",
+      "expired": "Geschlossen"
+    },
+    "value": {
+      "unknown": "Wert nicht angegeben"
+    },
+    "status": {
+      "open": "Offen",
+      "awarded": "Vergeben",
+      "cancelled": "Storniert",
+      "closed": "Geschlossen",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Für Sie empfohlen",
+      "seeAll": "Alles in Entdecken →"
+    },
+    "greeting": {
+      "morning": "Guten Morgen.",
+      "afternoon": "Guten Tag.",
+      "evening": "Guten Abend.",
+      "morningNamed": "Guten Morgen, {{name}}.",
+      "afternoonNamed": "Guten Tag, {{name}}.",
+      "eveningNamed": "Guten Abend, {{name}}."
+    },
+    "resume": {
+      "title": "Machen Sie da weiter, wo Sie aufgehört haben",
+      "untitled": "Unterhaltung ohne Titel"
+    },
+    "explore": {
+      "title": "Finden Sie Ihre nächste Ausschreibung",
+      "description": "Fragen Sie den Agenten nach Märkten, Anforderungen oder einer bestimmten Ausschreibung — personalisierte Empfehlungen erscheinen hier, sobald Ihre Suchprofile Gestalt annehmen.",
+      "action": "Öffnen Sie Entdecken"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Wird geladen…",
@@ -269,6 +448,7 @@
       "signIn": "Zum Beitreten anmelden"
     },
     "switcher": {
+      "settings": "Workspace-Einstellungen",
       "label": "Workspaces",
       "manage": "Alle Workspaces"
     }

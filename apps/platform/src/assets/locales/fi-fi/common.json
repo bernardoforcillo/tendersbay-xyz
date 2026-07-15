@@ -5,7 +5,110 @@
     "accept": "Hyväksy",
     "reject": "Hylkää"
   },
+  "account": {
+    "settings": {
+      "title": "Tilin asetukset"
+    },
+    "profile": {
+      "title": "Profiili",
+      "description": "Päivitä näyttönimesi ja se, miten muut näkevät sinut.",
+      "displayName": "Näyttönimi",
+      "saved": "Tallennettu!",
+      "submitting": "Tallennetaan…",
+      "submit": "Tallenna muutokset"
+    },
+    "changeEmail": {
+      "checkEmail": "Tarkista uusi sähköpostisi",
+      "title": "Vaihda sähköposti",
+      "prompt": "Lähetimme vahvistuslinkin uuteen osoitteeseesi. Vahvista muutos napsauttamalla sitä.",
+      "description": "Lähetämme vahvistuslinkin uuteen osoitteeseen.",
+      "hint": "Nykyinen sähköpostisi pysyy aktiivisena, kunnes vahvistat uuden.",
+      "newEmail": "Uusi sähköposti",
+      "password": "Nykyinen salasana",
+      "submitting": "Tallennetaan…",
+      "submit": "Vaihda sähköposti"
+    },
+    "changePassword": {
+      "successTitle": "Salasana päivitetty",
+      "title": "Vaihda salasana",
+      "successBody": "Salasanasi on vaihdettu. Kirjaudu uudelleen muilla laitteilla.",
+      "description": "Uuden salasanan on oltava vähintään 12 merkkiä pitkä.",
+      "successHint": "Muut aktiiviset istunnot pysyvät voimassa, kunnes ne vanhenevat.",
+      "current": "Nykyinen salasana",
+      "new": "Uusi salasana",
+      "submitting": "Tallennetaan…",
+      "submit": "Vaihda salasana"
+    },
+    "delete": {
+      "title": "Poista tili",
+      "description": "Tämä toiminto on pysyvä eikä sitä voi perua. Kaikki tietosi, työtilasi ja asetuksesi poistetaan pysyvästi.",
+      "password": "Vahvista salasanallasi",
+      "submitting": "Poistetaan…",
+      "submit": "Poista tilini"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Kirjaudu sisään",
+      "description": "Tervetuloa takaisin tendersbayhin.",
+      "email": "Sähköposti",
+      "password": "Salasana",
+      "forgotPassword": "Unohditko salasanan?",
+      "submitting": "Kirjaudutaan…",
+      "submit": "Kirjaudu sisään",
+      "noAccount": "Eikö sinulla ole tiliä?",
+      "signUp": "Rekisteröidy"
+    },
+    "signup": {
+      "checkEmail": "Tarkista sähköpostisi",
+      "verifyPrompt": "Lähetimme sinulle vahvistuslinkin. Aktivoi tilisi klikkaamalla sitä.",
+      "checkEmailHint": "Linkki vanhenee 24 tunnissa. Tarkista roskapostikansio, jos et näe sitä.",
+      "backToLogin": "Takaisin kirjautumiseen",
+      "title": "Luo tili",
+      "description": "Ala voittaa EU-hankintoja tekoälyagenttien avulla.",
+      "displayName": "Nimi",
+      "email": "Sähköposti",
+      "password": "Salasana",
+      "submitting": "Luodaan…",
+      "submit": "Luo tili",
+      "login": "Onko sinulla jo tili?",
+      "signIn": "Kirjaudu sisään"
+    },
+    "forgot": {
+      "checkEmail": "Tarkista sähköpostisi",
+      "checkEmailBody": "Jos kyseiselle osoitteelle on tili, saat pian palautuslinkin.",
+      "checkEmailHint": "Linkki vanhenee 1 tunnissa. Tarkista roskapostikansio, jos et näe sitä.",
+      "backToLogin": "Takaisin kirjautumiseen",
+      "title": "Nollaa salasana",
+      "description": "Anna sähköpostiosoitteesi, niin lähetämme sinulle palautuslinkin.",
+      "email": "Sähköposti",
+      "submitting": "Lähetetään…",
+      "submit": "Lähetä palautuslinkki"
+    },
+    "reset": {
+      "invalidTitle": "Virheellinen linkki",
+      "invalid": "Tämä palautuslinkki puuttuu tai on vanhentunut.",
+      "requestNew": "Pyydä uusi linkki",
+      "title": "Aseta uusi salasana",
+      "description": "Valitse vahva salasana, jossa on vähintään 12 merkkiä.",
+      "password": "Uusi salasana",
+      "submitting": "Tallennetaan…",
+      "submit": "Aseta salasana"
+    },
+    "verify": {
+      "errorTitle": "Linkki vanhentunut",
+      "error": "Tämä linkki on virheellinen tai vanhentunut. Pyydä uusi.",
+      "successTitle": "Sähköposti vahvistettu",
+      "success": "Kaikki valmista. Sinut ohjataan eteenpäin…",
+      "loadingTitle": "Vahvistetaan sähköpostiasi…",
+      "loading": "Hetki vielä."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Kirjaudu sisään",
+      "signup": "Rekisteröidy"
+    },
     "search": {
       "label": "Hae",
       "hint": "Tekoälyhaku — pian saatavilla",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Eurooppalaiset hankinnat, tekoälyagenttiesi voittamina",
-      "description": "Tekoälyagentit, jotka jäljittävät oikeat eurooppalaiset julkiset hankinnat, murskaavat paperityöt ja vievät pk-yrityksesi aina hankintapäätökseen asti."
+      "title": "tendersbay — Julkiset hankinnat, tekoälyagenttiesi valmistelemina",
+      "description": "Tekoälyagentit, jotka jäljittävät oikeat julkiset hankinnat ja tarjouspyynnöt Euroopassa, murskaavat paperityöt ja vievät pk-yrityksesi hankintapäätökseen asti."
     },
     "nav": {
       "problem": "Hinta",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} päivää"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Tänään",
+      "explore": "Tutustu",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Viimeisimmät",
+    "palette": {
+      "trigger": "Hae tai kysy…",
+      "label": "Komentopaletti",
+      "placeholder": "Hae tai kysy mitä tahansa…",
+      "askAgent": "Kysy agentilta: ”{{query}}”",
+      "sections": {
+        "navigate": "Siirry",
+        "recent": "Viimeisimmät workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-asetukset",
+      "accountSettings": "Tilin asetukset",
+      "allWorkspaces": "Kaikki workspacet"
+    },
+    "user": {
+      "settings": "Asetukset",
+      "logout": "Kirjaudu ulos"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} hankinta",
+    "results_other": "{{count}} hankintaa",
+    "searching": "Haetaan…",
+    "empty": {
+      "title": "Hankintoja ei löytynyt",
+      "description": "Kokeile laajempaa hakua tai vähemmän suodattimia."
+    },
+    "error": "Haku ei ole juuri nyt käytettävissä — yritä hetken kuluttua uudelleen.",
+    "loadMore": "Lataa lisää",
+    "deadline": {
+      "days_one": "{{count}} päivä jäljellä",
+      "days_other": "{{count}} päivää jäljellä",
+      "today": "Päättyy tänään",
+      "expired": "Päättynyt"
+    },
+    "value": {
+      "unknown": "Arvoa ei ilmoitettu"
+    },
+    "status": {
+      "open": "Avoinna",
+      "awarded": "Ratkaistu",
+      "cancelled": "Peruttu",
+      "closed": "Päättynyt",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Suositeltu sinulle",
+      "seeAll": "Kaikki Tutustu-osiossa →"
+    },
+    "greeting": {
+      "morning": "Hyvää huomenta.",
+      "afternoon": "Hyvää päivää.",
+      "evening": "Hyvää iltaa.",
+      "morningNamed": "Hyvää huomenta, {{name}}.",
+      "afternoonNamed": "Hyvää päivää, {{name}}.",
+      "eveningNamed": "Hyvää iltaa, {{name}}."
+    },
+    "resume": {
+      "title": "Jatka siitä, mihin jäit",
+      "untitled": "Nimetön keskustelu"
+    },
+    "explore": {
+      "title": "Löydä seuraava hankintasi",
+      "description": "Kysy agentilta markkinoista, vaatimuksista tai tietystä tarjouspyynnöstä — henkilökohtaiset suositukset näkyvät täällä, kun hakuprofiilisi muotoutuvat.",
+      "action": "Avaa Tutustu"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Ladataan…",
@@ -269,6 +448,7 @@
       "signIn": "Kirjaudu sisään liittyäksesi"
     },
     "switcher": {
+      "settings": "Workspace-asetukset",
       "label": "Työtilat",
       "manage": "Kaikki työtilat"
     }

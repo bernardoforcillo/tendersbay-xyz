@@ -1,0 +1,155 @@
+syntax = "proto3";
+package agent.v1;
+
+option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1;agentv1";
+
+// AgentService manages AI chat sessions, streaming agent responses, and
+// workspace token-credit tracking. Chat sessions are scoped to a workspace
+// (or optionally a workbench) and tagged with an agent_type so the registry
+// can dispatch to the right agent (base-chat, tender-search, prepare, win…).
+// Streaming is implemented via server-sent events (oneof token / choice /
+// error / done) so the frontend renders tokens incrementally and surfaces
+// structured prompts (multiple-choice questions) that block the agent until
+// the user replies through SubmitChoice.
+service AgentService {
+  // Chat CRUD
+  rpc CreateChat(CreateChatRequest) returns (CreateChatResponse);
+  rpc ListChats(ListChatsRequest) returns (ListChatsResponse);
+  rpc GetChat(GetChatRequest) returns (GetChatResponse);
+  rpc UpdateChat(UpdateChatRequest) returns (UpdateChatResponse);
+  rpc DeleteChat(DeleteChatRequest) returns (DeleteChatResponse);
+
+  // Messages
+  rpc GetMessages(GetMessagesRequest) returns (GetMessagesResponse);
+
+  // Streaming — sends tokens, choice prompts, or a final Done event.
+  // The client sends a single ChatStreamRequest (the user's message); the
+  // server streams zero or more response events until a StreamDone or error.
+  rpc ChatStream(ChatStreamRequest) returns (stream ChatStreamResponse);
+
+  // Human-in-the-loop: the user answers a question the agent asked. Resumes
+  // the same conversation and streams the continuation — identical event
+  // shapes to ChatStream (token / choice / error / done).
+  rpc SubmitChoice(SubmitChoiceRequest) returns (stream ChatStreamResponse);
+
+  // Workspace token credits
+  rpc GetCredits(GetCreditsRequest) returns (GetCreditsResponse);
+}
+
+// ── Entities ────────────────────────────────────────────────────────────────
+
+message ChatSession {
+  string id = 1;
+  string user_id = 2;
+  string workspace_id = 3;
+  string workbench_id = 4;  // optional; set when promoted
+  string agent_type = 5;    // "base-chat", "tender-search", …
+  string title = 6;
+  string created_at = 7;    // RFC3339
+  string updated_at = 8;    // RFC3339
+}
+
+message ChatMessage {
+  string id = 1;
+  string session_id = 2;
+  string role = 3;          // "user" | "assistant" | "choice_prompt" | "choice_response"
+  string content = 4;
+  bytes choices = 5;        // JSON — ChoiceOption list (for choice_prompt)
+  bytes metadata = 6;       // JSON — tokens, model, choice_id, …
+  string created_at = 7;    // RFC3339
+}
+
+message AgentUsage {
+  int32 input_tokens = 1;
+  int32 output_tokens = 2;
+  int32 total_tokens = 3;
+}
+
+message ChoiceOption {
+  string key = 1;           // "A", "B", "C", …
+  string label = 2;         // short display text
+  string description = 3;   // optional explanation
+}
+
+// ── Chat CRUD ──────────────────────────────────────────────────────────────
+
+message CreateChatRequest {
+  string workspace_id = 1;
+  string workbench_id = 2;  // optional
+  string agent_type = 3;    // "base-chat"
+  string title = 4;         // optional; server defaults
+}
+message CreateChatResponse { ChatSession chat = 1; }
+
+message ListChatsRequest { string workspace_id = 1; }
+message ListChatsResponse { repeated ChatSession chats = 1; }
+
+message GetChatRequest { string chat_id = 1; }
+message GetChatResponse { ChatSession chat = 1; }
+
+message UpdateChatRequest {
+  string chat_id = 1;
+  string title = 2;
+  string workbench_id = 3;  // promote to workbench
+}
+message UpdateChatResponse { ChatSession chat = 1; }
+
+message DeleteChatRequest { string chat_id = 1; }
+message DeleteChatResponse {}
+
+// ── Messages ───────────────────────────────────────────────────────────────
+
+message GetMessagesRequest { string chat_id = 1; }
+message GetMessagesResponse { repeated ChatMessage messages = 1; }
+
+// ── Streaming ──────────────────────────────────────────────────────────────
+
+message ChatStreamRequest {
+  string chat_id = 1;
+  string message = 2;
+}
+
+message ChatStreamResponse {
+  oneof event {
+    string token = 1;           // incremental text token
+    ChoicePrompt choice = 2;    // agent asks a multiple-choice question
+    StreamError error = 3;      // non-recoverable error, stream ends
+    StreamDone done = 4;        // stream completed successfully
+  }
+}
+
+message ChoicePrompt {
+  string id = 1;                // UUID — correlated with SubmitChoice
+  string question = 2;
+  repeated ChoiceOption options = 3;
+  bool allow_custom = 4;        // if true, user may type a free-form answer
+}
+
+message StreamError {
+  string code = 1;              // e.g. "INSUFFICIENT_CREDITS"
+  string message = 2;
+}
+
+message StreamDone {
+  AgentUsage usage = 1;
+  int64 credits_remaining = 2;
+  int64 credits_monthly_max = 3;
+}
+
+// ── Choices (HITL) ─────────────────────────────────────────────────────────
+
+message SubmitChoiceRequest {
+  string choice_id = 1;
+  string selected_key = 2;  // "A" | "B" | "C" | "custom"
+  string custom_value = 3;  // filled when selected_key == "custom"
+}
+
+// ── Credits ────────────────────────────────────────────────────────────────
+
+message GetCreditsRequest { string workspace_id = 1; }
+message GetCreditsResponse {
+  int64 remaining = 1;
+  int64 monthly_max = 2;
+  int64 used = 3;
+  string reset_date = 4;  // ISO date — "2026-08-01"
+}

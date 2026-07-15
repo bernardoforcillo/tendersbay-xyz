@@ -5,7 +5,110 @@
     "accept": "Accepter",
     "reject": "Refuser"
   },
+  "account": {
+    "settings": {
+      "title": "Paramètres du compte"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Mettez à jour votre nom affiché et la façon dont les autres vous voient.",
+      "displayName": "Nom affiché",
+      "saved": "Enregistré !",
+      "submitting": "Enregistrement…",
+      "submit": "Enregistrer les modifications"
+    },
+    "changeEmail": {
+      "checkEmail": "Vérifiez votre nouvel e-mail",
+      "title": "Changer l'e-mail",
+      "prompt": "Nous avons envoyé un lien de vérification à votre nouvelle adresse. Cliquez dessus pour confirmer le changement.",
+      "description": "Nous enverrons un lien de vérification à la nouvelle adresse.",
+      "hint": "Votre e-mail actuel reste actif jusqu'à ce que vous vérifiiez le nouveau.",
+      "newEmail": "Nouvel e-mail",
+      "password": "Mot de passe actuel",
+      "submitting": "Enregistrement…",
+      "submit": "Changer l'e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Mot de passe mis à jour",
+      "title": "Changer le mot de passe",
+      "successBody": "Votre mot de passe a été modifié. Reconnectez-vous sur les autres appareils.",
+      "description": "Le nouveau mot de passe doit contenir au moins 12 caractères.",
+      "successHint": "Les autres sessions actives restent valides jusqu'à leur expiration.",
+      "current": "Mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "submitting": "Enregistrement…",
+      "submit": "Changer le mot de passe"
+    },
+    "delete": {
+      "title": "Supprimer le compte",
+      "description": "Cette action est définitive et ne peut pas être annulée. Toutes vos données, tous vos espaces de travail et tous vos paramètres seront définitivement supprimés.",
+      "password": "Confirmez avec votre mot de passe",
+      "submitting": "Suppression…",
+      "submit": "Supprimer mon compte"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "description": "Ravis de vous revoir sur tendersbay.",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submitting": "Connexion en cours…",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "signUp": "S'inscrire"
+    },
+    "signup": {
+      "checkEmail": "Vérifiez votre e-mail",
+      "verifyPrompt": "Nous vous avons envoyé un lien de vérification. Cliquez dessus pour activer votre compte.",
+      "checkEmailHint": "Le lien expire dans 24 heures. Vérifiez votre dossier spam si vous ne le voyez pas.",
+      "backToLogin": "Retour à la connexion",
+      "title": "Créer un compte",
+      "description": "Commencez à remporter des marchés publics européens avec des agents IA.",
+      "displayName": "Nom",
+      "email": "E-mail",
+      "password": "Mot de passe",
+      "submitting": "Création en cours…",
+      "submit": "Créer un compte",
+      "login": "Vous avez déjà un compte ?",
+      "signIn": "Se connecter"
+    },
+    "forgot": {
+      "checkEmail": "Vérifiez votre e-mail",
+      "checkEmailBody": "Si un compte existe pour cette adresse, vous recevrez bientôt un lien de réinitialisation.",
+      "checkEmailHint": "Le lien expire dans 1 heure. Vérifiez votre dossier spam si vous ne le voyez pas.",
+      "backToLogin": "Retour à la connexion",
+      "title": "Réinitialiser le mot de passe",
+      "description": "Saisissez votre e-mail et nous vous enverrons un lien de réinitialisation.",
+      "email": "E-mail",
+      "submitting": "Envoi en cours…",
+      "submit": "Envoyer le lien de réinitialisation"
+    },
+    "reset": {
+      "invalidTitle": "Lien invalide",
+      "invalid": "Ce lien de réinitialisation est manquant ou a expiré.",
+      "requestNew": "Demander un nouveau lien",
+      "title": "Définir un nouveau mot de passe",
+      "description": "Choisissez un mot de passe fort d'au moins 12 caractères.",
+      "password": "Nouveau mot de passe",
+      "submitting": "Enregistrement en cours…",
+      "submit": "Définir le mot de passe"
+    },
+    "verify": {
+      "errorTitle": "Lien expiré",
+      "error": "Ce lien est invalide ou a expiré. Demandez-en un nouveau.",
+      "successTitle": "E-mail vérifié",
+      "success": "Tout est prêt. Vous allez être redirigé…",
+      "loadingTitle": "Vérification de votre e-mail…",
+      "loading": "Un instant."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Connexion",
+      "signup": "S'inscrire"
+    },
     "search": {
       "label": "Rechercher",
       "hint": "Recherche par IA — bientôt disponible",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Marchés européens, attribués par vos agents IA",
-      "description": "Des agents IA qui débusquent les bons marchés publics européens, écrasent la paperasse et mènent votre PME jusqu'à l'attribution."
+      "title": "tendersbay — Appels d'offres publics, attribués par vos agents IA",
+      "description": "Des agents IA qui débusquent les bons appels d'offres et marchés publics en Europe, écrasent la paperasse et mènent votre PME jusqu'à l'attribution."
     },
     "nav": {
       "problem": "Le coût",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} jours"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Aujourd'hui",
+      "explore": "Explorer",
+      "workbenches": "Workbench"
+    },
+    "recent": "Récents",
+    "palette": {
+      "trigger": "Rechercher ou demander…",
+      "label": "Palette de commandes",
+      "placeholder": "Rechercher ou demander n'importe quoi…",
+      "askAgent": "Demander à l'agent : « {{query}} »",
+      "sections": {
+        "navigate": "Aller à",
+        "recent": "Workbench récents",
+        "workspaces": "Workspace"
+      },
+      "workspaceSettings": "Paramètres du workspace",
+      "accountSettings": "Paramètres du compte",
+      "allWorkspaces": "Tous les workspace"
+    },
+    "user": {
+      "settings": "Paramètres",
+      "logout": "Déconnexion"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} marché",
+    "results_other": "{{count}} marchés",
+    "searching": "Recherche en cours…",
+    "empty": {
+      "title": "Aucun marché trouvé",
+      "description": "Essayez une recherche plus large ou moins de filtres."
+    },
+    "error": "La recherche est indisponible pour le moment — réessayez dans un instant.",
+    "loadMore": "Charger plus",
+    "deadline": {
+      "days_one": "{{count}} jour restant",
+      "days_other": "{{count}} jours restants",
+      "today": "Clôture aujourd'hui",
+      "expired": "Clôturé"
+    },
+    "value": {
+      "unknown": "Valeur non communiquée"
+    },
+    "status": {
+      "open": "Ouvert",
+      "awarded": "Attribué",
+      "cancelled": "Annulé",
+      "closed": "Clôturé",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Recommandés pour vous",
+      "seeAll": "Tout dans Explorer →"
+    },
+    "greeting": {
+      "morning": "Bonjour.",
+      "afternoon": "Bon après-midi.",
+      "evening": "Bonsoir.",
+      "morningNamed": "Bonjour, {{name}}.",
+      "afternoonNamed": "Bon après-midi, {{name}}.",
+      "eveningNamed": "Bonsoir, {{name}}."
+    },
+    "resume": {
+      "title": "Reprenez là où vous vous êtes arrêté",
+      "untitled": "Conversation sans titre"
+    },
+    "explore": {
+      "title": "Trouvez votre prochain marché",
+      "description": "Demandez à l'agent des informations sur les marchés, les exigences ou un appel d'offres précis — des recommandations personnalisées apparaîtront ici à mesure que vos profils de recherche prennent forme.",
+      "action": "Ouvrez Explorer"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Chargement…",
@@ -269,6 +448,7 @@
       "signIn": "Connectez-vous pour rejoindre"
     },
     "switcher": {
+      "settings": "Paramètres du workspace",
       "label": "Espaces de travail",
       "manage": "Tous les espaces de travail"
     }

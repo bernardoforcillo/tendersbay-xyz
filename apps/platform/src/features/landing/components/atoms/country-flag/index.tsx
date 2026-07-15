@@ -1,7 +1,7 @@
+import { cn } from '@tendersbay/components/core';
 import { useState } from 'react';
 import { Button, OverlayArrow, Tooltip, TooltipTrigger } from 'react-aria-components';
 import { Icon } from '~/features/landing/components/atoms/icon';
-import { cx } from '~/features/landing/cx';
 import { type EuCountry, FLAGS } from './flags';
 
 type CountryFlagProps = {
@@ -46,7 +46,7 @@ export function CountryFlag({
         excludeFromTabOrder={decorative}
         onHoverChange={setHovered}
         onFocusChange={setFocused}
-        className={cx(
+        className={cn(
           'group/flag flex cursor-pointer flex-col gap-1.5 rounded-xl border bg-white p-1.5 outline-none transition duration-300',
           'hover:-translate-y-1 motion-reduce:transform-none',
           'data-[pressed]:translate-y-0 data-[pressed]:scale-[0.98]',
@@ -60,7 +60,7 @@ export function CountryFlag({
         <span className="block overflow-hidden rounded-md ring-1 ring-ink-900/5">
           <Flag
             aria-hidden="true"
-            className={cx(
+            className={cn(
               'block h-auto w-full transition duration-500',
               available
                 ? ''
@@ -71,7 +71,7 @@ export function CountryFlag({
         <span className="flex items-center justify-between gap-1.5 px-0.5">
           <span
             title={name}
-            className={cx(
+            className={cn(
               'min-w-0 flex-1 truncate text-left text-[11px] font-medium transition-colors duration-300',
               available ? 'text-brand-700' : 'text-ink-500 group-hover/flag:text-ink-700',
             )}
@@ -80,7 +80,7 @@ export function CountryFlag({
           </span>
           <span
             aria-hidden="true"
-            className={cx(
+            className={cn(
               'h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-300',
               available ? 'bg-brand-500' : 'bg-cream-300 group-hover/flag:bg-brand-300',
             )}
@@ -91,7 +91,7 @@ export function CountryFlag({
       <Tooltip
         placement="top"
         offset={10}
-        className={cx(
+        className={cn(
           'origin-bottom transition duration-200 ease-out',
           'data-[entering]:scale-95 data-[entering]:opacity-0',
           'data-[exiting]:scale-95 data-[exiting]:opacity-0',

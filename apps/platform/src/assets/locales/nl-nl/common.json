@@ -5,7 +5,110 @@
     "accept": "Accepteren",
     "reject": "Weigeren"
   },
+  "account": {
+    "settings": {
+      "title": "Accountinstellingen"
+    },
+    "profile": {
+      "title": "Profiel",
+      "description": "Werk je weergavenaam bij en hoe anderen je zien.",
+      "displayName": "Weergavenaam",
+      "saved": "Opgeslagen!",
+      "submitting": "Opslaan…",
+      "submit": "Wijzigingen opslaan"
+    },
+    "changeEmail": {
+      "checkEmail": "Controleer je nieuwe e-mail",
+      "title": "E-mail wijzigen",
+      "prompt": "We hebben een bevestigingslink naar je nieuwe adres gestuurd. Klik erop om de wijziging te bevestigen.",
+      "description": "We sturen een bevestigingslink naar het nieuwe adres.",
+      "hint": "Je huidige e-mail blijft actief totdat je de nieuwe bevestigt.",
+      "newEmail": "Nieuwe e-mail",
+      "password": "Huidig wachtwoord",
+      "submitting": "Opslaan…",
+      "submit": "E-mail wijzigen"
+    },
+    "changePassword": {
+      "successTitle": "Wachtwoord bijgewerkt",
+      "title": "Wachtwoord wijzigen",
+      "successBody": "Je wachtwoord is gewijzigd. Log opnieuw in op andere apparaten.",
+      "description": "Het nieuwe wachtwoord moet minstens 12 tekens bevatten.",
+      "successHint": "Andere actieve sessies blijven geldig tot ze verlopen.",
+      "current": "Huidig wachtwoord",
+      "new": "Nieuw wachtwoord",
+      "submitting": "Opslaan…",
+      "submit": "Wachtwoord wijzigen"
+    },
+    "delete": {
+      "title": "Account verwijderen",
+      "description": "Deze actie is permanent en kan niet ongedaan worden gemaakt. Al je gegevens, werkruimtes en instellingen worden definitief verwijderd.",
+      "password": "Bevestig met je wachtwoord",
+      "submitting": "Verwijderen…",
+      "submit": "Mijn account verwijderen"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Inloggen",
+      "description": "Welkom terug bij tendersbay.",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "forgotPassword": "Wachtwoord vergeten?",
+      "submitting": "Bezig met inloggen…",
+      "submit": "Inloggen",
+      "noAccount": "Nog geen account?",
+      "signUp": "Registreren"
+    },
+    "signup": {
+      "checkEmail": "Controleer je e-mail",
+      "verifyPrompt": "We hebben je een verificatielink gestuurd. Klik erop om je account te activeren.",
+      "checkEmailHint": "De link verloopt over 24 uur. Kijk in je spamfolder als je hem niet ziet.",
+      "backToLogin": "Terug naar inloggen",
+      "title": "Account aanmaken",
+      "description": "Begin met het winnen van EU-aanbestedingen met AI-agenten.",
+      "displayName": "Naam",
+      "email": "E-mail",
+      "password": "Wachtwoord",
+      "submitting": "Bezig met aanmaken…",
+      "submit": "Account aanmaken",
+      "login": "Heb je al een account?",
+      "signIn": "Inloggen"
+    },
+    "forgot": {
+      "checkEmail": "Controleer je e-mail",
+      "checkEmailBody": "Als er een account bestaat voor dit adres, ontvang je binnenkort een resetlink.",
+      "checkEmailHint": "De link verloopt over 1 uur. Kijk in je spamfolder als je hem niet ziet.",
+      "backToLogin": "Terug naar inloggen",
+      "title": "Wachtwoord resetten",
+      "description": "Voer je e-mailadres in en we sturen je een resetlink.",
+      "email": "E-mail",
+      "submitting": "Bezig met verzenden…",
+      "submit": "Resetlink versturen"
+    },
+    "reset": {
+      "invalidTitle": "Ongeldige link",
+      "invalid": "Deze resetlink ontbreekt of is verlopen.",
+      "requestNew": "Nieuwe link aanvragen",
+      "title": "Nieuw wachtwoord instellen",
+      "description": "Kies een sterk wachtwoord van minstens 12 tekens.",
+      "password": "Nieuw wachtwoord",
+      "submitting": "Bezig met opslaan…",
+      "submit": "Wachtwoord instellen"
+    },
+    "verify": {
+      "errorTitle": "Link verlopen",
+      "error": "Deze link is ongeldig of verlopen. Vraag een nieuwe aan.",
+      "successTitle": "E-mail geverifieerd",
+      "success": "Helemaal klaar. Je wordt nu doorgestuurd…",
+      "loadingTitle": "Je e-mail wordt geverifieerd…",
+      "loading": "Een moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Inloggen",
+      "signup": "Registreren"
+    },
     "search": {
       "label": "Zoeken",
       "hint": "AI-zoekfunctie — binnenkort beschikbaar",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Europese aanbestedingen, gegund door uw AI-agenten",
-      "description": "AI-agenten die de juiste Europese overheidsopdrachten opsporen, het papierwerk slopen en uw mkb tot aan de gunning brengen."
+      "title": "tendersbay — Openbare aanbestedingen, gegund door uw AI-agenten",
+      "description": "AI-agenten die de juiste Europese aanbestedingen en overheidsopdrachten opsporen, het papierwerk slopen en uw mkb tot aan de gunning brengen."
     },
     "nav": {
       "problem": "De kosten",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} dagen"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Vandaag",
+      "explore": "Ontdekken",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Recent",
+    "palette": {
+      "trigger": "Zoeken of vragen…",
+      "label": "Opdrachtenpalet",
+      "placeholder": "Zoek of vraag iets…",
+      "askAgent": "Vraag het de agent: „{{query}}”",
+      "sections": {
+        "navigate": "Ga naar",
+        "recent": "Recente workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-instellingen",
+      "accountSettings": "Accountinstellingen",
+      "allWorkspaces": "Alle workspaces"
+    },
+    "user": {
+      "settings": "Instellingen",
+      "logout": "Uitloggen"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} aanbesteding",
+    "results_other": "{{count}} aanbestedingen",
+    "searching": "Zoeken…",
+    "empty": {
+      "title": "Geen aanbestedingen gevonden",
+      "description": "Probeer een bredere zoekopdracht of minder filters."
+    },
+    "error": "Zoeken is nu niet beschikbaar — probeer het zo weer.",
+    "loadMore": "Meer laden",
+    "deadline": {
+      "days_one": "{{count}} dag over",
+      "days_other": "{{count}} dagen over",
+      "today": "Sluit vandaag",
+      "expired": "Gesloten"
+    },
+    "value": {
+      "unknown": "Waarde niet bekendgemaakt"
+    },
+    "status": {
+      "open": "Open",
+      "awarded": "Gegund",
+      "cancelled": "Geannuleerd",
+      "closed": "Gesloten",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Aanbevolen voor jou",
+      "seeAll": "Alles in Ontdekken →"
+    },
+    "greeting": {
+      "morning": "Goedemorgen.",
+      "afternoon": "Goedemiddag.",
+      "evening": "Goedenavond.",
+      "morningNamed": "Goedemorgen, {{name}}.",
+      "afternoonNamed": "Goedemiddag, {{name}}.",
+      "eveningNamed": "Goedenavond, {{name}}."
+    },
+    "resume": {
+      "title": "Ga verder waar u gebleven was",
+      "untitled": "Gesprek zonder titel"
+    },
+    "explore": {
+      "title": "Vind uw volgende aanbesteding",
+      "description": "Vraag de agent naar markten, vereisten of een specifieke aanbesteding — persoonlijke aanbevelingen verschijnen hier zodra uw zoekprofielen vorm krijgen.",
+      "action": "Open Ontdekken"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Laden…",
@@ -269,6 +448,7 @@
       "signIn": "Meld je aan om deel te nemen"
     },
     "switcher": {
+      "settings": "Workspace-instellingen",
       "label": "Werkruimtes",
       "manage": "Alle werkruimtes"
     }

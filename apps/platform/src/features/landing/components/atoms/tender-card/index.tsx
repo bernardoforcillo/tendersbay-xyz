@@ -1,5 +1,5 @@
+import { cn } from '@tendersbay/components/core';
 import { useTranslation } from 'react-i18next';
-import { cx } from '~/features/landing/cx';
 
 export type Tender = {
   id: string;
@@ -14,7 +14,7 @@ export function TenderCard({ tender, className }: { tender: Tender; className?: 
   const { t } = useTranslation();
   return (
     <div
-      className={cx(
+      className={cn(
         'w-52 rounded-2xl bg-ink-900 p-4 text-ink-100 shadow-2xl shadow-ink-900/30',
         className,
       )}

@@ -5,7 +5,110 @@
     "accept": "Accetta",
     "reject": "Rifiuta"
   },
+  "account": {
+    "settings": {
+      "title": "Impostazioni account"
+    },
+    "profile": {
+      "title": "Profilo",
+      "description": "Aggiorna il tuo nome visualizzato e il modo in cui gli altri ti vedono.",
+      "displayName": "Nome visualizzato",
+      "saved": "Salvato!",
+      "submitting": "Salvataggio…",
+      "submit": "Salva modifiche"
+    },
+    "changeEmail": {
+      "checkEmail": "Controlla la tua nuova email",
+      "title": "Cambia email",
+      "prompt": "Abbiamo inviato un link di verifica al tuo nuovo indirizzo. Fai clic per confermare la modifica.",
+      "description": "Invieremo un link di verifica al nuovo indirizzo.",
+      "hint": "La tua email attuale resta attiva finché non verifichi quella nuova.",
+      "newEmail": "Nuova email",
+      "password": "Password attuale",
+      "submitting": "Salvataggio…",
+      "submit": "Cambia email"
+    },
+    "changePassword": {
+      "successTitle": "Password aggiornata",
+      "title": "Cambia password",
+      "successBody": "La tua password è stata modificata. Accedi di nuovo sugli altri dispositivi.",
+      "description": "La nuova password deve contenere almeno 12 caratteri.",
+      "successHint": "Le altre sessioni attive restano valide fino alla scadenza.",
+      "current": "Password attuale",
+      "new": "Nuova password",
+      "submitting": "Salvataggio…",
+      "submit": "Cambia password"
+    },
+    "delete": {
+      "title": "Elimina account",
+      "description": "Questa azione è permanente e non può essere annullata. Tutti i tuoi dati, spazi di lavoro e impostazioni verranno eliminati definitivamente.",
+      "password": "Conferma con la tua password",
+      "submitting": "Eliminazione…",
+      "submit": "Elimina il mio account"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Accedi",
+      "description": "Bentornato su tendersbay.",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Password dimenticata?",
+      "submitting": "Accesso in corso…",
+      "submit": "Accedi",
+      "noAccount": "Non hai un account?",
+      "signUp": "Registrati"
+    },
+    "signup": {
+      "checkEmail": "Controlla la tua email",
+      "verifyPrompt": "Ti abbiamo inviato un link di verifica. Cliccalo per attivare il tuo account.",
+      "checkEmailHint": "Il link scade tra 24 ore. Controlla la cartella spam se non lo vedi.",
+      "backToLogin": "Torna al login",
+      "title": "Crea account",
+      "description": "Inizia a vincere gare d'appalto UE con agenti IA.",
+      "displayName": "Nome",
+      "email": "Email",
+      "password": "Password",
+      "submitting": "Creazione in corso…",
+      "submit": "Crea account",
+      "login": "Hai già un account?",
+      "signIn": "Accedi"
+    },
+    "forgot": {
+      "checkEmail": "Controlla la tua email",
+      "checkEmailBody": "Se esiste un account per questo indirizzo, riceverai a breve un link di reimpostazione.",
+      "checkEmailHint": "Il link scade tra 1 ora. Controlla la cartella spam se non lo vedi.",
+      "backToLogin": "Torna al login",
+      "title": "Reimposta password",
+      "description": "Inserisci la tua email e ti invieremo un link di reimpostazione.",
+      "email": "Email",
+      "submitting": "Invio in corso…",
+      "submit": "Invia link di reimpostazione"
+    },
+    "reset": {
+      "invalidTitle": "Link non valido",
+      "invalid": "Questo link di reimpostazione è mancante o scaduto.",
+      "requestNew": "Richiedi un nuovo link",
+      "title": "Imposta una nuova password",
+      "description": "Scegli una password sicura di almeno 12 caratteri.",
+      "password": "Nuova password",
+      "submitting": "Salvataggio in corso…",
+      "submit": "Imposta password"
+    },
+    "verify": {
+      "errorTitle": "Link scaduto",
+      "error": "Questo link non è valido o è scaduto. Richiedine uno nuovo.",
+      "successTitle": "Email verificata",
+      "success": "Tutto pronto. Reindirizzamento in corso…",
+      "loadingTitle": "Verifica della tua email in corso…",
+      "loading": "Un momento."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Accedi",
+      "signup": "Registrati"
+    },
     "search": {
       "label": "Cerca",
       "hint": "Ricerca con IA — presto disponibile",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Gare europee, aggiudicate dai tuoi agenti AI",
-      "description": "Agenti AI che scovano le gare pubbliche europee giuste, distruggono la burocrazia e portano la tua PMI fino all'aggiudicazione."
+      "title": "tendersbay — Bandi di gara, aggiudicati dai tuoi agenti AI",
+      "description": "Agenti AI che scovano i bandi di gara giusti in tutta Europa, distruggono la burocrazia degli appalti pubblici e portano la tua PMI fino all'aggiudicazione."
     },
     "nav": {
       "problem": "Il costo",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} giorni"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Oggi",
+      "explore": "Esplora",
+      "workbenches": "Workbench"
+    },
+    "recent": "Recenti",
+    "palette": {
+      "trigger": "Cerca o chiedi…",
+      "label": "Palette comandi",
+      "placeholder": "Cerca o chiedi qualsiasi cosa…",
+      "askAgent": "Chiedi all’agente: “{{query}}”",
+      "sections": {
+        "navigate": "Vai a",
+        "recent": "Workbench recenti",
+        "workspaces": "Workspace"
+      },
+      "workspaceSettings": "Impostazioni workspace",
+      "accountSettings": "Impostazioni account",
+      "allWorkspaces": "Tutti i workspace"
+    },
+    "user": {
+      "settings": "Impostazioni",
+      "logout": "Esci"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} gara",
+    "results_other": "{{count}} gare",
+    "searching": "Ricerca in corso…",
+    "empty": {
+      "title": "Nessuna gara trovata",
+      "description": "Prova con una ricerca più ampia o meno filtri."
+    },
+    "error": "La ricerca non è disponibile al momento — riprova tra poco.",
+    "loadMore": "Carica altri",
+    "deadline": {
+      "days_one": "{{count}} giorno rimanente",
+      "days_other": "{{count}} giorni rimanenti",
+      "today": "Scade oggi",
+      "expired": "Chiusa"
+    },
+    "value": {
+      "unknown": "Valore non divulgato"
+    },
+    "status": {
+      "open": "Aperta",
+      "awarded": "Aggiudicata",
+      "cancelled": "Annullata",
+      "closed": "Chiusa",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Consigliate per te",
+      "seeAll": "Tutto in Esplora →"
+    },
+    "greeting": {
+      "morning": "Buongiorno.",
+      "afternoon": "Buon pomeriggio.",
+      "evening": "Buonasera.",
+      "morningNamed": "Buongiorno, {{name}}.",
+      "afternoonNamed": "Buon pomeriggio, {{name}}.",
+      "eveningNamed": "Buonasera, {{name}}."
+    },
+    "resume": {
+      "title": "Riprendi da dove eri",
+      "untitled": "Conversazione senza titolo"
+    },
+    "explore": {
+      "title": "Trova il tuo prossimo bando",
+      "description": "Chiedi all’agente di mercati, requisiti o di una gara specifica — i consigli personalizzati appariranno qui man mano che i tuoi profili di ricerca prendono forma.",
+      "action": "Apri Esplora"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Caricamento…",
@@ -269,6 +448,7 @@
       "signIn": "Accedi per unirti"
     },
     "switcher": {
+      "settings": "Impostazioni workspace",
       "label": "Spazi di lavoro",
       "manage": "Tutti gli spazi di lavoro"
     }

@@ -1,8 +1,8 @@
 export { AcceptInvitePage } from './components/pages/accept-invite';
 export { JoinWorkspacePage } from './components/pages/join-workspace';
+export { WorkspaceTodayPage } from './components/pages/today';
 export { WorkspaceInvitesPage } from './components/pages/workspace-invites';
 export { WorkspaceMembersPage } from './components/pages/workspace-members';
-export { WorkspaceOverviewPage } from './components/pages/workspace-overview';
 export { WorkspaceRolesPage } from './components/pages/workspace-roles';
 export { WorkspaceSettingsPage } from './components/pages/workspace-settings';
 export { WorkspacesListPage } from './components/pages/workspaces-list';

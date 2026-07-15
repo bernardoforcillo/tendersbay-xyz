@@ -5,7 +5,110 @@
     "accept": "Sprejmi",
     "reject": "Zavrni"
   },
+  "account": {
+    "settings": {
+      "title": "Nastavitve računa"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Posodobite prikazano ime in način, kako vas vidijo drugi.",
+      "displayName": "Prikazano ime",
+      "saved": "Shranjeno!",
+      "submitting": "Shranjevanje…",
+      "submit": "Shrani spremembe"
+    },
+    "changeEmail": {
+      "checkEmail": "Preverite svoj nov e-poštni naslov",
+      "title": "Sprememba e-pošte",
+      "prompt": "Na vaš nov naslov smo poslali potrditveno povezavo. Kliknite nanjo, da potrdite spremembo.",
+      "description": "Na nov naslov bomo poslali potrditveno povezavo.",
+      "hint": "Vaša trenutna e-pošta ostane aktivna, dokler ne potrdite nove.",
+      "newEmail": "Nov e-poštni naslov",
+      "password": "Trenutno geslo",
+      "submitting": "Shranjevanje…",
+      "submit": "Spremeni e-pošto"
+    },
+    "changePassword": {
+      "successTitle": "Geslo posodobljeno",
+      "title": "Sprememba gesla",
+      "successBody": "Vaše geslo je bilo spremenjeno. Na drugih napravah se ponovno prijavite.",
+      "description": "Novo geslo mora imeti vsaj 12 znakov.",
+      "successHint": "Ostale aktivne seje ostanejo veljavne do poteka.",
+      "current": "Trenutno geslo",
+      "new": "Novo geslo",
+      "submitting": "Shranjevanje…",
+      "submit": "Spremeni geslo"
+    },
+    "delete": {
+      "title": "Izbriši račun",
+      "description": "To dejanje je trajno in ga ni mogoče razveljaviti. Vsi vaši podatki, delovni prostori in nastavitve bodo trajno izbrisani.",
+      "password": "Potrdite s svojim geslom",
+      "submitting": "Brisanje…",
+      "submit": "Izbriši moj račun"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Prijava",
+      "description": "Dobrodošli nazaj na tendersbay.",
+      "email": "E-poštni naslov",
+      "password": "Geslo",
+      "forgotPassword": "Ste pozabili geslo?",
+      "submitting": "Prijavljanje…",
+      "submit": "Prijava",
+      "noAccount": "Nimate računa?",
+      "signUp": "Registrirajte se"
+    },
+    "signup": {
+      "checkEmail": "Preverite svojo e-pošto",
+      "verifyPrompt": "Poslali smo vam potrditveno povezavo. Kliknite nanjo, da aktivirate svoj račun.",
+      "checkEmailHint": "Povezava poteče čez 24 ur. Če je ne vidite, preverite mapo z neželeno pošto.",
+      "backToLogin": "Nazaj na prijavo",
+      "title": "Ustvarite račun",
+      "description": "Začnite zmagovati na razpisih EU z agenti UI.",
+      "displayName": "Ime",
+      "email": "E-poštni naslov",
+      "password": "Geslo",
+      "submitting": "Ustvarjanje…",
+      "submit": "Ustvarite račun",
+      "login": "Že imate račun?",
+      "signIn": "Prijava"
+    },
+    "forgot": {
+      "checkEmail": "Preverite svojo e-pošto",
+      "checkEmailBody": "Če za ta naslov obstaja račun, boste kmalu prejeli povezavo za ponastavitev.",
+      "checkEmailHint": "Povezava poteče čez 1 uro. Če je ne vidite, preverite mapo z neželeno pošto.",
+      "backToLogin": "Nazaj na prijavo",
+      "title": "Ponastavite geslo",
+      "description": "Vnesite svoj e-poštni naslov in poslali vam bomo povezavo za ponastavitev.",
+      "email": "E-poštni naslov",
+      "submitting": "Pošiljanje…",
+      "submit": "Pošlji povezavo za ponastavitev"
+    },
+    "reset": {
+      "invalidTitle": "Neveljavna povezava",
+      "invalid": "Ta povezava za ponastavitev manjka ali je potekla.",
+      "requestNew": "Zahtevajte novo povezavo",
+      "title": "Nastavite novo geslo",
+      "description": "Izberite močno geslo z vsaj 12 znaki.",
+      "password": "Novo geslo",
+      "submitting": "Shranjevanje…",
+      "submit": "Nastavite geslo"
+    },
+    "verify": {
+      "errorTitle": "Povezava je potekla",
+      "error": "Ta povezava ni veljavna ali je potekla. Zahtevajte novo.",
+      "successTitle": "E-pošta potrjena",
+      "success": "Vse je pripravljeno. Zdaj boste preusmerjeni…",
+      "loadingTitle": "Preverjanje vaše e-pošte…",
+      "loading": "Trenutek."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Prijava",
+      "signup": "Registracija"
+    },
     "search": {
       "label": "Iskanje",
       "hint": "Iskanje z UI — kmalu na voljo",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Evropski razpisi, dodeljeni z vašimi agenti UI",
-      "description": "Agenti UI, ki izsledijo prave evropske javne razpise, zdrobijo birokracijo in popeljejo vaš MSP vse do dodelitve."
+      "title": "tendersbay — Javna naročila v Evropi, dodeljena z agenti UI",
+      "description": "Agenti UI, ki izsledijo prava javna naročila in javne razpise po Evropi, zdrobijo birokracijo in popeljejo vaš MSP vse do dodelitve naročila."
     },
     "nav": {
       "problem": "Strošek",
@@ -148,6 +251,86 @@
       "daysLeft": "{{count}} dni"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Danes",
+      "explore": "Razišči",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Nedavno",
+    "palette": {
+      "trigger": "Išči ali vprašaj…",
+      "label": "Paleta ukazov",
+      "placeholder": "Išči ali vprašaj karkoli…",
+      "askAgent": "Vprašaj agenta: „{{query}}“",
+      "sections": {
+        "navigate": "Pojdi na",
+        "recent": "Nedavni workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Nastavitve workspace",
+      "accountSettings": "Nastavitve računa",
+      "allWorkspaces": "Vsi workspace"
+    },
+    "user": {
+      "settings": "Nastavitve",
+      "logout": "Odjava"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} razpis",
+    "results_two": "{{count}} razpisa",
+    "results_few": "{{count}} razpisi",
+    "results_other": "{{count}} razpisov",
+    "searching": "Iskanje…",
+    "empty": {
+      "title": "Ni najdenih razpisov",
+      "description": "Poskusite širše poizvedbo ali manj filtrov."
+    },
+    "error": "Iskanje trenutno ni na voljo — poskusite znova čez trenutek.",
+    "loadMore": "Naloži več",
+    "deadline": {
+      "days_one": "{{count}} dan preostane",
+      "days_two": "{{count}} dneva preostaneta",
+      "days_few": "{{count}} dnevi preostanejo",
+      "days_other": "{{count}} dni preostane",
+      "today": "Zapre se danes",
+      "expired": "Zaprto"
+    },
+    "value": {
+      "unknown": "Vrednost ni razkrita"
+    },
+    "status": {
+      "open": "Odprt",
+      "awarded": "Oddan",
+      "cancelled": "Preklican",
+      "closed": "Zaprt",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Priporočeno za vas",
+      "seeAll": "Vse v razdelku Razišči →"
+    },
+    "greeting": {
+      "morning": "Dobro jutro.",
+      "afternoon": "Dober dan.",
+      "evening": "Dober večer.",
+      "morningNamed": "Dobro jutro, {{name}}.",
+      "afternoonNamed": "Dober dan, {{name}}.",
+      "eveningNamed": "Dober večer, {{name}}."
+    },
+    "resume": {
+      "title": "Nadaljujte, kjer ste končali",
+      "untitled": "Pogovor brez naslova"
+    },
+    "explore": {
+      "title": "Poiščite svoj naslednji razpis",
+      "description": "Vprašajte agenta o trgih, zahtevah ali določenem razpisu — prilagojena priporočila se bodo tu prikazala, ko se bodo oblikovali vaši iskalni profili.",
+      "action": "Odprite Razišči"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Nalaganje…",
@@ -269,6 +452,7 @@
       "signIn": "Prijavite se za pridružitev"
     },
     "switcher": {
+      "settings": "Nastavitve workspace",
       "label": "Delovni prostori",
       "manage": "Vsi delovni prostori"
     }

@@ -1,13 +1,17 @@
 import { useNavigate, useParams } from '@tanstack/react-router';
+import { Banner, Button } from '@tendersbay/components/core';
 import { useQueryState } from 'nuqs';
 import { useCallback, useState } from 'react';
-import { Button } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
 import { useAsync } from '~/features/workspace/hooks';
-import { BTN_PRIMARY, ERROR_BOX } from '~/features/workspace/ui';
 import { workspaceClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
+
+// Matches the kit Button's primary/md recipe — a real <a> (not a RAC Button)
+// so the sign-in redirect stays a genuine, crawlable, middle-click-able link.
+const SIGN_IN_LINK =
+  'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 text-sm font-semibold text-white outline-none transition-colors duration-150 hover:bg-brand-700 focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 focus-visible:ring-offset-cream-100';
 
 export function AcceptInvitePage() {
   const { locale } = useParams({ from: '/$locale/workspace/accept-invite' });
@@ -72,19 +76,15 @@ export function AcceptInvitePage() {
       })}
     >
       <div className="flex flex-col gap-4">
-        {error && (
-          <p role="alert" className={ERROR_BOX}>
-            {error}
-          </p>
-        )}
+        {error && <Banner tone="error">{error}</Banner>}
         {isAuthenticated ? (
-          <Button className={BTN_PRIMARY} isDisabled={accepting} onPress={accept}>
+          <Button isDisabled={accepting} onPress={accept}>
             {accepting
               ? t('workspace.accept.accepting', 'Joining…')
               : t('workspace.accept.accept', 'Accept invitation')}
           </Button>
         ) : (
-          <a href={loginHref} className={BTN_PRIMARY}>
+          <a href={loginHref} className={SIGN_IN_LINK}>
             {t('workspace.accept.signIn', 'Sign in to accept')}
           </a>
         )}

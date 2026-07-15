@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+.gocache/
 
 # Build outputs
 dist/
@@ -24,6 +25,7 @@ pnpm-debug.log*
 # Caches
 coverage/
 *.tsbuildinfo
+.gocache/
 
 # OS / editor
 .DS_Store

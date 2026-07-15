@@ -5,7 +5,110 @@
     "accept": "Pieņemt",
     "reject": "Noraidīt"
   },
+  "account": {
+    "settings": {
+      "title": "Konta iestatījumi"
+    },
+    "profile": {
+      "title": "Profils",
+      "description": "Atjauniniet savu attēloto vārdu un to, kā citi jūs redz.",
+      "displayName": "Attēlotais vārds",
+      "saved": "Saglabāts!",
+      "submitting": "Notiek saglabāšana…",
+      "submit": "Saglabāt izmaiņas"
+    },
+    "changeEmail": {
+      "checkEmail": "Pārbaudiet savu jauno e-pastu",
+      "title": "Mainīt e-pastu",
+      "prompt": "Mēs nosūtījām apstiprinājuma saiti uz jūsu jauno adresi. Noklikšķiniet uz tās, lai apstiprinātu izmaiņas.",
+      "description": "Mēs nosūtīsim apstiprinājuma saiti uz jauno adresi.",
+      "hint": "Jūsu pašreizējais e-pasts paliek aktīvs, līdz apstiprināt jauno.",
+      "newEmail": "Jauns e-pasts",
+      "password": "Pašreizējā parole",
+      "submitting": "Notiek saglabāšana…",
+      "submit": "Mainīt e-pastu"
+    },
+    "changePassword": {
+      "successTitle": "Parole atjaunināta",
+      "title": "Mainīt paroli",
+      "successBody": "Jūsu parole ir mainīta. Citās ierīcēs piesakieties atkārtoti.",
+      "description": "Jaunajai parolei jābūt vismaz 12 rakstzīmēm.",
+      "successHint": "Citas aktīvās sesijas paliek derīgas līdz to termiņa beigām.",
+      "current": "Pašreizējā parole",
+      "new": "Jaunā parole",
+      "submitting": "Notiek saglabāšana…",
+      "submit": "Mainīt paroli"
+    },
+    "delete": {
+      "title": "Dzēst kontu",
+      "description": "Šī darbība ir neatgriezeniska un to nevar atsaukt. Visi jūsu dati, darbvietas un iestatījumi tiks neatgriezeniski dzēsti.",
+      "password": "Apstipriniet ar savu paroli",
+      "submitting": "Notiek dzēšana…",
+      "submit": "Dzēst manu kontu"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Pieteikties",
+      "description": "Laipni lūdzam atpakaļ tendersbay.",
+      "email": "E-pasts",
+      "password": "Parole",
+      "forgotPassword": "Aizmirsāt paroli?",
+      "submitting": "Notiek pieteikšanās…",
+      "submit": "Pieteikties",
+      "noAccount": "Nav konta?",
+      "signUp": "Reģistrēties"
+    },
+    "signup": {
+      "checkEmail": "Pārbaudiet savu e-pastu",
+      "verifyPrompt": "Mēs jums nosūtījām apstiprinājuma saiti. Noklikšķiniet uz tās, lai aktivizētu savu kontu.",
+      "checkEmailHint": "Saites derīgums beidzas pēc 24 stundām. Ja to neredzat, pārbaudiet surogātpasta mapi.",
+      "backToLogin": "Atpakaļ uz pieteikšanos",
+      "title": "Izveidot kontu",
+      "description": "Sāciet uzvarēt ES iepirkumos ar MI aģentiem.",
+      "displayName": "Vārds",
+      "email": "E-pasts",
+      "password": "Parole",
+      "submitting": "Notiek izveide…",
+      "submit": "Izveidot kontu",
+      "login": "Vai jums jau ir konts?",
+      "signIn": "Pieteikties"
+    },
+    "forgot": {
+      "checkEmail": "Pārbaudiet savu e-pastu",
+      "checkEmailBody": "Ja šai adresei ir konts, drīz saņemsiet atiestatīšanas saiti.",
+      "checkEmailHint": "Saites derīgums beidzas pēc 1 stundas. Ja to neredzat, pārbaudiet surogātpasta mapi.",
+      "backToLogin": "Atpakaļ uz pieteikšanos",
+      "title": "Atiestatīt paroli",
+      "description": "Ievadiet savu e-pastu, un mēs nosūtīsim atiestatīšanas saiti.",
+      "email": "E-pasts",
+      "submitting": "Notiek sūtīšana…",
+      "submit": "Sūtīt atiestatīšanas saiti"
+    },
+    "reset": {
+      "invalidTitle": "Nederīga saite",
+      "invalid": "Šī atiestatīšanas saite trūkst vai ir beigusies.",
+      "requestNew": "Pieprasīt jaunu saiti",
+      "title": "Iestatīt jaunu paroli",
+      "description": "Izvēlieties spēcīgu paroli, kas satur vismaz 12 rakstzīmes.",
+      "password": "Jauna parole",
+      "submitting": "Notiek saglabāšana…",
+      "submit": "Iestatīt paroli"
+    },
+    "verify": {
+      "errorTitle": "Saites derīgums beidzies",
+      "error": "Šī saite nav derīga vai ir beigusies. Pieprasiet jaunu.",
+      "successTitle": "E-pasts apstiprināts",
+      "success": "Viss gatavs. Jūs tiksiet novirzīts…",
+      "loadingTitle": "Notiek jūsu e-pasta apstiprināšana…",
+      "loading": "Vēl mirklis."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Pieteikties",
+      "signup": "Reģistrēties"
+    },
     "search": {
       "label": "Meklēt",
       "hint": "AI meklēšana — drīzumā",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Eiropas iepirkumi, ko izcīna jūsu MI aģenti",
-      "description": "MI aģenti, kas izseko pareizos Eiropas publiskos iepirkumus, sasmalcina birokrātiju un aizved jūsu MVU līdz iepirkuma piešķiršanai."
+      "title": "tendersbay — Publiskie iepirkumi Eiropā ar jūsu MI aģentiem",
+      "description": "MI aģenti, kas izseko pareizos publiskos iepirkumus un iepirkumu konkursus Eiropā, sasmalcina birokrātiju un aizved jūsu MVU līdz iepirkuma piešķiršanai."
     },
     "nav": {
       "problem": "Izmaksas",
@@ -148,6 +251,84 @@
       "daysLeft": "{{count}} dienas"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Šodien",
+      "explore": "Pārlūkot",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Nesenie",
+    "palette": {
+      "trigger": "Meklēt vai jautāt…",
+      "label": "Komandu palete",
+      "placeholder": "Meklēt vai jautāt jebko…",
+      "askAgent": "Jautājiet aģentam: „{{query}}“",
+      "sections": {
+        "navigate": "Iet uz",
+        "recent": "Nesenie workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace iestatījumi",
+      "accountSettings": "Konta iestatījumi",
+      "allWorkspaces": "Visi workspace"
+    },
+    "user": {
+      "settings": "Iestatījumi",
+      "logout": "Izrakstīties"
+    }
+  },
+  "tenders": {
+    "results_zero": "{{count}} iepirkumu",
+    "results_one": "{{count}} iepirkums",
+    "results_other": "{{count}} iepirkumi",
+    "searching": "Meklē…",
+    "empty": {
+      "title": "Iepirkumi nav atrasti",
+      "description": "Mēģiniet plašāku vaicājumu vai mazāk filtru."
+    },
+    "error": "Meklēšana pašlaik nav pieejama — mēģiniet vēlreiz pēc brīža.",
+    "loadMore": "Ielādēt vairāk",
+    "deadline": {
+      "days_zero": "{{count}} dienu atlikušas",
+      "days_one": "{{count}} diena atlikusi",
+      "days_other": "{{count}} dienas atlikušas",
+      "today": "Beidzas šodien",
+      "expired": "Slēgts"
+    },
+    "value": {
+      "unknown": "Vērtība nav norādīta"
+    },
+    "status": {
+      "open": "Atvērts",
+      "awarded": "Piešķirts",
+      "cancelled": "Atcelts",
+      "closed": "Slēgts",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Ieteikts jums",
+      "seeAll": "Viss sadaļā Pārlūkot →"
+    },
+    "greeting": {
+      "morning": "Labrīt.",
+      "afternoon": "Labdien.",
+      "evening": "Labvakar.",
+      "morningNamed": "Labrīt, {{name}}.",
+      "afternoonNamed": "Labdien, {{name}}.",
+      "eveningNamed": "Labvakar, {{name}}."
+    },
+    "resume": {
+      "title": "Turpiniet no vietas, kur pārtraucāt",
+      "untitled": "Saruna bez nosaukuma"
+    },
+    "explore": {
+      "title": "Atrodiet savu nākamo iepirkumu",
+      "description": "Jautājiet aģentam par tirgiem, prasībām vai konkrētu iepirkumu — šeit parādīsies personalizēti ieteikumi, kad veidosies jūsu meklēšanas profili.",
+      "action": "Atveriet Pārlūkot"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Notiek ielāde…",
@@ -269,6 +450,7 @@
       "signIn": "Piesakieties, lai pievienotos"
     },
     "switcher": {
+      "settings": "Workspace iestatījumi",
       "label": "Darbvietas",
       "manage": "Visas darbvietas"
     }

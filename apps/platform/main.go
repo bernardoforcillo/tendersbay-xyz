@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/apps/platform/internal/server"
-	"github.com/bernardoforcillo/tendersbay-xyz/apps/platform/internal/telemetry"
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry"
 )
 
 //go:embed all:dist
@@ -23,7 +23,15 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	shutdown, err := telemetry.Setup(ctx, telemetry.ConfigFromEnv())
+	host := os.Getenv("POSTHOG_HOST")
+	if host == "" {
+		host = "https://eu.i.posthog.com"
+	}
+	shutdown, err := telemetry.Setup(ctx, telemetry.Config{
+		APIKey:      os.Getenv("POSTHOG_API_KEY"),
+		Host:        host,
+		ServiceName: "tendersbay-platform",
+	})
 	if err != nil {
 		slog.Error("failed to set up telemetry", "error", err)
 		os.Exit(1)

@@ -1,12 +1,11 @@
 import { Link, useNavigate, useParams } from '@tanstack/react-router';
+import { cn, navItemClass } from '@tendersbay/components/core';
 import {
   ChevronsUpDown,
   Home,
   LayoutGrid,
   LogOut,
-  Menu,
-  PanelLeftClose,
-  PanelLeftOpen,
+  Search,
   Settings,
   Sparkles,
   X,
@@ -14,11 +13,13 @@ import {
 import type { ReactNode } from 'react';
 import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
+import { CommandPalette } from '~/features/account/components/organisms/command-palette';
 import { Logo } from '~/features/landing/components/atoms';
 import { WorkspaceSwitcher } from '~/features/workspace/components/organisms/workspace-switcher';
 import { detectLocale } from '~/i18n/detect-locale';
 import { authClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
+import { useRecentWorkbenchesStore } from '~/store/recent-workbenches';
 import { useSidebarStore } from '~/store/sidebar';
 import { useWorkspaceStore } from '~/store/workspace';
 import { sidebarNavKeys } from './sidebar-nav';
@@ -36,11 +37,6 @@ type SidebarContentProps = {
 
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
-const NAV_ITEM =
-  'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium no-underline ' +
-  'text-ink-500 transition-colors hover:bg-cream-200 hover:text-ink-900 ' +
-  '[&[aria-current=page]]:bg-cream-200 [&[aria-current=page]]:text-ink-900';
-
 const POPUP_LINK =
   'flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm no-underline ' +
   'text-ink-700 transition-colors hover:bg-cream-100 hover:text-ink-900';
@@ -52,10 +48,12 @@ const ICON_BTN =
 // ─── SidebarContent ───────────────────────────────────────────────────────────
 
 function SidebarContent({ showClose, onClose }: SidebarContentProps) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const clearAuth = useAuthStore((s) => s.clearAuth);
   const user = useAuthStore((s) => s.user);
+  const setPaletteOpen = useSidebarStore((s) => s.setPaletteOpen);
+  const recent = useRecentWorkbenchesStore((s) => s.items);
 
   const initial = (user?.displayName?.[0] ?? user?.email?.[0] ?? '?').toUpperCase();
   // Keep the workspace nav visible even on workspace-agnostic routes (e.g. Explore)
@@ -90,7 +88,11 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
         </Link>
 
         {showClose && (
-          <Button onPress={onClose} aria-label="Close navigation" className={`${ICON_BTN} ml-auto`}>
+          <Button
+            onPress={onClose}
+            aria-label="Close navigation"
+            className={cn(ICON_BTN, 'ml-auto')}
+          >
             <X size={16} aria-hidden="true" />
           </Button>
         )}
@@ -101,19 +103,43 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
         <WorkspaceSwitcher />
       </div>
 
+      {/* ⌘K trigger */}
+      <div className="px-4 pb-2">
+        <Button
+          onPress={() => setPaletteOpen(true)}
+          className="flex w-full items-center gap-2.5 rounded-xl border border-cream-300 bg-white px-3 py-2 text-left text-sm text-ink-400 outline-none transition-colors duration-150 data-[hovered]:border-cream-400 data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600"
+        >
+          <Search size={14} aria-hidden="true" className="shrink-0" />
+          <span className="min-w-0 flex-1 truncate">
+            {t('shell.palette.trigger', 'Search or ask…')}
+          </span>
+          <kbd className="shrink-0 rounded border border-cream-300 bg-cream-100 px-1.5 py-0.5 font-mono text-[10px] text-ink-400">
+            ⌘K
+          </kbd>
+        </Button>
+      </div>
+
       {/* Nav */}
-      <nav className="flex-1 overflow-y-auto px-4 py-3">
+      <nav className="flex-1 overflow-y-auto px-4 py-2">
         <ul className="space-y-0.5">
-          {keys.includes('overview') && workspaceId && (
+          {keys.includes('today') && workspaceId && (
             <li>
               <Link
                 to="/workspaces/$workspaceId"
                 params={{ workspaceId }}
                 activeOptions={{ exact: true }}
-                className={NAV_ITEM}
+                className={navItemClass}
               >
                 <Home size={16} aria-hidden="true" className="shrink-0" />
-                Overview
+                {t('shell.nav.today', 'Today')}
+              </Link>
+            </li>
+          )}
+          {keys.includes('explore') && (
+            <li>
+              <Link to="/explore" className={navItemClass}>
+                <Sparkles size={16} aria-hidden="true" className="shrink-0" />
+                {t('shell.nav.explore', 'Explore')}
               </Link>
             </li>
           )}
@@ -122,34 +148,36 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
               <Link
                 to="/workspaces/$workspaceId/workbenches"
                 params={{ workspaceId }}
-                className={NAV_ITEM}
+                className={navItemClass}
               >
                 <LayoutGrid size={16} aria-hidden="true" className="shrink-0" />
-                Workbenches
-              </Link>
-            </li>
-          )}
-          {keys.includes('explore') && (
-            <li>
-              <Link to="/explore" className={NAV_ITEM}>
-                <Sparkles size={16} aria-hidden="true" className="shrink-0" />
-                Explore
-              </Link>
-            </li>
-          )}
-          {keys.includes('settings') && workspaceId && (
-            <li>
-              <Link
-                to="/workspaces/$workspaceId/settings"
-                params={{ workspaceId }}
-                className={NAV_ITEM}
-              >
-                <Settings size={16} aria-hidden="true" className="shrink-0" />
-                Settings
+                {t('shell.nav.workbenches', 'Workbenches')}
               </Link>
             </li>
           )}
         </ul>
+
+        {/* Recent workbenches */}
+        {recent.length > 0 && (
+          <div className="mt-4 border-t border-cream-300 pt-3">
+            <p className="px-3 pb-1 font-mono text-[10px] font-semibold uppercase tracking-wide text-ink-400">
+              {t('shell.recent', 'Recent')}
+            </p>
+            <ul className="space-y-0.5">
+              {recent.map((item) => (
+                <li key={item.workbenchId}>
+                  <Link
+                    to="/workspaces/$workspaceId/workbench/$workbenchId"
+                    params={{ workspaceId: item.workspaceId, workbenchId: item.workbenchId }}
+                    className={cn(navItemClass, 'py-1.5 text-[13px]')}
+                  >
+                    <span className="truncate">{item.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </nav>
 
       {/* Footer — user menu */}
@@ -187,7 +215,7 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
               <div className="p-1.5">
                 <Link to="/settings" className={POPUP_LINK}>
                   <Settings size={14} aria-hidden="true" className="shrink-0 text-ink-400" />
-                  Settings
+                  {t('shell.user.settings', 'Settings')}
                 </Link>
               </div>
 
@@ -197,7 +225,7 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
                   className="flex w-full items-center gap-2.5 rounded-md px-2 py-1.5 text-left text-sm text-red-600 outline-none transition data-[hovered]:bg-red-50 data-[hovered]:text-red-700 data-[focus-visible]:ring-2 data-[focus-visible]:ring-red-600"
                 >
                   <LogOut size={14} aria-hidden="true" className="shrink-0" />
-                  Log out
+                  {t('shell.user.logout', 'Log out')}
                 </Button>
               </div>
             </Dialog>
@@ -211,29 +239,13 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
 // ─── AccountLayout ────────────────────────────────────────────────────────────
 
 export function AccountLayout({ children }: AccountLayoutProps) {
-  const { i18n } = useTranslation();
   const collapsed = useSidebarStore((s) => s.collapsed);
   const drawerOpen = useSidebarStore((s) => s.drawerOpen);
-  const openDrawer = useSidebarStore((s) => s.openDrawer);
   const closeDrawer = useSidebarStore((s) => s.closeDrawer);
-  const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed);
 
   return (
     <div className="relative flex min-h-screen bg-cream-100 lg:h-screen lg:overflow-hidden">
-      {/* ── Mobile header ── */}
-      <header className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-cream-200 bg-cream-100 px-4 lg:hidden">
-        <Button onPress={openDrawer} aria-label="Open navigation" className={ICON_BTN}>
-          <Menu size={18} aria-hidden="true" />
-        </Button>
-        <Link
-          to="/$locale"
-          params={{ locale: i18n.language }}
-          aria-label="tendersbay home"
-          className="no-underline outline-none"
-        >
-          <Logo />
-        </Link>
-      </header>
+      <CommandPalette />
 
       {/* ── Mobile overlay ── */}
       {drawerOpen && (
@@ -247,14 +259,20 @@ export function AccountLayout({ children }: AccountLayoutProps) {
 
       {/* ── Mobile sidebar drawer ── */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 overflow-hidden bg-cream-100 shadow-soft transition-transform duration-200 ease-in-out lg:hidden ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 w-64 overflow-hidden bg-cream-100 shadow-soft transition-transform duration-200 ease-in-out lg:hidden',
+          drawerOpen ? 'translate-x-0' : '-translate-x-full',
+        )}
       >
         <SidebarContent showClose={true} onClose={closeDrawer} />
       </aside>
 
       {/* ── Desktop sidebar — floating rounded card ── */}
       <aside
-        className={`fixed inset-y-3 left-3 hidden overflow-hidden rounded-3xl bg-cream-100 transition-[width] duration-200 ease-in-out lg:block ${collapsed ? 'w-0' : 'w-64'}`}
+        className={cn(
+          'fixed inset-y-3 left-3 hidden overflow-hidden rounded-3xl bg-cream-100 transition-[width] duration-200 ease-in-out lg:block',
+          collapsed ? 'w-0' : 'w-64',
+        )}
       >
         <div className="h-full w-64">
           <SidebarContent showClose={false} onClose={closeDrawer} />
@@ -263,22 +281,12 @@ export function AccountLayout({ children }: AccountLayoutProps) {
 
       {/* ── Main ── */}
       <main
-        className={`flex min-h-screen flex-1 flex-col transition-[padding-left] duration-200 ease-in-out lg:h-screen lg:min-h-0 ${collapsed ? 'lg:pl-0' : 'lg:pl-[calc(16rem+0.75rem)]'}`}
+        className={cn(
+          'flex min-h-screen flex-1 flex-col transition-[padding-left] duration-200 ease-in-out lg:h-screen lg:min-h-0',
+          collapsed ? 'lg:pl-0' : 'lg:pl-[calc(16rem+0.75rem)]',
+        )}
       >
         <div className="relative flex flex-1 flex-col lg:m-3 lg:min-h-0 lg:overflow-hidden lg:rounded-xl lg:bg-white lg:shadow-sm">
-          {/* Toggle — no background, sits at the top-left corner of the card */}
-          <Button
-            onPress={toggleCollapsed}
-            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className="absolute left-0 top-0 z-10 hidden h-11 w-11 items-center justify-center text-ink-400 outline-none data-[hovered]:text-ink-700 data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600 lg:flex"
-          >
-            {collapsed ? (
-              <PanelLeftOpen size={16} aria-hidden="true" />
-            ) : (
-              <PanelLeftClose size={16} aria-hidden="true" />
-            )}
-          </Button>
-
           {/* Scroll region — content scrolls inside the fixed-height card */}
           <div className="flex flex-1 flex-col lg:min-h-0 lg:overflow-y-auto">{children}</div>
         </div>

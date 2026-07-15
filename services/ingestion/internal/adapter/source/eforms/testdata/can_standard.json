@@ -1,0 +1,19 @@
+{
+  "publication-number": "472142-2026",
+  "procedure-identifier": "proc-can-1",
+  "notice-type": "can-standard",
+  "procedure-type": "open",
+  "notice-title": { "deu": "Bauleistung Brücke", "eng": "Bridge construction works" },
+  "buyer-name": { "deu": ["DB InfraGO AG"], "eng": ["DB InfraGO AG"] },
+  "organisation-identifier-buyer": ["fb197f94-7578-4673-8a57-4642ae120532"],
+  "official-language": ["DEU"],
+  "buyer-country": ["DEU"],
+  "classification-cpv": ["45221100"],
+  "publication-date": "2026-07-09+02:00",
+  "links": {
+    "pdf": {
+      "DEU": "https://ted.europa.eu/de/notice/472142-2026/pdf",
+      "ENG": "https://ted.europa.eu/en/notice/472142-2026/pdf"
+    }
+  }
+}

@@ -5,7 +5,110 @@
     "accept": "Elfogadom",
     "reject": "Elutasítom"
   },
+  "account": {
+    "settings": {
+      "title": "Fiókbeállítások"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Frissítse a megjelenített nevét és azt, ahogyan mások látják Önt.",
+      "displayName": "Megjelenített név",
+      "saved": "Mentve!",
+      "submitting": "Mentés…",
+      "submit": "Módosítások mentése"
+    },
+    "changeEmail": {
+      "checkEmail": "Ellenőrizze új e-mail címét",
+      "title": "E-mail módosítása",
+      "prompt": "Megerősítő linket küldtünk az új címére. Kattintson rá a módosítás megerősítéséhez.",
+      "description": "Megerősítő linket küldünk az új címre.",
+      "hint": "Jelenlegi e-mail címe aktív marad, amíg meg nem erősíti az újat.",
+      "newEmail": "Új e-mail",
+      "password": "Jelenlegi jelszó",
+      "submitting": "Mentés…",
+      "submit": "E-mail módosítása"
+    },
+    "changePassword": {
+      "successTitle": "Jelszó frissítve",
+      "title": "Jelszó módosítása",
+      "successBody": "Jelszava megváltozott. Jelentkezzen be újra a többi eszközön.",
+      "description": "Az új jelszónak legalább 12 karakterből kell állnia.",
+      "successHint": "A többi aktív munkamenet érvényes marad a lejáratukig.",
+      "current": "Jelenlegi jelszó",
+      "new": "Új jelszó",
+      "submitting": "Mentés…",
+      "submit": "Jelszó módosítása"
+    },
+    "delete": {
+      "title": "Fiók törlése",
+      "description": "Ez a művelet végleges, és nem vonható vissza. Minden adata, munkaterülete és beállítása véglegesen törlésre kerül.",
+      "password": "Erősítse meg jelszavával",
+      "submitting": "Törlés…",
+      "submit": "Fiókom törlése"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Bejelentkezés",
+      "description": "Üdvözöljük ismét a tendersbayen.",
+      "email": "E-mail",
+      "password": "Jelszó",
+      "forgotPassword": "Elfelejtette a jelszavát?",
+      "submitting": "Bejelentkezés…",
+      "submit": "Bejelentkezés",
+      "noAccount": "Még nincs fiókja?",
+      "signUp": "Regisztráció"
+    },
+    "signup": {
+      "checkEmail": "Ellenőrizze az e-mailjét",
+      "verifyPrompt": "Küldtünk Önnek egy megerősítő linket. Kattintson rá a fiókja aktiválásához.",
+      "checkEmailHint": "A link 24 óra múlva lejár. Ha nem látja, ellenőrizze a spam mappát.",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "title": "Fiók létrehozása",
+      "description": "Kezdjen el uniós közbeszerzéseket nyerni MI-ügynökökkel.",
+      "displayName": "Név",
+      "email": "E-mail",
+      "password": "Jelszó",
+      "submitting": "Létrehozás…",
+      "submit": "Fiók létrehozása",
+      "login": "Már van fiókja?",
+      "signIn": "Bejelentkezés"
+    },
+    "forgot": {
+      "checkEmail": "Ellenőrizze az e-mailjét",
+      "checkEmailBody": "Ha létezik fiók ehhez a címhez, hamarosan kap egy visszaállítási linket.",
+      "checkEmailHint": "A link 1 óra múlva lejár. Ha nem látja, ellenőrizze a spam mappát.",
+      "backToLogin": "Vissza a bejelentkezéshez",
+      "title": "Jelszó visszaállítása",
+      "description": "Adja meg az e-mail címét, és küldünk egy visszaállítási linket.",
+      "email": "E-mail",
+      "submitting": "Küldés…",
+      "submit": "Visszaállítási link küldése"
+    },
+    "reset": {
+      "invalidTitle": "Érvénytelen link",
+      "invalid": "Ez a visszaállítási link hiányzik vagy lejárt.",
+      "requestNew": "Új link kérése",
+      "title": "Új jelszó beállítása",
+      "description": "Válasszon egy erős, legalább 12 karakteres jelszót.",
+      "password": "Új jelszó",
+      "submitting": "Mentés…",
+      "submit": "Jelszó beállítása"
+    },
+    "verify": {
+      "errorTitle": "A link lejárt",
+      "error": "Ez a link érvénytelen vagy lejárt. Kérjen egy újat.",
+      "successTitle": "E-mail megerősítve",
+      "success": "Minden készen áll. Átirányítjuk…",
+      "loadingTitle": "E-mail megerősítése folyamatban…",
+      "loading": "Egy pillanat."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Bejelentkezés",
+      "signup": "Regisztráció"
+    },
     "search": {
       "label": "Keresés",
       "hint": "MI-alapú keresés — hamarosan",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Nyerjen európai közbeszerzéseket MI-ügynökök csapatával",
-      "description": "MI-ügynökök, akik felkutatják a megfelelő európai közbeszerzéseket, szétzúzzák a papírmunkát, és egészen az odaítélésig viszik az Ön kkv-ját."
+      "title": "tendersbay — Közbeszerzések az odaítélésig, MI-ügynökök csapatával",
+      "description": "MI-ügynökök, akik felkutatják a megfelelő közbeszerzéseket és közbeszerzési pályázatokat, szétzúzzák a papírmunkát, és az odaítélésig viszik az Ön kkv-ját."
     },
     "nav": {
       "problem": "A költség",
@@ -152,6 +255,82 @@
       "daysLeft": "{{count}} nap"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Ma",
+      "explore": "Felfedezés",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Legutóbbi",
+    "palette": {
+      "trigger": "Keresés vagy kérdés…",
+      "label": "Parancspaletta",
+      "placeholder": "Keressen vagy kérdezzen bármit…",
+      "askAgent": "Kérdezze meg az ügynököt: „{{query}}”",
+      "sections": {
+        "navigate": "Ugrás",
+        "recent": "Legutóbbi workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-beállítások",
+      "accountSettings": "Fiókbeállítások",
+      "allWorkspaces": "Minden workspace"
+    },
+    "user": {
+      "settings": "Beállítások",
+      "logout": "Kijelentkezés"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} pályázat",
+    "results_other": "{{count}} pályázat",
+    "searching": "Keresés…",
+    "empty": {
+      "title": "Nem található pályázat",
+      "description": "Próbáljon tágabb keresést vagy kevesebb szűrőt."
+    },
+    "error": "A keresés jelenleg nem érhető el — próbálja újra egy pillanat múlva.",
+    "loadMore": "Továbbiak betöltése",
+    "deadline": {
+      "days_one": "{{count}} nap van hátra",
+      "days_other": "{{count}} nap van hátra",
+      "today": "Ma zárul",
+      "expired": "Lezárva"
+    },
+    "value": {
+      "unknown": "Érték nincs közzétéve"
+    },
+    "status": {
+      "open": "Nyitott",
+      "awarded": "Odaítélve",
+      "cancelled": "Törölve",
+      "closed": "Lezárva",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Önnek ajánlott",
+      "seeAll": "Minden a Felfedezésben →"
+    },
+    "greeting": {
+      "morning": "Jó reggelt.",
+      "afternoon": "Jó napot.",
+      "evening": "Jó estét.",
+      "morningNamed": "Jó reggelt, {{name}}.",
+      "afternoonNamed": "Jó napot, {{name}}.",
+      "eveningNamed": "Jó estét, {{name}}."
+    },
+    "resume": {
+      "title": "Folytassa ott, ahol abbahagyta",
+      "untitled": "Névtelen beszélgetés"
+    },
+    "explore": {
+      "title": "Találja meg a következő pályázatát",
+      "description": "Kérdezze meg az ügynököt a piacokról, követelményekről vagy egy adott pályázati felhívásról — személyre szabott ajánlások jelennek meg itt, ahogy az Ön keresési profiljai formát öltenek.",
+      "action": "Nyissa meg a Felfedezést"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Betöltés…",
@@ -273,6 +452,7 @@
       "signIn": "A csatlakozáshoz jelentkezzen be"
     },
     "switcher": {
+      "settings": "Workspace-beállítások",
       "label": "Munkaterületek",
       "manage": "Összes munkaterület"
     }

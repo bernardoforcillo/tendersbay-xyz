@@ -5,7 +5,110 @@
     "accept": "Acceptera",
     "reject": "Avvisa"
   },
+  "account": {
+    "settings": {
+      "title": "Kontoinställningar"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Uppdatera ditt visningsnamn och hur andra ser dig.",
+      "displayName": "Visningsnamn",
+      "saved": "Sparat!",
+      "submitting": "Sparar…",
+      "submit": "Spara ändringar"
+    },
+    "changeEmail": {
+      "checkEmail": "Kontrollera din nya e-post",
+      "title": "Byt e-post",
+      "prompt": "Vi har skickat en verifieringslänk till din nya adress. Klicka på den för att bekräfta ändringen.",
+      "description": "Vi skickar en verifieringslänk till den nya adressen.",
+      "hint": "Din nuvarande e-post förblir aktiv tills du verifierar den nya.",
+      "newEmail": "Ny e-post",
+      "password": "Nuvarande lösenord",
+      "submitting": "Sparar…",
+      "submit": "Byt e-post"
+    },
+    "changePassword": {
+      "successTitle": "Lösenordet har uppdaterats",
+      "title": "Byt lösenord",
+      "successBody": "Ditt lösenord har ändrats. Logga in igen på andra enheter.",
+      "description": "Det nya lösenordet måste vara minst 12 tecken långt.",
+      "successHint": "Andra aktiva sessioner förblir giltiga tills de går ut.",
+      "current": "Nuvarande lösenord",
+      "new": "Nytt lösenord",
+      "submitting": "Sparar…",
+      "submit": "Byt lösenord"
+    },
+    "delete": {
+      "title": "Ta bort konto",
+      "description": "Denna åtgärd är permanent och kan inte ångras. All din data, dina arbetsytor och inställningar tas bort permanent.",
+      "password": "Bekräfta med ditt lösenord",
+      "submitting": "Tar bort…",
+      "submit": "Ta bort mitt konto"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Logga in",
+      "description": "Välkommen tillbaka till tendersbay.",
+      "email": "E-post",
+      "password": "Lösenord",
+      "forgotPassword": "Glömt lösenordet?",
+      "submitting": "Loggar in…",
+      "submit": "Logga in",
+      "noAccount": "Har du inget konto?",
+      "signUp": "Registrera dig"
+    },
+    "signup": {
+      "checkEmail": "Kontrollera din e-post",
+      "verifyPrompt": "Vi har skickat en verifieringslänk till dig. Klicka på den för att aktivera ditt konto.",
+      "checkEmailHint": "Länken slutar gälla om 24 timmar. Kolla din skräppost om du inte ser den.",
+      "backToLogin": "Tillbaka till inloggning",
+      "title": "Skapa konto",
+      "description": "Börja vinna EU-upphandlingar med AI-agenter.",
+      "displayName": "Namn",
+      "email": "E-post",
+      "password": "Lösenord",
+      "submitting": "Skapar…",
+      "submit": "Skapa konto",
+      "login": "Har du redan ett konto?",
+      "signIn": "Logga in"
+    },
+    "forgot": {
+      "checkEmail": "Kontrollera din e-post",
+      "checkEmailBody": "Om det finns ett konto för den adressen får du snart en återställningslänk.",
+      "checkEmailHint": "Länken slutar gälla om 1 timme. Kolla din skräppost om du inte ser den.",
+      "backToLogin": "Tillbaka till inloggning",
+      "title": "Återställ lösenord",
+      "description": "Ange din e-postadress så skickar vi en återställningslänk.",
+      "email": "E-post",
+      "submitting": "Skickar…",
+      "submit": "Skicka återställningslänk"
+    },
+    "reset": {
+      "invalidTitle": "Ogiltig länk",
+      "invalid": "Den här återställningslänken saknas eller har gått ut.",
+      "requestNew": "Begär en ny länk",
+      "title": "Ange nytt lösenord",
+      "description": "Välj ett starkt lösenord på minst 12 tecken.",
+      "password": "Nytt lösenord",
+      "submitting": "Sparar…",
+      "submit": "Ange lösenord"
+    },
+    "verify": {
+      "errorTitle": "Länken har gått ut",
+      "error": "Den här länken är ogiltig eller har gått ut. Begär en ny.",
+      "successTitle": "E-post verifierad",
+      "success": "Allt klart. Du omdirigeras nu…",
+      "loadingTitle": "Verifierar din e-post…",
+      "loading": "Ett ögonblick."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Logga in",
+      "signup": "Registrera dig"
+    },
     "search": {
       "label": "Sök",
       "hint": "AI-sökning — kommer snart",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Europeiska upphandlingar, tilldelade av dina AI-agenter",
-      "description": "AI-agenter som spårar upp rätt europeiska offentliga upphandlingar, krossar pappersarbetet och tar ditt SMF hela vägen till tilldelning."
+      "title": "tendersbay — Offentliga upphandlingar, tilldelade av AI-agenter",
+      "description": "AI-agenter som spårar upp rätt offentliga upphandlingar i hela Europa, krossar pappersarbetet och tar ditt SMF hela vägen till tilldelningen."
     },
     "nav": {
       "problem": "Kostnaden",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} dagar"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Idag",
+      "explore": "Utforska",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Senaste",
+    "palette": {
+      "trigger": "Sök eller fråga…",
+      "label": "Kommandopalett",
+      "placeholder": "Sök eller fråga vad som helst…",
+      "askAgent": "Fråga agenten: ”{{query}}”",
+      "sections": {
+        "navigate": "Gå till",
+        "recent": "Senaste workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-inställningar",
+      "accountSettings": "Kontoinställningar",
+      "allWorkspaces": "Alla workspaces"
+    },
+    "user": {
+      "settings": "Inställningar",
+      "logout": "Logga ut"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} upphandling",
+    "results_other": "{{count}} upphandlingar",
+    "searching": "Söker…",
+    "empty": {
+      "title": "Inga upphandlingar hittades",
+      "description": "Prova en bredare sökning eller färre filter."
+    },
+    "error": "Sökningen är inte tillgänglig just nu — försök igen om en stund.",
+    "loadMore": "Ladda fler",
+    "deadline": {
+      "days_one": "{{count}} dag kvar",
+      "days_other": "{{count}} dagar kvar",
+      "today": "Stänger idag",
+      "expired": "Stängd"
+    },
+    "value": {
+      "unknown": "Värde ej redovisat"
+    },
+    "status": {
+      "open": "Öppen",
+      "awarded": "Tilldelad",
+      "cancelled": "Avbruten",
+      "closed": "Stängd",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Rekommenderat för dig",
+      "seeAll": "Allt i Utforska →"
+    },
+    "greeting": {
+      "morning": "God morgon.",
+      "afternoon": "God eftermiddag.",
+      "evening": "God kväll.",
+      "morningNamed": "God morgon, {{name}}.",
+      "afternoonNamed": "God eftermiddag, {{name}}.",
+      "eveningNamed": "God kväll, {{name}}."
+    },
+    "resume": {
+      "title": "Fortsätt där du slutade",
+      "untitled": "Namnlös konversation"
+    },
+    "explore": {
+      "title": "Hitta din nästa upphandling",
+      "description": "Fråga agenten om marknader, krav eller en specifik upphandling — personliga rekommendationer visas här när dina sökprofiler tar form.",
+      "action": "Öppna Utforska"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Läser in…",
@@ -269,6 +448,7 @@
       "signIn": "Logga in för att gå med"
     },
     "switcher": {
+      "settings": "Workspace-inställningar",
       "label": "Arbetsytor",
       "manage": "Alla arbetsytor"
     }

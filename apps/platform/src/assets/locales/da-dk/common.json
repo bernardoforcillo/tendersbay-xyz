@@ -5,7 +5,110 @@
     "accept": "Accepter",
     "reject": "Afvis"
   },
+  "account": {
+    "settings": {
+      "title": "Kontoindstillinger"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Opdater dit viste navn og den måde, andre ser dig på.",
+      "displayName": "Vist navn",
+      "saved": "Gemt!",
+      "submitting": "Gemmer…",
+      "submit": "Gem ændringer"
+    },
+    "changeEmail": {
+      "checkEmail": "Tjek din nye e-mail",
+      "title": "Skift e-mail",
+      "prompt": "Vi har sendt et bekræftelseslink til din nye adresse. Klik på det for at bekræfte ændringen.",
+      "description": "Vi sender et bekræftelseslink til den nye adresse.",
+      "hint": "Din nuværende e-mail forbliver aktiv, indtil du bekræfter den nye.",
+      "newEmail": "Ny e-mail",
+      "password": "Nuværende adgangskode",
+      "submitting": "Gemmer…",
+      "submit": "Skift e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Adgangskode opdateret",
+      "title": "Skift adgangskode",
+      "successBody": "Din adgangskode er blevet ændret. Log ind igen på andre enheder.",
+      "description": "Den nye adgangskode skal være mindst 12 tegn.",
+      "successHint": "Andre aktive sessioner forbliver gyldige, indtil de udløber.",
+      "current": "Nuværende adgangskode",
+      "new": "Ny adgangskode",
+      "submitting": "Gemmer…",
+      "submit": "Skift adgangskode"
+    },
+    "delete": {
+      "title": "Slet konto",
+      "description": "Denne handling er permanent og kan ikke fortrydes. Alle dine data, arbejdsområder og indstillinger bliver slettet permanent.",
+      "password": "Bekræft med din adgangskode",
+      "submitting": "Sletter…",
+      "submit": "Slet min konto"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Log ind",
+      "description": "Velkommen tilbage til tendersbay.",
+      "email": "E-mail",
+      "password": "Adgangskode",
+      "forgotPassword": "Glemt adgangskode?",
+      "submitting": "Logger ind…",
+      "submit": "Log ind",
+      "noAccount": "Har du ikke en konto?",
+      "signUp": "Opret konto"
+    },
+    "signup": {
+      "checkEmail": "Tjek din e-mail",
+      "verifyPrompt": "Vi har sendt dig et bekræftelseslink. Klik på det for at aktivere din konto.",
+      "checkEmailHint": "Linket udløber om 24 timer. Tjek din spammappe, hvis du ikke kan se det.",
+      "backToLogin": "Tilbage til login",
+      "title": "Opret konto",
+      "description": "Begynd at vinde EU-udbud med AI-agenter.",
+      "displayName": "Navn",
+      "email": "E-mail",
+      "password": "Adgangskode",
+      "submitting": "Opretter…",
+      "submit": "Opret konto",
+      "login": "Har du allerede en konto?",
+      "signIn": "Log ind"
+    },
+    "forgot": {
+      "checkEmail": "Tjek din e-mail",
+      "checkEmailBody": "Hvis der findes en konto til den adresse, modtager du snart et nulstillingslink.",
+      "checkEmailHint": "Linket udløber om 1 time. Tjek din spammappe, hvis du ikke kan se det.",
+      "backToLogin": "Tilbage til login",
+      "title": "Nulstil adgangskode",
+      "description": "Indtast din e-mail, så sender vi dig et nulstillingslink.",
+      "email": "E-mail",
+      "submitting": "Sender…",
+      "submit": "Send nulstillingslink"
+    },
+    "reset": {
+      "invalidTitle": "Ugyldigt link",
+      "invalid": "Dette nulstillingslink mangler eller er udløbet.",
+      "requestNew": "Anmod om et nyt link",
+      "title": "Angiv ny adgangskode",
+      "description": "Vælg en stærk adgangskode på mindst 12 tegn.",
+      "password": "Ny adgangskode",
+      "submitting": "Gemmer…",
+      "submit": "Angiv adgangskode"
+    },
+    "verify": {
+      "errorTitle": "Linket er udløbet",
+      "error": "Dette link er ugyldigt eller er udløbet. Anmod om et nyt.",
+      "successTitle": "E-mail bekræftet",
+      "success": "Alt er klar. Du bliver omdirigeret nu…",
+      "loadingTitle": "Bekræfter din e-mail…",
+      "loading": "Et øjeblik."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Log ind",
+      "signup": "Opret konto"
+    },
     "search": {
       "label": "Søg",
       "hint": "AI-søgning — kommer snart",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Europæiske udbud, tildelt af dine AI-agenter",
-      "description": "AI-agenter, der opsporer de rigtige europæiske offentlige udbud, knuser papirarbejdet og fører din SMV hele vejen til tildelingen."
+      "title": "tendersbay — Offentlige udbud, tildelt af dine AI-agenter",
+      "description": "AI-agenter, der opsporer de rigtige offentlige udbud og EU-udbud i hele Europa, knuser papirarbejdet og fører din SMV hele vejen til tildelingen."
     },
     "nav": {
       "problem": "Omkostningen",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} dage"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "I dag",
+      "explore": "Udforsk",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Seneste",
+    "palette": {
+      "trigger": "Søg eller spørg…",
+      "label": "Kommandopalet",
+      "placeholder": "Søg eller spørg om hvad som helst…",
+      "askAgent": "Spørg agenten: »{{query}}«",
+      "sections": {
+        "navigate": "Gå til",
+        "recent": "Seneste workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace-indstillinger",
+      "accountSettings": "Kontoindstillinger",
+      "allWorkspaces": "Alle workspaces"
+    },
+    "user": {
+      "settings": "Indstillinger",
+      "logout": "Log ud"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} udbud",
+    "results_other": "{{count}} udbud",
+    "searching": "Søger…",
+    "empty": {
+      "title": "Ingen udbud fundet",
+      "description": "Prøv en bredere søgning eller færre filtre."
+    },
+    "error": "Søgning er ikke tilgængelig lige nu — prøv igen om et øjeblik.",
+    "loadMore": "Indlæs flere",
+    "deadline": {
+      "days_one": "{{count}} dag tilbage",
+      "days_other": "{{count}} dage tilbage",
+      "today": "Udløber i dag",
+      "expired": "Lukket"
+    },
+    "value": {
+      "unknown": "Værdi ikke oplyst"
+    },
+    "status": {
+      "open": "Åbent",
+      "awarded": "Tildelt",
+      "cancelled": "Annulleret",
+      "closed": "Lukket",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Anbefalet til dig",
+      "seeAll": "Alt i Udforsk →"
+    },
+    "greeting": {
+      "morning": "Godmorgen.",
+      "afternoon": "God eftermiddag.",
+      "evening": "God aften.",
+      "morningNamed": "Godmorgen, {{name}}.",
+      "afternoonNamed": "God eftermiddag, {{name}}.",
+      "eveningNamed": "God aften, {{name}}."
+    },
+    "resume": {
+      "title": "Fortsæt hvor du slap",
+      "untitled": "Samtale uden titel"
+    },
+    "explore": {
+      "title": "Find dit næste udbud",
+      "description": "Spørg agenten om markeder, krav eller et konkret udbud — personlige anbefalinger vises her, efterhånden som dine søgeprofiler tager form.",
+      "action": "Åbn Udforsk"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Indlæser…",
@@ -269,6 +448,7 @@
       "signIn": "Log ind for at deltage"
     },
     "switcher": {
+      "settings": "Workspace-indstillinger",
       "label": "Arbejdsområder",
       "manage": "Alle arbejdsområder"
     }

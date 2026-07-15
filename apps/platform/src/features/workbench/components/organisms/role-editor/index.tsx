@@ -1,5 +1,6 @@
+import { Banner, Button, Field, Switch } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, Form, Input, Label, Switch, TextField } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import {
   hasBit,
@@ -7,7 +8,6 @@ import {
   PERMISSION_KEYS,
   toggleBit,
 } from '~/features/workbench/permissions';
-import { BTN_PRIMARY, BTN_SECONDARY, ERROR_BOX, INPUT, LABEL } from '~/features/workbench/ui';
 
 type RoleEditorProps = {
   initialName?: string;
@@ -41,13 +41,18 @@ export function RoleEditor({
       }}
       className="flex flex-col gap-4"
     >
-      <TextField value={name} onChange={setName} isRequired className="flex flex-col gap-1.5">
-        <Label className={LABEL}>{t('workbench.roles.nameLabel', 'Role name')}</Label>
-        <Input className={INPUT} placeholder={t('workbench.roles.namePlaceholder', 'Editor')} />
-      </TextField>
+      <Field
+        label={t('workbench.roles.nameLabel', 'Role name')}
+        placeholder={t('workbench.roles.namePlaceholder', 'Editor')}
+        value={name}
+        onChange={setName}
+        isRequired
+      />
 
       <div className="flex flex-col gap-1">
-        <span className={LABEL}>{t('workbench.roles.permissionsLabel', 'Permissions')}</span>
+        <span className="text-sm font-medium text-ink-700">
+          {t('workbench.roles.permissionsLabel', 'Permissions')}
+        </span>
         <div className="mt-1 flex flex-col divide-y divide-cream-200 rounded-xl border border-cream-200">
           {PERMISSION_KEYS.map((key) => {
             const bit = PERMISSION_BITS[key];
@@ -58,46 +63,31 @@ export function RoleEditor({
                 isSelected={hasBit(perms, bit)}
                 isDisabled={!grantable}
                 onChange={(v) => setPerms(toggleBit(perms, bit, v))}
-                className="group flex items-center justify-between gap-3 px-4 py-3 data-[disabled]:opacity-50"
+                className="w-full justify-between px-4 py-3 data-[disabled]:opacity-50"
               >
-                {({ isSelected }) => (
-                  <>
-                    <span className="flex flex-col">
-                      <span className="text-sm font-medium text-ink-800">
-                        {t(`workbench.permissions.${key}`, key)}
-                      </span>
-                      <span className="text-xs text-ink-500">
-                        {t(`workbench.permissionsHint.${key}`, '')}
-                      </span>
-                    </span>
-                    <span
-                      className={`flex h-5 w-9 shrink-0 items-center rounded-full px-0.5 transition-colors ${isSelected ? 'bg-brand-600' : 'bg-cream-300'}`}
-                    >
-                      <span
-                        className={`block h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${isSelected ? 'translate-x-4' : 'translate-x-0'}`}
-                      />
-                    </span>
-                  </>
-                )}
+                <span className="flex flex-col">
+                  <span className="text-sm font-medium text-ink-800">
+                    {t(`workbench.permissions.${key}`, key)}
+                  </span>
+                  <span className="text-xs text-ink-500">
+                    {t(`workbench.permissionsHint.${key}`, '')}
+                  </span>
+                </span>
               </Switch>
             );
           })}
         </div>
       </div>
 
-      {error && (
-        <p role="alert" className={ERROR_BOX}>
-          {error}
-        </p>
-      )}
+      {error && <Banner tone="error">{error}</Banner>}
 
       <div className="flex gap-3">
-        <Button type="submit" isDisabled={submitting || name.trim() === ''} className={BTN_PRIMARY}>
+        <Button type="submit" isDisabled={submitting || name.trim() === ''}>
           {submitting
             ? t('workbench.common.saving', 'Saving…')
             : t('workbench.common.save', 'Save')}
         </Button>
-        <Button type="button" onPress={onCancel} className={BTN_SECONDARY}>
+        <Button type="button" variant="ghost" onPress={onCancel}>
           {t('workbench.common.cancel', 'Cancel')}
         </Button>
       </div>

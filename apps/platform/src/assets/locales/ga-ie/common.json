@@ -5,7 +5,110 @@
     "accept": "Glac",
     "reject": "Diúltaigh"
   },
+  "account": {
+    "settings": {
+      "title": "Socruithe cuntais"
+    },
+    "profile": {
+      "title": "Próifíl",
+      "description": "Nuashonraigh d'ainm taispeána agus an chaoi a bhfeiceann daoine eile thú.",
+      "displayName": "Ainm taispeána",
+      "saved": "Sábháilte!",
+      "submitting": "Á shábháil…",
+      "submit": "Sábháil athruithe"
+    },
+    "changeEmail": {
+      "checkEmail": "Seiceáil do ríomhphost nua",
+      "title": "Athraigh ríomhphost",
+      "prompt": "Sheol muid nasc deimhnithe chuig do sheoladh nua. Cliceáil air chun an t-athrú a dhearbhú.",
+      "description": "Seolfaimid nasc deimhnithe chuig an seoladh nua.",
+      "hint": "Fanann do ríomhphost reatha gníomhach go dtí go ndeimhníonn tú an ceann nua.",
+      "newEmail": "Ríomhphost nua",
+      "password": "Focal faire reatha",
+      "submitting": "Á shábháil…",
+      "submit": "Athraigh ríomhphost"
+    },
+    "changePassword": {
+      "successTitle": "Focal faire nuashonraithe",
+      "title": "Athraigh focal faire",
+      "successBody": "Athraíodh d'fhocal faire. Sínigh isteach arís ar ghléasanna eile.",
+      "description": "Caithfidh an focal faire nua a bheith 12 charachtar ar a laghad.",
+      "successHint": "Fanann seisiúin ghníomhacha eile bailí go dtí go rachaidh siad in éag.",
+      "current": "Focal faire reatha",
+      "new": "Focal faire nua",
+      "submitting": "Á shábháil…",
+      "submit": "Athraigh focal faire"
+    },
+    "delete": {
+      "title": "Scrios cuntas",
+      "description": "Tá an gníomh seo buan agus ní féidir é a chur ar ceal. Scriosfar do chuid sonraí, spásanna oibre agus socruithe go léir go buan.",
+      "password": "Deimhnigh le d'fhocal faire",
+      "submitting": "Á scriosadh…",
+      "submit": "Scrios mo chuntas"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sínigh isteach",
+      "description": "Fáilte ar ais chuig tendersbay.",
+      "email": "Ríomhphost",
+      "password": "Focal faire",
+      "forgotPassword": "Focal faire dearmadta?",
+      "submitting": "Ag síniú isteach…",
+      "submit": "Sínigh isteach",
+      "noAccount": "Nach bhfuil cuntas agat?",
+      "signUp": "Cláraigh"
+    },
+    "signup": {
+      "checkEmail": "Seiceáil do ríomhphost",
+      "verifyPrompt": "Chuireamar nasc fíoraithe chugat. Cliceáil air chun do chuntas a ghníomhachtú.",
+      "checkEmailHint": "Rachaidh an nasc as feidhm i gceann 24 uair an chloig. Seiceáil d'fhillteán turscair mura bhfeiceann tú é.",
+      "backToLogin": "Ar ais chuig an síniú isteach",
+      "title": "Cruthaigh cuntas",
+      "description": "Tosaigh ag buachan tairiscintí AE le gníomhairí AI.",
+      "displayName": "Ainm",
+      "email": "Ríomhphost",
+      "password": "Focal faire",
+      "submitting": "Ag cruthú…",
+      "submit": "Cruthaigh cuntas",
+      "login": "Cuntas agat cheana féin?",
+      "signIn": "Sínigh isteach"
+    },
+    "forgot": {
+      "checkEmail": "Seiceáil do ríomhphost",
+      "checkEmailBody": "Má tá cuntas ann don seoladh sin, gheobhaidh tú nasc athshocraithe go luath.",
+      "checkEmailHint": "Rachaidh an nasc as feidhm i gceann uair an chloig. Seiceáil d'fhillteán turscair mura bhfeiceann tú é.",
+      "backToLogin": "Ar ais chuig an síniú isteach",
+      "title": "Athshocraigh an focal faire",
+      "description": "Cuir isteach do ríomhphost agus seolfaimid nasc athshocraithe chugat.",
+      "email": "Ríomhphost",
+      "submitting": "Ag seoladh…",
+      "submit": "Seol nasc athshocraithe"
+    },
+    "reset": {
+      "invalidTitle": "Nasc neamhbhailí",
+      "invalid": "Tá an nasc athshocraithe seo ar iarraidh nó imithe as feidhm.",
+      "requestNew": "Iarr nasc nua",
+      "title": "Socraigh focal faire nua",
+      "description": "Roghnaigh focal faire láidir ar a laghad 12 charachtar.",
+      "password": "Focal faire nua",
+      "submitting": "Ag sábháil…",
+      "submit": "Socraigh focal faire"
+    },
+    "verify": {
+      "errorTitle": "Nasc imithe as feidhm",
+      "error": "Tá an nasc seo neamhbhailí nó imithe as feidhm. Iarr ceann nua.",
+      "successTitle": "Ríomhphost fíoraithe",
+      "success": "Gach rud réidh. Á atreorú anois…",
+      "loadingTitle": "Do ríomhphost á fhíorú…",
+      "loading": "Nóiméad amháin."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Sínigh isteach",
+      "signup": "Cláraigh"
+    },
     "search": {
       "label": "Cuardaigh",
       "hint": "Cuardach AI — ar fáil go luath",
@@ -17,7 +120,7 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Tairiscintí Eorpacha, bronnta ag do ghníomhairí AI",
+      "title": "tendersbay — Tairiscintí poiblí, bronnta ag do ghníomhairí AI",
       "description": "Gníomhairí AI a aimsíonn na tairiscintí poiblí Eorpacha cearta, a réabann an obair pháipéir, agus a thugann do FBM an bealach ar fad go dtí an bronnadh."
     },
     "nav": {
@@ -152,6 +255,88 @@
       "daysLeft": "{{count}} lá"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Inniu",
+      "explore": "Iniúchadh",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Le déanaí",
+    "palette": {
+      "trigger": "Cuardaigh nó fiafraigh…",
+      "label": "Pailéad na n-orduithe",
+      "placeholder": "Cuardaigh nó fiafraigh rud ar bith…",
+      "askAgent": "Fiafraigh den ghníomhaire: “{{query}}”",
+      "sections": {
+        "navigate": "Téigh go dtí",
+        "recent": "Workbenches le déanaí",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Socruithe workspace",
+      "accountSettings": "Socruithe cuntais",
+      "allWorkspaces": "Gach workspace"
+    },
+    "user": {
+      "settings": "Socruithe",
+      "logout": "Logáil amach"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} thairiscint",
+    "results_two": "{{count}} thairiscint",
+    "results_few": "{{count}} thairiscint",
+    "results_many": "{{count}} dtairiscint",
+    "results_other": "{{count}} tairiscint",
+    "searching": "Ag cuardach…",
+    "empty": {
+      "title": "Níor aimsíodh aon tairiscint",
+      "description": "Bain triail as cuardach níos leithne nó níos lú scagairí."
+    },
+    "error": "Níl an cuardach ar fáil faoi láthair — bain triail eile as i gceann nóiméid.",
+    "loadMore": "Luchtaigh tuilleadh",
+    "deadline": {
+      "days_one": "{{count}} lá fágtha",
+      "days_two": "{{count}} lá fágtha",
+      "days_few": "{{count}} lá fágtha",
+      "days_many": "{{count}} lá fágtha",
+      "days_other": "{{count}} lá fágtha",
+      "today": "Dúnann inniu",
+      "expired": "Dúnta"
+    },
+    "value": {
+      "unknown": "Luach neamhnochta"
+    },
+    "status": {
+      "open": "Oscailte",
+      "awarded": "Bronnta",
+      "cancelled": "Cealaithe",
+      "closed": "Dúnta",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Molta duit",
+      "seeAll": "Gach rud in Iniúchadh →"
+    },
+    "greeting": {
+      "morning": "Maidin mhaith.",
+      "afternoon": "Tráthnóna maith.",
+      "evening": "Oíche mhaith.",
+      "morningNamed": "Maidin mhaith, {{name}}.",
+      "afternoonNamed": "Tráthnóna maith, {{name}}.",
+      "eveningNamed": "Oíche mhaith, {{name}}."
+    },
+    "resume": {
+      "title": "Lean leat ón áit ar stad tú",
+      "untitled": "Comhrá gan teideal"
+    },
+    "explore": {
+      "title": "Aimsigh an chéad tairiscint eile agat",
+      "description": "Fiafraigh den ghníomhaire faoi mhargaí, riachtanais, nó tairiscint ar leith — beidh moltaí pearsantaithe le feiceáil anseo de réir mar a fhorbraíonn do phróifílí cuardaigh.",
+      "action": "Oscail Iniúchadh"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Á lódáil…",
@@ -273,6 +458,7 @@
       "signIn": "Sínigh isteach chun bheith páirteach"
     },
     "switcher": {
+      "settings": "Socruithe workspace",
       "label": "Spásanna oibre",
       "manage": "Gach spás oibre"
     }

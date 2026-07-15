@@ -5,7 +5,110 @@
     "accept": "Priimti",
     "reject": "Atmesti"
   },
+  "account": {
+    "settings": {
+      "title": "Paskyros nustatymai"
+    },
+    "profile": {
+      "title": "Profilis",
+      "description": "Atnaujinkite rodomą vardą ir tai, kaip jus mato kiti.",
+      "displayName": "Rodomas vardas",
+      "saved": "Įrašyta!",
+      "submitting": "Įrašoma…",
+      "submit": "Įrašyti pakeitimus"
+    },
+    "changeEmail": {
+      "checkEmail": "Patikrinkite naują el. paštą",
+      "title": "El. pašto keitimas",
+      "prompt": "Išsiuntėme patvirtinimo nuorodą jūsų naujam adresui. Spustelėkite ją, kad patvirtintumėte pakeitimą.",
+      "description": "Naujam adresui atsiųsime patvirtinimo nuorodą.",
+      "hint": "Dabartinis el. paštas lieka aktyvus, kol patvirtinsite naują.",
+      "newEmail": "Naujas el. paštas",
+      "password": "Dabartinis slaptažodis",
+      "submitting": "Įrašoma…",
+      "submit": "Keisti el. paštą"
+    },
+    "changePassword": {
+      "successTitle": "Slaptažodis atnaujintas",
+      "title": "Slaptažodžio keitimas",
+      "successBody": "Jūsų slaptažodis pakeistas. Kituose įrenginiuose prisijunkite iš naujo.",
+      "description": "Naują slaptažodį turi sudaryti bent 12 simbolių.",
+      "successHint": "Kiti aktyvūs seansai lieka galioti, kol nesibaigs jų galiojimas.",
+      "current": "Dabartinis slaptažodis",
+      "new": "Naujas slaptažodis",
+      "submitting": "Įrašoma…",
+      "submit": "Keisti slaptažodį"
+    },
+    "delete": {
+      "title": "Ištrinti paskyrą",
+      "description": "Šis veiksmas negrįžtamas ir jo atšaukti negalima. Visi jūsų duomenys, darbo sritys ir nustatymai bus visam laikui ištrinti.",
+      "password": "Patvirtinkite slaptažodžiu",
+      "submitting": "Trinama…",
+      "submit": "Ištrinti mano paskyrą"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Prisijungti",
+      "description": "Sveiki sugrįžę į tendersbay.",
+      "email": "El. paštas",
+      "password": "Slaptažodis",
+      "forgotPassword": "Pamiršote slaptažodį?",
+      "submitting": "Jungiamasi…",
+      "submit": "Prisijungti",
+      "noAccount": "Neturite paskyros?",
+      "signUp": "Registruotis"
+    },
+    "signup": {
+      "checkEmail": "Patikrinkite savo el. paštą",
+      "verifyPrompt": "Išsiuntėme jums patvirtinimo nuorodą. Spustelėkite ją, kad aktyvuotumėte paskyrą.",
+      "checkEmailHint": "Nuorodos galiojimas baigiasi po 24 valandų. Jei jos nematote, patikrinkite šlamšto aplanką.",
+      "backToLogin": "Grįžti į prisijungimą",
+      "title": "Sukurti paskyrą",
+      "description": "Pradėkite laimėti ES viešuosius pirkimus su DI agentais.",
+      "displayName": "Vardas",
+      "email": "El. paštas",
+      "password": "Slaptažodis",
+      "submitting": "Kuriama…",
+      "submit": "Sukurti paskyrą",
+      "login": "Jau turite paskyrą?",
+      "signIn": "Prisijungti"
+    },
+    "forgot": {
+      "checkEmail": "Patikrinkite savo el. paštą",
+      "checkEmailBody": "Jei paskyra su šiuo adresu egzistuoja, netrukus gausite atkūrimo nuorodą.",
+      "checkEmailHint": "Nuorodos galiojimas baigiasi po 1 valandos. Jei jos nematote, patikrinkite šlamšto aplanką.",
+      "backToLogin": "Grįžti į prisijungimą",
+      "title": "Atkurti slaptažodį",
+      "description": "Įveskite savo el. paštą ir atsiųsime atkūrimo nuorodą.",
+      "email": "El. paštas",
+      "submitting": "Siunčiama…",
+      "submit": "Siųsti atkūrimo nuorodą"
+    },
+    "reset": {
+      "invalidTitle": "Neteisinga nuoroda",
+      "invalid": "Šios atkūrimo nuorodos trūksta arba ji nebegalioja.",
+      "requestNew": "Prašyti naujos nuorodos",
+      "title": "Nustatyti naują slaptažodį",
+      "description": "Pasirinkite stiprų, ne trumpesnį kaip 12 simbolių slaptažodį.",
+      "password": "Naujas slaptažodis",
+      "submitting": "Įrašoma…",
+      "submit": "Nustatyti slaptažodį"
+    },
+    "verify": {
+      "errorTitle": "Nuorodos galiojimas baigėsi",
+      "error": "Ši nuoroda neteisinga arba nebegalioja. Paprašykite naujos.",
+      "successTitle": "El. paštas patvirtintas",
+      "success": "Viskas paruošta. Netrukus būsite nukreipti…",
+      "loadingTitle": "Tvirtinamas jūsų el. paštas…",
+      "loading": "Palaukite akimirką."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Prisijungti",
+      "signup": "Registruotis"
+    },
     "search": {
       "label": "Ieškoti",
       "hint": "AI paieška — netrukus",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Europos viešieji pirkimai, kuriuos laimi jūsų DI agentai",
-      "description": "DI agentai, kurie suranda tinkamus Europos viešuosius pirkimus, sutriuškina biurokratiją ir nuveda jūsų MVĮ iki sutarties suteikimo."
+      "title": "tendersbay — Europos viešieji pirkimai su jūsų DI agentais",
+      "description": "DI agentai, kurie suranda tinkamus viešuosius pirkimus ir pirkimų skelbimus Europoje, sutriuškina biurokratiją ir nuveda jūsų MVĮ iki sutarties sudarymo."
     },
     "nav": {
       "problem": "Kaina",
@@ -152,6 +255,84 @@
       "daysLeft": "{{count}} dienos"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Šiandien",
+      "explore": "Naršyti",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Naujausi",
+    "palette": {
+      "trigger": "Ieškoti arba klausti…",
+      "label": "Komandų paletė",
+      "placeholder": "Ieškoti arba klausti bet ko…",
+      "askAgent": "Paklauskite agento: „{{query}}“",
+      "sections": {
+        "navigate": "Eiti į",
+        "recent": "Naujausi workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace nustatymai",
+      "accountSettings": "Paskyros nustatymai",
+      "allWorkspaces": "Visi workspace"
+    },
+    "user": {
+      "settings": "Nustatymai",
+      "logout": "Atsijungti"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} pirkimas",
+    "results_few": "{{count}} pirkimai",
+    "results_other": "{{count}} pirkimų",
+    "searching": "Ieškoma…",
+    "empty": {
+      "title": "Pirkimų nerasta",
+      "description": "Pabandykite platesnę užklausą arba mažiau filtrų."
+    },
+    "error": "Paieška šiuo metu nepasiekiama — pabandykite dar kartą po akimirkos.",
+    "loadMore": "Įkelti daugiau",
+    "deadline": {
+      "days_one": "{{count}} diena liko",
+      "days_few": "{{count}} dienos liko",
+      "days_other": "{{count}} dienų liko",
+      "today": "Baigiasi šiandien",
+      "expired": "Uždaryta"
+    },
+    "value": {
+      "unknown": "Vertė neatskleista"
+    },
+    "status": {
+      "open": "Atviras",
+      "awarded": "Laimėtas",
+      "cancelled": "Atšauktas",
+      "closed": "Uždarytas",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Rekomenduojama jums",
+      "seeAll": "Visi skiltyje Naršyti →"
+    },
+    "greeting": {
+      "morning": "Labas rytas.",
+      "afternoon": "Laba diena.",
+      "evening": "Labas vakaras.",
+      "morningNamed": "Labas rytas, {{name}}.",
+      "afternoonNamed": "Laba diena, {{name}}.",
+      "eveningNamed": "Labas vakaras, {{name}}."
+    },
+    "resume": {
+      "title": "Tęskite nuo ten, kur baigėte",
+      "untitled": "Pokalbis be pavadinimo"
+    },
+    "explore": {
+      "title": "Raskite savo kitą pirkimą",
+      "description": "Paklauskite agento apie rinkas, reikalavimus arba konkretų pirkimą — čia atsiras personalizuotos rekomendacijos, kai formuosis jūsų paieškos profiliai.",
+      "action": "Atidarykite Naršyti"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Įkeliama…",
@@ -273,6 +454,7 @@
       "signIn": "Prisijunkite, kad prisijungtumėte"
     },
     "switcher": {
+      "settings": "Workspace nustatymai",
       "label": "Darbo sritys",
       "manage": "Visos darbo sritys"
     }

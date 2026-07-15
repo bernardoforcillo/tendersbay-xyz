@@ -61,6 +61,14 @@ spec:
               value: '15m'
             - name: REFRESH_EXPIRY
               value: '168h'
+            - name: QDRANT_URL
+              value: 'http://qdrant-release.qdrant.svc.cluster.local:6333'
+            - name: OLLAMA_BASE_URL
+              value: 'http://ollama-release.ollama.svc.cluster.local:11434'
+            - name: EMBEDDING_MODEL
+              value: 'embeddinggemma:latest'
+            - name: REDIS_URL
+              value: 'redis://redis-release-master.redis.svc.cluster.local:6379'
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { WorkspaceOverviewPage } from '~/features/workspace';
+import { WorkspaceTodayPage } from '~/features/workspace';
 
 export const Route = createFileRoute('/_authenticated/workspaces/$workspaceId/')({
-  component: WorkspaceOverviewPage,
+  component: WorkspaceTodayPage,
 });

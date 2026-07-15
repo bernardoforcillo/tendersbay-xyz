@@ -1,7 +1,9 @@
-@import "@fontsource/calistoga";
+@import "@fontsource-variable/fraunces/opsz.css";
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
 @import "@tendersbay/tailwind";
+/* Tailwind v4 does not auto-scan node_modules — pull in the shared kit's classes. */
+@source "../node_modules/@tendersbay/components/src";
 
 @layer base {
   html {
@@ -14,6 +16,7 @@
   }
   body {
     font-family: var(--font-sans);
+    font-optical-sizing: auto;
     background-color: var(--color-cream-100);
     color: var(--color-ink-900);
     -webkit-font-smoothing: antialiased;

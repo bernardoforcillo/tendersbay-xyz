@@ -1,0 +1,25 @@
+{
+  "publication-number": "472141-2026",
+  "procedure-identifier": "proc-cn-1",
+  "notice-type": "cn-standard",
+  "procedure-type": "open",
+  "notice-title": { "ron": "Lucrări de drum", "eng": "Road works" },
+  "buyer-name": { "ron": ["Municipiul Blaj"], "eng": ["Municipiul Blaj"] },
+  "organisation-identifier-buyer": ["RO 4563007"],
+  "official-language": ["RON"],
+  "buyer-country": ["ROU"],
+  "classification-cpv": ["45233220", "45213352", "45223320"],
+  "estimated-value-proc": "22134549.01",
+  "estimated-value-cur-proc": "RON",
+  "publication-date": "2026-07-09+02:00",
+  "identifier-lot": ["LOT-0001"],
+  "title-lot": { "ron": ["Lucrări de drum"], "eng": ["Road works"] },
+  "deadline-receipt-tender-date-lot": ["2026-08-11+03:00"],
+  "deadline-receipt-tender-time-lot": ["15:00:00+03:00"],
+  "links": {
+    "pdf": {
+      "RON": "https://ted.europa.eu/ro/notice/472141-2026/pdf",
+      "ENG": "https://ted.europa.eu/en/notice/472141-2026/pdf"
+    }
+  }
+}

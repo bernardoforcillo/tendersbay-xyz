@@ -1,0 +1,53 @@
+syntax = "proto3";
+package tender.v1;
+
+option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1;tenderv1";
+
+// TenderService serves the direct tender search endpoint behind the
+// SearchDock's "Cerca" mode. Unlike AgentService, this is not a
+// conversational tool — it's a structured request/response search, and
+// SearchTenders is safe to call unauthenticated (anonymous callers get a
+// lower result cap and a stricter rate limit; see the server-side config).
+service TenderService {
+  rpc SearchTenders(SearchTendersRequest) returns (SearchTendersResponse);
+}
+
+message SearchTendersRequest {
+  string query = 1;          // optional; empty = filters-only search
+  TenderFilters filters = 2; // optional
+  int32 limit = 3;           // optional, server-clamped by auth tier
+  int32 offset = 4;          // optional, default 0; for semantic (non-empty query) searches,
+                              // paging is bounded by the candidate window (~250 results) —
+                              // very deep pages may return empty even with more matches server-side
+}
+
+message TenderFilters {
+  string country = 1;         // alpha-3, matches the TED connector's convention
+  string cpv = 2;              // prefix match
+  string status = 3;           // open/awarded/cancelled/closed/unknown
+  string deadline_from = 4;    // RFC3339
+  string deadline_to = 5;      // RFC3339
+}
+
+message SearchTendersResponse {
+  repeated TenderResult results = 1;
+  bool has_more = 2; // server fetches limit+1 rows and trims, to avoid a
+                      // separate COUNT(*) query
+}
+
+message TenderResult {
+  string id = 1;                // Postgres bigserial, stringified
+  string title = 2;
+  string buyer_name = 3;
+  string status = 4;
+  string procedure_type = 5;
+  string country = 6;
+  string cpv = 7;
+  int64 value = 8;
+  string currency = 9;
+  string published_at = 10;     // RFC3339, empty if unset
+  string deadline = 11;         // RFC3339, empty if unset
+  double relevance_score = 12;  // meaningful only when query was non-empty; 0 for filters-only
+  string source = 13;
+  string source_ref = 14;
+}

@@ -1,14 +1,10 @@
+import { Banner, Button, Field } from '@tendersbay/components/core';
 import { useState } from 'react';
-import { Button, FieldError, Form, Input, Label, TextField } from 'react-aria-components';
+import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { SettingsSection } from '~/features/account/components/organisms/settings-section';
 import { userClient } from '~/lib/api/client';
 import { type AuthUser, useAuthStore } from '~/store/auth';
-
-const INPUT =
-  'w-full rounded-xl border border-cream-300 bg-cream-50 px-3.5 py-2.5 text-sm text-ink-900 outline-none transition placeholder:text-ink-300 focus:border-brand-400 focus:ring-2 focus:ring-brand-100';
-const BTN =
-  'mt-2 w-full rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition data-[hovered]:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 data-[disabled]:cursor-not-allowed data-[disabled]:opacity-60';
 
 export function ProfileForm() {
   const { t } = useTranslation();
@@ -59,32 +55,16 @@ export function ProfileForm() {
         </div>
       </div>
       <Form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <TextField
+        <Field
           name="displayName"
           defaultValue={user?.displayName}
           isRequired
-          className="flex flex-col gap-1.5"
-        >
-          <Label className="text-sm font-medium text-ink-700">
-            {t('account.profile.displayName', 'Display name')}
-          </Label>
-          <Input autoComplete="name" className={INPUT} />
-          <FieldError className="text-xs text-red-600" />
-        </TextField>
-        {error && (
-          <p
-            role="alert"
-            className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
-          >
-            {error}
-          </p>
-        )}
-        {saved && (
-          <p className="rounded-lg border border-brand-200 bg-brand-50 px-3 py-2.5 text-sm text-brand-700">
-            {t('account.profile.saved', 'Saved!')}
-          </p>
-        )}
-        <Button type="submit" isDisabled={pending} className={BTN}>
+          autoComplete="name"
+          label={t('account.profile.displayName', 'Display name')}
+        />
+        {error && <Banner tone="error">{error}</Banner>}
+        {saved && <Banner tone="success">{t('account.profile.saved', 'Saved!')}</Banner>}
+        <Button type="submit" isDisabled={pending}>
           {pending
             ? t('account.profile.submitting', 'Saving…')
             : t('account.profile.submit', 'Save changes')}

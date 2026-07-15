@@ -5,7 +5,110 @@
     "accept": "Acceptă",
     "reject": "Respinge"
   },
+  "account": {
+    "settings": {
+      "title": "Setările contului"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Actualizați numele afișat și modul în care vă văd ceilalți.",
+      "displayName": "Nume afișat",
+      "saved": "Salvat!",
+      "submitting": "Se salvează…",
+      "submit": "Salvează modificările"
+    },
+    "changeEmail": {
+      "checkEmail": "Verificați noul e-mail",
+      "title": "Schimbare e-mail",
+      "prompt": "Am trimis un link de verificare la noua adresă. Faceți clic pe el pentru a confirma modificarea.",
+      "description": "Vom trimite un link de verificare la noua adresă.",
+      "hint": "E-mailul dumneavoastră actual rămâne activ până când îl confirmați pe cel nou.",
+      "newEmail": "E-mail nou",
+      "password": "Parola actuală",
+      "submitting": "Se salvează…",
+      "submit": "Schimbă e-mailul"
+    },
+    "changePassword": {
+      "successTitle": "Parolă actualizată",
+      "title": "Schimbare parolă",
+      "successBody": "Parola dumneavoastră a fost schimbată. Autentificați-vă din nou pe celelalte dispozitive.",
+      "description": "Noua parolă trebuie să aibă cel puțin 12 caractere.",
+      "successHint": "Celelalte sesiuni active rămân valabile până la expirare.",
+      "current": "Parola actuală",
+      "new": "Parolă nouă",
+      "submitting": "Se salvează…",
+      "submit": "Schimbă parola"
+    },
+    "delete": {
+      "title": "Șterge contul",
+      "description": "Această acțiune este permanentă și nu poate fi anulată. Toate datele, spațiile de lucru și setările dumneavoastră vor fi șterse definitiv.",
+      "password": "Confirmați cu parola dumneavoastră",
+      "submitting": "Se șterge…",
+      "submit": "Șterge contul meu"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Autentificare",
+      "description": "Bine ai revenit pe tendersbay.",
+      "email": "E-mail",
+      "password": "Parolă",
+      "forgotPassword": "Ai uitat parola?",
+      "submitting": "Se autentifică…",
+      "submit": "Autentifică-te",
+      "noAccount": "Nu ai cont?",
+      "signUp": "Înregistrează-te"
+    },
+    "signup": {
+      "checkEmail": "Verifică-ți e-mailul",
+      "verifyPrompt": "Ți-am trimis un link de verificare. Apasă pe el pentru a-ți activa contul.",
+      "checkEmailHint": "Linkul expiră în 24 de ore. Verifică folderul de spam dacă nu îl vezi.",
+      "backToLogin": "Înapoi la autentificare",
+      "title": "Creează cont",
+      "description": "Începe să câștigi licitații din UE cu agenți IA.",
+      "displayName": "Nume",
+      "email": "E-mail",
+      "password": "Parolă",
+      "submitting": "Se creează…",
+      "submit": "Creează cont",
+      "login": "Ai deja un cont?",
+      "signIn": "Autentifică-te"
+    },
+    "forgot": {
+      "checkEmail": "Verifică-ți e-mailul",
+      "checkEmailBody": "Dacă există un cont pentru această adresă, vei primi în curând un link de resetare.",
+      "checkEmailHint": "Linkul expiră într-o oră. Verifică folderul de spam dacă nu îl vezi.",
+      "backToLogin": "Înapoi la autentificare",
+      "title": "Resetează parola",
+      "description": "Introdu adresa de e-mail și îți vom trimite un link de resetare.",
+      "email": "E-mail",
+      "submitting": "Se trimite…",
+      "submit": "Trimite linkul de resetare"
+    },
+    "reset": {
+      "invalidTitle": "Link nevalid",
+      "invalid": "Acest link de resetare lipsește sau a expirat.",
+      "requestNew": "Solicită un link nou",
+      "title": "Setează o parolă nouă",
+      "description": "Alege o parolă puternică de cel puțin 12 caractere.",
+      "password": "Parolă nouă",
+      "submitting": "Se salvează…",
+      "submit": "Setează parola"
+    },
+    "verify": {
+      "errorTitle": "Link expirat",
+      "error": "Acest link nu este valid sau a expirat. Solicită unul nou.",
+      "successTitle": "E-mail verificat",
+      "success": "Totul este gata. Vei fi redirecționat acum…",
+      "loadingTitle": "Se verifică e-mailul tău…",
+      "loading": "Un moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Autentificare",
+      "signup": "Înregistrează-te"
+    },
     "search": {
       "label": "Caută",
       "hint": "Căutare cu IA — în curând",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Licitații europene, atribuite de agenții dvs. AI",
-      "description": "Agenți AI care depistează licitațiile publice europene potrivite, fac praf birocrația și vă duc IMM-ul până la atribuire."
+      "title": "tendersbay — Licitații publice, atribuite de agenții dvs. AI",
+      "description": "Agenți AI care depistează licitațiile publice și achizițiile publice europene potrivite, fac praf birocrația și vă duc IMM-ul până la atribuire."
     },
     "nav": {
       "problem": "Costul",
@@ -148,6 +251,84 @@
       "daysLeft": "{{count}} zile"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Astăzi",
+      "explore": "Explorează",
+      "workbenches": "Workbench"
+    },
+    "recent": "Recente",
+    "palette": {
+      "trigger": "Caută sau întreabă…",
+      "label": "Paletă de comenzi",
+      "placeholder": "Caută sau întreabă orice…",
+      "askAgent": "Întreabă agentul: „{{query}}”",
+      "sections": {
+        "navigate": "Mergi la",
+        "recent": "Workbench recente",
+        "workspaces": "Workspace"
+      },
+      "workspaceSettings": "Setări workspace",
+      "accountSettings": "Setări cont",
+      "allWorkspaces": "Toate workspace"
+    },
+    "user": {
+      "settings": "Setări",
+      "logout": "Deconectare"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} licitație",
+    "results_few": "{{count}} licitații",
+    "results_other": "{{count}} de licitații",
+    "searching": "Se caută…",
+    "empty": {
+      "title": "Nu s-au găsit licitații",
+      "description": "Încercați o căutare mai amplă sau mai puține filtre."
+    },
+    "error": "Căutarea nu este disponibilă momentan — încercați din nou peste puțin timp.",
+    "loadMore": "Încarcă mai multe",
+    "deadline": {
+      "days_one": "{{count}} zi rămasă",
+      "days_few": "{{count}} zile rămase",
+      "days_other": "{{count}} de zile rămase",
+      "today": "Se închide astăzi",
+      "expired": "Închisă"
+    },
+    "value": {
+      "unknown": "Valoare nedivulgată"
+    },
+    "status": {
+      "open": "Deschisă",
+      "awarded": "Atribuită",
+      "cancelled": "Anulată",
+      "closed": "Închisă",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Recomandate pentru dumneavoastră",
+      "seeAll": "Toate în secțiunea Explorează →"
+    },
+    "greeting": {
+      "morning": "Bună dimineața.",
+      "afternoon": "Bună ziua.",
+      "evening": "Bună seara.",
+      "morningNamed": "Bună dimineața, {{name}}.",
+      "afternoonNamed": "Bună ziua, {{name}}.",
+      "eveningNamed": "Bună seara, {{name}}."
+    },
+    "resume": {
+      "title": "Continuați de unde ați rămas",
+      "untitled": "Conversație fără titlu"
+    },
+    "explore": {
+      "title": "Găsiți-vă următoarea licitație",
+      "description": "Întrebați agentul despre piețe, cerințe sau o licitație specifică — recomandările personalizate vor apărea aici pe măsură ce profilurile dvs. de căutare prind contur.",
+      "action": "Deschideți Explorează"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Se încarcă…",
@@ -269,6 +450,7 @@
       "signIn": "Autentifică-te pentru a te alătura"
     },
     "switcher": {
+      "settings": "Setări workspace",
       "label": "Spații de lucru",
       "manage": "Toate spațiile de lucru"
     }

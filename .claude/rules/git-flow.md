@@ -91,3 +91,25 @@ own `dist/`. Remove a finished one with `git worktree remove ../tb-<feature>`.
 This is the **recommended default, not a mandate — the final choice is the user's.** Suggest
 a worktree when work would otherwise share a tree with unrelated WIP, but never create or
 switch worktrees, or move the user's uncommitted work, without asking first.
+
+## Agent worktrees → `dev` (port, don't merge)
+
+Subagents dispatched with worktree isolation (the GTM desk — `gtm-engineer`,
+`growth-marketer`, `neuro-ux-designer` — and any `Agent` call using `isolation: "worktree"`)
+run in a **harness-managed** `.claude/worktrees/agent-*` tree on a throwaway
+`worktree-agent-*` branch. That branch is cut from **whatever branch the session is on**, not
+necessarily `dev` — so it can sit on top of an unrelated in-flight feature (e.g.
+`feature/redesign-explore`). Two consequences:
+
+- **Never merge or PR an agent's `worktree-agent-*` branch straight into `dev`** — its base
+  carries commits from the feature branch it happened to fork, and merging drags all of them
+  along. The agent tree is disposable scratch, not a release branch.
+- **Port the agent's commit onto a fresh `feature/<name>` cut from `dev`, then run the normal
+  flow.** Commit the agent's work on its own branch, create `feature/<name>` off `dev`, and
+  **`git cherry-pick <sha>`** it across — cherry-pick's 3-way merge reconciles the divergent
+  base cleanly where a flat `git apply` would reject (resolve any conflict, it's usually just
+  the regions the unrelated base also touched). Verify on the `dev` base (build + tests), then
+  PR `feature/<name>` → `dev` (canary) as usual.
+
+Remove the finished agent tree with `git worktree remove .claude/worktrees/agent-<id>` and
+delete its `worktree-agent-*` branch once the port is verified.

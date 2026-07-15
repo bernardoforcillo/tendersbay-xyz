@@ -5,7 +5,110 @@
     "accept": "Aceitar",
     "reject": "Rejeitar"
   },
+  "account": {
+    "settings": {
+      "title": "Definições da conta"
+    },
+    "profile": {
+      "title": "Perfil",
+      "description": "Atualize o seu nome apresentado e a forma como os outros o veem.",
+      "displayName": "Nome apresentado",
+      "saved": "Guardado!",
+      "submitting": "A guardar…",
+      "submit": "Guardar alterações"
+    },
+    "changeEmail": {
+      "checkEmail": "Verifique o seu novo e-mail",
+      "title": "Alterar e-mail",
+      "prompt": "Enviámos uma ligação de verificação para o seu novo endereço. Clique nela para confirmar a alteração.",
+      "description": "Enviaremos uma ligação de verificação para o novo endereço.",
+      "hint": "O seu e-mail atual permanece ativo até verificar o novo.",
+      "newEmail": "Novo e-mail",
+      "password": "Palavra-passe atual",
+      "submitting": "A guardar…",
+      "submit": "Alterar e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Palavra-passe atualizada",
+      "title": "Alterar palavra-passe",
+      "successBody": "A sua palavra-passe foi alterada. Inicie sessão novamente nos outros dispositivos.",
+      "description": "A nova palavra-passe deve ter pelo menos 12 carateres.",
+      "successHint": "As restantes sessões ativas permanecem válidas até expirarem.",
+      "current": "Palavra-passe atual",
+      "new": "Nova palavra-passe",
+      "submitting": "A guardar…",
+      "submit": "Alterar palavra-passe"
+    },
+    "delete": {
+      "title": "Eliminar conta",
+      "description": "Esta ação é permanente e não pode ser anulada. Todos os seus dados, espaços de trabalho e definições serão eliminados permanentemente.",
+      "password": "Confirme com a sua palavra-passe",
+      "submitting": "A eliminar…",
+      "submit": "Eliminar a minha conta"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sessão",
+      "description": "Bem-vindo de volta ao tendersbay.",
+      "email": "E-mail",
+      "password": "Palavra-passe",
+      "forgotPassword": "Esqueceu-se da palavra-passe?",
+      "submitting": "A iniciar sessão…",
+      "submit": "Iniciar sessão",
+      "noAccount": "Ainda não tem conta?",
+      "signUp": "Criar conta"
+    },
+    "signup": {
+      "checkEmail": "Verifique o seu e-mail",
+      "verifyPrompt": "Enviámos-lhe um link de verificação. Clique nele para ativar a sua conta.",
+      "checkEmailHint": "O link expira em 24 horas. Verifique a pasta de spam se não o encontrar.",
+      "backToLogin": "Voltar ao início de sessão",
+      "title": "Criar conta",
+      "description": "Comece a ganhar concursos públicos da UE com agentes de IA.",
+      "displayName": "Nome",
+      "email": "E-mail",
+      "password": "Palavra-passe",
+      "submitting": "A criar…",
+      "submit": "Criar conta",
+      "login": "Já tem conta?",
+      "signIn": "Iniciar sessão"
+    },
+    "forgot": {
+      "checkEmail": "Verifique o seu e-mail",
+      "checkEmailBody": "Se existir uma conta com esse endereço, receberá em breve um link de reposição.",
+      "checkEmailHint": "O link expira em 1 hora. Verifique a pasta de spam se não o encontrar.",
+      "backToLogin": "Voltar ao início de sessão",
+      "title": "Repor palavra-passe",
+      "description": "Introduza o seu e-mail e enviaremos um link de reposição.",
+      "email": "E-mail",
+      "submitting": "A enviar…",
+      "submit": "Enviar link de reposição"
+    },
+    "reset": {
+      "invalidTitle": "Link inválido",
+      "invalid": "Este link de reposição está em falta ou expirou.",
+      "requestNew": "Pedir um novo link",
+      "title": "Definir nova palavra-passe",
+      "description": "Escolha uma palavra-passe forte com pelo menos 12 carateres.",
+      "password": "Nova palavra-passe",
+      "submitting": "A guardar…",
+      "submit": "Definir palavra-passe"
+    },
+    "verify": {
+      "errorTitle": "Link expirado",
+      "error": "Este link é inválido ou expirou. Peça um novo.",
+      "successTitle": "E-mail verificado",
+      "success": "Está tudo pronto. Vai ser redirecionado…",
+      "loadingTitle": "A verificar o seu e-mail…",
+      "loading": "Um momento."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Iniciar sessão",
+      "signup": "Criar conta"
+    },
     "search": {
       "label": "Pesquisar",
       "hint": "Pesquisa com IA — em breve",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Concursos europeus, adjudicados pelos seus agentes de IA",
-      "description": "Agentes de IA que caçam os concursos públicos europeus certos, arrasam a burocracia e levam a sua PME até à adjudicação."
+      "title": "tendersbay — Concursos públicos, adjudicados por agentes de IA",
+      "description": "Agentes de IA que caçam os concursos públicos e contratos públicos europeus certos, arrasam a burocracia e levam a sua PME até à adjudicação."
     },
     "nav": {
       "problem": "O custo",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} dias"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Hoje",
+      "explore": "Explorar",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Recentes",
+    "palette": {
+      "trigger": "Pesquisar ou perguntar…",
+      "label": "Paleta de comandos",
+      "placeholder": "Pesquisar ou perguntar qualquer coisa…",
+      "askAgent": "Perguntar ao agente: «{{query}}»",
+      "sections": {
+        "navigate": "Ir para",
+        "recent": "Workbenches recentes",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Definições do workspace",
+      "accountSettings": "Definições da conta",
+      "allWorkspaces": "Todos os workspaces"
+    },
+    "user": {
+      "settings": "Definições",
+      "logout": "Terminar sessão"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} concurso",
+    "results_other": "{{count}} concursos",
+    "searching": "A pesquisar…",
+    "empty": {
+      "title": "Não foram encontrados concursos",
+      "description": "Experimente uma pesquisa mais ampla ou menos filtros."
+    },
+    "error": "A pesquisa não está disponível de momento — tente novamente daqui a instantes.",
+    "loadMore": "Carregar mais",
+    "deadline": {
+      "days_one": "{{count}} dia restante",
+      "days_other": "{{count}} dias restantes",
+      "today": "Termina hoje",
+      "expired": "Encerrado"
+    },
+    "value": {
+      "unknown": "Valor não divulgado"
+    },
+    "status": {
+      "open": "Aberto",
+      "awarded": "Adjudicado",
+      "cancelled": "Cancelado",
+      "closed": "Encerrado",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Recomendado para si",
+      "seeAll": "Tudo em Explorar →"
+    },
+    "greeting": {
+      "morning": "Bom dia.",
+      "afternoon": "Boa tarde.",
+      "evening": "Boa noite.",
+      "morningNamed": "Bom dia, {{name}}.",
+      "afternoonNamed": "Boa tarde, {{name}}.",
+      "eveningNamed": "Boa noite, {{name}}."
+    },
+    "resume": {
+      "title": "Continue de onde parou",
+      "untitled": "Conversa sem título"
+    },
+    "explore": {
+      "title": "Encontre o seu próximo concurso",
+      "description": "Pergunte ao agente sobre mercados, requisitos ou um concurso específico — recomendações personalizadas vão aparecer aqui à medida que os seus perfis de pesquisa tomam forma.",
+      "action": "Abra Explorar"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "A carregar…",
@@ -269,6 +448,7 @@
       "signIn": "Inicie sessão para entrar"
     },
     "switcher": {
+      "settings": "Definições do workspace",
       "label": "Espaços de trabalho",
       "manage": "Todos os espaços de trabalho"
     }

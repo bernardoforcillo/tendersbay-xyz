@@ -5,7 +5,110 @@
     "accept": "Nõustu",
     "reject": "Keeldu"
   },
+  "account": {
+    "settings": {
+      "title": "Konto seaded"
+    },
+    "profile": {
+      "title": "Profiil",
+      "description": "Uuendage oma kuvatavat nime ja seda, kuidas teised teid näevad.",
+      "displayName": "Kuvatav nimi",
+      "saved": "Salvestatud!",
+      "submitting": "Salvestamine…",
+      "submit": "Salvesta muudatused"
+    },
+    "changeEmail": {
+      "checkEmail": "Kontrollige oma uut e-posti",
+      "title": "E-posti muutmine",
+      "prompt": "Saatsime kinnituslingi teie uuele aadressile. Muudatuse kinnitamiseks klõpsake sellel.",
+      "description": "Saadame kinnituslingi uuele aadressile.",
+      "hint": "Teie praegune e-post jääb aktiivseks, kuni kinnitate uue.",
+      "newEmail": "Uus e-post",
+      "password": "Praegune parool",
+      "submitting": "Salvestamine…",
+      "submit": "Muuda e-posti"
+    },
+    "changePassword": {
+      "successTitle": "Parool on uuendatud",
+      "title": "Parooli muutmine",
+      "successBody": "Teie parool on muudetud. Logige teistes seadmetes uuesti sisse.",
+      "description": "Uus parool peab olema vähemalt 12 tähemärki pikk.",
+      "successHint": "Teised aktiivsed seansid jäävad kehtima kuni nende aegumiseni.",
+      "current": "Praegune parool",
+      "new": "Uus parool",
+      "submitting": "Salvestamine…",
+      "submit": "Muuda parooli"
+    },
+    "delete": {
+      "title": "Kustuta konto",
+      "description": "See toiming on lõplik ja seda ei saa tagasi võtta. Kõik teie andmed, tööruumid ja seaded kustutatakse jäädavalt.",
+      "password": "Kinnitage oma parooliga",
+      "submitting": "Kustutamine…",
+      "submit": "Kustuta minu konto"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Logi sisse",
+      "description": "Tere tulemast tagasi tendersbaysse.",
+      "email": "E-post",
+      "password": "Parool",
+      "forgotPassword": "Unustasid parooli?",
+      "submitting": "Sisselogimine…",
+      "submit": "Logi sisse",
+      "noAccount": "Kas sul pole kontot?",
+      "signUp": "Registreeru"
+    },
+    "signup": {
+      "checkEmail": "Kontrolli oma e-posti",
+      "verifyPrompt": "Saatsime sulle kinnituslingi. Klõpsa sellel, et konto aktiveerida.",
+      "checkEmailHint": "Link aegub 24 tunni pärast. Kontrolli rämpspostikausta, kui sa seda ei näe.",
+      "backToLogin": "Tagasi sisselogimise juurde",
+      "title": "Loo konto",
+      "description": "Hakka võitma ELi hankeid tehisintellekti agentidega.",
+      "displayName": "Nimi",
+      "email": "E-post",
+      "password": "Parool",
+      "submitting": "Loomine…",
+      "submit": "Loo konto",
+      "login": "Kas sul on juba konto?",
+      "signIn": "Logi sisse"
+    },
+    "forgot": {
+      "checkEmail": "Kontrolli oma e-posti",
+      "checkEmailBody": "Kui selle aadressiga konto on olemas, saad peagi lähtestamislingi.",
+      "checkEmailHint": "Link aegub 1 tunni pärast. Kontrolli rämpspostikausta, kui sa seda ei näe.",
+      "backToLogin": "Tagasi sisselogimise juurde",
+      "title": "Lähtesta parool",
+      "description": "Sisesta oma e-post ja saadame sulle lähtestamislingi.",
+      "email": "E-post",
+      "submitting": "Saatmine…",
+      "submit": "Saada lähtestamislink"
+    },
+    "reset": {
+      "invalidTitle": "Vigane link",
+      "invalid": "See lähtestamislink puudub või on aegunud.",
+      "requestNew": "Küsi uus link",
+      "title": "Määra uus parool",
+      "description": "Vali tugev parool, mis on vähemalt 12 tähemärki pikk.",
+      "password": "Uus parool",
+      "submitting": "Salvestamine…",
+      "submit": "Määra parool"
+    },
+    "verify": {
+      "errorTitle": "Link on aegunud",
+      "error": "See link on vigane või aegunud. Küsi uus.",
+      "successTitle": "E-post kinnitatud",
+      "success": "Kõik on valmis. Sind suunatakse nüüd ümber…",
+      "loadingTitle": "Sinu e-posti kinnitamine…",
+      "loading": "Hetk veel."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Logi sisse",
+      "signup": "Registreeru"
+    },
     "search": {
       "label": "Otsi",
       "hint": "AI-otsing — peagi saadaval",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Euroopa hanked, omistatud teie AI-agentide abil",
-      "description": "Tehisintellekti agendid, kes jälitavad õigeid Euroopa riigihankeid, purustavad paberimajanduse ja viivad teie VKE kuni hanke omistamiseni."
+      "title": "tendersbay — Euroopa riigihanked, lepinguni teie AI-agentide abil",
+      "description": "Tehisintellekti agendid, kes jälitavad õigeid Euroopa riigihankeid ja hanketeateid, purustavad paberimajanduse ja viivad teie VKE hankelepingu sõlmimiseni."
     },
     "nav": {
       "problem": "Hind",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} päeva"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Täna",
+      "explore": "Avasta",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Hiljutised",
+    "palette": {
+      "trigger": "Otsi või küsi…",
+      "label": "Käsupalett",
+      "placeholder": "Otsi või küsi ükskõik mida…",
+      "askAgent": "Küsi agendilt: „{{query}}“",
+      "sections": {
+        "navigate": "Mine",
+        "recent": "Hiljutised workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace'i seaded",
+      "accountSettings": "Konto seaded",
+      "allWorkspaces": "Kõik workspace'id"
+    },
+    "user": {
+      "settings": "Seaded",
+      "logout": "Logi välja"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} hange",
+    "results_other": "{{count}} hanget",
+    "searching": "Otsimine…",
+    "empty": {
+      "title": "Hankeid ei leitud",
+      "description": "Proovige laiemat otsingut või vähem filtreid."
+    },
+    "error": "Otsing ei ole hetkel saadaval — proovige veidi hiljem uuesti.",
+    "loadMore": "Laadi rohkem",
+    "deadline": {
+      "days_one": "{{count}} päev jäänud",
+      "days_other": "{{count}} päeva jäänud",
+      "today": "Tähtaeg täna",
+      "expired": "Suletud"
+    },
+    "value": {
+      "unknown": "Väärtus avaldamata"
+    },
+    "status": {
+      "open": "Avatud",
+      "awarded": "Sõlmitud",
+      "cancelled": "Tühistatud",
+      "closed": "Suletud",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Teile soovitatud",
+      "seeAll": "Kõik jaotises Avasta →"
+    },
+    "greeting": {
+      "morning": "Tere hommikust.",
+      "afternoon": "Tere päevast.",
+      "evening": "Head õhtut.",
+      "morningNamed": "Tere hommikust, {{name}}.",
+      "afternoonNamed": "Tere päevast, {{name}}.",
+      "eveningNamed": "Head õhtut, {{name}}."
+    },
+    "resume": {
+      "title": "Jätkake sealt, kus pooleli jäite",
+      "untitled": "Nimetu vestlus"
+    },
+    "explore": {
+      "title": "Leidke oma järgmine hange",
+      "description": "Küsige agendilt turgude, nõuete või konkreetse hanke kohta — personaalsed soovitused ilmuvad siia, kui teie otsinguprofiilid kujunevad.",
+      "action": "Avage Avasta"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Laadimine…",
@@ -269,6 +448,7 @@
       "signIn": "Liitumiseks logi sisse"
     },
     "switcher": {
+      "settings": "Workspace'i seaded",
       "label": "Tööruumid",
       "manage": "Kõik tööruumid"
     }

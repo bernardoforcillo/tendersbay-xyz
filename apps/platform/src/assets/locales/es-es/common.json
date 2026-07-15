@@ -5,7 +5,110 @@
     "accept": "Aceptar",
     "reject": "Rechazar"
   },
+  "account": {
+    "settings": {
+      "title": "Ajustes de la cuenta"
+    },
+    "profile": {
+      "title": "Perfil",
+      "description": "Actualiza tu nombre visible y cómo te ven los demás.",
+      "displayName": "Nombre visible",
+      "saved": "¡Guardado!",
+      "submitting": "Guardando…",
+      "submit": "Guardar cambios"
+    },
+    "changeEmail": {
+      "checkEmail": "Revisa tu nuevo correo",
+      "title": "Cambiar correo electrónico",
+      "prompt": "Hemos enviado un enlace de verificación a tu nueva dirección. Haz clic en él para confirmar el cambio.",
+      "description": "Enviaremos un enlace de verificación a la nueva dirección.",
+      "hint": "Tu correo actual permanece activo hasta que verifiques el nuevo.",
+      "newEmail": "Nuevo correo electrónico",
+      "password": "Contraseña actual",
+      "submitting": "Guardando…",
+      "submit": "Cambiar correo"
+    },
+    "changePassword": {
+      "successTitle": "Contraseña actualizada",
+      "title": "Cambiar contraseña",
+      "successBody": "Tu contraseña ha sido cambiada. Vuelve a iniciar sesión en otros dispositivos.",
+      "description": "La nueva contraseña debe tener al menos 12 caracteres.",
+      "successHint": "El resto de sesiones activas seguirán siendo válidas hasta que caduquen.",
+      "current": "Contraseña actual",
+      "new": "Nueva contraseña",
+      "submitting": "Guardando…",
+      "submit": "Cambiar contraseña"
+    },
+    "delete": {
+      "title": "Eliminar cuenta",
+      "description": "Esta acción es permanente y no se puede deshacer. Todos tus datos, espacios de trabajo y ajustes se eliminarán de forma definitiva.",
+      "password": "Confirma con tu contraseña",
+      "submitting": "Eliminando…",
+      "submit": "Eliminar mi cuenta"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "description": "Bienvenido de nuevo a tendersbay.",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "submitting": "Iniciando sesión…",
+      "submit": "Iniciar sesión",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUp": "Regístrate"
+    },
+    "signup": {
+      "checkEmail": "Revisa tu correo",
+      "verifyPrompt": "Te hemos enviado un enlace de verificación. Haz clic en él para activar tu cuenta.",
+      "checkEmailHint": "El enlace caduca en 24 horas. Revisa tu carpeta de spam si no lo ves.",
+      "backToLogin": "Volver a iniciar sesión",
+      "title": "Crear cuenta",
+      "description": "Empieza a ganar licitaciones de la UE con agentes de IA.",
+      "displayName": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submitting": "Creando…",
+      "submit": "Crear cuenta",
+      "login": "¿Ya tienes una cuenta?",
+      "signIn": "Iniciar sesión"
+    },
+    "forgot": {
+      "checkEmail": "Revisa tu correo",
+      "checkEmailBody": "Si existe una cuenta con esa dirección, recibirás en breve un enlace de restablecimiento.",
+      "checkEmailHint": "El enlace caduca en 1 hora. Revisa tu carpeta de spam si no lo ves.",
+      "backToLogin": "Volver a iniciar sesión",
+      "title": "Restablecer contraseña",
+      "description": "Introduce tu correo y te enviaremos un enlace de restablecimiento.",
+      "email": "Correo electrónico",
+      "submitting": "Enviando…",
+      "submit": "Enviar enlace de restablecimiento"
+    },
+    "reset": {
+      "invalidTitle": "Enlace no válido",
+      "invalid": "Este enlace de restablecimiento falta o ha caducado.",
+      "requestNew": "Solicitar un nuevo enlace",
+      "title": "Establecer nueva contraseña",
+      "description": "Elige una contraseña segura de al menos 12 caracteres.",
+      "password": "Nueva contraseña",
+      "submitting": "Guardando…",
+      "submit": "Establecer contraseña"
+    },
+    "verify": {
+      "errorTitle": "Enlace caducado",
+      "error": "Este enlace no es válido o ha caducado. Solicita uno nuevo.",
+      "successTitle": "Correo verificado",
+      "success": "Todo listo. Te estamos redirigiendo…",
+      "loadingTitle": "Verificando tu correo…",
+      "loading": "Un momento."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Iniciar sesión",
+      "signup": "Regístrate"
+    },
     "search": {
       "label": "Buscar",
       "hint": "Búsqueda con IA — próximamente",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Licitaciones europeas, adjudicadas por tus agentes de IA",
-      "description": "Agentes de IA que cazan las licitaciones públicas europeas adecuadas, arrasan con el papeleo y llevan a tu pyme hasta la adjudicación."
+      "title": "tendersbay — Licitaciones públicas, adjudicadas por agentes de IA",
+      "description": "Agentes de IA que cazan las licitaciones públicas y los concursos públicos europeos adecuados, arrasan con el papeleo y llevan a tu pyme hasta la adjudicación."
     },
     "nav": {
       "problem": "El coste",
@@ -148,6 +251,82 @@
       "daysLeft": "{{count}} días"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Hoy",
+      "explore": "Explorar",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Recientes",
+    "palette": {
+      "trigger": "Buscar o preguntar…",
+      "label": "Paleta de comandos",
+      "placeholder": "Busca o pregunta cualquier cosa…",
+      "askAgent": "Pregunta al agente: «{{query}}»",
+      "sections": {
+        "navigate": "Ir a",
+        "recent": "Workbenches recientes",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Ajustes del workspace",
+      "accountSettings": "Ajustes de la cuenta",
+      "allWorkspaces": "Todos los workspaces"
+    },
+    "user": {
+      "settings": "Ajustes",
+      "logout": "Cerrar sesión"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} licitación",
+    "results_other": "{{count}} licitaciones",
+    "searching": "Buscando…",
+    "empty": {
+      "title": "No se encontraron licitaciones",
+      "description": "Prueba con una búsqueda más amplia o menos filtros."
+    },
+    "error": "La búsqueda no está disponible en este momento — inténtalo de nuevo en un momento.",
+    "loadMore": "Cargar más",
+    "deadline": {
+      "days_one": "{{count}} día restante",
+      "days_other": "{{count}} días restantes",
+      "today": "Cierra hoy",
+      "expired": "Cerrada"
+    },
+    "value": {
+      "unknown": "Valor no divulgado"
+    },
+    "status": {
+      "open": "Abierta",
+      "awarded": "Adjudicada",
+      "cancelled": "Cancelada",
+      "closed": "Cerrada",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Recomendadas para ti",
+      "seeAll": "Todo en Explorar →"
+    },
+    "greeting": {
+      "morning": "Buenos días.",
+      "afternoon": "Buenas tardes.",
+      "evening": "Buenas noches.",
+      "morningNamed": "Buenos días, {{name}}.",
+      "afternoonNamed": "Buenas tardes, {{name}}.",
+      "eveningNamed": "Buenas noches, {{name}}."
+    },
+    "resume": {
+      "title": "Continúa donde lo dejaste",
+      "untitled": "Conversación sin título"
+    },
+    "explore": {
+      "title": "Encuentra tu próxima licitación",
+      "description": "Pregunta al agente sobre mercados, requisitos o una licitación concreta — las recomendaciones personalizadas aparecerán aquí a medida que tus perfiles de búsqueda tomen forma.",
+      "action": "Abre Explorar"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Cargando…",
@@ -269,6 +448,7 @@
       "signIn": "Inicia sesión para unirte"
     },
     "switcher": {
+      "settings": "Ajustes del workspace",
       "label": "Espacios de trabajo",
       "manage": "Todos los espacios de trabajo"
     }

@@ -1,7 +1,7 @@
+import { cn } from '@tendersbay/components/core';
 import { motion } from 'motion/react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-aria-components';
-import { cx } from '~/features/landing/cx';
 
 type Variant = 'primary' | 'ghost' | 'invert' | 'text';
 type ButtonProps = { href: string; variant?: Variant; children: ReactNode; className?: string };
@@ -24,7 +24,7 @@ const VARIANTS: Record<Variant, string> = {
 const MotionLink = motion.create(Link);
 
 export function Button({ href, variant = 'primary', children, className }: ButtonProps) {
-  const classes = cx(BASE, VARIANTS[variant], className);
+  const classes = cn(BASE, VARIANTS[variant], className);
   if (variant === 'primary' || variant === 'invert') {
     return (
       <MotionLink href={href} className={classes} whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>

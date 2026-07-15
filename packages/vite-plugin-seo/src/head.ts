@@ -3,11 +3,18 @@ import type { HtmlTagDescriptor } from 'vite';
 export interface HeadOptions {
   hostname: string;
   siteName: string;
+  /** Page title for og:title/twitter:title; falls back to siteName when absent. */
+  title?: string;
   description: string;
   ogImage?: string;
   twitterSite?: string;
   themeColor?: string;
   organization?: { name: string; url: string; logo?: string; sameAs?: string[] };
+  /**
+   * Optional schema.org Service node describing the product; added to the @graph
+   * alongside Organization + WebSite. `provider` points back to the Organization.
+   */
+  service?: { name: string; description: string; serviceType?: string; areaServed?: string };
 }
 
 function absolutize(hostname: string, url: string): string {
@@ -31,14 +38,15 @@ export function headTags(options: HeadOptions): HtmlTagDescriptor[] {
     injectTo: 'head',
   });
   const image = options.ogImage ? absolutize(options.hostname, options.ogImage) : undefined;
+  const title = options.title ?? options.siteName;
   const tags: HtmlTagDescriptor[] = [
     meta({ name: 'description', content: options.description }),
     meta({ property: 'og:type', content: 'website' }),
     meta({ property: 'og:site_name', content: options.siteName }),
-    meta({ property: 'og:title', content: options.siteName }),
+    meta({ property: 'og:title', content: title }),
     meta({ property: 'og:description', content: options.description }),
     meta({ name: 'twitter:card', content: 'summary_large_image' }),
-    meta({ name: 'twitter:title', content: options.siteName }),
+    meta({ name: 'twitter:title', content: title }),
     meta({ name: 'twitter:description', content: options.description }),
   ];
   if (image) {
@@ -53,18 +61,30 @@ export function headTags(options: HeadOptions): HtmlTagDescriptor[] {
   }
   if (options.organization) {
     const org = options.organization;
+    const graph: Record<string, unknown>[] = [
+      {
+        '@type': 'Organization',
+        name: org.name,
+        url: org.url,
+        ...(org.logo ? { logo: org.logo } : {}),
+        ...(org.sameAs?.length ? { sameAs: org.sameAs } : {}),
+      },
+      { '@type': 'WebSite', name: options.siteName, url: options.hostname },
+    ];
+    if (options.service) {
+      const svc = options.service;
+      graph.push({
+        '@type': 'Service',
+        name: svc.name,
+        description: svc.description,
+        ...(svc.serviceType ? { serviceType: svc.serviceType } : {}),
+        ...(svc.areaServed ? { areaServed: svc.areaServed } : {}),
+        provider: { '@type': 'Organization', name: org.name, url: org.url },
+      });
+    }
     const jsonLd = {
       '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Organization',
-          name: org.name,
-          url: org.url,
-          ...(org.logo ? { logo: org.logo } : {}),
-          ...(org.sameAs?.length ? { sameAs: org.sameAs } : {}),
-        },
-        { '@type': 'WebSite', name: options.siteName, url: options.hostname },
-      ],
+      '@graph': graph,
     };
     tags.push({
       tag: 'script',

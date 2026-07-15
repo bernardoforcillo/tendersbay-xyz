@@ -40,8 +40,16 @@
   --color-cream-900: #60523e;
   --color-cream-950: #332b20;
 
+  /* Signal — fixed semantic colors: one color = one meaning, everywhere.
+     warm = deadline approaching · urgent = urgent/overdue.
+     (match/confirmation reuses brand-100/700; interactive is brand.) */
+  --color-signal-warm-100: #fef3c7;
+  --color-signal-warm-700: #b45309;
+  --color-signal-urgent-100: #ffedd5;
+  --color-signal-urgent-700: #c2410c;
+
   /* Type system — editorial display serif + clean sans + mono for data labels */
-  --font-display: "Calistoga", ui-serif, Georgia, "Times New Roman", serif;
+  --font-display: "Fraunces Variable", ui-serif, Georgia, "Times New Roman", serif;
   --font-sans:
     "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
     sans-serif;

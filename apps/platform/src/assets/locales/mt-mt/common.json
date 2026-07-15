@@ -5,7 +5,110 @@
     "accept": "Aċċetta",
     "reject": "Irrifjuta"
   },
+  "account": {
+    "settings": {
+      "title": "Settings tal-kont"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Aġġorna l-isem li jidher tiegħek u kif ħaddieħor jarak.",
+      "displayName": "Isem li jidher",
+      "saved": "Issejvjat!",
+      "submitting": "Qed jinħażen…",
+      "submit": "Issejvja l-bidliet"
+    },
+    "changeEmail": {
+      "checkEmail": "Iċċekkja l-email il-ġdida tiegħek",
+      "title": "Biddel l-email",
+      "prompt": "Bgħatna link ta' verifika lill-indirizz il-ġdid tiegħek. Ikklikkja fuqu biex tikkonferma l-bidla.",
+      "description": "Nibagħtu link ta' verifika lill-indirizz il-ġdid.",
+      "hint": "L-email attwali tiegħek tibqa' attiva sakemm tivverifika dik il-ġdida.",
+      "newEmail": "Email ġdida",
+      "password": "Password attwali",
+      "submitting": "Qed jinħażen…",
+      "submit": "Biddel l-email"
+    },
+    "changePassword": {
+      "successTitle": "Password aġġornata",
+      "title": "Biddel il-password",
+      "successBody": "Il-password tiegħek inbidlet. Erġa' idħol fuq apparati oħra.",
+      "description": "Il-password il-ġdida trid tkun mill-inqas 12-il karattru.",
+      "successHint": "Sessjonijiet attivi oħra jibqgħu validi sakemm jiskadu.",
+      "current": "Password attwali",
+      "new": "Password ġdida",
+      "submitting": "Qed jinħażen…",
+      "submit": "Biddel il-password"
+    },
+    "delete": {
+      "title": "Ħassar il-kont",
+      "description": "Din l-azzjoni hija permanenti u ma tistax titħassar. Id-data, l-ispazji tax-xogħol u s-settings kollha tiegħek jitħassru b'mod permanenti.",
+      "password": "Ikkonferma bil-password tiegħek",
+      "submitting": "Qed jitħassar…",
+      "submit": "Ħassar il-kont tiegħi"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Idħol",
+      "description": "Merħba lura għal tendersbay.",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Insejt il-password?",
+      "submitting": "Qed tidħol…",
+      "submit": "Idħol",
+      "noAccount": "M'għandekx kont?",
+      "signUp": "Irreġistra"
+    },
+    "signup": {
+      "checkEmail": "Iċċekkja l-email tiegħek",
+      "verifyPrompt": "Bgħatnielek link ta' verifika. Ikklikkjah biex tattiva l-kont tiegħek.",
+      "checkEmailHint": "Il-link jiskadi wara 24 siegħa. Iċċekkja l-folder tal-ispam jekk ma tarahx.",
+      "backToLogin": "Lura għal-login",
+      "title": "Oħloq kont",
+      "description": "Ibda tirbaħ offerti pubbliċi tal-UE b'aġenti tal-AI.",
+      "displayName": "Isem",
+      "email": "Email",
+      "password": "Password",
+      "submitting": "Qed jinħoloq…",
+      "submit": "Oħloq kont",
+      "login": "Diġà għandek kont?",
+      "signIn": "Idħol"
+    },
+    "forgot": {
+      "checkEmail": "Iċċekkja l-email tiegħek",
+      "checkEmailBody": "Jekk jeżisti kont għal dan l-indirizz, dalwaqt tirċievi link ta' rissettjar.",
+      "checkEmailHint": "Il-link jiskadi wara siegħa. Iċċekkja l-folder tal-ispam jekk ma tarahx.",
+      "backToLogin": "Lura għal-login",
+      "title": "Irrisettja l-password",
+      "description": "Daħħal l-email tiegħek u nibagħtulek link ta' rissettjar.",
+      "email": "Email",
+      "submitting": "Qed jintbagħat…",
+      "submit": "Ibgħat link ta' rissettjar"
+    },
+    "reset": {
+      "invalidTitle": "Link mhux validu",
+      "invalid": "Dan il-link ta' rissettjar nieqes jew skada.",
+      "requestNew": "Itlob link ġdid",
+      "title": "Issettja password ġdida",
+      "description": "Agħżel password b'saħħitha ta' mill-inqas 12-il karattru.",
+      "password": "Password ġdida",
+      "submitting": "Qed jissejvja…",
+      "submit": "Issettja l-password"
+    },
+    "verify": {
+      "errorTitle": "Il-link skada",
+      "error": "Dan il-link mhux validu jew skada. Itlob wieħed ġdid.",
+      "successTitle": "Email ivverifikata",
+      "success": "Kollox lest. Se tiġi rredirezzjonat issa…",
+      "loadingTitle": "Qed tiġi vverifikata l-email tiegħek…",
+      "loading": "Mument."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Idħol",
+      "signup": "Irreġistra"
+    },
     "search": {
       "label": "Fittex",
       "hint": "Tfittxija bl-IA — dalwaqt disponibbli",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Offerti Ewropej, mogħtija mill-aġenti AI tiegħek",
-      "description": "Aġenti AI li jsibu l-offerti pubbliċi Ewropej it-tajbin, ifarrku l-burokrazija u jieħdu l-SME tiegħek sal-għoti tal-kuntratt."
+      "title": "tendersbay — Sejħiet għall-offerti, mogħtija mill-aġenti AI",
+      "description": "Aġenti AI li jsibu s-sejħiet għall-offerti u l-offerti pubbliċi Ewropej it-tajbin, ifarrku l-burokrazija u jieħdu l-SME tiegħek sal-għoti tal-kuntratt."
     },
     "nav": {
       "problem": "L-Ispiża",
@@ -148,6 +251,88 @@
       "daysLeft": "{{count}} jiem"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Illum",
+      "explore": "Esplora",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Riċenti",
+    "palette": {
+      "trigger": "Fittex jew staqsi…",
+      "label": "Paletta tal-kmandi",
+      "placeholder": "Fittex jew staqsi kwalunkwe ħaġa…",
+      "askAgent": "Staqsi lill-aġent: “{{query}}”",
+      "sections": {
+        "navigate": "Mur għal",
+        "recent": "Workbenches riċenti",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Settings tal-workspace",
+      "accountSettings": "Settings tal-kont",
+      "allWorkspaces": "Il-workspaces kollha"
+    },
+    "user": {
+      "settings": "Settings",
+      "logout": "Oħroġ"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} offerta",
+    "results_two": "{{count}} offerti",
+    "results_few": "{{count}} offerti",
+    "results_many": "{{count}} offerta",
+    "results_other": "{{count}} offerta",
+    "searching": "Qed infittxu…",
+    "empty": {
+      "title": "L-ebda offerta ma nstabet",
+      "description": "Ipprova tfittxija usa' jew inqas filtri."
+    },
+    "error": "It-tfittxija mhix disponibbli bħalissa — erġa' pprova fi ftit ħin.",
+    "loadMore": "Tella' aktar",
+    "deadline": {
+      "days_one": "{{count}} jum fadal",
+      "days_two": "{{count}} jiem fadal",
+      "days_few": "{{count}} jiem fadal",
+      "days_many": "{{count}} jum fadal",
+      "days_other": "{{count}} jum fadal",
+      "today": "Tagħlaq illum",
+      "expired": "Magħluqa"
+    },
+    "value": {
+      "unknown": "Valur mhux żvelat"
+    },
+    "status": {
+      "open": "Miftuħa",
+      "awarded": "Mogħtija",
+      "cancelled": "Ikkanċellata",
+      "closed": "Magħluqa",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Rakkomandati għalik",
+      "seeAll": "Kollox f'Esplora →"
+    },
+    "greeting": {
+      "morning": "L-għodwa t-tajba.",
+      "afternoon": "Wara nofsinhar it-tajjeb.",
+      "evening": "Il-lejla t-tajba.",
+      "morningNamed": "L-għodwa t-tajba, {{name}}.",
+      "afternoonNamed": "Wara nofsinhar it-tajjeb, {{name}}.",
+      "eveningNamed": "Il-lejla t-tajba, {{name}}."
+    },
+    "resume": {
+      "title": "Kompli minn fejn ħallejt",
+      "untitled": "Konversazzjoni mingħajr titlu"
+    },
+    "explore": {
+      "title": "Sib l-offerta li jmiss tiegħek",
+      "description": "Staqsi lill-aġent dwar swieq, rekwiżiti, jew offerta speċifika — rakkomandazzjonijiet personalizzati jidhru hawn hekk kif jieħdu forma l-profili tat-tiftix tiegħek.",
+      "action": "Iftaħ Esplora"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Qed jitgħabba…",
@@ -269,6 +454,7 @@
       "signIn": "Idħol biex tissieħeb"
     },
     "switcher": {
+      "settings": "Settings tal-workspace",
       "label": "Spazji tax-xogħol",
       "manage": "L-ispazji tax-xogħol kollha"
     }

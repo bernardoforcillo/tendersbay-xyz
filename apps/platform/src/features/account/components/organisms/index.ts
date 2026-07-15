@@ -1,3 +1,5 @@
+export { ChatWindow } from './chat-window';
+export { CommandPalette } from './command-palette';
 export { DeleteForm } from './delete-form';
 export { EmailForm } from './email-form';
 export type { PageHeaderProps } from './page-header';
@@ -8,3 +10,5 @@ export type { SearchMode } from './search-dock';
 export { SearchDock } from './search-dock';
 export type { SettingsSectionProps } from './settings-section';
 export { SettingsSection } from './settings-section';
+export type { TenderResultCardProps } from './tender-result-card';
+export { TenderResultCard } from './tender-result-card';

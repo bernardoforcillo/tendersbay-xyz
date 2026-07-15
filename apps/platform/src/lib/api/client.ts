@@ -1,7 +1,9 @@
 import type { Interceptor } from '@connectrpc/connect';
 import { createClient } from '@connectrpc/connect';
 import { createConnectTransport } from '@connectrpc/connect-web';
+import { AgentService } from '@tendersbay/proto/agent/v1/agent_pb';
 import { AuthService } from '@tendersbay/proto/auth/v1/auth_pb';
+import { TenderService } from '@tendersbay/proto/tender/v1/tender_pb';
 import { UserService } from '@tendersbay/proto/user/v1/user_pb';
 import { WorkbenchService } from '@tendersbay/proto/workbench/v1/workbench_pb';
 import { WorkspaceService } from '@tendersbay/proto/workspace/v1/workspace_pb';
@@ -24,7 +26,9 @@ const transport = createConnectTransport({
   interceptors: [authInterceptor],
 });
 
+export const agentClient = createClient(AgentService, transport);
 export const authClient = createClient(AuthService, transport);
+export const tenderClient = createClient(TenderService, transport);
 export const userClient = createClient(UserService, transport);
 export const workspaceClient = createClient(WorkspaceService, transport);
 export const workbenchClient = createClient(WorkbenchService, transport);

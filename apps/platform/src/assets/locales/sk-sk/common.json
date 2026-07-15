@@ -5,7 +5,110 @@
     "accept": "Prijať",
     "reject": "Odmietnuť"
   },
+  "account": {
+    "settings": {
+      "title": "Nastavenia účtu"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Aktualizujte svoje zobrazované meno a spôsob, akým vás vidia ostatní.",
+      "displayName": "Zobrazované meno",
+      "saved": "Uložené!",
+      "submitting": "Ukladá sa…",
+      "submit": "Uložiť zmeny"
+    },
+    "changeEmail": {
+      "checkEmail": "Skontrolujte svoj nový e-mail",
+      "title": "Zmena e-mailu",
+      "prompt": "Na vašu novú adresu sme odoslali overovací odkaz. Kliknutím naň potvrdíte zmenu.",
+      "description": "Na novú adresu zašleme overovací odkaz.",
+      "hint": "Váš súčasný e-mail zostáva aktívny, kým nepotvrdíte nový.",
+      "newEmail": "Nový e-mail",
+      "password": "Súčasné heslo",
+      "submitting": "Ukladá sa…",
+      "submit": "Zmeniť e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Heslo bolo aktualizované",
+      "title": "Zmena hesla",
+      "successBody": "Vaše heslo bolo zmenené. Na ostatných zariadeniach sa prihláste znova.",
+      "description": "Nové heslo musí mať aspoň 12 znakov.",
+      "successHint": "Ostatné aktívne relácie zostávajú platné až do vypršania.",
+      "current": "Súčasné heslo",
+      "new": "Nové heslo",
+      "submitting": "Ukladá sa…",
+      "submit": "Zmeniť heslo"
+    },
+    "delete": {
+      "title": "Odstrániť účet",
+      "description": "Táto akcia je trvalá a nedá sa vrátiť späť. Všetky vaše údaje, pracovné priestory a nastavenia budú natrvalo odstránené.",
+      "password": "Potvrďte svojím heslom",
+      "submitting": "Odstraňuje sa…",
+      "submit": "Odstrániť môj účet"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Prihlásiť sa",
+      "description": "Vitajte späť na tendersbay.",
+      "email": "E-mail",
+      "password": "Heslo",
+      "forgotPassword": "Zabudli ste heslo?",
+      "submitting": "Prihlasovanie…",
+      "submit": "Prihlásiť sa",
+      "noAccount": "Nemáte účet?",
+      "signUp": "Zaregistrovať sa"
+    },
+    "signup": {
+      "checkEmail": "Skontrolujte svoj e-mail",
+      "verifyPrompt": "Poslali sme vám overovací odkaz. Kliknutím naň aktivujete svoj účet.",
+      "checkEmailHint": "Platnosť odkazu vyprší o 24 hodín. Ak ho nevidíte, skontrolujte priečinok so spamom.",
+      "backToLogin": "Späť na prihlásenie",
+      "title": "Vytvoriť účet",
+      "description": "Začnite vyhrávať zákazky EÚ s AI agentmi.",
+      "displayName": "Meno",
+      "email": "E-mail",
+      "password": "Heslo",
+      "submitting": "Vytváranie…",
+      "submit": "Vytvoriť účet",
+      "login": "Máte už účet?",
+      "signIn": "Prihlásiť sa"
+    },
+    "forgot": {
+      "checkEmail": "Skontrolujte svoj e-mail",
+      "checkEmailBody": "Ak pre túto adresu existuje účet, čoskoro dostanete odkaz na obnovenie hesla.",
+      "checkEmailHint": "Platnosť odkazu vyprší o 1 hodinu. Ak ho nevidíte, skontrolujte priečinok so spamom.",
+      "backToLogin": "Späť na prihlásenie",
+      "title": "Obnoviť heslo",
+      "description": "Zadajte svoj e-mail a my vám zašleme odkaz na obnovenie hesla.",
+      "email": "E-mail",
+      "submitting": "Odosielanie…",
+      "submit": "Odoslať odkaz na obnovenie hesla"
+    },
+    "reset": {
+      "invalidTitle": "Neplatný odkaz",
+      "invalid": "Tento odkaz na obnovenie hesla chýba alebo vypršal.",
+      "requestNew": "Vyžiadať nový odkaz",
+      "title": "Nastaviť nové heslo",
+      "description": "Zvoľte silné heslo s dĺžkou aspoň 12 znakov.",
+      "password": "Nové heslo",
+      "submitting": "Ukladanie…",
+      "submit": "Nastaviť heslo"
+    },
+    "verify": {
+      "errorTitle": "Odkaz vypršal",
+      "error": "Tento odkaz je neplatný alebo vypršal. Vyžiadajte si nový.",
+      "successTitle": "E-mail overený",
+      "success": "Všetko je pripravené. Teraz budete presmerovaní…",
+      "loadingTitle": "Overovanie vášho e-mailu…",
+      "loading": "Moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Prihlásiť sa",
+      "signup": "Zaregistrovať sa"
+    },
     "search": {
       "label": "Hľadať",
       "hint": "Vyhľadávanie s AI — už čoskoro",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Európske zákazky, udelené vašimi AI agentmi",
-      "description": "AI agenti, ktorí vyhľadajú správne európske verejné zákazky, rozdrvia papierovačky a dovedú vašu malú či strednú firmu až k udeleniu zákazky."
+      "title": "tendersbay — Verejné obstarávanie v Európe s vašimi AI agentmi",
+      "description": "AI agenti, ktorí vyhľadajú správne verejné obstarávania a verejné zákazky v Európe, rozdrvia papierovačky a dovedú vašu firmu až k udeleniu zákazky."
     },
     "nav": {
       "problem": "Náklady",
@@ -148,6 +251,84 @@
       "daysLeft": "{{count}} dní"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Dnes",
+      "explore": "Preskúmať",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Nedávne",
+    "palette": {
+      "trigger": "Hľadať alebo sa opýtať…",
+      "label": "Paleta príkazov",
+      "placeholder": "Hľadať alebo sa opýtať na čokoľvek…",
+      "askAgent": "Opýtajte sa agenta: „{{query}}“",
+      "sections": {
+        "navigate": "Prejsť na",
+        "recent": "Nedávne workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Nastavenia workspace",
+      "accountSettings": "Nastavenia účtu",
+      "allWorkspaces": "Všetky workspace"
+    },
+    "user": {
+      "settings": "Nastavenia",
+      "logout": "Odhlásiť sa"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} zákazka",
+    "results_few": "{{count}} zákazky",
+    "results_other": "{{count}} zákaziek",
+    "searching": "Vyhľadávanie…",
+    "empty": {
+      "title": "Nenašli sa žiadne zákazky",
+      "description": "Skúste širší dopyt alebo menej filtrov."
+    },
+    "error": "Vyhľadávanie je momentálne nedostupné — skúste to o chvíľu znova.",
+    "loadMore": "Načítať ďalšie",
+    "deadline": {
+      "days_one": "{{count}} deň zostáva",
+      "days_few": "{{count}} dni zostávajú",
+      "days_other": "{{count}} dní zostáva",
+      "today": "Uzávierka dnes",
+      "expired": "Uzavretá"
+    },
+    "value": {
+      "unknown": "Hodnota nezverejnená"
+    },
+    "status": {
+      "open": "Otvorená",
+      "awarded": "Pridelená",
+      "cancelled": "Zrušená",
+      "closed": "Uzavretá",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Odporúčané pre vás",
+      "seeAll": "Všetko v sekcii Preskúmať →"
+    },
+    "greeting": {
+      "morning": "Dobré ráno.",
+      "afternoon": "Dobrý deň.",
+      "evening": "Dobrý večer.",
+      "morningNamed": "Dobré ráno, {{name}}.",
+      "afternoonNamed": "Dobrý deň, {{name}}.",
+      "eveningNamed": "Dobrý večer, {{name}}."
+    },
+    "resume": {
+      "title": "Pokračujte tam, kde ste skončili",
+      "untitled": "Konverzácia bez názvu"
+    },
+    "explore": {
+      "title": "Nájdite svoju ďalšiu zákazku",
+      "description": "Opýtajte sa agenta na trhy, požiadavky alebo konkrétnu zákazku — personalizované odporúčania sa tu zobrazia, keď sa vytvoria vaše vyhľadávacie profily.",
+      "action": "Otvorte Preskúmať"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Načítava sa…",
@@ -269,6 +450,7 @@
       "signIn": "Prihláste sa na pripojenie"
     },
     "switcher": {
+      "settings": "Nastavenia workspace",
       "label": "Pracovné priestory",
       "manage": "Všetky pracovné priestory"
     }

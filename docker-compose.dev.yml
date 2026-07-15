@@ -15,5 +15,31 @@ services:
       timeout: 5s
       retries: 10
 
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_dev:/qdrant/storage
+    # No healthcheck: the official image ships without curl/wget by
+    # design (a deliberate security choice, not an oversight) and has no
+    # documented built-in healthcheck command as of this writing — verified
+    # during design, not assumed. Docker still tracks the container's
+    # running state without one; `drops/qdrant.Client.Ping` (hitting
+    # /healthz) is the app-level equivalent, used at connection time in
+    # go-services/knowledge instead.
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
 volumes:
   postgres_dev:
+  qdrant_dev:

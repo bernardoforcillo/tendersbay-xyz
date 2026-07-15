@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"encoding/json"
 	"time"
 
 	"github.com/bernardoforcillo/drops/pg"
@@ -258,4 +259,147 @@ type DBWorkbenchMembership struct {
 	RoleName    string    `drop:"name"`
 	Permissions int64     `drop:"permissions"`
 	AddedAt     time.Time `drop:"added_at"`
+}
+
+// ── Agent tables (chat, credits, pricing, usage) ────────────────────────────
+var (
+	ChatSessions           = pg.NewTable("chat_sessions")
+	ChatSessionID          = pg.Add(ChatSessions, pg.UUID("id").Default("gen_random_uuid()").PrimaryKey())
+	ChatSessionMemberID    = pg.Add(ChatSessions, pg.UUID("member_id").NotNull().References(UserID, pg.OnDelete("CASCADE")))
+	ChatSessionWorkspaceID = pg.Add(ChatSessions, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	ChatSessionWorkbenchID = pg.Add(ChatSessions, pg.UUID("workbench_id").References(WBID, pg.OnDelete("SET NULL")))
+	ChatSessionAgentType   = pg.Add(ChatSessions, pg.Text("agent_type").NotNull())
+	ChatSessionTitle       = pg.Add(ChatSessions, pg.Text("title").NotNull().Default("'Nuova chat'"))
+	ChatSessionCreatedAt   = pg.Add(ChatSessions, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	ChatSessionUpdatedAt   = pg.Add(ChatSessions, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	ChatMessages         = pg.NewTable("chat_messages")
+	ChatMessageID        = pg.Add(ChatMessages, pg.UUID("id").Default("gen_random_uuid()").PrimaryKey())
+	ChatMessageSessionID = pg.Add(ChatMessages, pg.UUID("session_id").NotNull().References(ChatSessionID, pg.OnDelete("CASCADE")))
+	ChatMessageRole      = pg.Add(ChatMessages, pg.Text("role").NotNull())
+	ChatMessageContent   = pg.Add(ChatMessages, pg.Text("content").NotNull())
+	ChatMessageChoices   = pg.Add(ChatMessages, pg.JSONB("choices"))
+	ChatMessageMetadata  = pg.Add(ChatMessages, pg.JSONB("metadata"))
+	ChatMessageCreatedAt = pg.Add(ChatMessages, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+
+	WorkspaceCredits              = pg.NewTable("workspace_credits")
+	WCreditsID                    = pg.Add(WorkspaceCredits, pg.UUID("id").Default("gen_random_uuid()").PrimaryKey())
+	WCreditsWorkspaceID           = pg.Add(WorkspaceCredits, pg.UUID("workspace_id").NotNull().Unique().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	WCreditsMonthlyTokenAllowance = pg.Add(WorkspaceCredits, pg.BigInt("monthly_token_allowance").NotNull().Default("2000000"))
+	WCreditsCurrentCycleStart     = pg.Add(WorkspaceCredits, pg.Timestamp("current_cycle_start", true).NotNull().Default("now()"))
+	WCreditsCurrentCycleTokens    = pg.Add(WorkspaceCredits, pg.BigInt("current_cycle_tokens").NotNull().Default("0"))
+	WCreditsCreatedAt             = pg.Add(WorkspaceCredits, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	WCreditsUpdatedAt             = pg.Add(WorkspaceCredits, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	AgentPricing            = pg.NewTable("agent_pricing")
+	APricingID              = pg.Add(AgentPricing, pg.UUID("id").Default("gen_random_uuid()").PrimaryKey())
+	APricingAgentType       = pg.Add(AgentPricing, pg.Text("agent_type").NotNull().Unique())
+	APricingInputTokenCost  = pg.Add(AgentPricing, pg.BigInt("input_token_cost").NotNull().Default("1"))
+	APricingOutputTokenCost = pg.Add(AgentPricing, pg.BigInt("output_token_cost").NotNull().Default("1"))
+	APricingCreatedAt       = pg.Add(AgentPricing, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+
+	TokenUsageLog           = pg.NewTable("token_usage_log")
+	TUsageLogID             = pg.Add(TokenUsageLog, pg.UUID("id").Default("gen_random_uuid()").PrimaryKey())
+	TUsageLogWorkspaceID    = pg.Add(TokenUsageLog, pg.UUID("workspace_id").NotNull())
+	TUsageLogUserID         = pg.Add(TokenUsageLog, pg.Text("user_id").NotNull())
+	TUsageLogAgentType      = pg.Add(TokenUsageLog, pg.Text("agent_type").NotNull())
+	TUsageLogSessionID      = pg.Add(TokenUsageLog, pg.UUID("session_id").NotNull())
+	TUsageLogModel          = pg.Add(TokenUsageLog, pg.Text("model").NotNull())
+	TUsageLogInputTokens    = pg.Add(TokenUsageLog, pg.Integer("input_tokens").NotNull().Default("0"))
+	TUsageLogOutputTokens   = pg.Add(TokenUsageLog, pg.Integer("output_tokens").NotNull().Default("0"))
+	TUsageLogTotalTokens    = pg.Add(TokenUsageLog, pg.Integer("total_tokens").NotNull().Default("0"))
+	TUsageLogCostMultiplier = pg.Add(TokenUsageLog, pg.BigInt("cost_multiplier").NotNull().Default("1"))
+	TUsageLogCreatedAt      = pg.Add(TokenUsageLog, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+)
+
+type DBChatSession struct {
+	ID          string    `drop:"id"`
+	MemberID    string    `drop:"member_id"`
+	WorkspaceID string    `drop:"workspace_id"`
+	WorkbenchID *string   `drop:"workbench_id"`
+	AgentType   string    `drop:"agent_type"`
+	Title       string    `drop:"title"`
+	CreatedAt   time.Time `drop:"created_at"`
+	UpdatedAt   time.Time `drop:"updated_at"`
+}
+
+type DBChatMessage struct {
+	ID        string           `drop:"id"`
+	SessionID string           `drop:"session_id"`
+	Role      string           `drop:"role"`
+	Content   string           `drop:"content"`
+	Choices   *json.RawMessage `drop:"choices"`
+	Metadata  *json.RawMessage `drop:"metadata"`
+	CreatedAt time.Time        `drop:"created_at"`
+}
+
+type DBWorkspaceCredits struct {
+	ID                 string    `drop:"id"`
+	WorkspaceID        string    `drop:"workspace_id"`
+	MonthlyAllowance   int64     `drop:"monthly_token_allowance"`
+	CurrentCycleStart  time.Time `drop:"current_cycle_start"`
+	CurrentCycleTokens int64     `drop:"current_cycle_tokens"`
+	CreatedAt          time.Time `drop:"created_at"`
+	UpdatedAt          time.Time `drop:"updated_at"`
+}
+
+type DBAgentPricing struct {
+	ID         string    `drop:"id"`
+	AgentType  string    `drop:"agent_type"`
+	InputCost  int64     `drop:"input_token_cost"`
+	OutputCost int64     `drop:"output_token_cost"`
+	CreatedAt  time.Time `drop:"created_at"`
+}
+
+type DBTokenUsage struct {
+	ID             string    `drop:"id"`
+	WorkspaceID    string    `drop:"workspace_id"`
+	UserID         string    `drop:"user_id"`
+	AgentType      string    `drop:"agent_type"`
+	SessionID      string    `drop:"session_id"`
+	Model          string    `drop:"model"`
+	InputTokens    int32     `drop:"input_tokens"`
+	OutputTokens   int32     `drop:"output_tokens"`
+	TotalTokens    int32     `drop:"total_tokens"`
+	CostMultiplier int64     `drop:"cost_multiplier"`
+	CreatedAt      time.Time `drop:"created_at"`
+}
+
+// Tenders references tenders.ingested_tenders, owned and migrated by
+// services/ingestion — this service only ever reads it (never migrates,
+// never writes). Only the columns this service's search API actually
+// needs are declared; the real table has more (raw, history, version,
+// first_seen_at, last_seen_at, indexed_at, ...) that this service doesn't
+// touch.
+var (
+	Tenders             = pg.NewSchemaTable("tenders", "ingested_tenders")
+	TenderID            = pg.Add(Tenders, pg.BigInt("id").PrimaryKey())
+	TenderSource        = pg.Add(Tenders, pg.Text("source").NotNull())
+	TenderSourceRef     = pg.Add(Tenders, pg.Text("source_ref").NotNull())
+	TenderTitle         = pg.Add(Tenders, pg.Text("title").NotNull())
+	TenderBuyerName     = pg.Add(Tenders, pg.Text("buyer_name").NotNull())
+	TenderStatus        = pg.Add(Tenders, pg.Text("status").NotNull())
+	TenderProcedureType = pg.Add(Tenders, pg.Text("procedure_type").NotNull())
+	TenderCountry       = pg.Add(Tenders, pg.Text("country").NotNull())
+	TenderCPV           = pg.Add(Tenders, pg.Text("cpv").NotNull())
+	TenderValue         = pg.Add(Tenders, pg.BigInt("value")) // nullable
+	TenderCurrency      = pg.Add(Tenders, pg.Text("currency").NotNull())
+	TenderPublishedAt   = pg.Add(Tenders, pg.Timestamp("published_at", true)) // nullable
+	TenderDeadline      = pg.Add(Tenders, pg.Timestamp("deadline", true))     // nullable
+)
+
+type DBTender struct {
+	ID            int64      `drop:"id"`
+	Source        string     `drop:"source"`
+	SourceRef     string     `drop:"source_ref"`
+	Title         string     `drop:"title"`
+	BuyerName     string     `drop:"buyer_name"`
+	Status        string     `drop:"status"`
+	ProcedureType string     `drop:"procedure_type"`
+	Country       string     `drop:"country"`
+	CPV           string     `drop:"cpv"`
+	Value         *int64     `drop:"value"`
+	Currency      string     `drop:"currency"`
+	PublishedAt   *time.Time `drop:"published_at"`
+	Deadline      *time.Time `drop:"deadline"`
 }

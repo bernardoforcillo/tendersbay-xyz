@@ -5,7 +5,110 @@
     "accept": "Accept",
     "reject": "Reject"
   },
+  "account": {
+    "settings": {
+      "title": "Account settings"
+    },
+    "profile": {
+      "title": "Profile",
+      "description": "Update your display name and how others see you.",
+      "displayName": "Display name",
+      "saved": "Saved!",
+      "submitting": "Saving…",
+      "submit": "Save changes"
+    },
+    "changeEmail": {
+      "checkEmail": "Check your new email",
+      "title": "Change email",
+      "prompt": "We sent a verification link to your new address. Click it to confirm the change.",
+      "description": "We'll send a verification link to the new address.",
+      "hint": "Your current email stays active until you verify the new one.",
+      "newEmail": "New email",
+      "password": "Current password",
+      "submitting": "Saving…",
+      "submit": "Change email"
+    },
+    "changePassword": {
+      "successTitle": "Password updated",
+      "title": "Change password",
+      "successBody": "Your password has been changed. Sign in again on other devices.",
+      "description": "New password must be at least 12 characters.",
+      "successHint": "Other active sessions remain valid until they expire.",
+      "current": "Current password",
+      "new": "New password",
+      "submitting": "Saving…",
+      "submit": "Change password"
+    },
+    "delete": {
+      "title": "Delete account",
+      "description": "This action is permanent and cannot be undone. All your data, workspaces, and settings will be permanently deleted.",
+      "password": "Confirm with your password",
+      "submitting": "Deleting…",
+      "submit": "Delete my account"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "description": "Welcome back to tendersbay.",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "submitting": "Signing in…",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign up"
+    },
+    "signup": {
+      "checkEmail": "Check your email",
+      "verifyPrompt": "We sent you a verification link. Click it to activate your account.",
+      "checkEmailHint": "The link expires in 24 hours. Check your spam folder if you don't see it.",
+      "backToLogin": "Back to sign in",
+      "title": "Create account",
+      "description": "Start winning EU tenders with AI agents.",
+      "displayName": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submitting": "Creating…",
+      "submit": "Create account",
+      "login": "Already have an account?",
+      "signIn": "Sign in"
+    },
+    "forgot": {
+      "checkEmail": "Check your email",
+      "checkEmailBody": "If an account exists for that address, you'll receive a reset link shortly.",
+      "checkEmailHint": "The link expires in 1 hour. Check your spam folder if you don't see it.",
+      "backToLogin": "Back to sign in",
+      "title": "Reset password",
+      "description": "Enter your email and we'll send you a reset link.",
+      "email": "Email",
+      "submitting": "Sending…",
+      "submit": "Send reset link"
+    },
+    "reset": {
+      "invalidTitle": "Invalid link",
+      "invalid": "This reset link is missing or has expired.",
+      "requestNew": "Request a new link",
+      "title": "Set new password",
+      "description": "Choose a strong password of at least 12 characters.",
+      "password": "New password",
+      "submitting": "Saving…",
+      "submit": "Set password"
+    },
+    "verify": {
+      "errorTitle": "Link expired",
+      "error": "This link is invalid or has expired. Request a new one.",
+      "successTitle": "Email verified",
+      "success": "You're all set. Redirecting you now…",
+      "loadingTitle": "Verifying your email…",
+      "loading": "Just a moment."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Log in",
+      "signup": "Sign up"
+    },
     "search": {
       "label": "Search",
       "hint": "AI-powered search — coming soon",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — European tenders, awarded by your AI agents",
-      "description": "AI agents that hunt down the right European public tenders, demolish the paperwork, and walk your SME all the way to the award."
+      "title": "tendersbay — EU public tenders, awarded by your AI agents",
+      "description": "AI agents that hunt down the right public tenders across Europe, demolish the paperwork, and walk your SME from the first tender opportunity all the way to the award."
     },
     "nav": {
       "problem": "The cost",
@@ -42,7 +145,7 @@
         },
         {
           "title": "Drowning in paperwork",
-          "body": "Specs, certificates, DGUE, deadlines. Miss one line and weeks of work hit the bin."
+          "body": "Specs, certificates, ESPD, deadlines. Miss one line and weeks of work hit the bin."
         },
         {
           "title": "No bid office, no shot",
@@ -59,7 +162,7 @@
         },
         {
           "title": "Prepare",
-          "body": "Requirements, certificates, DGUE, deadlines: extracted, cross-checked, assembled. The paperwork that broke you, handled."
+          "body": "Requirements, certificates, ESPD, deadlines: extracted, cross-checked, assembled. The paperwork that broke you, handled."
         },
         {
           "title": "Win",
@@ -72,7 +175,7 @@
       "items": [
         {
           "title": "You run the bids",
-          "body": "Midnight, another DGUE by hand. Hand the documents to the agents. Spend your hours on the offer that actually wins."
+          "body": "Midnight, another ESPD by hand. Hand the documents to the agents. Spend your hours on the offer that actually wins."
         },
         {
           "title": "You own the number",
@@ -146,6 +249,82 @@
       "value": "Value",
       "deadline": "Deadline",
       "daysLeft": "{{count}} days"
+    }
+  },
+  "shell": {
+    "nav": {
+      "today": "Today",
+      "explore": "Explore",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Recent",
+    "palette": {
+      "trigger": "Search or ask…",
+      "label": "Command palette",
+      "placeholder": "Search or ask anything…",
+      "askAgent": "Ask the agent: “{{query}}”",
+      "sections": {
+        "navigate": "Go to",
+        "recent": "Recent workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Workspace settings",
+      "accountSettings": "Account settings",
+      "allWorkspaces": "All workspaces"
+    },
+    "user": {
+      "settings": "Settings",
+      "logout": "Log out"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} tender",
+    "results_other": "{{count}} tenders",
+    "searching": "Searching…",
+    "empty": {
+      "title": "No tenders found",
+      "description": "Try a broader query or fewer filters."
+    },
+    "error": "Search is unavailable right now — try again in a moment.",
+    "loadMore": "Load more",
+    "deadline": {
+      "days_one": "{{count}} day left",
+      "days_other": "{{count}} days left",
+      "today": "Closes today",
+      "expired": "Closed"
+    },
+    "value": {
+      "unknown": "Value undisclosed"
+    },
+    "status": {
+      "open": "Open",
+      "awarded": "Awarded",
+      "cancelled": "Cancelled",
+      "closed": "Closed",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Recommended for you",
+      "seeAll": "All in Explore →"
+    },
+    "greeting": {
+      "morning": "Good morning.",
+      "afternoon": "Good afternoon.",
+      "evening": "Good evening.",
+      "morningNamed": "Good morning, {{name}}.",
+      "afternoonNamed": "Good afternoon, {{name}}.",
+      "eveningNamed": "Good evening, {{name}}."
+    },
+    "resume": {
+      "title": "Pick up where you left off",
+      "untitled": "Untitled conversation"
+    },
+    "explore": {
+      "title": "Find your next tender",
+      "description": "Ask the agent about markets, requirements, or a specific call — personalised recommendations will appear here as your search profiles take shape.",
+      "action": "Open Explore"
     }
   },
   "workspace": {
@@ -269,6 +448,7 @@
       "signIn": "Sign in to join"
     },
     "switcher": {
+      "settings": "Workspace settings",
       "label": "Workspaces",
       "manage": "All workspaces"
     }

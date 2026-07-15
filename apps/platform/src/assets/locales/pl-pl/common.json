@@ -5,7 +5,110 @@
     "accept": "Akceptuj",
     "reject": "Odrzuć"
   },
+  "account": {
+    "settings": {
+      "title": "Ustawienia konta"
+    },
+    "profile": {
+      "title": "Profil",
+      "description": "Zaktualizuj wyświetlaną nazwę i to, jak widzą Cię inni.",
+      "displayName": "Wyświetlana nazwa",
+      "saved": "Zapisano!",
+      "submitting": "Zapisywanie…",
+      "submit": "Zapisz zmiany"
+    },
+    "changeEmail": {
+      "checkEmail": "Sprawdź swój nowy e-mail",
+      "title": "Zmiana e-maila",
+      "prompt": "Wysłaliśmy link weryfikacyjny na Twój nowy adres. Kliknij go, aby potwierdzić zmianę.",
+      "description": "Wyślemy link weryfikacyjny na nowy adres.",
+      "hint": "Twój obecny e-mail pozostaje aktywny, dopóki nie zweryfikujesz nowego.",
+      "newEmail": "Nowy e-mail",
+      "password": "Obecne hasło",
+      "submitting": "Zapisywanie…",
+      "submit": "Zmień e-mail"
+    },
+    "changePassword": {
+      "successTitle": "Hasło zaktualizowane",
+      "title": "Zmiana hasła",
+      "successBody": "Twoje hasło zostało zmienione. Zaloguj się ponownie na innych urządzeniach.",
+      "description": "Nowe hasło musi mieć co najmniej 12 znaków.",
+      "successHint": "Pozostałe aktywne sesje pozostają ważne do czasu wygaśnięcia.",
+      "current": "Obecne hasło",
+      "new": "Nowe hasło",
+      "submitting": "Zapisywanie…",
+      "submit": "Zmień hasło"
+    },
+    "delete": {
+      "title": "Usuń konto",
+      "description": "Ta czynność jest nieodwracalna i nie można jej cofnąć. Wszystkie Twoje dane, przestrzenie robocze i ustawienia zostaną trwale usunięte.",
+      "password": "Potwierdź swoim hasłem",
+      "submitting": "Usuwanie…",
+      "submit": "Usuń moje konto"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Zaloguj się",
+      "description": "Witaj z powrotem w tendersbay.",
+      "email": "E-mail",
+      "password": "Hasło",
+      "forgotPassword": "Nie pamiętasz hasła?",
+      "submitting": "Logowanie…",
+      "submit": "Zaloguj się",
+      "noAccount": "Nie masz konta?",
+      "signUp": "Zarejestruj się"
+    },
+    "signup": {
+      "checkEmail": "Sprawdź swoją skrzynkę e-mail",
+      "verifyPrompt": "Wysłaliśmy Ci link weryfikacyjny. Kliknij go, aby aktywować konto.",
+      "checkEmailHint": "Link wygasa za 24 godziny. Sprawdź folder ze spamem, jeśli go nie widzisz.",
+      "backToLogin": "Powrót do logowania",
+      "title": "Utwórz konto",
+      "description": "Zacznij wygrywać unijne przetargi z agentami AI.",
+      "displayName": "Imię",
+      "email": "E-mail",
+      "password": "Hasło",
+      "submitting": "Tworzenie…",
+      "submit": "Utwórz konto",
+      "login": "Masz już konto?",
+      "signIn": "Zaloguj się"
+    },
+    "forgot": {
+      "checkEmail": "Sprawdź swoją skrzynkę e-mail",
+      "checkEmailBody": "Jeśli konto dla tego adresu istnieje, wkrótce otrzymasz link do resetowania hasła.",
+      "checkEmailHint": "Link wygasa za 1 godzinę. Sprawdź folder ze spamem, jeśli go nie widzisz.",
+      "backToLogin": "Powrót do logowania",
+      "title": "Zresetuj hasło",
+      "description": "Podaj swój e-mail, a wyślemy Ci link do resetowania hasła.",
+      "email": "E-mail",
+      "submitting": "Wysyłanie…",
+      "submit": "Wyślij link do resetowania hasła"
+    },
+    "reset": {
+      "invalidTitle": "Nieprawidłowy link",
+      "invalid": "Ten link do resetowania hasła jest nieprawidłowy lub wygasł.",
+      "requestNew": "Poproś o nowy link",
+      "title": "Ustaw nowe hasło",
+      "description": "Wybierz silne hasło zawierające co najmniej 12 znaków.",
+      "password": "Nowe hasło",
+      "submitting": "Zapisywanie…",
+      "submit": "Ustaw hasło"
+    },
+    "verify": {
+      "errorTitle": "Link wygasł",
+      "error": "Ten link jest nieprawidłowy lub wygasł. Poproś o nowy.",
+      "successTitle": "E-mail zweryfikowany",
+      "success": "Wszystko gotowe. Trwa przekierowywanie…",
+      "loadingTitle": "Weryfikowanie Twojego e-maila…",
+      "loading": "Chwileczkę."
+    }
+  },
   "landing": {
+    "header": {
+      "login": "Zaloguj się",
+      "signup": "Zarejestruj się"
+    },
     "search": {
       "label": "Szukaj",
       "hint": "Wyszukiwanie z AI — już wkrótce",
@@ -17,8 +120,8 @@
       ]
     },
     "meta": {
-      "title": "tendersbay — Europejskie przetargi wygrane przez twoich agentów AI",
-      "description": "Agenci AI, którzy wytropią właściwe europejskie zamówienia publiczne, zmiażdżą papierkową robotę i doprowadzą twoje MŚP aż do wygranej."
+      "title": "tendersbay — Przetargi w Europie, rozstrzygnięte z agentami AI",
+      "description": "Agenci AI, którzy wytropią właściwe przetargi i zamówienia publiczne w Europie, zmiażdżą papierkową robotę i doprowadzą twoje MŚP aż do udzielenia zamówienia."
     },
     "nav": {
       "problem": "Koszt",
@@ -152,6 +255,86 @@
       "daysLeft": "{{count}} dni"
     }
   },
+  "shell": {
+    "nav": {
+      "today": "Dziś",
+      "explore": "Odkrywaj",
+      "workbenches": "Workbenches"
+    },
+    "recent": "Ostatnie",
+    "palette": {
+      "trigger": "Szukaj lub zapytaj…",
+      "label": "Paleta poleceń",
+      "placeholder": "Szukaj lub zapytaj o cokolwiek…",
+      "askAgent": "Zapytaj agenta: „{{query}}”",
+      "sections": {
+        "navigate": "Przejdź do",
+        "recent": "Ostatnie workbenches",
+        "workspaces": "Workspaces"
+      },
+      "workspaceSettings": "Ustawienia workspace",
+      "accountSettings": "Ustawienia konta",
+      "allWorkspaces": "Wszystkie workspace"
+    },
+    "user": {
+      "settings": "Ustawienia",
+      "logout": "Wyloguj się"
+    }
+  },
+  "tenders": {
+    "results_one": "{{count}} przetarg",
+    "results_few": "{{count}} przetargi",
+    "results_many": "{{count}} przetargów",
+    "results_other": "{{count}} przetargu",
+    "searching": "Wyszukiwanie…",
+    "empty": {
+      "title": "Nie znaleziono przetargów",
+      "description": "Spróbuj szerszego zapytania lub mniejszej liczby filtrów."
+    },
+    "error": "Wyszukiwanie jest obecnie niedostępne — spróbuj ponownie za chwilę.",
+    "loadMore": "Wczytaj więcej",
+    "deadline": {
+      "days_one": "{{count}} dzień pozostał",
+      "days_few": "{{count}} dni pozostały",
+      "days_many": "{{count}} dni pozostało",
+      "days_other": "{{count}} dnia pozostało",
+      "today": "Zamyka się dziś",
+      "expired": "Zamknięty"
+    },
+    "value": {
+      "unknown": "Wartość nieujawniona"
+    },
+    "status": {
+      "open": "Otwarty",
+      "awarded": "Udzielony",
+      "cancelled": "Anulowany",
+      "closed": "Zamknięty",
+      "unknown": "—"
+    }
+  },
+  "today": {
+    "recommended": {
+      "title": "Polecane dla Ciebie",
+      "seeAll": "Wszystko w sekcji Odkrywaj →"
+    },
+    "greeting": {
+      "morning": "Dzień dobry.",
+      "afternoon": "Miłego popołudnia.",
+      "evening": "Dobry wieczór.",
+      "morningNamed": "Dzień dobry, {{name}}.",
+      "afternoonNamed": "Miłego popołudnia, {{name}}.",
+      "eveningNamed": "Dobry wieczór, {{name}}."
+    },
+    "resume": {
+      "title": "Kontynuuj od miejsca przerwania",
+      "untitled": "Rozmowa bez tytułu"
+    },
+    "explore": {
+      "title": "Znajdź swój następny przetarg",
+      "description": "Zapytaj agenta o rynki, wymagania lub konkretny przetarg — spersonalizowane rekomendacje pojawią się tutaj, gdy ukształtują się twoje profile wyszukiwania.",
+      "action": "Otwórz Odkrywaj"
+    }
+  },
   "workspace": {
     "common": {
       "loading": "Ładowanie…",
@@ -273,6 +456,7 @@
       "signIn": "Zaloguj się, aby dołączyć"
     },
     "switcher": {
+      "settings": "Ustawienia workspace",
       "label": "Przestrzenie robocze",
       "manage": "Wszystkie przestrzenie robocze"
     }

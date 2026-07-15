@@ -1,16 +1,17 @@
-import { Link, Outlet, useParams } from '@tanstack/react-router';
+import { Outlet, useNavigate, useParams } from '@tanstack/react-router';
+import { Button } from '@tendersbay/components/core';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageHeader } from '~/features/account/components/organisms';
 import { AccountLayout } from '~/features/account/components/templates/account-layout';
 import { WorkspaceContext } from '~/features/workspace/context';
 import { useWorkspace } from '~/features/workspace/hooks';
-import { BTN_SECONDARY } from '~/features/workspace/ui';
 import { useWorkspaceStore } from '~/store/workspace';
 
 export function WorkspaceLayout() {
   const { workspaceId } = useParams({ from: '/_authenticated/workspaces/$workspaceId' });
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data, loading, error, refetch } = useWorkspace(workspaceId);
   const currentWorkspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
   const setCurrentWorkspace = useWorkspaceStore((s) => s.setCurrentWorkspace);
@@ -42,9 +43,9 @@ export function WorkspaceLayout() {
           <p className="text-sm text-ink-700">
             {error ?? t('workspace.errors.notFound', 'This workspace is unavailable.')}
           </p>
-          <Link to="/workspaces" className={BTN_SECONDARY}>
+          <Button variant="ghost" onPress={() => void navigate({ to: '/workspaces' })}>
             {t('workspace.nav.allWorkspaces', 'All workspaces')}
-          </Link>
+          </Button>
         </div>
       </AccountLayout>
     );

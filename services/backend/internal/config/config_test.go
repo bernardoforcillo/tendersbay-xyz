@@ -35,3 +35,37 @@ func TestFromEnvOverrides(t *testing.T) {
 		t.Errorf("overrides not applied: %+v", cfg)
 	}
 }
+
+func TestFromEnv_TenderSearchDefaults(t *testing.T) {
+	t.Setenv("QDRANT_URL", "")
+	t.Setenv("OLLAMA_BASE_URL", "")
+	t.Setenv("EMBEDDING_MODEL", "")
+	t.Setenv("REDIS_URL", "")
+
+	cfg := FromEnv()
+	if cfg.QdrantURL != "http://localhost:6333" {
+		t.Errorf("QdrantURL = %q, want http://localhost:6333", cfg.QdrantURL)
+	}
+	if cfg.OllamaBaseURL != "http://localhost:11434" {
+		t.Errorf("OllamaBaseURL = %q, want http://localhost:11434", cfg.OllamaBaseURL)
+	}
+	if cfg.EmbeddingModel != "embeddinggemma:latest" {
+		t.Errorf("EmbeddingModel = %q, want embeddinggemma:latest", cfg.EmbeddingModel)
+	}
+	if cfg.RedisURL != "redis://localhost:6379" {
+		t.Errorf("RedisURL = %q, want redis://localhost:6379", cfg.RedisURL)
+	}
+}
+
+func TestFromEnv_TenderSearchOverrides(t *testing.T) {
+	t.Setenv("QDRANT_URL", "http://qdrant.internal:6333")
+	t.Setenv("OLLAMA_BASE_URL", "http://ollama.internal:11434")
+	t.Setenv("EMBEDDING_MODEL", "custom-model")
+	t.Setenv("REDIS_URL", "redis://redis.internal:6379")
+
+	cfg := FromEnv()
+	if cfg.QdrantURL != "http://qdrant.internal:6333" || cfg.OllamaBaseURL != "http://ollama.internal:11434" ||
+		cfg.EmbeddingModel != "custom-model" || cfg.RedisURL != "redis://redis.internal:6379" {
+		t.Errorf("overrides not applied: %+v", cfg)
+	}
+}
