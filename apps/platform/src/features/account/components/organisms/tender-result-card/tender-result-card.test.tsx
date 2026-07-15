@@ -72,6 +72,21 @@ describe('TenderResultCard', () => {
     expect(screen.getByTitle('Italy')).toBeInTheDocument();
   });
 
+  it('drops the country prefix and shows the category as a subtitle', () => {
+    render(
+      <TenderResultCard
+        tender={fixture({
+          country: 'ITA',
+          title: 'Italia – Apparecchi per angiografia – Affidamento della fornitura',
+        })}
+      />,
+    );
+    // Object leads as the title, category becomes the subtitle, country is gone.
+    expect(screen.getByText('Affidamento della fornitura')).toBeInTheDocument();
+    expect(screen.getByText('Apparecchi per angiografia')).toBeInTheDocument();
+    expect(screen.queryByText(/^Italia/)).not.toBeInTheDocument();
+  });
+
   it('omits the buyer line when buyerName is empty', () => {
     render(<TenderResultCard tender={fixture({ buyerName: '' })} />);
     expect(screen.queryByText('City of Lisbon')).not.toBeInTheDocument();

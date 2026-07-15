@@ -44,6 +44,7 @@ export function TenderResultCard({ tender, className }: TenderResultCardProps) {
 
   const value = formatTenderValue(tender.value, tender.currency, i18n.language);
   const statusLabel = t(`tenders.status.${tender.status}`, { defaultValue: tender.status });
+  const { title, category } = tenderTitle(tender.title, tender.country);
 
   return (
     <Card
@@ -77,9 +78,8 @@ export function TenderResultCard({ tender, className }: TenderResultCardProps) {
         )}
       </div>
 
-      <p className="mt-2.5 line-clamp-2 text-sm font-medium leading-snug text-ink-900">
-        {tenderTitle(tender.title, tender.country)}
-      </p>
+      <p className="mt-2.5 line-clamp-2 text-sm font-medium leading-snug text-ink-900">{title}</p>
+      {category && <p className="mt-1 truncate text-xs font-medium text-ink-600">{category}</p>}
       {tender.buyerName && (
         <p className="mt-0.5 truncate text-xs text-ink-500">{tender.buyerName}</p>
       )}

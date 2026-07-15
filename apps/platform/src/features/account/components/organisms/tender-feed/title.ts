@@ -1,16 +1,26 @@
 import { countryAlpha2 } from './country';
 
 /**
- * Notice titles arrive with the country spelled out as a lead segment, in the
- * notice's own language and set off by a spaced dash or a colon — e.g.
- * "Italia – Apparecchi per angiografia – Affidamento della fornitura …". The
- * card already shows the origin as a flag, so that country prefix is redundant.
- * `tenderTitle` drops it and lets the title lead with the actual object.
+ * Notice titles arrive as "Country – Category – Object" in the notice's own
+ * language — e.g. "Italia – Apparecchi per angiografia – Affidamento della
+ * fornitura …". The card shows origin as a flag, so the country prefix is
+ * redundant; the category is a classification best shown as a subtitle. So
+ * `tenderTitle` returns the two useful parts:
  *
- * The prefix is removed *only* when the lead segment is genuinely this tender's
- * country name (matched across the EU languages, accent-insensitively), so any
- * other dash in the title — including a legitimate leading clause — is kept.
+ * - `title`   — the object of the contract (the notice's real headline),
+ * - `category` — the subject classification, or null when the notice has none.
+ *
+ * The country prefix is only stripped when the lead segment is genuinely this
+ * tender's country name (matched across the EU languages, accent-insensitively),
+ * and the category is only split off once that structured prefix is confirmed —
+ * so an ordinary title with a stray dash or colon is returned whole, no
+ * category, nothing mangled.
  */
+
+export type TenderTitle = {
+  title: string;
+  category: string | null;
+};
 
 // The 24 official EU languages: a notice's country name is spelled in one of
 // them, so this is the set we match the lead segment against.
@@ -72,20 +82,31 @@ function countryNames(code: string): Set<string> {
   return names;
 }
 
-// Splits a title into its lead segment and the remainder at the first spaced
-// dash (– — -) or colon separator. Non-greedy, so it stops at the first one.
-const LEAD_SEGMENT = /^(.+?)(?:\s+[–—-]|:)\s+(.+)$/u;
+// The country prefix is set off by a spaced dash (– — -) or a colon; the
+// category from the object by a spaced dash. Both non-greedy — first separator
+// wins.
+const COUNTRY_PREFIX = /^(.+?)(?:\s+[–—-]|:)\s+(.+)$/u;
+const CATEGORY_SPLIT = /^(.+?)\s+[–—-]\s+(.+)$/u;
 
-/** The tender title with its redundant leading country name removed. */
-export function tenderTitle(rawTitle: string, country: string): string {
+/** Splits a tender's raw title into its object headline and category subtitle. */
+export function tenderTitle(rawTitle: string, country: string): TenderTitle {
   const title = rawTitle.trim();
-  const match = LEAD_SEGMENT.exec(title);
-  const lead = match?.[1];
-  const rest = match?.[2];
-  if (lead === undefined || rest === undefined) return title;
 
-  if (countryNames(country).has(normalize(lead))) {
-    return rest.trim() || title;
+  // Strip the leading country name — but only if the lead segment really is
+  // this tender's country. Otherwise the title has no structured prefix.
+  const prefix = COUNTRY_PREFIX.exec(title);
+  const lead = prefix?.[1];
+  const afterCountry = prefix?.[2]?.trim();
+  if (lead === undefined || !afterCountry || !countryNames(country).has(normalize(lead))) {
+    return { title, category: null };
   }
-  return title;
+
+  // What's left is "Category – Object" (or just the object). Pull the leading
+  // category out as the subtitle, keeping any further dashes with the object.
+  const split = CATEGORY_SPLIT.exec(afterCountry);
+  const category = split?.[1]?.trim();
+  const object = split?.[2]?.trim();
+  if (!category || !object) return { title: afterCountry, category: null };
+
+  return { title: object, category };
 }

@@ -2,49 +2,70 @@ import { describe, expect, it } from 'vitest';
 import { tenderTitle } from './title';
 
 describe('tenderTitle', () => {
-  it('strips the leading country name from a real notice title', () => {
+  it('splits a real notice into object title and category subtitle', () => {
     const raw =
       'Italia – Apparecchi per angiografia – Affidamento della fornitura ' +
       '"chiavi in mano" di n. 1 angiografo biplano';
-    expect(tenderTitle(raw, 'ITA')).toBe(
-      'Apparecchi per angiografia – Affidamento della fornitura ' +
-        '"chiavi in mano" di n. 1 angiografo biplano',
-    );
+    expect(tenderTitle(raw, 'ITA')).toEqual({
+      title: 'Affidamento della fornitura "chiavi in mano" di n. 1 angiografo biplano',
+      category: 'Apparecchi per angiografia',
+    });
   });
 
   it('matches the country name in any EU language, not just the local one', () => {
-    expect(tenderTitle('Italy – Angiography equipment', 'ITA')).toBe('Angiography equipment');
-    expect(tenderTitle('France – Rénovation énergétique', 'FRA')).toBe('Rénovation énergétique');
-    expect(tenderTitle('Deutschland – IT-Beratung', 'DEU')).toBe('IT-Beratung');
+    expect(tenderTitle('Italy – Equipment – Angiography supply', 'ITA')).toEqual({
+      title: 'Angiography supply',
+      category: 'Equipment',
+    });
+    expect(tenderTitle('Deutschland – IT – IT-Sicherheitsberatung', 'DEU')).toEqual({
+      title: 'IT-Sicherheitsberatung',
+      category: 'IT',
+    });
   });
 
-  it('handles a colon separator as well as a dash', () => {
-    expect(tenderTitle('Italia: Servizi di pulizia', 'ITA')).toBe('Servizi di pulizia');
+  it('keeps further dashes with the object, only pulling the first category out', () => {
+    expect(tenderTitle('Portugal – Limpeza – Recolha – e transporte de resíduos', 'PRT')).toEqual({
+      title: 'Recolha – e transporte de resíduos',
+      category: 'Limpeza',
+    });
   });
 
-  it('keeps dashes that belong to the title, only dropping the country', () => {
-    // The remaining "category – object" dash must survive.
-    expect(tenderTitle('Portugal – Limpeza – Recolha de resíduos', 'PRT')).toBe(
-      'Limpeza – Recolha de resíduos',
-    );
+  it('returns no category when the notice has only a country and an object', () => {
+    expect(tenderTitle('Italia – Servizi di pulizia', 'ITA')).toEqual({
+      title: 'Servizi di pulizia',
+      category: null,
+    });
   });
 
-  it('leaves the title untouched when the lead segment is not the country', () => {
-    expect(tenderTitle('Framework agreement – supply of vehicles', 'ITA')).toBe(
-      'Framework agreement – supply of vehicles',
-    );
-    expect(tenderTitle('IT-Sicherheitsberatung und Penetrationstests', 'DEU')).toBe(
-      'IT-Sicherheitsberatung und Penetrationstests',
-    );
+  it('accepts a colon after the country as well as a dash', () => {
+    expect(tenderTitle('Italia: Apparecchi – Fornitura', 'ITA')).toEqual({
+      title: 'Fornitura',
+      category: 'Apparecchi',
+    });
   });
 
-  it('leaves the title untouched when the country is unknown', () => {
-    expect(tenderTitle('Italia – Apparecchi', 'ZZZ')).toBe('Italia – Apparecchi');
+  it('leaves the title whole when the lead segment is not the country', () => {
+    expect(tenderTitle('Framework agreement – supply of vehicles', 'ITA')).toEqual({
+      title: 'Framework agreement – supply of vehicles',
+      category: null,
+    });
+    expect(tenderTitle('IT-Sicherheitsberatung und Penetrationstests', 'DEU')).toEqual({
+      title: 'IT-Sicherheitsberatung und Penetrationstests',
+      category: null,
+    });
   });
 
-  it('returns a prefix-less title unchanged', () => {
-    expect(tenderTitle('Supply of road maintenance services', 'PT')).toBe(
-      'Supply of road maintenance services',
-    );
+  it('leaves the title whole when the country is unknown', () => {
+    expect(tenderTitle('Italia – Apparecchi – Fornitura', 'ZZZ')).toEqual({
+      title: 'Italia – Apparecchi – Fornitura',
+      category: null,
+    });
+  });
+
+  it('returns a prefix-less title unchanged with no category', () => {
+    expect(tenderTitle('Supply of road maintenance services', 'PT')).toEqual({
+      title: 'Supply of road maintenance services',
+      category: null,
+    });
   });
 });
