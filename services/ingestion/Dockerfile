@@ -7,6 +7,10 @@
 # `replace` in go.mod — so the whole tree is copied and go.work drives
 # resolution.
 FROM golang:1.26-alpine AS builder
+# git is required for Go to resolve the GOPRIVATE internal modules through
+# go.work; the alpine image ships without it, so `go mod download` otherwise
+# fails with `exec: "git": executable file not found in $PATH`.
+RUN apk add --no-cache git
 WORKDIR /workspace
 COPY . .
 
