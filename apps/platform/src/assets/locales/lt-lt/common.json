@@ -127,7 +127,12 @@
         "sector": "Sektorius",
         "deadline": "Terminas",
         "value": "Vertė"
-      }
+      },
+      "loading": "Ieškoma…",
+      "empty": "Pirkimų nerasta",
+      "error": "Paieška šiuo metu nepasiekiama — pabandykite dar kartą po akimirkos.",
+      "results_one": "{{count}} pirkimas",
+      "results_other": "{{count}} pirkimų"
     },
     "meta": {
       "title": "tendersbay — Europos viešieji pirkimai su jūsų DI agentais",

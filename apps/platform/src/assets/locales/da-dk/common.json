@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Frist",
         "value": "Værdi"
-      }
+      },
+      "loading": "Søger…",
+      "empty": "Ingen udbud fundet",
+      "error": "Søgning er ikke tilgængelig lige nu — prøv igen om et øjeblik.",
+      "results_one": "{{count}} udbud",
+      "results_other": "{{count}} udbud"
     },
     "meta": {
       "title": "tendersbay — Offentlige udbud, tildelt af dine AI-agenter",

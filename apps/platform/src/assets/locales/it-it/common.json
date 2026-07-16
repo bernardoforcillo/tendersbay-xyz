@@ -127,7 +127,12 @@
         "sector": "Settore",
         "deadline": "Scadenza",
         "value": "Valore"
-      }
+      },
+      "loading": "Ricerca in corso…",
+      "empty": "Nessuna gara trovata",
+      "error": "La ricerca non è disponibile al momento — riprova tra poco.",
+      "results_one": "{{count}} gara",
+      "results_other": "{{count}} gare"
     },
     "meta": {
       "title": "tendersbay — Bandi di gara, aggiudicati dai tuoi agenti AI",

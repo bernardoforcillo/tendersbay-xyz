@@ -127,7 +127,12 @@
         "sector": "Earnáil",
         "deadline": "Spriocdháta",
         "value": "Luach"
-      }
+      },
+      "loading": "Ag cuardach…",
+      "empty": "Níor aimsíodh aon tairiscint",
+      "error": "Níl an cuardach ar fáil faoi láthair — bain triail eile as i gceann nóiméid.",
+      "results_one": "{{count}} thairiscint",
+      "results_other": "{{count}} tairiscint"
     },
     "meta": {
       "title": "tendersbay — Tairiscintí poiblí, bronnta ag do ghníomhairí AI",

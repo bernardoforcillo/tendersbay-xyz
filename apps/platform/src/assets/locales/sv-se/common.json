@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Sista dag",
         "value": "Värde"
-      }
+      },
+      "loading": "Söker…",
+      "empty": "Inga upphandlingar hittades",
+      "error": "Sökningen är inte tillgänglig just nu — försök igen om en stund.",
+      "results_one": "{{count}} upphandling",
+      "results_other": "{{count}} upphandlingar"
     },
     "meta": {
       "title": "tendersbay — Offentliga upphandlingar, tilldelade av AI-agenter",

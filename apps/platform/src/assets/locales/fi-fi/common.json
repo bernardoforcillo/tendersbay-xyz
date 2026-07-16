@@ -127,7 +127,12 @@
         "sector": "Toimiala",
         "deadline": "Määräaika",
         "value": "Arvo"
-      }
+      },
+      "loading": "Haetaan…",
+      "empty": "Hankintoja ei löytynyt",
+      "error": "Haku ei ole juuri nyt käytettävissä — yritä hetken kuluttua uudelleen.",
+      "results_one": "{{count}} hankinta",
+      "results_other": "{{count}} hankintaa"
     },
     "meta": {
       "title": "tendersbay — Julkiset hankinnat, tekoälyagenttiesi valmistelemina",

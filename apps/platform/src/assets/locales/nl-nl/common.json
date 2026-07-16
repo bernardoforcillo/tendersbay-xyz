@@ -127,7 +127,12 @@
         "sector": "Sector",
         "deadline": "Deadline",
         "value": "Waarde"
-      }
+      },
+      "loading": "Zoeken…",
+      "empty": "Geen aanbestedingen gevonden",
+      "error": "Zoeken is nu niet beschikbaar — probeer het zo weer.",
+      "results_one": "{{count}} aanbesteding",
+      "results_other": "{{count}} aanbestedingen"
     },
     "meta": {
       "title": "tendersbay — Openbare aanbestedingen, gegund door uw AI-agenten",

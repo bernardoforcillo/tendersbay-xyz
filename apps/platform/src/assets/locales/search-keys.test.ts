@@ -5,6 +5,11 @@ type Search = {
   hint?: string;
   examples?: string[];
   filters?: { country?: string; sector?: string; deadline?: string; value?: string };
+  loading?: string;
+  empty?: string;
+  error?: string;
+  results_one?: string;
+  results_other?: string;
 };
 
 const modules = import.meta.glob('./*/common.json', { eager: true }) as Record<
@@ -38,5 +43,23 @@ describe('landing.search locale keys', () => {
     for (const key of FILTER_KEYS) {
       expect(filters?.[key], `filters.${key}`).toBeTruthy();
     }
+  });
+
+  // The real inline search adds honest state copy — loading, empty (no
+  // sample fallback), error, and a pluralized result count for the aria-live
+  // announcement. A missing/blank key in any locale must fail loudly here.
+  const STATE_KEYS = ['loading', 'empty', 'error', 'results_one', 'results_other'] as const;
+
+  it.each(entries)('%s defines every inline-search state string', (_path, mod) => {
+    const search = mod.default.landing.search;
+    for (const key of STATE_KEYS) {
+      expect(search?.[key], key).toBeTruthy();
+    }
+  });
+
+  it.each(entries)('%s keeps a {{count}} placeholder in both result plurals', (_path, mod) => {
+    const search = mod.default.landing.search;
+    expect(search?.results_one, 'results_one has {{count}}').toContain('{{count}}');
+    expect(search?.results_other, 'results_other has {{count}}').toContain('{{count}}');
   });
 });

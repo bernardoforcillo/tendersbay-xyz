@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Termín",
         "value": "Hodnota"
-      }
+      },
+      "loading": "Vyhľadávanie…",
+      "empty": "Nenašli sa žiadne zákazky",
+      "error": "Vyhľadávanie je momentálne nedostupné — skúste to o chvíľu znova.",
+      "results_one": "{{count}} zákazka",
+      "results_other": "{{count}} zákaziek"
     },
     "meta": {
       "title": "tendersbay — Verejné obstarávanie v Európe s vašimi AI agentmi",

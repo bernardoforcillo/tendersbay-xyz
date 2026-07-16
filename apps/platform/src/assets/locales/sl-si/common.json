@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Rok",
         "value": "Vrednost"
-      }
+      },
+      "loading": "Iskanje…",
+      "empty": "Ni najdenih razpisov",
+      "error": "Iskanje trenutno ni na voljo — poskusite znova čez trenutek.",
+      "results_one": "{{count}} razpis",
+      "results_other": "{{count}} razpisov"
     },
     "meta": {
       "title": "tendersbay — Javna naročila v Evropi, dodeljena z agenti UI",

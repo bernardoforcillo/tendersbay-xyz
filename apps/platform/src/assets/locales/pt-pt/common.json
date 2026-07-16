@@ -127,7 +127,12 @@
         "sector": "Setor",
         "deadline": "Prazo",
         "value": "Valor"
-      }
+      },
+      "loading": "A pesquisar…",
+      "empty": "Não foram encontrados concursos",
+      "error": "A pesquisa não está disponível de momento — tente novamente daqui a instantes.",
+      "results_one": "{{count}} concurso",
+      "results_other": "{{count}} concursos"
     },
     "meta": {
       "title": "tendersbay — Concursos públicos, adjudicados por agentes de IA",

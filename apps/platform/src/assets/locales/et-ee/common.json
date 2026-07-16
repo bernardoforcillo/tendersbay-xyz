@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Tähtaeg",
         "value": "Väärtus"
-      }
+      },
+      "loading": "Otsimine…",
+      "empty": "Hankeid ei leitud",
+      "error": "Otsing ei ole hetkel saadaval — proovige veidi hiljem uuesti.",
+      "results_one": "{{count}} hange",
+      "results_other": "{{count}} hanget"
     },
     "meta": {
       "title": "tendersbay — Euroopa riigihanked, lepinguni teie AI-agentide abil",

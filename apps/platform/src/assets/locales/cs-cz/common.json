@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Termín",
         "value": "Hodnota"
-      }
+      },
+      "loading": "Vyhledávání…",
+      "empty": "Nenalezeny žádné zakázky",
+      "error": "Vyhledávání je momentálně nedostupné — zkuste to za chvíli znovu.",
+      "results_one": "{{count}} zakázka",
+      "results_other": "{{count}} zakázek"
     },
     "meta": {
       "title": "tendersbay — Veřejné zakázky v Evropě, přidělené AI agenty",
