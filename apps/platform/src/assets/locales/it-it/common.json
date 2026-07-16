@@ -144,7 +144,8 @@
       "subtitle": "Stanotte scade una gara col tuo nome sopra. I grandi ci hanno messo una squadra. Tu hai tre schede aperte in Excel. Finisce qui — agenti AI che la trovano, sbranano la burocrazia e ti mettono in gara. Mentre dormi.",
       "ctaPrimary": "Metti al lavoro i tuoi agenti",
       "ctaSecondary": "Guarda la vision",
-      "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"]
+      "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"],
+      "deckLabel": "Risultati di esempio"
     },
     "proof": {
       "lead": "Ogni anno in Europa si spendono oltre duemila miliardi di euro di denaro pubblico. La maggior parte passa da bandi di gara che non vedi mai.",

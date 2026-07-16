@@ -144,7 +144,8 @@
       "subtitle": "Esta noite fecha um concurso com o seu nome. Os grandes já têm uma equipa nele. Você tem três separadores abertos no Excel. Acaba aqui — agentes de IA que o encontram, despedaçam a burocracia e põem-no na proposta. Enquanto dorme.",
       "ctaPrimary": "Ponha os seus agentes a trabalhar",
       "ctaSecondary": "Veja a visão",
-      "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"]
+      "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"],
+      "deckLabel": "Resultados de exemplo"
     },
     "proof": {
       "lead": "Todos os anos são gastos na Europa mais de dois biliões de euros de dinheiro público. A maior parte passa por concursos públicos que você nunca vê.",

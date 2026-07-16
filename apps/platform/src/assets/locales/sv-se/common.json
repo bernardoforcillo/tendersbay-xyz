@@ -144,7 +144,8 @@
       "subtitle": "Ikväll stänger en upphandling med ditt namn på. De stora aktörerna har redan ett team på den. Du har tre flikar öppna i Excel. Det slutar här — AI-agenter som hittar den, sliter sönder pappersarbetet och placerar dig i anbudet. Medan du sover.",
       "ctaPrimary": "Sätt dina agenter i arbete",
       "ctaSecondary": "Se visionen",
-      "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"]
+      "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"],
+      "deckLabel": "Exempelresultat"
     },
     "proof": {
       "lead": "Varje år spenderas i Europa över två biljoner euro av offentliga medel. Det mesta går genom offentliga upphandlingar som du aldrig ser.",

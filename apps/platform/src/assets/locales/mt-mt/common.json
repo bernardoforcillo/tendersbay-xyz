@@ -144,7 +144,8 @@
       "subtitle": "Illejla tagħlaq offerta b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
       "ctaPrimary": "Poġġi l-aġenti tiegħek jaħdmu",
       "ctaSecondary": "Ara l-viżjoni",
-      "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"]
+      "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"],
+      "deckLabel": "Riżultati ta' eżempju"
     },
     "proof": {
       "lead": "Kull sena fl-Ewropa jintnefqu aktar minn żewġ triljun ewro ta’ flus pubbliċi. Il-biċċa l-kbira tgħaddi minn sejħiet għall-offerti li qatt ma tara.",

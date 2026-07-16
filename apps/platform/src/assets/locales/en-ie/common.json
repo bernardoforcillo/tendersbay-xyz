@@ -144,7 +144,8 @@
       "subtitle": "A tender with your name on it closes tonight. The big players have a team on it. You have three tabs open in Excel. That ends here — AI agents that find it, gut the paperwork, and put you on the bid. While you sleep.",
       "ctaPrimary": "Put your agents to work",
       "ctaSecondary": "See the vision",
-      "trust": ["27 countries, one search", "Agents that never sleep", "Paperwork: handled"]
+      "trust": ["27 countries, one search", "Agents that never sleep", "Paperwork: handled"],
+      "deckLabel": "Sample results"
     },
     "proof": {
       "lead": "Over two trillion euro of public money is spent across Europe every year. Most of it moves through tenders you never see.",

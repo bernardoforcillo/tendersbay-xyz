@@ -144,7 +144,8 @@
       "subtitle": "Nocoj se zapre razpis z vašim imenom. Veliki igralci že imajo ekipo na njem. Vi imate odprte tri zavihke v Excelu. Tu je konec — agenti UI, ki ga najdejo, raztrgajo birokracijo in vas postavijo v ponudbo. Medtem ko spite.",
       "ctaPrimary": "Pošljite svoje agente na delo",
       "ctaSecondary": "Oglejte si vizijo",
-      "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"]
+      "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"],
+      "deckLabel": "Vzorčni rezultati"
     },
     "proof": {
       "lead": "Vsako leto se v Evropi porabi več kot dva bilijona evrov javnega denarja. Večina gre skozi javna naročila, ki jih nikoli ne vidite.",

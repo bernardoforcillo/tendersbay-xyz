@@ -144,7 +144,8 @@
       "subtitle": "Esta noche se cierra una licitación con tu nombre. Los grandes ya tienen un equipo en ella. Tú tienes tres pestañas abiertas en Excel. Aquí se acaba — agentes de IA que la encuentran, destrozan el papeleo y te ponen en la oferta. Mientras duermes.",
       "ctaPrimary": "Pon a trabajar a tus agentes",
       "ctaSecondary": "Ver la visión",
-      "trust": ["27 países, una búsqueda", "Agentes que nunca duermen", "Papeleo: resuelto"]
+      "trust": ["27 países, una búsqueda", "Agentes que nunca duermen", "Papeleo: resuelto"],
+      "deckLabel": "Resultados de ejemplo"
     },
     "proof": {
       "lead": "Cada año se gastan en Europa más de dos billones de euros de dinero público. La mayor parte pasa por licitaciones que nunca ves.",

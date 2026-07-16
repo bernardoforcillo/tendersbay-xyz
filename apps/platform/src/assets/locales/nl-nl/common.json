@@ -144,7 +144,8 @@
       "subtitle": "Vanavond sluit een aanbesteding met uw naam erop. De grote spelers hebben er al een team op. U heeft drie tabbladen open in Excel. Daar is het mee gedaan — AI-agenten die haar vinden, het papierwerk slopen en u op de inschrijving zetten. Terwijl u slaapt.",
       "ctaPrimary": "Zet uw agenten aan het werk",
       "ctaSecondary": "Bekijk de visie",
-      "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"]
+      "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"],
+      "deckLabel": "Voorbeeldresultaten"
     },
     "proof": {
       "lead": "Elk jaar wordt in Europa ruim twee biljoen euro aan publiek geld uitgegeven. Het meeste loopt via aanbestedingen die u nooit ziet.",
