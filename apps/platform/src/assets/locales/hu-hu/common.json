@@ -127,7 +127,12 @@
         "sector": "Ágazat",
         "deadline": "Határidő",
         "value": "Érték"
-      }
+      },
+      "loading": "Keresés…",
+      "empty": "Nem található pályázat",
+      "error": "A keresés jelenleg nem érhető el — próbálja újra egy pillanat múlva.",
+      "results_one": "{{count}} pályázat",
+      "results_other": "{{count}} pályázat"
     },
     "meta": {
       "title": "tendersbay — Közbeszerzések az odaítélésig, MI-ügynökök csapatával",

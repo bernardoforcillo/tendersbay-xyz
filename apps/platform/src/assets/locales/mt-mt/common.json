@@ -127,7 +127,12 @@
         "sector": "Settur",
         "deadline": "Skadenza",
         "value": "Valur"
-      }
+      },
+      "loading": "Qed infittxu…",
+      "empty": "L-ebda offerta ma nstabet",
+      "error": "It-tfittxija mhix disponibbli bħalissa — erġa' pprova fi ftit ħin.",
+      "results_one": "{{count}} offerta",
+      "results_other": "{{count}} offerta"
     },
     "meta": {
       "title": "tendersbay — Sejħiet għall-offerti, mogħtija mill-aġenti AI",

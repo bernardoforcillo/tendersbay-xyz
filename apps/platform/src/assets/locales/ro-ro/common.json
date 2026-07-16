@@ -127,7 +127,12 @@
         "sector": "Sector",
         "deadline": "Termen",
         "value": "Valoare"
-      }
+      },
+      "loading": "Se caută…",
+      "empty": "Nu s-au găsit licitații",
+      "error": "Căutarea nu este disponibilă momentan — încercați din nou peste puțin timp.",
+      "results_one": "{{count}} licitație",
+      "results_other": "{{count}} de licitații"
     },
     "meta": {
       "title": "tendersbay — Licitații publice, atribuite de agenții dvs. AI",

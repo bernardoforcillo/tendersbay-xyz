@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Termin",
         "value": "Wartość"
-      }
+      },
+      "loading": "Wyszukiwanie…",
+      "empty": "Nie znaleziono przetargów",
+      "error": "Wyszukiwanie jest obecnie niedostępne — spróbuj ponownie za chwilę.",
+      "results_one": "{{count}} przetarg",
+      "results_other": "{{count}} przetargu"
     },
     "meta": {
       "title": "tendersbay — Przetargi w Europie, rozstrzygnięte z agentami AI",

@@ -127,7 +127,12 @@
         "sector": "Branche",
         "deadline": "Frist",
         "value": "Wert"
-      }
+      },
+      "loading": "Suche läuft…",
+      "empty": "Keine Ausschreibungen gefunden",
+      "error": "Die Suche ist momentan nicht verfügbar — versuchen Sie es in Kürze erneut.",
+      "results_one": "{{count}} Ausschreibung",
+      "results_other": "{{count}} Ausschreibungen"
     },
     "meta": {
       "title": "tendersbay — Öffentliche Ausschreibungen, zugeschlagen von KI-Agenten",

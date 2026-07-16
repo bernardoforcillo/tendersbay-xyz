@@ -127,7 +127,12 @@
         "sector": "Sector",
         "deadline": "Deadline",
         "value": "Value"
-      }
+      },
+      "loading": "Searching…",
+      "empty": "No tenders found",
+      "error": "Search is unavailable right now — try again in a moment.",
+      "results_one": "{{count}} tender",
+      "results_other": "{{count}} tenders"
     },
     "meta": {
       "title": "tendersbay — EU public tenders, awarded by your AI agents",

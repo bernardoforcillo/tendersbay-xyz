@@ -127,7 +127,12 @@
         "sector": "Secteur",
         "deadline": "Échéance",
         "value": "Valeur"
-      }
+      },
+      "loading": "Recherche en cours…",
+      "empty": "Aucun marché trouvé",
+      "error": "La recherche est indisponible pour le moment — réessayez dans un instant.",
+      "results_one": "{{count}} marché",
+      "results_other": "{{count}} marchés"
     },
     "meta": {
       "title": "tendersbay — Appels d'offres publics, attribués par vos agents IA",

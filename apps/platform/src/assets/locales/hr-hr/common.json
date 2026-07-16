@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Rok",
         "value": "Vrijednost"
-      }
+      },
+      "loading": "Pretraživanje…",
+      "empty": "Nema pronađenih natječaja",
+      "error": "Pretraživanje trenutačno nije dostupno — pokušajte ponovno za trenutak.",
+      "results_one": "{{count}} natječaj",
+      "results_other": "{{count}} natječaja"
     },
     "meta": {
       "title": "tendersbay — Javni natječaji, dodijeljeni uz vaše AI agente",

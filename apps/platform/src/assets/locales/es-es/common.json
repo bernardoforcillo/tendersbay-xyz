@@ -127,7 +127,12 @@
         "sector": "Sector",
         "deadline": "Plazo",
         "value": "Valor"
-      }
+      },
+      "loading": "Buscando…",
+      "empty": "No se encontraron licitaciones",
+      "error": "La búsqueda no está disponible en este momento — inténtalo de nuevo en un momento.",
+      "results_one": "{{count}} licitación",
+      "results_other": "{{count}} licitaciones"
     },
     "meta": {
       "title": "tendersbay — Licitaciones públicas, adjudicadas por agentes de IA",

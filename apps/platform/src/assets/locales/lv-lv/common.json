@@ -127,7 +127,12 @@
         "sector": "Nozare",
         "deadline": "Termiņš",
         "value": "Vērtība"
-      }
+      },
+      "loading": "Meklē…",
+      "empty": "Iepirkumi nav atrasti",
+      "error": "Meklēšana pašlaik nav pieejama — mēģiniet vēlreiz pēc brīža.",
+      "results_one": "{{count}} iepirkums",
+      "results_other": "{{count}} iepirkumi"
     },
     "meta": {
       "title": "tendersbay — Publiskie iepirkumi Eiropā ar jūsu MI aģentiem",
