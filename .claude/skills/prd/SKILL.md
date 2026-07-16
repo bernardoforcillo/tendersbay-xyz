@@ -14,8 +14,8 @@ findings.
 
 Pipeline position:
 
-    /prd → docs/superpowers/prd/<feature>.md → superpowers:brainstorming → spec → writing-plans
-    (product layer — this skill)               (technical design — existing)
+    /prd → docs/superpowers/prd/YYYY-MM-DD-<feature>.md → superpowers:brainstorming → spec → writing-plans
+    (product layer — this skill)                          (technical design — existing)
 
 ## When NOT to use this
 
