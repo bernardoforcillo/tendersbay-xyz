@@ -312,6 +312,30 @@
       "cancelled": "Отменена",
       "closed": "Затворена",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Държава",
+      "anyCountry": "Всички държави",
+      "sector": "Сектор",
+      "anySector": "Всички сектори",
+      "sectors": {
+        "construction": "Строителство",
+        "it": "ИТ и софтуер",
+        "health": "Здравеопазване",
+        "energy": "Енергетика",
+        "transport": "Транспорт",
+        "education": "Образование",
+        "environment": "Околна среда",
+        "business": "Бизнес услуги"
+      },
+      "status": "Статус",
+      "anyStatus": "Всички статуси",
+      "deadline": "Краен срок",
+      "anyDeadline": "По всяко време",
+      "deadline7": "Следващите 7 дни",
+      "deadline30": "Следващите 30 дни",
+      "deadline90": "Следващите 90 дни",
+      "clear": "Изчисти всичко"
     }
   },
   "today": {

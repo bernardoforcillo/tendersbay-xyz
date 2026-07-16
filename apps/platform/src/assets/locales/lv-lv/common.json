@@ -314,6 +314,30 @@
       "cancelled": "Atcelts",
       "closed": "Slēgts",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Valsts",
+      "anyCountry": "Visas valstis",
+      "sector": "Nozare",
+      "anySector": "Visas nozares",
+      "sectors": {
+        "construction": "Būvniecība",
+        "it": "IT un programmatūra",
+        "health": "Veselība",
+        "energy": "Enerģētika",
+        "transport": "Transports",
+        "education": "Izglītība",
+        "environment": "Vide",
+        "business": "Uzņēmējdarbības pakalpojumi"
+      },
+      "status": "Statuss",
+      "anyStatus": "Visi statusi",
+      "deadline": "Termiņš",
+      "anyDeadline": "Jebkurā laikā",
+      "deadline7": "Nākamās 7 dienas",
+      "deadline30": "Nākamās 30 dienas",
+      "deadline90": "Nākamās 90 dienas",
+      "clear": "Notīrīt visu"
     }
   },
   "today": {

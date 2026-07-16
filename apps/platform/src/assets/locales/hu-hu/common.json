@@ -316,6 +316,30 @@
       "cancelled": "Törölve",
       "closed": "Lezárva",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Ország",
+      "anyCountry": "Összes ország",
+      "sector": "Ágazat",
+      "anySector": "Összes ágazat",
+      "sectors": {
+        "construction": "Építőipar",
+        "it": "IT és szoftver",
+        "health": "Egészségügy",
+        "energy": "Energia",
+        "transport": "Közlekedés",
+        "education": "Oktatás",
+        "environment": "Környezet",
+        "business": "Üzleti szolgáltatások"
+      },
+      "status": "Állapot",
+      "anyStatus": "Összes állapot",
+      "deadline": "Határidő",
+      "anyDeadline": "Bármikor",
+      "deadline7": "Következő 7 nap",
+      "deadline30": "Következő 30 nap",
+      "deadline90": "Következő 90 nap",
+      "clear": "Összes törlése"
     }
   },
   "today": {

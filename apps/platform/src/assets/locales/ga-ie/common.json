@@ -322,6 +322,30 @@
       "cancelled": "Cealaithe",
       "closed": "Dúnta",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Tír",
+      "anyCountry": "Gach tír",
+      "sector": "Earnáil",
+      "anySector": "Gach earnáil",
+      "sectors": {
+        "construction": "Tógáil",
+        "it": "TF agus bogearraí",
+        "health": "Sláinte",
+        "energy": "Fuinneamh",
+        "transport": "Iompar",
+        "education": "Oideachas",
+        "environment": "Comhshaol",
+        "business": "Seirbhísí gnó"
+      },
+      "status": "Stádas",
+      "anyStatus": "Gach stádas",
+      "deadline": "Spriocdháta",
+      "anyDeadline": "Am ar bith",
+      "deadline7": "Chéad 7 lá eile",
+      "deadline30": "Chéad 30 lá eile",
+      "deadline90": "Chéad 90 lá eile",
+      "clear": "Glan gach rud"
     }
   },
   "today": {

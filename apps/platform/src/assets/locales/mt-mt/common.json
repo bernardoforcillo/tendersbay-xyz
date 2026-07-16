@@ -318,6 +318,30 @@
       "cancelled": "Ikkanċellata",
       "closed": "Magħluqa",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Pajjiż",
+      "anyCountry": "Il-pajjiżi kollha",
+      "sector": "Settur",
+      "anySector": "Is-setturi kollha",
+      "sectors": {
+        "construction": "Kostruzzjoni",
+        "it": "IT u software",
+        "health": "Saħħa",
+        "energy": "Enerġija",
+        "transport": "Trasport",
+        "education": "Edukazzjoni",
+        "environment": "Ambjent",
+        "business": "Servizzi tan-negozju"
+      },
+      "status": "Status",
+      "anyStatus": "L-istatusi kollha",
+      "deadline": "Skadenza",
+      "anyDeadline": "Fi kwalunkwe ħin",
+      "deadline7": "Li jmiss 7 ijiem",
+      "deadline30": "Li jmiss 30 jum",
+      "deadline90": "Li jmiss 90 jum",
+      "clear": "Ħassar kollox"
     }
   },
   "today": {

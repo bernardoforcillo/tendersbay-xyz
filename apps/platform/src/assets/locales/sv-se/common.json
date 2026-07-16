@@ -312,6 +312,30 @@
       "cancelled": "Avbruten",
       "closed": "Stängd",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Land",
+      "anyCountry": "Alla länder",
+      "sector": "Sektor",
+      "anySector": "Alla sektorer",
+      "sectors": {
+        "construction": "Bygg",
+        "it": "IT och mjukvara",
+        "health": "Hälsa",
+        "energy": "Energi",
+        "transport": "Transport",
+        "education": "Utbildning",
+        "environment": "Miljö",
+        "business": "Företagstjänster"
+      },
+      "status": "Status",
+      "anyStatus": "Alla statusar",
+      "deadline": "Sista dag",
+      "anyDeadline": "När som helst",
+      "deadline7": "Nästa 7 dagar",
+      "deadline30": "Nästa 30 dagar",
+      "deadline90": "Nästa 90 dagar",
+      "clear": "Rensa allt"
     }
   },
   "today": {

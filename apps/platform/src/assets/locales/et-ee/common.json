@@ -312,6 +312,30 @@
       "cancelled": "Tühistatud",
       "closed": "Suletud",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Riik",
+      "anyCountry": "Kõik riigid",
+      "sector": "Sektor",
+      "anySector": "Kõik sektorid",
+      "sectors": {
+        "construction": "Ehitus",
+        "it": "IT ja tarkvara",
+        "health": "Tervishoid",
+        "energy": "Energeetika",
+        "transport": "Transport",
+        "education": "Haridus",
+        "environment": "Keskkond",
+        "business": "Äriteenused"
+      },
+      "status": "Olek",
+      "anyStatus": "Kõik olekud",
+      "deadline": "Tähtaeg",
+      "anyDeadline": "Ükskõik millal",
+      "deadline7": "Järgmised 7 päeva",
+      "deadline30": "Järgmised 30 päeva",
+      "deadline90": "Järgmised 90 päeva",
+      "clear": "Tühjenda kõik"
     }
   },
   "today": {

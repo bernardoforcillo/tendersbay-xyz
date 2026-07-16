@@ -1,8 +1,18 @@
-import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
+import type { TenderFilters, TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { useCallback, useRef, useState } from 'react';
 import { tenderClient } from '~/lib/api/client';
 
 const PAGE_SIZE = 20;
+
+/**
+ * The tender filters the explore UI can set — a subset of the proto `TenderFilters`
+ * message. Only fields set to a non-empty value constrain the search (an empty or
+ * omitted field means "no constraint"); `search` takes these and `loadMore` reuses
+ * the last set so paging stays within the same filtered result set.
+ */
+export type TenderFilterValues = Partial<
+  Pick<TenderFilters, 'country' | 'cpv' | 'status' | 'deadlineFrom' | 'deadlineTo'>
+>;
 
 function errorMessage(e: unknown): string {
   return e instanceof Error ? e.message : 'Something went wrong';
@@ -19,7 +29,7 @@ export function useTenderSearch(): {
   hasMore: boolean;
   loading: boolean;
   error: string | null;
-  search: (query: string) => Promise<void>;
+  search: (query: string, filters?: TenderFilterValues) => Promise<void>;
   loadMore: () => Promise<void>;
 } {
   const [results, setResults] = useState<TenderResult[]>([]);
@@ -28,20 +38,22 @@ export function useTenderSearch(): {
   const [error, setError] = useState<string | null>(null);
 
   const queryRef = useRef('');
+  const filtersRef = useRef<TenderFilterValues | undefined>(undefined);
   const offsetRef = useRef(0);
   const requestIdRef = useRef(0);
   const inFlightRef = useRef(false);
 
-  const search = useCallback(async (query: string) => {
+  const search = useCallback(async (query: string, filters?: TenderFilterValues) => {
     const requestId = ++requestIdRef.current;
     inFlightRef.current = true;
     queryRef.current = query;
+    filtersRef.current = filters;
     offsetRef.current = 0;
     setLoading(true);
     setError(null);
 
     try {
-      const res = await tenderClient.searchTenders({ query, limit: PAGE_SIZE, offset: 0 });
+      const res = await tenderClient.searchTenders({ query, filters, limit: PAGE_SIZE, offset: 0 });
       if (requestIdRef.current !== requestId) return;
       // Page by rows actually received, not by PAGE_SIZE: the server clamps
       // `limit` to the caller's auth tier (anon < 20), so a page can be short.
@@ -76,6 +88,7 @@ export function useTenderSearch(): {
     try {
       const res = await tenderClient.searchTenders({
         query: queryRef.current,
+        filters: filtersRef.current,
         limit: PAGE_SIZE,
         offset: nextOffset,
       });

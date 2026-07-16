@@ -316,6 +316,30 @@
       "cancelled": "Ακυρώθηκε",
       "closed": "Έκλεισε",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Χώρα",
+      "anyCountry": "Όλες οι χώρες",
+      "sector": "Τομέας",
+      "anySector": "Όλοι οι τομείς",
+      "sectors": {
+        "construction": "Κατασκευές",
+        "it": "IT και λογισμικό",
+        "health": "Υγεία",
+        "energy": "Ενέργεια",
+        "transport": "Μεταφορές",
+        "education": "Εκπαίδευση",
+        "environment": "Περιβάλλον",
+        "business": "Επιχειρηματικές υπηρεσίες"
+      },
+      "status": "Κατάσταση",
+      "anyStatus": "Όλες οι καταστάσεις",
+      "deadline": "Προθεσμία",
+      "anyDeadline": "Οποτεδήποτε",
+      "deadline7": "Επόμενες 7 ημέρες",
+      "deadline30": "Επόμενες 30 ημέρες",
+      "deadline90": "Επόμενες 90 ημέρες",
+      "clear": "Εκκαθάριση όλων"
     }
   },
   "today": {

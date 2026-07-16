@@ -312,6 +312,30 @@
       "cancelled": "Geannuleerd",
       "closed": "Gesloten",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Land",
+      "anyCountry": "Alle landen",
+      "sector": "Sector",
+      "anySector": "Alle sectoren",
+      "sectors": {
+        "construction": "Bouw",
+        "it": "IT & software",
+        "health": "Gezondheidszorg",
+        "energy": "Energie",
+        "transport": "Vervoer",
+        "education": "Onderwijs",
+        "environment": "Milieu",
+        "business": "Zakelijke dienstverlening"
+      },
+      "status": "Status",
+      "anyStatus": "Alle statussen",
+      "deadline": "Deadline",
+      "anyDeadline": "Elk moment",
+      "deadline7": "Komende 7 dagen",
+      "deadline30": "Komende 30 dagen",
+      "deadline90": "Komende 90 dagen",
+      "clear": "Alles wissen"
     }
   },
   "today": {

@@ -312,6 +312,30 @@
       "cancelled": "Annullata",
       "closed": "Chiusa",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Paese",
+      "anyCountry": "Tutti i paesi",
+      "sector": "Settore",
+      "anySector": "Tutti i settori",
+      "sectors": {
+        "construction": "Edilizia",
+        "it": "IT e software",
+        "health": "Sanità",
+        "energy": "Energia",
+        "transport": "Trasporti",
+        "education": "Istruzione",
+        "environment": "Ambiente",
+        "business": "Servizi alle imprese"
+      },
+      "status": "Stato",
+      "anyStatus": "Tutti gli stati",
+      "deadline": "Scadenza",
+      "anyDeadline": "Qualsiasi data",
+      "deadline7": "Prossimi 7 giorni",
+      "deadline30": "Prossimi 30 giorni",
+      "deadline90": "Prossimi 90 giorni",
+      "clear": "Cancella tutto"
     }
   },
   "today": {
