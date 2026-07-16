@@ -146,6 +146,24 @@
       "ctaSecondary": "Veja a visão",
       "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"]
     },
+    "proof": {
+      "lead": "Todos os anos são gastos na Europa mais de dois biliões de euros de dinheiro público. A maior parte passa por concursos públicos que você nunca vê.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "de despesa pública por ano na UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "compradores públicos que abrem concursos"
+        },
+        {
+          "value": "~800,000",
+          "label": "concursos por ano — nenhuma equipa os lê a todos"
+        }
+      ],
+      "source": "Comissão Europeia · TED (Tenders Electronic Daily)"
+    },
     "problem": {
       "title": "O jogo está viciado para o deixar de fora. E está a resultar.",
       "items": [
@@ -164,19 +182,23 @@
       ]
     },
     "agents": {
-      "title": "Três agentes. Não falham, não dormem, não desistem.",
+      "title": "Eis o que os seus agentes fizeram enquanto dormia.",
+      "lead": "Não uma barra de pesquisa mais rápida que ainda tem de conduzir. Uma equipa de agentes que trata o concurso inteiro — encontrar, preparar, vencer — durante a noite, para que acorde já na corrida.",
       "items": [
         {
-          "title": "Encontre",
-          "body": "Vasculham os 27 países todos os dias e mostram-lhe apenas os concursos que valem o seu tempo — à medida do que faz de facto."
+          "time": "02:14",
+          "title": "Encontrou o que lhe serve",
+          "body": "Enquanto o mercado dormia, os agentes vasculharam os 27 países e trouxeram o único concurso que vale o seu tempo — à medida do que faz de facto, não um amontoado de palavras-chave."
         },
         {
-          "title": "Prepare",
-          "body": "Requisitos, certificados, DEUCP, prazos: extraídos, cruzados, montados. A burocracia que o derrubava, tratada."
+          "time": "05:30",
+          "title": "Montou a papelada",
+          "body": "Requisitos lidos, certificados cruzados, o DEUCP montado, cada prazo registado. A burocracia que lhe queimava o fim de semana — pronta antes do café."
         },
         {
-          "title": "Vença",
-          "body": "Transformam o caderno de encargos numa estratégia vencedora, para entrar com o mesmo poder de fogo dos gigantes."
+          "time": "07:00",
+          "title": "Acordou já na corrida",
+          "body": "Sem página em branco. O caderno de encargos tornou-se uma estratégia de concurso, pronta para a sua decisão — o mesmo poder de fogo que os gigantes pagam com um escritório inteiro, à sua espera na secretária."
         }
       ]
     },
@@ -252,8 +274,8 @@
     },
     "cta": {
       "title": "Os seus agentes estão prontos. Só falta você.",
-      "body": "Estamos a ligar a UE mercado a mercado. Inscreva-se na lista — assim que o seu país acender, os seus agentes vão à caça.",
-      "button": "Garanta o seu lugar"
+      "body": "Crie a sua conta e ponha os agentes no seu mercado — encontrar, preparar, ganhar, sem um departamento de concursos próprio.",
+      "button": "Crie a sua conta"
     },
     "tenderCard": {
       "value": "Valor",

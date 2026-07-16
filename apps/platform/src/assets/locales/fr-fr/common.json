@@ -146,6 +146,24 @@
       "ctaSecondary": "Voir la vision",
       "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"]
     },
+    "proof": {
+      "lead": "Chaque année, plus de deux mille milliards d’euros d’argent public sont dépensés en Europe. La plupart passe par des appels d’offres que vous ne voyez jamais.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "de dépenses publiques par an dans l’UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "acheteurs publics qui lancent des appels d’offres"
+        },
+        {
+          "value": "~800,000",
+          "label": "appels d’offres par an — aucune équipe ne les lit tous"
+        }
+      ],
+      "source": "Commission européenne · TED (Tenders Electronic Daily)"
+    },
     "problem": {
       "title": "Le jeu est truqué pour vous tenir dehors. Et ça marche.",
       "items": [
@@ -164,19 +182,23 @@
       ]
     },
     "agents": {
-      "title": "Trois agents. Ils ne ratent rien, ne dorment pas, n'abandonnent jamais.",
+      "title": "Voici ce que vos agents ont fait pendant votre sommeil.",
+      "lead": "Pas une barre de recherche plus rapide que vous devez quand même piloter. Une équipe d’agents qui traite l’appel d’offres de bout en bout — trouver, préparer, remporter — pendant la nuit, pour que vous vous réveilliez déjà dans la course.",
       "items": [
         {
-          "title": "Trouver",
-          "body": "Ils passent les 27 pays au peigne fin chaque jour et ne remontent que les marchés qui valent votre temps — adaptés à ce que vous faites vraiment."
+          "time": "02:14",
+          "title": "Il a trouvé celui qui vous correspond",
+          "body": "Pendant que le marché dormait, les agents ont passé les 27 pays au peigne fin et remonté le seul appel d’offres qui vaut votre temps — adapté à ce que vous faites vraiment, pas un fatras de mots-clés."
         },
         {
-          "title": "Préparer",
-          "body": "Exigences, certificats, DUME, délais : extraits, recoupés, assemblés. La paperasse qui vous brisait, réglée."
+          "time": "05:30",
+          "title": "Il a monté la paperasse",
+          "body": "Exigences lues, certificats appariés, le DUME assemblé, chaque délai consigné. La paperasse qui vous brûlait le week-end — réglée avant le café."
         },
         {
-          "title": "Remporter",
-          "body": "Ils transforment le cahier des charges en stratégie gagnante, pour que vous entriez avec la même puissance de feu que les géants."
+          "time": "07:00",
+          "title": "Vous vous êtes réveillé déjà dans la course",
+          "body": "Pas de page blanche. Le cahier des charges est devenu une stratégie d’offre, prête pour votre décision — la même puissance de feu pour laquelle les géants paient un bureau entier, qui vous attend sur votre bureau."
         }
       ]
     },
@@ -252,8 +274,8 @@
     },
     "cta": {
       "title": "Vos agents sont prêts. Il ne manque que vous.",
-      "body": "Nous allumons l'UE marché après marché. Inscrivez-vous sur la liste — dès que votre pays s'allume, vos agents partent en chasse.",
-      "button": "Réservez votre place"
+      "body": "Créez votre compte et mettez les agents sur votre marché — trouver, préparer, gagner, sans avoir votre propre cellule appels d’offres.",
+      "button": "Créez votre compte"
     },
     "tenderCard": {
       "value": "Valeur",

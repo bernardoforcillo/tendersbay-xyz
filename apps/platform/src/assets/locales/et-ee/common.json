@@ -146,6 +146,24 @@
       "ctaSecondary": "Vaadake visiooni",
       "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"]
     },
+    "proof": {
+      "lead": "Igal aastal kulutatakse Euroopas üle kahe tuhande miljardi euro avalikku raha. Suurem osa liigub läbi riigihangete, mida te kunagi ei näe.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "avalikke kulutusi aastas ELis"
+        },
+        {
+          "value": "250,000+",
+          "label": "avalikku hankijat, kes korraldavad hankeid"
+        },
+        {
+          "value": "~800,000",
+          "label": "riigihanget aastas — ükski meeskond ei loe neid kõiki"
+        }
+      ],
+      "source": "Euroopa Komisjon · TED (Tenders Electronic Daily)"
+    },
     "problem": {
       "title": "Mäng on seatud teid välja jätma. Ja see töötab.",
       "items": [
@@ -164,19 +182,23 @@
       ]
     },
     "agents": {
-      "title": "Kolm agenti. Nad ei eksi, ei maga, ei anna alla.",
+      "title": "Vaadake, mida teie agendid tegid, kui te magasite.",
+      "lead": "Mitte kiirem otsinguriba, mida peate ikkagi ise juhtima. Tiim agente, kes töötab läbi kogu hanke — leiab, valmistab ette, võidab — öö jooksul, nii et ärkate juba mängus.",
       "items": [
         {
-          "title": "Leia",
-          "body": "Nad kammivad iga päev läbi kõik 27 riiki ja toovad esile ainult hanked, mis on teie aega väärt — kohandatuna sellele, mida te tegelikult teete."
+          "time": "02:14",
+          "title": "Leidis selle, mis teile sobib",
+          "body": "Kui turg magas, kammisid agendid läbi kõik 27 riiki ja tõid välja ainsa hanke, mis on teie aega väärt — kohandatud sellele, mida te tegelikult teete, mitte hunnik märksõnu."
         },
         {
-          "title": "Valmista ette",
-          "body": "Nõuded, sertifikaadid, ESPD, tähtajad: välja võetud, ristkontrollitud, kokku pandud. Paberimajandus, mis teid murdis, korras."
+          "time": "05:30",
+          "title": "Pani paberimajanduse kokku",
+          "body": "Nõuded loetud, sertifikaadid sobitatud, ESPD kokku pandud, iga tähtaeg kirja pandud. Bürokraatia, mis varem teie nädalavahetust põletas — valmis enne kohvi."
         },
         {
-          "title": "Võida",
-          "body": "Nad muudavad hankedokumendid võidustrateegiaks, et astuksite sisse sama löögijõuga kui hiiglased."
+          "time": "07:00",
+          "title": "Ärkasite juba mängus",
+          "body": "Ei mingit tühja lehte. Hankedokumentidest sai võidustrateegia, valmis teie otsuseks — sama löögijõud, mille eest hiiglased maksavad terve kontori, ootab teie laual."
         }
       ]
     },
@@ -252,8 +274,8 @@
     },
     "cta": {
       "title": "Teie agendid on valmis. Puudute ainult teie.",
-      "body": "Lülitame ELi sisse turg turu haaval. Liituge ootenimekirjaga — hetkel, mil teie riik süttib, lähevad teie agendid jahile.",
-      "button": "Broneerige oma koht"
+      "body": "Looge konto ja pange agendid oma turule — leida, ette valmistada, võita, ilma oma hankeosakonnata.",
+      "button": "Loo konto"
     },
     "tenderCard": {
       "value": "Väärtus",

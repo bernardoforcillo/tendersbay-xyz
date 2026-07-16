@@ -146,6 +146,24 @@
       "ctaSecondary": "Se visionen",
       "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"]
     },
+    "proof": {
+      "lead": "Varje år spenderas i Europa över två biljoner euro av offentliga medel. Det mesta går genom offentliga upphandlingar som du aldrig ser.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "offentliga utgifter per år i EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "offentliga köpare som upphandlar uppdrag"
+        },
+        {
+          "value": "~800,000",
+          "label": "upphandlingar per år — inget team läser alla"
+        }
+      ],
+      "source": "Europeiska kommissionen · TED (Tenders Electronic Daily)"
+    },
     "problem": {
       "title": "Spelet är riggat för att hålla dig ute. Och det fungerar.",
       "items": [
@@ -164,19 +182,23 @@
       ]
     },
     "agents": {
-      "title": "Tre agenter. De missar inte, sover inte, ger inte upp.",
+      "title": "Det här gjorde dina agenter medan du sov.",
+      "lead": "Inte en snabbare sökruta som du ändå måste styra själv. Ett team av agenter som arbetar med hela upphandlingen — hittar, förbereder, vinner — under natten, så att du vaknar redan med i loppet.",
       "items": [
         {
-          "title": "Hitta",
-          "body": "De finkammar alla 27 länder varje dag och lyfter bara fram upphandlingarna som är värda din tid — anpassade efter vad du faktiskt gör."
+          "time": "02:14",
+          "title": "Den hittade den som passar dig",
+          "body": "Medan marknaden sov finkammade agenterna alla 27 länder och lyfte fram den enda upphandlingen som är värd din tid — anpassad efter vad du faktiskt gör, inte en hög med sökord."
         },
         {
-          "title": "Förbered",
-          "body": "Krav, certifikat, ESPD, deadlines: extraherade, korskontrollerade, sammanställda. Pappersarbetet som knäckte dig, löst."
+          "time": "05:30",
+          "title": "Den byggde pappersarbetet",
+          "body": "Krav lästa, certifikat matchade, ESPD sammanställt, varje deadline noterad. Byråkratin som brukade bränna din helg — klar före kaffet."
         },
         {
-          "title": "Vinn",
-          "body": "De gör om förfrågningsunderlaget till en vinnande strategi, så att du går in med samma eldkraft som jättarna."
+          "time": "07:00",
+          "title": "Du vaknade redan med i loppet",
+          "body": "Ingen tom sida. Förfrågningsunderlaget blev en vinnande anbudsstrategi, redo för ditt beslut — samma eldkraft som jättarna betalar ett helt kontor för, väntar på ditt skrivbord."
         }
       ]
     },
@@ -252,8 +274,8 @@
     },
     "cta": {
       "title": "Dina agenter är redo. Det enda som saknas är du.",
-      "body": "Vi slår på EU marknad för marknad. Gå med på väntelistan — i samma stund ditt land tänds börjar dina agenter jaga.",
-      "button": "Säkra din plats"
+      "body": "Skapa ditt konto och sätt agenterna på din marknad — hitta, förbereda, vinna, utan en egen anbudsavdelning.",
+      "button": "Skapa konto"
     },
     "tenderCard": {
       "value": "Värde",

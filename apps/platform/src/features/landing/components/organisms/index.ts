@@ -5,6 +5,7 @@ export { CoverageSection } from './coverage-section';
 export { CtaBand } from './cta-band';
 export { Hero } from './hero';
 export { ProblemSection } from './problem-section';
+export { ProofStrip } from './proof-strip';
 export { SearchDock } from './search-dock';
 export { SiteFooter } from './site-footer';
 export { SiteHeader } from './site-header';

@@ -7,7 +7,7 @@ import { SAMPLE_TENDERS } from './sample-tenders';
 import { TenderDeck } from './tender-deck';
 
 export function Hero() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const reduce = useReducedMotion();
   const trust = t('landing.hero.trust', { returnObjects: true }) as string[];
   const heroRef = useRef<HTMLElement>(null);
@@ -63,7 +63,7 @@ export function Hero() {
             {t('landing.hero.subtitle')}
           </motion.p>
           <motion.div {...item} className="mt-9 flex flex-wrap items-center gap-5">
-            <Button href="#agents" variant="primary">
+            <Button to="/$locale/auth/signup" params={{ locale: i18n.language }} variant="primary">
               {t('landing.hero.ctaPrimary')}
               <Icon name="arrow-right" className="text-[18px]" />
             </Button>

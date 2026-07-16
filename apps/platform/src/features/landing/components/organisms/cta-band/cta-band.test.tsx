@@ -18,7 +18,7 @@ describe('CtaBand', () => {
         name: 'Your agents are ready. The only thing missing is you.',
       }),
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Claim your spot' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'Create your account' })).toHaveAttribute(
       'href',
       '/$locale/auth/signup',
     );
