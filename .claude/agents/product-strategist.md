@@ -102,4 +102,4 @@ dispatched for:
 2. **Synthesis / recommendation** — for Ideate, 2–3 approaches with trade-offs and your
    pick; for Empathize, the sharpened who/pain; for Prototype, feasibility + MVP cut.
 3. **Open questions & assumptions** — what's unproven, what data is missing.
-4. **What you'd investigate next.
+4. **What you'd investigate next.**
