@@ -34,9 +34,11 @@ law, 24-locale recipe, PostHog rules) so the main session doesn't have to.
   fine — the agent handles both remits in a single run.
 - Multiple independent GTM tasks → dispatch multiple `gtm-engineer` agents in
   parallel, each in its own worktree.
-- Routing: strategy-first work (launch plans, channels, referral mechanics)
-  → `/growth` (whose marketer chains gtm-engineer for implementation);
-  in-product flow/retention work → `/ux`. `/gtm` stays the direct
-  implementation route.
+- Routing: defining a *new* feature's why/who/what before any build →
+  `/prd` (the design-thinking desk; its PRD then feeds
+  `superpowers:brainstorming`). Strategy-first work (launch plans, channels,
+  referral mechanics) → `/growth` (whose marketer chains gtm-engineer for
+  implementation); in-product flow/retention work → `/ux`. `/gtm` stays the
+  direct implementation route.
 - The engineer may peer-dispatch other agents itself (growth-marketer,
   neuro-ux-designer); its report embeds theirs — you still relay one report.
