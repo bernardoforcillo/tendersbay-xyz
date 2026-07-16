@@ -208,6 +208,313 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
 export declare const TenderResultSchema: GenMessage<TenderResult>;
 
 /**
+ * @generated from message tender.v1.GetTenderRequest
+ */
+export declare type GetTenderRequest = Message<"tender.v1.GetTenderRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message tender.v1.GetTenderRequest.
+ * Use `create(GetTenderRequestSchema)` to create a new message.
+ */
+export declare const GetTenderRequestSchema: GenMessage<GetTenderRequest>;
+
+/**
+ * @generated from message tender.v1.GetTenderResponse
+ */
+export declare type GetTenderResponse = Message<"tender.v1.GetTenderResponse"> & {
+  /**
+   * @generated from field: tender.v1.TenderDetail tender = 1;
+   */
+  tender?: TenderDetail | undefined;
+};
+
+/**
+ * Describes the message tender.v1.GetTenderResponse.
+ * Use `create(GetTenderResponseSchema)` to create a new message.
+ */
+export declare const GetTenderResponseSchema: GenMessage<GetTenderResponse>;
+
+/**
+ * @generated from message tender.v1.GetRelatedTendersRequest
+ */
+export declare type GetRelatedTendersRequest = Message<"tender.v1.GetRelatedTendersRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * optional, server-clamped
+   *
+   * @generated from field: int32 limit = 2;
+   */
+  limit: number;
+};
+
+/**
+ * Describes the message tender.v1.GetRelatedTendersRequest.
+ * Use `create(GetRelatedTendersRequestSchema)` to create a new message.
+ */
+export declare const GetRelatedTendersRequestSchema: GenMessage<GetRelatedTendersRequest>;
+
+/**
+ * @generated from message tender.v1.GetRelatedTendersResponse
+ */
+export declare type GetRelatedTendersResponse = Message<"tender.v1.GetRelatedTendersResponse"> & {
+  /**
+   * @generated from field: repeated tender.v1.TenderResult results = 1;
+   */
+  results: TenderResult[];
+};
+
+/**
+ * Describes the message tender.v1.GetRelatedTendersResponse.
+ * Use `create(GetRelatedTendersResponseSchema)` to create a new message.
+ */
+export declare const GetRelatedTendersResponseSchema: GenMessage<GetRelatedTendersResponse>;
+
+/**
+ * @generated from message tender.v1.ListTenderSitemapRequest
+ */
+export declare type ListTenderSitemapRequest = Message<"tender.v1.ListTenderSitemapRequest"> & {
+  /**
+   * @generated from field: int32 limit = 1;
+   */
+  limit: number;
+};
+
+/**
+ * Describes the message tender.v1.ListTenderSitemapRequest.
+ * Use `create(ListTenderSitemapRequestSchema)` to create a new message.
+ */
+export declare const ListTenderSitemapRequestSchema: GenMessage<ListTenderSitemapRequest>;
+
+/**
+ * @generated from message tender.v1.ListTenderSitemapResponse
+ */
+export declare type ListTenderSitemapResponse = Message<"tender.v1.ListTenderSitemapResponse"> & {
+  /**
+   * @generated from field: repeated tender.v1.TenderRef refs = 1;
+   */
+  refs: TenderRef[];
+};
+
+/**
+ * Describes the message tender.v1.ListTenderSitemapResponse.
+ * Use `create(ListTenderSitemapResponseSchema)` to create a new message.
+ */
+export declare const ListTenderSitemapResponseSchema: GenMessage<ListTenderSitemapResponse>;
+
+/**
+ * @generated from message tender.v1.TenderRef
+ */
+export declare type TenderRef = Message<"tender.v1.TenderRef"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * RFC3339 (published_at), empty if unset
+   *
+   * @generated from field: string lastmod = 2;
+   */
+  lastmod: string;
+};
+
+/**
+ * Describes the message tender.v1.TenderRef.
+ * Use `create(TenderRefSchema)` to create a new message.
+ */
+export declare const TenderRefSchema: GenMessage<TenderRef>;
+
+/**
+ * @generated from message tender.v1.TenderDocument
+ */
+export declare type TenderDocument = Message<"tender.v1.TenderDocument"> & {
+  /**
+   * @generated from field: string url = 1;
+   */
+  url: string;
+
+  /**
+   * @generated from field: string type = 2;
+   */
+  type: string;
+};
+
+/**
+ * Describes the message tender.v1.TenderDocument.
+ * Use `create(TenderDocumentSchema)` to create a new message.
+ */
+export declare const TenderDocumentSchema: GenMessage<TenderDocument>;
+
+/**
+ * @generated from message tender.v1.TenderLot
+ */
+export declare type TenderLot = Message<"tender.v1.TenderLot"> & {
+  /**
+   * @generated from field: string ref = 1;
+   */
+  ref: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string cpv = 3;
+   */
+  cpv: string;
+
+  /**
+   * @generated from field: int64 value = 4;
+   */
+  value: bigint;
+
+  /**
+   * @generated from field: string currency = 5;
+   */
+  currency: string;
+
+  /**
+   * RFC3339, empty if unset
+   *
+   * @generated from field: string deadline = 6;
+   */
+  deadline: string;
+};
+
+/**
+ * Describes the message tender.v1.TenderLot.
+ * Use `create(TenderLotSchema)` to create a new message.
+ */
+export declare const TenderLotSchema: GenMessage<TenderLot>;
+
+/**
+ * @generated from message tender.v1.TenderDetail
+ */
+export declare type TenderDetail = Message<"tender.v1.TenderDetail"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string buyer_name = 3;
+   */
+  buyerName: string;
+
+  /**
+   * @generated from field: string buyer_id = 4;
+   */
+  buyerId: string;
+
+  /**
+   * @generated from field: string status = 5;
+   */
+  status: string;
+
+  /**
+   * @generated from field: string procedure_type = 6;
+   */
+  procedureType: string;
+
+  /**
+   * @generated from field: string country = 7;
+   */
+  country: string;
+
+  /**
+   * @generated from field: string nuts = 8;
+   */
+  nuts: string;
+
+  /**
+   * @generated from field: string language = 9;
+   */
+  language: string;
+
+  /**
+   * @generated from field: string cpv = 10;
+   */
+  cpv: string;
+
+  /**
+   * @generated from field: repeated string cpv_secondary = 11;
+   */
+  cpvSecondary: string[];
+
+  /**
+   * @generated from field: int64 value = 12;
+   */
+  value: bigint;
+
+  /**
+   * @generated from field: string currency = 13;
+   */
+  currency: string;
+
+  /**
+   * RFC3339, empty if unset
+   *
+   * @generated from field: string published_at = 14;
+   */
+  publishedAt: string;
+
+  /**
+   * RFC3339, empty if unset
+   *
+   * @generated from field: string deadline = 15;
+   */
+  deadline: string;
+
+  /**
+   * @generated from field: string source = 16;
+   */
+  source: string;
+
+  /**
+   * @generated from field: string source_ref = 17;
+   */
+  sourceRef: string;
+
+  /**
+   * best-effort; may be empty
+   *
+   * @generated from field: string source_url = 18;
+   */
+  sourceUrl: string;
+
+  /**
+   * @generated from field: repeated tender.v1.TenderDocument documents = 19;
+   */
+  documents: TenderDocument[];
+
+  /**
+   * @generated from field: repeated tender.v1.TenderLot lots = 20;
+   */
+  lots: TenderLot[];
+};
+
+/**
+ * Describes the message tender.v1.TenderDetail.
+ * Use `create(TenderDetailSchema)` to create a new message.
+ */
+export declare const TenderDetailSchema: GenMessage<TenderDetail>;
+
+/**
  * TenderService serves the direct tender search endpoint behind the
  * SearchDock's "Cerca" mode. Unlike AgentService, this is not a
  * conversational tool — it's a structured request/response search, and
@@ -224,6 +531,30 @@ export declare const TenderService: GenService<{
     methodKind: "unary";
     input: typeof SearchTendersRequestSchema;
     output: typeof SearchTendersResponseSchema;
+  },
+  /**
+   * @generated from rpc tender.v1.TenderService.GetTender
+   */
+  getTender: {
+    methodKind: "unary";
+    input: typeof GetTenderRequestSchema;
+    output: typeof GetTenderResponseSchema;
+  },
+  /**
+   * @generated from rpc tender.v1.TenderService.GetRelatedTenders
+   */
+  getRelatedTenders: {
+    methodKind: "unary";
+    input: typeof GetRelatedTendersRequestSchema;
+    output: typeof GetRelatedTendersResponseSchema;
+  },
+  /**
+   * @generated from rpc tender.v1.TenderService.ListTenderSitemap
+   */
+  listTenderSitemap: {
+    methodKind: "unary";
+    input: typeof ListTenderSitemapRequestSchema;
+    output: typeof ListTenderSitemapResponseSchema;
   },
 }>;
 

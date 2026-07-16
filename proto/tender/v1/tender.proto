@@ -10,6 +10,9 @@ option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend
 // lower result cap and a stricter rate limit; see the server-side config).
 service TenderService {
   rpc SearchTenders(SearchTendersRequest) returns (SearchTendersResponse);
+  rpc GetTender(GetTenderRequest) returns (GetTenderResponse);
+  rpc GetRelatedTenders(GetRelatedTendersRequest) returns (GetRelatedTendersResponse);
+  rpc ListTenderSitemap(ListTenderSitemapRequest) returns (ListTenderSitemapResponse);
 }
 
 message SearchTendersRequest {
@@ -50,4 +53,58 @@ message TenderResult {
   double relevance_score = 12;  // meaningful only when query was non-empty; 0 for filters-only
   string source = 13;
   string source_ref = 14;
+}
+
+message GetTenderRequest { string id = 1; }
+message GetTenderResponse { TenderDetail tender = 1; }
+
+message GetRelatedTendersRequest {
+  string id = 1;
+  int32 limit = 2; // optional, server-clamped
+}
+message GetRelatedTendersResponse { repeated TenderResult results = 1; }
+
+message ListTenderSitemapRequest { int32 limit = 1; } // optional, server-clamped to <=50000
+message ListTenderSitemapResponse { repeated TenderRef refs = 1; }
+
+message TenderRef {
+  string id = 1;
+  string lastmod = 2; // RFC3339 (published_at), empty if unset
+}
+
+message TenderDocument {
+  string url = 1;
+  string type = 2;
+}
+
+message TenderLot {
+  string ref = 1;
+  string title = 2;
+  string cpv = 3;
+  int64  value = 4;
+  string currency = 5;
+  string deadline = 6; // RFC3339, empty if unset
+}
+
+message TenderDetail {
+  string id = 1;
+  string title = 2;
+  string buyer_name = 3;
+  string buyer_id = 4;
+  string status = 5;
+  string procedure_type = 6;
+  string country = 7;
+  string nuts = 8;
+  string language = 9;
+  string cpv = 10;
+  repeated string cpv_secondary = 11;
+  int64  value = 12;
+  string currency = 13;
+  string published_at = 14; // RFC3339, empty if unset
+  string deadline = 15;     // RFC3339, empty if unset
+  string source = 16;
+  string source_ref = 17;
+  string source_url = 18;   // best-effort; may be empty
+  repeated TenderDocument documents = 19;
+  repeated TenderLot lots = 20;
 }

@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
+import { GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -25,6 +25,33 @@ export const TenderService = {
       name: "SearchTenders",
       I: SearchTendersRequest,
       O: SearchTendersResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.GetTender
+     */
+    getTender: {
+      name: "GetTender",
+      I: GetTenderRequest,
+      O: GetTenderResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.GetRelatedTenders
+     */
+    getRelatedTenders: {
+      name: "GetRelatedTenders",
+      I: GetRelatedTendersRequest,
+      O: GetRelatedTendersResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.ListTenderSitemap
+     */
+    listTenderSitemap: {
+      name: "ListTenderSitemap",
+      I: ListTenderSitemapRequest,
+      O: ListTenderSitemapResponse,
       kind: MethodKind.Unary,
     },
   }

@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
+import { GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -25,6 +25,33 @@ export declare const TenderService: {
       readonly name: "SearchTenders",
       readonly I: typeof SearchTendersRequest,
       readonly O: typeof SearchTendersResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.GetTender
+     */
+    readonly getTender: {
+      readonly name: "GetTender",
+      readonly I: typeof GetTenderRequest,
+      readonly O: typeof GetTenderResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.GetRelatedTenders
+     */
+    readonly getRelatedTenders: {
+      readonly name: "GetRelatedTenders",
+      readonly I: typeof GetRelatedTendersRequest,
+      readonly O: typeof GetRelatedTendersResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.ListTenderSitemap
+     */
+    readonly listTenderSitemap: {
+      readonly name: "ListTenderSitemap",
+      readonly I: typeof ListTenderSitemapRequest,
+      readonly O: typeof ListTenderSitemapResponse,
       readonly kind: MethodKind.Unary,
     },
   }
