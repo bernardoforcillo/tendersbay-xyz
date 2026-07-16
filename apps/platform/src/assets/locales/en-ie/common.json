@@ -312,6 +312,30 @@
       "cancelled": "Cancelled",
       "closed": "Closed",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Country",
+      "anyCountry": "Any country",
+      "sector": "Sector",
+      "anySector": "Any sector",
+      "sectors": {
+        "construction": "Construction",
+        "it": "IT & software",
+        "health": "Healthcare",
+        "energy": "Energy",
+        "transport": "Transport",
+        "education": "Education",
+        "environment": "Environment",
+        "business": "Business services"
+      },
+      "status": "Status",
+      "anyStatus": "Any status",
+      "deadline": "Deadline",
+      "anyDeadline": "Any time",
+      "deadline7": "Next 7 days",
+      "deadline30": "Next 30 days",
+      "deadline90": "Next 90 days",
+      "clear": "Clear all"
     }
   },
   "today": {

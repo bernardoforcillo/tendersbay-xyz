@@ -320,6 +320,30 @@
       "cancelled": "Anulowany",
       "closed": "Zamknięty",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Kraj",
+      "anyCountry": "Wszystkie kraje",
+      "sector": "Sektor",
+      "anySector": "Wszystkie sektory",
+      "sectors": {
+        "construction": "Budownictwo",
+        "it": "IT i oprogramowanie",
+        "health": "Zdrowie",
+        "energy": "Energia",
+        "transport": "Transport",
+        "education": "Edukacja",
+        "environment": "Środowisko",
+        "business": "Usługi dla firm"
+      },
+      "status": "Status",
+      "anyStatus": "Wszystkie statusy",
+      "deadline": "Termin",
+      "anyDeadline": "Dowolny termin",
+      "deadline7": "Najbliższe 7 dni",
+      "deadline30": "Najbliższe 30 dni",
+      "deadline90": "Najbliższe 90 dni",
+      "clear": "Wyczyść wszystko"
     }
   },
   "today": {

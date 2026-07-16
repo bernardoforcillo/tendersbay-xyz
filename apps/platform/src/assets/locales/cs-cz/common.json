@@ -314,6 +314,30 @@
       "cancelled": "Zrušená",
       "closed": "Uzavřená",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Země",
+      "anyCountry": "Všechny země",
+      "sector": "Odvětví",
+      "anySector": "Všechna odvětví",
+      "sectors": {
+        "construction": "Stavebnictví",
+        "it": "IT a software",
+        "health": "Zdravotnictví",
+        "energy": "Energetika",
+        "transport": "Doprava",
+        "education": "Vzdělávání",
+        "environment": "Životní prostředí",
+        "business": "Podnikové služby"
+      },
+      "status": "Stav",
+      "anyStatus": "Všechny stavy",
+      "deadline": "Lhůta",
+      "anyDeadline": "Kdykoli",
+      "deadline7": "Příštích 7 dní",
+      "deadline30": "Příštích 30 dní",
+      "deadline90": "Příštích 90 dní",
+      "clear": "Vymazat vše"
     }
   },
   "today": {

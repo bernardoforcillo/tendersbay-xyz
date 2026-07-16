@@ -312,6 +312,30 @@
       "cancelled": "Peruttu",
       "closed": "Päättynyt",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Maa",
+      "anyCountry": "Kaikki maat",
+      "sector": "Toimiala",
+      "anySector": "Kaikki toimialat",
+      "sectors": {
+        "construction": "Rakentaminen",
+        "it": "IT ja ohjelmistot",
+        "health": "Terveydenhuolto",
+        "energy": "Energia",
+        "transport": "Liikenne",
+        "education": "Koulutus",
+        "environment": "Ympäristö",
+        "business": "Yrityspalvelut"
+      },
+      "status": "Tila",
+      "anyStatus": "Kaikki tilat",
+      "deadline": "Määräaika",
+      "anyDeadline": "Milloin tahansa",
+      "deadline7": "Seuraavat 7 päivää",
+      "deadline30": "Seuraavat 30 päivää",
+      "deadline90": "Seuraavat 90 päivää",
+      "clear": "Tyhjennä kaikki"
     }
   },
   "today": {

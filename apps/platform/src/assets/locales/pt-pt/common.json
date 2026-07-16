@@ -312,6 +312,30 @@
       "cancelled": "Cancelado",
       "closed": "Encerrado",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "País",
+      "anyCountry": "Todos os países",
+      "sector": "Setor",
+      "anySector": "Todos os setores",
+      "sectors": {
+        "construction": "Construção",
+        "it": "TI e software",
+        "health": "Saúde",
+        "energy": "Energia",
+        "transport": "Transportes",
+        "education": "Educação",
+        "environment": "Ambiente",
+        "business": "Serviços às empresas"
+      },
+      "status": "Estado",
+      "anyStatus": "Todos os estados",
+      "deadline": "Prazo",
+      "anyDeadline": "Qualquer data",
+      "deadline7": "Próximos 7 dias",
+      "deadline30": "Próximos 30 dias",
+      "deadline90": "Próximos 90 dias",
+      "clear": "Limpar tudo"
     }
   },
   "today": {

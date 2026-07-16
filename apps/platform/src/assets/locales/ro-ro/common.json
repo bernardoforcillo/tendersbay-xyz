@@ -314,6 +314,30 @@
       "cancelled": "Anulată",
       "closed": "Închisă",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Țară",
+      "anyCountry": "Toate țările",
+      "sector": "Sector",
+      "anySector": "Toate sectoarele",
+      "sectors": {
+        "construction": "Construcții",
+        "it": "IT și software",
+        "health": "Sănătate",
+        "energy": "Energie",
+        "transport": "Transport",
+        "education": "Educație",
+        "environment": "Mediu",
+        "business": "Servicii pentru afaceri"
+      },
+      "status": "Stare",
+      "anyStatus": "Toate stările",
+      "deadline": "Termen",
+      "anyDeadline": "Oricând",
+      "deadline7": "Următoarele 7 zile",
+      "deadline30": "Următoarele 30 de zile",
+      "deadline90": "Următoarele 90 de zile",
+      "clear": "Șterge tot"
     }
   },
   "today": {

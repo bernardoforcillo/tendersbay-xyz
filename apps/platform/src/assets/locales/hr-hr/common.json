@@ -318,6 +318,30 @@
       "cancelled": "Otkazan",
       "closed": "Zatvoren",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Država",
+      "anyCountry": "Sve države",
+      "sector": "Sektor",
+      "anySector": "Svi sektori",
+      "sectors": {
+        "construction": "Graditeljstvo",
+        "it": "IT i softver",
+        "health": "Zdravstvo",
+        "energy": "Energetika",
+        "transport": "Promet",
+        "education": "Obrazovanje",
+        "environment": "Okoliš",
+        "business": "Poslovne usluge"
+      },
+      "status": "Status",
+      "anyStatus": "Svi statusi",
+      "deadline": "Rok",
+      "anyDeadline": "Bilo kada",
+      "deadline7": "Sljedećih 7 dana",
+      "deadline30": "Sljedećih 30 dana",
+      "deadline90": "Sljedećih 90 dana",
+      "clear": "Očisti sve"
     }
   },
   "today": {

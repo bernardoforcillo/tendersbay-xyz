@@ -318,6 +318,30 @@
       "cancelled": "Atšauktas",
       "closed": "Uždarytas",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Šalis",
+      "anyCountry": "Visos šalys",
+      "sector": "Sektorius",
+      "anySector": "Visi sektoriai",
+      "sectors": {
+        "construction": "Statyba",
+        "it": "IT ir programinė įranga",
+        "health": "Sveikata",
+        "energy": "Energetika",
+        "transport": "Transportas",
+        "education": "Švietimas",
+        "environment": "Aplinka",
+        "business": "Verslo paslaugos"
+      },
+      "status": "Būsena",
+      "anyStatus": "Visos būsenos",
+      "deadline": "Terminas",
+      "anyDeadline": "Bet kada",
+      "deadline7": "Artimiausios 7 dienos",
+      "deadline30": "Artimiausios 30 dienų",
+      "deadline90": "Artimiausios 90 dienų",
+      "clear": "Išvalyti viską"
     }
   },
   "today": {

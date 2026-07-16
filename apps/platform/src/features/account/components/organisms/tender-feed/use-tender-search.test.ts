@@ -208,4 +208,44 @@ describe('useTenderSearch', () => {
     expect(result.current.error).toBeNull();
     expect(result.current.results).toEqual([fakeResult('1')]);
   });
+
+  it('threads filters into searchTenders and reuses them on loadMore', async () => {
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('1')], hasMore: true });
+    const { result } = renderHook(() => useTenderSearch());
+    await act(async () => {
+      await result.current.search('roads', { country: 'ITA', cpv: '45' });
+    });
+    expect(searchTenders).toHaveBeenCalledWith({
+      query: 'roads',
+      filters: { country: 'ITA', cpv: '45' },
+      limit: 20,
+      offset: 0,
+    });
+
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('2')], hasMore: false });
+    await act(async () => {
+      await result.current.loadMore();
+    });
+    expect(searchTenders).toHaveBeenLastCalledWith({
+      query: 'roads',
+      filters: { country: 'ITA', cpv: '45' },
+      limit: 20,
+      offset: 1,
+    });
+  });
+
+  it('supports a filters-only search with an empty query', async () => {
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('1')], hasMore: false });
+    const { result } = renderHook(() => useTenderSearch());
+    await act(async () => {
+      await result.current.search('', { status: 'open' });
+    });
+    expect(searchTenders).toHaveBeenCalledWith({
+      query: '',
+      filters: { status: 'open' },
+      limit: 20,
+      offset: 0,
+    });
+    expect(result.current.results).toEqual([fakeResult('1')]);
+  });
 });
