@@ -164,8 +164,9 @@ func main() {
 		knowledgeBaseAdapter{kb},
 		rl,
 		tender.Config{
-			AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
-			AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+			AnonTier:      tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
+			AuthedTier:    tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+			GetTenderTier: tender.Tier{MaxResults: 20, RateLimit: 600, RateWindow: time.Minute},
 		},
 	)
 	tenderHandler := connectapi.NewTenderHandler(tenderSvc)
@@ -242,6 +243,21 @@ func (a knowledgeBaseAdapter) SearchWithScores(ctx context.Context, query string
 		return nil, errors.New("knowledge base unavailable")
 	}
 	results, err := a.kb.SearchWithScores(ctx, query, limit)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]tender.ScoredChunk, len(results))
+	for i, r := range results {
+		out[i] = tender.ScoredChunk{DocID: r.DocID, Score: r.Score}
+	}
+	return out, nil
+}
+
+func (a knowledgeBaseAdapter) RelatedByDocID(ctx context.Context, docID string, limit int) ([]tender.ScoredChunk, error) {
+	if a.kb == nil {
+		return nil, errors.New("knowledge base unavailable")
+	}
+	results, err := a.kb.RelatedByDocID(ctx, docID, limit)
 	if err != nil {
 		return nil, err
 	}
