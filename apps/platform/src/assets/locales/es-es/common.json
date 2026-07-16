@@ -146,6 +146,24 @@
       "ctaSecondary": "Ver la visión",
       "trust": ["27 países, una búsqueda", "Agentes que nunca duermen", "Papeleo: resuelto"]
     },
+    "proof": {
+      "lead": "Cada año se gastan en Europa más de dos billones de euros de dinero público. La mayor parte pasa por licitaciones que nunca ves.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "de gasto público al año en la UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "compradores públicos que sacan contratos a licitación"
+        },
+        {
+          "value": "~800,000",
+          "label": "licitaciones al año — ningún equipo las lee todas"
+        }
+      ],
+      "source": "Comisión Europea · TED (Tenders Electronic Daily)"
+    },
     "problem": {
       "title": "El juego está amañado para dejarte fuera. Y funciona.",
       "items": [
@@ -164,19 +182,23 @@
       ]
     },
     "agents": {
-      "title": "Tres agentes. No fallan, no duermen, no se rinden.",
+      "title": "Esto es lo que hicieron tus agentes mientras dormías.",
+      "lead": "No una barra de búsqueda más rápida que aun así tienes que pilotar tú. Un equipo de agentes que trabaja la licitación entera — encontrar, preparar, ganar — durante la noche, para que despiertes ya en la carrera.",
       "items": [
         {
-          "title": "Encuentra",
-          "body": "Rastrean los 27 países cada día y solo te muestran las licitaciones que valen tu tiempo — a la medida de lo que haces de verdad."
+          "time": "02:14",
+          "title": "Encontró la que encaja contigo",
+          "body": "Mientras el mercado dormía, los agentes rastrearon los 27 países y sacaron la única licitación que vale tu tiempo — a la medida de lo que haces de verdad, no un montón de palabras clave."
         },
         {
-          "title": "Prepara",
-          "body": "Requisitos, certificados, DEUC, plazos: extraídos, contrastados, montados. El papeleo que te hundía, resuelto."
+          "time": "05:30",
+          "title": "Montó el papeleo",
+          "body": "Requisitos leídos, certificados cotejados, el DEUC montado, cada plazo anotado. La burocracia que te quemaba el fin de semana — lista antes del café."
         },
         {
-          "title": "Gana",
-          "body": "Convierten el pliego en una estrategia ganadora, para que entres con la misma potencia que los gigantes."
+          "time": "07:00",
+          "title": "Despertaste ya en la carrera",
+          "body": "Sin página en blanco. El pliego se convirtió en una estrategia de licitación, lista para tu decisión — la misma potencia que los gigantes pagan con una oficina entera, esperándote en el escritorio."
         }
       ]
     },
@@ -252,8 +274,8 @@
     },
     "cta": {
       "title": "Tus agentes están listos. Solo faltas tú.",
-      "body": "Estamos encendiendo la UE mercado a mercado. Apúntate a la lista — en cuanto tu país se encienda, tus agentes salen a cazar.",
-      "button": "Reserva tu plaza"
+      "body": "Crea tu cuenta y pon a los agentes en tu mercado — encontrar, preparar, ganar, sin un departamento de licitaciones propio.",
+      "button": "Crea tu cuenta"
     },
     "tenderCard": {
       "value": "Valor",

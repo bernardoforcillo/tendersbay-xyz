@@ -146,6 +146,24 @@
       "ctaSecondary": "Pozrite si víziu",
       "trust": ["27 krajín, jedno hľadanie", "Agenti, ktorí nikdy nespia", "Papierovačky: vybavené"]
     },
+    "proof": {
+      "lead": "Každý rok sa v Európe minie vyše dva bilióny eur verejných peňazí. Väčšina prejde cez verejné obstarávanie, ktoré nikdy nevidíte.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "verejných výdavkov ročne v EÚ"
+        },
+        {
+          "value": "250,000+",
+          "label": "verejných obstarávateľov vypisujúcich zákazky"
+        },
+        {
+          "value": "~800,000",
+          "label": "zákaziek ročne — žiadny tím ich neprečíta všetky"
+        }
+      ],
+      "source": "Európska komisia · TED (Tenders Electronic Daily)"
+    },
     "problem": {
       "title": "Hra je nastavená tak, aby vás držala vonku. A funguje to.",
       "items": [
@@ -164,19 +182,23 @@
       ]
     },
     "agents": {
-      "title": "Traja agenti. Neminú, nespia, nevzdávajú sa.",
+      "title": "Toto urobili vaši agenti, kým ste spali.",
+      "lead": "Nie rýchlejšie vyhľadávacie pole, ktoré aj tak musíte riadiť vy. Tím agentov, ktorý spracuje celú zákazku — nájde, pripraví, vyhrá — cez noc, aby ste sa zobudili už v hre.",
       "items": [
         {
-          "title": "Nájdite",
-          "body": "Každý deň prečešú všetkých 27 krajín a vytiahnu len zákazky, ktoré stoja za váš čas — na mieru tomu, čo naozaj robíte."
+          "time": "02:14",
+          "title": "Našiel tú, ktorá vám sadne",
+          "body": "Kým trh spal, agenti prečesali všetkých 27 krajín a vytiahli jedinú zákazku, ktorá stojí za váš čas — na mieru tomu, čo naozaj robíte, nie kopu kľúčových slov."
         },
         {
-          "title": "Pripravte",
-          "body": "Požiadavky, certifikáty, JED, termíny: extrahované, skontrolované, zostavené. Papierovačky, ktoré vás lámali, vybavené."
+          "time": "05:30",
+          "title": "Zostavil papierovačky",
+          "body": "Požiadavky prečítané, certifikáty spárované, JED zostavený, každý termín zaznamenaný. Byrokracia, ktorá vám spaľovala víkend — hotová pred kávou."
         },
         {
-          "title": "Vyhrajte",
-          "body": "Premenia súťažné podklady na víťaznú stratégiu, aby ste vstúpili s rovnakou palebnou silou ako giganti."
+          "time": "07:00",
+          "title": "Zobudili ste sa už v hre",
+          "body": "Žiadna prázdna stránka. Zo súťažných podkladov sa stala víťazná stratégia ponuky, pripravená na vaše rozhodnutie — tá istá palebná sila, za ktorú giganti platia celú kanceláriu, čaká na vašom stole."
         }
       ]
     },
@@ -252,8 +274,8 @@
     },
     "cta": {
       "title": "Vaši agenti sú pripravení. Chýbate už len vy.",
-      "body": "Zapíname EÚ trh po trhu. Zaregistrujte sa na čakaciu listinu — vo chvíli, keď sa vaša krajina rozsvieti, vyrazia vaši agenti na lov.",
-      "button": "Zaistite si svoje miesto"
+      "body": "Vytvorte si účet a pustite agentov na svoj trh — nájsť, pripraviť, vyhrať, bez vlastného oddelenia pre zákazky.",
+      "button": "Vytvoriť účet"
     },
     "tenderCard": {
       "value": "Hodnota",

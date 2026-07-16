@@ -146,6 +146,24 @@
       "ctaSecondary": "Vedeți viziunea",
       "trust": ["27 de țări, o căutare", "Agenți care nu dorm niciodată", "Birocrație: rezolvată"]
     },
+    "proof": {
+      "lead": "În fiecare an, în Europa se cheltuiesc peste două trilioane de euro din bani publici. Cea mai mare parte trece prin licitații publice pe care nu le vedeți niciodată.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "cheltuieli publice pe an în UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "cumpărători publici care scot contracte la licitație"
+        },
+        {
+          "value": "~800,000",
+          "label": "licitații pe an — nicio echipă nu le citește pe toate"
+        }
+      ],
+      "source": "Comisia Europeană · TED (Tenders Electronic Daily)"
+    },
     "problem": {
       "title": "Jocul e măsluit ca să vă țină pe dinafară. Și funcționează.",
       "items": [
@@ -164,19 +182,23 @@
       ]
     },
     "agents": {
-      "title": "Trei agenți. Nu ratează, nu dorm, nu renunță.",
+      "title": "Iată ce au făcut agenții dvs. cât ați dormit.",
+      "lead": "Nu o bară de căutare mai rapidă pe care tot dvs. trebuie să o conduceți. O echipă de agenți care lucrează întreaga licitație — găsește, pregătește, câștigă — peste noapte, ca să vă treziți deja în cursă.",
       "items": [
         {
-          "title": "Găsiți",
-          "body": "Răscolesc toate cele 27 de țări în fiecare zi și scot la suprafață doar licitațiile care merită timpul dvs. — pe măsura a ceea ce faceți cu adevărat."
+          "time": "02:14",
+          "title": "A găsit-o pe cea care vi se potrivește",
+          "body": "Cât timp piața dormea, agenții au răscolit toate cele 27 de țări și au scos la suprafață singura licitație care merită timpul dvs. — pe măsura a ceea ce faceți cu adevărat, nu un morman de cuvinte-cheie."
         },
         {
-          "title": "Pregătiți",
-          "body": "Cerințe, certificate, DUAE, termene: extrase, verificate încrucișat, asamblate. Birocrația care vă frângea, rezolvată."
+          "time": "05:30",
+          "title": "A construit hârțogăria",
+          "body": "Cerințe citite, certificate potrivite, DUAE asamblat, fiecare termen notat. Birocrația care vă ardea weekendul — gata înainte de cafea."
         },
         {
-          "title": "Câștigați",
-          "body": "Transformă caietul de sarcini într-o strategie câștigătoare, ca să intrați cu aceeași putere de foc ca giganții."
+          "time": "07:00",
+          "title": "V-ați trezit deja în cursă",
+          "body": "Nicio pagină albă. Caietul de sarcini a devenit o strategie de ofertă câștigătoare, gata pentru decizia dvs. — aceeași putere de foc pentru care giganții plătesc un birou întreg, așteptând pe biroul dvs."
         }
       ]
     },
@@ -252,8 +274,8 @@
     },
     "cta": {
       "title": "Agenții dvs. sunt gata. Singurul care lipsește sunteți dvs.",
-      "body": "Aprindem UE piață cu piață. Înscrieți-vă pe lista de așteptare — în clipa în care țara dvs. se aprinde, agenții dvs. pornesc la vânătoare.",
-      "button": "Rezervați-vă locul"
+      "body": "Creați-vă contul și puneți agenții pe piața dvs. — să găsească, să pregătească, să câștige, fără un departament de licitații propriu.",
+      "button": "Creați-vă contul"
     },
     "tenderCard": {
       "value": "Valoare",

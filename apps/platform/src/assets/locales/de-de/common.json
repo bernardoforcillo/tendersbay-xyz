@@ -146,6 +146,24 @@
       "ctaSecondary": "Vision ansehen",
       "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"]
     },
+    "proof": {
+      "lead": "Jedes Jahr werden in Europa über zwei Billionen Euro an öffentlichen Geldern ausgegeben. Das meiste läuft über Ausschreibungen, die Sie nie zu sehen bekommen.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "öffentliche Ausgaben pro Jahr in der EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "öffentliche Auftraggeber, die ausschreiben"
+        },
+        {
+          "value": "~800,000",
+          "label": "Ausschreibungen pro Jahr — kein Team liest sie alle"
+        }
+      ],
+      "source": "Europäische Kommission · TED (Tenders Electronic Daily)"
+    },
     "problem": {
       "title": "Das Spiel ist manipuliert, um Sie draußen zu halten. Und es funktioniert.",
       "items": [
@@ -164,19 +182,23 @@
       ]
     },
     "agents": {
-      "title": "Drei Agenten. Sie verfehlen nichts, schlafen nicht, geben nicht auf.",
+      "title": "Das haben Ihre Agenten getan, während Sie schliefen.",
+      "lead": "Keine schnellere Suchleiste, die Sie trotzdem selbst bedienen müssen. Ein Team von Agenten, das die ganze Ausschreibung bearbeitet — finden, vorbereiten, gewinnen — über Nacht, sodass Sie schon im Rennen aufwachen.",
       "items": [
         {
-          "title": "Finden",
-          "body": "Sie durchkämmen täglich alle 27 Länder und zeigen nur die Ausschreibungen, die Ihre Zeit wert sind — zugeschnitten auf das, was Sie wirklich tun."
+          "time": "02:14",
+          "title": "Sie fand die eine, die passt",
+          "body": "Während der Markt schlief, durchkämmten die Agenten alle 27 Länder und zogen die eine Ausschreibung heraus, die Ihre Zeit wert ist — zugeschnitten auf das, was Sie wirklich tun, kein Stichwort-Wust."
         },
         {
-          "title": "Vorbereiten",
-          "body": "Anforderungen, Zertifikate, EEE, Fristen: extrahiert, abgeglichen, zusammengestellt. Der Papierkram, der Sie zermürbt hat, erledigt."
+          "time": "05:30",
+          "title": "Sie erledigte den Papierkram",
+          "body": "Anforderungen gelesen, Zertifikate abgeglichen, die EEE zusammengestellt, jede Frist notiert. Die Bürokratie, die Ihnen früher das Wochenende raubte — fertig vor dem Kaffee."
         },
         {
-          "title": "Gewinnen",
-          "body": "Sie machen aus den Vergabeunterlagen eine Gewinnstrategie, damit Sie mit derselben Schlagkraft antreten wie die Großen."
+          "time": "07:00",
+          "title": "Sie wachten schon im Rennen auf",
+          "body": "Kein leeres Blatt. Aus den Vergabeunterlagen wurde eine Gewinnstrategie, bereit für Ihre Entscheidung — dieselbe Schlagkraft, für die die Großen ein ganzes Büro bezahlen, wartet auf Ihrem Schreibtisch."
         }
       ]
     },
@@ -252,8 +274,8 @@
     },
     "cta": {
       "title": "Ihre Agenten sind bereit. Es fehlen nur Sie.",
-      "body": "Wir schalten die EU Markt für Markt frei. Tragen Sie sich in die Warteliste ein — sobald Ihr Land aufleuchtet, gehen Ihre Agenten auf die Jagd.",
-      "button": "Sichern Sie sich Ihren Platz"
+      "body": "Erstellen Sie Ihr Konto und setzen Sie die Agenten auf Ihren Markt an — finden, vorbereiten, gewinnen, ganz ohne eigenes Vergabebüro.",
+      "button": "Konto erstellen"
     },
     "tenderCard": {
       "value": "Wert",
