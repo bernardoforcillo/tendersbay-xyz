@@ -15,6 +15,9 @@ type fakeRepo struct {
 	byIDs        map[string]tender.Tender // keyed by ID
 	byIDsErr     error
 	gotLimit     int
+	detail       *tender.TenderDetail
+	detailErr    error
+	refs         []tender.TenderRef
 }
 
 func (f *fakeRepo) SearchTenders(_ context.Context, _ tender.Filters, limit, offset int) ([]tender.Tender, error) {
@@ -45,10 +48,25 @@ func (f *fakeRepo) EnrichTenders(_ context.Context, ids []string, _ tender.Filte
 	return out, nil
 }
 
+func (f *fakeRepo) FindDetailByID(_ context.Context, _ int64) (*tender.TenderDetail, error) {
+	return f.detail, f.detailErr
+}
+func (f *fakeRepo) DocumentsByTenderID(context.Context, int64) ([]tender.Document, error) {
+	return nil, nil
+}
+func (f *fakeRepo) LotsByTenderID(context.Context, int64) ([]tender.Lot, error) {
+	return nil, nil
+}
+func (f *fakeRepo) RecentTenderRefs(context.Context, int) ([]tender.TenderRef, error) {
+	return f.refs, nil
+}
+
 type fakeKnowledgeBase struct {
-	results  []tender.ScoredChunk
-	err      error
-	gotLimit int
+	results    []tender.ScoredChunk
+	err        error
+	gotLimit   int
+	related    []tender.ScoredChunk
+	relatedErr error
 }
 
 func (f *fakeKnowledgeBase) SearchWithScores(_ context.Context, _ string, limit int) ([]tender.ScoredChunk, error) {
@@ -57,6 +75,10 @@ func (f *fakeKnowledgeBase) SearchWithScores(_ context.Context, _ string, limit 
 		return nil, f.err
 	}
 	return f.results, nil
+}
+
+func (f *fakeKnowledgeBase) RelatedByDocID(_ context.Context, _ string, _ int) ([]tender.ScoredChunk, error) {
+	return f.related, f.relatedErr
 }
 
 type fakeRateLimiter struct {

@@ -75,6 +75,10 @@ type ScoredTender struct {
 type Repo interface {
 	SearchTenders(ctx context.Context, filters Filters, limit, offset int) ([]Tender, error)
 	EnrichTenders(ctx context.Context, ids []string, filters Filters) ([]Tender, error)
+	FindDetailByID(ctx context.Context, id int64) (*TenderDetail, error)
+	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)
+	LotsByTenderID(ctx context.Context, id int64) ([]Lot, error)
+	RecentTenderRefs(ctx context.Context, limit int) ([]TenderRef, error)
 }
 
 // ScoredChunk is the minimal shape Search needs from a semantic search
@@ -89,6 +93,7 @@ type ScoredChunk struct {
 // go-services/knowledge's — see the package doc comment.
 type KnowledgeBase interface {
 	SearchWithScores(ctx context.Context, query string, limit int) ([]ScoredChunk, error)
+	RelatedByDocID(ctx context.Context, docID string, limit int) ([]ScoredChunk, error)
 }
 
 // RateLimiter is the subset of redis.RateLimiter the service needs.
@@ -103,10 +108,11 @@ type Tier struct {
 	RateWindow time.Duration
 }
 
-// Config holds the two tiers' limits.
+// Config holds the tiers' limits.
 type Config struct {
-	AnonTier   Tier
-	AuthedTier Tier
+	AnonTier      Tier
+	AuthedTier    Tier
+	GetTenderTier Tier // generous; GetTender is cheap and called server-side per crawl
 }
 
 // Service runs tender searches.
