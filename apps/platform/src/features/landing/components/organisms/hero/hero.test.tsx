@@ -1,6 +1,13 @@
 import { screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { renderWithI18n } from '~/test/utils';
+
+// The hero deck fetches on mount; with no backend in tests it falls back to the
+// curated pool, so the deck (and its honest "Sample results" label) still render.
+vi.mock('~/lib/api/client', () => ({
+  tenderClient: { searchTenders: vi.fn().mockRejectedValue(new Error('no backend in tests')) },
+}));
+
 import { Hero } from './index';
 
 describe('Hero', () => {
