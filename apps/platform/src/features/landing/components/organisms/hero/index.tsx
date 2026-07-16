@@ -1,17 +1,49 @@
-import { motion, useReducedMotion } from 'motion/react';
-import { useRef } from 'react';
+import { motion, useInView, useReducedMotion } from 'motion/react';
+import { usePostHog } from 'posthog-js/react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Icon } from '~/features/landing/components/atoms';
+import { Button, Icon, type Tender } from '~/features/landing/components/atoms';
 import { useParallax } from '~/features/landing/motion';
-import { SAMPLE_TENDERS } from './sample-tenders';
+import { fetchSampleTenders, initialSampleTenders } from './sample-tenders';
 import { TenderDeck } from './tender-deck';
 
+/** How many sample tenders the hero deck cycles through per visit. */
+const DECK_SIZE = 6;
+
+// Module-scoped guard so the "deck seen" event fires at most once per loaded
+// session, even if the hero remounts during SPA navigation.
+let deckSeenCaptured = false;
+
 export function Hero() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+  const posthog = usePostHog();
   const reduce = useReducedMotion();
   const trust = t('landing.hero.trust', { returnObjects: true }) as string[];
   const heroRef = useRef<HTMLElement>(null);
+  const deckRef = useRef<HTMLDivElement>(null);
   const constellationY = useParallax(heroRef, 80);
+
+  // Curated sample tenders via the async seam. Seed synchronously with a stable
+  // slice so the deck paints on the first frame (no empty state, no LCP hit),
+  // then swap in a randomised set once the loader resolves.
+  const [tenders, setTenders] = useState<Tender[]>(() => initialSampleTenders(DECK_SIZE));
+  useEffect(() => {
+    let active = true;
+    fetchSampleTenders(DECK_SIZE).then((next) => {
+      if (active && next.length > 0) setTenders(next);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  // Fire once per session when the sample deck scrolls into view.
+  const deckInView = useInView(deckRef, { once: true, amount: 0.4 });
+  useEffect(() => {
+    if (!deckInView || deckSeenCaptured) return;
+    deckSeenCaptured = true;
+    posthog?.capture('landing_hero_deck_seen', { location: 'hero' });
+  }, [deckInView, posthog]);
 
   const container = reduce
     ? {}
@@ -63,7 +95,7 @@ export function Hero() {
             {t('landing.hero.subtitle')}
           </motion.p>
           <motion.div {...item} className="mt-9 flex flex-wrap items-center gap-5">
-            <Button to="/$locale/auth/signup" params={{ locale: i18n.language }} variant="primary">
+            <Button href="#agents" variant="primary">
               {t('landing.hero.ctaPrimary')}
               <Icon name="arrow-right" className="text-[18px]" />
             </Button>
@@ -84,16 +116,21 @@ export function Hero() {
           </motion.ul>
         </motion.div>
 
-        {/* infinite tender deck — a "Tinder" swipe loop on every breakpoint */}
+        {/* infinite tender deck — a "Tinder" swipe loop on every breakpoint.
+            Illustrative samples, labelled as such — never live/real-time data. */}
         <motion.div
+          ref={deckRef}
           aria-hidden="true"
-          className="relative mx-auto flex h-[400px] w-[340px] shrink-0 items-center justify-center"
+          className="relative mx-auto flex h-[400px] w-[340px] shrink-0 flex-col items-center justify-center gap-4"
           style={constellationY ? { y: constellationY } : undefined}
           initial={reduce ? undefined : { opacity: 0, scale: 0.94 }}
           animate={reduce ? undefined : { opacity: 1, scale: 1 }}
           transition={reduce ? undefined : { duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          <TenderDeck tenders={SAMPLE_TENDERS} />
+          <TenderDeck tenders={tenders} />
+          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-400">
+            {t('landing.hero.deckLabel')}
+          </span>
         </motion.div>
       </div>
 

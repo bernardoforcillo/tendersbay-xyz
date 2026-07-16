@@ -144,7 +144,8 @@
       "subtitle": "Dnes v noci se uzavírá zakázka s vaším jménem. Velcí hráči na ní už mají tým. Vy máte otevřené tři panely v Excelu. Tady to končí — AI agenti, kteří ji najdou, rozcupují papírování a postaví vás do nabídky. Zatímco spíte.",
       "ctaPrimary": "Pošlete své agenty do práce",
       "ctaSecondary": "Podívejte se na vizi",
-      "trust": ["27 zemí, jedno hledání", "Agenti, kteří nikdy nespí", "Papírování: vyřízeno"]
+      "trust": ["27 zemí, jedno hledání", "Agenti, kteří nikdy nespí", "Papírování: vyřízeno"],
+      "deckLabel": "Ukázkové výsledky"
     },
     "proof": {
       "lead": "Každý rok se v Evropě utratí přes dva biliony eur veřejných peněz. Většina projde veřejnými zakázkami, které nikdy nevidíte.",

@@ -144,7 +144,8 @@
       "subtitle": "În seara asta se închide o licitație cu numele dvs. Marii jucători au deja o echipă pe ea. Dvs. aveți trei file deschise în Excel. Aici se termină — agenți AI care o găsesc, sfâșie birocrația și vă pun pe ofertă. În timp ce dormiți.",
       "ctaPrimary": "Puneți-vă agenții la treabă",
       "ctaSecondary": "Vedeți viziunea",
-      "trust": ["27 de țări, o căutare", "Agenți care nu dorm niciodată", "Birocrație: rezolvată"]
+      "trust": ["27 de țări, o căutare", "Agenți care nu dorm niciodată", "Birocrație: rezolvată"],
+      "deckLabel": "Rezultate exemplu"
     },
     "proof": {
       "lead": "În fiecare an, în Europa se cheltuiesc peste două trilioane de euro din bani publici. Cea mai mare parte trece prin licitații publice pe care nu le vedeți niciodată.",

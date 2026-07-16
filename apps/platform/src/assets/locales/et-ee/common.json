@@ -144,7 +144,8 @@
       "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja panevad teid pakkumisse. Sel ajal kui magate.",
       "ctaPrimary": "Pange oma agendid tööle",
       "ctaSecondary": "Vaadake visiooni",
-      "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"]
+      "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"],
+      "deckLabel": "Näidistulemused"
     },
     "proof": {
       "lead": "Igal aastal kulutatakse Euroopas üle kahe tuhande miljardi euro avalikku raha. Suurem osa liigub läbi riigihangete, mida te kunagi ei näe.",

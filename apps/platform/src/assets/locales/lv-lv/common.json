@@ -144,7 +144,8 @@
       "subtitle": "Šonakt noslēdzas iepirkums ar jūsu vārdu. Lielajiem spēlētājiem tam jau ir komanda. Jums ir atvērtas trīs cilnes programmā Excel. Te tas beidzas — MI aģenti, kas to atrod, saplosa birokrātiju un ieliek jūs piedāvājumā. Kamēr jūs guļat.",
       "ctaPrimary": "Lieciet saviem aģentiem strādāt",
       "ctaSecondary": "Skatiet vīziju",
-      "trust": ["27 valstis, viena meklēšana", "Aģenti, kas nekad neguļ", "Birokrātija: nokārtota"]
+      "trust": ["27 valstis, viena meklēšana", "Aģenti, kas nekad neguļ", "Birokrātija: nokārtota"],
+      "deckLabel": "Piemēra rezultāti"
     },
     "proof": {
       "lead": "Katru gadu Eiropā tiek iztērēti vairāk nekā divi triljoni eiro publiskās naudas. Lielākā daļa iet caur publiskajiem iepirkumiem, kurus jūs nekad neredzat.",

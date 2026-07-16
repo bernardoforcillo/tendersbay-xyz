@@ -144,7 +144,8 @@
       "subtitle": "Un marché à votre nom se clôt ce soir. Les gros ont déjà une équipe dessus. Vous avez trois onglets ouverts dans Excel. Ça s'arrête ici — des agents IA qui le trouvent, étripent la paperasse et vous placent sur l'offre. Pendant que vous dormez.",
       "ctaPrimary": "Mettez vos agents au travail",
       "ctaSecondary": "Voir la vision",
-      "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"]
+      "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"],
+      "deckLabel": "Exemples de résultats"
     },
     "proof": {
       "lead": "Chaque année, plus de deux mille milliards d’euros d’argent public sont dépensés en Europe. La plupart passe par des appels d’offres que vous ne voyez jamais.",

@@ -144,7 +144,8 @@
       "subtitle": "I aften lukker et udbud med dit navn på. De store spillere har allerede et team på det. Du har tre faner åbne i Excel. Det slutter her — AI-agenter, der finder det, flår papirarbejdet fra hinanden og sætter dig på buddet. Mens du sover.",
       "ctaPrimary": "Sæt dine agenter i gang",
       "ctaSecondary": "Se visionen",
-      "trust": ["27 lande, én søgning", "Agenter der aldrig sover", "Papirarbejde: klaret"]
+      "trust": ["27 lande, én søgning", "Agenter der aldrig sover", "Papirarbejde: klaret"],
+      "deckLabel": "Eksempelresultater"
     },
     "proof": {
       "lead": "Hvert år bruges der i Europa over to billioner euro af offentlige penge. Det meste går gennem offentlige udbud, du aldrig ser.",

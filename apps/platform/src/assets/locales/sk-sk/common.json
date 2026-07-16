@@ -144,7 +144,12 @@
       "subtitle": "Dnes v noci sa uzatvára zákazka s vaším menom. Veľkí hráči na nej už majú tím. Vy máte otvorené tri karty v Exceli. Tu to končí — AI agenti, ktorí ju nájdu, rozcupujú papierovačky a postavia vás do ponuky. Kým spíte.",
       "ctaPrimary": "Pošlite svojich agentov do práce",
       "ctaSecondary": "Pozrite si víziu",
-      "trust": ["27 krajín, jedno hľadanie", "Agenti, ktorí nikdy nespia", "Papierovačky: vybavené"]
+      "trust": [
+        "27 krajín, jedno hľadanie",
+        "Agenti, ktorí nikdy nespia",
+        "Papierovačky: vybavené"
+      ],
+      "deckLabel": "Ukážkové výsledky"
     },
     "proof": {
       "lead": "Každý rok sa v Európe minie vyše dva bilióny eur verejných peňazí. Väčšina prejde cez verejné obstarávanie, ktoré nikdy nevidíte.",

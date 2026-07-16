@@ -144,7 +144,8 @@
       "subtitle": "Tänä yönä sulkeutuu hankinta, jossa on sinun nimesi. Suurilla toimijoilla on jo tiimi sen kimpussa. Sinulla on kolme välilehteä auki Excelissä. Se loppuu tähän — tekoälyagentit, jotka löytävät sen, repivät paperityöt kappaleiksi ja nostavat sinut tarjoukseen. Sillä aikaa kun nukut.",
       "ctaPrimary": "Pane agenttisi töihin",
       "ctaSecondary": "Katso visio",
-      "trust": ["27 maata, yksi haku", "Agentit jotka eivät koskaan nuku", "Paperityöt: hoidettu"]
+      "trust": ["27 maata, yksi haku", "Agentit jotka eivät koskaan nuku", "Paperityöt: hoidettu"],
+      "deckLabel": "Esimerkkituloksia"
     },
     "proof": {
       "lead": "Euroopassa käytetään joka vuosi yli kaksi biljoonaa euroa julkista rahaa. Suurin osa kulkee julkisten hankintojen kautta, joita et koskaan näe.",

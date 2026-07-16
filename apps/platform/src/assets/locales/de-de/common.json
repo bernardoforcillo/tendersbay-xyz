@@ -144,7 +144,8 @@
       "subtitle": "Heute Nacht läuft eine Ausschreibung mit Ihrem Namen aus. Die Großen haben längst ein Team daran. Sie haben drei Excel-Tabs offen. Damit ist Schluss — KI-Agenten, die sie finden, den Papierkram zerlegen und Sie ins Angebot bringen. Während Sie schlafen.",
       "ctaPrimary": "Setzen Sie Ihre Agenten ein",
       "ctaSecondary": "Vision ansehen",
-      "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"]
+      "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"],
+      "deckLabel": "Beispielergebnisse"
     },
     "proof": {
       "lead": "Jedes Jahr werden in Europa über zwei Billionen Euro an öffentlichen Geldern ausgegeben. Das meiste läuft über Ausschreibungen, die Sie nie zu sehen bekommen.",
