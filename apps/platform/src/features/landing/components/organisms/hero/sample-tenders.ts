@@ -1,4 +1,10 @@
+import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
+import {
+  deadlineInfo,
+  formatTenderValue,
+} from '~/features/account/components/organisms/tender-feed';
 import type { Tender } from '~/features/landing/components/atoms';
+import { tenderClient } from '~/lib/api/client';
 
 // Illustrative sample tenders — NOT live data. Buyers are named in their own
 // country's language and objects are plausible calls spread across EU markets
@@ -153,14 +159,39 @@ export function initialSampleTenders(count = 3): Tender[] {
 }
 
 /**
- * Async seam for the hero deck: resolves a randomised subset of the curated
- * pool as a Promise, so the hero awaits it exactly like a real fetch. These are
- * illustrative samples only — never surface them as live / real-time results.
- * `count` is clamped to the pool size so an over-large request cannot throw.
- *
- * // PHASE 2: replace body with tenderClient.searchTenders({ query: '', limit: count });
- * // map results to `Tender`, and fall back to the shuffled pool on error/empty.
+ * Maps a backend `TenderResult` to the hero card's display shape. The hero teaser
+ * isn't locale-critical, so the value is formatted in the app's default locale.
+ * `scoutCount` is a curated-only teaser metric the backend doesn't carry (and the
+ * card never renders it), so live rows carry 0.
  */
-export function fetchSampleTenders(count = 3): Promise<Tender[]> {
-  return Promise.resolve(shuffle(SAMPLE_TENDERS).slice(0, clampCount(count)));
+function toTender(result: TenderResult): Tender {
+  const days = deadlineInfo(result.deadline, new Date())?.days ?? 0;
+  return {
+    id: result.id,
+    entity: result.buyerName || result.country || '—',
+    object: result.title,
+    value: formatTenderValue(result.value, result.currency, 'en-IE') ?? '—',
+    deadlineDays: Math.max(0, days),
+    scoutCount: 0,
+  };
+}
+
+/**
+ * Async seam for the hero deck: fetches up to `count` real tenders from the
+ * anonymous `SearchTenders` endpoint and maps them to the card shape. Falls back
+ * to the shuffled curated pool on error, or when the backend has nothing yet, so
+ * the deck is never empty and never fabricates a "live" claim — it shows real
+ * tenders or clearly-labelled samples. `count` is clamped to the pool size.
+ */
+export async function fetchSampleTenders(count = 3): Promise<Tender[]> {
+  const n = clampCount(count);
+  if (n === 0) return [];
+  const fallback = () => shuffle(SAMPLE_TENDERS).slice(0, n);
+  try {
+    const res = await tenderClient.searchTenders({ query: '', limit: n, offset: 0 });
+    const mapped = res.results.slice(0, n).map(toTender);
+    return mapped.length > 0 ? mapped : fallback();
+  } catch {
+    return fallback();
+  }
 }
