@@ -85,7 +85,7 @@ func (r *Registry) RemoveChat(sessionID string) {
 func (r *Registry) RegisterDefaults() {
 	r.Register(AgentConfig{
 		Type:  AgentTypeBaseChat,
-		Model: "accounts/fireworks/models/glm-5p2",
+		Model: "accounts/fireworks/models/deepseek-v4-flash",
 		Instructions: "Sei un assistente esperto di bandi pubblici europei. Rispondi in modo conciso e " +
 			"professionale in italiano. Se l'utente ti chiede di creare un workbench, deduci nome e " +
 			"visibilità (privato o condiviso) dalla conversazione e usa il tool ask_choice per farteli " +
