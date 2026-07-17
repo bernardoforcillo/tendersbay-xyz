@@ -1,11 +1,18 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PageHeader, SearchDock, TenderResultCard } from '~/features/account/components/organisms';
 import { AccountLayout } from '~/features/account/components/templates/account-layout';
-import { loadTenderDetail, TenderDetailView, useTenderHead } from '~/features/tenders';
+import {
+  loadTenderDetail,
+  TenderDetailView,
+  TenderNotFoundError,
+  useTenderHead,
+} from '~/features/tenders';
 
 export const Route = createFileRoute('/_authenticated/explore/tenders/$id')({
   loader: ({ params }) => loadTenderDetail(params.id),
+  errorComponent: AuthedTenderNotFound,
   component: AccountTenderDetail,
 });
 
@@ -45,6 +52,23 @@ function AccountTenderDetail() {
         <div className="pointer-events-auto w-full max-w-xl">
           <SearchDock mode="search" value={query} onChange={setQuery} onSubmit={runSearch} />
         </div>
+      </div>
+    </AccountLayout>
+  );
+}
+
+function AuthedTenderNotFound({ error }: { error: unknown }) {
+  const { t } = useTranslation();
+  // Real (non-not-found) errors must not be swallowed — rethrow.
+  if (!(error instanceof TenderNotFoundError)) throw error;
+  return (
+    <AccountLayout>
+      <PageHeader />
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
+        <p className="text-lg text-ink-900">{t('tenders.detail.notFound')}</p>
+        <Link to="/explore" className="text-brand-700 underline">
+          {t('tenders.detail.backToSearch')}
+        </Link>
       </div>
     </AccountLayout>
   );
