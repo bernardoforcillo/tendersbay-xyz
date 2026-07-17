@@ -35,6 +35,7 @@ import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchesRouteImport } fro
 import { Route as AuthenticatedWorkspacesWorkspaceIdRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/roles'
 import { Route as AuthenticatedWorkspacesWorkspaceIdMembersRouteImport } from './routes/_authenticated/workspaces/$workspaceId/members'
 import { Route as AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/invites'
+import { Route as AuthenticatedExploreTendersIdRouteImport } from './routes/_authenticated/explore/tenders/$id'
 import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/route'
 import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsIndexRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/index'
 import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/roles'
@@ -192,6 +193,12 @@ const AuthenticatedWorkspacesWorkspaceIdInvitesRoute =
     path: '/invites',
     getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
   } as any)
+const AuthenticatedExploreTendersIdRoute =
+  AuthenticatedExploreTendersIdRouteImport.update({
+    id: '/explore/tenders/$id',
+    path: '/explore/tenders/$id',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute =
   AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteImport.update({
     id: '/settings',
@@ -298,6 +305,7 @@ export interface FileRoutesByFullPath {
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
   '/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren
+  '/explore/tenders/$id': typeof AuthenticatedExploreTendersIdRoute
   '/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
   '/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
   '/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
@@ -333,6 +341,7 @@ export interface FileRoutesByTo {
   '/explore': typeof AuthenticatedExploreIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/workspaces': typeof AuthenticatedWorkspacesIndexRoute
+  '/explore/tenders/$id': typeof AuthenticatedExploreTendersIdRoute
   '/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
   '/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
   '/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
@@ -371,6 +380,7 @@ export interface FileRoutesById {
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
   '/_authenticated/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren
+  '/_authenticated/explore/tenders/$id': typeof AuthenticatedExploreTendersIdRoute
   '/_authenticated/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
   '/_authenticated/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
   '/_authenticated/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
@@ -411,6 +421,7 @@ export interface FileRouteTypes {
     | '/settings/'
     | '/workspaces/'
     | '/workspaces/$workspaceId/settings'
+    | '/explore/tenders/$id'
     | '/workspaces/$workspaceId/invites'
     | '/workspaces/$workspaceId/members'
     | '/workspaces/$workspaceId/roles'
@@ -446,6 +457,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/settings'
     | '/workspaces'
+    | '/explore/tenders/$id'
     | '/workspaces/$workspaceId/invites'
     | '/workspaces/$workspaceId/members'
     | '/workspaces/$workspaceId/roles'
@@ -483,6 +495,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/'
     | '/_authenticated/workspaces/'
     | '/_authenticated/workspaces/$workspaceId/settings'
+    | '/_authenticated/explore/tenders/$id'
     | '/_authenticated/workspaces/$workspaceId/invites'
     | '/_authenticated/workspaces/$workspaceId/members'
     | '/_authenticated/workspaces/$workspaceId/roles'
@@ -690,6 +703,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/workspaces/$workspaceId/invites'
       preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport
       parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
+    }
+    '/_authenticated/explore/tenders/$id': {
+      id: '/_authenticated/explore/tenders/$id'
+      path: '/explore/tenders/$id'
+      fullPath: '/explore/tenders/$id'
+      preLoaderRoute: typeof AuthenticatedExploreTendersIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/workspaces/$workspaceId/settings': {
       id: '/_authenticated/workspaces/$workspaceId/settings'
@@ -903,6 +923,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedExploreIndexRoute: typeof AuthenticatedExploreIndexRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
   AuthenticatedWorkspacesIndexRoute: typeof AuthenticatedWorkspacesIndexRoute
+  AuthenticatedExploreTendersIdRoute: typeof AuthenticatedExploreTendersIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -917,6 +938,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedExploreIndexRoute: AuthenticatedExploreIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   AuthenticatedWorkspacesIndexRoute: AuthenticatedWorkspacesIndexRoute,
+  AuthenticatedExploreTendersIdRoute: AuthenticatedExploreTendersIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
