@@ -127,7 +127,12 @@
         "sector": "Branche",
         "deadline": "Frist",
         "value": "Wert"
-      }
+      },
+      "loading": "Suche läuft…",
+      "empty": "Keine Ausschreibungen gefunden",
+      "error": "Die Suche ist momentan nicht verfügbar — versuchen Sie es in Kürze erneut.",
+      "results_one": "{{count}} Ausschreibung",
+      "results_other": "{{count}} Ausschreibungen"
     },
     "meta": {
       "title": "tendersbay — Öffentliche Ausschreibungen, zugeschlagen von KI-Agenten",
@@ -144,7 +149,26 @@
       "subtitle": "Heute Nacht läuft eine Ausschreibung mit Ihrem Namen aus. Die Großen haben längst ein Team daran. Sie haben drei Excel-Tabs offen. Damit ist Schluss — KI-Agenten, die sie finden, den Papierkram zerlegen und Sie ins Angebot bringen. Während Sie schlafen.",
       "ctaPrimary": "Setzen Sie Ihre Agenten ein",
       "ctaSecondary": "Vision ansehen",
-      "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"]
+      "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"],
+      "deckLabel": "Beispielergebnisse"
+    },
+    "proof": {
+      "lead": "Jedes Jahr werden in Europa über zwei Billionen Euro an öffentlichen Geldern ausgegeben. Das meiste läuft über Ausschreibungen, die Sie nie zu sehen bekommen.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "öffentliche Ausgaben pro Jahr in der EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "öffentliche Auftraggeber, die ausschreiben"
+        },
+        {
+          "value": "~800,000",
+          "label": "Ausschreibungen pro Jahr — kein Team liest sie alle"
+        }
+      ],
+      "source": "Europäische Kommission · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Das Spiel ist manipuliert, um Sie draußen zu halten. Und es funktioniert.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Drei Agenten. Sie verfehlen nichts, schlafen nicht, geben nicht auf.",
+      "title": "Das haben Ihre Agenten getan, während Sie schliefen.",
+      "lead": "Keine schnellere Suchleiste, die Sie trotzdem selbst bedienen müssen. Ein Team von Agenten, das die ganze Ausschreibung bearbeitet — finden, vorbereiten, gewinnen — über Nacht, sodass Sie schon im Rennen aufwachen.",
       "items": [
         {
-          "title": "Finden",
-          "body": "Sie durchkämmen täglich alle 27 Länder und zeigen nur die Ausschreibungen, die Ihre Zeit wert sind — zugeschnitten auf das, was Sie wirklich tun."
+          "time": "02:14",
+          "title": "Sie fand die eine, die passt",
+          "body": "Während der Markt schlief, durchkämmten die Agenten alle 27 Länder und zogen die eine Ausschreibung heraus, die Ihre Zeit wert ist — zugeschnitten auf das, was Sie wirklich tun, kein Stichwort-Wust."
         },
         {
-          "title": "Vorbereiten",
-          "body": "Anforderungen, Zertifikate, EEE, Fristen: extrahiert, abgeglichen, zusammengestellt. Der Papierkram, der Sie zermürbt hat, erledigt."
+          "time": "05:30",
+          "title": "Sie erledigte den Papierkram",
+          "body": "Anforderungen gelesen, Zertifikate abgeglichen, die EEE zusammengestellt, jede Frist notiert. Die Bürokratie, die Ihnen früher das Wochenende raubte — fertig vor dem Kaffee."
         },
         {
-          "title": "Gewinnen",
-          "body": "Sie machen aus den Vergabeunterlagen eine Gewinnstrategie, damit Sie mit derselben Schlagkraft antreten wie die Großen."
+          "time": "07:00",
+          "title": "Sie wachten schon im Rennen auf",
+          "body": "Kein leeres Blatt. Aus den Vergabeunterlagen wurde eine Gewinnstrategie, bereit für Ihre Entscheidung — dieselbe Schlagkraft, für die die Großen ein ganzes Büro bezahlen, wartet auf Ihrem Schreibtisch."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Ihre Agenten sind bereit. Es fehlen nur Sie.",
-      "body": "Wir schalten die EU Markt für Markt frei. Tragen Sie sich in die Warteliste ein — sobald Ihr Land aufleuchtet, gehen Ihre Agenten auf die Jagd.",
-      "button": "Sichern Sie sich Ihren Platz"
+      "body": "Erstellen Sie Ihr Konto und setzen Sie die Agenten auf Ihren Markt an — finden, vorbereiten, gewinnen, ganz ohne eigenes Vergabebüro.",
+      "button": "Konto erstellen"
     },
     "tenderCard": {
       "value": "Wert",
@@ -312,6 +340,30 @@
       "cancelled": "Storniert",
       "closed": "Geschlossen",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Land",
+      "anyCountry": "Alle Länder",
+      "sector": "Sektor",
+      "anySector": "Alle Sektoren",
+      "sectors": {
+        "construction": "Bauwesen",
+        "it": "IT & Software",
+        "health": "Gesundheit",
+        "energy": "Energie",
+        "transport": "Verkehr",
+        "education": "Bildung",
+        "environment": "Umwelt",
+        "business": "Unternehmensdienstleistungen"
+      },
+      "status": "Status",
+      "anyStatus": "Alle Status",
+      "deadline": "Frist",
+      "anyDeadline": "Jederzeit",
+      "deadline7": "Nächste 7 Tage",
+      "deadline30": "Nächste 30 Tage",
+      "deadline90": "Nächste 90 Tage",
+      "clear": "Alle löschen"
     },
     "detail": {
       "overview": "Übersicht",

@@ -127,7 +127,12 @@
         "sector": "Nozare",
         "deadline": "Termiņš",
         "value": "Vērtība"
-      }
+      },
+      "loading": "Meklē…",
+      "empty": "Iepirkumi nav atrasti",
+      "error": "Meklēšana pašlaik nav pieejama — mēģiniet vēlreiz pēc brīža.",
+      "results_one": "{{count}} iepirkums",
+      "results_other": "{{count}} iepirkumi"
     },
     "meta": {
       "title": "tendersbay — Publiskie iepirkumi Eiropā ar jūsu MI aģentiem",
@@ -144,7 +149,26 @@
       "subtitle": "Šonakt noslēdzas iepirkums ar jūsu vārdu. Lielajiem spēlētājiem tam jau ir komanda. Jums ir atvērtas trīs cilnes programmā Excel. Te tas beidzas — MI aģenti, kas to atrod, saplosa birokrātiju un ieliek jūs piedāvājumā. Kamēr jūs guļat.",
       "ctaPrimary": "Lieciet saviem aģentiem strādāt",
       "ctaSecondary": "Skatiet vīziju",
-      "trust": ["27 valstis, viena meklēšana", "Aģenti, kas nekad neguļ", "Birokrātija: nokārtota"]
+      "trust": ["27 valstis, viena meklēšana", "Aģenti, kas nekad neguļ", "Birokrātija: nokārtota"],
+      "deckLabel": "Piemēra rezultāti"
+    },
+    "proof": {
+      "lead": "Katru gadu Eiropā tiek iztērēti vairāk nekā divi triljoni eiro publiskās naudas. Lielākā daļa iet caur publiskajiem iepirkumiem, kurus jūs nekad neredzat.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "publisko izdevumu gadā ES"
+        },
+        {
+          "value": "250,000+",
+          "label": "publiskie pircēji, kas izsludina iepirkumus"
+        },
+        {
+          "value": "~800,000",
+          "label": "iepirkumu gadā — neviena komanda tos visus neizlasa"
+        }
+      ],
+      "source": "Eiropas Komisija · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Spēle ir sarežģēta tā, lai turētu jūs ārā. Un tā darbojas.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Trīs aģenti. Viņi nekļūdās, neguļ, nepadodas.",
+      "title": "Lūk, ko jūsu aģenti paveica, kamēr jūs gulējāt.",
+      "lead": "Nevis ātrāka meklēšanas josla, kas jums joprojām jāvada pašam. Aģentu komanda, kas apstrādā visu iepirkumu — atrod, sagatavo, uzvar — nakts laikā, lai jūs pamostos jau sacensībā.",
       "items": [
         {
-          "title": "Atrast",
-          "body": "Katru dienu izķemmē visas 27 valstis un izceļ tikai tos iepirkumus, kas ir jūsu laika vērti — pielāgotus tam, ko jūs patiešām darāt."
+          "time": "02:14",
+          "title": "Atrada to, kas jums der",
+          "body": "Kamēr tirgus gulēja, aģenti izķemmēja visas 27 valstis un izcēla vienīgo iepirkumu, kas ir jūsu laika vērts — pielāgotu tam, ko jūs patiešām darāt, nevis atslēgvārdu kaudzi."
         },
         {
-          "title": "Sagatavot",
-          "body": "Prasības, sertifikāti, ESPD, termiņi: izvilkti, salīdzināti, samontēti. Birokrātija, kas jūs lauza, nokārtota."
+          "time": "05:30",
+          "title": "Salika dokumentāciju",
+          "body": "Prasības izlasītas, sertifikāti saskaņoti, ESPD salikts, katrs termiņš pierakstīts. Birokrātija, kas mēdza sadedzināt jūsu nedēļas nogali — gatava pirms kafijas."
         },
         {
-          "title": "Uzvarēt",
-          "body": "Viņi pārvērš iepirkuma dokumentāciju uzvaras stratēģijā, lai jūs ienāktu ar tādu pašu uguns spēku kā giganti."
+          "time": "07:00",
+          "title": "Pamodāties jau sacensībā",
+          "body": "Nekādas tukšas lapas. No iepirkuma dokumentācijas tapa uzvaras piedāvājuma stratēģija, gatava jūsu lēmumam — tas pats uguns spēks, par kuru giganti maksā veselu biroju, gaida uz jūsu galda."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Jūsu aģenti ir gatavi. Trūkst tikai jūs.",
-      "body": "Mēs ieslēdzam ES tirgu pēc tirgus. Reģistrējieties gaidīšanas sarakstā — brīdī, kad jūsu valsts iedegas, jūsu aģenti dodas medībās.",
-      "button": "Rezervējiet savu vietu"
+      "body": "Izveidojiet kontu un palaidiet aģentus savā tirgū — atrast, sagatavot, uzvarēt, bez sava iepirkumu departamenta.",
+      "button": "Izveidot kontu"
     },
     "tenderCard": {
       "value": "Vērtība",
@@ -314,6 +342,30 @@
       "cancelled": "Atcelts",
       "closed": "Slēgts",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Valsts",
+      "anyCountry": "Visas valstis",
+      "sector": "Nozare",
+      "anySector": "Visas nozares",
+      "sectors": {
+        "construction": "Būvniecība",
+        "it": "IT un programmatūra",
+        "health": "Veselība",
+        "energy": "Enerģētika",
+        "transport": "Transports",
+        "education": "Izglītība",
+        "environment": "Vide",
+        "business": "Uzņēmējdarbības pakalpojumi"
+      },
+      "status": "Statuss",
+      "anyStatus": "Visi statusi",
+      "deadline": "Termiņš",
+      "anyDeadline": "Jebkurā laikā",
+      "deadline7": "Nākamās 7 dienas",
+      "deadline30": "Nākamās 30 dienas",
+      "deadline90": "Nākamās 90 dienas",
+      "clear": "Notīrīt visu"
     },
     "detail": {
       "overview": "Pārskats",

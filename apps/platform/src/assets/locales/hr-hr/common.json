@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Rok",
         "value": "Vrijednost"
-      }
+      },
+      "loading": "Pretraživanje…",
+      "empty": "Nema pronađenih natječaja",
+      "error": "Pretraživanje trenutačno nije dostupno — pokušajte ponovno za trenutak.",
+      "results_one": "{{count}} natječaj",
+      "results_other": "{{count}} natječaja"
     },
     "meta": {
       "title": "tendersbay — Javni natječaji, dodijeljeni uz vaše AI agente",
@@ -148,7 +153,26 @@
         "27 zemalja, jedno pretraživanje",
         "Agenti koji nikada ne spavaju",
         "Papirologija: riješena"
-      ]
+      ],
+      "deckLabel": "Primjeri rezultata"
+    },
+    "proof": {
+      "lead": "Svake se godine u Europi potroši više od dva bilijuna eura javnog novca. Većina prolazi kroz javne natječaje koje nikada ne vidite.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "javne potrošnje godišnje u EU-u"
+        },
+        {
+          "value": "250,000+",
+          "label": "javnih naručitelja koji raspisuju natječaje"
+        },
+        {
+          "value": "~800,000",
+          "label": "natječaja godišnje — nijedan tim ih ne pročita sve"
+        }
+      ],
+      "source": "Europska komisija · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Igra je namještena da vas drži vani. I uspijeva.",
@@ -168,19 +192,23 @@
       ]
     },
     "agents": {
-      "title": "Tri agenta. Ne promašuju, ne spavaju, ne odustaju.",
+      "title": "Evo što su vaši agenti napravili dok ste spavali.",
+      "lead": "Ne brža tražilica koju svejedno morate voziti sami. Tim agenata koji obrađuje cijeli natječaj — pronalazi, priprema, pobjeđuje — preko noći, da se probudite već u utrci.",
       "items": [
         {
-          "title": "Pronađi",
-          "body": "Svaki dan pročešljaju svih 27 zemalja i izdvoje samo natječaje vrijedne vašeg vremena — prilagođene onome što stvarno radite."
+          "time": "02:14",
+          "title": "Pronašao je onaj koji vam odgovara",
+          "body": "Dok je tržište spavalo, agenti su pročešljali svih 27 zemalja i izvukli jedini natječaj vrijedan vašeg vremena — prilagođen onome što stvarno radite, a ne hrpu ključnih riječi."
         },
         {
-          "title": "Pripremi",
-          "body": "Uvjeti, certifikati, ESPD, rokovi: izvučeni, unakrsno provjereni, složeni. Papirologija koja vas je lomila, riješena."
+          "time": "05:30",
+          "title": "Sastavio je papirologiju",
+          "body": "Uvjeti pročitani, certifikati usklađeni, ESPD složen, svaki rok zabilježen. Birokracija koja vam je gutala vikend — gotova prije kave."
         },
         {
-          "title": "Pobijedi",
-          "body": "Pretvaraju natječajnu dokumentaciju u pobjedničku strategiju, da uđete s istom vatrenom moći kao divovi."
+          "time": "07:00",
+          "title": "Probudili ste se već u utrci",
+          "body": "Nikakav prazan papir. Natječajna dokumentacija postala je pobjednička strategija ponude, spremna za vašu odluku — ista vatrena moć za koju divovi plaćaju cijeli ured, čeka na vašem stolu."
         }
       ]
     },
@@ -256,8 +284,8 @@
     },
     "cta": {
       "title": "Vaši agenti su spremni. Jedino što nedostaje ste vi.",
-      "body": "Palimo EU tržište po tržište. Prijavite se na listu čekanja — u trenutku kada vaša zemlja zasvijetli, vaši agenti kreću u lov.",
-      "button": "Osigurajte svoje mjesto"
+      "body": "Otvorite račun i pošaljite agente na svoje tržište — pronaći, pripremiti, pobijediti, bez vlastitog odjela za natječaje.",
+      "button": "Otvorite račun"
     },
     "tenderCard": {
       "value": "Vrijednost",
@@ -318,6 +346,30 @@
       "cancelled": "Otkazan",
       "closed": "Zatvoren",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Država",
+      "anyCountry": "Sve države",
+      "sector": "Sektor",
+      "anySector": "Svi sektori",
+      "sectors": {
+        "construction": "Graditeljstvo",
+        "it": "IT i softver",
+        "health": "Zdravstvo",
+        "energy": "Energetika",
+        "transport": "Promet",
+        "education": "Obrazovanje",
+        "environment": "Okoliš",
+        "business": "Poslovne usluge"
+      },
+      "status": "Status",
+      "anyStatus": "Svi statusi",
+      "deadline": "Rok",
+      "anyDeadline": "Bilo kada",
+      "deadline7": "Sljedećih 7 dana",
+      "deadline30": "Sljedećih 30 dana",
+      "deadline90": "Sljedećih 90 dana",
+      "clear": "Očisti sve"
     },
     "detail": {
       "overview": "Pregled",

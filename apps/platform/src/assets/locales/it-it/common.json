@@ -127,7 +127,12 @@
         "sector": "Settore",
         "deadline": "Scadenza",
         "value": "Valore"
-      }
+      },
+      "loading": "Ricerca in corso…",
+      "empty": "Nessuna gara trovata",
+      "error": "La ricerca non è disponibile al momento — riprova tra poco.",
+      "results_one": "{{count}} gara",
+      "results_other": "{{count}} gare"
     },
     "meta": {
       "title": "tendersbay — Bandi di gara, aggiudicati dai tuoi agenti AI",
@@ -144,7 +149,26 @@
       "subtitle": "Stanotte scade una gara col tuo nome sopra. I grandi ci hanno messo una squadra. Tu hai tre schede aperte in Excel. Finisce qui — agenti AI che la trovano, sbranano la burocrazia e ti mettono in gara. Mentre dormi.",
       "ctaPrimary": "Metti al lavoro i tuoi agenti",
       "ctaSecondary": "Guarda la vision",
-      "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"]
+      "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"],
+      "deckLabel": "Risultati di esempio"
+    },
+    "proof": {
+      "lead": "Ogni anno in Europa si spendono oltre duemila miliardi di euro di denaro pubblico. La maggior parte passa da bandi di gara che non vedi mai.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "di spesa pubblica all’anno nell’UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "enti pubblici che vanno a gara"
+        },
+        {
+          "value": "~800,000",
+          "label": "gare d’appalto all’anno — nessuno le legge tutte"
+        }
+      ],
+      "source": "Commissione europea · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Il gioco è truccato per tenerti fuori. E funziona.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Tre agenti. Non sbagliano, non dormono, non mollano.",
+      "title": "Ecco cosa hanno fatto i tuoi agenti mentre dormivi.",
+      "lead": "Non una barra di ricerca più veloce che devi comunque guidare tu. Una squadra di agenti che lavora l’intera gara — scova, prepara, vince — nella notte, così ti svegli già in corsa.",
       "items": [
         {
-          "title": "Scova",
-          "body": "Setacciano tutti i 27 paesi ogni giorno e ti mostrano solo le gare che valgono il tuo tempo — su misura per ciò che fai davvero."
+          "time": "02:14",
+          "title": "Ha scovato quella giusta per te",
+          "body": "Mentre il mercato dormiva, gli agenti hanno setacciato tutti i 27 paesi e tirato fuori l’unica gara che vale il tuo tempo — su misura per ciò che fai davvero, non un mucchio di parole chiave."
         },
         {
-          "title": "Prepara",
-          "body": "Requisiti, certificati, DGUE, scadenze: estratti, verificati, assemblati. La burocrazia che ti spezzava, risolta."
+          "time": "05:30",
+          "title": "Ha costruito le scartoffie",
+          "body": "Requisiti letti, certificati abbinati, il DGUE assemblato, ogni scadenza annotata. La burocrazia che ti bruciava il weekend — pronta prima del caffè."
         },
         {
-          "title": "Vinci",
-          "body": "Trasformano il capitolato in una strategia vincente, così entri con la stessa potenza di fuoco dei giganti."
+          "time": "07:00",
+          "title": "Ti sei svegliato già in corsa",
+          "body": "Niente pagina bianca. Il capitolato è diventato una strategia di gara, pronta per la tua decisione — la stessa potenza di fuoco per cui i giganti pagano un ufficio intero, che ti aspetta sulla scrivania."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "I tuoi agenti sono pronti. Manca solo tu.",
-      "body": "Stiamo accendendo l'UE un mercato alla volta. Iscriviti alla lista — nel momento in cui il tuo paese si accende, i tuoi agenti partono a caccia.",
-      "button": "Prendi il tuo posto"
+      "body": "Crea il tuo account e metti gli agenti sul tuo mercato — trovare, preparare, vincere, senza un ufficio gare tutto tuo.",
+      "button": "Crea il tuo account"
     },
     "tenderCard": {
       "value": "Valore",
@@ -312,6 +340,30 @@
       "cancelled": "Annullata",
       "closed": "Chiusa",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Paese",
+      "anyCountry": "Tutti i paesi",
+      "sector": "Settore",
+      "anySector": "Tutti i settori",
+      "sectors": {
+        "construction": "Edilizia",
+        "it": "IT e software",
+        "health": "Sanità",
+        "energy": "Energia",
+        "transport": "Trasporti",
+        "education": "Istruzione",
+        "environment": "Ambiente",
+        "business": "Servizi alle imprese"
+      },
+      "status": "Stato",
+      "anyStatus": "Tutti gli stati",
+      "deadline": "Scadenza",
+      "anyDeadline": "Qualsiasi data",
+      "deadline7": "Prossimi 7 giorni",
+      "deadline30": "Prossimi 30 giorni",
+      "deadline90": "Prossimi 90 giorni",
+      "clear": "Cancella tutto"
     },
     "detail": {
       "overview": "Panoramica",

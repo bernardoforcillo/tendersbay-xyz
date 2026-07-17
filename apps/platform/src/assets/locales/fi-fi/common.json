@@ -127,7 +127,12 @@
         "sector": "Toimiala",
         "deadline": "Määräaika",
         "value": "Arvo"
-      }
+      },
+      "loading": "Haetaan…",
+      "empty": "Hankintoja ei löytynyt",
+      "error": "Haku ei ole juuri nyt käytettävissä — yritä hetken kuluttua uudelleen.",
+      "results_one": "{{count}} hankinta",
+      "results_other": "{{count}} hankintaa"
     },
     "meta": {
       "title": "tendersbay — Julkiset hankinnat, tekoälyagenttiesi valmistelemina",
@@ -144,7 +149,26 @@
       "subtitle": "Tänä yönä sulkeutuu hankinta, jossa on sinun nimesi. Suurilla toimijoilla on jo tiimi sen kimpussa. Sinulla on kolme välilehteä auki Excelissä. Se loppuu tähän — tekoälyagentit, jotka löytävät sen, repivät paperityöt kappaleiksi ja nostavat sinut tarjoukseen. Sillä aikaa kun nukut.",
       "ctaPrimary": "Pane agenttisi töihin",
       "ctaSecondary": "Katso visio",
-      "trust": ["27 maata, yksi haku", "Agentit jotka eivät koskaan nuku", "Paperityöt: hoidettu"]
+      "trust": ["27 maata, yksi haku", "Agentit jotka eivät koskaan nuku", "Paperityöt: hoidettu"],
+      "deckLabel": "Esimerkkituloksia"
+    },
+    "proof": {
+      "lead": "Euroopassa käytetään joka vuosi yli kaksi biljoonaa euroa julkista rahaa. Suurin osa kulkee julkisten hankintojen kautta, joita et koskaan näe.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "julkisia menoja vuodessa EU:ssa"
+        },
+        {
+          "value": "250,000+",
+          "label": "julkista hankkijaa, jotka kilpailuttavat hankintoja"
+        },
+        {
+          "value": "~800,000",
+          "label": "hankintaa vuodessa — mikään tiimi ei lue niitä kaikkia"
+        }
+      ],
+      "source": "Euroopan komissio · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Peli on viritetty pitämään sinut ulkona. Ja se toimii.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Kolme agenttia. Ne eivät hairahda, eivät nuku, eivät luovuta.",
+      "title": "Tässä on, mitä agenttisi tekivät nukkuessasi.",
+      "lead": "Ei nopeampi hakupalkki, jota sinun on silti itse ohjattava. Tiimi agentteja, joka työstää koko hankinnan — löytää, valmistelee, voittaa — yön aikana, niin että heräät jo mukana kisassa.",
       "items": [
         {
-          "title": "Löydä",
-          "body": "Ne kampaavat kaikki 27 maata joka päivä ja nostavat esiin vain hankinnat, jotka ovat aikasi arvoisia — räätälöitynä siihen, mitä todella teet."
+          "time": "02:14",
+          "title": "Se löysi sen, joka sopii sinulle",
+          "body": "Markkinoiden nukkuessa agentit kampasivat kaikki 27 maata ja nostivat esiin ainoan hankinnan, joka on aikasi arvoinen — räätälöitynä siihen, mitä todella teet, ei kasa hakusanoja."
         },
         {
-          "title": "Valmistele",
-          "body": "Vaatimukset, sertifikaatit, ESPD, määräajat: poimittu, ristiintarkistettu, koottu. Paperityö, joka mursi sinut, hoidettu."
+          "time": "05:30",
+          "title": "Se kokosi paperityöt",
+          "body": "Vaatimukset luettu, todistukset kohdistettu, ESPD koottu, jokainen määräaika kirjattu. Byrokratia, joka ennen poltti viikonloppusi — valmiina ennen kahvia."
         },
         {
-          "title": "Voita",
-          "body": "Ne muuttavat tarjouspyynnön voittavaksi strategiaksi, niin että astut sisään samalla tulivoimalla kuin jättiläiset."
+          "time": "07:00",
+          "title": "Heräsit jo mukana kisassa",
+          "body": "Ei tyhjää sivua. Tarjouspyynnöstä tuli voittava tarjousstrategia, valmiina päätöstäsi varten — sama tulivoima, josta jättiläiset maksavat kokonaisen toimiston, odottaa työpöydälläsi."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Agenttisi ovat valmiina. Vain sinä puutut.",
-      "body": "Sytytämme EU:n markkina kerrallaan. Liity odotuslistalle — sillä hetkellä kun maasi syttyy, agenttisi lähtevät metsästämään.",
-      "button": "Varaa paikkasi"
+      "body": "Luo tili ja pane agentit markkinoillesi — löytää, valmistella, voittaa, ilman omaa tarjoustiimiä.",
+      "button": "Luo tili"
     },
     "tenderCard": {
       "value": "Arvo",
@@ -312,6 +340,30 @@
       "cancelled": "Peruttu",
       "closed": "Päättynyt",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Maa",
+      "anyCountry": "Kaikki maat",
+      "sector": "Toimiala",
+      "anySector": "Kaikki toimialat",
+      "sectors": {
+        "construction": "Rakentaminen",
+        "it": "IT ja ohjelmistot",
+        "health": "Terveydenhuolto",
+        "energy": "Energia",
+        "transport": "Liikenne",
+        "education": "Koulutus",
+        "environment": "Ympäristö",
+        "business": "Yrityspalvelut"
+      },
+      "status": "Tila",
+      "anyStatus": "Kaikki tilat",
+      "deadline": "Määräaika",
+      "anyDeadline": "Milloin tahansa",
+      "deadline7": "Seuraavat 7 päivää",
+      "deadline30": "Seuraavat 30 päivää",
+      "deadline90": "Seuraavat 90 päivää",
+      "clear": "Tyhjennä kaikki"
     },
     "detail": {
       "overview": "Yleiskatsaus",

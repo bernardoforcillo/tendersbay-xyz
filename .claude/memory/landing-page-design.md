@@ -3,8 +3,8 @@ name: landing-page-design
 description: "tendersbay landing page — positioning, brand palette, tone, and key product framing"
 metadata:
   type: project
-  updated: 2026-07-01
-  sources: []
+  updated: 2026-07-16
+  sources: [docs/gtm/2026-07-15-landing-restructure.md]
 ---
 
 The tendersbay marketing/landing page (route `/$locale/` in `apps/platform`) is an
@@ -29,8 +29,9 @@ bureaucracy, and help them **win**. It is explicitly **NOT** a translation produ
   **"awarded"** (en) / **"aggiudicata"** (it — de "zugeschlagen", fr "attribué",
   es "adjudicada") in the **technical / SEO** spots (hero highlight, meta title); the
   bolder **"yours" / "win"** swagger is allowed in **emotional micro-copy** (footer
-  tagline "Europe's tenders. Yours.", CTA "Claim your spot"). (Supersedes the earlier
-  blanket "never 'won'" rule.)
+  tagline "Europe's tenders. Yours."). (Supersedes the earlier blanket "never 'won'"
+  rule.) **CTA copy changed 2026-07-16** from the waitlist-era "Claim your spot" to
+  **"Create your account"** — see the restructure block below.
 
 **Notable specifics:** hero shows a rotating sample-tender card (`SAMPLE_TENDERS` fixture →
 swap for real tenders in phase 2); footer contact is `mailto:me@bernardoforcillo.com`;
@@ -60,20 +61,53 @@ ro DUAE, sk JED, hu EEKD, lt EBVPD, bg ЕЕДОП, others ESPD). Completeness te
 Full suite green (194 tests). Follows the user's usual SDD flow of writing copy first in
 one locale, then propagating it across all 24.
 
+**Competitor-informed restructure (2026-07-16, `feature/landing-restructure`):** a
+competitor teardown (TED, TenderNed, Mercell, Stotles, Tendium, Tussell…) drove a
+category-defining rework. Three changes to the flow, now
+Hero → **Proof strip** → Problem → **Agents (reworked)** → Audience → Assurance →
+Coverage → Vision → CTA:
+- **New `proof-strip` organism** after the hero (`landing.proof`): "honesty judo" — flex
+  *the prize, not us*. Real EU-sourced scale (~€2tn/yr public spend · 250k+ contracting
+  authorities · ~800k TED notices/yr) in the slot competitors fill with fake logos, with a
+  **visible citation line** as the trust signal (no invented metrics — figures are
+  EC/TED-sourced). Loss aversion + authority + processing fluency.
+- **Agents section reworked from the find/prepare/win triptych to an open-loop "overnight
+  shift" hook** (`landing.agents`: `title` + `lead` + 3 `items` each with a new `time`
+  field). Headline is a curiosity gap ("Here's what your agents did while you slept.");
+  the three cards became a timestamped timeline **02:14 → 05:30 → 07:00** (`<time>` mono
+  eyebrows, `tabular-nums`, `text-brand-200`) — show-don't-tell over abstract labels
+  (Zeigarnik open loop + peak-end). The tools-vs-agents wedge moved into the `lead`. Same
+  brand-700 band, 3-up grid, icons, Reveal stagger.
+- **CTA now drives signup, not a waitlist.** All "join the waitlist / claim your spot"
+  copy dropped; `landing.cta` + hero primary CTA route to the real `/$locale/auth/signup`
+  flow (button "Create your account"). The authenticated product (auth/workbench/
+  workspace/explore) already exists in-repo, so the waitlist framing was wrong.
+- **Instrumentation:** `AgentsSection` fires `agents_section_viewed` ({ location: 'agents' })
+  once via motion `useInView` (once, amount 0.4) — measures whether the open-loop hook pulls
+  readers toward the CTA. Consent-gating is automatic. (`locale` is a super-property.)
+- Copy propagated across all 24 locales (ESPD localised per market as before); the
+  completeness test carries the new keys. Ported to `feature/landing-restructure` off `dev`
+  via cherry-pick (the search-dock work already on `dev` auto-merged cleanly). Strategy doc:
+  `docs/gtm/2026-07-15-landing-restructure.md`.
+
 **Env gotcha (2026-06-27):** `pnpm --filter platform exec vitest`/`pnpm exec biome` started
 failing in a pre-run deps check (`runDepsStatusCheck` → `pnpm install` → `ERR_PNPM_IGNORED_BUILDS:
 core-js`). Bypass by calling the binaries directly: `apps/platform/node_modules/.bin/vitest run
 --root apps/platform` and `node_modules/.bin/biome check --write <paths>`.
 
-**Light/dark section rhythm (2026-06-27, intentional — don't "fix" back):** value ladder
-`cream-50 → cream-100 → ink-900 → ink-950` used as an arousal/attention ladder. Rhythm:
-Hero L · Problem L (top hairline seam marks the boundary from the hero) · Agents **D** ·
-Audience L (cream-100, warm) · Assurance L (cream-50, distinct) · **Coverage D** (ink-900 —
-deliberately dark so the flag tiles, which are `bg-white`, *light up* against the dark; also
-breaks the long light trough) · **Vision L** (cream-100 — an airy "breath of light" before
-the close) · CTA D (ink-950 card) · Footer D. Coverage is the only mid-page dark beat (Von
-Restorff) and the close is the dark peak-end. Coverage carries an aurora top bleed + a bottom
-fade to `#fbf7f0` to melt into the light Vision.
+**Light/dark section rhythm (2026-06-27, intentional — don't "fix" back; ladder updated
+2026-07-16):** value ladder `cream-50 → cream-100 → ink-900 → ink-950` used as an
+arousal/attention ladder. Current rhythm (verified against the code):
+Hero L · **Proof L** (cream-100, the new proof strip continues the hero field) ·
+**Problem D** (`bg-ink-900` — now dark; the earlier "Problem L" note is stale) ·
+Agents (brand-700 teal band) · Audience L (cream-100, warm) · Assurance L (cream-50,
+distinct) · **Coverage D** (`bg-ink-950` — deliberately dark so the flag tiles, which are
+`bg-white`, *light up* against the dark) · **Vision L** (cream-100 — an airy "breath of
+light" before the close) · CtaBand (ink card) · Footer D. **Note (2026-07-16):** with
+Problem now dark, Coverage is no longer the *only* mid-page dark beat, so the original
+Von-Restorff rationale is partly superseded — whether the two dark beats + the teal Agents
+band read well together is a **design/UX call** (route to `/ux` if the rhythm needs a
+pass). Coverage still carries an aurora top bleed + bottom fade to `#fbf7f0`.
 
 Full spec: `docs/superpowers/specs/2026-06-21-landing-page-design.md` (original) and
 `docs/superpowers/specs/2026-06-26-landing-copy-rearchitecture-design.md` (this rewrite) —

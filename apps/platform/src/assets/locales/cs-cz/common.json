@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Termín",
         "value": "Hodnota"
-      }
+      },
+      "loading": "Vyhledávání…",
+      "empty": "Nenalezeny žádné zakázky",
+      "error": "Vyhledávání je momentálně nedostupné — zkuste to za chvíli znovu.",
+      "results_one": "{{count}} zakázka",
+      "results_other": "{{count}} zakázek"
     },
     "meta": {
       "title": "tendersbay — Veřejné zakázky v Evropě, přidělené AI agenty",
@@ -144,7 +149,26 @@
       "subtitle": "Dnes v noci se uzavírá zakázka s vaším jménem. Velcí hráči na ní už mají tým. Vy máte otevřené tři panely v Excelu. Tady to končí — AI agenti, kteří ji najdou, rozcupují papírování a postaví vás do nabídky. Zatímco spíte.",
       "ctaPrimary": "Pošlete své agenty do práce",
       "ctaSecondary": "Podívejte se na vizi",
-      "trust": ["27 zemí, jedno hledání", "Agenti, kteří nikdy nespí", "Papírování: vyřízeno"]
+      "trust": ["27 zemí, jedno hledání", "Agenti, kteří nikdy nespí", "Papírování: vyřízeno"],
+      "deckLabel": "Ukázkové výsledky"
+    },
+    "proof": {
+      "lead": "Každý rok se v Evropě utratí přes dva biliony eur veřejných peněz. Většina projde veřejnými zakázkami, které nikdy nevidíte.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "veřejných výdajů ročně v EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "veřejných zadavatelů vypisujících zakázky"
+        },
+        {
+          "value": "~800,000",
+          "label": "zakázek ročně — žádný tým je nepřečte všechny"
+        }
+      ],
+      "source": "Evropská komise · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Hra je nastavená tak, aby vás držela venku. A funguje to.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Tři agenti. Neminou, nespí, nevzdávají se.",
+      "title": "Tohle udělali vaši agenti, zatímco jste spali.",
+      "lead": "Ne rychlejší vyhledávací pole, které stejně musíte řídit vy. Tým agentů, který zpracuje celou zakázku — najde, připraví, vyhraje — přes noc, takže se probudíte už ve hře.",
       "items": [
         {
-          "title": "Najděte",
-          "body": "Každý den pročešou všech 27 zemí a vytáhnou jen zakázky, které stojí za váš čas — na míru tomu, co opravdu děláte."
+          "time": "02:14",
+          "title": "Našel tu, která vám sedí",
+          "body": "Zatímco trh spal, agenti pročesali všech 27 zemí a vytáhli jedinou zakázku, která stojí za váš čas — na míru tomu, co opravdu děláte, ne hromadu klíčových slov."
         },
         {
-          "title": "Připravte",
-          "body": "Požadavky, certifikáty, ESPD, termíny: extrahované, zkontrolované, sestavené. Papírování, které vás lámalo, vyřízeno."
+          "time": "05:30",
+          "title": "Sestavil papírování",
+          "body": "Požadavky přečteny, certifikáty spárovány, ESPD sestaveno, každý termín zaznamenán. Byrokracie, která vám spalovala víkend — hotová před kávou."
         },
         {
-          "title": "Vyhrajte",
-          "body": "Promění zadávací dokumentaci ve vítěznou strategii, abyste vstoupili se stejnou palebnou silou jako giganti."
+          "time": "07:00",
+          "title": "Probudili jste se už ve hře",
+          "body": "Žádná prázdná stránka. Ze zadávací dokumentace se stala vítězná strategie nabídky, připravená na vaše rozhodnutí — stejná palebná síla, za kterou giganti platí celou kancelář, čeká na vašem stole."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Vaši agenti jsou připraveni. Chybíte už jen vy.",
-      "body": "Zapínáme EU trh po trhu. Zaregistrujte se na čekací listinu — ve chvíli, kdy se vaše země rozsvítí, vyrazí vaši agenti na lov.",
-      "button": "Zajistěte si své místo"
+      "body": "Vytvořte si účet a pusťte agenty na svůj trh — najít, připravit, vyhrát, bez vlastního oddělení pro zakázky.",
+      "button": "Vytvořit účet"
     },
     "tenderCard": {
       "value": "Hodnota",
@@ -314,6 +342,30 @@
       "cancelled": "Zrušená",
       "closed": "Uzavřená",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Země",
+      "anyCountry": "Všechny země",
+      "sector": "Odvětví",
+      "anySector": "Všechna odvětví",
+      "sectors": {
+        "construction": "Stavebnictví",
+        "it": "IT a software",
+        "health": "Zdravotnictví",
+        "energy": "Energetika",
+        "transport": "Doprava",
+        "education": "Vzdělávání",
+        "environment": "Životní prostředí",
+        "business": "Podnikové služby"
+      },
+      "status": "Stav",
+      "anyStatus": "Všechny stavy",
+      "deadline": "Lhůta",
+      "anyDeadline": "Kdykoli",
+      "deadline7": "Příštích 7 dní",
+      "deadline30": "Příštích 30 dní",
+      "deadline90": "Příštích 90 dní",
+      "clear": "Vymazat vše"
     },
     "detail": {
       "overview": "Přehled",

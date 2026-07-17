@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Tähtaeg",
         "value": "Väärtus"
-      }
+      },
+      "loading": "Otsimine…",
+      "empty": "Hankeid ei leitud",
+      "error": "Otsing ei ole hetkel saadaval — proovige veidi hiljem uuesti.",
+      "results_one": "{{count}} hange",
+      "results_other": "{{count}} hanget"
     },
     "meta": {
       "title": "tendersbay — Euroopa riigihanked, lepinguni teie AI-agentide abil",
@@ -144,7 +149,26 @@
       "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja panevad teid pakkumisse. Sel ajal kui magate.",
       "ctaPrimary": "Pange oma agendid tööle",
       "ctaSecondary": "Vaadake visiooni",
-      "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"]
+      "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"],
+      "deckLabel": "Näidistulemused"
+    },
+    "proof": {
+      "lead": "Igal aastal kulutatakse Euroopas üle kahe tuhande miljardi euro avalikku raha. Suurem osa liigub läbi riigihangete, mida te kunagi ei näe.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "avalikke kulutusi aastas ELis"
+        },
+        {
+          "value": "250,000+",
+          "label": "avalikku hankijat, kes korraldavad hankeid"
+        },
+        {
+          "value": "~800,000",
+          "label": "riigihanget aastas — ükski meeskond ei loe neid kõiki"
+        }
+      ],
+      "source": "Euroopa Komisjon · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Mäng on seatud teid välja jätma. Ja see töötab.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Kolm agenti. Nad ei eksi, ei maga, ei anna alla.",
+      "title": "Vaadake, mida teie agendid tegid, kui te magasite.",
+      "lead": "Mitte kiirem otsinguriba, mida peate ikkagi ise juhtima. Tiim agente, kes töötab läbi kogu hanke — leiab, valmistab ette, võidab — öö jooksul, nii et ärkate juba mängus.",
       "items": [
         {
-          "title": "Leia",
-          "body": "Nad kammivad iga päev läbi kõik 27 riiki ja toovad esile ainult hanked, mis on teie aega väärt — kohandatuna sellele, mida te tegelikult teete."
+          "time": "02:14",
+          "title": "Leidis selle, mis teile sobib",
+          "body": "Kui turg magas, kammisid agendid läbi kõik 27 riiki ja tõid välja ainsa hanke, mis on teie aega väärt — kohandatud sellele, mida te tegelikult teete, mitte hunnik märksõnu."
         },
         {
-          "title": "Valmista ette",
-          "body": "Nõuded, sertifikaadid, ESPD, tähtajad: välja võetud, ristkontrollitud, kokku pandud. Paberimajandus, mis teid murdis, korras."
+          "time": "05:30",
+          "title": "Pani paberimajanduse kokku",
+          "body": "Nõuded loetud, sertifikaadid sobitatud, ESPD kokku pandud, iga tähtaeg kirja pandud. Bürokraatia, mis varem teie nädalavahetust põletas — valmis enne kohvi."
         },
         {
-          "title": "Võida",
-          "body": "Nad muudavad hankedokumendid võidustrateegiaks, et astuksite sisse sama löögijõuga kui hiiglased."
+          "time": "07:00",
+          "title": "Ärkasite juba mängus",
+          "body": "Ei mingit tühja lehte. Hankedokumentidest sai võidustrateegia, valmis teie otsuseks — sama löögijõud, mille eest hiiglased maksavad terve kontori, ootab teie laual."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Teie agendid on valmis. Puudute ainult teie.",
-      "body": "Lülitame ELi sisse turg turu haaval. Liituge ootenimekirjaga — hetkel, mil teie riik süttib, lähevad teie agendid jahile.",
-      "button": "Broneerige oma koht"
+      "body": "Looge konto ja pange agendid oma turule — leida, ette valmistada, võita, ilma oma hankeosakonnata.",
+      "button": "Loo konto"
     },
     "tenderCard": {
       "value": "Väärtus",
@@ -312,6 +340,30 @@
       "cancelled": "Tühistatud",
       "closed": "Suletud",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Riik",
+      "anyCountry": "Kõik riigid",
+      "sector": "Sektor",
+      "anySector": "Kõik sektorid",
+      "sectors": {
+        "construction": "Ehitus",
+        "it": "IT ja tarkvara",
+        "health": "Tervishoid",
+        "energy": "Energeetika",
+        "transport": "Transport",
+        "education": "Haridus",
+        "environment": "Keskkond",
+        "business": "Äriteenused"
+      },
+      "status": "Olek",
+      "anyStatus": "Kõik olekud",
+      "deadline": "Tähtaeg",
+      "anyDeadline": "Ükskõik millal",
+      "deadline7": "Järgmised 7 päeva",
+      "deadline30": "Järgmised 30 päeva",
+      "deadline90": "Järgmised 90 päeva",
+      "clear": "Tühjenda kõik"
     },
     "detail": {
       "overview": "Ülevaade",

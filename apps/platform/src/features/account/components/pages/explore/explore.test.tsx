@@ -115,7 +115,7 @@ describe('AccountExplorePage — search mode', () => {
     const user = userEvent.setup();
     renderExplore();
     await submit(user, '  roads  ');
-    expect(searchMock).toHaveBeenCalledWith('roads');
+    expect(searchMock).toHaveBeenCalledWith('roads', {});
   });
 
   it('is a no-op on an empty (whitespace-only) submit', async () => {
@@ -197,6 +197,56 @@ describe('AccountExplorePage — search mode', () => {
       loadMore: loadMoreMock,
     });
     renderExplore('?q=roads');
-    expect(searchMock).toHaveBeenCalledWith('roads');
+    expect(searchMock).toHaveBeenCalledWith('roads', expect.anything());
+  });
+
+  it('runs a filters-only search when a filter is set with an empty query', async () => {
+    const user = userEvent.setup();
+    renderExplore();
+    await user.selectOptions(screen.getByLabelText('Country'), 'ITA');
+    expect(searchMock).toHaveBeenCalledWith('', { country: 'ITA' });
+  });
+
+  it('maps the sector selection to a CPV prefix', async () => {
+    const user = userEvent.setup();
+    renderExplore();
+    await user.selectOptions(screen.getByLabelText('Sector'), 'construction');
+    expect(searchMock).toHaveBeenCalledWith('', { cpv: '45' });
+  });
+
+  it('includes the active filters when searching with a query', async () => {
+    const user = userEvent.setup();
+    // Seed the query via ?q= rather than typing: nuqs commits the text-box value
+    // asynchronously, so typing-then-acting races the URL state under the test's
+    // fast synthetic events. A URL-seeded query is settled from mount.
+    renderExplore('?q=roads');
+    await user.selectOptions(screen.getByLabelText('Status'), 'open');
+    expect(searchMock).toHaveBeenLastCalledWith('roads', { status: 'open' });
+  });
+
+  it('maps a deadline preset to an RFC3339 from/to window', async () => {
+    const user = userEvent.setup();
+    renderExplore();
+    await user.selectOptions(screen.getByLabelText('Deadline'), '7');
+    const filters = (searchMock.mock.calls.at(-1)?.[1] ?? {}) as {
+      deadlineFrom?: string;
+      deadlineTo?: string;
+    };
+    const from = filters.deadlineFrom ?? '';
+    const to = filters.deadlineTo ?? '';
+    expect(from).not.toBe('');
+    expect(to).not.toBe('');
+    expect(new Date(to).getTime()).toBeGreaterThan(new Date(from).getTime());
+  });
+
+  it('clears filters and re-runs the search with the query only', async () => {
+    const user = userEvent.setup();
+    // Seed the query via ?q= (see note above — nuqs commits typing asynchronously).
+    renderExplore('?q=roads');
+    await user.selectOptions(screen.getByLabelText('Country'), 'ITA');
+    searchMock.mockClear();
+    await user.click(screen.getByRole('button', { name: 'Clear all' }));
+    expect(searchMock).toHaveBeenCalledWith('roads', {});
+    expect(screen.getByLabelText('Country')).toHaveValue('');
   });
 });

@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Termin",
         "value": "Wartość"
-      }
+      },
+      "loading": "Wyszukiwanie…",
+      "empty": "Nie znaleziono przetargów",
+      "error": "Wyszukiwanie jest obecnie niedostępne — spróbuj ponownie za chwilę.",
+      "results_one": "{{count}} przetarg",
+      "results_other": "{{count}} przetargu"
     },
     "meta": {
       "title": "tendersbay — Przetargi w Europie, rozstrzygnięte z agentami AI",
@@ -148,7 +153,26 @@
         "27 krajów, jedno wyszukiwanie",
         "Agenci, którzy nigdy nie śpią",
         "Papierkowa robota: ogarnięta"
-      ]
+      ],
+      "deckLabel": "Przykładowe wyniki"
+    },
+    "proof": {
+      "lead": "Każdego roku w Europie wydaje się ponad dwa biliony euro publicznych pieniędzy. Większość przechodzi przez przetargi, których nigdy nie widzisz.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "wydatków publicznych rocznie w UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "publicznych zamawiających ogłaszających przetargi"
+        },
+        {
+          "value": "~800,000",
+          "label": "przetargów rocznie — żaden zespół nie przeczyta ich wszystkich"
+        }
+      ],
+      "source": "Komisja Europejska · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Gra jest ustawiona, by trzymać cię na zewnątrz. I działa.",
@@ -168,19 +192,23 @@
       ]
     },
     "agents": {
-      "title": "Trzej agenci. Nie chybiają, nie śpią, nie odpuszczają.",
+      "title": "Oto co zrobili twoi agenci, gdy spałeś.",
+      "lead": "Nie szybsza wyszukiwarka, którą i tak musisz sterować sam. Zespół agentów, który obrabia cały przetarg — znajduje, przygotowuje, wygrywa — przez noc, żebyś obudził się już w grze.",
       "items": [
         {
-          "title": "Znajdź",
-          "body": "Codziennie przeczesują wszystkie 27 krajów i pokazują tylko przetargi warte twojego czasu — dopasowane do tego, co naprawdę robisz."
+          "time": "02:14",
+          "title": "Znalazł ten, który pasuje do ciebie",
+          "body": "Gdy rynek spał, agenci przeczesali wszystkie 27 krajów i wyciągnęli jedyny przetarg wart twojego czasu — dopasowany do tego, co naprawdę robisz, a nie stertę słów kluczowych."
         },
         {
-          "title": "Przygotuj",
-          "body": "Wymagania, zaświadczenia, JEDZ, terminy: wyciągnięte, sprawdzone, złożone. Papierkowa robota, która cię łamała, ogarnięta."
+          "time": "05:30",
+          "title": "Złożył papierkową robotę",
+          "body": "Wymagania przeczytane, zaświadczenia dopasowane, JEDZ złożony, każdy termin zapisany. Biurokracja, która spalała ci weekend — gotowa przed kawą."
         },
         {
-          "title": "Wygrywaj",
-          "body": "Zamieniają specyfikację w zwycięską strategię, byś wszedł z taką samą siłą rażenia jak giganci."
+          "time": "07:00",
+          "title": "Obudziłeś się już w grze",
+          "body": "Żadnej pustej strony. Specyfikacja zamieniła się w zwycięską strategię oferty, gotową na twoją decyzję — ta sama siła rażenia, za którą giganci płacą całe biuro, czeka na twoim biurku."
         }
       ]
     },
@@ -256,8 +284,8 @@
     },
     "cta": {
       "title": "Twoi agenci są gotowi. Brakuje tylko ciebie.",
-      "body": "Uruchamiamy UE rynek po rynku. Dołącz do listy — w chwili, gdy twój kraj się rozświetli, twoi agenci ruszają na łowy.",
-      "button": "Zarezerwuj swoje miejsce"
+      "body": "Załóż konto i puść agentów na swój rynek — znaleźć, przygotować, wygrać, bez własnego działu przetargów.",
+      "button": "Załóż konto"
     },
     "tenderCard": {
       "value": "Wartość",
@@ -320,6 +348,30 @@
       "cancelled": "Anulowany",
       "closed": "Zamknięty",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Kraj",
+      "anyCountry": "Wszystkie kraje",
+      "sector": "Sektor",
+      "anySector": "Wszystkie sektory",
+      "sectors": {
+        "construction": "Budownictwo",
+        "it": "IT i oprogramowanie",
+        "health": "Zdrowie",
+        "energy": "Energia",
+        "transport": "Transport",
+        "education": "Edukacja",
+        "environment": "Środowisko",
+        "business": "Usługi dla firm"
+      },
+      "status": "Status",
+      "anyStatus": "Wszystkie statusy",
+      "deadline": "Termin",
+      "anyDeadline": "Dowolny termin",
+      "deadline7": "Najbliższe 7 dni",
+      "deadline30": "Najbliższe 30 dni",
+      "deadline90": "Najbliższe 90 dni",
+      "clear": "Wyczyść wszystko"
     },
     "detail": {
       "overview": "Przegląd",

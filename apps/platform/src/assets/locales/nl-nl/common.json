@@ -127,7 +127,12 @@
         "sector": "Sector",
         "deadline": "Deadline",
         "value": "Waarde"
-      }
+      },
+      "loading": "Zoeken…",
+      "empty": "Geen aanbestedingen gevonden",
+      "error": "Zoeken is nu niet beschikbaar — probeer het zo weer.",
+      "results_one": "{{count}} aanbesteding",
+      "results_other": "{{count}} aanbestedingen"
     },
     "meta": {
       "title": "tendersbay — Openbare aanbestedingen, gegund door uw AI-agenten",
@@ -144,7 +149,26 @@
       "subtitle": "Vanavond sluit een aanbesteding met uw naam erop. De grote spelers hebben er al een team op. U heeft drie tabbladen open in Excel. Daar is het mee gedaan — AI-agenten die haar vinden, het papierwerk slopen en u op de inschrijving zetten. Terwijl u slaapt.",
       "ctaPrimary": "Zet uw agenten aan het werk",
       "ctaSecondary": "Bekijk de visie",
-      "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"]
+      "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"],
+      "deckLabel": "Voorbeeldresultaten"
+    },
+    "proof": {
+      "lead": "Elk jaar wordt in Europa ruim twee biljoen euro aan publiek geld uitgegeven. Het meeste loopt via aanbestedingen die u nooit ziet.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "aan publieke uitgaven per jaar in de EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "publieke inkopers die opdrachten aanbesteden"
+        },
+        {
+          "value": "~800,000",
+          "label": "aanbestedingen per jaar — geen enkel team leest ze allemaal"
+        }
+      ],
+      "source": "Europese Commissie · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Het spel is opgezet om u buiten te houden. En het werkt.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Drie agenten. Ze missen niets, slapen niet, geven niet op.",
+      "title": "Dit deden uw agenten terwijl u sliep.",
+      "lead": "Geen snellere zoekbalk die u alsnog zelf moet besturen. Een team van agenten dat de hele aanbesteding afhandelt — vinden, voorbereiden, winnen — ’s nachts, zodat u al in de race wakker wordt.",
       "items": [
         {
-          "title": "Vind",
-          "body": "Ze kammen elke dag alle 27 landen uit en tonen alleen de aanbestedingen die uw tijd waard zijn — afgestemd op wat u echt doet."
+          "time": "02:14",
+          "title": "Het vond de aanbesteding die bij u past",
+          "body": "Terwijl de markt sliep, kamden de agenten alle 27 landen uit en haalden de enige aanbesteding op die uw tijd waard is — afgestemd op wat u echt doet, geen bak vol zoekwoorden."
         },
         {
-          "title": "Bereid voor",
-          "body": "Eisen, certificaten, UEA, deadlines: opgehaald, gecontroleerd, samengesteld. Het papierwerk dat u brak, geregeld."
+          "time": "05:30",
+          "title": "Het bouwde het papierwerk",
+          "body": "Eisen gelezen, certificaten gematcht, de UEA samengesteld, elke deadline vastgelegd. De bureaucratie die uw weekend opslokte — klaar vóór de koffie."
         },
         {
-          "title": "Win",
-          "body": "Ze maken van het bestek een winnende strategie, zodat u binnenkomt met dezelfde slagkracht als de reuzen."
+          "time": "07:00",
+          "title": "U werd al in de race wakker",
+          "body": "Geen leeg blad. Het bestek werd een winnende biedstrategie, klaar voor uw beslissing — dezelfde slagkracht waarvoor de reuzen een heel kantoor betalen, klaar op uw bureau."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Uw agenten staan klaar. Alleen u ontbreekt nog.",
-      "body": "We zetten de EU markt voor markt aan. Schrijf u in op de wachtlijst — zodra uw land oplicht, gaan uw agenten op jacht.",
-      "button": "Claim uw plek"
+      "body": "Maak uw account aan en zet de agenten op uw markt — vinden, voorbereiden, winnen, zonder eigen aanbestedingsteam.",
+      "button": "Maak uw account aan"
     },
     "tenderCard": {
       "value": "Waarde",
@@ -312,6 +340,30 @@
       "cancelled": "Geannuleerd",
       "closed": "Gesloten",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Land",
+      "anyCountry": "Alle landen",
+      "sector": "Sector",
+      "anySector": "Alle sectoren",
+      "sectors": {
+        "construction": "Bouw",
+        "it": "IT & software",
+        "health": "Gezondheidszorg",
+        "energy": "Energie",
+        "transport": "Vervoer",
+        "education": "Onderwijs",
+        "environment": "Milieu",
+        "business": "Zakelijke dienstverlening"
+      },
+      "status": "Status",
+      "anyStatus": "Alle statussen",
+      "deadline": "Deadline",
+      "anyDeadline": "Elk moment",
+      "deadline7": "Komende 7 dagen",
+      "deadline30": "Komende 30 dagen",
+      "deadline90": "Komende 90 dagen",
+      "clear": "Alles wissen"
     },
     "detail": {
       "overview": "Overzicht",

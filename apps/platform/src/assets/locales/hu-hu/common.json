@@ -127,7 +127,12 @@
         "sector": "Ágazat",
         "deadline": "Határidő",
         "value": "Érték"
-      }
+      },
+      "loading": "Keresés…",
+      "empty": "Nem található pályázat",
+      "error": "A keresés jelenleg nem érhető el — próbálja újra egy pillanat múlva.",
+      "results_one": "{{count}} pályázat",
+      "results_other": "{{count}} pályázat"
     },
     "meta": {
       "title": "tendersbay — Közbeszerzések az odaítélésig, MI-ügynökök csapatával",
@@ -148,7 +153,26 @@
         "27 ország, egy keresés",
         "Ügynökök, akik soha nem alszanak",
         "Papírmunka: elintézve"
-      ]
+      ],
+      "deckLabel": "Példaeredmények"
+    },
+    "proof": {
+      "lead": "Európában évente több mint kétezer milliárd euró közpénzt költenek el. Ennek nagy része olyan közbeszerzéseken megy át, amelyeket Ön soha nem lát.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "közkiadás évente az EU-ban"
+        },
+        {
+          "value": "250,000+",
+          "label": "közbeszerzést kiíró közületi vásárló"
+        },
+        {
+          "value": "~800,000",
+          "label": "közbeszerzés évente — egyetlen csapat sem olvassa el mind"
+        }
+      ],
+      "source": "Európai Bizottság · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "A játékot úgy állították be, hogy Önt kizárja. És működik.",
@@ -168,19 +192,23 @@
       ]
     },
     "agents": {
-      "title": "Három ügynök. Nem hibáznak, nem alszanak, nem adják fel.",
+      "title": "Íme, mit végeztek az ügynökei, amíg Ön aludt.",
+      "lead": "Nem egy gyorsabb keresősáv, amit még mindig Önnek kell vezérelnie. Egy ügynökcsapat, amely a teljes pályázatot végigviszi — megtalál, előkészít, nyer — éjszaka, hogy már versenyben ébredjen.",
       "items": [
         {
-          "title": "Találjon",
-          "body": "Minden nap átfésülik mind a 27 országot, és csak azokat a pályázatokat hozzák fel, amelyek megérik az Ön idejét — arra szabva, amit valójában csinál."
+          "time": "02:14",
+          "title": "Megtalálta az Önhöz illőt",
+          "body": "Amíg a piac aludt, az ügynökök átfésülték mind a 27 országot, és kiemelték az egyetlen pályázatot, amely megéri az Ön idejét — arra szabva, amit valójában csinál, nem egy halom kulcsszó."
         },
         {
-          "title": "Készítse elő",
-          "body": "Követelmények, tanúsítványok, EEKD, határidők: kinyerve, összevetve, összeállítva. A papírmunka, ami megtörte, elintézve."
+          "time": "05:30",
+          "title": "Összeállította a papírmunkát",
+          "body": "Követelmények elolvasva, tanúsítványok párosítva, az EEKD összeállítva, minden határidő rögzítve. A bürokrácia, ami eddig felemésztette a hétvégéjét — kész a kávé előtt."
         },
         {
-          "title": "Nyerjen",
-          "body": "A kiírást nyertes stratégiává alakítják, hogy ugyanakkora tűzerővel lépjen be, mint az óriások."
+          "time": "07:00",
+          "title": "Már versenyben ébredt",
+          "body": "Nincs üres lap. A kiírásból nyertes ajánlati stratégia lett, készen az Ön döntésére — ugyanaz a tűzerő, amiért az óriások egész irodát fizetnek, az asztalán várja."
         }
       ]
     },
@@ -256,8 +284,8 @@
     },
     "cta": {
       "title": "Az ügynökei készen állnak. Már csak Ön hiányzik.",
-      "body": "Piacról piacra kapcsoljuk be az EU-t. Iratkozzon fel a várólistára — abban a pillanatban, amikor az Ön országa felgyullad, az ügynökei vadászni indulnak.",
-      "button": "Foglalja le a helyét"
+      "body": "Hozza létre a fiókját, és állítsa rá az ügynököket a piacára — megtalálni, előkészíteni, megnyerni, saját ajánlati részleg nélkül.",
+      "button": "Fiók létrehozása"
     },
     "tenderCard": {
       "value": "Érték",
@@ -316,6 +344,30 @@
       "cancelled": "Törölve",
       "closed": "Lezárva",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Ország",
+      "anyCountry": "Összes ország",
+      "sector": "Ágazat",
+      "anySector": "Összes ágazat",
+      "sectors": {
+        "construction": "Építőipar",
+        "it": "IT és szoftver",
+        "health": "Egészségügy",
+        "energy": "Energia",
+        "transport": "Közlekedés",
+        "education": "Oktatás",
+        "environment": "Környezet",
+        "business": "Üzleti szolgáltatások"
+      },
+      "status": "Állapot",
+      "anyStatus": "Összes állapot",
+      "deadline": "Határidő",
+      "anyDeadline": "Bármikor",
+      "deadline7": "Következő 7 nap",
+      "deadline30": "Következő 30 nap",
+      "deadline90": "Következő 90 nap",
+      "clear": "Összes törlése"
     },
     "detail": {
       "overview": "Áttekintés",

@@ -127,7 +127,12 @@
         "sector": "Sector",
         "deadline": "Deadline",
         "value": "Value"
-      }
+      },
+      "loading": "Searching…",
+      "empty": "No tenders found",
+      "error": "Search is unavailable right now — try again in a moment.",
+      "results_one": "{{count}} tender",
+      "results_other": "{{count}} tenders"
     },
     "meta": {
       "title": "tendersbay — EU public tenders, awarded by your AI agents",
@@ -144,7 +149,26 @@
       "subtitle": "A tender with your name on it closes tonight. The big players have a team on it. You have three tabs open in Excel. That ends here — AI agents that find it, gut the paperwork, and put you on the bid. While you sleep.",
       "ctaPrimary": "Put your agents to work",
       "ctaSecondary": "See the vision",
-      "trust": ["27 countries, one search", "Agents that never sleep", "Paperwork: handled"]
+      "trust": ["27 countries, one search", "Agents that never sleep", "Paperwork: handled"],
+      "deckLabel": "Sample results"
+    },
+    "proof": {
+      "lead": "Over two trillion euro of public money is spent across Europe every year. Most of it moves through tenders you never see.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "public spend a year across the EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "public buyers putting work out to tender"
+        },
+        {
+          "value": "~800,000",
+          "label": "tenders a year — no team reads them all"
+        }
+      ],
+      "source": "European Commission · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "The game was rigged to keep you out. It's working.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Three agents. They don't miss, don't sleep, don't quit.",
+      "title": "Here's what your agents did while you slept.",
+      "lead": "Not a faster search box you still have to drive. A team of agents that works the whole tender — find, prepare, win — overnight, so you wake up already in the running.",
       "items": [
         {
-          "title": "Find",
-          "body": "They comb all 27 countries every day and surface only the tenders worth your time — matched to what you actually do."
+          "time": "02:14",
+          "title": "It found the one that fits",
+          "body": "While the market slept, the agents swept all 27 countries and pulled the single tender worth your time — matched to what you actually do, not a keyword dump."
         },
         {
-          "title": "Prepare",
-          "body": "Requirements, certificates, ESPD, deadlines: extracted, cross-checked, assembled. The paperwork that broke you, handled."
+          "time": "05:30",
+          "title": "It built the paperwork",
+          "body": "Requirements read, certificates matched, the ESPD assembled, every deadline logged. The bureaucracy that used to burn your weekend — done before the coffee."
         },
         {
-          "title": "Win",
-          "body": "They turn the spec into a winning strategy, so you walk in with the same firepower as the giants."
+          "time": "07:00",
+          "title": "You woke up in the running",
+          "body": "No blank page. The spec turned into a bid strategy, ready for your call — the same firepower the giants pay a whole office for, waiting on your desk."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Your agents are ready. The only thing missing is you.",
-      "body": "We're switching on the EU market by market. Join the waitlist — the moment your country lights up, your agents start hunting.",
-      "button": "Claim your spot"
+      "body": "Create your account and put the agents on your market — find, prepare, win, without a bid office of your own.",
+      "button": "Create your account"
     },
     "tenderCard": {
       "value": "Value",
@@ -312,6 +340,30 @@
       "cancelled": "Cancelled",
       "closed": "Closed",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Country",
+      "anyCountry": "Any country",
+      "sector": "Sector",
+      "anySector": "Any sector",
+      "sectors": {
+        "construction": "Construction",
+        "it": "IT & software",
+        "health": "Healthcare",
+        "energy": "Energy",
+        "transport": "Transport",
+        "education": "Education",
+        "environment": "Environment",
+        "business": "Business services"
+      },
+      "status": "Status",
+      "anyStatus": "Any status",
+      "deadline": "Deadline",
+      "anyDeadline": "Any time",
+      "deadline7": "Next 7 days",
+      "deadline30": "Next 30 days",
+      "deadline90": "Next 90 days",
+      "clear": "Clear all"
     },
     "detail": {
       "overview": "Overview",

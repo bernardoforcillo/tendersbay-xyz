@@ -127,7 +127,12 @@
         "sector": "Settur",
         "deadline": "Skadenza",
         "value": "Valur"
-      }
+      },
+      "loading": "Qed infittxu…",
+      "empty": "L-ebda offerta ma nstabet",
+      "error": "It-tfittxija mhix disponibbli bħalissa — erġa' pprova fi ftit ħin.",
+      "results_one": "{{count}} offerta",
+      "results_other": "{{count}} offerta"
     },
     "meta": {
       "title": "tendersbay — Sejħiet għall-offerti, mogħtija mill-aġenti AI",
@@ -144,7 +149,26 @@
       "subtitle": "Illejla tagħlaq offerta b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
       "ctaPrimary": "Poġġi l-aġenti tiegħek jaħdmu",
       "ctaSecondary": "Ara l-viżjoni",
-      "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"]
+      "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"],
+      "deckLabel": "Riżultati ta' eżempju"
+    },
+    "proof": {
+      "lead": "Kull sena fl-Ewropa jintnefqu aktar minn żewġ triljun ewro ta’ flus pubbliċi. Il-biċċa l-kbira tgħaddi minn sejħiet għall-offerti li qatt ma tara.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "nefqa pubblika fis-sena fl-UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "xerrejja pubbliċi li joħorġu xogħol għall-offerti"
+        },
+        {
+          "value": "~800,000",
+          "label": "sejħiet fis-sena — l-ebda tim ma jaqrahom kollha"
+        }
+      ],
+      "source": "Il-Kummissjoni Ewropea · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Il-logħba hija mqassma biex iżżommok barra. U qed taħdem.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Tliet aġenti. Ma jfallux, ma jorqdux, ma jċedux.",
+      "title": "Dan hu li għamlu l-aġenti tiegħek waqt li kont rieqed.",
+      "lead": "Mhux search bar aktar mgħaġġla li xorta trid tħaddem int. Tim ta’ aġenti li jaħdem l-offerta kollha — isib, iħejji, jirbaħ — matul il-lejl, biex tqum diġà fit-tellieqa.",
       "items": [
         {
-          "title": "Sib",
-          "body": "Kuljum ifittxu sew il-27 pajjiż kollha u joħorġu biss l-offerti li jistħoqqilhom il-ħin tiegħek — imfassla għal dak li tagħmel tabilħaqq."
+          "time": "02:14",
+          "title": "Sab dik li tgħodd għalik",
+          "body": "Waqt li s-suq kien rieqed, l-aġenti fittxew sew il-27 pajjiż kollha u ħarġu l-unika offerta li jistħoqqilha l-ħin tiegħek — imfassla għal dak li tagħmel tabilħaqq, mhux gozz kliem ta’ tiftix."
         },
         {
-          "title": "Ipprepara",
-          "body": "Rekwiżiti, ċertifikati, ESPD, skadenzieri: estratti, ivverifikati, miġbura. Il-burokrazija li kissritek, solvuta."
+          "time": "05:30",
+          "title": "Bena l-burokrazija",
+          "body": "Rekwiżiti moqrija, ċertifikati mqabbla, l-ESPD miġbur, kull skadenza rreġistrata. Il-burokrazija li kienet taħraqlek il-weekend — lesta qabel il-kafè."
         },
         {
-          "title": "Irbaħ",
-          "body": "Ibiddlu d-dokumenti tal-offerta fi strateġija rebbieħa, biex tidħol bl-istess saħħa bħall-ġganti."
+          "time": "07:00",
+          "title": "Qomt diġà fit-tellieqa",
+          "body": "L-ebda paġna vojta. Id-dokument tal-offerta sar strateġija rebbieħa tal-offerta, lesta għad-deċiżjoni tiegħek — l-istess saħħa li l-ġganti jħallsu uffiċċju sħiħ għaliha, tistennik fuq l-iskrivanija."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "L-aġenti tiegħek lesti. L-uniku li jonqos huwa int.",
-      "body": "Qed nixegħlu l-UE suq wara suq. Irreġistra fuq il-lista ta' stennija — fil-mument li pajjiżek jixgħel, l-aġenti tiegħek joħorġu għall-kaċċa.",
-      "button": "Iżgura postok"
+      "body": "Oħloq il-kont tiegħek u poġġi l-aġenti fis-suq tiegħek — isibu, iħejju, jirbħu, mingħajr dipartiment tal-offerti tiegħek stess.",
+      "button": "Oħloq kont"
     },
     "tenderCard": {
       "value": "Valur",
@@ -318,6 +346,30 @@
       "cancelled": "Ikkanċellata",
       "closed": "Magħluqa",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Pajjiż",
+      "anyCountry": "Il-pajjiżi kollha",
+      "sector": "Settur",
+      "anySector": "Is-setturi kollha",
+      "sectors": {
+        "construction": "Kostruzzjoni",
+        "it": "IT u software",
+        "health": "Saħħa",
+        "energy": "Enerġija",
+        "transport": "Trasport",
+        "education": "Edukazzjoni",
+        "environment": "Ambjent",
+        "business": "Servizzi tan-negozju"
+      },
+      "status": "Status",
+      "anyStatus": "L-istatusi kollha",
+      "deadline": "Skadenza",
+      "anyDeadline": "Fi kwalunkwe ħin",
+      "deadline7": "Li jmiss 7 ijiem",
+      "deadline30": "Li jmiss 30 jum",
+      "deadline90": "Li jmiss 90 jum",
+      "clear": "Ħassar kollox"
     },
     "detail": {
       "overview": "Ħarsa ġenerali",

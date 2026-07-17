@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Rok",
         "value": "Vrednost"
-      }
+      },
+      "loading": "Iskanje…",
+      "empty": "Ni najdenih razpisov",
+      "error": "Iskanje trenutno ni na voljo — poskusite znova čez trenutek.",
+      "results_one": "{{count}} razpis",
+      "results_other": "{{count}} razpisov"
     },
     "meta": {
       "title": "tendersbay — Javna naročila v Evropi, dodeljena z agenti UI",
@@ -144,7 +149,26 @@
       "subtitle": "Nocoj se zapre razpis z vašim imenom. Veliki igralci že imajo ekipo na njem. Vi imate odprte tri zavihke v Excelu. Tu je konec — agenti UI, ki ga najdejo, raztrgajo birokracijo in vas postavijo v ponudbo. Medtem ko spite.",
       "ctaPrimary": "Pošljite svoje agente na delo",
       "ctaSecondary": "Oglejte si vizijo",
-      "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"]
+      "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"],
+      "deckLabel": "Vzorčni rezultati"
+    },
+    "proof": {
+      "lead": "Vsako leto se v Evropi porabi več kot dva bilijona evrov javnega denarja. Večina gre skozi javna naročila, ki jih nikoli ne vidite.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "javne porabe na leto v EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "javnih naročnikov, ki objavljajo naročila"
+        },
+        {
+          "value": "~800,000",
+          "label": "javnih naročil na leto — nobena ekipa jih ne prebere vseh"
+        }
+      ],
+      "source": "Evropska komisija · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Igra je prirejena, da vas drži zunaj. In deluje.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Trije agenti. Ne zgrešijo, ne spijo, ne odnehajo.",
+      "title": "Tole so vaši agenti postorili, medtem ko ste spali.",
+      "lead": "Ne hitrejša iskalna vrstica, ki jo morate vseeno upravljati sami. Ekipa agentov, ki obdela celotno naročilo — poišče, pripravi, zmaga — čez noč, da se zbudite že v tekmi.",
       "items": [
         {
-          "title": "Poiščite",
-          "body": "Vsak dan prečešejo vseh 27 držav in izpostavijo le razpise, vredne vašega časa — prilagojene temu, kar resnično počnete."
+          "time": "02:14",
+          "title": "Našel je tistega, ki vam ustreza",
+          "body": "Medtem ko je trg spal, so agenti prečesali vseh 27 držav in izluščili edino naročilo, vredno vašega časa — prilagojeno temu, kar resnično počnete, ne kupa ključnih besed."
         },
         {
-          "title": "Pripravite",
-          "body": "Zahteve, potrdila, ESPD, roki: izvlečeni, navzkrižno preverjeni, sestavljeni. Birokracija, ki vas je lomila, urejena."
+          "time": "05:30",
+          "title": "Sestavil je papirologijo",
+          "body": "Zahteve prebrane, potrdila usklajena, ESPD sestavljen, vsak rok zabeležen. Birokracija, ki vam je požirala vikend — pripravljena pred kavo."
         },
         {
-          "title": "Zmagajte",
-          "body": "Razpisno dokumentacijo spremenijo v zmagovalno strategijo, da vstopite z enako ognjeno močjo kot velikani."
+          "time": "07:00",
+          "title": "Zbudili ste se že v tekmi",
+          "body": "Nobenega praznega lista. Iz razpisne dokumentacije je nastala zmagovalna ponudbena strategija, pripravljena za vašo odločitev — enaka ognjena moč, za katero velikani plačujejo celotno pisarno, vas čaka na mizi."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Vaši agenti so pripravljeni. Manjkate samo še vi.",
-      "body": "Prižigamo EU trg za trgom. Pridružite se čakalni listi — v trenutku, ko vaša država zasveti, vaši agenti odidejo na lov.",
-      "button": "Zagotovite si svoje mesto"
+      "body": "Ustvarite račun in pošljite agente na svoj trg — poiskati, pripraviti, zmagati, brez lastnega oddelka za javna naročila.",
+      "button": "Ustvarite račun"
     },
     "tenderCard": {
       "value": "Vrednost",
@@ -316,6 +344,30 @@
       "cancelled": "Preklican",
       "closed": "Zaprt",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Država",
+      "anyCountry": "Vse države",
+      "sector": "Sektor",
+      "anySector": "Vsi sektorji",
+      "sectors": {
+        "construction": "Gradbeništvo",
+        "it": "IT in programska oprema",
+        "health": "Zdravstvo",
+        "energy": "Energetika",
+        "transport": "Promet",
+        "education": "Izobraževanje",
+        "environment": "Okolje",
+        "business": "Poslovne storitve"
+      },
+      "status": "Stanje",
+      "anyStatus": "Vsa stanja",
+      "deadline": "Rok",
+      "anyDeadline": "Kadar koli",
+      "deadline7": "Naslednjih 7 dni",
+      "deadline30": "Naslednjih 30 dni",
+      "deadline90": "Naslednjih 90 dni",
+      "clear": "Počisti vse"
     },
     "detail": {
       "overview": "Pregled",

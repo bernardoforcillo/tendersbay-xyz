@@ -127,7 +127,12 @@
         "sector": "Sektor",
         "deadline": "Frist",
         "value": "Værdi"
-      }
+      },
+      "loading": "Søger…",
+      "empty": "Ingen udbud fundet",
+      "error": "Søgning er ikke tilgængelig lige nu — prøv igen om et øjeblik.",
+      "results_one": "{{count}} udbud",
+      "results_other": "{{count}} udbud"
     },
     "meta": {
       "title": "tendersbay — Offentlige udbud, tildelt af dine AI-agenter",
@@ -144,7 +149,26 @@
       "subtitle": "I aften lukker et udbud med dit navn på. De store spillere har allerede et team på det. Du har tre faner åbne i Excel. Det slutter her — AI-agenter, der finder det, flår papirarbejdet fra hinanden og sætter dig på buddet. Mens du sover.",
       "ctaPrimary": "Sæt dine agenter i gang",
       "ctaSecondary": "Se visionen",
-      "trust": ["27 lande, én søgning", "Agenter der aldrig sover", "Papirarbejde: klaret"]
+      "trust": ["27 lande, én søgning", "Agenter der aldrig sover", "Papirarbejde: klaret"],
+      "deckLabel": "Eksempelresultater"
+    },
+    "proof": {
+      "lead": "Hvert år bruges der i Europa over to billioner euro af offentlige penge. Det meste går gennem offentlige udbud, du aldrig ser.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "offentligt forbrug om året i EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "offentlige indkøbere, der sender opgaver i udbud"
+        },
+        {
+          "value": "~800,000",
+          "label": "udbud om året — intet team læser dem alle"
+        }
+      ],
+      "source": "Europa-Kommissionen · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Spillet er rigget til at holde dig ude. Og det virker.",
@@ -164,19 +188,23 @@
       ]
     },
     "agents": {
-      "title": "Tre agenter. De rammer ikke ved siden af, sover ikke, giver ikke op.",
+      "title": "Her er, hvad dine agenter lavede, mens du sov.",
+      "lead": "Ikke en hurtigere søgefelt, som du stadig selv skal styre. Et team af agenter, der arbejder med hele udbuddet — finder, forbereder, vinder — om natten, så du vågner allerede med i kampen.",
       "items": [
         {
-          "title": "Find",
-          "body": "De finkæmmer alle 27 lande hver dag og fremhæver kun de udbud, der er din tid værd — tilpasset det, du faktisk laver."
+          "time": "02:14",
+          "title": "Den fandt det, der passer til dig",
+          "body": "Mens markedet sov, finkæmmede agenterne alle 27 lande og trak det ene udbud frem, der er din tid værd — tilpasset det, du faktisk laver, ikke en bunke søgeord."
         },
         {
-          "title": "Forbered",
-          "body": "Krav, certifikater, ESPD, frister: udtrukket, krydstjekket, samlet. Papirarbejdet, der knækkede dig, klaret."
+          "time": "05:30",
+          "title": "Den byggede papirarbejdet",
+          "body": "Krav læst, certifikater matchet, ESPD samlet, hver frist noteret. Bureaukratiet, der plejede at brænde din weekend — klaret før kaffen."
         },
         {
-          "title": "Vind",
-          "body": "De forvandler udbudsmaterialet til en vindende strategi, så du går ind med samme slagkraft som giganterne."
+          "time": "07:00",
+          "title": "Du vågnede allerede med i kampen",
+          "body": "Ingen blank side. Udbudsmaterialet blev til en vindende tilbudsstrategi, klar til din beslutning — samme slagkraft, som giganterne betaler et helt kontor for, venter på dit skrivebord."
         }
       ]
     },
@@ -252,8 +280,8 @@
     },
     "cta": {
       "title": "Dine agenter er klar. Det eneste, der mangler, er dig.",
-      "body": "Vi tænder EU marked for marked. Tilmeld dig ventelisten — i samme øjeblik dit land lyser op, går dine agenter på jagt.",
-      "button": "Sikr dig din plads"
+      "body": "Opret din konto, og sæt agenterne på dit marked — finde, forberede, vinde, uden din egen udbudsafdeling.",
+      "button": "Opret konto"
     },
     "tenderCard": {
       "value": "Værdi",
@@ -312,6 +340,30 @@
       "cancelled": "Annulleret",
       "closed": "Lukket",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Land",
+      "anyCountry": "Alle lande",
+      "sector": "Sektor",
+      "anySector": "Alle sektorer",
+      "sectors": {
+        "construction": "Byggeri",
+        "it": "IT og software",
+        "health": "Sundhed",
+        "energy": "Energi",
+        "transport": "Transport",
+        "education": "Uddannelse",
+        "environment": "Miljø",
+        "business": "Erhvervsservice"
+      },
+      "status": "Status",
+      "anyStatus": "Alle statusser",
+      "deadline": "Frist",
+      "anyDeadline": "Når som helst",
+      "deadline7": "Næste 7 dage",
+      "deadline30": "Næste 30 dage",
+      "deadline90": "Næste 90 dage",
+      "clear": "Ryd alt"
     },
     "detail": {
       "overview": "Oversigt",

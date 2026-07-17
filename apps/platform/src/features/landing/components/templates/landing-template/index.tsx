@@ -6,6 +6,7 @@ import {
   CtaBand,
   Hero,
   ProblemSection,
+  ProofStrip,
   SearchDock,
   SiteFooter,
   SiteHeader,
@@ -18,6 +19,7 @@ export function LandingTemplate() {
       <SiteHeader />
       <main>
         <Hero />
+        <ProofStrip />
         <ProblemSection />
         <AgentsSection />
         <AudienceSection />

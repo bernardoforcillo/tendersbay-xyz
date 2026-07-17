@@ -127,7 +127,12 @@
         "sector": "Sektorius",
         "deadline": "Terminas",
         "value": "Vertė"
-      }
+      },
+      "loading": "Ieškoma…",
+      "empty": "Pirkimų nerasta",
+      "error": "Paieška šiuo metu nepasiekiama — pabandykite dar kartą po akimirkos.",
+      "results_one": "{{count}} pirkimas",
+      "results_other": "{{count}} pirkimų"
     },
     "meta": {
       "title": "tendersbay — Europos viešieji pirkimai su jūsų DI agentais",
@@ -148,7 +153,26 @@
         "27 šalys, viena paieška",
         "Agentai, kurie niekada nemiega",
         "Biurokratija: sutvarkyta"
-      ]
+      ],
+      "deckLabel": "Pavyzdiniai rezultatai"
+    },
+    "proof": {
+      "lead": "Kasmet Europoje išleidžiama daugiau nei du trilijonai eurų viešųjų pinigų. Didžioji dalis keliauja per viešuosius pirkimus, kurių niekada nematote.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "viešųjų išlaidų per metus ES"
+        },
+        {
+          "value": "250,000+",
+          "label": "viešieji pirkėjai, skelbiantys pirkimus"
+        },
+        {
+          "value": "~800,000",
+          "label": "viešieji pirkimai per metus — nė viena komanda jų visų neperskaito"
+        }
+      ],
+      "source": "Europos Komisija · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Žaidimas sukurptas taip, kad jus laikytų lauke. Ir tai veikia.",
@@ -168,19 +192,23 @@
       ]
     },
     "agents": {
-      "title": "Trys agentai. Jie neprašauna, nemiega, nepasiduoda.",
+      "title": "Štai ką jūsų agentai nuveikė, kol miegojote.",
+      "lead": "Ne greitesnė paieškos juosta, kurią vis tiek turite valdyti patys. Agentų komanda, dirbanti visą pirkimą — randa, parengia, laimi — per naktį, kad pabustumėte jau lenktynėse.",
       "items": [
         {
-          "title": "Raskite",
-          "body": "Kiekvieną dieną iššukuoja visas 27 šalis ir iškelia tik tuos pirkimus, kurie verti jūsų laiko — pritaikytus tam, ką iš tikrųjų darote."
+          "time": "02:14",
+          "title": "Rado tą, kuris jums tinka",
+          "body": "Rinkai miegant, agentai iššukavo visas 27 šalis ir ištraukė vienintelį pirkimą, vertą jūsų laiko — pritaikytą tam, ką iš tikrųjų darote, o ne raktažodžių krūvą."
         },
         {
-          "title": "Paruoškite",
-          "body": "Reikalavimai, sertifikatai, EBVPD, terminai: ištraukti, sutikrinti, sudėti. Biurokratija, kuri jus laužė, sutvarkyta."
+          "time": "05:30",
+          "title": "Sudėliojo dokumentus",
+          "body": "Reikalavimai perskaityti, sertifikatai suderinti, EBVPD sudėtas, kiekvienas terminas užfiksuotas. Biurokratija, kuri degindavo jūsų savaitgalį — paruošta prieš kavą."
         },
         {
-          "title": "Laimėkite",
-          "body": "Jie paverčia pirkimo dokumentus laiminčia strategija, kad įžengtumėte su tokia pat ugnies galia kaip milžinai."
+          "time": "07:00",
+          "title": "Pabudote jau lenktynėse",
+          "body": "Jokio tuščio lapo. Pirkimo dokumentai virto laiminčia pasiūlymo strategija, paruošta jūsų sprendimui — ta pati ugnies galia, už kurią milžinai moka už visą biurą, laukia ant jūsų stalo."
         }
       ]
     },
@@ -256,8 +284,8 @@
     },
     "cta": {
       "title": "Jūsų agentai pasiruošę. Trūksta tik jūsų.",
-      "body": "Įjungiame ES rinka po rinkos. Užsiregistruokite laukiančiųjų sąraše — tą akimirką, kai jūsų šalis užsidega, jūsų agentai išeina į medžioklę.",
-      "button": "Užsitikrinkite savo vietą"
+      "body": "Susikurkite paskyrą ir paleiskite agentus į savo rinką — rasti, parengti, laimėti, be nuosavo pirkimų skyriaus.",
+      "button": "Susikurti paskyrą"
     },
     "tenderCard": {
       "value": "Vertė",
@@ -318,6 +346,30 @@
       "cancelled": "Atšauktas",
       "closed": "Uždarytas",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Šalis",
+      "anyCountry": "Visos šalys",
+      "sector": "Sektorius",
+      "anySector": "Visi sektoriai",
+      "sectors": {
+        "construction": "Statyba",
+        "it": "IT ir programinė įranga",
+        "health": "Sveikata",
+        "energy": "Energetika",
+        "transport": "Transportas",
+        "education": "Švietimas",
+        "environment": "Aplinka",
+        "business": "Verslo paslaugos"
+      },
+      "status": "Būsena",
+      "anyStatus": "Visos būsenos",
+      "deadline": "Terminas",
+      "anyDeadline": "Bet kada",
+      "deadline7": "Artimiausios 7 dienos",
+      "deadline30": "Artimiausios 30 dienų",
+      "deadline90": "Artimiausios 90 dienų",
+      "clear": "Išvalyti viską"
     },
     "detail": {
       "overview": "Apžvalga",

@@ -2,6 +2,7 @@ import { Banner, Button, cn, EmptyState } from '@tendersbay/components/core';
 import { SearchX } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useQueryState } from 'nuqs';
+import { usePostHog } from 'posthog-js/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchModeSwitch } from '~/features/account/components/molecules';
@@ -17,9 +18,18 @@ import { AccountLayout } from '~/features/account/components/templates/account-l
 import { useTenderLink } from '~/features/tenders';
 import { useAuthStore } from '~/store/auth';
 import { useChatStore } from '~/store/chat';
+import {
+  EMPTY_FILTERS,
+  type ExploreFilterKey,
+  ExploreFilters,
+  type FilterSelections,
+  hasActiveFilters,
+  toFilterValues,
+} from './filters';
 
 export function AccountExplorePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const posthog = usePostHog();
   const reduce = useReducedMotion();
   const user = useAuthStore((s) => s.user);
   const name = user?.displayName?.split(' ')[0];
@@ -29,6 +39,7 @@ export function AccountExplorePage() {
   const [query, setQuery] = useQueryState('q', { defaultValue: '', clearOnDefault: true });
   const tenderLink = useTenderLink();
   const [searched, setSearched] = useState(false);
+  const [filters, setFilters] = useState<FilterSelections>(EMPTY_FILTERS);
   const { results, hasMore, loading, error, search, loadMore } = useTenderSearch();
 
   // A palette ask can arrive while already on /explore — flip to chat so
@@ -37,21 +48,40 @@ export function AccountExplorePage() {
     if (hasDraft) setMode('chat');
   }, [hasDraft]);
 
+  // A search runs when there is a query OR at least one active filter, so a
+  // filters-only search (empty text box) is valid. loadMore reuses these filters.
+  const runSearch = (selections: FilterSelections) => {
+    const trimmed = query.trim();
+    if (!trimmed && !hasActiveFilters(selections)) return;
+    setSearched(true);
+    void search(trimmed, toFilterValues(selections, new Date()));
+  };
+
   // Seed a search when arriving with ?q= (e.g. from the detail page's dock or a shared link).
   // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount only.
   useEffect(() => {
-    const trimmed = query.trim();
-    if (trimmed && !searched) {
-      setSearched(true);
-      void search(trimmed);
+    if (query.trim() && !searched) {
+      runSearch(filters);
     }
   }, []);
 
   function handleSearch() {
-    const trimmed = query.trim();
-    if (!trimmed) return;
-    setSearched(true);
-    void search(trimmed);
+    runSearch(filters);
+  }
+
+  function handleFilterChange(key: ExploreFilterKey, next: string) {
+    const updated = { ...filters, [key]: next };
+    setFilters(updated);
+    posthog?.capture('explore_filter_applied', {
+      filter: key,
+      has_query: query.trim().length > 0,
+    });
+    runSearch(updated);
+  }
+
+  function handleClearFilters() {
+    setFilters(EMPTY_FILTERS);
+    runSearch(EMPTY_FILTERS);
   }
 
   return (
@@ -101,6 +131,12 @@ export function AccountExplorePage() {
                 onSubmit={handleSearch}
               />
             </div>
+            <ExploreFilters
+              value={filters}
+              locale={i18n.language}
+              onChange={handleFilterChange}
+              onClear={handleClearFilters}
+            />
             {searched && (
               <div className="mx-auto w-full max-w-xl space-y-4">
                 {results.length > 0 && (

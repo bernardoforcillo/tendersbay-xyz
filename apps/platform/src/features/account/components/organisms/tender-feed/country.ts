@@ -124,6 +124,13 @@ const ALPHA3_TO_ALPHA2: Record<string, string> = {
 const ALIASES: Record<string, string> = { EL: 'GR', UK: 'GB', EUU: 'EU' };
 
 /**
+ * The alpha-3 country codes we can name and flag — the EU-27 plus the EEA/adjacent
+ * states that also appear on TED — offered as the explore "country" filter. Sort by
+ * localised name at the call site with `countryName`.
+ */
+export const TENDER_COUNTRY_CODES: readonly string[] = Object.keys(ALPHA3_TO_ALPHA2);
+
+/**
  * Resolves a raw tender country code (alpha-3, alpha-2, or an EU quirk code) to
  * an ISO 3166-1 alpha-2 region code, or null when it isn't one we recognise.
  */
