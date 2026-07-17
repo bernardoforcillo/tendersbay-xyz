@@ -1,6 +1,7 @@
 import { Banner, Button, cn, EmptyState } from '@tendersbay/components/core';
 import { SearchX } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
+import { useQueryState } from 'nuqs';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchModeSwitch } from '~/features/account/components/molecules';
@@ -13,6 +14,7 @@ import {
 } from '~/features/account/components/organisms';
 import { useTenderSearch } from '~/features/account/components/organisms/tender-feed';
 import { AccountLayout } from '~/features/account/components/templates/account-layout';
+import { useTenderLink } from '~/features/tenders';
 import { useAuthStore } from '~/store/auth';
 import { useChatStore } from '~/store/chat';
 
@@ -24,7 +26,8 @@ export function AccountExplorePage() {
   const hasChats = useChatStore((s) => s.messages.length > 0 || s.currentChatId !== null);
   const hasDraft = useChatStore((s) => s.draft !== null);
   const [mode, setMode] = useState<SearchMode>(hasChats || hasDraft ? 'chat' : 'search');
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useQueryState('q', { defaultValue: '', clearOnDefault: true });
+  const tenderLink = useTenderLink();
   const [searched, setSearched] = useState(false);
   const { results, hasMore, loading, error, search, loadMore } = useTenderSearch();
 
@@ -33,6 +36,16 @@ export function AccountExplorePage() {
   useEffect(() => {
     if (hasDraft) setMode('chat');
   }, [hasDraft]);
+
+  // Seed a search when arriving with ?q= (e.g. from the detail page's dock or a shared link).
+  // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount only.
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (trimmed && !searched) {
+      setSearched(true);
+      void search(trimmed);
+    }
+  }, []);
 
   function handleSearch() {
     const trimmed = query.trim();
@@ -81,7 +94,12 @@ export function AccountExplorePage() {
                 : t('account.explore.greeting', { defaultValue: 'What are you bidding on today?' })}
             </motion.h1>
             <div className="flex w-full justify-center">
-              <SearchDock mode={mode} value={query} onChange={setQuery} onSubmit={handleSearch} />
+              <SearchDock
+                mode={mode}
+                value={query}
+                onChange={(v) => void setQuery(v)}
+                onSubmit={handleSearch}
+              />
             </div>
             {searched && (
               <div className="mx-auto w-full max-w-xl space-y-4">
@@ -92,7 +110,13 @@ export function AccountExplorePage() {
                     </p>
                     <div className="space-y-3">
                       {results.map((tender) => (
-                        <TenderResultCard key={tender.id} tender={tender} />
+                        <div key={tender.id}>
+                          {tenderLink(
+                            tender.id,
+                            <TenderResultCard tender={tender} />,
+                            'block rounded-2xl no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand-600',
+                          )}
+                        </div>
                       ))}
                     </div>
                     {hasMore && (

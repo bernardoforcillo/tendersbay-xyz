@@ -1,6 +1,7 @@
 import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { NuqsTestingAdapter } from 'nuqs/adapters/testing';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useChatStore } from '~/store/chat';
@@ -34,7 +35,19 @@ vi.mock('~/features/account/components/organisms', async (importOriginal) => {
   };
 });
 
+vi.mock('~/features/tenders', () => ({
+  useTenderLink: () => (_id: string, children: ReactNode) => children,
+}));
+
 import { AccountExplorePage } from './index';
+
+function renderExplore(searchParams = '') {
+  return renderWithI18n(
+    <NuqsTestingAdapter searchParams={searchParams}>
+      <AccountExplorePage />
+    </NuqsTestingAdapter>,
+  );
+}
 
 function fixture(overrides: Partial<TenderResult> = {}): TenderResult {
   return {
@@ -92,7 +105,7 @@ describe('AccountExplorePage — search mode', () => {
   });
 
   it('shows the greeting hero and no results section before any search has run', () => {
-    renderWithI18n(<AccountExplorePage />);
+    renderExplore();
     expect(screen.getByText('What are you bidding on today?')).toBeInTheDocument();
     expect(screen.queryByText('No tenders found')).not.toBeInTheDocument();
     expect(screen.queryByText('Load more')).not.toBeInTheDocument();
@@ -100,14 +113,14 @@ describe('AccountExplorePage — search mode', () => {
 
   it('submitting a query calls search with the trimmed value', async () => {
     const user = userEvent.setup();
-    renderWithI18n(<AccountExplorePage />);
+    renderExplore();
     await submit(user, '  roads  ');
     expect(searchMock).toHaveBeenCalledWith('roads');
   });
 
   it('is a no-op on an empty (whitespace-only) submit', async () => {
     const user = userEvent.setup();
-    renderWithI18n(<AccountExplorePage />);
+    renderExplore();
     await submit(user, '   ');
     expect(searchMock).not.toHaveBeenCalled();
     expect(screen.queryByText('No tenders found')).not.toBeInTheDocument();
@@ -119,7 +132,7 @@ describe('AccountExplorePage — search mode', () => {
       hasMore: true,
     });
     const user = userEvent.setup();
-    renderWithI18n(<AccountExplorePage />);
+    renderExplore();
     await submit(user, 'roads');
 
     expect(screen.getByText('2 tenders')).toBeInTheDocument();
@@ -135,7 +148,7 @@ describe('AccountExplorePage — search mode', () => {
   it('disables Load more while a request is in flight', async () => {
     mockHook({ results: [fixture()], hasMore: true, loading: true });
     const user = userEvent.setup();
-    renderWithI18n(<AccountExplorePage />);
+    renderExplore();
     await submit(user, 'roads');
 
     const loadMoreBtn = screen.getByRole('button', { name: 'Load more' });
@@ -147,7 +160,7 @@ describe('AccountExplorePage — search mode', () => {
   it('shows the empty state when a search returns zero results', async () => {
     mockHook({ results: [], hasMore: false, loading: false });
     const user = userEvent.setup();
-    renderWithI18n(<AccountExplorePage />);
+    renderExplore();
     await submit(user, 'zzz');
 
     expect(screen.getByText('No tenders found')).toBeInTheDocument();
@@ -157,7 +170,7 @@ describe('AccountExplorePage — search mode', () => {
   it('shows an error banner when the search fails', async () => {
     mockHook({ results: [], error: 'boom' });
     const user = userEvent.setup();
-    renderWithI18n(<AccountExplorePage />);
+    renderExplore();
     await submit(user, 'zzz');
 
     expect(screen.getByRole('alert')).toHaveTextContent(
@@ -169,8 +182,21 @@ describe('AccountExplorePage — search mode', () => {
     useChatStore.setState({
       messages: [{ id: 'm1', role: 'user', content: 'hi', createdAt: '' }],
     });
-    renderWithI18n(<AccountExplorePage />);
+    renderExplore();
     expect(screen.getByTestId('chat-window')).toBeInTheDocument();
     expect(screen.queryByRole('textbox', { name: 'Search' })).not.toBeInTheDocument();
+  });
+
+  it('seeds a search from ?q= on mount', () => {
+    useTenderSearchMock.mockReturnValue({
+      results: [],
+      hasMore: false,
+      loading: false,
+      error: null,
+      search: searchMock,
+      loadMore: loadMoreMock,
+    });
+    renderExplore('?q=roads');
+    expect(searchMock).toHaveBeenCalledWith('roads');
   });
 });
