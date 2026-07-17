@@ -366,6 +366,33 @@
       "deadline30": "Nākamās 30 dienas",
       "deadline90": "Nākamās 90 dienas",
       "clear": "Notīrīt visu"
+    },
+    "detail": {
+      "overview": "Pārskats",
+      "buyer": "Pircējs",
+      "value": "Paredzamā vērtība",
+      "published": "Publicēts",
+      "deadline": "Termiņš",
+      "status": "Statuss",
+      "procedure": "Procedūra",
+      "cpv": "CPV",
+      "cpvSecondary": "Papildu CPV",
+      "region": "Reģions (NUTS)",
+      "language": "Valoda",
+      "documents": "Dokumenti",
+      "officialNotice": "Oficiālais paziņojums (PDF)",
+      "viewSource": "Skatīt avotā",
+      "lots": "Daļas",
+      "lotsNone": "Šim iepirkumam nav atsevišķu daļu.",
+      "related": "Saistītie iepirkumi",
+      "relatedNone": "Nav atrasts neviens saistīts iepirkums.",
+      "notFound": "Šis iepirkums netika atrasts.",
+      "backToSearch": "Atpakaļ uz meklēšanu",
+      "searchPlaceholder": "Meklēt iepirkumus…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Iepirkuma dati, termiņš, pircējs un saistītās iespējas iepirkumam \"{{title}}\"."
+      }
     }
   },
   "today": {

@@ -372,6 +372,33 @@
       "deadline30": "Najbliższe 30 dni",
       "deadline90": "Najbliższe 90 dni",
       "clear": "Wyczyść wszystko"
+    },
+    "detail": {
+      "overview": "Przegląd",
+      "buyer": "Zamawiający",
+      "value": "Szacunkowa wartość",
+      "published": "Opublikowano",
+      "deadline": "Termin składania ofert",
+      "status": "Status",
+      "procedure": "Tryb postępowania",
+      "cpv": "CPV",
+      "cpvSecondary": "Dodatkowe CPV",
+      "region": "Region (NUTS)",
+      "language": "Język",
+      "documents": "Dokumenty",
+      "officialNotice": "Ogłoszenie urzędowe (PDF)",
+      "viewSource": "Zobacz źródło",
+      "lots": "Części",
+      "lotsNone": "To postępowanie nie ma odrębnych części.",
+      "related": "Powiązane postępowania",
+      "relatedNone": "Nie znaleziono powiązanych postępowań.",
+      "notFound": "Nie znaleziono tego postępowania.",
+      "backToSearch": "Powrót do wyszukiwania",
+      "searchPlaceholder": "Szukaj postępowań…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Szczegóły postępowania, termin składania ofert, zamawiający i powiązane zamówienia dla „{{title}}”."
+      }
     }
   },
   "today": {

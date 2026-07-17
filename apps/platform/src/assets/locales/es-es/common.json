@@ -364,6 +364,33 @@
       "deadline30": "Próximos 30 días",
       "deadline90": "Próximos 90 días",
       "clear": "Borrar todo"
+    },
+    "detail": {
+      "overview": "Resumen",
+      "buyer": "Comprador",
+      "value": "Valor estimado",
+      "published": "Publicado",
+      "deadline": "Plazo",
+      "status": "Estado",
+      "procedure": "Procedimiento",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV adicional",
+      "region": "Región (NUTS)",
+      "language": "Idioma",
+      "documents": "Documentos",
+      "officialNotice": "Anuncio oficial (PDF)",
+      "viewSource": "Ver en la fuente",
+      "lots": "Lotes",
+      "lotsNone": "Esta licitación no tiene lotes separados.",
+      "related": "Licitaciones relacionadas",
+      "relatedNone": "No se encontraron licitaciones relacionadas.",
+      "notFound": "No se pudo encontrar esta licitación.",
+      "backToSearch": "Volver a la búsqueda",
+      "searchPlaceholder": "Buscar licitaciones…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Detalles de la licitación, plazo, comprador y oportunidades relacionadas para \"{{title}}\"."
+      }
     }
   },
   "today": {

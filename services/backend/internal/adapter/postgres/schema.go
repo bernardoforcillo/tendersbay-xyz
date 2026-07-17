@@ -403,3 +403,62 @@ type DBTender struct {
 	PublishedAt   *time.Time `drop:"published_at"`
 	Deadline      *time.Time `drop:"deadline"`
 }
+
+// Extra ingested_tenders scalar columns the detail API needs.
+var (
+	TenderBuyerID  = pg.Add(Tenders, pg.Text("buyer_id").NotNull())
+	TenderNUTS     = pg.Add(Tenders, pg.Text("nuts").NotNull())
+	TenderLanguage = pg.Add(Tenders, pg.Text("language").NotNull())
+)
+
+// Read-only child tables of tenders.ingested_tenders (owned by services/ingestion).
+var (
+	TenderDocuments   = pg.NewSchemaTable("tenders", "ingested_tender_documents")
+	TenderDocTenderID = pg.Add(TenderDocuments, pg.BigInt("tender_id").NotNull())
+	TenderDocURL      = pg.Add(TenderDocuments, pg.Text("url").NotNull())
+	TenderDocType     = pg.Add(TenderDocuments, pg.Text("type").NotNull())
+
+	TenderLots        = pg.NewSchemaTable("tenders", "ingested_tender_lots")
+	TenderLotTenderID = pg.Add(TenderLots, pg.BigInt("tender_id").NotNull())
+	TenderLotRef      = pg.Add(TenderLots, pg.Text("ref").NotNull())
+	TenderLotTitle    = pg.Add(TenderLots, pg.Text("title").NotNull())
+	TenderLotCPV      = pg.Add(TenderLots, pg.Text("cpv").NotNull())
+	TenderLotValue    = pg.Add(TenderLots, pg.BigInt("value"))
+	TenderLotCurrency = pg.Add(TenderLots, pg.Text("currency").NotNull())
+	TenderLotDeadline = pg.Add(TenderLots, pg.Timestamp("deadline", true))
+)
+
+// DBTenderDetail scans the scalar detail columns (NOT cpv_secondary — that text[]
+// column is read separately via array_to_string; see the repo).
+type DBTenderDetail struct {
+	ID            int64      `drop:"id"`
+	Source        string     `drop:"source"`
+	SourceRef     string     `drop:"source_ref"`
+	Title         string     `drop:"title"`
+	BuyerName     string     `drop:"buyer_name"`
+	BuyerID       string     `drop:"buyer_id"`
+	Status        string     `drop:"status"`
+	ProcedureType string     `drop:"procedure_type"`
+	Country       string     `drop:"country"`
+	NUTS          string     `drop:"nuts"`
+	Language      string     `drop:"language"`
+	CPV           string     `drop:"cpv"`
+	Value         *int64     `drop:"value"`
+	Currency      string     `drop:"currency"`
+	PublishedAt   *time.Time `drop:"published_at"`
+	Deadline      *time.Time `drop:"deadline"`
+}
+
+type DBTenderDocument struct {
+	URL  string `drop:"url"`
+	Type string `drop:"type"`
+}
+
+type DBTenderLot struct {
+	Ref      string     `drop:"ref"`
+	Title    string     `drop:"title"`
+	CPV      string     `drop:"cpv"`
+	Value    *int64     `drop:"value"`
+	Currency string     `drop:"currency"`
+	Deadline *time.Time `drop:"deadline"`
+}

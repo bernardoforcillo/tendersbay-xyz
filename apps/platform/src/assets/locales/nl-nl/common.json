@@ -364,6 +364,33 @@
       "deadline30": "Komende 30 dagen",
       "deadline90": "Komende 90 dagen",
       "clear": "Alles wissen"
+    },
+    "detail": {
+      "overview": "Overzicht",
+      "buyer": "Aanbestedende dienst",
+      "value": "Geraamde waarde",
+      "published": "Gepubliceerd",
+      "deadline": "Termijn",
+      "status": "Status",
+      "procedure": "Procedure",
+      "cpv": "CPV",
+      "cpvSecondary": "Aanvullende CPV",
+      "region": "Regio (NUTS)",
+      "language": "Taal",
+      "documents": "Documenten",
+      "officialNotice": "Officiële aankondiging (PDF)",
+      "viewSource": "Bekijk bron",
+      "lots": "Percelen",
+      "lotsNone": "Deze aanbesteding heeft geen aparte percelen.",
+      "related": "Vergelijkbare aanbestedingen",
+      "relatedNone": "Geen vergelijkbare aanbestedingen gevonden.",
+      "notFound": "Deze aanbesteding kon niet worden gevonden.",
+      "backToSearch": "Terug naar zoeken",
+      "searchPlaceholder": "Zoek aanbestedingen…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Details, termijn, aanbestedende dienst en vergelijkbare kansen voor \"{{title}}\"."
+      }
     }
   },
   "today": {

@@ -370,6 +370,33 @@
       "deadline30": "Li jmiss 30 jum",
       "deadline90": "Li jmiss 90 jum",
       "clear": "Ħassar kollox"
+    },
+    "detail": {
+      "overview": "Ħarsa ġenerali",
+      "buyer": "Xerrej",
+      "value": "Valur stmat",
+      "published": "Ippubblikat",
+      "deadline": "Skadenza",
+      "status": "Status",
+      "procedure": "Proċedura",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV addizzjonali",
+      "region": "Reġjun (NUTS)",
+      "language": "Lingwa",
+      "documents": "Dokumenti",
+      "officialNotice": "Avviż uffiċjali (PDF)",
+      "viewSource": "Ara fuq is-sors",
+      "lots": "Lotti",
+      "lotsNone": "Din is-sejħa m'għandhiex lotti separati.",
+      "related": "Sejħiet relatati",
+      "relatedNone": "L-ebda sejħa relatata ma nstabet.",
+      "notFound": "Din is-sejħa ma setgħetx tinstab.",
+      "backToSearch": "Lura għat-tfittxija",
+      "searchPlaceholder": "Fittex sejħiet…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Dettalji tas-sejħa, skadenza, xerrej u opportunitajiet relatati għal \"{{title}}\"."
+      }
     }
   },
   "today": {

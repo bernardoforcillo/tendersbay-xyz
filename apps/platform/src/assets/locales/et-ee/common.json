@@ -364,6 +364,33 @@
       "deadline30": "Järgmised 30 päeva",
       "deadline90": "Järgmised 90 päeva",
       "clear": "Tühjenda kõik"
+    },
+    "detail": {
+      "overview": "Ülevaade",
+      "buyer": "Ostja",
+      "value": "Eeldatav maksumus",
+      "published": "Avaldatud",
+      "deadline": "Tähtaeg",
+      "status": "Staatus",
+      "procedure": "Menetlus",
+      "cpv": "CPV",
+      "cpvSecondary": "Täiendav CPV",
+      "region": "Piirkond (NUTS)",
+      "language": "Keel",
+      "documents": "Dokumendid",
+      "officialNotice": "Ametlik teade (PDF)",
+      "viewSource": "Vaata allikat",
+      "lots": "Osad",
+      "lotsNone": "Sellel hankel eraldi osi ei ole.",
+      "related": "Seotud hanked",
+      "relatedNone": "Seotud hankeid ei leitud.",
+      "notFound": "Seda hanget ei leitud.",
+      "backToSearch": "Tagasi otsingusse",
+      "searchPlaceholder": "Otsi hankeid…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Hanke üksikasjad, tähtaeg, ostja ja seotud võimalused hankele \"{{title}}\"."
+      }
     }
   },
   "today": {

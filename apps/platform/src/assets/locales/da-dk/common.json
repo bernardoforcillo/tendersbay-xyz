@@ -364,6 +364,33 @@
       "deadline30": "Næste 30 dage",
       "deadline90": "Næste 90 dage",
       "clear": "Ryd alt"
+    },
+    "detail": {
+      "overview": "Oversigt",
+      "buyer": "Ordregiver",
+      "value": "Anslået værdi",
+      "published": "Offentliggjort",
+      "deadline": "Frist",
+      "status": "Status",
+      "procedure": "Procedure",
+      "cpv": "CPV",
+      "cpvSecondary": "Yderligere CPV",
+      "region": "Region (NUTS)",
+      "language": "Sprog",
+      "documents": "Dokumenter",
+      "officialNotice": "Officiel bekendtgørelse (PDF)",
+      "viewSource": "Se på kilden",
+      "lots": "Delaftaler",
+      "lotsNone": "Dette udbud har ingen separate delaftaler.",
+      "related": "Relaterede udbud",
+      "relatedNone": "Ingen relaterede udbud fundet.",
+      "notFound": "Dette udbud kunne ikke findes.",
+      "backToSearch": "Tilbage til søgning",
+      "searchPlaceholder": "Søg efter udbud…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Udbudsdetaljer, frist, ordregiver og relaterede muligheder for \"{{title}}\"."
+      }
     }
   },
   "today": {

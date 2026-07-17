@@ -368,6 +368,33 @@
       "deadline30": "Naslednjih 30 dni",
       "deadline90": "Naslednjih 90 dni",
       "clear": "Počisti vse"
+    },
+    "detail": {
+      "overview": "Pregled",
+      "buyer": "Naročnik",
+      "value": "Ocenjena vrednost",
+      "published": "Objavljeno",
+      "deadline": "Rok",
+      "status": "Status",
+      "procedure": "Postopek",
+      "cpv": "CPV",
+      "cpvSecondary": "Dodatni CPV",
+      "region": "Regija (NUTS)",
+      "language": "Jezik",
+      "documents": "Dokumenti",
+      "officialNotice": "Uradno obvestilo (PDF)",
+      "viewSource": "Ogled na viru",
+      "lots": "Sklopi",
+      "lotsNone": "Ta razpis nima ločenih sklopov.",
+      "related": "Sorodni razpisi",
+      "relatedNone": "Ni najdenih sorodnih razpisov.",
+      "notFound": "Tega razpisa ni bilo mogoče najti.",
+      "backToSearch": "Nazaj na iskanje",
+      "searchPlaceholder": "Iskanje razpisov…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Podrobnosti razpisa, rok, naročnik in sorodne priložnosti za \"{{title}}\"."
+      }
     }
   },
   "today": {

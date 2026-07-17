@@ -370,6 +370,33 @@
       "deadline30": "Najbližších 30 dní",
       "deadline90": "Najbližších 90 dní",
       "clear": "Vymazať všetko"
+    },
+    "detail": {
+      "overview": "Prehľad",
+      "buyer": "Obstarávateľ",
+      "value": "Predpokladaná hodnota",
+      "published": "Zverejnené",
+      "deadline": "Termín",
+      "status": "Stav",
+      "procedure": "Postup",
+      "cpv": "CPV",
+      "cpvSecondary": "Doplnkový CPV",
+      "region": "Región (NUTS)",
+      "language": "Jazyk",
+      "documents": "Dokumenty",
+      "officialNotice": "Úradné oznámenie (PDF)",
+      "viewSource": "Zobraziť zdroj",
+      "lots": "Časti",
+      "lotsNone": "Táto zákazka nemá samostatné časti.",
+      "related": "Súvisiace zákazky",
+      "relatedNone": "Neboli nájdené žiadne súvisiace zákazky.",
+      "notFound": "Táto zákazka sa nenašla.",
+      "backToSearch": "Späť na vyhľadávanie",
+      "searchPlaceholder": "Hľadať zákazky…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Podrobnosti o zákazke, termín, obstarávateľ a súvisiace príležitosti pre „{{title}}“."
+      }
     }
   },
   "today": {

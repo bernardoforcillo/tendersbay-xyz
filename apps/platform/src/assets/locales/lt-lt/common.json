@@ -370,6 +370,33 @@
       "deadline30": "Artimiausios 30 dienų",
       "deadline90": "Artimiausios 90 dienų",
       "clear": "Išvalyti viską"
+    },
+    "detail": {
+      "overview": "Apžvalga",
+      "buyer": "Perkančioji organizacija",
+      "value": "Numatoma vertė",
+      "published": "Paskelbta",
+      "deadline": "Terminas",
+      "status": "Būsena",
+      "procedure": "Procedūra",
+      "cpv": "CPV",
+      "cpvSecondary": "Papildomas CPV",
+      "region": "Regionas (NUTS)",
+      "language": "Kalba",
+      "documents": "Dokumentai",
+      "officialNotice": "Oficialus skelbimas (PDF)",
+      "viewSource": "Žiūrėti šaltinį",
+      "lots": "Pirkimo dalys",
+      "lotsNone": "Šis pirkimas neturi atskirų dalių.",
+      "related": "Susiję pirkimai",
+      "relatedNone": "Susijusių pirkimų nerasta.",
+      "notFound": "Šis pirkimas nerastas.",
+      "backToSearch": "Grįžti į paiešką",
+      "searchPlaceholder": "Ieškoti pirkimų…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Pirkimo informacija, terminas, perkančioji organizacija ir susijusios galimybės „{{title}}“."
+      }
     }
   },
   "today": {

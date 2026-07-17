@@ -368,6 +368,33 @@
       "deadline30": "Következő 30 nap",
       "deadline90": "Következő 90 nap",
       "clear": "Összes törlése"
+    },
+    "detail": {
+      "overview": "Áttekintés",
+      "buyer": "Ajánlatkérő",
+      "value": "Becsült érték",
+      "published": "Közzétéve",
+      "deadline": "Határidő",
+      "status": "Állapot",
+      "procedure": "Eljárás",
+      "cpv": "CPV",
+      "cpvSecondary": "További CPV",
+      "region": "Régió (NUTS)",
+      "language": "Nyelv",
+      "documents": "Dokumentumok",
+      "officialNotice": "Hivatalos hirdetmény (PDF)",
+      "viewSource": "Megtekintés a forrásnál",
+      "lots": "Részek",
+      "lotsNone": "Ennek a közbeszerzésnek nincsenek külön részei.",
+      "related": "Kapcsolódó közbeszerzések",
+      "relatedNone": "Nem található kapcsolódó közbeszerzés.",
+      "notFound": "Ez a közbeszerzés nem található.",
+      "backToSearch": "Vissza a kereséshez",
+      "searchPlaceholder": "Közbeszerzések keresése…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Közbeszerzési részletek, határidő, ajánlatkérő és kapcsolódó lehetőségek a(z) „{{title}}” tenderhez."
+      }
     }
   },
   "today": {

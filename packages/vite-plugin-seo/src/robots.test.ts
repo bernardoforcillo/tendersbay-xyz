@@ -7,6 +7,7 @@ describe('buildRobots', () => {
     expect(txt).toContain('User-agent: *');
     expect(txt).toContain('Allow: /');
     expect(txt).toContain('Sitemap: https://tendersbay.xyz/sitemap.xml');
+    expect(txt).toContain('Sitemap: https://tendersbay.xyz/sitemap-tenders.xml');
   });
 
   it('explicitly allows every default AI crawler', () => {

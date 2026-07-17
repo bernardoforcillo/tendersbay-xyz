@@ -364,6 +364,33 @@
       "deadline30": "Próximos 30 dias",
       "deadline90": "Próximos 90 dias",
       "clear": "Limpar tudo"
+    },
+    "detail": {
+      "overview": "Visão geral",
+      "buyer": "Comprador",
+      "value": "Valor estimado",
+      "published": "Publicado",
+      "deadline": "Prazo",
+      "status": "Estado",
+      "procedure": "Procedimento",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV adicional",
+      "region": "Região (NUTS)",
+      "language": "Idioma",
+      "documents": "Documentos",
+      "officialNotice": "Anúncio oficial (PDF)",
+      "viewSource": "Ver na fonte",
+      "lots": "Lotes",
+      "lotsNone": "Este concurso não tem lotes separados.",
+      "related": "Concursos relacionados",
+      "relatedNone": "Não foram encontrados concursos relacionados.",
+      "notFound": "Este concurso não foi encontrado.",
+      "backToSearch": "Voltar à pesquisa",
+      "searchPlaceholder": "Pesquisar concursos…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Detalhes do concurso, prazo, comprador e oportunidades relacionadas para \"{{title}}\"."
+      }
     }
   },
   "today": {

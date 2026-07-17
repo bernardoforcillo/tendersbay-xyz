@@ -4,6 +4,7 @@ package server
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io/fs"
 	"log/slog"
@@ -30,6 +31,9 @@ func New(fsys fs.FS) http.Handler {
 
 	fileServer := http.FileServer(http.FS(fsys))
 
+	metas := newMetaCache()
+	sitemaps := newSitemapCache()
+
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := strings.TrimPrefix(path.Clean(r.URL.Path), "/")
 		if name == "" {
@@ -40,14 +44,45 @@ func New(fsys fs.FS) http.Handler {
 		// is always served from the prepared bytes — never straight off the file
 		// server, which would return the un-injected embedded copy.
 		if name == "index.html" {
+			w.Header().Set("X-Robots-Tag", "noindex")
 			serveIndex(w, r, index)
 			return
 		}
 
+		// The sitemap is generated dynamically from the backend, not embedded.
+		if name == "sitemap-tenders.xml" {
+			if xml, ok := sitemaps.get(); ok {
+				w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+				_, _ = w.Write(xml)
+				return
+			}
+			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+			defer cancel()
+			scheme := "https"
+			if r.TLS == nil && r.Header.Get("X-Forwarded-Proto") == "" {
+				scheme = "http"
+			}
+			xml, err := tenderSitemapXML(ctx, apiURLFromEnv(), scheme+"://"+r.Host, localeNames(locales))
+			if err != nil {
+				http.Error(w, "sitemap unavailable", http.StatusBadGateway)
+				return
+			}
+			sitemaps.put(xml)
+			w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+			_, _ = w.Write(xml)
+			return
+		}
+
 		// /<locale>, /<locale>/index.html, and extensionless SPA paths below a
-		// locale serve that locale's prepared index (same env injection).
+		// locale serve that locale's prepared index (same env injection). A
+		// /<locale>/tenders/<id> path gets a server-rendered head with the
+		// tender's title/meta/JSON-LD instead of the plain shell.
 		segment, rest, _ := strings.Cut(name, "/")
 		if prepared, ok := locales[segment]; ok {
+			if id, isTender := tenderIDFromPath(rest); isTender {
+				serveTenderPage(w, r, prepared, segment, id, metas)
+				return
+			}
 			if rest == "" || rest == "index.html" || path.Ext(rest) == "" {
 				serveIndex(w, r, prepared)
 				return
@@ -64,6 +99,7 @@ func New(fsys fs.FS) http.Handler {
 			return
 		}
 
+		w.Header().Set("X-Robots-Tag", "noindex")
 		serveIndex(w, r, index)
 	})
 

@@ -364,6 +364,33 @@
       "deadline30": "Prossimi 30 giorni",
       "deadline90": "Prossimi 90 giorni",
       "clear": "Cancella tutto"
+    },
+    "detail": {
+      "overview": "Panoramica",
+      "buyer": "Ente appaltante",
+      "value": "Valore stimato",
+      "published": "Pubblicato",
+      "deadline": "Scadenza",
+      "status": "Stato",
+      "procedure": "Procedura",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV aggiuntivo",
+      "region": "Regione (NUTS)",
+      "language": "Lingua",
+      "documents": "Documenti",
+      "officialNotice": "Bando ufficiale (PDF)",
+      "viewSource": "Visualizza sulla fonte",
+      "lots": "Lotti",
+      "lotsNone": "Questo bando non prevede lotti separati.",
+      "related": "Bandi correlati",
+      "relatedNone": "Nessun bando correlato trovato.",
+      "notFound": "Impossibile trovare questo bando.",
+      "backToSearch": "Torna alla ricerca",
+      "searchPlaceholder": "Cerca bandi…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Dettagli del bando, scadenza, ente appaltante e opportunità correlate per \"{{title}}\"."
+      }
     }
   },
   "today": {

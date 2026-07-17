@@ -364,6 +364,33 @@
       "deadline30": "Next 30 days",
       "deadline90": "Next 90 days",
       "clear": "Clear all"
+    },
+    "detail": {
+      "overview": "Overview",
+      "buyer": "Buyer",
+      "value": "Estimated value",
+      "published": "Published",
+      "deadline": "Deadline",
+      "status": "Status",
+      "procedure": "Procedure",
+      "cpv": "CPV",
+      "cpvSecondary": "Additional CPV",
+      "region": "Region (NUTS)",
+      "language": "Language",
+      "documents": "Documents",
+      "officialNotice": "Official notice (PDF)",
+      "viewSource": "View on source",
+      "lots": "Lots",
+      "lotsNone": "This tender has no separate lots.",
+      "related": "Related tenders",
+      "relatedNone": "No related tenders found.",
+      "notFound": "This tender could not be found.",
+      "backToSearch": "Back to search",
+      "searchPlaceholder": "Search tenders…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Tender details, deadline, buyer and related opportunities for \"{{title}}\"."
+      }
     }
   },
   "today": {

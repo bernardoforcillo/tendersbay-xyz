@@ -364,6 +364,33 @@
       "deadline30": "30 prochains jours",
       "deadline90": "90 prochains jours",
       "clear": "Tout effacer"
+    },
+    "detail": {
+      "overview": "Aperçu",
+      "buyer": "Acheteur",
+      "value": "Valeur estimée",
+      "published": "Publié",
+      "deadline": "Date limite",
+      "status": "Statut",
+      "procedure": "Procédure",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV additionnel",
+      "region": "Région (NUTS)",
+      "language": "Langue",
+      "documents": "Documents",
+      "officialNotice": "Avis officiel (PDF)",
+      "viewSource": "Voir la source",
+      "lots": "Lots",
+      "lotsNone": "Cet appel d'offres ne comporte pas de lots séparés.",
+      "related": "Appels d'offres similaires",
+      "relatedNone": "Aucun appel d'offres similaire trouvé.",
+      "notFound": "Cet appel d'offres est introuvable.",
+      "backToSearch": "Retour à la recherche",
+      "searchPlaceholder": "Rechercher des appels d'offres…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Détails de l'appel d'offres, date limite, acheteur et opportunités similaires pour « {{title}} »."
+      }
     }
   },
   "today": {
