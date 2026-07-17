@@ -31,6 +31,9 @@ func New(fsys fs.FS) http.Handler {
 
 	fileServer := http.FileServer(http.FS(fsys))
 
+	metas := newMetaCache()
+	sitemaps := newSitemapCache()
+
 	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		name := strings.TrimPrefix(path.Clean(r.URL.Path), "/")
 		if name == "" {
@@ -48,6 +51,11 @@ func New(fsys fs.FS) http.Handler {
 
 		// The sitemap is generated dynamically from the backend, not embedded.
 		if name == "sitemap-tenders.xml" {
+			if xml, ok := sitemaps.get(); ok {
+				w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+				_, _ = w.Write(xml)
+				return
+			}
 			ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
 			defer cancel()
 			scheme := "https"
@@ -59,6 +67,7 @@ func New(fsys fs.FS) http.Handler {
 				http.Error(w, "sitemap unavailable", http.StatusBadGateway)
 				return
 			}
+			sitemaps.put(xml)
 			w.Header().Set("Content-Type", "application/xml; charset=utf-8")
 			_, _ = w.Write(xml)
 			return
@@ -71,7 +80,7 @@ func New(fsys fs.FS) http.Handler {
 		segment, rest, _ := strings.Cut(name, "/")
 		if prepared, ok := locales[segment]; ok {
 			if id, isTender := tenderIDFromPath(rest); isTender {
-				serveTenderPage(w, r, prepared, segment, id)
+				serveTenderPage(w, r, prepared, segment, id, metas)
 				return
 			}
 			if rest == "" || rest == "index.html" || path.Ext(rest) == "" {

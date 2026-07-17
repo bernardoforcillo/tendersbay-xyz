@@ -255,11 +255,11 @@ func tenderIDFromPath(rest string) (string, bool) {
 	return after, true
 }
 
-func serveTenderPage(w http.ResponseWriter, r *http.Request, shell []byte, locale, id string) {
+func serveTenderPage(w http.ResponseWriter, r *http.Request, shell []byte, locale, id string, metas *metaCache) {
 	ctx, cancel := context.WithTimeout(r.Context(), tenderHeadTimeout)
 	defer cancel()
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	meta, err := fetchTenderMeta(ctx, apiURLFromEnv(), id)
+	meta, err := metas.fetch(ctx, apiURLFromEnv(), id)
 	if err != nil {
 		// Backend slow/unreachable: serve the plain SPA shell (page still works client-side).
 		_, _ = w.Write(shell)
