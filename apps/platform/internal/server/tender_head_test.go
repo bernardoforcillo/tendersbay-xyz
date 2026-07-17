@@ -9,17 +9,46 @@ import (
 	"testing/fstest"
 )
 
-func TestInjectTenderHead_OverridesTitleAndInjectsJSONLD(t *testing.T) {
-	shell := []byte(`<html><head><title>tendersbay</title><meta name="description" content="landing"><!--tender-head--></head><body></body></html>`)
-	out := string(injectTenderHead(shell, tenderMeta{ID: "5", Title: "Road works", BuyerName: "City", Country: "ITA", CanonicalURL: "https://tendersbay.xyz/en-ie/tenders/5"}))
+const testShell = `<html><head>` +
+	`<title>tendersbay — generic</title>` +
+	`<meta name="description" content="generic description">` +
+	`<meta property="og:title" content="generic og title">` +
+	`<meta property="og:description" content="generic og description">` +
+	`<meta name="twitter:title" content="generic tw title">` +
+	`<meta name="twitter:description" content="generic tw description">` +
+	`<link rel="canonical" href="https://tendersbay.xyz/en-ie/">` +
+	`<script>window.__ENV__ = {};</script>` +
+	`<!--tender-head--></head><body></body></html>`
+
+func TestInjectTenderHead_OverridesInPlaceAndInjectsJSONLD(t *testing.T) {
+	out := string(injectTenderHead([]byte(testShell), tenderMeta{
+		ID: "5", Title: "Road works", BuyerName: "City", Country: "ITA",
+		CanonicalURL: "https://tendersbay.xyz/en-ie/tenders/5",
+	}))
 	if !strings.Contains(out, "<title>Road works — tendersbay</title>") {
 		t.Errorf("title not overridden: %s", out)
 	}
-	if !strings.Contains(out, "application/ld+json") || !strings.Contains(out, "Road works") {
-		t.Errorf("JSON-LD not injected: %s", out)
+	// og:title / twitter:title overridden in place, generic gone, not duplicated.
+	if !strings.Contains(out, `<meta property="og:title" content="Road works — tendersbay">`) {
+		t.Errorf("og:title not overridden: %s", out)
 	}
-	if !strings.Contains(out, `property="og:title"`) || !strings.Contains(out, `rel="canonical"`) {
-		t.Errorf("OG/canonical missing: %s", out)
+	if !strings.Contains(out, `<meta name="twitter:title" content="Road works — tendersbay">`) {
+		t.Errorf("twitter:title not overridden: %s", out)
+	}
+	if strings.Contains(out, "generic og title") || strings.Contains(out, "generic tw title") {
+		t.Errorf("generic social titles still present: %s", out)
+	}
+	if strings.Count(out, `property="og:title"`) != 1 || strings.Count(out, `name="twitter:title"`) != 1 {
+		t.Errorf("social tags duplicated: %s", out)
+	}
+	if !strings.Contains(out, `<link rel="canonical" href="https://tendersbay.xyz/en-ie/tenders/5">`) {
+		t.Errorf("canonical not overridden: %s", out)
+	}
+	if strings.Count(out, `rel="canonical"`) != 1 {
+		t.Errorf("canonical duplicated: %s", out)
+	}
+	if !strings.Contains(out, "application/ld+json") || !strings.Contains(out, "Road works") {
+		t.Errorf("JSON-LD missing: %s", out)
 	}
 	if strings.Contains(out, "<!--tender-head-->") {
 		t.Errorf("sentinel not consumed: %s", out)
@@ -38,10 +67,9 @@ func TestServer_ServesTenderPageFromBackend(t *testing.T) {
 	defer backend.Close()
 	t.Setenv("API_URL", backend.URL)
 
-	shell := "<html><head><title>tendersbay</title><meta name=\"description\" content=\"x\"><script>window.__ENV__ = {};</script><!--tender-head--></head><body></body></html>"
 	fsys := fstest.MapFS{
-		"index.html":       {Data: []byte(shell)},
-		"en-ie/index.html": {Data: []byte(shell)},
+		"index.html":       {Data: []byte(testShell)},
+		"en-ie/index.html": {Data: []byte(testShell)},
 	}
 	srv := New(fsys)
 
@@ -65,8 +93,7 @@ func TestServer_TenderNotFoundServesNoindex(t *testing.T) {
 	defer backend.Close()
 	t.Setenv("API_URL", backend.URL)
 
-	shell := "<html><head><title>t</title><meta name=\"description\" content=\"x\"><script>window.__ENV__ = {};</script><!--tender-head--></head><body></body></html>"
-	srv := New(fstest.MapFS{"index.html": {Data: []byte(shell)}, "en-ie/index.html": {Data: []byte(shell)}})
+	srv := New(fstest.MapFS{"index.html": {Data: []byte(testShell)}, "en-ie/index.html": {Data: []byte(testShell)}})
 
 	rec := httptest.NewRecorder()
 	srv.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/en-ie/tenders/999", nil))
@@ -76,5 +103,28 @@ func TestServer_TenderNotFoundServesNoindex(t *testing.T) {
 	body, _ := io.ReadAll(rec.Body)
 	if !strings.Contains(string(body), `name="robots" content="noindex"`) {
 		t.Errorf("not-found page should be noindex: %s", body)
+	}
+}
+
+func TestServer_TenderBackendErrorServesPlainShell(t *testing.T) {
+	backend := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusInternalServerError)
+	}))
+	defer backend.Close()
+	t.Setenv("API_URL", backend.URL)
+
+	srv := New(fstest.MapFS{"index.html": {Data: []byte(testShell)}, "en-ie/index.html": {Data: []byte(testShell)}})
+	rec := httptest.NewRecorder()
+	srv.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/en-ie/tenders/5", nil))
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want 200 (degrade to plain shell)", rec.Code)
+	}
+	body, _ := io.ReadAll(rec.Body)
+	if strings.Contains(string(body), "— tendersbay") || strings.Contains(string(body), "application/ld+json") {
+		t.Errorf("backend-error page should be the untouched shell: %s", body)
+	}
+	if strings.Contains(string(body), `content="noindex"`) {
+		t.Errorf("backend-error (not 404) must not be noindex: %s", body)
 	}
 }

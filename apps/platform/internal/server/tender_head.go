@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"encoding/xml"
 	"fmt"
 	"html"
 	"net/http"
@@ -62,13 +63,25 @@ func fetchTenderMeta(ctx context.Context, apiURL, id string) (*tenderMeta, error
 	return out.Tender, nil
 }
 
-// injectTenderHead overrides the shell's <title> + description and injects
-// OG/Twitter/canonical + JSON-LD at the <!--tender-head--> sentinel.
+// injectTenderHead rewrites the shell's title, description, OG/Twitter title &
+// description, and canonical IN PLACE to the tender's values (the locale shell
+// already carries generic versions from vite-plugin-seo — we override, never
+// duplicate), then injects the tender JSON-LD at the <!--tender-head--> sentinel.
 func injectTenderHead(shell []byte, m tenderMeta) []byte {
 	title := m.Title + " — tendersbay"
 	desc := "Tender details, deadline, buyer and related opportunities for " + m.Title + "."
-	out := replaceFirstTag(shell, "<title>", "</title>", html.EscapeString(title))
-	out = replaceMetaDescription(out, html.EscapeString(desc))
+	et := html.EscapeString(title)
+	ed := html.EscapeString(desc)
+
+	out := replaceFirstTag(shell, "<title>", "</title>", et)
+	out = replaceMetaContent(out, "name", "description", ed)
+	out = replaceMetaContent(out, "property", "og:title", et)
+	out = replaceMetaContent(out, "property", "og:description", ed)
+	out = replaceMetaContent(out, "name", "twitter:title", et)
+	out = replaceMetaContent(out, "name", "twitter:description", ed)
+	if m.CanonicalURL != "" {
+		out = replaceCanonical(out, html.EscapeString(m.CanonicalURL))
+	}
 
 	ld := map[string]any{
 		"@context": "https://schema.org", "@type": "GovernmentService",
@@ -78,17 +91,9 @@ func injectTenderHead(shell []byte, m tenderMeta) []byte {
 		ld["provider"] = map[string]any{"@type": "GovernmentOrganization", "name": m.BuyerName}
 	}
 	ldBytes, _ := json.Marshal(ld)
-
-	var b strings.Builder
-	fmt.Fprintf(&b, `<meta property="og:title" content="%s">`, html.EscapeString(title))
-	fmt.Fprintf(&b, `<meta property="og:description" content="%s">`, html.EscapeString(desc))
-	fmt.Fprintf(&b, `<meta property="og:type" content="website">`)
-	if m.CanonicalURL != "" {
-		fmt.Fprintf(&b, `<link rel="canonical" href="%s">`, html.EscapeString(m.CanonicalURL))
-	}
-	fmt.Fprintf(&b, `<meta name="twitter:card" content="summary">`)
-	fmt.Fprintf(&b, `<script type="application/ld+json">%s</script>`, ldBytes)
-	return bytes.Replace(out, []byte("<!--tender-head-->"), []byte(b.String()), 1)
+	sentinel := []byte("<!--tender-head-->")
+	inject := []byte(fmt.Sprintf(`<script type="application/ld+json">%s</script>`, ldBytes))
+	return bytes.Replace(out, sentinel, inject, 1)
 }
 
 func replaceFirstTag(src []byte, open, closeTag, content string) []byte {
@@ -109,8 +114,11 @@ func replaceFirstTag(src []byte, open, closeTag, content string) []byte {
 	return out.Bytes()
 }
 
-func replaceMetaDescription(src []byte, content string) []byte {
-	marker := []byte(`<meta name="description" content="`)
+// replaceMetaContent overwrites the content="" of the first
+// <meta {attr}="{key}" content="..."> tag, leaving everything else intact.
+// Returns src unchanged if the tag is absent.
+func replaceMetaContent(src []byte, attr, key, content string) []byte {
+	marker := []byte(fmt.Sprintf(`<meta %s="%s" content="`, attr, key))
 	i := bytes.Index(src, marker)
 	if i < 0 {
 		return src
@@ -123,6 +131,25 @@ func replaceMetaDescription(src []byte, content string) []byte {
 	var out bytes.Buffer
 	out.Write(src[:start])
 	out.WriteString(content)
+	out.Write(src[start+end:])
+	return out.Bytes()
+}
+
+// replaceCanonical overwrites the href of the first <link rel="canonical" href="...">.
+func replaceCanonical(src []byte, href string) []byte {
+	marker := []byte(`<link rel="canonical" href="`)
+	i := bytes.Index(src, marker)
+	if i < 0 {
+		return src
+	}
+	start := i + len(marker)
+	end := bytes.IndexByte(src[start:], '"')
+	if end < 0 {
+		return src
+	}
+	var out bytes.Buffer
+	out.Write(src[:start])
+	out.WriteString(href)
 	out.Write(src[start+end:])
 	return out.Bytes()
 }
@@ -162,16 +189,23 @@ func tenderSitemapXML(ctx context.Context, apiURL, hostname string, locales []st
 	b.WriteString(`<?xml version="1.0" encoding="UTF-8"?>` + "\n")
 	b.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` + "\n")
 	for _, r := range out.Refs {
-		for _, loc := range locales {
-			fmt.Fprintf(&b, "<url><loc>%s/%s/tenders/%s</loc>", hostname, loc, r.ID)
+		for _, locName := range locales {
+			loc := xmlEscape(hostname + "/" + locName + "/tenders/" + r.ID)
+			fmt.Fprintf(&b, "<url><loc>%s</loc>", loc)
 			if len(r.Lastmod) >= 10 {
-				fmt.Fprintf(&b, "<lastmod>%s</lastmod>", r.Lastmod[:10])
+				fmt.Fprintf(&b, "<lastmod>%s</lastmod>", xmlEscape(r.Lastmod[:10]))
 			}
 			b.WriteString("</url>\n")
 		}
 	}
 	b.WriteString(`</urlset>`)
 	return []byte(b.String()), nil
+}
+
+func xmlEscape(s string) string {
+	var b strings.Builder
+	_ = xml.EscapeText(&b, []byte(s))
+	return b.String()
 }
 
 // tenderIDFromPath returns the id for a locale-relative "tenders/<id>" path.
