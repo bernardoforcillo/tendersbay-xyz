@@ -23,6 +23,7 @@ import { Route as AuthenticatedSettingsChangePasswordRouteImport } from './route
 import { Route as AuthenticatedSettingsChangeEmailRouteImport } from './routes/_authenticated/settings/change-email'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as LocaleWorkspaceAcceptInviteRouteImport } from './routes/$locale/workspace/accept-invite'
+import { Route as LocaleTendersIdRouteImport } from './routes/$locale/tenders/$id'
 import { Route as LocaleAuthVerifyEmailRouteImport } from './routes/$locale/auth/verify-email'
 import { Route as LocaleAuthSignupRouteImport } from './routes/$locale/auth/signup'
 import { Route as LocaleAuthResetPasswordRouteImport } from './routes/$locale/auth/reset-password'
@@ -124,6 +125,11 @@ const LocaleWorkspaceAcceptInviteRoute =
     path: '/workspace/accept-invite',
     getParentRoute: () => LocaleRouteRoute,
   } as any)
+const LocaleTendersIdRoute = LocaleTendersIdRouteImport.update({
+  id: '/tenders/$id',
+  path: '/tenders/$id',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
 const LocaleAuthVerifyEmailRoute = LocaleAuthVerifyEmailRouteImport.update({
   id: '/auth/verify-email',
   path: '/auth/verify-email',
@@ -281,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/tenders/$id': typeof LocaleTendersIdRoute
   '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
@@ -316,6 +323,7 @@ export interface FileRoutesByTo {
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/tenders/$id': typeof LocaleTendersIdRoute
   '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
@@ -352,6 +360,7 @@ export interface FileRoutesById {
   '/$locale/auth/reset-password': typeof LocaleAuthResetPasswordRoute
   '/$locale/auth/signup': typeof LocaleAuthSignupRoute
   '/$locale/auth/verify-email': typeof LocaleAuthVerifyEmailRoute
+  '/$locale/tenders/$id': typeof LocaleTendersIdRoute
   '/$locale/workspace/accept-invite': typeof LocaleWorkspaceAcceptInviteRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/change-email': typeof AuthenticatedSettingsChangeEmailRoute
@@ -391,6 +400,7 @@ export interface FileRouteTypes {
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/tenders/$id'
     | '/$locale/workspace/accept-invite'
     | '/settings/account'
     | '/settings/change-email'
@@ -426,6 +436,7 @@ export interface FileRouteTypes {
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/tenders/$id'
     | '/$locale/workspace/accept-invite'
     | '/settings/account'
     | '/settings/change-email'
@@ -461,6 +472,7 @@ export interface FileRouteTypes {
     | '/$locale/auth/reset-password'
     | '/$locale/auth/signup'
     | '/$locale/auth/verify-email'
+    | '/$locale/tenders/$id'
     | '/$locale/workspace/accept-invite'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/change-email'
@@ -593,6 +605,13 @@ declare module '@tanstack/react-router' {
       path: '/workspace/accept-invite'
       fullPath: '/$locale/workspace/accept-invite'
       preLoaderRoute: typeof LocaleWorkspaceAcceptInviteRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/$locale/tenders/$id': {
+      id: '/$locale/tenders/$id'
+      path: '/tenders/$id'
+      fullPath: '/$locale/tenders/$id'
+      preLoaderRoute: typeof LocaleTendersIdRouteImport
       parentRoute: typeof LocaleRouteRoute
     }
     '/$locale/auth/verify-email': {
@@ -759,6 +778,7 @@ interface LocaleRouteRouteChildren {
   LocaleAuthResetPasswordRoute: typeof LocaleAuthResetPasswordRoute
   LocaleAuthSignupRoute: typeof LocaleAuthSignupRoute
   LocaleAuthVerifyEmailRoute: typeof LocaleAuthVerifyEmailRoute
+  LocaleTendersIdRoute: typeof LocaleTendersIdRoute
   LocaleWorkspaceAcceptInviteRoute: typeof LocaleWorkspaceAcceptInviteRoute
 }
 
@@ -769,6 +789,7 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAuthResetPasswordRoute: LocaleAuthResetPasswordRoute,
   LocaleAuthSignupRoute: LocaleAuthSignupRoute,
   LocaleAuthVerifyEmailRoute: LocaleAuthVerifyEmailRoute,
+  LocaleTendersIdRoute: LocaleTendersIdRoute,
   LocaleWorkspaceAcceptInviteRoute: LocaleWorkspaceAcceptInviteRoute,
 }
 
