@@ -25,7 +25,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: backend
-          image: bernardoforcillo/tendersbay-backend:20260715043559-2e521158f5760c722f6e64275a1e0886c067e827-canary@sha256:874a1931906c6be912b8a40f0037e948a42208003e8e61e5cd5a6e84bf449080 # {"$imagepolicy": "tendersbay-xyz:tendersbay-backend-canary-image-policy"}
+          image: bernardoforcillo/tendersbay-backend:20260717211537-ba7054e9195912755dd1d7114f2b0fa215a8509c-canary@sha256:4ab679ee598b4b477b75b1283211e8fd462e96c171f5b9222370b9e8766922fa # {"$imagepolicy": "tendersbay-xyz:tendersbay-backend-canary-image-policy"}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
