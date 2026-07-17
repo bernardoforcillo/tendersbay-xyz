@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -103,6 +104,60 @@ func TestServer_TenderNotFoundServesNoindex(t *testing.T) {
 	body, _ := io.ReadAll(rec.Body)
 	if !strings.Contains(string(body), `name="robots" content="noindex"`) {
 		t.Errorf("not-found page should be noindex: %s", body)
+	}
+}
+
+func TestTenderSitemapXML_OneURLPerTenderWithHreflang(t *testing.T) {
+	backend := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasSuffix(r.URL.Path, "/tender.v1.TenderService/ListTenderSitemap") {
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"refs":[{"id":"5","lastmod":"2026-01-02T00:00:00Z"},{"id":"6","lastmod":""}]}`))
+			return
+		}
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer backend.Close()
+
+	xml, err := tenderSitemapXML(context.Background(), backend.URL, "https://tendersbay.xyz", []string{"en-ie", "it-it", "de-de"})
+	if err != nil {
+		t.Fatalf("tenderSitemapXML: %v", err)
+	}
+	s := string(xml)
+	// One <url> per tender (2), not per locale (would be 6).
+	if strings.Count(s, "<url>") != 2 {
+		t.Errorf("want 2 <url> blocks (one per tender), got %d:\n%s", strings.Count(s, "<url>"), s)
+	}
+	// Primary loc at the default locale; hreflang alternates present incl. x-default and BCP-47 casing.
+	if !strings.Contains(s, "<loc>https://tendersbay.xyz/en-ie/tenders/5</loc>") {
+		t.Errorf("missing default-locale <loc> for tender 5:\n%s", s)
+	}
+	if !strings.Contains(s, `hreflang="it-IT" href="https://tendersbay.xyz/it-it/tenders/5"`) {
+		t.Errorf("missing it-IT hreflang alternate:\n%s", s)
+	}
+	if !strings.Contains(s, `hreflang="x-default"`) {
+		t.Errorf("missing x-default alternate:\n%s", s)
+	}
+	if !strings.Contains(s, `xmlns:xhtml=`) {
+		t.Errorf("missing xhtml namespace:\n%s", s)
+	}
+}
+
+func TestServer_AuthedShellIsNoindexButLocaleIsNot(t *testing.T) {
+	shell := "<html><head><title>t</title><meta name=\"description\" content=\"x\"><script>window.__ENV__ = {};</script><!--tender-head--></head><body></body></html>"
+	srv := New(fstest.MapFS{"index.html": {Data: []byte(shell)}, "en-ie/index.html": {Data: []byte(shell)}})
+
+	// Authed app route (non-locale) → served the root shell → noindex.
+	recAuthed := httptest.NewRecorder()
+	srv.ServeHTTP(recAuthed, httptest.NewRequest(http.MethodGet, "/explore/tenders/5", nil))
+	if recAuthed.Header().Get("X-Robots-Tag") != "noindex" {
+		t.Errorf("authed shell X-Robots-Tag = %q, want noindex", recAuthed.Header().Get("X-Robots-Tag"))
+	}
+
+	// Locale landing page → indexable (no noindex).
+	recLocale := httptest.NewRecorder()
+	srv.ServeHTTP(recLocale, httptest.NewRequest(http.MethodGet, "/en-ie", nil))
+	if recLocale.Header().Get("X-Robots-Tag") == "noindex" {
+		t.Errorf("locale page must NOT be noindex")
 	}
 }
 

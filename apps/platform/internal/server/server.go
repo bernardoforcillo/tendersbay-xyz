@@ -41,6 +41,7 @@ func New(fsys fs.FS) http.Handler {
 		// is always served from the prepared bytes — never straight off the file
 		// server, which would return the un-injected embedded copy.
 		if name == "index.html" {
+			w.Header().Set("X-Robots-Tag", "noindex")
 			serveIndex(w, r, index)
 			return
 		}
@@ -89,6 +90,7 @@ func New(fsys fs.FS) http.Handler {
 			return
 		}
 
+		w.Header().Set("X-Robots-Tag", "noindex")
 		serveIndex(w, r, index)
 	})
 

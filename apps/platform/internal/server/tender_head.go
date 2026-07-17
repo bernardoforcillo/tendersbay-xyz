@@ -9,6 +9,7 @@ import (
 	"html"
 	"net/http"
 	"os"
+	"sort"
 	"strings"
 	"time"
 )
@@ -159,7 +160,22 @@ func noindexHead(shell []byte) []byte {
 	return bytes.Replace(shell, []byte("<!--tender-head-->"), []byte(`<meta name="robots" content="noindex">`), 1)
 }
 
-// tenderSitemapXML builds sitemap XML from the backend ListTenderSitemap RPC.
+// defaultSitemapLocale is the locale used for each tender's primary <loc> and
+// x-default alternate (matches the app's default locale).
+const defaultSitemapLocale = "en-ie"
+
+// bcp47 converts a locale dir ("it-it") to BCP-47 hreflang casing ("it-IT").
+func bcp47(locale string) string {
+	parts := strings.SplitN(locale, "-", 2)
+	if len(parts) != 2 {
+		return locale
+	}
+	return strings.ToLower(parts[0]) + "-" + strings.ToUpper(parts[1])
+}
+
+// tenderSitemapXML builds a sitemap with ONE <url> per tender (at the default
+// locale) plus hreflang <xhtml:link> alternates for every locale + x-default.
+// locales is the set of locale dir names; hostname is scheme+host (no trailing slash).
 func tenderSitemapXML(ctx context.Context, apiURL, hostname string, locales []string) ([]byte, error) {
 	body, _ := json.Marshal(map[string]int{"limit": 50000})
 	url := strings.TrimRight(apiURL, "/") + "/tender.v1.TenderService/ListTenderSitemap"
@@ -185,21 +201,43 @@ func tenderSitemapXML(ctx context.Context, apiURL, hostname string, locales []st
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
 		return nil, err
 	}
+
+	// Order locales deterministically; ensure the default is available.
+	sorted := append([]string(nil), locales...)
+	sort.Strings(sorted)
+	primary := defaultSitemapLocale
+	if !containsStr(sorted, primary) && len(sorted) > 0 {
+		primary = sorted[0]
+	}
+
+	tenderPath := func(loc, id string) string { return hostname + "/" + loc + "/tenders/" + id }
+
 	var b strings.Builder
 	b.WriteString(`<?xml version="1.0" encoding="UTF-8"?>` + "\n")
-	b.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` + "\n")
+	b.WriteString(`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">` + "\n")
 	for _, r := range out.Refs {
-		for _, locName := range locales {
-			loc := xmlEscape(hostname + "/" + locName + "/tenders/" + r.ID)
-			fmt.Fprintf(&b, "<url><loc>%s</loc>", loc)
-			if len(r.Lastmod) >= 10 {
-				fmt.Fprintf(&b, "<lastmod>%s</lastmod>", xmlEscape(r.Lastmod[:10]))
-			}
-			b.WriteString("</url>\n")
+		b.WriteString("  <url>\n")
+		fmt.Fprintf(&b, "    <loc>%s</loc>\n", xmlEscape(tenderPath(primary, r.ID)))
+		for _, loc := range sorted {
+			fmt.Fprintf(&b, "    <xhtml:link rel=\"alternate\" hreflang=\"%s\" href=\"%s\"/>\n", xmlEscape(bcp47(loc)), xmlEscape(tenderPath(loc, r.ID)))
+		}
+		fmt.Fprintf(&b, "    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"%s\"/>\n", xmlEscape(tenderPath(primary, r.ID)))
+		if len(r.Lastmod) >= 10 {
+			fmt.Fprintf(&b, "    <lastmod>%s</lastmod>\n", xmlEscape(r.Lastmod[:10]))
+		}
+		b.WriteString("  </url>\n")
+	}
+	b.WriteString("</urlset>")
+	return []byte(b.String()), nil
+}
+
+func containsStr(s []string, v string) bool {
+	for _, x := range s {
+		if x == v {
+			return true
 		}
 	}
-	b.WriteString(`</urlset>`)
-	return []byte(b.String()), nil
+	return false
 }
 
 func xmlEscape(s string) string {
