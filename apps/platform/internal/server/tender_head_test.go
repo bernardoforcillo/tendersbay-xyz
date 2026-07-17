@@ -85,6 +85,14 @@ func TestServer_ServesTenderPageFromBackend(t *testing.T) {
 	if !strings.Contains(string(body), "Road works — tendersbay") {
 		t.Errorf("body missing per-tender title: %s", body)
 	}
+	// The public /<locale>/tenders/<id> page MUST be indexable — only the root
+	// app shell and not-found tenders are noindex.
+	if rec.Header().Get("X-Robots-Tag") == "noindex" {
+		t.Errorf("public locale tender page must be indexable, got X-Robots-Tag: noindex")
+	}
+	if !strings.Contains(string(body), `<link rel="canonical" href="`) {
+		t.Errorf("public tender page must carry a self-canonical: %s", body)
+	}
 }
 
 func TestServer_TenderNotFoundServesNoindex(t *testing.T) {
