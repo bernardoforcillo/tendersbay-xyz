@@ -312,6 +312,33 @@
       "cancelled": "Avbruten",
       "closed": "Stängd",
       "unknown": "—"
+    },
+    "detail": {
+      "overview": "Översikt",
+      "buyer": "Upphandlande myndighet",
+      "value": "Uppskattat värde",
+      "published": "Publicerad",
+      "deadline": "Sista anbudsdag",
+      "status": "Status",
+      "procedure": "Förfarande",
+      "cpv": "CPV",
+      "cpvSecondary": "Ytterligare CPV",
+      "region": "Region (NUTS)",
+      "language": "Språk",
+      "documents": "Dokument",
+      "officialNotice": "Officiellt meddelande (PDF)",
+      "viewSource": "Visa på källan",
+      "lots": "Delar",
+      "lotsNone": "Denna upphandling har inga separata delar.",
+      "related": "Relaterade upphandlingar",
+      "relatedNone": "Inga relaterade upphandlingar hittades.",
+      "notFound": "Denna upphandling kunde inte hittas.",
+      "backToSearch": "Tillbaka till sökningen",
+      "searchPlaceholder": "Sök upphandlingar…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Upphandlingsdetaljer, sista anbudsdag, upphandlande myndighet och relaterade möjligheter för \"{{title}}\"."
+      }
     }
   },
   "today": {

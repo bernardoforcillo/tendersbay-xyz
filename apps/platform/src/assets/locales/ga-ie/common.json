@@ -322,6 +322,33 @@
       "cancelled": "Cealaithe",
       "closed": "Dúnta",
       "unknown": "—"
+    },
+    "detail": {
+      "overview": "Forbhreathnú",
+      "buyer": "Ceannaitheoir",
+      "value": "Luach measta",
+      "published": "Foilsithe",
+      "deadline": "Sprioc-am",
+      "status": "Stádas",
+      "procedure": "Nós imeachta",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV Breise",
+      "region": "Réigiún (NUTS)",
+      "language": "Teanga",
+      "documents": "Doiciméid",
+      "officialNotice": "Fógra oifigiúil (PDF)",
+      "viewSource": "Féach ar an bhfoinse",
+      "lots": "Loit",
+      "lotsNone": "Níl loit ar leith ag an tairiscint seo.",
+      "related": "Tairiscintí gaolmhara",
+      "relatedNone": "Níor aimsíodh aon tairiscintí gaolmhara.",
+      "notFound": "Níorbh fhéidir an tairiscint seo a aimsiú.",
+      "backToSearch": "Ar ais go dtí an cuardach",
+      "searchPlaceholder": "Cuardaigh tairiscintí…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Sonraí na tairisceana, sprioc-am, ceannaitheoir agus deiseanna gaolmhara le haghaidh \"{{title}}\"."
+      }
     }
   },
   "today": {

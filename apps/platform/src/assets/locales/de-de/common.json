@@ -312,6 +312,33 @@
       "cancelled": "Storniert",
       "closed": "Geschlossen",
       "unknown": "—"
+    },
+    "detail": {
+      "overview": "Übersicht",
+      "buyer": "Auftraggeber",
+      "value": "Geschätzter Wert",
+      "published": "Veröffentlicht",
+      "deadline": "Frist",
+      "status": "Status",
+      "procedure": "Verfahren",
+      "cpv": "CPV",
+      "cpvSecondary": "Zusätzliche CPV",
+      "region": "Region (NUTS)",
+      "language": "Sprache",
+      "documents": "Dokumente",
+      "officialNotice": "Amtliche Bekanntmachung (PDF)",
+      "viewSource": "Auf Quelle ansehen",
+      "lots": "Lose",
+      "lotsNone": "Diese Ausschreibung hat keine separaten Lose.",
+      "related": "Ähnliche Ausschreibungen",
+      "relatedNone": "Keine ähnlichen Ausschreibungen gefunden.",
+      "notFound": "Diese Ausschreibung konnte nicht gefunden werden.",
+      "backToSearch": "Zurück zur Suche",
+      "searchPlaceholder": "Ausschreibungen durchsuchen…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Details zur Ausschreibung, Frist, Auftraggeber und ähnliche Gelegenheiten für „{{title}}\"."
+      }
     }
   },
   "today": {

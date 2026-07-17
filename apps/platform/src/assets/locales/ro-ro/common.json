@@ -314,6 +314,33 @@
       "cancelled": "Anulată",
       "closed": "Închisă",
       "unknown": "—"
+    },
+    "detail": {
+      "overview": "Prezentare generală",
+      "buyer": "Autoritate contractantă",
+      "value": "Valoare estimată",
+      "published": "Publicat",
+      "deadline": "Termen limită",
+      "status": "Stare",
+      "procedure": "Procedură",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV suplimentar",
+      "region": "Regiune (NUTS)",
+      "language": "Limbă",
+      "documents": "Documente",
+      "officialNotice": "Anunț oficial (PDF)",
+      "viewSource": "Vezi sursa",
+      "lots": "Loturi",
+      "lotsNone": "Această licitație nu are loturi separate.",
+      "related": "Licitații conexe",
+      "relatedNone": "Nu au fost găsite licitații conexe.",
+      "notFound": "Această licitație nu a putut fi găsită.",
+      "backToSearch": "Înapoi la căutare",
+      "searchPlaceholder": "Caută licitații…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Detalii licitație, termen limită, autoritate contractantă și oportunități conexe pentru „{{title}}”."
+      }
     }
   },
   "today": {

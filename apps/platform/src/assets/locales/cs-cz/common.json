@@ -314,6 +314,33 @@
       "cancelled": "Zrušená",
       "closed": "Uzavřená",
       "unknown": "—"
+    },
+    "detail": {
+      "overview": "Přehled",
+      "buyer": "Zadavatel",
+      "value": "Odhadovaná hodnota",
+      "published": "Zveřejněno",
+      "deadline": "Lhůta",
+      "status": "Stav",
+      "procedure": "Druh řízení",
+      "cpv": "CPV",
+      "cpvSecondary": "Doplňkové CPV",
+      "region": "Region (NUTS)",
+      "language": "Jazyk",
+      "documents": "Dokumenty",
+      "officialNotice": "Úřední oznámení (PDF)",
+      "viewSource": "Zobrazit zdroj",
+      "lots": "Části",
+      "lotsNone": "Tato zakázka nemá samostatné části.",
+      "related": "Související zakázky",
+      "relatedNone": "Nebyly nalezeny žádné související zakázky.",
+      "notFound": "Tuto zakázku se nepodařilo najít.",
+      "backToSearch": "Zpět na vyhledávání",
+      "searchPlaceholder": "Hledat zakázky…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Podrobnosti o zakázce, lhůta, zadavatel a související příležitosti pro „{{title}}“."
+      }
     }
   },
   "today": {

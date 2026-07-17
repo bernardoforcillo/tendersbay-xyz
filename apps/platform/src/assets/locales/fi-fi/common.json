@@ -312,6 +312,33 @@
       "cancelled": "Peruttu",
       "closed": "Päättynyt",
       "unknown": "—"
+    },
+    "detail": {
+      "overview": "Yleiskatsaus",
+      "buyer": "Hankintayksikkö",
+      "value": "Arvioitu arvo",
+      "published": "Julkaistu",
+      "deadline": "Määräaika",
+      "status": "Tila",
+      "procedure": "Menettely",
+      "cpv": "CPV",
+      "cpvSecondary": "Lisä-CPV",
+      "region": "Alue (NUTS)",
+      "language": "Kieli",
+      "documents": "Asiakirjat",
+      "officialNotice": "Virallinen ilmoitus (PDF)",
+      "viewSource": "Näytä lähteessä",
+      "lots": "Osat",
+      "lotsNone": "Tällä hankinnalla ei ole erillisiä osia.",
+      "related": "Vastaavat hankinnat",
+      "relatedNone": "Vastaavia hankintoja ei löytynyt.",
+      "notFound": "Tätä hankintaa ei löytynyt.",
+      "backToSearch": "Takaisin hakuun",
+      "searchPlaceholder": "Hae hankintoja…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Hankinnan tiedot, määräaika, hankintayksikkö ja vastaavat mahdollisuudet kohteelle \"{{title}}\"."
+      }
     }
   },
   "today": {

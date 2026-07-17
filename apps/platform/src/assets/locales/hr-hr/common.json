@@ -318,6 +318,33 @@
       "cancelled": "Otkazan",
       "closed": "Zatvoren",
       "unknown": "—"
+    },
+    "detail": {
+      "overview": "Pregled",
+      "buyer": "Naručitelj",
+      "value": "Procijenjena vrijednost",
+      "published": "Objavljeno",
+      "deadline": "Rok",
+      "status": "Status",
+      "procedure": "Postupak",
+      "cpv": "CPV",
+      "cpvSecondary": "Dodatni CPV",
+      "region": "Regija (NUTS)",
+      "language": "Jezik",
+      "documents": "Dokumenti",
+      "officialNotice": "Službena obavijest (PDF)",
+      "viewSource": "Pogledaj izvor",
+      "lots": "Grupe",
+      "lotsNone": "Ovaj natječaj nema zasebnih grupa.",
+      "related": "Slični natječaji",
+      "relatedNone": "Nisu pronađeni slični natječaji.",
+      "notFound": "Ovaj natječaj nije moguće pronaći.",
+      "backToSearch": "Natrag na pretragu",
+      "searchPlaceholder": "Pretraži natječaje…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Detalji natječaja, rok, naručitelj i slične prilike za \"{{title}}\"."
+      }
     }
   },
   "today": {
