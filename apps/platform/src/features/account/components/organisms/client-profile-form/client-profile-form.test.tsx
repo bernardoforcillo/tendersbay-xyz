@@ -38,7 +38,7 @@ describe('ClientProfileForm', () => {
   });
 
   it('submits the selected sectors/countries and calls onSaved with the server response', async () => {
-    const saved = fakeProfile({ sectors: ['45'], countries: ['ITA'] });
+    const saved = fakeProfile({ sectors: ['45'], countries: ['IT'] });
     updateClientProfile.mockResolvedValue({ profile: saved });
     const onSaved = vi.fn();
 
@@ -53,7 +53,7 @@ describe('ClientProfileForm', () => {
       expect.objectContaining({
         workspaceId: 'ws-1',
         sectors: ['45'],
-        countries: ['ITA'],
+        countries: ['IT'],
         regions: [],
         procedureTypes: [],
       }),
@@ -95,7 +95,7 @@ describe('ClientProfileForm', () => {
 
   it('fires client_profile_completed with consent-safe bands, including region_count and has_procedure_filter', async () => {
     updateClientProfile.mockResolvedValue({
-      profile: fakeProfile({ sectors: ['45'], countries: ['ITA'] }),
+      profile: fakeProfile({ sectors: ['45'], countries: ['IT'] }),
     });
 
     renderWithI18n(<ClientProfileForm workspaceId="ws-1" onSaved={vi.fn()} />);
@@ -164,7 +164,7 @@ describe('ClientProfileForm', () => {
         onSaved={vi.fn()}
         initial={fakeProfile({
           sectors: ['45'],
-          countries: ['ITA'],
+          countries: ['IT'],
           regions: ['ITC'],
           procedureTypes: ['open'],
           notes: 'renovation work',

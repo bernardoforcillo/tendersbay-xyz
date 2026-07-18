@@ -213,8 +213,8 @@ describe('AccountExplorePage — search mode', () => {
   it('runs a filters-only search when a filter is set with an empty query', async () => {
     const user = userEvent.setup();
     renderWithI18n(<AccountExplorePage />);
-    await user.selectOptions(screen.getByLabelText('Country'), 'ITA');
-    expect(searchMock).toHaveBeenCalledWith('', { country: 'ITA' });
+    await user.selectOptions(screen.getByLabelText('Country'), 'IT');
+    expect(searchMock).toHaveBeenCalledWith('', { country: 'IT' });
   });
 
   it('maps the sector selection to a CPV prefix', async () => {
@@ -251,7 +251,7 @@ describe('AccountExplorePage — search mode', () => {
     const user = userEvent.setup();
     renderWithI18n(<AccountExplorePage />);
     await user.type(screen.getByRole('textbox', { name: 'Search' }), 'roads');
-    await user.selectOptions(screen.getByLabelText('Country'), 'ITA');
+    await user.selectOptions(screen.getByLabelText('Country'), 'IT');
     searchMock.mockClear();
     await user.click(screen.getByRole('button', { name: 'Clear all' }));
     expect(searchMock).toHaveBeenCalledWith('roads', {});
