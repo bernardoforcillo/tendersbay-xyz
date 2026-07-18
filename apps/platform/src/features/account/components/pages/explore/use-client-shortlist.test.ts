@@ -86,4 +86,26 @@ describe('useClientShortlist', () => {
     expect(recommendTendersForClient).toHaveBeenCalledTimes(2);
     expect(recommendTendersForClient).toHaveBeenLastCalledWith({ workspaceId: 'ws-2', limit: 3 });
   });
+
+  it('exposes a refetch that re-runs the request for the same workspaceId', async () => {
+    recommendTendersForClient.mockResolvedValue({ results: [fakeResult('1')], needsProfile: true });
+
+    const { result } = renderHook(() => useClientShortlist('ws-1'));
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(recommendTendersForClient).toHaveBeenCalledTimes(1);
+
+    recommendTendersForClient.mockResolvedValue({
+      results: [fakeResult('1')],
+      needsProfile: false,
+    });
+    await act(async () => {
+      result.current.refetch();
+      await Promise.resolve();
+    });
+
+    expect(recommendTendersForClient).toHaveBeenCalledTimes(2);
+    expect(result.current.needsProfile).toBe(false);
+  });
 });

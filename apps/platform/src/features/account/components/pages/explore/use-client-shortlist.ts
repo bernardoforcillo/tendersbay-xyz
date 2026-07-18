@@ -8,7 +8,8 @@ const SHORTLIST_LIMIT = 3;
  * The per-client best-fit shortlist for Explore's default state — a thin sibling of
  * use-tender-search.ts, but reading RecommendTendersForClient (deterministic, unmetered,
  * membership-checked) instead of the free-text SearchTenders. Re-fetches whenever
- * workspaceId changes (the advisor switching clients); a null workspaceId (no client
+ * workspaceId changes (the advisor switching clients) or refetch() is called (after
+ * ClientProfileForm saves a profile for the first time); a null workspaceId (no client
  * selected) short-circuits without a network call.
  */
 export function useClientShortlist(workspaceId: string | null): {
@@ -16,12 +17,15 @@ export function useClientShortlist(workspaceId: string | null): {
   needsProfile: boolean;
   loading: boolean;
   error: string | null;
+  refetch: () => void;
 } {
   const [results, setResults] = useState<RecommendedTenderResult[]>([]);
   const [needsProfile, setNeedsProfile] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [version, setVersion] = useState(0);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `version` is a manual refetch trigger
   useEffect(() => {
     if (!workspaceId) {
       setResults([]);
@@ -51,7 +55,7 @@ export function useClientShortlist(workspaceId: string | null): {
     return () => {
       active = false;
     };
-  }, [workspaceId]);
+  }, [workspaceId, version]);
 
-  return { results, needsProfile, loading, error };
+  return { results, needsProfile, loading, error, refetch: () => setVersion((v) => v + 1) };
 }
