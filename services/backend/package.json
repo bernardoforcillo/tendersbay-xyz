@@ -5,7 +5,7 @@
   "scripts": {
     "build": "go build -o ./bin/backend .",
     "dev": "air",
-    "lint": "gofmt -l . && go vet ./...",
+    "lint": "gofmt -l . && go vet ./... && go tool govulncheck ./...",
     "test": "go test ./..."
   }
 }
