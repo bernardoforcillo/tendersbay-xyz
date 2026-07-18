@@ -10,6 +10,7 @@ import (
 
 	tenderv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
@@ -34,6 +35,12 @@ func (fakeRL) Allow(context.Context, string, int64, time.Duration) (bool, error)
 	return true, nil
 }
 
+type fakeProfileSource struct{}
+
+func (fakeProfileSource) Get(context.Context, string, string) (clientprofile.Profile, error) {
+	return clientprofile.Profile{}, nil
+}
+
 func testTenderHandler(t *testing.T) *connectapi.TenderHandler {
 	t.Helper()
 	repo := &fakeRepo{results: []tender.Tender{{ID: "1", Title: "Lavori stradali"}}}
@@ -41,7 +48,7 @@ func testTenderHandler(t *testing.T) *connectapi.TenderHandler {
 		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
 		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
 	}
-	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, cfg)
+	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSource{}, cfg)
 	return connectapi.NewTenderHandler(svc)
 }
 

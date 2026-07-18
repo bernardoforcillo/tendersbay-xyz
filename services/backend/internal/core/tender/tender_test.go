@@ -6,8 +6,15 @@ import (
 	"testing"
 	"time"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
+
+type fakeProfiles struct{}
+
+func (fakeProfiles) Get(context.Context, string, string) (clientprofile.Profile, error) {
+	return clientprofile.Profile{}, nil
+}
 
 type fakeRepo struct {
 	byFilters    []tender.Tender
@@ -79,7 +86,7 @@ func TestSearch_FiltersOnlyWhenQueryEmpty(t *testing.T) {
 	repo := &fakeRepo{byFilters: []tender.Tender{{ID: "1", Title: "A"}, {ID: "2", Title: "B"}}}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	out, err := svc.Search(context.Background(), tender.SearchParams{
 		Query: "", Limit: 10, RateLimitKey: "1.2.3.4",
@@ -105,7 +112,7 @@ func TestSearch_SemanticMergesScoresAndSortsDescending(t *testing.T) {
 		{DocID: "2", Score: 0.9},
 	}}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	out, err := svc.Search(context.Background(), tender.SearchParams{
 		Query: "lavori stradali", Limit: 10, RateLimitKey: "1.2.3.4",
@@ -128,7 +135,7 @@ func TestSearch_KeepsBestScorePerTenderWhenMultipleChunksMatch(t *testing.T) {
 		{DocID: "1", Score: 0.95}, // same tender, different chunk, higher score
 	}}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	out, err := svc.Search(context.Background(), tender.SearchParams{Query: "q", Limit: 10, RateLimitKey: "k"})
 	if err != nil {
@@ -146,7 +153,7 @@ func TestSearch_FallsBackToFiltersOnlyWhenKnowledgeBaseErrors(t *testing.T) {
 	repo := &fakeRepo{byFilters: []tender.Tender{{ID: "1", Title: "Fallback result"}}}
 	kb := &fakeKnowledgeBase{err: errors.New("qdrant unreachable")}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	out, err := svc.Search(context.Background(), tender.SearchParams{Query: "q", Limit: 10, RateLimitKey: "k"})
 	if err != nil {
@@ -161,7 +168,7 @@ func TestSearch_RejectsRequestOverRateLimit(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{allow: false}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	_, err := svc.Search(context.Background(), tender.SearchParams{RateLimitKey: "k"})
 	if !errors.Is(err, tender.ErrRateLimited) {
@@ -173,7 +180,7 @@ func TestSearch_ClampsLimitToAuthTier(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	// Anonymous (Authenticated: false) requests 100; anon tier max is 10, so
 	// SearchTenders should be called with limit+1 = 11 (10 clamped + 1 for has_more).
@@ -190,7 +197,7 @@ func TestSearch_ClampsNegativeOffsetToZero(t *testing.T) {
 	repo := &fakeRepo{byIDs: map[string]tender.Tender{"1": {ID: "1", Title: "T"}}}
 	kb := &fakeKnowledgeBase{results: []tender.ScoredChunk{{DocID: "1", Score: 0.5}}}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	// Must not panic, and must behave as if offset were 0.
 	out, err := svc.Search(context.Background(), tender.SearchParams{
@@ -208,7 +215,7 @@ func TestSearch_OverFetchesCandidatesByFiveX(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	// Authenticated tier max is 50; Limit: 20 stays under that, so effective
 	// limit is 20, and candidateLimit should be 20*5 = 100.
@@ -227,7 +234,7 @@ func TestSearch_CapsCandidatesAt250(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	// Authenticated tier max is 50; even at the max, 50*5 = 250 exactly hits
 	// the cap. Confirm it's capped, not left uncapped past 250.
@@ -246,7 +253,7 @@ func TestSearch_WrapsRateLimiterUnavailableWhenAllowErrors(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{err: errors.New("redis: connection refused")}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	_, err := svc.Search(context.Background(), tender.SearchParams{RateLimitKey: "k"})
 	if !errors.Is(err, tender.ErrRateLimiterUnavailable) {
@@ -258,7 +265,7 @@ func TestSearch_RejectsInvalidDeadlineRange(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{allow: true}
-	svc := tender.NewService(repo, kb, rl, testConfig())
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	from := time.Now()
 	to := from.Add(-time.Hour) // before from — invalid

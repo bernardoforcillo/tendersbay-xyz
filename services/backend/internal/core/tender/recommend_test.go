@@ -1,8 +1,12 @@
 package tender
 
 import (
+	"context"
+	"errors"
 	"testing"
 	"time"
+
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 )
 
 func i64(v int64) *int64 { return &v }
@@ -212,5 +216,133 @@ func TestComputeReasonSignalsRegionAndProcedureMatch(t *testing.T) {
 				t.Fatalf("ProcedureMatch = %v, want %v", got.ProcedureMatch, tc.wantProcedure)
 			}
 		})
+	}
+}
+
+type fakeProfileSource struct {
+	profile clientprofile.Profile
+	err     error
+}
+
+func (f *fakeProfileSource) Get(_ context.Context, _, _ string) (clientprofile.Profile, error) {
+	if f.err != nil {
+		return clientprofile.Profile{}, f.err
+	}
+	return f.profile, nil
+}
+
+type recommendFakeRepo struct {
+	results []Tender
+}
+
+func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, limit, _ int) ([]Tender, error) {
+	end := limit
+	if end > len(f.results) {
+		end = len(f.results)
+	}
+	return f.results[:end], nil
+}
+
+func (f *recommendFakeRepo) EnrichTenders(context.Context, []string, Filters) ([]Tender, error) {
+	return nil, nil
+}
+
+type recommendFakeRateLimiter struct{}
+
+func (recommendFakeRateLimiter) Allow(context.Context, string, int64, time.Duration) (bool, error) {
+	return true, nil
+}
+
+func testFitConfig() Config {
+	return Config{
+		AnonTier:   Tier{MaxResults: 10, RateLimit: 30, RateWindow: time.Minute},
+		AuthedTier: Tier{MaxResults: 50, RateLimit: 300, RateWindow: time.Minute},
+		Fit:        FitThresholds{RelevanceHigh: 0.75, RelevanceLow: 0.4, MinDeadlineDays: 10, UrgentDeadlineDays: 5},
+	}
+}
+
+func TestRecommendForClient_ReturnsErrProfileNotFoundUnwrapped(t *testing.T) {
+	svc := NewService(&recommendFakeRepo{}, nil, recommendFakeRateLimiter{}, &fakeProfileSource{err: clientprofile.ErrProfileNotFound}, testFitConfig())
+
+	_, err := svc.RecommendForClient(context.Background(), "user-1", "ws-1", 3)
+	if !errors.Is(err, clientprofile.ErrProfileNotFound) {
+		t.Fatalf("RecommendForClient error = %v, want ErrProfileNotFound", err)
+	}
+}
+
+func TestRecommendForClient_ScoresAndSortsByTierThenRelevance(t *testing.T) {
+	min, max := i64(100), i64(200)
+	profile := clientprofile.Profile{
+		WorkspaceID: "ws-1", Sectors: []string{"45"}, Countries: []string{"ITA"},
+		ValueMin: min, ValueMax: max,
+	}
+	repo := &recommendFakeRepo{results: []Tender{
+		{ID: "1", CPV: "45210000", Country: "ITA", Value: i64(150)}, // in-band, sector+country match
+		{ID: "2", CPV: "99000000", Country: "FRA", Value: i64(999)}, // no match, value above band
+	}}
+	svc := NewService(repo, nil, recommendFakeRateLimiter{}, &fakeProfileSource{profile: profile}, testFitConfig())
+
+	recs, err := svc.RecommendForClient(context.Background(), "user-1", "ws-1", 3)
+	if err != nil {
+		t.Fatalf("RecommendForClient: %v", err)
+	}
+	if len(recs) != 2 {
+		t.Fatalf("len(recs) = %d, want 2", len(recs))
+	}
+	if recs[0].ID != "1" {
+		t.Fatalf("recs[0].ID = %q, want %q (the in-band, matching tender should sort first)", recs[0].ID, "1")
+	}
+	if !recs[0].Reason.SectorMatch || !recs[0].Reason.CountryMatch {
+		t.Fatalf("recs[0].Reason = %+v, want sector+country match", recs[0].Reason)
+	}
+	if recs[1].Reason.ValueFit != "above" {
+		t.Fatalf("recs[1].Reason.ValueFit = %q, want above", recs[1].Reason.ValueFit)
+	}
+}
+
+func TestRecommendForClient_DefaultsLimitWhenNonPositive(t *testing.T) {
+	repo := &recommendFakeRepo{results: []Tender{{ID: "1"}, {ID: "2"}, {ID: "3"}, {ID: "4"}}}
+	svc := NewService(repo, nil, recommendFakeRateLimiter{}, &fakeProfileSource{profile: clientprofile.Profile{WorkspaceID: "ws-1"}}, testFitConfig())
+
+	recs, err := svc.RecommendForClient(context.Background(), "user-1", "ws-1", 0)
+	if err != nil {
+		t.Fatalf("RecommendForClient: %v", err)
+	}
+	if len(recs) != defaultRecommendLimit {
+		t.Fatalf("len(recs) = %d, want the default limit %d", len(recs), defaultRecommendLimit)
+	}
+}
+
+// TestRecommendForClient_TieBreaksByRegionThenProcedureMatch is the delta's
+// required coverage for the sort's extended tie-breakers: when tier and
+// relevance are equal (all three tenders below RelevanceLow with no query,
+// so all classify long_shot at RelevanceScore 0), RegionMatch is checked
+// before ProcedureMatch, both descending. Fed in reverse of the wanted
+// order to prove the sort — not fake-repo or slice order — decides it.
+func TestRecommendForClient_TieBreaksByRegionThenProcedureMatch(t *testing.T) {
+	profile := clientprofile.Profile{
+		WorkspaceID:    "ws-1",
+		Regions:        []string{"ITC"},
+		ProcedureTypes: []string{"open"},
+	}
+	repo := &recommendFakeRepo{results: []Tender{
+		{ID: "neither", NUTS: "FRB1", ProcedureType: "restricted"},
+		{ID: "procedure-only", NUTS: "FRB1", ProcedureType: "open"},
+		{ID: "region-only", NUTS: "ITC4", ProcedureType: "restricted"},
+	}}
+	svc := NewService(repo, nil, recommendFakeRateLimiter{}, &fakeProfileSource{profile: profile}, testFitConfig())
+
+	recs, err := svc.RecommendForClient(context.Background(), "user-1", "ws-1", 3)
+	if err != nil {
+		t.Fatalf("RecommendForClient: %v", err)
+	}
+	if len(recs) != 3 {
+		t.Fatalf("len(recs) = %d, want 3", len(recs))
+	}
+	wantOrder := []string{"region-only", "procedure-only", "neither"}
+	for i, want := range wantOrder {
+		if recs[i].ID != want {
+			t.Fatalf("recs[%d].ID = %q, want %q (order: %v)", i, recs[i].ID, want, wantOrder)
+		}
 	}
 }

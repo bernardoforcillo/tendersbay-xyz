@@ -1,6 +1,8 @@
 package tender
 
 import (
+	"context"
+	"sort"
 	"strings"
 	"time"
 )
@@ -139,4 +141,100 @@ func computeFitTier(relevance float64, r ReasonSignals, cfg FitThresholds) FitTi
 		return FitStrong
 	}
 	return FitPossible
+}
+
+// RecommendedTender is one shortlist entry: the scored search result plus
+// its deterministic fit classification.
+type RecommendedTender struct {
+	ScoredTender
+	Tier   FitTier
+	Reason ReasonSignals
+}
+
+// defaultRecommendLimit is used when the caller passes limit <= 0.
+const defaultRecommendLimit = 3
+
+// RecommendForClient turns workspaceID's ClientProfile into a ranked
+// best-fit shortlist: it loads the profile (membership-checked by
+// ProfileSource.Get itself), searches on the profile's notes/sectors/
+// countries, classifies every result's fit, and sorts by (tier desc,
+// relevance desc, RegionMatch desc, ProcedureMatch desc). Returns
+// clientprofile.ErrProfileNotFound, unwrapped, when the client has no
+// profile yet — callers (the RPC handler) turn that into an honest "set up
+// a profile" response rather than a hard error.
+func (s *Service) RecommendForClient(ctx context.Context, userID, workspaceID string, limit int) ([]RecommendedTender, error) {
+	profile, err := s.profiles.Get(ctx, userID, workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	if limit <= 0 {
+		limit = defaultRecommendLimit
+	}
+
+	filters := Filters{Status: "open"}
+	if len(profile.Countries) > 0 {
+		// profile.Countries is alpha-2 (clientprofile.Profile's Countries
+		// field comment: "matches ingested_tenders.country (alpha3ToAlpha2
+		// at ingestion)" — Task 1's delta). Before that, Countries was
+		// alpha-3, so this filter silently matched zero rows against the
+		// alpha-2 ingested_tenders.country column — a real bug, now fixed
+		// by the type change alone; this line's logic did not need to
+		// change.
+		filters.Country = profile.Countries[0]
+	}
+	if len(profile.Sectors) > 0 {
+		filters.CPV = profile.Sectors[0]
+	}
+
+	out, err := s.Search(ctx, SearchParams{
+		Query:         profile.Notes,
+		Filters:       filters,
+		Limit:         limit,
+		Authenticated: true,
+		RateLimitKey:  userID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	now := time.Now()
+	recs := make([]RecommendedTender, len(out.Results))
+	for i, t := range out.Results {
+		reason := computeReasonSignals(t.Tender, profile.Sectors, profile.Countries, profile.Regions, profile.ProcedureTypes, profile.ValueMin, profile.ValueMax, now)
+		recs[i] = RecommendedTender{
+			ScoredTender: t,
+			Tier:         computeFitTier(t.RelevanceScore, reason, s.cfg.Fit),
+			Reason:       reason,
+		}
+	}
+	sort.SliceStable(recs, func(i, j int) bool {
+		if recs[i].Tier != recs[j].Tier {
+			return tierRank(recs[i].Tier) > tierRank(recs[j].Tier)
+		}
+		if recs[i].RelevanceScore != recs[j].RelevanceScore {
+			return recs[i].RelevanceScore > recs[j].RelevanceScore
+		}
+		if recs[i].Reason.RegionMatch != recs[j].Reason.RegionMatch {
+			return recs[i].Reason.RegionMatch
+		}
+		if recs[i].Reason.ProcedureMatch != recs[j].Reason.ProcedureMatch {
+			return recs[i].Reason.ProcedureMatch
+		}
+		return false
+	})
+	if len(recs) > limit {
+		recs = recs[:limit]
+	}
+	return recs, nil
+}
+
+func tierRank(t FitTier) int {
+	switch t {
+	case FitStrong:
+		return 2
+	case FitPossible:
+		return 1
+	default:
+		return 0
+	}
 }

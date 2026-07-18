@@ -15,6 +15,8 @@ import (
 	"fmt"
 	"sort"
 	"time"
+
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 )
 
 // ── Sentinel errors ──
@@ -123,17 +125,28 @@ type Config struct {
 	Fit        FitThresholds
 }
 
+// ProfileSource is the subset of clientprofile.Service this package needs to
+// scope a recommendation to one client (workspace) — defined here, the
+// consumer, mirroring the KnowledgeBase port above. Its Get is already
+// membership-checked (clientprofile.Service.Get requires membership before
+// touching its repo), so RecommendForClient does not re-check membership
+// itself — see recommend.go.
+type ProfileSource interface {
+	Get(ctx context.Context, userID, workspaceID string) (clientprofile.Profile, error)
+}
+
 // Service runs tender searches.
 type Service struct {
-	repo Repo
-	kb   KnowledgeBase
-	rl   RateLimiter
-	cfg  Config
+	repo     Repo
+	kb       KnowledgeBase
+	rl       RateLimiter
+	profiles ProfileSource
+	cfg      Config
 }
 
 // NewService returns a Service.
-func NewService(repo Repo, kb KnowledgeBase, rl RateLimiter, cfg Config) *Service {
-	return &Service{repo: repo, kb: kb, rl: rl, cfg: cfg}
+func NewService(repo Repo, kb KnowledgeBase, rl RateLimiter, profiles ProfileSource, cfg Config) *Service {
+	return &Service{repo: repo, kb: kb, rl: rl, profiles: profiles, cfg: cfg}
 }
 
 // SearchParams is Search's input. RateLimitKey is the client IP for
