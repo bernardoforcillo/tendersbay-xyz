@@ -9,6 +9,7 @@ import (
 	"github.com/bernardoforcillo/drops/pg"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
@@ -143,9 +144,15 @@ func (fakeWorkbenchCreator) CreateWorkbench(context.Context, string, string, str
 	return workbench.Workbench{}, nil
 }
 
+type fakeTenderSearcher struct{}
+
+func (fakeTenderSearcher) Search(context.Context, tender.SearchParams) (tender.SearchOutput, error) {
+	return tender.SearchOutput{}, nil
+}
+
 func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches WorkbenchCreator) *Service {
 	registry := NewRegistry("")
-	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches)
+	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenderSearcher{})
 }
 
 func TestListChats_RejectsNonMember(t *testing.T) {

@@ -3,8 +3,11 @@ package agent
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"strings"
 	"testing"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 )
 
@@ -144,5 +147,48 @@ func TestCreateWorkbenchTool_RejectsMissingName(t *testing.T) {
 	args, _ := json.Marshal(map[string]any{"visibility": "private"})
 	if _, err := tool.Execute(context.Background(), string(args)); err == nil {
 		t.Fatal("Execute: want error for missing name, got nil")
+	}
+}
+
+func TestSearchTendersTool_CallsCallbackWithParsedArgs(t *testing.T) {
+	var gotQuery, gotCountry, gotCPV, gotStatus string
+	tool := newSearchTendersTool(func(query, country, cpv, status string) ([]tender.ScoredTender, error) {
+		gotQuery, gotCountry, gotCPV, gotStatus = query, country, cpv, status
+		return []tender.ScoredTender{{Tender: tender.Tender{ID: "1", Title: "Lavori stradali"}, RelevanceScore: 0.9}}, nil
+	})
+
+	args, _ := json.Marshal(map[string]any{
+		"query": "road construction", "country": "IT", "cpv": "45", "status": "open",
+	})
+	result, err := tool.Execute(context.Background(), string(args))
+	if err != nil {
+		t.Fatalf("Execute: %v", err)
+	}
+	if gotQuery != "road construction" || gotCountry != "IT" || gotCPV != "45" || gotStatus != "open" {
+		t.Fatalf("query=%q country=%q cpv=%q status=%q", gotQuery, gotCountry, gotCPV, gotStatus)
+	}
+	if !strings.Contains(result, `"id":"1"`) {
+		t.Fatalf("result = %q, want it to contain the tender id", result)
+	}
+}
+
+func TestSearchTendersTool_RejectsMissingQuery(t *testing.T) {
+	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+		t.Fatal("callback should not run without a query")
+		return nil, nil
+	})
+	args, _ := json.Marshal(map[string]any{"country": "IT"})
+	if _, err := tool.Execute(context.Background(), string(args)); err == nil {
+		t.Fatal("Execute: want error for missing query, got nil")
+	}
+}
+
+func TestSearchTendersTool_PropagatesSearchError(t *testing.T) {
+	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+		return nil, errors.New("boom")
+	})
+	args, _ := json.Marshal(map[string]any{"query": "x"})
+	if _, err := tool.Execute(context.Background(), string(args)); err == nil {
+		t.Fatal("Execute: want the search callback's error propagated")
 	}
 }

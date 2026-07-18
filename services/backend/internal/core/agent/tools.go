@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/buildwithgo/berrygem/providers"
 	"github.com/buildwithgo/berrygem/tools"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 )
 
@@ -151,4 +153,95 @@ func newCreateWorkbenchTool(createWorkbench func(name, description string, visib
 			return string(result), nil
 		},
 	)
+}
+
+// searchTendersToolLimit caps how many results the model sees per call —
+// enough to reason about, small enough to stay cheap in the model's context.
+const searchTendersToolLimit = 5
+
+// newSearchTendersTool builds the "search live EU tenders" tool — a plain,
+// client-agnostic search on model-provided terms (v1.0 does not auto-scope
+// this to a ClientProfile; see the design spec's architecture section for
+// why). Same callback-reads-current-turnState shape as
+// newCreateWorkbenchTool — see that function's doc comment for the full
+// stale-closure rationale.
+func newSearchTendersTool(search func(query, country, cpv, status string) ([]tender.ScoredTender, error)) tools.Tool {
+	return tools.NewFunc(
+		"search_tenders",
+		"Search live EU public tenders by free-text query and optional filters. Use this whenever "+
+			"the user asks about tenders, procurement opportunities, or a specific sector/country. Only "+
+			"report tenders this tool actually returns — never invent tender details.",
+		map[string]providers.Property{
+			"query": {
+				Type:        "string",
+				Description: "Free-text search query, e.g. 'road construction Milan'.",
+			},
+			"country": {
+				Type:        "string",
+				Description: "Optional alpha-2 country filter, e.g. 'IT'.",
+			},
+			"cpv": {
+				Type:        "string",
+				Description: "Optional CPV code prefix filter, e.g. '45' for construction.",
+			},
+			"status": {
+				Type:        "string",
+				Description: "Optional status filter.",
+				Enum:        []string{"open", "awarded", "cancelled", "closed"},
+			},
+		},
+		[]string{"query"},
+		func(_ context.Context, args string) (string, error) {
+			var parsed struct {
+				Query   string `json:"query"`
+				Country string `json:"country"`
+				CPV     string `json:"cpv"`
+				Status  string `json:"status"`
+			}
+			if err := json.Unmarshal([]byte(args), &parsed); err != nil {
+				return "", fmt.Errorf("search_tenders: invalid arguments: %w", err)
+			}
+			if parsed.Query == "" {
+				return "", fmt.Errorf("search_tenders: query is required")
+			}
+			results, err := search(parsed.Query, parsed.Country, parsed.CPV, parsed.Status)
+			if err != nil {
+				return "", fmt.Errorf("search_tenders: %w", err)
+			}
+			return marshalSearchTendersResult(results)
+		},
+	)
+}
+
+// searchTendersResultItem is the compact JSON shape the model sees per
+// result — raw fields only, no fit tier or reason (that's the deterministic
+// RecommendTendersForClient RPC's job, not this tool's).
+type searchTendersResultItem struct {
+	ID             string  `json:"id"`
+	Title          string  `json:"title"`
+	BuyerName      string  `json:"buyer_name"`
+	Country        string  `json:"country"`
+	CPV            string  `json:"cpv"`
+	Value          *int64  `json:"value,omitempty"`
+	Deadline       string  `json:"deadline,omitempty"`
+	RelevanceScore float64 `json:"relevance_score"`
+}
+
+func marshalSearchTendersResult(results []tender.ScoredTender) (string, error) {
+	out := make([]searchTendersResultItem, len(results))
+	for i, r := range results {
+		var deadline string
+		if r.Deadline != nil {
+			deadline = r.Deadline.Format(time.RFC3339)
+		}
+		out[i] = searchTendersResultItem{
+			ID: r.ID, Title: r.Title, BuyerName: r.BuyerName, Country: r.Country, CPV: r.CPV,
+			Value: r.Value, Deadline: deadline, RelevanceScore: r.RelevanceScore,
+		}
+	}
+	b, err := json.Marshal(out)
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
 }
