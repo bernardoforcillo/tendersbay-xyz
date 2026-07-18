@@ -12,9 +12,16 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, arg?: string | { defaultValue?: string; name?: string }) => {
+    t: (
+      key: string,
+      arg?: string | { defaultValue?: string; name?: string; count?: number; client?: string },
+    ) => {
       const dv = typeof arg === 'string' ? arg : (arg?.defaultValue ?? key);
-      return typeof arg === 'object' && arg?.name ? dv.replace('{{name}}', arg.name) : dv;
+      if (typeof arg !== 'object' || arg === null) return dv;
+      return dv
+        .replace('{{name}}', arg.name ?? '')
+        .replace('{{count}}', String(arg.count ?? ''))
+        .replace('{{client}}', arg.client ?? '');
     },
     i18n: { language: 'en-ie' },
   }),
@@ -38,9 +45,6 @@ vi.mock('~/features/account/components/organisms', () => ({
   SearchDock: ({ onPress }: { onPress?: () => void }) => (
     <button type="button" data-testid="search-dock" onClick={onPress} />
   ),
-  TenderResultCard: ({ tender }: { tender: { id: string; title: string } }) => (
-    <article data-testid="tender-card">{tender.title}</article>
-  ),
 }));
 // FirstRunProfile has its own dedicated test suite (its own GetClientProfile check,
 // Skip, and carry-over pre-fill); Today's tests only need it to pass its content through.
@@ -58,7 +62,7 @@ describe('WorkspaceTodayPage', () => {
   beforeEach(() => {
     navigateMock.mockReset();
     recommendedMock.mockReset();
-    recommendedMock.mockReturnValue({ tenders: [], loading: false, error: null });
+    recommendedMock.mockReturnValue({ count: 0, needsProfile: false, loading: false, error: null });
   });
 
   it('greets, lists resumable chats, teaches Explore, keeps the dock', () => {
@@ -93,36 +97,23 @@ describe('WorkspaceTodayPage', () => {
     expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
   });
 
-  it('shows the recommended tenders and the see-all link, hiding the Explore teaser', () => {
-    recommendedMock.mockReturnValue({
-      tenders: [
-        { id: 't1', title: 'Cloud migration framework' },
-        { id: 't2', title: 'Road resurfacing works' },
-      ],
-      loading: false,
-      error: null,
-    });
+  it('shows the best-fit count nudge and the see-all link, hiding the Explore teaser', () => {
+    recommendedMock.mockReturnValue({ count: 2, needsProfile: false, loading: false, error: null });
     render(<WorkspaceTodayPage />);
-    expect(screen.getByText('Recommended for you')).toBeInTheDocument();
+    expect(screen.getByText('2 best-fit tenders ready for ACME')).toBeInTheDocument();
     expect(screen.getByText('All in Explore →')).toBeInTheDocument();
-    expect(screen.getAllByTestId('tender-card')).toHaveLength(2);
     expect(screen.queryByText('Find your next tender')).not.toBeInTheDocument();
   });
 
-  it('falls back to the Explore teaser and hides the recommended section with no tenders', () => {
-    recommendedMock.mockReturnValue({ tenders: [], loading: false, error: null });
+  it('falls back to the Explore teaser and hides the recommended nudge with no tenders', () => {
+    recommendedMock.mockReturnValue({ count: 0, needsProfile: false, loading: false, error: null });
     render(<WorkspaceTodayPage />);
     expect(screen.getByText('Find your next tender')).toBeInTheDocument();
-    expect(screen.queryByText('Recommended for you')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('tender-card')).not.toBeInTheDocument();
+    expect(screen.queryByText('All in Explore →')).not.toBeInTheDocument();
   });
 
   it('pressing see-all navigates to Explore', async () => {
-    recommendedMock.mockReturnValue({
-      tenders: [{ id: 't1', title: 'Cloud migration framework' }],
-      loading: false,
-      error: null,
-    });
+    recommendedMock.mockReturnValue({ count: 1, needsProfile: false, loading: false, error: null });
     const { default: userEvent } = await import('@testing-library/user-event');
     const user = userEvent.setup();
     render(<WorkspaceTodayPage />);
