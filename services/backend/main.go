@@ -29,6 +29,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/config"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
@@ -82,6 +83,12 @@ func main() {
 	inviteLinkRepo := postgres.NewInviteLinkRepo(db)
 	workspaceUow := postgres.NewUnitOfWork(db)
 
+	// Client profile (per-client bid-qualification agent, v1.0) — built here,
+	// before both tenderSvc and agentSvc, since tenderSvc.RecommendForClient
+	// needs it as a ProfileSource.
+	clientProfileRepo := postgres.NewClientProfileRepo(db)
+	clientProfileSvc := clientprofile.NewService(clientProfileRepo, memberRepo)
+
 	var mailer interface {
 		SendVerification(ctx context.Context, to, displayName, link string) error
 		SendPasswordReset(ctx context.Context, to, displayName, link string) error
@@ -121,23 +128,13 @@ func main() {
 		workbenchUow,
 	)
 
-	// Agent / chat service
-	chatRepo := postgres.NewChatRepo(db)
-	creditRepo := postgres.NewWorkspaceCreditRepo(db)
-	pricingRepo := postgres.NewAgentPricingRepo(db)
-	usageRepo := postgres.NewTokenUsageRepo(db)
-
-	agentRegistry := agent.NewRegistry(cfg.FireworksAPIKey)
-	agentRegistry.RegisterDefaults()
-
-	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
-	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc)
-
 	// Tender search — Qdrant/Ollama/Redis unreachable at startup is logged,
 	// not fatal: search degrades to Postgres-only filtering via
 	// knowledgeBaseAdapter's nil handling (for Qdrant/Ollama) or fails
 	// rate-limit checks via unavailableRateLimiter (for Redis) — neither
 	// blocks the whole service from starting over an optional dependency.
+	// MOVED above the agent block: agentSvc's search_tenders tool needs
+	// tenderSvc as its TenderSearcher.
 	kb, kbErr := knowledge.NewKnowledgeBase(ctx, cfg.QdrantURL, cfg.OllamaBaseURL, cfg.EmbeddingModel)
 	if kbErr != nil {
 		slog.Warn("failed to connect to knowledge base, semantic search will be degraded", "error", kbErr)
@@ -163,16 +160,32 @@ func main() {
 		tenderRepo,
 		knowledgeBaseAdapter{kb},
 		rl,
+		clientProfileSvc,
 		tender.Config{
 			AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
 			AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+			// Uncalibrated defaults — no conversion data exists pre-launch
+			// (see the design spec's Risks section). Retune here, no code change.
+			Fit: tender.FitThresholds{RelevanceHigh: 0.75, RelevanceLow: 0.4, MinDeadlineDays: 10, UrgentDeadlineDays: 5},
 		},
 	)
 	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo)
 
+	// Agent / chat service
+	chatRepo := postgres.NewChatRepo(db)
+	creditRepo := postgres.NewWorkspaceCreditRepo(db)
+	pricingRepo := postgres.NewAgentPricingRepo(db)
+	usageRepo := postgres.NewTokenUsageRepo(db)
+
+	agentRegistry := agent.NewRegistry(cfg.FireworksAPIKey)
+	agentRegistry.RegisterDefaults()
+
+	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc)
+
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
-	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc)
+	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc, clientProfileSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
 	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, memberRepo)
 
