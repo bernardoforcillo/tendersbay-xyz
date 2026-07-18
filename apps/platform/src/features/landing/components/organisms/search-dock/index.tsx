@@ -4,6 +4,7 @@ import { usePostHog } from 'posthog-js/react';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '~/features/landing/components/atoms';
+import { writeLandingCarryOver } from '~/lib/landing-carry-over';
 import { SearchResults } from './search-results';
 import { useHideNearFooter } from './use-hide-near-footer';
 import { useLandingSearch } from './use-landing-search';
@@ -22,12 +23,18 @@ export function SearchDock() {
   const { example } = useRotatingPlaceholder(examples, !reduce && query.length === 0);
 
   const { status, results } = useLandingSearch(query, {
-    onResolved: ({ queryLength, resultCount }) =>
+    onResolved: ({ queryLength, resultCount }) => {
       posthog?.capture('landing_search_performed', {
         query_length: queryLength,
         result_count: resultCount,
         location: 'search_dock',
-      }),
+      });
+      // Carry the resolved search over to the first-run client-profile capture
+      // (shown once the visitor signs up and creates a workspace). The dock has
+      // no filter controls today, so filters is always empty — the contract
+      // still carries the field for a later filter UI to fill in.
+      writeLandingCarryOver({ query: query.trim(), filters: {} });
+    },
   });
 
   // Fire the search-engagement event at most once per focus cycle: focus covers

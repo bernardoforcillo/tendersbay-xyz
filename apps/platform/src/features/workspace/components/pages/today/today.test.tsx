@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { navigateMock, recommendedMock } = vi.hoisted(() => ({
@@ -40,6 +41,11 @@ vi.mock('~/features/account/components/organisms', () => ({
   TenderResultCard: ({ tender }: { tender: { id: string; title: string } }) => (
     <article data-testid="tender-card">{tender.title}</article>
   ),
+}));
+// FirstRunProfile has its own dedicated test suite (its own GetClientProfile check,
+// Skip, and carry-over pre-fill); Today's tests only need it to pass its content through.
+vi.mock('~/features/workspace/components/organisms/first-run-profile', () => ({
+  FirstRunProfile: ({ children }: { children: ReactNode }) => <>{children}</>,
 }));
 vi.mock('./use-recommended-tenders', () => ({
   useRecommendedTenders: () => recommendedMock(),

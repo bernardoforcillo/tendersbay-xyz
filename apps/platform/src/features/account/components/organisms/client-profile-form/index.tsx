@@ -13,6 +13,13 @@ export type ClientProfileFormProps = {
   workspaceId: string;
   initial?: ClientProfile;
   onSaved: (profile: ClientProfile) => void;
+  /**
+   * Analytics `location` tag on the `client_profile_completed` event — which
+   * surface the form was submitted from (Explore, first-run capture, Settings).
+   * Defaults to the form's original Explore surface so existing callers are
+   * unaffected.
+   */
+  location?: string;
 };
 
 const TOGGLE_BASE =
@@ -51,7 +58,12 @@ const PROCEDURE_TYPE_LABELS: Record<ProcedureType, string> = {
  * so those render as native elements styled to the kit's tone system rather than
  * extending the shared kit for one feature's form.
  */
-export function ClientProfileForm({ workspaceId, initial, onSaved }: ClientProfileFormProps) {
+export function ClientProfileForm({
+  workspaceId,
+  initial,
+  onSaved,
+  location = 'explore_profile_form',
+}: ClientProfileFormProps) {
   const { t, i18n } = useTranslation();
   const posthog = usePostHog();
 
@@ -102,7 +114,7 @@ export function ClientProfileForm({ workspaceId, initial, onSaved }: ClientProfi
       // the free-text region values themselves are never sent to analytics — only
       // how many the advisor configured.
       posthog?.capture('client_profile_completed', {
-        location: 'explore_profile_form',
+        location,
         sector_count: band(sectors.length),
         country_count: band(countries.length),
         region_count: band(regions.length),

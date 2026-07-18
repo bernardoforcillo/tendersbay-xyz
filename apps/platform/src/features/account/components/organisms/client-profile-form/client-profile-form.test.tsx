@@ -116,6 +116,19 @@ describe('ClientProfileForm', () => {
     });
   });
 
+  it('tags the completion event with a caller-supplied location, overriding the default', async () => {
+    updateClientProfile.mockResolvedValue({ profile: fakeProfile() });
+
+    renderWithI18n(<ClientProfileForm workspaceId="ws-1" onSaved={vi.fn()} location="first_run" />);
+    fireEvent.click(screen.getByRole('button', { name: /save profile/i }));
+
+    await waitFor(() => expect(captureMock).toHaveBeenCalled());
+    expect(captureMock).toHaveBeenCalledWith(
+      'client_profile_completed',
+      expect.objectContaining({ location: 'first_run' }),
+    );
+  });
+
   it('reports zero/false bands when regions and procedure types are left as "any"', async () => {
     updateClientProfile.mockResolvedValue({ profile: fakeProfile() });
 
