@@ -4,6 +4,7 @@ import { type ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ClientProfileForm } from '~/features/account/components/organisms';
 import { workspaceClient } from '~/lib/api/client';
+import type { LandingCarryOver } from '~/lib/landing-carry-over';
 import { readAndClearLandingCarryOver } from '~/lib/landing-carry-over';
 import { useFirstRunStore } from '~/store/first-run';
 
@@ -15,8 +16,10 @@ export type FirstRunProfileProps = {
 
 type Status = 'checking' | 'needed' | 'not-needed';
 
-function carryOverInitial(workspaceId: string): ClientProfile | undefined {
-  const carryOver = readAndClearLandingCarryOver();
+function carryOverToProfile(
+  workspaceId: string,
+  carryOver: LandingCarryOver | null,
+): ClientProfile | undefined {
   if (!carryOver) return undefined;
   return {
     $typeName: 'workspace.v1.ClientProfile',
@@ -54,6 +57,11 @@ export function FirstRunProfile({ workspaceId, children }: FirstRunProfileProps)
   const [initial, setInitial] = useState<ClientProfile | undefined>(undefined);
 
   useEffect(() => {
+    // Read-and-clear once per mount, unconditionally — "first-consumer-wins":
+    // whichever FirstRunProfile instance mounts first after a landing search
+    // must consume the carry-over, whether or not it ends up rendering the
+    // capture panel, or it leaks forward into a later, unrelated workspace.
+    const carryOver = readAndClearLandingCarryOver();
     if (skipped) {
       setStatus('not-needed');
       return;
@@ -67,7 +75,7 @@ export function FirstRunProfile({ workspaceId, children }: FirstRunProfileProps)
         if (res.exists) {
           setStatus('not-needed');
         } else {
-          setInitial(carryOverInitial(workspaceId));
+          setInitial(carryOverToProfile(workspaceId, carryOver));
           setStatus('needed');
         }
       })

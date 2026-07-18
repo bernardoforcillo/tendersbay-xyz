@@ -116,6 +116,41 @@ describe('FirstRunProfile', () => {
     expect(sessionStorage.getItem(LANDING_CARRY_OVER_KEY)).toBeNull();
   });
 
+  it('clears a pre-seeded landing carry-over even when a profile already exists', async () => {
+    sessionStorage.setItem(
+      LANDING_CARRY_OVER_KEY,
+      JSON.stringify({ query: 'road resurfacing works', filters: {} }),
+    );
+    getClientProfile.mockResolvedValue({ exists: true, profile: { notes: 'existing' } });
+
+    renderWithI18n(
+      <FirstRunProfile workspaceId="ws-1">
+        <div data-testid="children" />
+      </FirstRunProfile>,
+    );
+
+    expect(await screen.findByTestId('children')).toBeInTheDocument();
+    expect(sessionStorage.getItem(LANDING_CARRY_OVER_KEY)).toBeNull();
+  });
+
+  it('clears a pre-seeded landing carry-over when the workspace was already skipped, without a network call', async () => {
+    sessionStorage.setItem(
+      LANDING_CARRY_OVER_KEY,
+      JSON.stringify({ query: 'road resurfacing works', filters: {} }),
+    );
+    useFirstRunStore.getState().skipWorkspace('ws-1');
+
+    renderWithI18n(
+      <FirstRunProfile workspaceId="ws-1">
+        <div data-testid="children" />
+      </FirstRunProfile>,
+    );
+
+    expect(screen.getByTestId('children')).toBeInTheDocument();
+    expect(sessionStorage.getItem(LANDING_CARRY_OVER_KEY)).toBeNull();
+    await waitFor(() => expect(getClientProfile).not.toHaveBeenCalled());
+  });
+
   it('fails open (renders children) if the profile check errors', async () => {
     getClientProfile.mockRejectedValue(new Error('network down'));
 
