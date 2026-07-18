@@ -54,6 +54,7 @@ type Tender struct {
 	Source        string
 	SourceRef     string
 	NUTS          string
+	SourceURL     string // the notice document's URL; "" if none is ingested
 }
 
 // Filters narrows a search. Zero-value fields are unset.

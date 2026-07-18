@@ -182,6 +182,57 @@ func TestSearchByFilters_ReturnsNUTS(t *testing.T) {
 	}
 }
 
+// insertTestDocument writes a row into tenders.ingested_tender_documents for
+// tenderID, mirroring insertTestTender's direct-INSERT bypass pattern.
+func insertTestDocument(t *testing.T, sqlDB *sql.DB, tenderID int64, docType, url string) {
+	t.Helper()
+	var id int64
+	err := sqlDB.QueryRow(
+		`INSERT INTO tenders.ingested_tender_documents (tender_id, url, type) VALUES ($1, $2, $3) RETURNING id`,
+		tenderID, url, docType,
+	).Scan(&id)
+	if err != nil {
+		t.Fatalf("insertTestDocument: %v", err)
+	}
+	t.Cleanup(func() {
+		_, _ = sqlDB.Exec(`DELETE FROM tenders.ingested_tender_documents WHERE id = $1`, id)
+	})
+}
+
+func TestSearchByFilters_JoinsNoticeDocumentURL(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+
+	withDoc := insertTestTender(t, sqlDB, "doc-with-notice", withCountry("ITA"))
+	insertTestDocument(t, sqlDB, withDoc, "notice", "https://ted.europa.eu/example/notice")
+	insertTestDocument(t, sqlDB, withDoc, "spec", "https://ted.europa.eu/example/spec") // must NOT be picked
+	withoutDoc := insertTestTender(t, sqlDB, "doc-without-notice", withCountry("ITA"))
+
+	rows, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "ITA"}, 10, 0)
+	if err != nil {
+		t.Fatalf("SearchByFilters: %v", err)
+	}
+
+	var gotWith, gotWithout *postgres.TenderResultRow
+	for i := range rows {
+		switch rows[i].ID {
+		case withDoc:
+			gotWith = &rows[i]
+		case withoutDoc:
+			gotWithout = &rows[i]
+		}
+	}
+	if gotWith == nil || gotWithout == nil {
+		t.Fatalf("expected both seeded rows in results, got %d rows", len(rows))
+	}
+	if gotWith.SourceURL == nil || *gotWith.SourceURL != "https://ted.europa.eu/example/notice" {
+		t.Fatalf("gotWith.SourceURL = %v, want the notice-type URL (not the spec one)", gotWith.SourceURL)
+	}
+	if gotWithout.SourceURL != nil {
+		t.Fatalf("gotWithout.SourceURL = %v, want nil (no document ingested)", *gotWithout.SourceURL)
+	}
+}
+
 func TestEnrichTenders_RoundTripsStringIDs(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()

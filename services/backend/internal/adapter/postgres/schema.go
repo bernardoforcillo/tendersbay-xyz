@@ -413,7 +413,21 @@ type DBTender struct {
 	PublishedAt   *time.Time `drop:"published_at"`
 	Deadline      *time.Time `drop:"deadline"`
 	NUTS          string     `drop:"nuts"`
+	SourceURL     *string    `drop:"url"`
 }
+
+// TenderDocuments references tenders.ingested_tender_documents — like
+// Tenders above, owned and migrated exclusively by services/ingestion; this
+// service only ever reads it, to resolve one tender's notice-document URL
+// (the eForms mapper writes at most one row of type "notice" per tender —
+// see services/ingestion/internal/adapter/source/eforms/map.go).
+var (
+	TenderDocuments = pg.NewSchemaTable("tenders", "ingested_tender_documents")
+	TDocID          = pg.Add(TenderDocuments, pg.BigInt("id").PrimaryKey())
+	TDocTenderID    = pg.Add(TenderDocuments, pg.BigInt("tender_id").NotNull())
+	TDocURL         = pg.Add(TenderDocuments, pg.Text("url").NotNull())
+	TDocType        = pg.Add(TenderDocuments, pg.Text("type").NotNull())
+)
 
 // ── Client profile table (per-client bid-qualification agent, v1.0) ────────
 // One row per workspace (PK = FK to workspaces.id) — the workspace IS the

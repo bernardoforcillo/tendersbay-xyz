@@ -98,5 +98,6 @@ func tenderResultToProto(t tender.ScoredTender) *tenderv1.TenderResult {
 		ProcedureType: t.ProcedureType, Country: t.Country, Cpv: t.CPV,
 		Value: value, Currency: t.Currency, PublishedAt: publishedAt, Deadline: deadline,
 		RelevanceScore: t.RelevanceScore, Source: t.Source, SourceRef: t.SourceRef,
+		SourceUrl: t.SourceURL,
 	}
 }
