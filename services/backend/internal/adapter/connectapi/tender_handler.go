@@ -2,12 +2,14 @@ package connectapi
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"connectrpc.com/connect"
 
 	tenderv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
@@ -110,6 +112,32 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 	}), nil
 }
 
+// RecommendTendersForClient requires auth like every other handler in this
+// package except SearchTenders — no handler-level membership check is added
+// here: h.svc.RecommendForClient is already membership-checked internally
+// via ProfileSource.Get → clientprofile.Service.Get → requireMember, the
+// same trust-the-callee shape SearchTenders' workspace_id branch uses for
+// AnnotateForClient (see its doc comment). A redundant h.members.
+// LoadMembership call here would duplicate that check for no benefit.
+func (h *TenderHandler) RecommendTendersForClient(ctx context.Context, req *connect.Request[tenderv1.RecommendTendersForClientRequest]) (*connect.Response[tenderv1.RecommendTendersForClientResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	recs, err := h.svc.RecommendForClient(ctx, uid, req.Msg.WorkspaceId, int(req.Msg.Limit))
+	if errors.Is(err, clientprofile.ErrProfileNotFound) {
+		return connect.NewResponse(&tenderv1.RecommendTendersForClientResponse{NeedsProfile: true}), nil
+	}
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	out := make([]*tenderv1.RecommendedTenderResult, len(recs))
+	for i, r := range recs {
+		out[i] = recommendedTenderToProto(r)
+	}
+	return connect.NewResponse(&tenderv1.RecommendTendersForClientResponse{Results: out}), nil
+}
+
 func filtersFromProto(f *tenderv1.TenderFilters) (tender.Filters, error) {
 	if f == nil {
 		return tender.Filters{}, nil
@@ -172,4 +200,18 @@ func reasonSignalsToProto(r tender.ReasonSignals) *tenderv1.ReasonSignals {
 		out.HasDeadline = true
 	}
 	return out
+}
+
+// recommendedTenderToProto maps one tender.RecommendedTender (Task 8) onto
+// the wire RecommendedTenderResult, reusing reasonSignalsToProto above for
+// the Reason mapping so all six tender.ReasonSignals fields — including
+// RegionMatch/ProcedureMatch — stay in sync across both RPCs that emit
+// ReasonSignals (SearchTenders' annotation branch and this one), rather than
+// two independently-maintained copies of the same mapping.
+func recommendedTenderToProto(r tender.RecommendedTender) *tenderv1.RecommendedTenderResult {
+	return &tenderv1.RecommendedTenderResult{
+		Tender:  tenderResultToProto(r.ScoredTender),
+		FitTier: string(r.Tier),
+		Reason:  reasonSignalsToProto(r.Reason),
+	}
 }

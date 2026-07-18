@@ -221,3 +221,100 @@ func TestSearchTenders_NonMemberWorkspaceIdReturnsPermissionDenied(t *testing.T)
 		t.Fatalf("error = %v, want a connect.Error with CodePermissionDenied", err)
 	}
 }
+
+// i64 is a small test-local helper for building *int64 literals (e.g.
+// tender.Tender.Value, clientprofile.Profile.ValueMin/ValueMax).
+func i64(v int64) *int64 { return &v }
+
+// TestRecommendTendersForClient_ReturnsNeedsProfileWhenNoneStored proves the
+// handler turns clientprofile.ErrProfileNotFound (surfaced unwrapped by
+// RecommendForClient, unlike AnnotateForClient's silent passthrough) into an
+// honest needs_profile response rather than an error.
+func TestRecommendTendersForClient_ReturnsNeedsProfileWhenNoneStored(t *testing.T) {
+	repo := &fakeRepo{results: []tender.Tender{{ID: "1", Title: "Lavori stradali"}}}
+	cfg := tender.Config{
+		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
+		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+	}
+	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSourceWithProfile{err: clientprofile.ErrProfileNotFound}, cfg)
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+	ctx := connectapi.ContextWithUserID(context.Background(), "user-1")
+
+	resp, err := h.RecommendTendersForClient(ctx, connect.NewRequest(&tenderv1.RecommendTendersForClientRequest{WorkspaceId: "ws-1"}))
+	if err != nil {
+		t.Fatalf("RecommendTendersForClient: %v", err)
+	}
+	if !resp.Msg.NeedsProfile {
+		t.Fatal("NeedsProfile = false, want true")
+	}
+	if len(resp.Msg.Results) != 0 {
+		t.Fatalf("len(Results) = %d, want 0", len(resp.Msg.Results))
+	}
+}
+
+func TestRecommendTendersForClient_RejectsUnauthenticated(t *testing.T) {
+	h := testTenderHandler(t)
+	_, err := h.RecommendTendersForClient(context.Background(), connect.NewRequest(&tenderv1.RecommendTendersForClientRequest{WorkspaceId: "ws-1"}))
+	var connectErr *connect.Error
+	if !errors.As(err, &connectErr) || connectErr.Code() != connect.CodeUnauthenticated {
+		t.Fatalf("err = %v, want CodeUnauthenticated", err)
+	}
+}
+
+// TestRecommendTendersForClient_MapsFitTierAndReason covers all six
+// tender.ReasonSignals fields making it onto the wire ReasonSignals message
+// — including region_match/procedure_match, which Task 8 explicitly
+// deferred to this task (see recommend.go's RecommendForClient doc comment
+// history / task-9-brief correction #4).
+func TestRecommendTendersForClient_MapsFitTierAndReason(t *testing.T) {
+	repo := &fakeRepo{results: []tender.Tender{{
+		ID: "1", Title: "Lavori stradali", CPV: "45210000", Country: "ITA",
+		NUTS: "ITC4C", ProcedureType: "open", Value: i64(150),
+	}}}
+	cfg := tender.Config{
+		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
+		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+		Fit:        tender.FitThresholds{RelevanceHigh: 0.0, RelevanceLow: -1, MinDeadlineDays: 10, UrgentDeadlineDays: 5}, // RelevanceHigh=0 so a 0-relevance filters-only result still qualifies as "strong"
+	}
+	profile := clientprofile.Profile{
+		WorkspaceID: "ws-1", Sectors: []string{"45"}, Countries: []string{"ITA"},
+		Regions: []string{"ITC"}, ProcedureTypes: []string{"open"},
+		ValueMin: i64(100), ValueMax: i64(200),
+	}
+	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSourceWithProfile{profile: profile}, cfg)
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+	ctx := connectapi.ContextWithUserID(context.Background(), "user-1")
+
+	resp, err := h.RecommendTendersForClient(ctx, connect.NewRequest(&tenderv1.RecommendTendersForClientRequest{WorkspaceId: "ws-1", Limit: 3}))
+	if err != nil {
+		t.Fatalf("RecommendTendersForClient: %v", err)
+	}
+	if resp.Msg.NeedsProfile {
+		t.Fatal("NeedsProfile = true, want false")
+	}
+	if len(resp.Msg.Results) != 1 {
+		t.Fatalf("len(Results) = %d, want 1", len(resp.Msg.Results))
+	}
+	got := resp.Msg.Results[0]
+	if got.FitTier != "strong" {
+		t.Fatalf("FitTier = %q, want strong", got.FitTier)
+	}
+	if !got.Reason.SectorMatch || !got.Reason.CountryMatch {
+		t.Fatalf("Reason = %+v, want sector+country match", got.Reason)
+	}
+	if !got.Reason.RegionMatch {
+		t.Fatal("Reason.RegionMatch = false, want true (tender NUTS ITC4C matches profile region ITC)")
+	}
+	if !got.Reason.ProcedureMatch {
+		t.Fatal("Reason.ProcedureMatch = false, want true (tender procedure_type open matches profile procedure_types [open])")
+	}
+	if got.Reason.ValueFit != "in_band" {
+		t.Fatalf("Reason.ValueFit = %q, want in_band", got.Reason.ValueFit)
+	}
+	if got.Reason.HasDeadline {
+		t.Fatal("Reason.HasDeadline = true, want false (tender has no deadline)")
+	}
+	if got.Tender.Id != "1" {
+		t.Fatalf("Tender.Id = %q, want 1", got.Tender.Id)
+	}
+}
