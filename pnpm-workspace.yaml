@@ -2,6 +2,10 @@ packages:
   - "apps/*"
   - "packages/*"
   - "services/*"
+# Refuse to resolve any package version published less than 7 days ago (10080 minutes) —
+# most supply-chain attacks target a package's latest version, and compromised versions are
+# usually caught and yanked within days.
+minimumReleaseAge: 10080
 allowBuilds:
   '@swc/core': true
   core-js: false
