@@ -346,3 +346,94 @@ func TestRecommendForClient_TieBreaksByRegionThenProcedureMatch(t *testing.T) {
 		}
 	}
 }
+
+// ── AnnotateForClient (Task A-annotate) ──────────────────────────────────
+
+// TestAnnotateForClient_PreservesOrderAndAnnotates is the brief's Step 1
+// test: search results in a fixed order, annotated, order preserved, each
+// result carries the tier/reason a profile match implies.
+func TestAnnotateForClient_PreservesOrderAndAnnotates(t *testing.T) {
+	profile := clientprofile.Profile{WorkspaceID: "ws-1", Sectors: []string{"45"}}
+	svc := NewService(&recommendFakeRepo{}, nil, recommendFakeRateLimiter{}, &fakeProfileSource{profile: profile}, testFitConfig())
+
+	results := []ScoredTender{
+		{Tender: Tender{ID: "A", CPV: "45210000"}}, // sector match
+		{Tender: Tender{ID: "B", CPV: "72000000"}}, // no match
+	}
+
+	out, err := svc.AnnotateForClient(context.Background(), "u1", "ws1", results)
+	if err != nil {
+		t.Fatalf("AnnotateForClient: %v", err)
+	}
+	if len(out) != 2 {
+		t.Fatalf("len(out) = %d, want 2", len(out))
+	}
+	if out[0].ScoredTender.ID != results[0].ID || out[1].ScoredTender.ID != results[1].ID {
+		t.Fatal("order must be preserved (annotate, not re-rank)")
+	}
+	if !out[0].Reason.SectorMatch {
+		t.Fatal("A should be a sector match")
+	}
+	if out[1].Reason.SectorMatch {
+		t.Fatal("B should not be a sector match")
+	}
+	if out[0].Tier == "" || out[1].Tier == "" {
+		t.Fatal("each result should carry a non-empty fit tier when a profile exists")
+	}
+}
+
+// TestAnnotateForClient_NeverReorders feeds results in an order a
+// tier-based sort would NOT produce (the long_shot tender first, the
+// strong one second) and asserts AnnotateForClient leaves that order
+// alone — the whole point of annotation vs. RecommendForClient's shortlist.
+func TestAnnotateForClient_NeverReorders(t *testing.T) {
+	profile := clientprofile.Profile{WorkspaceID: "ws-1", Sectors: []string{"45"}, ValueMin: i64(100), ValueMax: i64(200)}
+	svc := NewService(&recommendFakeRepo{}, nil, recommendFakeRateLimiter{}, &fakeProfileSource{profile: profile}, testFitConfig())
+
+	results := []ScoredTender{
+		{Tender: Tender{ID: "long-shot", CPV: "99000000", Value: i64(999)}, RelevanceScore: 0.1},
+		{Tender: Tender{ID: "strong", CPV: "45210000", Value: i64(150)}, RelevanceScore: 0.9},
+	}
+
+	out, err := svc.AnnotateForClient(context.Background(), "u1", "ws1", results)
+	if err != nil {
+		t.Fatalf("AnnotateForClient: %v", err)
+	}
+	if out[0].ID != "long-shot" || out[1].ID != "strong" {
+		t.Fatalf("AnnotateForClient reordered results: got [%s, %s], want input order [long-shot, strong]", out[0].ID, out[1].ID)
+	}
+	if out[0].Tier != FitLongShot {
+		t.Fatalf("out[0].Tier = %q, want %q", out[0].Tier, FitLongShot)
+	}
+	if out[1].Tier != FitStrong {
+		t.Fatalf("out[1].Tier = %q, want %q", out[1].Tier, FitStrong)
+	}
+}
+
+// TestAnnotateForClient_ProfileNotFoundReturnsUnannotatedPassthrough
+// asserts the brief's required degradation: no profile yet ⇒ no
+// annotation and no error, not a failure — order is still preserved.
+func TestAnnotateForClient_ProfileNotFoundReturnsUnannotatedPassthrough(t *testing.T) {
+	svc := NewService(&recommendFakeRepo{}, nil, recommendFakeRateLimiter{}, &fakeProfileSource{err: clientprofile.ErrProfileNotFound}, testFitConfig())
+
+	results := []ScoredTender{
+		{Tender: Tender{ID: "1"}},
+		{Tender: Tender{ID: "2"}},
+	}
+
+	out, err := svc.AnnotateForClient(context.Background(), "u1", "ws1", results)
+	if err != nil {
+		t.Fatalf("AnnotateForClient: %v", err)
+	}
+	if len(out) != 2 {
+		t.Fatalf("len(out) = %d, want 2", len(out))
+	}
+	for i, r := range out {
+		if r.ID != results[i].ID {
+			t.Fatalf("out[%d].ID = %q, want %q (order preserved)", i, r.ID, results[i].ID)
+		}
+		if r.Tier != "" {
+			t.Fatalf("out[%d].Tier = %q, want empty (no profile ⇒ no annotation)", i, r.Tier)
+		}
+	}
+}

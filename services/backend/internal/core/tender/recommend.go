@@ -2,9 +2,12 @@ package tender
 
 import (
 	"context"
+	"errors"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 )
 
 // FitTier is a per-client shortlist result's qualitative fit — never a
@@ -154,6 +157,19 @@ type RecommendedTender struct {
 // defaultRecommendLimit is used when the caller passes limit <= 0.
 const defaultRecommendLimit = 3
 
+// annotate scores one search result against profile: the per-row logic
+// shared by RecommendForClient (which sorts the resulting slice into a
+// ranked shortlist) and AnnotateForClient (which does not — it preserves
+// the caller's input order; see its own doc comment).
+func (s *Service) annotate(profile clientprofile.Profile, st ScoredTender, now time.Time) RecommendedTender {
+	reason := computeReasonSignals(st.Tender, profile.Sectors, profile.Countries, profile.Regions, profile.ProcedureTypes, profile.ValueMin, profile.ValueMax, now)
+	return RecommendedTender{
+		ScoredTender: st,
+		Tier:         computeFitTier(st.RelevanceScore, reason, s.cfg.Fit),
+		Reason:       reason,
+	}
+}
+
 // RecommendForClient turns workspaceID's ClientProfile into a ranked
 // best-fit shortlist: it loads the profile (membership-checked by
 // ProfileSource.Get itself), searches on the profile's notes/sectors/
@@ -200,12 +216,7 @@ func (s *Service) RecommendForClient(ctx context.Context, userID, workspaceID st
 	now := time.Now()
 	recs := make([]RecommendedTender, len(out.Results))
 	for i, t := range out.Results {
-		reason := computeReasonSignals(t.Tender, profile.Sectors, profile.Countries, profile.Regions, profile.ProcedureTypes, profile.ValueMin, profile.ValueMax, now)
-		recs[i] = RecommendedTender{
-			ScoredTender: t,
-			Tier:         computeFitTier(t.RelevanceScore, reason, s.cfg.Fit),
-			Reason:       reason,
-		}
+		recs[i] = s.annotate(profile, t, now)
 	}
 	sort.SliceStable(recs, func(i, j int) bool {
 		if recs[i].Tier != recs[j].Tier {
@@ -226,6 +237,39 @@ func (s *Service) RecommendForClient(ctx context.Context, userID, workspaceID st
 		recs = recs[:limit]
 	}
 	return recs, nil
+}
+
+// AnnotateForClient scores each of results against workspaceID's
+// ClientProfile, in the SAME ORDER as the input — this is annotation of a
+// manual search, not a re-ranked shortlist (see RecommendForClient for the
+// sorted, capped version this shares its per-row scoring with via
+// annotate). Like RecommendForClient, the profile lookup is
+// membership-checked by ProfileSource.Get itself.
+//
+// Unlike RecommendForClient, clientprofile.ErrProfileNotFound is not
+// surfaced as an error: a workspace that hasn't set up a profile yet still
+// gets its (unannotated) search results back — results mapped 1:1 into
+// RecommendedTender with an empty Tier and zero-value Reason — rather than
+// the request failing.
+func (s *Service) AnnotateForClient(ctx context.Context, userID, workspaceID string, results []ScoredTender) ([]RecommendedTender, error) {
+	profile, err := s.profiles.Get(ctx, userID, workspaceID)
+	if errors.Is(err, clientprofile.ErrProfileNotFound) {
+		out := make([]RecommendedTender, len(results))
+		for i, st := range results {
+			out[i] = RecommendedTender{ScoredTender: st}
+		}
+		return out, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	now := time.Now()
+	out := make([]RecommendedTender, len(results))
+	for i, st := range results {
+		out[i] = s.annotate(profile, st, now)
+	}
+	return out, nil
 }
 
 func tierRank(t FitTier) int {

@@ -168,7 +168,7 @@ func main() {
 			AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
 		},
 	)
-	tenderHandler := connectapi.NewTenderHandler(tenderSvc)
+	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
