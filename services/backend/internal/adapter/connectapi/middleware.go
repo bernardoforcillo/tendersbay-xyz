@@ -10,6 +10,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -23,6 +24,13 @@ const userIDKey contextKey = "user_id"
 func UserIDFromContext(ctx context.Context) (string, bool) {
 	id, ok := ctx.Value(userIDKey).(string)
 	return id, ok && id != ""
+}
+
+// ContextWithUserID injects userID the same way JWTMiddleware does, for
+// tests that need to exercise a handler's authenticated path without
+// standing up a real JWT.
+func ContextWithUserID(ctx context.Context, userID string) context.Context {
+	return context.WithValue(ctx, userIDKey, userID)
 }
 
 const clientIPKey contextKey = "client_ip"
@@ -193,6 +201,15 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeInvalidArgument, err)
 	case errors.Is(err, tender.ErrRateLimiterUnavailable):
 		return connect.NewError(connect.CodeUnavailable, err)
+
+	// ── client profile ──
+	case errors.Is(err, clientprofile.ErrInvalidSector),
+		errors.Is(err, clientprofile.ErrInvalidCountry),
+		errors.Is(err, clientprofile.ErrInvalidRegion),
+		errors.Is(err, clientprofile.ErrInvalidProcedureType),
+		errors.Is(err, clientprofile.ErrInvalidValueBand),
+		errors.Is(err, clientprofile.ErrNotesTooLong):
+		return connect.NewError(connect.CodeInvalidArgument, err)
 
 	default:
 		return connect.NewError(connect.CodeInternal, err)
