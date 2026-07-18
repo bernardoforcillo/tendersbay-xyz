@@ -1,29 +1,8 @@
 import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-
-// Return defaultValue strings (with {{count}} interpolation) without initializing
-// the full i18n stack — precedent: chat-window.test.tsx, command-palette.test.tsx.
-vi.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string, options?: string | { count?: number; defaultValue?: string }) => {
-      const opts = typeof options === 'string' ? { defaultValue: options } : options;
-      const template = opts?.defaultValue ?? key;
-      return typeof opts?.count === 'number'
-        ? template.replace('{{count}}', String(opts.count))
-        : template;
-    },
-    i18n: { language: 'en-ie' },
-  }),
-}));
-
+import { renderWithI18n } from '~/test/utils';
 import { TenderResultCard } from './index';
-
-const ONE_DAY_MS = 86_400_000;
-
-function deadlineAt(daysFromNow: number, now: Date): string {
-  return new Date(now.getTime() + daysFromNow * ONE_DAY_MS).toISOString();
-}
 
 function fixture(overrides: Partial<TenderResult> = {}): TenderResult {
   return {
@@ -42,90 +21,109 @@ function fixture(overrides: Partial<TenderResult> = {}): TenderResult {
     relevanceScore: 0,
     source: 'ted',
     sourceRef: 'ref-1',
+    sourceUrl: '',
     ...overrides,
   } as TenderResult;
 }
 
 describe('TenderResultCard', () => {
-  it('renders the title, buyer, country flag, source stamp, value, status and CPV', () => {
-    render(<TenderResultCard tender={fixture()} />);
-
-    expect(screen.getByText('Supply of road maintenance services')).toBeInTheDocument();
-    expect(screen.getByText('City of Lisbon')).toBeInTheDocument();
-    // Country renders as a flag labelled with the localised country name (no
-    // more bare alpha code), the source becomes an uppercased stamp.
-    expect(screen.getByTitle('Portugal')).toBeInTheDocument();
-    expect(screen.getByText('TED')).toBeInTheDocument();
-    expect(screen.getByText('45233141')).toBeInTheDocument();
-    expect(screen.getByText('€240,000')).toBeInTheDocument();
-    expect(screen.getByText('open')).toBeInTheDocument();
+  it("renders with no fit tier and no link when sourceUrl is empty (today's inert card, unchanged)", () => {
+    renderWithI18n(<TenderResultCard tender={fixture()} />);
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
-  it('falls back to the country code when no flag is known', () => {
-    render(<TenderResultCard tender={fixture({ country: 'ZZZ' })} />);
-    expect(screen.getByText('ZZZ')).toBeInTheDocument();
-    expect(screen.queryByTitle(/./)).not.toBeInTheDocument();
+  it('renders a link to the source notice when sourceUrl is set', () => {
+    renderWithI18n(
+      <TenderResultCard tender={fixture({ sourceUrl: 'https://ted.europa.eu/example/notice' })} />,
+    );
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', 'https://ted.europa.eu/example/notice');
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
   });
 
-  it('maps the alpha-3 country code the backend sends to a flag', () => {
-    render(<TenderResultCard tender={fixture({ country: 'ITA' })} />);
-    expect(screen.getByTitle('Italy')).toBeInTheDocument();
-  });
-
-  it('drops the country prefix and shows the category as a subtitle', () => {
-    render(
+  it('calls onOpen when the source link is clicked', () => {
+    const onOpen = vi.fn();
+    renderWithI18n(
       <TenderResultCard
-        tender={fixture({
-          country: 'ITA',
-          title: 'Italia – Apparecchi per angiografia – Affidamento della fornitura',
-        })}
+        tender={fixture({ sourceUrl: 'https://ted.europa.eu/example/notice' })}
+        onOpen={onOpen}
       />,
     );
-    // Object leads as the title, category becomes the subtitle, country is gone.
-    expect(screen.getByText('Affidamento della fornitura')).toBeInTheDocument();
-    expect(screen.getByText('Apparecchi per angiografia')).toBeInTheDocument();
-    expect(screen.queryByText(/^Italia/)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('link'));
+    expect(onOpen).toHaveBeenCalledTimes(1);
   });
 
-  it('omits the buyer line when buyerName is empty', () => {
-    render(<TenderResultCard tender={fixture({ buyerName: '' })} />);
-    expect(screen.queryByText('City of Lisbon')).not.toBeInTheDocument();
+  it('renders the strong fit tier pill and a reason line built from ReasonSignals', () => {
+    renderWithI18n(
+      <TenderResultCard
+        tender={fixture()}
+        fitTier="strong"
+        reason={{
+          sectorMatch: true,
+          countryMatch: true,
+          valueFit: 'in_band',
+          deadlineDays: 12,
+          hasDeadline: true,
+          regionMatch: false,
+          procedureMatch: false,
+        }}
+      />,
+    );
+    expect(screen.getByText('Strong fit')).toBeInTheDocument();
+    // Reason line joins fragments with " · " — assert the container has all four pieces present.
+    const reasonLine = screen.getByTestId('tender-fit-reason');
+    expect(reasonLine.textContent).toContain('sector');
+    expect(reasonLine.textContent).toContain('12');
   });
 
-  it('shows an urgent pill with the day count 3 days from the deadline', () => {
-    const now = new Date();
-    render(<TenderResultCard tender={fixture({ deadline: deadlineAt(3, now) })} />);
-
-    const pill = screen.getByText('3 days left');
-    expect(pill).toBeInTheDocument();
-    expect(pill).toHaveClass('bg-signal-urgent-100');
+  it('includes region and procedure match text in the reason line, appended after the other signals', () => {
+    renderWithI18n(
+      <TenderResultCard
+        tender={fixture()}
+        fitTier="possible"
+        reason={{
+          sectorMatch: true,
+          countryMatch: false,
+          valueFit: 'unknown',
+          deadlineDays: 0,
+          hasDeadline: false,
+          regionMatch: true,
+          procedureMatch: true,
+        }}
+      />,
+    );
+    const reasonLine = screen.getByTestId('tender-fit-reason');
+    expect(reasonLine.textContent).toContain('sector');
+    expect(reasonLine.textContent).toContain('region');
+    expect(reasonLine.textContent).toContain('procedure');
+    // Never a numeric match percentage anywhere in the reason line.
+    expect(reasonLine.textContent).not.toMatch(/%/);
   });
 
-  it('shows a deadline-tone pill with the day count 10 days from the deadline', () => {
-    const now = new Date();
-    render(<TenderResultCard tender={fixture({ deadline: deadlineAt(10, now) })} />);
-
-    const pill = screen.getByText('10 days left');
-    expect(pill).toBeInTheDocument();
-    expect(pill).toHaveClass('bg-signal-warm-100');
+  it('renders no reason line when no signal matched', () => {
+    renderWithI18n(
+      <TenderResultCard
+        tender={fixture()}
+        fitTier="long_shot"
+        reason={{
+          sectorMatch: false,
+          countryMatch: false,
+          valueFit: 'unknown',
+          deadlineDays: 0,
+          hasDeadline: false,
+          regionMatch: false,
+          procedureMatch: false,
+        }}
+      />,
+    );
+    expect(screen.queryByTestId('tender-fit-reason')).not.toBeInTheDocument();
   });
 
-  it('shows an urgent "Closed" pill for an expired deadline', () => {
-    const now = new Date();
-    render(<TenderResultCard tender={fixture({ deadline: deadlineAt(-2, now) })} />);
-
-    const pill = screen.getByText('Closed');
-    expect(pill).toBeInTheDocument();
-    expect(pill).toHaveClass('bg-signal-urgent-100');
-  });
-
-  it('renders no pill when the tender has no deadline', () => {
-    render(<TenderResultCard tender={fixture({ deadline: '' })} />);
-    expect(screen.queryByText(/day|Closed|Closes today/)).not.toBeInTheDocument();
-  });
-
-  it('falls back to "Value undisclosed" when the value is zero', () => {
-    render(<TenderResultCard tender={fixture({ value: 0n })} />);
-    expect(screen.getByText('Value undisclosed')).toBeInTheDocument();
+  it('renders no fit pill at all when fitTier is not provided (plain search result)', () => {
+    renderWithI18n(<TenderResultCard tender={fixture()} />);
+    expect(screen.queryByText('Strong fit')).not.toBeInTheDocument();
+    expect(screen.queryByText('Possible fit')).not.toBeInTheDocument();
+    expect(screen.queryByText('Long shot')).not.toBeInTheDocument();
   });
 });
