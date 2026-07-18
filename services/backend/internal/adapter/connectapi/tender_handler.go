@@ -19,11 +19,15 @@ import (
 // itself does not call it — its per-client fit annotation trusts
 // AnnotateForClient's own internal membership check instead (see
 // SearchTenders' doc comment), so this port is currently unused by that RPC.
-// It is kept on TenderHandler for Task 9 (RecommendTendersForClient) — not
-// yet implemented as of this task — which needs its own handler-level
-// membership check (RecommendForClient, unlike AnnotateForClient, does not
-// re-check membership itself) and reuses this same h.members field rather
-// than adding its own port.
+// Task 9's RecommendTendersForClient (not yet implemented as of this task)
+// won't need it either: RecommendForClient is membership-checked the same
+// way AnnotateForClient is — via ProfileSource.Get itself (see both
+// methods' doc comments in core/tender/recommend.go) — so it has no more
+// need for a redundant handler-level LoadMembership call than
+// AnnotateForClient does. This port is kept on TenderHandler for now in
+// case a future handler needs a membership check the service layer doesn't
+// already provide — none of the current or currently-planned uses require
+// it.
 type MemberRepository interface {
 	LoadMembership(ctx context.Context, workspaceID, userID string) (workspace.Membership, error)
 }
