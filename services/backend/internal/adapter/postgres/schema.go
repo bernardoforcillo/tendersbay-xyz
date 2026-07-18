@@ -403,3 +403,29 @@ type DBTender struct {
 	PublishedAt   *time.Time `drop:"published_at"`
 	Deadline      *time.Time `drop:"deadline"`
 }
+
+// ── Client profile table (per-client bid-qualification agent, v1.0) ────────
+// One row per workspace (PK = FK to workspaces.id) — the workspace IS the
+// client (see docs/superpowers/specs/2026-07-17-per-client-bid-qualification-agent-design.md).
+// sectors/countries are JSONB (drops has no array column type; JSONB is this
+// codebase's existing precedent for list-shaped columns, e.g. chat_messages).
+var (
+	ClientProfiles = pg.NewTable("workspace_client_profiles")
+	CPWorkspaceID  = pg.Add(ClientProfiles, pg.UUID("workspace_id").PrimaryKey().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	CPSectors      = pg.Add(ClientProfiles, pg.JSONB("sectors").NotNull().Default("'[]'::jsonb"))
+	CPCountries    = pg.Add(ClientProfiles, pg.JSONB("countries").NotNull().Default("'[]'::jsonb"))
+	CPValueMin     = pg.Add(ClientProfiles, pg.BigInt("value_min")) // nullable
+	CPValueMax     = pg.Add(ClientProfiles, pg.BigInt("value_max")) // nullable
+	CPNotes        = pg.Add(ClientProfiles, pg.Text("notes").NotNull().Default("''"))
+	CPUpdatedAt    = pg.Add(ClientProfiles, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+)
+
+type DBClientProfile struct {
+	WorkspaceID string          `drop:"workspace_id"`
+	Sectors     json.RawMessage `drop:"sectors"`
+	Countries   json.RawMessage `drop:"countries"`
+	ValueMin    *int64          `drop:"value_min"`
+	ValueMax    *int64          `drop:"value_max"`
+	Notes       string          `drop:"notes"`
+	UpdatedAt   time.Time       `drop:"updated_at"`
+}
