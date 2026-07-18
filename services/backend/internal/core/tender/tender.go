@@ -53,6 +53,7 @@ type Tender struct {
 	Deadline      *time.Time
 	Source        string
 	SourceRef     string
+	NUTS          string
 }
 
 // Filters narrows a search. Zero-value fields are unset.

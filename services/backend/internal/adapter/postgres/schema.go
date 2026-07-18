@@ -386,6 +386,16 @@ var (
 	TenderCurrency      = pg.Add(Tenders, pg.Text("currency").NotNull())
 	TenderPublishedAt   = pg.Add(Tenders, pg.Timestamp("published_at", true)) // nullable
 	TenderDeadline      = pg.Add(Tenders, pg.Timestamp("deadline", true))     // nullable
+	TenderNUTS          = pg.Add(Tenders, pg.Text("nuts").NotNull())
+	// NOTE: cpv_secondary (text[]) is intentionally NOT declared here — drops
+	// (v0.4.1) has no array-typed column constructor (its pg package only
+	// exposes query-time array *operators* in array.go — ArrayContains,
+	// ArrayAgg, Any, Unnest, etc. — not a column DSL type), so it cannot be
+	// added to tenderResultColumns or scanned via the typed Select()+struct
+	// path. See Task A0's report for the fuller analysis, including why the
+	// candidate raw-SQL fallback (scanning text[] via the pgx/v5 stdlib
+	// driver's plain database/sql path) doesn't work either. Secondary-CPV
+	// matching is deferred; SectorMatch degrades to primary CPV only.
 )
 
 type DBTender struct {
@@ -402,6 +412,7 @@ type DBTender struct {
 	Currency      string     `drop:"currency"`
 	PublishedAt   *time.Time `drop:"published_at"`
 	Deadline      *time.Time `drop:"deadline"`
+	NUTS          string     `drop:"nuts"`
 }
 
 // ── Client profile table (per-client bid-qualification agent, v1.0) ────────

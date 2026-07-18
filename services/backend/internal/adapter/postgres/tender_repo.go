@@ -41,6 +41,7 @@ type TenderResultRow struct {
 	Deadline      *time.Time
 	Source        string
 	SourceRef     string
+	NUTS          string
 }
 
 type TenderRepo struct{ db *pg.DB }
@@ -51,7 +52,7 @@ func NewTenderRepo(db *pg.DB) *TenderRepo { return &TenderRepo{db: db} }
 var tenderResultColumns = []drops.Expression{
 	TenderID, TenderTitle, TenderBuyerName, TenderStatus, TenderProcedureType,
 	TenderCountry, TenderCPV, TenderValue, TenderCurrency, TenderPublishedAt,
-	TenderDeadline, TenderSource, TenderSourceRef,
+	TenderDeadline, TenderSource, TenderSourceRef, TenderNUTS,
 }
 
 // SearchByFilters returns up to limit tenders matching filters, ordered by
@@ -115,6 +116,7 @@ func dbTendersToRows(rows []DBTender) []TenderResultRow {
 			ProcedureType: row.ProcedureType, Country: row.Country, CPV: row.CPV,
 			Value: row.Value, Currency: row.Currency, PublishedAt: row.PublishedAt,
 			Deadline: row.Deadline, Source: row.Source, SourceRef: row.SourceRef,
+			NUTS: row.NUTS,
 		}
 	}
 	return out
@@ -178,6 +180,7 @@ func rowsToTenders(rows []TenderResultRow) []tender.Tender {
 			CPV: row.CPV, Value: row.Value, Currency: row.Currency,
 			PublishedAt: row.PublishedAt, Deadline: row.Deadline,
 			Source: row.Source, SourceRef: row.SourceRef,
+			NUTS: row.NUTS,
 		}
 	}
 	return out
