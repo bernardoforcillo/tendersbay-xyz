@@ -105,10 +105,22 @@ type Tier struct {
 	RateWindow time.Duration
 }
 
-// Config holds the two tiers' limits.
+// FitThresholds tunes RecommendForClient's tier classification (see
+// recommend.go). These are an initial, uncalibrated guess — there is no
+// conversion data pre-launch (see the design spec's Risks section) — safe to
+// retune here without touching the classification logic itself.
+type FitThresholds struct {
+	RelevanceHigh      float64 // relevance_score at/above which a result can be "strong"
+	RelevanceLow       float64 // relevance_score below which a result is always "long_shot"
+	MinDeadlineDays    int     // fewer days than this blocks "strong" (too tight to call it a sure thing)
+	UrgentDeadlineDays int     // fewer days than this forces "long_shot" regardless of relevance
+}
+
+// Config holds the two tiers' limits plus the fit-tier thresholds.
 type Config struct {
 	AnonTier   Tier
 	AuthedTier Tier
+	Fit        FitThresholds
 }
 
 // Service runs tender searches.
