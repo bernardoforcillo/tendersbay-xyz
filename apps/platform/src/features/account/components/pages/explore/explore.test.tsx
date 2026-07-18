@@ -1,5 +1,5 @@
 import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -11,6 +11,17 @@ const { searchMock, loadMoreMock, useTenderSearchMock } = vi.hoisted(() => ({
   loadMoreMock: vi.fn(),
   useTenderSearchMock: vi.fn(),
 }));
+
+const { useClientShortlistMock } = vi.hoisted(() => ({ useClientShortlistMock: vi.fn() }));
+vi.mock('./use-client-shortlist', () => ({ useClientShortlist: () => useClientShortlistMock() }));
+
+vi.mock('~/store/workspace', () => ({
+  useWorkspaceStore: (selector: (s: { currentWorkspaceId: string | null }) => unknown) =>
+    selector({ currentWorkspaceId: 'ws-1' }),
+}));
+
+const captureMock = vi.fn();
+vi.mock('posthog-js/react', () => ({ usePostHog: () => ({ capture: captureMock }) }));
 
 vi.mock('~/features/account/components/organisms/tender-feed', async (importOriginal) => {
   const actual =
@@ -57,6 +68,20 @@ function fixture(overrides: Partial<TenderResult> = {}): TenderResult {
   } as TenderResult;
 }
 
+function recommendedFixture(overrides: Partial<TenderResult> = {}) {
+  return {
+    tender: fixture(overrides),
+    fitTier: 'strong',
+    reason: {
+      sectorMatch: true,
+      countryMatch: true,
+      valueFit: 'in_band',
+      deadlineDays: 10,
+      hasDeadline: true,
+    },
+  };
+}
+
 type HookReturn = {
   results: TenderResult[];
   hasMore: boolean;
@@ -88,6 +113,17 @@ describe('AccountExplorePage — search mode', () => {
     searchMock.mockReset();
     loadMoreMock.mockReset();
     useChatStore.setState({ messages: [], currentChatId: null, draft: null });
+    // The shortlist hook is mocked at module scope (also used by the
+    // "client shortlist" describe below) — give it a neutral default here
+    // so these pre-existing search-mode tests, which don't care about the
+    // shortlist at all, don't crash on an undefined mock return.
+    useClientShortlistMock.mockReturnValue({
+      results: [],
+      needsProfile: false,
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
     mockHook();
   });
 
@@ -220,5 +256,107 @@ describe('AccountExplorePage — search mode', () => {
     await user.click(screen.getByRole('button', { name: 'Clear all' }));
     expect(searchMock).toHaveBeenCalledWith('roads', {});
     expect(screen.getByLabelText('Country')).toHaveValue('');
+  });
+});
+
+describe('client shortlist (Explore default state)', () => {
+  beforeEach(() => {
+    searchMock.mockReset();
+    loadMoreMock.mockReset();
+    useChatStore.setState({ messages: [], currentChatId: null, draft: null });
+    useClientShortlistMock.mockReturnValue({
+      results: [],
+      needsProfile: false,
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+    mockHook({ results: [], hasMore: false, loading: false, error: null }); // no manual search has run
+  });
+
+  it('shows the profile setup form directly when needsProfile is true', () => {
+    // v1.0 skips a separate "set up profile" CTA button — needsProfile:true
+    // renders ClientProfileForm immediately (the fewest clicks to a first
+    // match); there is no "edit an existing profile" affordance yet (see
+    // Step 7's note — deliberately deferred, not a gap in this task).
+    useClientShortlistMock.mockReturnValue({
+      results: [],
+      needsProfile: true,
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+    renderWithI18n(<AccountExplorePage />);
+    expect(screen.getByRole('button', { name: /save profile/i })).toBeInTheDocument();
+  });
+
+  it('renders the shortlist cards when a profile exists and results are returned', () => {
+    useClientShortlistMock.mockReturnValue({
+      results: [recommendedFixture({ id: 'r-1' })],
+      needsProfile: false,
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+    renderWithI18n(<AccountExplorePage />);
+    expect(screen.getByText('Strong fit')).toBeInTheDocument();
+  });
+
+  it('renders nothing from the shortlist block once a manual search has run', async () => {
+    const user = userEvent.setup();
+    useClientShortlistMock.mockReturnValue({
+      results: [recommendedFixture({ id: 'r-1' })],
+      needsProfile: false,
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+    mockHook({ results: [fixture({ id: 's-1' })], hasMore: false, loading: false, error: null });
+    renderWithI18n(<AccountExplorePage />);
+
+    await submit(user, 'roads');
+
+    // Once `searched` is true, the manual-results branch owns that slot —
+    // the shortlist's own "Strong fit" pill must not double-render there.
+    expect(screen.queryByText('Strong fit')).not.toBeInTheDocument();
+  });
+
+  it('captures client_shortlist_viewed once, with shortlist_size and has_strong', () => {
+    captureMock.mockClear();
+    useClientShortlistMock.mockReturnValue({
+      results: [recommendedFixture({ id: 'r-1' })],
+      needsProfile: false,
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+    renderWithI18n(<AccountExplorePage />);
+
+    expect(captureMock).toHaveBeenCalledWith('client_shortlist_viewed', {
+      location: 'explore_shortlist',
+      shortlist_size: 1,
+      has_strong: true,
+    });
+  });
+
+  it('captures shortlist_match_opened with the fit tier when a card is opened', () => {
+    captureMock.mockClear();
+    useClientShortlistMock.mockReturnValue({
+      results: [
+        recommendedFixture({ id: 'r-1', sourceUrl: 'https://ted.europa.eu/example/notice' }),
+      ],
+      needsProfile: false,
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+    renderWithI18n(<AccountExplorePage />);
+
+    fireEvent.click(screen.getByRole('link'));
+
+    expect(captureMock).toHaveBeenCalledWith('shortlist_match_opened', {
+      location: 'explore_shortlist',
+      fit_tier: 'strong',
+    });
   });
 });

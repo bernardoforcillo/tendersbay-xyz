@@ -104,6 +104,36 @@
       "loading": "Trenutek."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektorji",
+      "countries": "Države",
+      "valueMin": "Najnižja vrednost",
+      "valueMax": "Najvišja vrednost",
+      "notes": "Opombe",
+      "notesPlaceholder": "Za kaj se ta stranka običajno poteguje?",
+      "save": "Shrani profil",
+      "invalidBand": "Najnižja vrednost ne sme presegati najvišje vrednosti.",
+      "error": "Profila ni bilo mogoče shraniti — poskusite znova.",
+      "procedureTypesLabel": "Vrste postopkov",
+      "procedureTypes": {
+        "open": "Odprti postopek",
+        "restricted": "Omejeni postopek",
+        "negotiated": "Postopek s pogajanji",
+        "competitive_dialogue": "Konkurenčni dialog",
+        "innovation_partnership": "Partnerstvo za inovacije",
+        "other": "Drugo"
+      },
+      "regions": "Regije (NUTS)",
+      "regionsPlaceholder": "npr. ITC, DE3",
+      "regionsHint": "Predpone NUTS, ločene z vejico. Pustite prazno za vključitev katere koli regije."
+    },
+    "shortlist": {
+      "title": "Najboljše ujemanje za to stranko",
+      "emptyTitle": "Še ni ustreznih razpisov",
+      "emptyDescription": "Poskusite z ročnim iskanjem spodaj ali razširite profil te stranke."
+    }
+  },
   "landing": {
     "header": {
       "login": "Prijava",
@@ -368,12 +398,29 @@
       "deadline30": "Naslednjih 30 dni",
       "deadline90": "Naslednjih 90 dni",
       "clear": "Počisti vse"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Močno ujemanje",
+        "possible": "Možno ujemanje",
+        "longShot": "Majhna verjetnost"
+      },
+      "reasonSector": "Ujema se z vašim sektorjem",
+      "reasonCountry": "V vaši ciljni državi",
+      "reasonValueInBand": "V vašem vrednostnem razponu",
+      "reasonValueBelow": "Pod vašim vrednostnim razponom",
+      "reasonValueAbove": "Nad vašim vrednostnim razponom",
+      "reasonRegion": "V vaši regiji",
+      "reasonProcedure": "Ujema se z vrsto vašega postopka"
     }
   },
   "today": {
     "recommended": {
-      "title": "Priporočeno za vas",
-      "seeAll": "Vse v razdelku Razišči →"
+      "seeAll": "Vse v razdelku Razišči →",
+      "clientCount_one": "{{count}} ustrezen razpis pripravljen za {{client}}",
+      "clientCount_two": "{{count}} ustrezna razpisa pripravljena za {{client}}",
+      "clientCount_few": "{{count}} ustrezni razpisi pripravljeni za {{client}}",
+      "clientCount_other": "{{count}} ustreznih razpisov pripravljenih za {{client}}"
     },
     "greeting": {
       "morning": "Dobro jutro.",
@@ -406,6 +453,7 @@
     },
     "nav": {
       "general": "Splošno",
+      "profile": "Profil stranke",
       "overview": "Pregled",
       "members": "Člani",
       "roles": "Vloge",
@@ -517,6 +565,16 @@
       "settings": "Nastavitve workspace",
       "label": "Delovni prostori",
       "manage": "Vsi delovni prostori"
+    },
+    "firstRun": {
+      "title": "Dodaj profil ponudb stranke",
+      "subtitle": "Povejte nam, za kaj se ta stranka poteguje, da bodo priporočila od začetka natančna. To lahko dokončate pozneje v Nastavitvah.",
+      "skip": "Preskoči za zdaj"
+    },
+    "clientProfile": {
+      "title": "Profil ponudb stranke",
+      "subtitle": "Za kaj se ta stranka poteguje — sektorji, države in vrednostni razpon — usmerja vsako priporočilo.",
+      "saved": "Profil shranjen."
     }
   },
   "workbench": {

@@ -104,6 +104,36 @@
       "loading": "Moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektory",
+      "countries": "Krajiny",
+      "valueMin": "Minimálna hodnota",
+      "valueMax": "Maximálna hodnota",
+      "notes": "Poznámky",
+      "notesPlaceholder": "Na čo tento klient zvyčajne predkladá ponuky?",
+      "save": "Uložiť profil",
+      "invalidBand": "Minimálna hodnota nesmie prevýšiť maximálnu hodnotu.",
+      "error": "Profil sa nepodarilo uložiť — skúste to znova.",
+      "procedureTypesLabel": "Typy postupov",
+      "procedureTypes": {
+        "open": "Verejná súťaž",
+        "restricted": "Užšia súťaž",
+        "negotiated": "Rokovacie konanie",
+        "competitive_dialogue": "Súťažný dialóg",
+        "innovation_partnership": "Inovatívne partnerstvo",
+        "other": "Iné"
+      },
+      "regions": "Regióny (NUTS)",
+      "regionsPlaceholder": "napr. ITC, DE3",
+      "regionsHint": "Predpony NUTS oddelené čiarkami. Ponechajte prázdne pre zahrnutie ľubovoľného regiónu."
+    },
+    "shortlist": {
+      "title": "Najlepšia zhoda pre tohto klienta",
+      "emptyTitle": "Zatiaľ žiadne vhodné zákazky",
+      "emptyDescription": "Skúste manuálne vyhľadávanie nižšie, alebo rozšírte profil tohto klienta."
+    }
+  },
   "landing": {
     "header": {
       "login": "Prihlásiť sa",
@@ -370,12 +400,28 @@
       "deadline30": "Najbližších 30 dní",
       "deadline90": "Najbližších 90 dní",
       "clear": "Vymazať všetko"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Silná zhoda",
+        "possible": "Možná zhoda",
+        "longShot": "Malá šanca"
+      },
+      "reasonSector": "Zodpovedá vášmu sektoru",
+      "reasonCountry": "Vo vašej cieľovej krajine",
+      "reasonValueInBand": "Vo vašom hodnotovom rozpätí",
+      "reasonValueBelow": "Pod vaším hodnotovým rozpätím",
+      "reasonValueAbove": "Nad vaším hodnotovým rozpätím",
+      "reasonRegion": "Vo vašom regióne",
+      "reasonProcedure": "Zodpovedá vášmu typu postupu"
     }
   },
   "today": {
     "recommended": {
-      "title": "Odporúčané pre vás",
-      "seeAll": "Všetko v sekcii Preskúmať →"
+      "seeAll": "Všetko v sekcii Preskúmať →",
+      "clientCount_one": "{{count}} vhodná zákazka pripravená pre {{client}}",
+      "clientCount_few": "{{count}} vhodné zákazky pripravené pre {{client}}",
+      "clientCount_other": "{{count}} vhodných zákaziek pripravených pre {{client}}"
     },
     "greeting": {
       "morning": "Dobré ráno.",
@@ -408,6 +454,7 @@
     },
     "nav": {
       "general": "Všeobecné",
+      "profile": "Profil klienta",
       "overview": "Prehľad",
       "members": "Členovia",
       "roles": "Roly",
@@ -519,6 +566,16 @@
       "settings": "Nastavenia workspace",
       "label": "Pracovné priestory",
       "manage": "Všetky pracovné priestory"
+    },
+    "firstRun": {
+      "title": "Pridať profil ponúk klienta",
+      "subtitle": "Povedzte nám, na čo tento klient predkladá ponuky, aby boli odporúčania od začiatku presné. Dokončiť to môžete neskôr v Nastaveniach.",
+      "skip": "Zatiaľ preskočiť"
+    },
+    "clientProfile": {
+      "title": "Profil ponúk klienta",
+      "subtitle": "To, na čo tento klient predkladá ponuky — sektory, krajiny a hodnotové rozpätie — určuje každé odporúčanie.",
+      "saved": "Profil uložený."
     }
   },
   "workbench": {

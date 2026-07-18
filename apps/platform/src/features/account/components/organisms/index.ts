@@ -1,4 +1,6 @@
 export { ChatWindow } from './chat-window';
+export type { ClientProfileFormProps } from './client-profile-form';
+export { ClientProfileForm } from './client-profile-form';
 export { CommandPalette } from './command-palette';
 export { DeleteForm } from './delete-form';
 export { EmailForm } from './email-form';

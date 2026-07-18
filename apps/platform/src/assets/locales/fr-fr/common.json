@@ -104,6 +104,36 @@
       "loading": "Un instant."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Secteurs",
+      "countries": "Pays",
+      "valueMin": "Valeur minimale",
+      "valueMax": "Valeur maximale",
+      "notes": "Notes",
+      "notesPlaceholder": "Sur quoi ce client soumissionne-t-il habituellement ?",
+      "save": "Enregistrer le profil",
+      "invalidBand": "La valeur minimale ne doit pas dépasser la valeur maximale.",
+      "error": "Impossible d'enregistrer le profil — réessayez.",
+      "procedureTypesLabel": "Types de procédure",
+      "procedureTypes": {
+        "open": "Procédure ouverte",
+        "restricted": "Procédure restreinte",
+        "negotiated": "Procédure négociée",
+        "competitive_dialogue": "Dialogue compétitif",
+        "innovation_partnership": "Partenariat d'innovation",
+        "other": "Autre"
+      },
+      "regions": "Régions (NUTS)",
+      "regionsPlaceholder": "ex. ITC, DE3",
+      "regionsHint": "Préfixes NUTS séparés par des virgules. Laissez vide pour inclure toutes les régions."
+    },
+    "shortlist": {
+      "title": "Meilleure correspondance pour ce client",
+      "emptyTitle": "Aucun appel d'offres adapté pour l'instant",
+      "emptyDescription": "Essayez une recherche manuelle ci-dessous, ou élargissez le profil de ce client."
+    }
+  },
   "landing": {
     "header": {
       "login": "Connexion",
@@ -364,12 +394,27 @@
       "deadline30": "30 prochains jours",
       "deadline90": "90 prochains jours",
       "clear": "Tout effacer"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Forte correspondance",
+        "possible": "Correspondance possible",
+        "longShot": "Peu probable"
+      },
+      "reasonSector": "Correspond à votre secteur",
+      "reasonCountry": "Dans votre pays cible",
+      "reasonValueInBand": "Dans votre fourchette de valeur",
+      "reasonValueBelow": "Sous votre fourchette de valeur",
+      "reasonValueAbove": "Au-dessus de votre fourchette de valeur",
+      "reasonRegion": "Dans votre région",
+      "reasonProcedure": "Correspond à votre type de procédure"
     }
   },
   "today": {
     "recommended": {
-      "title": "Recommandés pour vous",
-      "seeAll": "Tout dans Explorer →"
+      "seeAll": "Tout dans Explorer →",
+      "clientCount_one": "{{count}} marché adapté prêt pour {{client}}",
+      "clientCount_other": "{{count}} marchés adaptés prêts pour {{client}}"
     },
     "greeting": {
       "morning": "Bonjour.",
@@ -402,6 +447,7 @@
     },
     "nav": {
       "general": "Général",
+      "profile": "Profil client",
       "overview": "Vue d'ensemble",
       "members": "Membres",
       "roles": "Rôles",
@@ -513,6 +559,16 @@
       "settings": "Paramètres du workspace",
       "label": "Espaces de travail",
       "manage": "Tous les espaces de travail"
+    },
+    "firstRun": {
+      "title": "Ajouter un profil d'offre client",
+      "subtitle": "Indiquez-nous sur quoi ce client soumissionne pour que les recommandations soient pertinentes dès le départ. Vous pourrez terminer plus tard depuis les Paramètres.",
+      "skip": "Passer pour l'instant"
+    },
+    "clientProfile": {
+      "title": "Profil d'offre client",
+      "subtitle": "Ce sur quoi ce client soumissionne — secteurs, pays et fourchette de valeur — oriente chaque recommandation.",
+      "saved": "Profil enregistré."
     }
   },
   "workbench": {

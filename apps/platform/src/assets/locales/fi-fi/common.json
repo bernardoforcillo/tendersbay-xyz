@@ -104,6 +104,36 @@
       "loading": "Hetki vielä."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Toimialat",
+      "countries": "Maat",
+      "valueMin": "Vähimmäisarvo",
+      "valueMax": "Enimmäisarvo",
+      "notes": "Muistiinpanot",
+      "notesPlaceholder": "Mihin tämä asiakas yleensä tarjoaa?",
+      "save": "Tallenna profiili",
+      "invalidBand": "Vähimmäisarvo ei saa ylittää enimmäisarvoa.",
+      "error": "Profiilia ei voitu tallentaa — yritä uudelleen.",
+      "procedureTypesLabel": "Menettelytyypit",
+      "procedureTypes": {
+        "open": "Avoin menettely",
+        "restricted": "Rajoitettu menettely",
+        "negotiated": "Neuvottelumenettely",
+        "competitive_dialogue": "Kilpailullinen neuvottelumenettely",
+        "innovation_partnership": "Innovaatiokumppanuus",
+        "other": "Muu"
+      },
+      "regions": "Alueet (NUTS)",
+      "regionsPlaceholder": "esim. ITC, DE3",
+      "regionsHint": "Pilkuilla erotetut NUTS-etuliitteet. Jätä tyhjäksi, jos haluat sisällyttää minkä tahansa alueen."
+    },
+    "shortlist": {
+      "title": "Paras osuma tälle asiakkaalle",
+      "emptyTitle": "Ei vielä sopivia hankintoja",
+      "emptyDescription": "Kokeile manuaalista hakua alla, tai laajenna tämän asiakkaan profiilia."
+    }
+  },
   "landing": {
     "header": {
       "login": "Kirjaudu sisään",
@@ -364,12 +394,27 @@
       "deadline30": "Seuraavat 30 päivää",
       "deadline90": "Seuraavat 90 päivää",
       "clear": "Tyhjennä kaikki"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Vahva osuma",
+        "possible": "Mahdollinen osuma",
+        "longShot": "Pieni mahdollisuus"
+      },
+      "reasonSector": "Vastaa toimialaasi",
+      "reasonCountry": "Kohdemaassasi",
+      "reasonValueInBand": "Arvoalueellasi",
+      "reasonValueBelow": "Arvoalueesi alapuolella",
+      "reasonValueAbove": "Arvoalueesi yläpuolella",
+      "reasonRegion": "Alueellasi",
+      "reasonProcedure": "Vastaa menettelytyyppiäsi"
     }
   },
   "today": {
     "recommended": {
-      "title": "Suositeltu sinulle",
-      "seeAll": "Kaikki Tutustu-osiossa →"
+      "seeAll": "Kaikki Tutustu-osiossa →",
+      "clientCount_one": "{{count}} sopiva hankinta valmiina asiakkaalle {{client}}",
+      "clientCount_other": "{{count}} sopivaa hankintaa valmiina asiakkaalle {{client}}"
     },
     "greeting": {
       "morning": "Hyvää huomenta.",
@@ -402,6 +447,7 @@
     },
     "nav": {
       "general": "Yleiset",
+      "profile": "Asiakasprofiili",
       "overview": "Yleiskatsaus",
       "members": "Jäsenet",
       "roles": "Roolit",
@@ -513,6 +559,16 @@
       "settings": "Workspace-asetukset",
       "label": "Työtilat",
       "manage": "Kaikki työtilat"
+    },
+    "firstRun": {
+      "title": "Lisää asiakkaan tarjousprofiili",
+      "subtitle": "Kerro, mihin tämä asiakas yleensä tarjoaa, jotta suositukset osuvat oikeaan heti alusta. Voit viimeistellä tämän myöhemmin Asetuksista.",
+      "skip": "Ohita toistaiseksi"
+    },
+    "clientProfile": {
+      "title": "Asiakkaan tarjousprofiili",
+      "subtitle": "Se, mihin tämä asiakas tarjoaa — toimialat, maat ja arvoalue — ohjaa jokaista suositusta.",
+      "saved": "Profiili tallennettu."
     }
   },
   "workbench": {

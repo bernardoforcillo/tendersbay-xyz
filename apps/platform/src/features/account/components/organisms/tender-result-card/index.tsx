@@ -5,26 +5,63 @@ import {
   countryFlag,
   countryName,
   deadlineInfo,
+  type FitTier,
+  fitReasonFragments,
+  fitTierPillClassName,
+  fitTierPillTone,
   formatTenderValue,
+  type ReasonSignals,
   tenderTitle,
 } from '../tender-feed';
 
 export type TenderResultCardProps = {
   tender: TenderResult;
+  /** Set only on a per-client shortlist result (RecommendTendersForClient) — a plain search result carries neither. */
+  fitTier?: FitTier;
+  reason?: ReasonSignals;
+  /** Fired when the card's source link is actually clicked (not on every render) — the shortlist uses this to capture `shortlist_match_opened`; a plain search result passes nothing. */
+  onOpen?: () => void;
   className?: string;
 };
 
+const FIT_TIER_LABEL: Record<FitTier, { key: string; defaultValue: string }> = {
+  strong: { key: 'tenders.fit.tier.strong', defaultValue: 'Strong fit' },
+  possible: { key: 'tenders.fit.tier.possible', defaultValue: 'Possible fit' },
+  long_shot: { key: 'tenders.fit.tier.longShot', defaultValue: 'Long shot' },
+};
+
+// Fallback English text for the reason-line keys, so this component's own
+// tests (and the app, briefly) render real copy before Task 17 adds these
+// keys to all 24 locale files — matching this file's existing defaultValue
+// convention (see the deadline labels below). "tenders.deadline.days" is
+// excluded: it already exists in every locale, no fallback needed.
+const REASON_DEFAULT: Record<string, string> = {
+  'tenders.fit.reasonSector': 'Matches your sector',
+  'tenders.fit.reasonCountry': 'In your target country',
+  'tenders.fit.reasonValueInBand': 'In your value band',
+  'tenders.fit.reasonValueBelow': 'Below your value band',
+  'tenders.fit.reasonValueAbove': 'Above your value band',
+  'tenders.fit.reasonRegion': 'In your region',
+  'tenders.fit.reasonProcedure': 'Matches your procedure type',
+};
+
 /**
- * Presentational result card for a single tender in a search feed. No
- * fetching, no link/onPress (there's no tender detail page yet) and no
- * match-% / reason line (doesn't exist yet) — purely renders the fields the
- * search RPC already returns.
+ * Presentational result card for a single tender in a search feed. When `fitTier` is set (the
+ * per-client shortlist), it also renders a qualitative fit Pill and a reason line built from
+ * `reason` — never a numeric match %. The card becomes a real link to the source notice
+ * whenever the backend returns one (`tender.sourceUrl`); otherwise it stays inert, as before.
  *
- * The header is a provenance rail: a country flag (the tender's origin) and a
- * source stamp (the portal it was published on, e.g. TED), with the deadline
- * pill trailing. Title leads the body; value, status and CPV close the card.
+ * The header is a provenance rail: a country flag (the tender's origin) and a source stamp (the
+ * portal it was published on, e.g. TED), with the deadline pill trailing. Title leads the body;
+ * value, status and CPV close the card.
  */
-export function TenderResultCard({ tender, className }: TenderResultCardProps) {
+export function TenderResultCard({
+  tender,
+  fitTier,
+  reason,
+  onOpen,
+  className,
+}: TenderResultCardProps) {
   const { t, i18n } = useTranslation();
 
   const Flag = tender.country ? countryFlag(tender.country) : null;
@@ -46,7 +83,13 @@ export function TenderResultCard({ tender, className }: TenderResultCardProps) {
   const statusLabel = t(`tenders.status.${tender.status}`, { defaultValue: tender.status });
   const { title, category } = tenderTitle(tender.title, tender.country);
 
-  return (
+  const reasonLine = reason
+    ? fitReasonFragments(reason)
+        .map((f) => t(f.key, { count: f.count, defaultValue: REASON_DEFAULT[f.key] }))
+        .join(' · ')
+    : '';
+
+  const cardBody = (
     <Card
       padding="none"
       className={cn('p-4 transition-shadow duration-200 hover:shadow-soft-md', className)}
@@ -71,8 +114,16 @@ export function TenderResultCard({ tender, className }: TenderResultCardProps) {
             {tender.source.toUpperCase()}
           </span>
         )}
+        {fitTier && (
+          <Pill
+            tone={fitTierPillTone(fitTier)}
+            className={cn('ml-auto shrink-0', fitTierPillClassName(fitTier))}
+          >
+            {t(FIT_TIER_LABEL[fitTier].key, { defaultValue: FIT_TIER_LABEL[fitTier].defaultValue })}
+          </Pill>
+        )}
         {deadline && (
-          <Pill tone={deadline.tone} className="ml-auto shrink-0">
+          <Pill tone={deadline.tone} className={cn('shrink-0', !fitTier && 'ml-auto')}>
             {deadlineLabel}
           </Pill>
         )}
@@ -82,6 +133,11 @@ export function TenderResultCard({ tender, className }: TenderResultCardProps) {
       {category && <p className="mt-1 truncate text-xs font-medium text-ink-600">{category}</p>}
       {tender.buyerName && (
         <p className="mt-0.5 truncate text-xs text-ink-500">{tender.buyerName}</p>
+      )}
+      {reasonLine && (
+        <p data-testid="tender-fit-reason" className="mt-1.5 text-xs text-ink-500">
+          {reasonLine}
+        </p>
       )}
 
       <div className="mt-3 flex items-baseline justify-between gap-3 border-t border-cream-200 pt-2.5">
@@ -99,5 +155,19 @@ export function TenderResultCard({ tender, className }: TenderResultCardProps) {
         )}
       </div>
     </Card>
+  );
+
+  if (!tender.sourceUrl) return cardBody;
+
+  return (
+    <a
+      href={tender.sourceUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onOpen}
+      className="block no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 rounded-xl"
+    >
+      {cardBody}
+    </a>
   );
 }

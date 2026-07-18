@@ -104,6 +104,36 @@
       "loading": "Nóiméad amháin."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Earnálacha",
+      "countries": "Tíortha",
+      "valueMin": "Luach íosta",
+      "valueMax": "Luach uasta",
+      "notes": "Nótaí",
+      "notesPlaceholder": "Cad air a dtairgeann an cliant seo de ghnáth?",
+      "save": "Sábháil an phróifíl",
+      "invalidBand": "Ní féidir leis an luach íosta a bheith níos airde ná an luach uasta.",
+      "error": "Níorbh fhéidir an phróifíl a shábháil — bain triail eile as.",
+      "procedureTypesLabel": "Cineálacha nós imeachta",
+      "procedureTypes": {
+        "open": "Nós imeachta oscailte",
+        "restricted": "Nós imeachta srianta",
+        "negotiated": "Nós imeachta caibidlíochta",
+        "competitive_dialogue": "Comhphlé iomaíoch",
+        "innovation_partnership": "Comhpháirtíocht nuálaíochta",
+        "other": "Eile"
+      },
+      "regions": "Réigiúin (NUTS)",
+      "regionsPlaceholder": "m.sh. ITC, DE3",
+      "regionsHint": "Réimíreanna NUTS scartha le camóga. Fág bán chun aon réigiún a áireamh."
+    },
+    "shortlist": {
+      "title": "An t-oiriúnú is fearr don chliant seo",
+      "emptyTitle": "Níl aon tairiscintí oiriúnacha go fóill",
+      "emptyDescription": "Bain triail as cuardach láimhe thíos, nó leathnaigh próifíl an chliaint seo."
+    }
+  },
   "landing": {
     "header": {
       "login": "Sínigh isteach",
@@ -374,12 +404,30 @@
       "deadline30": "Chéad 30 lá eile",
       "deadline90": "Chéad 90 lá eile",
       "clear": "Glan gach rud"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Meaitseáil láidir",
+        "possible": "Meaitseáil fhéideartha",
+        "longShot": "Seans beag"
+      },
+      "reasonSector": "Ag teacht le d'earnáil",
+      "reasonCountry": "I do thír sprioctha",
+      "reasonValueInBand": "I do raon luacha",
+      "reasonValueBelow": "Faoi bhun do raoin luacha",
+      "reasonValueAbove": "Os cionn do raoin luacha",
+      "reasonRegion": "I do réigiún",
+      "reasonProcedure": "Ag teacht le do chineál nóis imeachta"
     }
   },
   "today": {
     "recommended": {
-      "title": "Molta duit",
-      "seeAll": "Gach rud in Iniúchadh →"
+      "seeAll": "Gach rud in Iniúchadh →",
+      "clientCount_one": "{{count}} thairiscint oiriúnach réidh do {{client}}",
+      "clientCount_two": "{{count}} thairiscint oiriúnach réidh do {{client}}",
+      "clientCount_few": "{{count}} thairiscint oiriúnach réidh do {{client}}",
+      "clientCount_many": "{{count}} dtairiscint oiriúnach réidh do {{client}}",
+      "clientCount_other": "{{count}} tairiscint oiriúnach réidh do {{client}}"
     },
     "greeting": {
       "morning": "Maidin mhaith.",
@@ -412,6 +460,7 @@
     },
     "nav": {
       "general": "Ginearálta",
+      "profile": "Próifíl an chliaint",
       "overview": "Forbhreathnú",
       "members": "Baill",
       "roles": "Róil",
@@ -523,6 +572,16 @@
       "settings": "Socruithe workspace",
       "label": "Spásanna oibre",
       "manage": "Gach spás oibre"
+    },
+    "firstRun": {
+      "title": "Cuir próifíl tairisceana cliaint leis",
+      "subtitle": "Inis dúinn cad air a dtairgeann an cliant seo de ghnáth ionas go mbeidh na moltaí cruinn ón tús. Is féidir leat é seo a chríochnú níos déanaí sna Socruithe.",
+      "skip": "Ná bac leis faoi láthair"
+    },
+    "clientProfile": {
+      "title": "Próifíl tairisceana an chliaint",
+      "subtitle": "An rud a dtairgeann an cliant seo air — earnálacha, tíortha, agus raon luacha — a stiúrann gach moladh.",
+      "saved": "Próifíl sábháilte."
     }
   },
   "workbench": {

@@ -104,6 +104,36 @@
       "loading": "Un moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sectoare",
+      "countries": "Țări",
+      "valueMin": "Valoare minimă",
+      "valueMax": "Valoare maximă",
+      "notes": "Note",
+      "notesPlaceholder": "Pentru ce licitează de obicei acest client?",
+      "save": "Salvează profilul",
+      "invalidBand": "Valoarea minimă nu trebuie să depășească valoarea maximă.",
+      "error": "Profilul nu a putut fi salvat — încercați din nou.",
+      "procedureTypesLabel": "Tipuri de procedură",
+      "procedureTypes": {
+        "open": "Procedură deschisă",
+        "restricted": "Procedură restrânsă",
+        "negotiated": "Procedură negociată",
+        "competitive_dialogue": "Dialog competitiv",
+        "innovation_partnership": "Parteneriat pentru inovare",
+        "other": "Altul"
+      },
+      "regions": "Regiuni (NUTS)",
+      "regionsPlaceholder": "ex. ITC, DE3",
+      "regionsHint": "Prefixe NUTS separate prin virgulă. Lăsați necompletat pentru a include orice regiune."
+    },
+    "shortlist": {
+      "title": "Cea mai bună potrivire pentru acest client",
+      "emptyTitle": "Încă nu există licitații potrivite",
+      "emptyDescription": "Încercați o căutare manuală mai jos sau extindeți profilul acestui client."
+    }
+  },
   "landing": {
     "header": {
       "login": "Autentificare",
@@ -366,12 +396,28 @@
       "deadline30": "Următoarele 30 de zile",
       "deadline90": "Următoarele 90 de zile",
       "clear": "Șterge tot"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Potrivire puternică",
+        "possible": "Potrivire posibilă",
+        "longShot": "Șansă mică"
+      },
+      "reasonSector": "Se potrivește cu sectorul dumneavoastră",
+      "reasonCountry": "În țara dumneavoastră țintă",
+      "reasonValueInBand": "În intervalul dumneavoastră de valoare",
+      "reasonValueBelow": "Sub intervalul dumneavoastră de valoare",
+      "reasonValueAbove": "Peste intervalul dumneavoastră de valoare",
+      "reasonRegion": "În regiunea dumneavoastră",
+      "reasonProcedure": "Se potrivește cu tipul dumneavoastră de procedură"
     }
   },
   "today": {
     "recommended": {
-      "title": "Recomandate pentru dumneavoastră",
-      "seeAll": "Toate în secțiunea Explorează →"
+      "seeAll": "Toate în secțiunea Explorează →",
+      "clientCount_one": "{{count}} licitație potrivită pregătită pentru {{client}}",
+      "clientCount_few": "{{count}} licitații potrivite pregătite pentru {{client}}",
+      "clientCount_other": "{{count}} de licitații potrivite pregătite pentru {{client}}"
     },
     "greeting": {
       "morning": "Bună dimineața.",
@@ -404,6 +450,7 @@
     },
     "nav": {
       "general": "General",
+      "profile": "Profil client",
       "overview": "Prezentare generală",
       "members": "Membri",
       "roles": "Roluri",
@@ -515,6 +562,16 @@
       "settings": "Setări workspace",
       "label": "Spații de lucru",
       "manage": "Toate spațiile de lucru"
+    },
+    "firstRun": {
+      "title": "Adăugați un profil de licitație pentru client",
+      "subtitle": "Spuneți-ne pentru ce licitează acest client, astfel încât recomandările să fie precise de la început. Puteți finaliza mai târziu din Setări.",
+      "skip": "Omite pentru moment"
+    },
+    "clientProfile": {
+      "title": "Profil de licitație al clientului",
+      "subtitle": "Ceea ce licitează acest client — sectoare, țări și interval de valoare — ghidează fiecare recomandare.",
+      "saved": "Profil salvat."
     }
   },
   "workbench": {

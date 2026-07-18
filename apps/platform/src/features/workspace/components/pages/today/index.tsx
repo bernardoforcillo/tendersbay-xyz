@@ -3,8 +3,9 @@ import { Button, Card, EmptyState } from '@tendersbay/components/core';
 import { MessageSquare, Sparkles } from 'lucide-react';
 import { Button as RACButton } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
-import { PageHeader, SearchDock, TenderResultCard } from '~/features/account/components/organisms';
+import { PageHeader, SearchDock } from '~/features/account/components/organisms';
 import { useWorkspaceChats } from '~/features/account/hooks/use-workspace-chats';
+import { FirstRunProfile } from '~/features/workspace/components/organisms/first-run-profile';
 import { useWorkspaceContext } from '~/features/workspace/context';
 import { useAuthStore } from '~/store/auth';
 import { useChatStore } from '~/store/chat';
@@ -21,7 +22,7 @@ const SEE_ALL_LINK =
   'data-[hovered]:text-brand-800 data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600';
 
 export function WorkspaceTodayPage() {
-  const { workspace } = useWorkspaceContext();
+  const { workspace, workspaceId } = useWorkspaceContext();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
@@ -29,7 +30,7 @@ export function WorkspaceTodayPage() {
   const setMessages = useChatStore((s) => s.setMessages);
   const setPendingChoice = useChatStore((s) => s.setPendingChoice);
   const { data: chats } = useWorkspaceChats(workspace.id);
-  const { tenders } = useRecommendedTenders();
+  const { count } = useRecommendedTenders(workspace.id);
 
   const name = user?.displayName?.split(' ')[0];
   const period = greetingKey(new Date().getHours());
@@ -56,67 +57,78 @@ export function WorkspaceTodayPage() {
   return (
     <div className="flex min-h-full flex-col">
       <PageHeader />
-      <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 pt-8 pb-4">
-        <div>
-          <h1 className="font-display text-3xl text-ink-900 sm:text-4xl">{greeting}</h1>
-          <p className="mt-1 text-sm text-ink-500 first-letter:uppercase">{dateLine}</p>
-        </div>
+      <FirstRunProfile workspaceId={workspaceId}>
+        <div className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-6 px-4 pt-8 pb-4">
+          <div>
+            <h1 className="font-display text-3xl text-ink-900 sm:text-4xl">{greeting}</h1>
+            <p className="mt-1 text-sm text-ink-500 first-letter:uppercase">{dateLine}</p>
+          </div>
 
-        {recent.length > 0 && (
-          <Card padding="none" className="p-2">
-            <p className="px-3 pt-2 pb-1 font-mono text-[10px] font-semibold uppercase tracking-wide text-ink-400">
-              {t('today.resume.title', 'Pick up where you left off')}
-            </p>
-            <ul>
-              {recent.map((chat) => (
-                <li key={chat.id}>
-                  <RACButton onPress={() => resume(chat.id)} className={RESUME_ROW}>
-                    <MessageSquare size={15} aria-hidden="true" className="shrink-0 text-ink-400" />
-                    <span className="truncate">
-                      {chat.title || t('today.resume.untitled', 'Untitled conversation')}
-                    </span>
-                  </RACButton>
-                </li>
-              ))}
-            </ul>
-          </Card>
-        )}
+          {recent.length > 0 && (
+            <Card padding="none" className="p-2">
+              <p className="px-3 pt-2 pb-1 font-mono text-[10px] font-semibold uppercase tracking-wide text-ink-400">
+                {t('today.resume.title', 'Pick up where you left off')}
+              </p>
+              <ul>
+                {recent.map((chat) => (
+                  <li key={chat.id}>
+                    <RACButton onPress={() => resume(chat.id)} className={RESUME_ROW}>
+                      <MessageSquare
+                        size={15}
+                        aria-hidden="true"
+                        className="shrink-0 text-ink-400"
+                      />
+                      <span className="truncate">
+                        {chat.title || t('today.resume.untitled', 'Untitled conversation')}
+                      </span>
+                    </RACButton>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          )}
 
-        {tenders.length > 0 ? (
-          <section className="space-y-3">
-            <div className="flex items-baseline justify-between gap-3">
-              <h2 className="font-display text-xl text-ink-900">
-                {t('today.recommended.title', 'Recommended for you')}
-              </h2>
-              <RACButton onPress={() => void navigate({ to: '/explore' })} className={SEE_ALL_LINK}>
-                {t('today.recommended.seeAll', 'All in Explore →')}
+          {count > 0 ? (
+            <section>
+              <RACButton
+                onPress={() => void navigate({ to: '/explore' })}
+                className="flex w-full items-center justify-between gap-3 rounded-xl border border-cream-200 bg-white p-4 text-left outline-none transition-colors duration-150 data-[hovered]:border-cream-300 data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600"
+              >
+                <span className="text-sm text-ink-700">
+                  {t('today.recommended.clientCount', {
+                    count,
+                    client: workspace.name,
+                    defaultValue:
+                      count === 1
+                        ? '{{count}} best-fit tender ready for {{client}}'
+                        : '{{count}} best-fit tenders ready for {{client}}',
+                  })}
+                </span>
+                <span className={SEE_ALL_LINK}>
+                  {t('today.recommended.seeAll', 'All in Explore →')}
+                </span>
               </RACButton>
-            </div>
-            <div className="space-y-3">
-              {tenders.map((tender) => (
-                <TenderResultCard key={tender.id} tender={tender} />
-              ))}
-            </div>
-          </section>
-        ) : (
-          <EmptyState
-            icon={<Sparkles size={28} />}
-            title={t('today.explore.title', 'Find your next tender')}
-            description={t(
-              'today.explore.description',
-              'Ask the agent about markets, requirements, or a specific call — personalised recommendations will appear here as your search profiles take shape.',
-            )}
-            action={
-              <Button variant="ghost" onPress={() => void navigate({ to: '/explore' })}>
-                {t('today.explore.action', 'Open Explore')}
-              </Button>
-            }
-          />
-        )}
-      </div>
-      <div className="mt-auto flex justify-center px-4 pb-6 pt-4">
-        <SearchDock onPress={() => void navigate({ to: '/explore' })} />
-      </div>
+            </section>
+          ) : (
+            <EmptyState
+              icon={<Sparkles size={28} />}
+              title={t('today.explore.title', 'Find your next tender')}
+              description={t(
+                'today.explore.description',
+                'Ask the agent about markets, requirements, or a specific call — personalised recommendations will appear here as your search profiles take shape.',
+              )}
+              action={
+                <Button variant="ghost" onPress={() => void navigate({ to: '/explore' })}>
+                  {t('today.explore.action', 'Open Explore')}
+                </Button>
+              }
+            />
+          )}
+        </div>
+        <div className="mt-auto flex justify-center px-4 pb-6 pt-4">
+          <SearchDock onPress={() => void navigate({ to: '/explore' })} />
+        </div>
+      </FirstRunProfile>
     </div>
   );
 }
