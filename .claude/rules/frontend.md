@@ -88,6 +88,42 @@ src/
   a closed list**: add a new top-level infra dir only for plumbing with no UI; if it renders
   anything, it's a feature.
 
+## Vertical slices, named by domain
+
+`features/<feature>/` is a vertical-slice architecture: each feature is self-contained
+(its own atomic-tier components, hooks, tests) rather than the app being split by technical
+layer. Feature names are business-domain names — `tenders`, `workspace`, `workbench`, `auth`,
+`account`, `consent`, `landing` — never technical ones (`controllers`, `handlers`, `utils`).
+The folder structure should announce what the product does, not its tech stack. Don't force
+extra internal layering (a separate "view"/"logic"/"data" sub-split) into a feature just for
+consistency — the atomic-design tiers plus `hooks/` already provide enough separation; add
+more only once a feature's own logic is genuinely complex enough to need it.
+
+## State placement: local vs. store, persisted vs. ephemeral
+
+Two independent questions for any piece of client state:
+
+- **Shared or local?** If only one component (or its direct children) needs it, keep it in
+  `useState`/`useReducer` right there — don't promote it just because "it might be needed
+  elsewhere" (YAGNI applies to state, not just code). Promote to a Zustand store under
+  `store/<domain>/` once more than one component actually needs to read or write it — e.g. a
+  sidebar drawer's open state is shared between its trigger and the drawer itself, so it
+  lives in `store/sidebar`, even though opening/closing a drawer is purely presentational and
+  touches no real app data.
+- **Persisted or ephemeral?** Within a store, decide per field whether it should survive a
+  reload, and mark only those fields via `persist` + `partialize`. `store/sidebar` is the
+  precedent: `collapsed` is a real user preference and persists; `drawerOpen`/`paletteOpen`
+  are transient UI flags, live in the same store, but are excluded from `partialize`. As a
+  rule of thumb, state that represents real app data or an intentional user preference
+  usually should persist; a flag that only means something for the current session usually
+  shouldn't.
+
+Store slices are split by domain (`store/auth`, `store/chat`, `store/recent-workbenches`,
+`store/sidebar`, `store/workspace`) the same way `features/` is — one store per concern, not
+one giant global store. A slice that starts absorbing unrelated concerns (auth state *and* UI
+toggles *and* a data cache all in one file) is a sign to split it, the same way an
+overloaded feature gets split.
+
 ## Generating components — `pnpm gen`
 
 Scaffold a component with the Turborepo generator instead of hand-creating folders:
