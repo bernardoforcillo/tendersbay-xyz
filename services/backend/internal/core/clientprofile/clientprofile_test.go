@@ -67,12 +67,14 @@ func TestService_Update_RoundTripsThroughGet(t *testing.T) {
 
 	min, max := int64(100_000), int64(500_000)
 	in := clientprofile.Profile{
-		WorkspaceID: "ws-1",
-		Sectors:     []string{"45", "72"},
-		Countries:   []string{"ITA", "DEU"},
-		ValueMin:    &min,
-		ValueMax:    &max,
-		Notes:       "Renovation and IT modernisation work",
+		WorkspaceID:    "ws-1",
+		Sectors:        []string{"45", "72"},
+		Countries:      []string{"IT", "DE"},
+		Regions:        []string{"ITC"},
+		ProcedureTypes: []string{"open"},
+		ValueMin:       &min,
+		ValueMax:       &max,
+		Notes:          "Renovation and IT modernisation work",
 	}
 	if _, err := svc.Update(context.Background(), "user-1", in); err != nil {
 		t.Fatalf("Update: %v", err)
@@ -82,8 +84,14 @@ func TestService_Update_RoundTripsThroughGet(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Get after Update: %v", err)
 	}
-	if len(got.Sectors) != 2 || got.Sectors[0] != "45" || got.Countries[1] != "DEU" {
+	if len(got.Sectors) != 2 || got.Sectors[0] != "45" || got.Countries[1] != "DE" {
 		t.Fatalf("Get after Update = %+v", got)
+	}
+	if len(got.Regions) != 1 || got.Regions[0] != "ITC" {
+		t.Fatalf("Get after Update Regions = %+v", got.Regions)
+	}
+	if len(got.ProcedureTypes) != 1 || got.ProcedureTypes[0] != "open" {
+		t.Fatalf("Get after Update ProcedureTypes = %+v", got.ProcedureTypes)
 	}
 	if got.ValueMin == nil || *got.ValueMin != min || got.ValueMax == nil || *got.ValueMax != max {
 		t.Fatalf("value band = %+v", got)
@@ -118,7 +126,12 @@ func TestValidate_TableDriven(t *testing.T) {
 		{"valid empty profile", clientprofile.Profile{WorkspaceID: "ws-1"}, nil},
 		{
 			"valid full profile",
-			clientprofile.Profile{WorkspaceID: "ws-1", Sectors: []string{"45", "7211"}, Countries: []string{"ITA"}, Notes: "ok"},
+			clientprofile.Profile{WorkspaceID: "ws-1", Sectors: []string{"45", "7211"}, Countries: []string{"IT"}, Notes: "ok"},
+			nil,
+		},
+		{
+			"valid regions and procedure types",
+			clientprofile.Profile{WorkspaceID: "ws-1", Regions: []string{"ITC4"}, ProcedureTypes: []string{"open", "restricted"}},
 			nil,
 		},
 		{
@@ -132,14 +145,24 @@ func TestValidate_TableDriven(t *testing.T) {
 			clientprofile.ErrInvalidSector,
 		},
 		{
-			"country not alpha-3",
-			clientprofile.Profile{WorkspaceID: "ws-1", Countries: []string{"IT"}},
+			"country alpha-3 now rejected",
+			clientprofile.Profile{WorkspaceID: "ws-1", Countries: []string{"ITA"}},
 			clientprofile.ErrInvalidCountry,
 		},
 		{
 			"country lowercase rejected",
-			clientprofile.Profile{WorkspaceID: "ws-1", Countries: []string{"ita"}},
+			clientprofile.Profile{WorkspaceID: "ws-1", Countries: []string{"it"}},
 			clientprofile.ErrInvalidCountry,
+		},
+		{
+			"invalid region string",
+			clientprofile.Profile{WorkspaceID: "ws-1", Regions: []string{"toolongxx"}},
+			clientprofile.ErrInvalidRegion,
+		},
+		{
+			"unknown procedure type",
+			clientprofile.Profile{WorkspaceID: "ws-1", ProcedureTypes: []string{"foo"}},
+			clientprofile.ErrInvalidProcedureType,
 		},
 		{
 			"inverted value band",
