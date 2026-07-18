@@ -66,6 +66,16 @@ Kubernetes deployment lives in `infrastructure/kubernetes/`, reconciled by Flux
 hardening, and image-automation conventions are documented in
 @.claude/rules/infrastructure.md.
 
+Scaling and service-boundary decisions (when to split a service, add a gateway, a
+broker, a cache, a CDN, or rate limiting) follow a trigger-based checklist documented
+in @.claude/rules/system-design.md; dispatch the `software-architect` agent to apply
+it to a design review or to scaffold the result.
+
+Internal code organization (which layer — UI, transport, domain, capabilities/vendors,
+supporting foundations — may depend on which other layer, mapped across `apps/platform`
+and `services/backend`) is documented in @.claude/rules/code-organization.md; the same
+`software-architect` agent reviews changes against it.
+
 ## Memory wiki
 
 Project knowledge accumulates in `.claude/memory/` — a committed markdown wiki

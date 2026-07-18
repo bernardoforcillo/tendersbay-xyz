@@ -23,6 +23,10 @@ locales, default `en-ie`, GDPR-first.
 - `.claude/memory/index.md` — the memory-wiki catalog; pull whatever page the current
   question needs (EU coverage, component kit, SEO, etc.).
 - `docs/gtm/` — existing GTM truth (keyword maps, launch docs). Extend, don't contradict.
+- `.claude/rules/system-design.md` and `.claude/rules/code-organization.md` — the scaling and
+  layering/dependency-boundary conventions this codebase already has. This is the existing
+  foundation: a Prototype-phase feasibility assessment builds on top of it (going 80->100),
+  it doesn't propose a new stack or a boundary violation as if starting from scratch.
 
 If a briefing file is missing from your checkout (a fresh worktree only carries committed
 files), note the gap in your report and continue — never block.
@@ -52,14 +56,25 @@ no-commit rule when you dispatch.
     features/routes/flows exist today and the adjacent code.
   - **PostHog MCP** (load via ToolSearch) — real behaviour: funnels, drop-off, event
     volumes, retention for the affected surface. Cite insight/query ids.
-  - The memory wiki + `docs/gtm/` for personas and prior positioning.
+  - The memory wiki + `docs/gtm/` for personas and prior positioning. tendersbay's three
+    personas (run the bids · own the number · multiply across clients) are already
+    defined — don't regenerate them. If a task genuinely needs a *new* segment or a
+    refinement within one, the **tension-model** technique is a useful alternate lens:
+    gather the raw needs/quotes you have, place them against 2-3 opposing-need axes
+    (e.g. "wants full control" vs. "wants to delegate entirely"), and see which
+    sub-groups cluster — more structured than eyeballing quotes for patterns.
 - **Ideate** — dispatch the three GTM-desk lenses **in parallel**, each report-only:
   - `gtm-engineer` — GTM / positioning / how it's messaged and found.
   - `growth-marketer` — acquisition / network / referral implications.
   - `neuro-ux-designer` — in-product flow, activation, retention mechanics.
 - **Prototype** →
   - `feature-dev:code-architect` — feasibility + a high-level technical shape and the
-    MVP-vs-later cut (NOT the detailed design — that's brainstorming's job downstream).
+    MVP-vs-later cut (NOT the detailed design — that's brainstorming's job downstream). Brief
+    it with `system-design.md`/`code-organization.md` so the shape it proposes respects the
+    existing dependency direction and doesn't reach for a new service/broker/vendor without
+    a proven trigger. For any feature spanning more than one layer (UI + backend), the
+    MVP-vs-later cut is phased in **build order** — data model/contracts, then backend
+    wiring, then UI/polish — never UI before the backend layer it depends on.
   - `feature-dev:code-explorer` — only if a claim needs deep tracing of existing code.
 
 ## Evidence discipline (non-negotiable)
@@ -70,6 +85,11 @@ no-commit rule when you dispatch.
   logos. If data doesn't exist, say "no data yet" and flag it — never fabricate.
 - **GDPR-first**: any event you propose carries no PII or raw free text (lengths,
   categories, hashes only). Never propose gating `capture()` — consent is upstream.
+- **Note when user feedback was collected, not just what was said.** Feedback taken
+  immediately after an experience (a demo, a call) runs systematically warmer and more
+  emotional than feedback from the same person a day later — it's a different
+  measurement, not a more or less valid one. If Empathize evidence mixes both, say so
+  rather than treating one pooled sentiment as ground truth.
 
 ## Tools & research
 

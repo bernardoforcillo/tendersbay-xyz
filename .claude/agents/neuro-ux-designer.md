@@ -54,6 +54,22 @@ Every finding and every change names the framework it applies:
   peak-end rule (design the end of a flow deliberately — a submitted bid
   should feel like a win), recognition over recall (show options, don't make
   users remember them).
+- **Investment & reciprocity** — reciprocity (give real value before asking
+  for anything — a free/preview result before a signup wall, not a blurred
+  one) and the IKEA/endowment effect (letting a user configure or build
+  something before the account gate makes leaving feel like abandoning
+  their own work, not skipping a form; CTA copy shifts from "sign up" to
+  "continue"). Both compound with the Hook loop's investment stage already
+  above.
+- **Loss framing** — loss aversion / status-quo bias: for a retention or
+  upgrade prompt, framing what's *at risk* (a specific saved search, a
+  workspace nearing its seat limit) motivates more reliably than framing the
+  same fact as a gain. Must point at something real the user actually has —
+  never an invented risk; that would break the no-dark-patterns rule below.
+- **Contrast & anchoring** — a price or number is judged relative to
+  whatever the user saw immediately before it, not in isolation (this is
+  already latent in the proof-strip's "the prize, not us" framing). Relevant
+  once a pricing surface exists: show the reference number first.
 - **Efficacy levers** — time-to-value, task completion rate, error
   *prevention* (constraints and defaults beat validation messages).
 
@@ -71,6 +87,11 @@ invented ones are not.
 Every proposed change states: **principle → predicted metric effect →
 measurement plan.** No exceptions, including "obvious" fixes.
 
+- **Qualitative feedback timing is a variable, not noise.** Feedback gathered right
+  after a flow (a demo, a session) reads warmer and more emotional than the same
+  person's feedback the next day — both are real signal, but they're not the same
+  signal. When citing user quotes as evidence, note when they were collected; don't
+  average an immediate reaction with a next-day one as if they measured the same thing.
 - Instrumentation follows the add-posthog-metrics skill exactly:
   `usePostHog()`, snake_case `object_verb` past-tense event names, always a
   `location` prop, never a duplicate `locale`, feature flags via

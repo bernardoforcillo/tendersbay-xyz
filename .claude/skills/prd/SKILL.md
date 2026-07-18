@@ -48,8 +48,13 @@ growth-marketer, neuro-ux-designer, in parallel, report-only). Present 2–3 can
 approaches with trade-offs and a recommendation.
 
 **5. Prototype — dispatch `product-strategist`** for the feature-dev:code-architect
-feasibility pass. Present the high-level technical shape and an MVP-vs-later scope cut. (No
-detailed design — that is brainstorming's job downstream.)
+feasibility pass, grounded in `.claude/rules/system-design.md` and
+`.claude/rules/code-organization.md` — this repo already has a foundation (conventions,
+layering, scaling triggers); feasibility builds on it, it doesn't propose a new stack or
+boundary violation from scratch. Present the high-level technical shape and an MVP-vs-later
+scope cut. For a feature spanning more than one layer, phase the cut in **build order** —
+data model/contracts, then backend wiring, then UI/polish — never UI before the backend
+layer it depends on. (No detailed design — that is brainstorming's job downstream.)
 
 **6. Test (main loop).** Draft success metrics + a measurement plan following the
 `add-posthog-metrics` skill conventions (snake_case `object_verb` past-tense events, a
@@ -70,7 +75,12 @@ turn it into a technical spec?" On yes, invoke it with the PRD as input.
 3. **How Might We** — the reframing that opens the solution space.
 4. **Goals & non-goals** — what we solve and what we explicitly do not (YAGNI).
 5. **Approaches considered** — 2–3 options from the three lenses, trade-offs, recommendation.
-6. **Scope: MVP → later** — feasibility from code-architect, the incremental cut.
+6. **Scope: MVP → later** — feasibility from code-architect, the incremental cut. For
+   cross-layer features, state the cut in build order (data model/contracts → backend wiring
+   → UI/polish) with explicit in-scope/out-of-scope per phase — this is what the handed-off
+   spec/plan should phase against. If the feature introduces new client state, note whether
+   it's component-local, a shared store slice, or backend-synced data (frontend.md's state
+   placement rule) — this belongs in the UI/polish phase, not assumed upfront.
 7. **Success metrics & measurement** — metrics + the PostHog events/funnels to instrument.
 8. **Risks & open questions.**
 9. **Hand-off** — pointer to the technical spec (filled once brainstorming runs).
@@ -80,6 +90,9 @@ turn it into a technical spec?" On yes, invoke it with the PRD as input.
 - **Router, not shotgun**: dispatch only the specialists a phase needs (Empathize: Explore +
   PostHog; Ideate: the 3 lenses; Prototype: code-architect). Never fire the whole panel
   every time.
+- **Ground feasibility in the existing foundation, not a blank slate**: this repo already has
+  conventions (`.claude/rules/*.md`) — going 80→100 on top of them is the default; proposing
+  new stack/patterns is the exception and needs a stated reason.
 - **Two hard gates only** (problem-lock, PRD-approval); phases flow in between. The user can
   interrupt anytime.
 - **Report-only**: the specialists edit nothing during a PRD run — the PRD is a thinking

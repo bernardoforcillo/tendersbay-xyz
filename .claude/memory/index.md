@@ -13,3 +13,7 @@ Project knowledge maintained by the `capture-learnings` skill. One line per page
 - [Locale namespace insertion](locale-namespace-insertion.md) — add an i18n namespace across the 24 locales: anchor-splice script, biome, <ns>-keys completeness test
 - [React-aria & motion gotchas](react-aria-motion-gotchas.md) — RAC tooltip warmup, TextField isInvalid vs native validation, inert-vs-aria-hidden, jsdom mocks, reduced-motion trick
 - [Tailwind v4 shared-kit CSS](tailwind-v4-shared-kit-css.md) — @source node_modules kit sources; extendTailwindMerge for non-stock scales
+- [Spacing and visual rhythm](spacing-and-visual-rhythm.md) — relationship strength -> proximity, margin on the larger element, optical correction for padding around text
+- [System design principles](system-design-principles.md) — decision framework: stateless servers, load balancing, microservices threshold, gateway, auth, object storage, event broker, caching/CDN, rate limiting
+- [Code organization principles](code-organization-principles.md) — layered dependency-direction framework: ownership over folders, mechanical boundary enforcement, AI-agent amplification effect, naming consistency, supply-chain hygiene
+- [AI coding workflow principles](ai-coding-workflow-principles.md) — build on the existing rules foundation instead of a blank slate, phase cross-layer features in build order, explicit per-phase scope
