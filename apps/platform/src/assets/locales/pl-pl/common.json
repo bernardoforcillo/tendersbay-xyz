@@ -104,6 +104,36 @@
       "loading": "Chwileczkę."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektory",
+      "countries": "Kraje",
+      "valueMin": "Wartość minimalna",
+      "valueMax": "Wartość maksymalna",
+      "notes": "Notatki",
+      "notesPlaceholder": "W czym zwykle startuje ten klient?",
+      "save": "Zapisz profil",
+      "invalidBand": "Wartość minimalna nie może przekraczać wartości maksymalnej.",
+      "error": "Nie udało się zapisać profilu — spróbuj ponownie.",
+      "procedureTypesLabel": "Typy procedur",
+      "procedureTypes": {
+        "open": "Procedura otwarta",
+        "restricted": "Procedura ograniczona",
+        "negotiated": "Procedura negocjacyjna",
+        "competitive_dialogue": "Dialog konkurencyjny",
+        "innovation_partnership": "Partnerstwo innowacyjne",
+        "other": "Inne"
+      },
+      "regions": "Regiony (NUTS)",
+      "regionsPlaceholder": "np. ITC, DE3",
+      "regionsHint": "Prefiksy NUTS oddzielone przecinkami. Zostaw puste, aby uwzględnić dowolny region."
+    },
+    "shortlist": {
+      "title": "Najlepsze dopasowanie dla tego klienta",
+      "emptyTitle": "Brak jeszcze dopasowanych przetargów",
+      "emptyDescription": "Wypróbuj wyszukiwanie ręczne poniżej lub rozszerz profil tego klienta."
+    }
+  },
   "landing": {
     "header": {
       "login": "Zaloguj się",
@@ -372,12 +402,29 @@
       "deadline30": "Najbliższe 30 dni",
       "deadline90": "Najbliższe 90 dni",
       "clear": "Wyczyść wszystko"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Silne dopasowanie",
+        "possible": "Możliwe dopasowanie",
+        "longShot": "Mała szansa"
+      },
+      "reasonSector": "Pasuje do Twojego sektora",
+      "reasonCountry": "W Twoim kraju docelowym",
+      "reasonValueInBand": "W Twoim przedziale wartości",
+      "reasonValueBelow": "Poniżej Twojego przedziału wartości",
+      "reasonValueAbove": "Powyżej Twojego przedziału wartości",
+      "reasonRegion": "W Twoim regionie",
+      "reasonProcedure": "Pasuje do Twojego typu procedury"
     }
   },
   "today": {
     "recommended": {
-      "title": "Polecane dla Ciebie",
-      "seeAll": "Wszystko w sekcji Odkrywaj →"
+      "seeAll": "Wszystko w sekcji Odkrywaj →",
+      "clientCount_one": "{{count}} dopasowany przetarg gotowy dla {{client}}",
+      "clientCount_few": "{{count}} dopasowane przetargi gotowe dla {{client}}",
+      "clientCount_many": "{{count}} dopasowanych przetargów gotowych dla {{client}}",
+      "clientCount_other": "{{count}} dopasowanego przetargu gotowego dla {{client}}"
     },
     "greeting": {
       "morning": "Dzień dobry.",
@@ -410,6 +457,7 @@
     },
     "nav": {
       "general": "Ogólne",
+      "profile": "Profil klienta",
       "overview": "Przegląd",
       "members": "Członkowie",
       "roles": "Role",
@@ -521,6 +569,16 @@
       "settings": "Ustawienia workspace",
       "label": "Przestrzenie robocze",
       "manage": "Wszystkie przestrzenie robocze"
+    },
+    "firstRun": {
+      "title": "Dodaj profil ofertowy klienta",
+      "subtitle": "Powiedz nam, w czym startuje ten klient, aby rekomendacje od razu były trafne. Możesz dokończyć to później w Ustawieniach.",
+      "skip": "Pomiń na razie"
+    },
+    "clientProfile": {
+      "title": "Profil ofertowy klienta",
+      "subtitle": "To, w czym startuje ten klient — sektory, kraje i przedział wartości — kształtuje każdą rekomendację.",
+      "saved": "Profil zapisany."
     }
   },
   "workbench": {

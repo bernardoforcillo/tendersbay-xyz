@@ -104,6 +104,36 @@
       "loading": "Just a moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sectors",
+      "countries": "Countries",
+      "valueMin": "Minimum value",
+      "valueMax": "Maximum value",
+      "notes": "Notes",
+      "notesPlaceholder": "What does this client typically bid on?",
+      "save": "Save profile",
+      "invalidBand": "Minimum value must not exceed maximum value.",
+      "error": "Could not save the profile — try again.",
+      "procedureTypesLabel": "Procedure types",
+      "procedureTypes": {
+        "open": "Open procedure",
+        "restricted": "Restricted procedure",
+        "negotiated": "Negotiated procedure",
+        "competitive_dialogue": "Competitive dialogue",
+        "innovation_partnership": "Innovation partnership",
+        "other": "Other"
+      },
+      "regions": "Regions (NUTS)",
+      "regionsPlaceholder": "e.g. ITC, DE3",
+      "regionsHint": "Comma-separated NUTS prefixes. Leave blank to match any region."
+    },
+    "shortlist": {
+      "title": "Best fit for this client",
+      "emptyTitle": "No best-fit tenders yet",
+      "emptyDescription": "Try a manual search below, or widen this client’s profile."
+    }
+  },
   "landing": {
     "header": {
       "login": "Log in",
@@ -364,12 +394,27 @@
       "deadline30": "Next 30 days",
       "deadline90": "Next 90 days",
       "clear": "Clear all"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Strong fit",
+        "possible": "Possible fit",
+        "longShot": "Long shot"
+      },
+      "reasonSector": "Matches your sector",
+      "reasonCountry": "In your target country",
+      "reasonValueInBand": "In your value band",
+      "reasonValueBelow": "Below your value band",
+      "reasonValueAbove": "Above your value band",
+      "reasonRegion": "In your region",
+      "reasonProcedure": "Matches your procedure type"
     }
   },
   "today": {
     "recommended": {
-      "title": "Recommended for you",
-      "seeAll": "All in Explore →"
+      "seeAll": "All in Explore →",
+      "clientCount_one": "{{count}} best-fit tender ready for {{client}}",
+      "clientCount_other": "{{count}} best-fit tenders ready for {{client}}"
     },
     "greeting": {
       "morning": "Good morning.",
@@ -402,6 +447,7 @@
     },
     "nav": {
       "general": "General",
+      "profile": "Client profile",
       "overview": "Overview",
       "members": "Members",
       "roles": "Roles",
@@ -513,6 +559,16 @@
       "settings": "Workspace settings",
       "label": "Workspaces",
       "manage": "All workspaces"
+    },
+    "firstRun": {
+      "title": "Add a client bid profile",
+      "subtitle": "Tell us what this client bids on so recommendations start sharp. You can finish this later from Settings.",
+      "skip": "Skip for now"
+    },
+    "clientProfile": {
+      "title": "Client bid profile",
+      "subtitle": "What this client bids on — sectors, countries, and value range — drives every recommendation.",
+      "saved": "Profile saved."
     }
   },
   "workbench": {

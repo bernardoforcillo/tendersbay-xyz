@@ -49,6 +49,16 @@ const REQUIRED_KEYS = [
   'tenders.filters.deadline30',
   'tenders.filters.deadline90',
   'tenders.filters.clear',
+  'tenders.fit.tier.strong',
+  'tenders.fit.tier.possible',
+  'tenders.fit.tier.longShot',
+  'tenders.fit.reasonSector',
+  'tenders.fit.reasonCountry',
+  'tenders.fit.reasonValueInBand',
+  'tenders.fit.reasonValueBelow',
+  'tenders.fit.reasonValueAbove',
+  'tenders.fit.reasonRegion',
+  'tenders.fit.reasonProcedure',
 ] as const;
 
 // Plural key stems: every locale must define at least `_one` and `_other`;

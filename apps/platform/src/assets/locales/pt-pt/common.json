@@ -104,6 +104,36 @@
       "loading": "Um momento."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Setores",
+      "countries": "Países",
+      "valueMin": "Valor mínimo",
+      "valueMax": "Valor máximo",
+      "notes": "Notas",
+      "notesPlaceholder": "Em que é que este cliente normalmente concorre?",
+      "save": "Guardar perfil",
+      "invalidBand": "O valor mínimo não pode exceder o valor máximo.",
+      "error": "Não foi possível guardar o perfil — tente novamente.",
+      "procedureTypesLabel": "Tipos de procedimento",
+      "procedureTypes": {
+        "open": "Procedimento aberto",
+        "restricted": "Procedimento restrito",
+        "negotiated": "Procedimento por negociação",
+        "competitive_dialogue": "Diálogo concorrencial",
+        "innovation_partnership": "Parceria para a inovação",
+        "other": "Outro"
+      },
+      "regions": "Regiões (NUTS)",
+      "regionsPlaceholder": "ex.: ITC, DE3",
+      "regionsHint": "Prefixos NUTS separados por vírgulas. Deixe em branco para incluir qualquer região."
+    },
+    "shortlist": {
+      "title": "Melhor opção para este cliente",
+      "emptyTitle": "Ainda não há concursos adequados",
+      "emptyDescription": "Experimente uma pesquisa manual abaixo, ou alargue o perfil deste cliente."
+    }
+  },
   "landing": {
     "header": {
       "login": "Iniciar sessão",
@@ -364,12 +394,27 @@
       "deadline30": "Próximos 30 dias",
       "deadline90": "Próximos 90 dias",
       "clear": "Limpar tudo"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Correspondência forte",
+        "possible": "Correspondência possível",
+        "longShot": "Pouco provável"
+      },
+      "reasonSector": "Corresponde ao seu setor",
+      "reasonCountry": "No seu país-alvo",
+      "reasonValueInBand": "Dentro do seu intervalo de valor",
+      "reasonValueBelow": "Abaixo do seu intervalo de valor",
+      "reasonValueAbove": "Acima do seu intervalo de valor",
+      "reasonRegion": "Na sua região",
+      "reasonProcedure": "Corresponde ao seu tipo de procedimento"
     }
   },
   "today": {
     "recommended": {
-      "title": "Recomendado para si",
-      "seeAll": "Tudo em Explorar →"
+      "seeAll": "Tudo em Explorar →",
+      "clientCount_one": "{{count}} concurso adequado pronto para {{client}}",
+      "clientCount_other": "{{count}} concursos adequados prontos para {{client}}"
     },
     "greeting": {
       "morning": "Bom dia.",
@@ -402,6 +447,7 @@
     },
     "nav": {
       "general": "Geral",
+      "profile": "Perfil do cliente",
       "overview": "Visão geral",
       "members": "Membros",
       "roles": "Funções",
@@ -513,6 +559,16 @@
       "settings": "Definições do workspace",
       "label": "Espaços de trabalho",
       "manage": "Todos os espaços de trabalho"
+    },
+    "firstRun": {
+      "title": "Adicionar um perfil de concurso do cliente",
+      "subtitle": "Diga-nos a que concorre este cliente para que as recomendações comecem certeiras. Pode terminar mais tarde nas Definições.",
+      "skip": "Ignorar por agora"
+    },
+    "clientProfile": {
+      "title": "Perfil de concurso do cliente",
+      "subtitle": "Aquilo a que este cliente concorre — setores, países e intervalo de valor — orienta cada recomendação.",
+      "saved": "Perfil guardado."
     }
   },
   "workbench": {

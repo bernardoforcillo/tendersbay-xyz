@@ -104,6 +104,36 @@
       "loading": "Trenutak."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektori",
+      "countries": "Države",
+      "valueMin": "Minimalna vrijednost",
+      "valueMax": "Maksimalna vrijednost",
+      "notes": "Bilješke",
+      "notesPlaceholder": "Za što se ovaj klijent obično natječe?",
+      "save": "Spremi profil",
+      "invalidBand": "Minimalna vrijednost ne smije premašiti maksimalnu vrijednost.",
+      "error": "Profil nije moguće spremiti — pokušajte ponovno.",
+      "procedureTypesLabel": "Vrste postupka",
+      "procedureTypes": {
+        "open": "Otvoreni postupak",
+        "restricted": "Ograničeni postupak",
+        "negotiated": "Pregovarački postupak",
+        "competitive_dialogue": "Natjecateljski dijalog",
+        "innovation_partnership": "Partnerstvo za inovacije",
+        "other": "Ostalo"
+      },
+      "regions": "Regije (NUTS)",
+      "regionsPlaceholder": "npr. ITC, DE3",
+      "regionsHint": "NUTS prefiksi odvojeni zarezom. Ostavite prazno za uključivanje bilo koje regije."
+    },
+    "shortlist": {
+      "title": "Najbolje podudaranje za ovog klijenta",
+      "emptyTitle": "Još nema odgovarajućih natječaja",
+      "emptyDescription": "Isprobajte ručno pretraživanje ispod, ili proširite profil ovog klijenta."
+    }
+  },
   "landing": {
     "header": {
       "login": "Prijava",
@@ -370,12 +400,28 @@
       "deadline30": "Sljedećih 30 dana",
       "deadline90": "Sljedećih 90 dana",
       "clear": "Očisti sve"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Snažno podudaranje",
+        "possible": "Moguće podudaranje",
+        "longShot": "Mala vjerojatnost"
+      },
+      "reasonSector": "Odgovara vašem sektoru",
+      "reasonCountry": "U vašoj ciljnoj državi",
+      "reasonValueInBand": "U vašem rasponu vrijednosti",
+      "reasonValueBelow": "Ispod vašeg raspona vrijednosti",
+      "reasonValueAbove": "Iznad vašeg raspona vrijednosti",
+      "reasonRegion": "U vašoj regiji",
+      "reasonProcedure": "Odgovara vašoj vrsti postupka"
     }
   },
   "today": {
     "recommended": {
-      "title": "Preporučeno za vas",
-      "seeAll": "Sve u odjeljku Istraži →"
+      "seeAll": "Sve u odjeljku Istraži →",
+      "clientCount_one": "{{count}} odgovarajući natječaj spreman za {{client}}",
+      "clientCount_few": "{{count}} odgovarajuća natječaja spremna za {{client}}",
+      "clientCount_other": "{{count}} odgovarajućih natječaja spremno za {{client}}"
     },
     "greeting": {
       "morning": "Dobro jutro.",
@@ -408,6 +454,7 @@
     },
     "nav": {
       "general": "Općenito",
+      "profile": "Profil klijenta",
       "overview": "Pregled",
       "members": "Članovi",
       "roles": "Uloge",
@@ -519,6 +566,16 @@
       "settings": "Postavke workspace",
       "label": "Radni prostori",
       "manage": "Svi radni prostori"
+    },
+    "firstRun": {
+      "title": "Dodajte profil ponude klijenta",
+      "subtitle": "Recite nam za što se ovaj klijent natječe kako bi preporuke od početka bile precizne. To možete dovršiti kasnije u Postavkama.",
+      "skip": "Preskoči za sada"
+    },
+    "clientProfile": {
+      "title": "Profil ponude klijenta",
+      "subtitle": "Za što se ovaj klijent natječe — sektori, države i raspon vrijednosti — usmjerava svaku preporuku.",
+      "saved": "Profil spremljen."
     }
   },
   "workbench": {
