@@ -15,12 +15,15 @@ import (
 // MemberRepository is the minimal membership-check port TenderHandler
 // needs — satisfied by *postgres.MemberRepo unchanged, the same concrete
 // type WorkspaceHandler and AgentHandler already depend on via their own
-// narrow ports. Added by Task A-annotate (an amendment task) to gate
-// SearchTenders' per-client fit annotation on workspace membership when a
-// caller passes workspace_id. Task 9 (RecommendTendersForClient) — not yet
-// implemented as of this task — reuses this same h.members field rather
-// than adding its own port; that RPC also needs a membership check and
-// this one is already shaped for it.
+// narrow ports. Added by Task A-annotate (an amendment task); SearchTenders
+// itself does not call it — its per-client fit annotation trusts
+// AnnotateForClient's own internal membership check instead (see
+// SearchTenders' doc comment), so this port is currently unused by that RPC.
+// It is kept on TenderHandler for Task 9 (RecommendTendersForClient) — not
+// yet implemented as of this task — which needs its own handler-level
+// membership check (RecommendForClient, unlike AnnotateForClient, does not
+// re-check membership itself) and reuses this same h.members field rather
+// than adding its own port.
 type MemberRepository interface {
 	LoadMembership(ctx context.Context, workspaceID, userID string) (workspace.Membership, error)
 }
@@ -71,10 +74,16 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 
 	// workspace_id == "" is today's anonymous-safe behavior, left
 	// completely unchanged: no membership check, no AnnotateForClient call.
+	//
+	// When workspace_id is set, this trusts AnnotateForClient's own
+	// membership check (it calls ProfileSource.Get, which is
+	// membership-checked by clientprofile.Service.Get → requireMember) and
+	// does not re-check membership itself here — the same trust-the-callee
+	// shape agent.Service.ChatStream uses for its analogous case, to avoid a
+	// redundant LoadMembership round trip on this path. toConnectError maps
+	// the resulting workspace.ErrNotMember to PermissionDenied the same way
+	// regardless of which call site produced it.
 	if req.Msg.WorkspaceId != "" {
-		if _, err := h.members.LoadMembership(ctx, req.Msg.WorkspaceId, userID); err != nil {
-			return nil, toConnectError(err)
-		}
 		recs, err := h.svc.AnnotateForClient(ctx, userID, req.Msg.WorkspaceId, out.Results)
 		if err != nil {
 			return nil, toConnectError(err)

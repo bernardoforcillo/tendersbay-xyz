@@ -198,10 +198,19 @@ func TestSearchTenders_NoProfileYetLeavesFitFieldsUnset(t *testing.T) {
 	}
 }
 
+// TestSearchTenders_NonMemberWorkspaceIdReturnsPermissionDenied proves the
+// non-member rejection now via AnnotateForClient's own internal membership
+// check, not a handler-level one: SearchTenders no longer calls
+// h.members.LoadMembership itself (see its doc comment), so the profile
+// source fake stands in for clientprofile.Service.Get → requireMember by
+// returning workspace.ErrNotMember, exactly what that call chain produces
+// in production for a non-member. h.members is still passed (deny-all,
+// unused by this RPC) only because the handler's constructor requires it —
+// Task 9 will exercise it directly.
 func TestSearchTenders_NonMemberWorkspaceIdReturnsPermissionDenied(t *testing.T) {
 	repo := &fakeRepo{results: []tender.Tender{{ID: "1"}}}
-	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSource{}, testAnnotatedTenderConfig())
-	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo()) // deny-all: no membership registered
+	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSourceWithProfile{err: workspace.ErrNotMember}, testAnnotatedTenderConfig())
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo()) // deny-all, unused by SearchTenders now
 
 	ctx := connectapi.ContextWithUserID(context.Background(), "user-1")
 	req := connect.NewRequest(&tenderv1.SearchTendersRequest{Limit: 5, WorkspaceId: "ws-1"})
