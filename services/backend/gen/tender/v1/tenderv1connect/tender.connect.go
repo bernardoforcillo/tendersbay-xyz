@@ -36,11 +36,19 @@ const (
 	// TenderServiceSearchTendersProcedure is the fully-qualified name of the TenderService's
 	// SearchTenders RPC.
 	TenderServiceSearchTendersProcedure = "/tender.v1.TenderService/SearchTenders"
+	// TenderServiceRecommendTendersForClientProcedure is the fully-qualified name of the
+	// TenderService's RecommendTendersForClient RPC.
+	TenderServiceRecommendTendersForClientProcedure = "/tender.v1.TenderService/RecommendTendersForClient"
 )
 
 // TenderServiceClient is a client for the tender.v1.TenderService service.
 type TenderServiceClient interface {
 	SearchTenders(context.Context, *connect.Request[v1.SearchTendersRequest]) (*connect.Response[v1.SearchTendersResponse], error)
+	// Deterministic, membership-checked, unmetered per-client best-fit
+	// shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+	// SearchTenders this requires authentication: it is scoped to one client
+	// (workspace) and reads that client's ClientProfile.
+	RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error)
 }
 
 // NewTenderServiceClient constructs a client for the tender.v1.TenderService service. By default,
@@ -60,12 +68,19 @@ func NewTenderServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(tenderServiceMethods.ByName("SearchTenders")),
 			connect.WithClientOptions(opts...),
 		),
+		recommendTendersForClient: connect.NewClient[v1.RecommendTendersForClientRequest, v1.RecommendTendersForClientResponse](
+			httpClient,
+			baseURL+TenderServiceRecommendTendersForClientProcedure,
+			connect.WithSchema(tenderServiceMethods.ByName("RecommendTendersForClient")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // tenderServiceClient implements TenderServiceClient.
 type tenderServiceClient struct {
-	searchTenders *connect.Client[v1.SearchTendersRequest, v1.SearchTendersResponse]
+	searchTenders             *connect.Client[v1.SearchTendersRequest, v1.SearchTendersResponse]
+	recommendTendersForClient *connect.Client[v1.RecommendTendersForClientRequest, v1.RecommendTendersForClientResponse]
 }
 
 // SearchTenders calls tender.v1.TenderService.SearchTenders.
@@ -73,9 +88,19 @@ func (c *tenderServiceClient) SearchTenders(ctx context.Context, req *connect.Re
 	return c.searchTenders.CallUnary(ctx, req)
 }
 
+// RecommendTendersForClient calls tender.v1.TenderService.RecommendTendersForClient.
+func (c *tenderServiceClient) RecommendTendersForClient(ctx context.Context, req *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error) {
+	return c.recommendTendersForClient.CallUnary(ctx, req)
+}
+
 // TenderServiceHandler is an implementation of the tender.v1.TenderService service.
 type TenderServiceHandler interface {
 	SearchTenders(context.Context, *connect.Request[v1.SearchTendersRequest]) (*connect.Response[v1.SearchTendersResponse], error)
+	// Deterministic, membership-checked, unmetered per-client best-fit
+	// shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+	// SearchTenders this requires authentication: it is scoped to one client
+	// (workspace) and reads that client's ClientProfile.
+	RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error)
 }
 
 // NewTenderServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -91,10 +116,18 @@ func NewTenderServiceHandler(svc TenderServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(tenderServiceMethods.ByName("SearchTenders")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenderServiceRecommendTendersForClientHandler := connect.NewUnaryHandler(
+		TenderServiceRecommendTendersForClientProcedure,
+		svc.RecommendTendersForClient,
+		connect.WithSchema(tenderServiceMethods.ByName("RecommendTendersForClient")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/tender.v1.TenderService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenderServiceSearchTendersProcedure:
 			tenderServiceSearchTendersHandler.ServeHTTP(w, r)
+		case TenderServiceRecommendTendersForClientProcedure:
+			tenderServiceRecommendTendersForClientHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -106,4 +139,8 @@ type UnimplementedTenderServiceHandler struct{}
 
 func (UnimplementedTenderServiceHandler) SearchTenders(context.Context, *connect.Request[v1.SearchTendersRequest]) (*connect.Response[v1.SearchTendersResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.SearchTenders is not implemented"))
+}
+
+func (UnimplementedTenderServiceHandler) RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.RecommendTendersForClient is not implemented"))
 }

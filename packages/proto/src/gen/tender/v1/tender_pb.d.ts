@@ -41,6 +41,16 @@ export declare type SearchTendersRequest = Message<"tender.v1.SearchTendersReque
    * @generated from field: int32 offset = 4;
    */
   offset: number;
+
+  /**
+   * paging is bounded by the candidate window (~250 results) —
+   * very deep pages may return empty even with more matches server-side
+   *
+   * optional; empty = today's anonymous-safe behavior
+   *
+   * @generated from field: string workspace_id = 5;
+   */
+  workspaceId: string;
 };
 
 /**
@@ -150,6 +160,8 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
   procedureType: string;
 
   /**
+   * alpha-2, e.g. "IT", "DE"
+   *
    * @generated from field: string country = 6;
    */
   country: string;
@@ -199,6 +211,34 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
    * @generated from field: string source_ref = 14;
    */
   sourceRef: string;
+
+  /**
+   * the notice's document URL, empty if none is ingested
+   *
+   * @generated from field: string source_url = 15;
+   */
+  sourceUrl: string;
+
+  /**
+   * NUTS region code, empty if unset
+   *
+   * @generated from field: string nuts = 16;
+   */
+  nuts: string;
+
+  /**
+   * "strong" | "possible" | "long_shot"; empty unless annotated
+   *
+   * @generated from field: string fit_tier = 17;
+   */
+  fitTier: string;
+
+  /**
+   * nil unless annotated
+   *
+   * @generated from field: tender.v1.ReasonSignals reason = 18;
+   */
+  reason?: ReasonSignals | undefined;
 };
 
 /**
@@ -206,6 +246,134 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
  * Use `create(TenderResultSchema)` to create a new message.
  */
 export declare const TenderResultSchema: GenMessage<TenderResult>;
+
+/**
+ * @generated from message tender.v1.RecommendTendersForClientRequest
+ */
+export declare type RecommendTendersForClientRequest = Message<"tender.v1.RecommendTendersForClientRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * optional, server-defaulted
+   *
+   * @generated from field: int32 limit = 2;
+   */
+  limit: number;
+};
+
+/**
+ * Describes the message tender.v1.RecommendTendersForClientRequest.
+ * Use `create(RecommendTendersForClientRequestSchema)` to create a new message.
+ */
+export declare const RecommendTendersForClientRequestSchema: GenMessage<RecommendTendersForClientRequest>;
+
+/**
+ * ReasonSignals are the localizable FACTS behind a fit tier — never a
+ * prebuilt sentence. The frontend renders the sentence from these booleans/
+ * enums so every locale controls its own phrasing.
+ *
+ * @generated from message tender.v1.ReasonSignals
+ */
+export declare type ReasonSignals = Message<"tender.v1.ReasonSignals"> & {
+  /**
+   * @generated from field: bool sector_match = 1;
+   */
+  sectorMatch: boolean;
+
+  /**
+   * @generated from field: bool country_match = 2;
+   */
+  countryMatch: boolean;
+
+  /**
+   * "in_band" | "below" | "above" | "unknown"
+   *
+   * @generated from field: string value_fit = 3;
+   */
+  valueFit: string;
+
+  /**
+   * meaningful only when has_deadline is true
+   *
+   * @generated from field: int32 deadline_days = 4;
+   */
+  deadlineDays: number;
+
+  /**
+   * @generated from field: bool has_deadline = 5;
+   */
+  hasDeadline: boolean;
+
+  /**
+   * @generated from field: bool region_match = 6;
+   */
+  regionMatch: boolean;
+
+  /**
+   * @generated from field: bool procedure_match = 7;
+   */
+  procedureMatch: boolean;
+};
+
+/**
+ * Describes the message tender.v1.ReasonSignals.
+ * Use `create(ReasonSignalsSchema)` to create a new message.
+ */
+export declare const ReasonSignalsSchema: GenMessage<ReasonSignals>;
+
+/**
+ * @generated from message tender.v1.RecommendedTenderResult
+ */
+export declare type RecommendedTenderResult = Message<"tender.v1.RecommendedTenderResult"> & {
+  /**
+   * @generated from field: tender.v1.TenderResult tender = 1;
+   */
+  tender?: TenderResult | undefined;
+
+  /**
+   * "strong" | "possible" | "long_shot"
+   *
+   * @generated from field: string fit_tier = 2;
+   */
+  fitTier: string;
+
+  /**
+   * @generated from field: tender.v1.ReasonSignals reason = 3;
+   */
+  reason?: ReasonSignals | undefined;
+};
+
+/**
+ * Describes the message tender.v1.RecommendedTenderResult.
+ * Use `create(RecommendedTenderResultSchema)` to create a new message.
+ */
+export declare const RecommendedTenderResultSchema: GenMessage<RecommendedTenderResult>;
+
+/**
+ * @generated from message tender.v1.RecommendTendersForClientResponse
+ */
+export declare type RecommendTendersForClientResponse = Message<"tender.v1.RecommendTendersForClientResponse"> & {
+  /**
+   * @generated from field: repeated tender.v1.RecommendedTenderResult results = 1;
+   */
+  results: RecommendedTenderResult[];
+
+  /**
+   * true = no ClientProfile yet; results is empty
+   *
+   * @generated from field: bool needs_profile = 2;
+   */
+  needsProfile: boolean;
+};
+
+/**
+ * Describes the message tender.v1.RecommendTendersForClientResponse.
+ * Use `create(RecommendTendersForClientResponseSchema)` to create a new message.
+ */
+export declare const RecommendTendersForClientResponseSchema: GenMessage<RecommendTendersForClientResponse>;
 
 /**
  * TenderService serves the direct tender search endpoint behind the
@@ -224,6 +392,19 @@ export declare const TenderService: GenService<{
     methodKind: "unary";
     input: typeof SearchTendersRequestSchema;
     output: typeof SearchTendersResponseSchema;
+  },
+  /**
+   * Deterministic, membership-checked, unmetered per-client best-fit
+   * shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+   * SearchTenders this requires authentication: it is scoped to one client
+   * (workspace) and reads that client's ClientProfile.
+   *
+   * @generated from rpc tender.v1.TenderService.RecommendTendersForClient
+   */
+  recommendTendersForClient: {
+    methodKind: "unary";
+    input: typeof RecommendTendersForClientRequestSchema;
+    output: typeof RecommendTendersForClientResponseSchema;
   },
 }>;
 
