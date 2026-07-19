@@ -168,6 +168,13 @@ func main() {
 			// Uncalibrated defaults — no conversion data exists pre-launch
 			// (see the design spec's Risks section). Retune here, no code change.
 			Fit: tender.FitThresholds{RelevanceHigh: 0.75, RelevanceLow: 0.4, MinDeadlineDays: 10, UrgentDeadlineDays: 5},
+			// Statutory EU procurement thresholds (2026-2027, EC), minor units.
+			// A biennial revision is a one-line change here — never in the classifier.
+			EU: tender.EUThreshold{
+				WorksMinor:              540400000, // €5,404,000
+				SuppliesCentralMinor:    14000000,  // €140,000
+				SuppliesSubCentralMinor: 21600000,  // €216,000
+			},
 		},
 	)
 	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo)

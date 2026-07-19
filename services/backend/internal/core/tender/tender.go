@@ -124,13 +124,14 @@ type FitThresholds struct {
 	UrgentDeadlineDays int     // fewer days than this forces "long_shot" regardless of relevance
 }
 
-// Config holds the search tiers' limits, the GetTender tier's limits, and
-// the fit-tier thresholds.
+// Config holds the search tiers' limits, the GetTender tier's limits, the
+// fit-tier thresholds, and the statutory EU-threshold band.
 type Config struct {
 	AnonTier      Tier
 	AuthedTier    Tier
 	GetTenderTier Tier // generous; GetTender is cheap and called server-side per crawl
 	Fit           FitThresholds
+	EU            EUThreshold
 }
 
 // ProfileSource is the subset of clientprofile.Service this package needs to
