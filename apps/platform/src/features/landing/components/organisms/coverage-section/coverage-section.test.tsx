@@ -10,10 +10,14 @@ vi.mock('~/lib/api/client', () => ({
   },
 }));
 
+const { capture } = vi.hoisted(() => ({ capture: vi.fn() }));
+vi.mock('posthog-js/react', () => ({ usePostHog: () => ({ capture }) }));
+
 import { CoverageSection } from './index';
 
 beforeEach(() => {
   getCoverage.mockReset();
+  capture.mockReset();
   // Default: the backend reports live coverage for Italy only.
   getCoverage.mockResolvedValue({ countries: ['IT'] });
   // Force the reduced-motion (static grid) variant so assertions target a
@@ -36,6 +40,18 @@ describe('CoverageSection', () => {
     expect(screen.getAllByRole('button')).toHaveLength(27);
     // Let the coverage fetch settle so its state update stays inside act().
     await waitFor(() => expect(getCoverage).toHaveBeenCalled());
+  });
+
+  it('fires coverage_market_focused with categorical props on flag focus', async () => {
+    const user = userEvent.setup();
+    renderWithI18n(<CoverageSection />, 'en-ie');
+    await waitFor(() => expect(getCoverage).toHaveBeenCalled());
+    await user.click(await screen.findByRole('button', { name: /italy/i }));
+    expect(capture).toHaveBeenCalledWith('coverage_market_focused', {
+      country: 'IT',
+      status: 'available',
+      location: 'coverage_section',
+    });
   });
 
   it('lights the flag for a covered country and leaves the rest coming-soon', async () => {

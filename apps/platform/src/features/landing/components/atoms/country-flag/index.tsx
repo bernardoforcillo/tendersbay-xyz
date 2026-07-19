@@ -42,7 +42,10 @@ export function CountryFlag({
   // when the card closes (onOpenChange below).
   const revealed = useRef(false);
   const reveal = () => {
-    if (revealed.current) return;
+    // Decorative duplicates (the marquee's second track) are silent: the
+    // primary track already emits the focus event, so a mouse user hovering
+    // both copies of a country must not double-count it.
+    if (revealed.current || decorative) return;
     revealed.current = true;
     onReveal?.(code);
   };
