@@ -3,6 +3,8 @@ package agent.v1;
 
 option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1;agentv1";
 
+import "tender/v1/tender.proto";
+
 // AgentService manages AI chat sessions, streaming agent responses, and
 // workspace token-credit tracking. Chat sessions are scoped to a workspace
 // (or optionally a workbench) and tagged with an agent_type so the registry
@@ -52,10 +54,11 @@ message ChatSession {
 message ChatMessage {
   string id = 1;
   string session_id = 2;
-  string role = 3;          // "user" | "assistant" | "choice_prompt" | "choice_response"
+  string role = 3;          // "user" | "assistant" | "choice_prompt" | "choice_response" | "tender_results"
   string content = 4;
   bytes choices = 5;        // JSON — ChoiceOption list (for choice_prompt)
   bytes metadata = 6;       // JSON — tokens, model, choice_id, …
+  bytes tenders = 8;        // JSON — persisted tender card list (for tender_results)
   string created_at = 7;    // RFC3339
 }
 
@@ -115,6 +118,7 @@ message ChatStreamResponse {
     ChoicePrompt choice = 2;    // agent asks a multiple-choice question
     StreamError error = 3;      // non-recoverable error, stream ends
     StreamDone done = 4;        // stream completed successfully
+    TenderResults tender_results = 5;  // search_tenders returned ≥1 result
   }
 }
 
@@ -123,6 +127,10 @@ message ChoicePrompt {
   string question = 2;
   repeated ChoiceOption options = 3;
   bool allow_custom = 4;        // if true, user may type a free-form answer
+}
+
+message TenderResults {
+  repeated tender.v1.TenderResult tenders = 1;
 }
 
 message StreamError {

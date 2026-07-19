@@ -4,6 +4,7 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
 import type { Message } from "@bufbuild/protobuf";
+import type { TenderResult } from "../../tender/v1/tender_pb";
 
 /**
  * Describes the file agent/v1/agent.proto.
@@ -84,7 +85,7 @@ export declare type ChatMessage = Message<"agent.v1.ChatMessage"> & {
   sessionId: string;
 
   /**
-   * "user" | "assistant" | "choice_prompt" | "choice_response"
+   * "user" | "assistant" | "choice_prompt" | "choice_response" | "tender_results"
    *
    * @generated from field: string role = 3;
    */
@@ -108,6 +109,13 @@ export declare type ChatMessage = Message<"agent.v1.ChatMessage"> & {
    * @generated from field: bytes metadata = 6;
    */
   metadata: Uint8Array;
+
+  /**
+   * JSON — persisted tender card list (for tender_results)
+   *
+   * @generated from field: bytes tenders = 8;
+   */
+  tenders: Uint8Array;
 
   /**
    * RFC3339
@@ -462,6 +470,14 @@ export declare type ChatStreamResponse = Message<"agent.v1.ChatStreamResponse"> 
      */
     value: StreamDone;
     case: "done";
+  } | {
+    /**
+     * search_tenders returned ≥1 result
+     *
+     * @generated from field: agent.v1.TenderResults tender_results = 5;
+     */
+    value: TenderResults;
+    case: "tenderResults";
   } | { case: undefined; value?: undefined };
 };
 
@@ -505,6 +521,22 @@ export declare type ChoicePrompt = Message<"agent.v1.ChoicePrompt"> & {
  * Use `create(ChoicePromptSchema)` to create a new message.
  */
 export declare const ChoicePromptSchema: GenMessage<ChoicePrompt>;
+
+/**
+ * @generated from message agent.v1.TenderResults
+ */
+export declare type TenderResults = Message<"agent.v1.TenderResults"> & {
+  /**
+   * @generated from field: repeated tender.v1.TenderResult tenders = 1;
+   */
+  tenders: TenderResult[];
+};
+
+/**
+ * Describes the message agent.v1.TenderResults.
+ * Use `create(TenderResultsSchema)` to create a new message.
+ */
+export declare const TenderResultsSchema: GenMessage<TenderResults>;
 
 /**
  * @generated from message agent.v1.StreamError

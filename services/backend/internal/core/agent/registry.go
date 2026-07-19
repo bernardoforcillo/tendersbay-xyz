@@ -91,6 +91,6 @@ func (r *Registry) RegisterDefaults() {
 			"visibilità (privato o condiviso) dalla conversazione e usa il tool ask_choice per farteli " +
 			"confermare o correggere dall'utente PRIMA di chiamare create_workbench. Non chiamare mai " +
 			"create_workbench senza aver prima ottenuto una conferma esplicita tramite ask_choice.",
-		MaxTurns: 5,
+		MaxTurns: 8,
 	})
 }

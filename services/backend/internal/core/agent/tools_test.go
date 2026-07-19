@@ -152,7 +152,7 @@ func TestCreateWorkbenchTool_RejectsMissingName(t *testing.T) {
 
 func TestSearchTendersTool_CallsCallbackWithParsedArgs(t *testing.T) {
 	var gotQuery, gotCountry, gotCPV, gotStatus string
-	tool := newSearchTendersTool(func(query, country, cpv, status string) ([]tender.ScoredTender, error) {
+	tool := newSearchTendersTool(&turnState{}, func(query, country, cpv, status string) ([]tender.ScoredTender, error) {
 		gotQuery, gotCountry, gotCPV, gotStatus = query, country, cpv, status
 		return []tender.ScoredTender{{Tender: tender.Tender{ID: "1", Title: "Lavori stradali"}, RelevanceScore: 0.9}}, nil
 	})
@@ -173,7 +173,7 @@ func TestSearchTendersTool_CallsCallbackWithParsedArgs(t *testing.T) {
 }
 
 func TestSearchTendersTool_RejectsMissingQuery(t *testing.T) {
-	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+	tool := newSearchTendersTool(&turnState{}, func(string, string, string, string) ([]tender.ScoredTender, error) {
 		t.Fatal("callback should not run without a query")
 		return nil, nil
 	})
@@ -184,11 +184,111 @@ func TestSearchTendersTool_RejectsMissingQuery(t *testing.T) {
 }
 
 func TestSearchTendersTool_PropagatesSearchError(t *testing.T) {
-	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+	tool := newSearchTendersTool(&turnState{}, func(string, string, string, string) ([]tender.ScoredTender, error) {
 		return nil, errors.New("boom")
 	})
 	args, _ := json.Marshal(map[string]any{"query": "x"})
 	if _, err := tool.Execute(context.Background(), string(args)); err == nil {
 		t.Fatal("Execute: want the search callback's error propagated")
+	}
+}
+
+func TestSearchTendersTool_AddsNoticeAfterFiveConsecutiveEmptyResults(t *testing.T) {
+	ts := &turnState{}
+	tool := newSearchTendersTool(ts, func(string, string, string, string) ([]tender.ScoredTender, error) {
+		return nil, nil
+	})
+	args, _ := json.Marshal(map[string]any{"query": "cestini intelligenti"})
+
+	var lastResult string
+	for i := 0; i < 5; i++ {
+		result, err := tool.Execute(context.Background(), string(args))
+		if err != nil {
+			t.Fatalf("Execute call %d: %v", i+1, err)
+		}
+		lastResult = result
+		if i < 4 && strings.Contains(result, "STOP calling search_tenders") {
+			t.Fatalf("call %d: notice appeared too early: %q", i+1, result)
+		}
+	}
+	if !strings.Contains(lastResult, "STOP calling search_tenders") {
+		t.Fatalf("5th call result = %q, want the broaden-search notice", lastResult)
+	}
+}
+
+func TestSearchTendersTool_NonEmptyResultResetsEmptyStreak(t *testing.T) {
+	empty := true
+	ts := &turnState{}
+	tool := newSearchTendersTool(ts, func(string, string, string, string) ([]tender.ScoredTender, error) {
+		if empty {
+			return nil, nil
+		}
+		return []tender.ScoredTender{{Tender: tender.Tender{ID: "1", Title: "Found one"}}}, nil
+	})
+	args, _ := json.Marshal(map[string]any{"query": "x"})
+
+	for i := 0; i < 4; i++ {
+		if _, err := tool.Execute(context.Background(), string(args)); err != nil {
+			t.Fatalf("Execute call %d: %v", i+1, err)
+		}
+	}
+	empty = false
+	if _, err := tool.Execute(context.Background(), string(args)); err != nil {
+		t.Fatalf("Execute (reset call): %v", err)
+	}
+	empty = true
+	for i := 0; i < 4; i++ {
+		result, err := tool.Execute(context.Background(), string(args))
+		if err != nil {
+			t.Fatalf("Execute post-reset call %d: %v", i+1, err)
+		}
+		if strings.Contains(result, "STOP calling search_tenders") {
+			t.Fatalf("post-reset call %d: notice appeared, streak should have reset: %q", i+1, result)
+		}
+	}
+}
+
+func TestSearchTendersTool_SearchErrorDoesNotAffectEmptyStreak(t *testing.T) {
+	callCount := 0
+	ts := &turnState{}
+	tool := newSearchTendersTool(ts, func(string, string, string, string) ([]tender.ScoredTender, error) {
+		callCount++
+		if callCount == 3 {
+			return nil, errors.New("boom")
+		}
+		return nil, nil
+	})
+	args, _ := json.Marshal(map[string]any{"query": "x"})
+
+	// Calls 1, 2: empty (streak -> 2). Call 3: errors — the streak must stay
+	// untouched at 2, neither incremented to 3 nor reset to 0. Calls 4, 5: empty
+	// (streak -> 3, 4 if the error correctly left it at 2 after call 2; only 4 by
+	// call 5, one short of searchTendersEmptyStreakLimit=5, so no notice yet).
+	// Call 6 must be the one that finally reaches 5 and triggers the notice —
+	// proving the errored call (call 3) contributed nothing to the count either
+	// way. If the error had instead reset the streak, call 6 would only reach a
+	// streak of 3 (calls 4,5,6), and the notice would NOT appear — this test
+	// would then fail, which is the point.
+	for i := 0; i < 5; i++ {
+		result, err := tool.Execute(context.Background(), string(args))
+		if i == 2 {
+			if err == nil {
+				t.Fatalf("call %d: want the search error propagated, got nil", i+1)
+			}
+			continue
+		}
+		if err != nil {
+			t.Fatalf("call %d: %v", i+1, err)
+		}
+		if strings.Contains(result, "STOP calling search_tenders") {
+			t.Fatalf("call %d: notice appeared too early: %q", i+1, result)
+		}
+	}
+	result, err := tool.Execute(context.Background(), string(args))
+	if err != nil {
+		t.Fatalf("call 6: %v", err)
+	}
+	if !strings.Contains(result, "STOP calling search_tenders") {
+		t.Fatalf("call 6 result = %q, want the notice (5 empty calls: 1,2,4,5,6 — call 3 errored and must not have contributed)", result)
 	}
 }

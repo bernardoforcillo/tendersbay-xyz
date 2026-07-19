@@ -80,7 +80,7 @@ func (r *ChatRepo) DeleteSession(ctx context.Context, id string) error {
 
 // ── Messages ────────────────────────────────────────────────────────────────
 
-func (r *ChatRepo) InsertMessage(ctx context.Context, sessionID, role, content string, choices, metadata json.RawMessage) (DBChatMessage, error) {
+func (r *ChatRepo) InsertMessage(ctx context.Context, sessionID, role, content string, choices, metadata, tenders json.RawMessage) (DBChatMessage, error) {
 	var row DBChatMessage
 	err := r.db.Insert(ChatMessages).
 		Row(
@@ -89,9 +89,10 @@ func (r *ChatRepo) InsertMessage(ctx context.Context, sessionID, role, content s
 			ChatMessageContent.Val(content),
 			ChatMessageChoices.Val(choices),
 			ChatMessageMetadata.Val(metadata),
+			ChatMessageTenders.Val(tenders),
 		).
 		Returning(ChatMessageID, ChatMessageSessionID, ChatMessageRole, ChatMessageContent,
-			ChatMessageChoices, ChatMessageMetadata, ChatMessageCreatedAt).
+			ChatMessageChoices, ChatMessageMetadata, ChatMessageTenders, ChatMessageCreatedAt).
 		One(ctx, &row)
 	return row, err
 }

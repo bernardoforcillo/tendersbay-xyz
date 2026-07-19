@@ -1,5 +1,5 @@
 import { useNavigate } from '@tanstack/react-router';
-import { Banner, Button, Card, Field, Select } from '@tendersbay/components/core';
+import { Banner, Button, Card, ConfirmDialog, Field, Select } from '@tendersbay/components/core';
 import { useState } from 'react';
 import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import { useMembers } from '~/features/workspace/hooks';
 import { can, Permission } from '~/features/workspace/permissions';
 import { workspaceClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
+import { usePreferencesStore } from '~/store/preferences';
 
 export function WorkspaceSettingsPage() {
   const { t } = useTranslation();
@@ -24,6 +25,9 @@ export function WorkspaceSettingsPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const shouldSkipDelete = usePreferencesStore((s) => s.shouldSkip('workspace-delete'));
+  const shouldSkipLeave = usePreferencesStore((s) => s.shouldSkip('workspace-leave'));
+  const setSkip = usePreferencesStore((s) => s.setSkipConfirmation);
 
   const otherMembers = (members ?? []).filter((m) => m.userId !== workspace.ownerId);
 
@@ -161,9 +165,22 @@ export function WorkspaceSettingsPage() {
                   'Permanently delete this workspace and all its data.',
                 )}
               </p>
-              <Button variant="danger" isDisabled={busy} onPress={destroy}>
-                {t('workspace.settings.delete', 'Delete workspace')}
-              </Button>
+              <ConfirmDialog
+                title={t('confirm.deleteWorkspace.title', 'Delete workspace?')}
+                description={t(
+                  'confirm.deleteWorkspace.description',
+                  'This will permanently delete this workspace and all its data. This action cannot be undone.',
+                )}
+                confirmLabel={t('workspace.settings.delete', 'Delete workspace')}
+                onConfirm={destroy}
+                skipConfirmation={shouldSkipDelete}
+                onSkipChange={(skip) => setSkip('workspace-delete', skip)}
+                trigger={
+                  <Button variant="danger" isDisabled={busy}>
+                    {t('workspace.settings.delete', 'Delete workspace')}
+                  </Button>
+                }
+              />
             </div>
           ) : (
             <div className="flex items-center justify-between gap-3">
@@ -173,9 +190,22 @@ export function WorkspaceSettingsPage() {
                   'Leave this workspace. You can rejoin with a new invite.',
                 )}
               </p>
-              <Button variant="danger" isDisabled={busy} onPress={leave}>
-                {t('workspace.settings.leave', 'Leave workspace')}
-              </Button>
+              <ConfirmDialog
+                title={t('confirm.leaveWorkspace.title', 'Leave workspace?')}
+                description={t(
+                  'confirm.leaveWorkspace.description',
+                  'You will lose access to this workspace. You can rejoin with a new invite.',
+                )}
+                confirmLabel={t('workspace.settings.leave', 'Leave workspace')}
+                onConfirm={leave}
+                skipConfirmation={shouldSkipLeave}
+                onSkipChange={(skip) => setSkip('workspace-leave', skip)}
+                trigger={
+                  <Button variant="danger" isDisabled={busy}>
+                    {t('workspace.settings.leave', 'Leave workspace')}
+                  </Button>
+                }
+              />
             </div>
           )}
         </Card>

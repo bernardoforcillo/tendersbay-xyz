@@ -280,6 +280,7 @@ var (
 	ChatMessageContent   = pg.Add(ChatMessages, pg.Text("content").NotNull())
 	ChatMessageChoices   = pg.Add(ChatMessages, pg.JSONB("choices"))
 	ChatMessageMetadata  = pg.Add(ChatMessages, pg.JSONB("metadata"))
+	ChatMessageTenders   = pg.Add(ChatMessages, pg.JSONB("tenders"))
 	ChatMessageCreatedAt = pg.Add(ChatMessages, pg.Timestamp("created_at", true).NotNull().Default("now()"))
 
 	WorkspaceCredits              = pg.NewTable("workspace_credits")
@@ -330,6 +331,7 @@ type DBChatMessage struct {
 	Content   string           `drop:"content"`
 	Choices   *json.RawMessage `drop:"choices"`
 	Metadata  *json.RawMessage `drop:"metadata"`
+	Tenders   *json.RawMessage `drop:"tenders"`
 	CreatedAt time.Time        `drop:"created_at"`
 }
 

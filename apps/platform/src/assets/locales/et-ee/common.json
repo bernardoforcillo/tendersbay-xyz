@@ -69,10 +69,15 @@
       "displayName": "Nimi",
       "email": "E-post",
       "password": "Parool",
-      "submitting": "Loomine…",
       "submit": "Loo konto",
       "login": "Kas teil on juba konto?",
-      "signIn": "Logi sisse"
+      "signIn": "Logi sisse",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Kontrollige oma e-posti",
@@ -422,6 +427,10 @@
         "description": "Hanke üksikasjad, tähtaeg, hankija ja seotud võimalused hankele \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Alla ELi piirmäära",
+      "aboveEu": "Üle ELi piirmäära"
+    },
     "fit": {
       "tier": {
         "strong": "Tugev sobivus",
@@ -690,9 +699,51 @@
       "deleteHint": "Kustuta see töölaud ja kõik selle andmed jäädavalt.",
       "delete": "Kustuta töölaud",
       "leaveHint": "Lahkuge sellest töölauast. Haldur saab teid uuesti lisada.",
-      "leave": "Lahku töölauast",
-      "confirmDelete": "Kustutada see töölaud?",
-      "confirmLeave": "Lahkuda sellest töölauast?"
+      "leave": "Lahku töölauast"
+    },
+    "overview": {
+      "emptyTitle": "Teie töölaud on valmis",
+      "emptyDescription": "Alustage hangete otsimisega, kliendiprofiili loomisega või oma meeskonna kutsumisega. Kõik, mida siin teete, on jagatud töölaua liikmetega.",
+      "emptyExplore": "Avage Avasta"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ära küsi uuesti",
+    "deleteWorkspace": {
+      "title": "Kustutada tööruum?",
+      "description": "See kustutab jäädavalt selle tööruumi ja kõik selle andmed. Seda toimingut ei saa tagasi võtta."
+    },
+    "leaveWorkspace": {
+      "title": "Lahkuda tööruumist?",
+      "description": "Kaotate juurdepääsu sellele tööruumile. Saate uue kutsega uuesti liituda."
+    },
+    "removeMember": {
+      "title": "Eemaldada liige?",
+      "description": "See inimene kaotab kohe juurdepääsu tööruumile."
+    },
+    "deleteRole": {
+      "title": "Kustutada roll?",
+      "description": "Selle rolliga liikmed kaotavad selle õigused."
+    },
+    "revokeInvite": {
+      "title": "Tühistada kutse?",
+      "description": "Seda e-posti kutset ei saa enam kasutada."
+    },
+    "revokeLink": {
+      "title": "Tühistada link?",
+      "description": "See kutselink lakkab kohe töötamast."
+    },
+    "deleteWorkbench": {
+      "title": "Kustutada töölaud?",
+      "description": "See kustutab jäädavalt selle töölaua ja kõik selle andmed. Seda toimingut ei saa tagasi võtta."
+    },
+    "leaveWorkbench": {
+      "title": "Lahkuda töölauast?",
+      "description": "Kaotate juurdepääsu sellele töölauale. Haldur saab teid uuesti lisada."
+    },
+    "removeWorkbenchMember": {
+      "title": "Eemaldada liige?",
+      "description": "See inimene kaotab kohe juurdepääsu töölauale."
     }
   }
 }

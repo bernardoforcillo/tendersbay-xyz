@@ -69,10 +69,15 @@
       "displayName": "Név",
       "email": "E-mail",
       "password": "Jelszó",
-      "submitting": "Létrehozás…",
       "submit": "Fiók létrehozása",
       "login": "Már van fiókja?",
-      "signIn": "Bejelentkezés"
+      "signIn": "Bejelentkezés",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Ellenőrizze az e-mailjét",
@@ -426,6 +431,10 @@
         "description": "Közbeszerzési részletek, határidő, ajánlatkérő és kapcsolódó lehetőségek a(z) „{{title}}” tenderhez."
       }
     },
+    "threshold": {
+      "belowEu": "Az uniós értékhatár alatt",
+      "aboveEu": "Az uniós értékhatár felett"
+    },
     "fit": {
       "tier": {
         "strong": "Erős egyezés",
@@ -694,9 +703,51 @@
       "deleteHint": "A munkafelület és minden adatának végleges törlése.",
       "delete": "Munkafelület törlése",
       "leaveHint": "Kilépés ebből a munkafelületből. Egy kezelő újra hozzáadhatja.",
-      "leave": "Kilépés a munkafelületből",
-      "confirmDelete": "Törli ezt a munkafelületet?",
-      "confirmLeave": "Kilép ebből a munkafelületből?"
+      "leave": "Kilépés a munkafelületből"
+    },
+    "overview": {
+      "emptyTitle": "A munkafelülete készen áll",
+      "emptyDescription": "Kezdje pályázatok keresésével, ügyfélprofil létrehozásával vagy csapata meghívásával. Amit itt tesz, az megosztásra kerül a munkafelület tagjaival.",
+      "emptyExplore": "Nyissa meg a Felfedezést"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ne kérdezze újra",
+    "deleteWorkspace": {
+      "title": "Törli a munkaterületet?",
+      "description": "Ez véglegesen törli ezt a munkaterületet és minden adatát. Ez a művelet nem vonható vissza."
+    },
+    "leaveWorkspace": {
+      "title": "Kilép a munkaterületből?",
+      "description": "Elveszíti a hozzáférést ehhez a munkaterülethez. Új meghívóval újra csatlakozhat."
+    },
+    "removeMember": {
+      "title": "Eltávolítja a tagot?",
+      "description": "Ez a személy azonnal elveszíti a hozzáférést a munkaterülethez."
+    },
+    "deleteRole": {
+      "title": "Törli a szerepkört?",
+      "description": "Az ezzel a szerepkörrel rendelkező tagok elveszítik annak jogosultságait."
+    },
+    "revokeInvite": {
+      "title": "Visszavonja a meghívót?",
+      "description": "Ez az e-mailes meghívó a továbbiakban nem lesz használható."
+    },
+    "revokeLink": {
+      "title": "Visszavonja a linket?",
+      "description": "Ez a meghívólink azonnal leáll."
+    },
+    "deleteWorkbench": {
+      "title": "Törli a munkafelületet?",
+      "description": "Ez véglegesen törli ezt a munkafelületet és minden adatát. Ez a művelet nem vonható vissza."
+    },
+    "leaveWorkbench": {
+      "title": "Kilép a munkafelületből?",
+      "description": "Elveszíti a hozzáférést ehhez a munkafelülethez. Egy kezelő újra hozzáadhatja."
+    },
+    "removeWorkbenchMember": {
+      "title": "Eltávolítja a tagot?",
+      "description": "Ez a személy azonnal elveszíti a hozzáférést a munkafelülethez."
     }
   }
 }

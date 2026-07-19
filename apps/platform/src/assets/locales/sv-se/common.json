@@ -69,10 +69,15 @@
       "displayName": "Namn",
       "email": "E-post",
       "password": "Lösenord",
-      "submitting": "Skapar…",
       "submit": "Skapa konto",
       "login": "Har du redan ett konto?",
-      "signIn": "Logga in"
+      "signIn": "Logga in",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Kontrollera din e-post",
@@ -422,6 +427,10 @@
         "description": "Upphandlingsdetaljer, sista anbudsdag, upphandlande myndighet och relaterade möjligheter för \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Under EU:s tröskelvärde",
+      "aboveEu": "Över EU:s tröskelvärde"
+    },
     "fit": {
       "tier": {
         "strong": "Stark matchning",
@@ -690,9 +699,51 @@
       "deleteHint": "Ta bort den här arbetsbänken och all dess data permanent.",
       "delete": "Ta bort arbetsbänk",
       "leaveHint": "Lämna den här arbetsbänken. En administratör kan lägga till dig igen.",
-      "leave": "Lämna arbetsbänk",
-      "confirmDelete": "Ta bort den här arbetsbänken?",
-      "confirmLeave": "Lämna den här arbetsbänken?"
+      "leave": "Lämna arbetsbänk"
+    },
+    "overview": {
+      "emptyTitle": "Din arbetsbänk är klar",
+      "emptyDescription": "Börja med att söka efter upphandlingar, skapa en kundprofil eller bjuda in ditt team. Allt du gör här delas med arbetsbänkens medlemmar.",
+      "emptyExplore": "Öppna Utforska"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Fråga inte igen",
+    "deleteWorkspace": {
+      "title": "Ta bort arbetsyta?",
+      "description": "Detta tar bort den här arbetsytan och all dess data permanent. Åtgärden kan inte ångras."
+    },
+    "leaveWorkspace": {
+      "title": "Lämna arbetsyta?",
+      "description": "Du förlorar åtkomsten till den här arbetsytan. Du kan gå med igen med en ny inbjudan."
+    },
+    "removeMember": {
+      "title": "Ta bort medlem?",
+      "description": "Den här personen förlorar omedelbart åtkomsten till arbetsytan."
+    },
+    "deleteRole": {
+      "title": "Ta bort roll?",
+      "description": "Medlemmar med den här rollen förlorar dess behörigheter."
+    },
+    "revokeInvite": {
+      "title": "Återkalla inbjudan?",
+      "description": "Den här e-postinbjudan går inte längre att använda."
+    },
+    "revokeLink": {
+      "title": "Återkalla länk?",
+      "description": "Den här inbjudningslänken slutar omedelbart att fungera."
+    },
+    "deleteWorkbench": {
+      "title": "Ta bort arbetsbänk?",
+      "description": "Detta tar bort den här arbetsbänken och all dess data permanent. Åtgärden kan inte ångras."
+    },
+    "leaveWorkbench": {
+      "title": "Lämna arbetsbänk?",
+      "description": "Du förlorar åtkomsten till den här arbetsbänken. En administratör kan lägga till dig igen."
+    },
+    "removeWorkbenchMember": {
+      "title": "Ta bort medlem?",
+      "description": "Den här personen förlorar omedelbart åtkomsten till arbetsbänken."
     }
   }
 }

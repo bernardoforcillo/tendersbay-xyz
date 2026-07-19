@@ -1,4 +1,4 @@
-import { Banner, Button, Card, Pill } from '@tendersbay/components/core';
+import { Banner, Button, Card, ConfirmDialog, Pill } from '@tendersbay/components/core';
 import type { Role } from '@tendersbay/proto/workspace/v1/workspace_pb';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ import {
   Permission,
 } from '~/features/workspace/permissions';
 import { workspaceClient } from '~/lib/api/client';
+import { usePreferencesStore } from '~/store/preferences';
 
 function permissionCount(perms: bigint): number {
   return PERMISSION_KEYS.filter((k) => hasBit(perms, PERMISSION_BITS[k])).length;
@@ -27,6 +28,8 @@ export function WorkspaceRolesPage() {
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const shouldSkipDelete = usePreferencesStore((s) => s.shouldSkip('workspace-delete-role'));
+  const setSkip = usePreferencesStore((s) => s.setSkipConfirmation);
 
   async function submit(name: string, permissions: bigint) {
     setSubmitting(true);
@@ -117,9 +120,20 @@ export function WorkspaceRolesPage() {
                     {t('workspace.common.edit', 'Edit')}
                   </Button>
                   {!r.isDefault && (
-                    <Button variant="danger" onPress={() => remove(r.id)}>
-                      {t('workspace.common.delete', 'Delete')}
-                    </Button>
+                    <ConfirmDialog
+                      title={t('confirm.deleteRole.title', 'Delete role?')}
+                      description={t(
+                        'confirm.deleteRole.description',
+                        'Members with this role will lose its permissions.',
+                      )}
+                      confirmLabel={t('workspace.common.delete', 'Delete')}
+                      onConfirm={() => remove(r.id)}
+                      skipConfirmation={shouldSkipDelete}
+                      onSkipChange={(skip) => setSkip('workspace-delete-role', skip)}
+                      trigger={
+                        <Button variant="danger">{t('workspace.common.delete', 'Delete')}</Button>
+                      }
+                    />
                   )}
                 </div>
               )}

@@ -1,4 +1,5 @@
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { agentClient } from '~/lib/api/client';
 import { useChatStore } from '~/store/chat';
@@ -24,6 +25,17 @@ vi.mock('react-i18next', () => ({
       typeof defaultValue === 'string' ? defaultValue : (defaultValue?.defaultValue ?? key),
     i18n: { language: 'en-ie' },
   }),
+}));
+// Rendering a tender_results message renders TenderResultCard wrapped in
+// useTenderLink, which otherwise needs router/auth-store context this test
+// doesn't set up — same stub message-bubble.test.tsx uses.
+vi.mock('~/features/tenders', () => ({
+  useTenderLink:
+    () => (id: string, children: ReactNode, _className?: string, onClick?: () => void) => (
+      <a href={`/tenders/${id}`} onClick={onClick}>
+        {children}
+      </a>
+    ),
 }));
 
 import { ChatWindow } from './index';
@@ -67,5 +79,44 @@ describe('ChatWindow', () => {
       expect(sendMessageMock).toHaveBeenCalledWith('chat-1', 'Hello agent');
     });
     expect(useChatStore.getState().draft).toBeNull();
+  });
+
+  it('reconstructs a tender_results history message into a rendered TenderResultCard', async () => {
+    const tenders = [
+      {
+        id: 't-1',
+        title: 'Cestini intelligenti IoT',
+        buyerName: 'Comune di Torino',
+        status: 'open',
+        country: 'IT',
+        cpv: '34928480',
+        value: 250000,
+        currency: 'EUR',
+        deadline: '',
+        source: 'ted',
+      },
+    ];
+    vi.mocked(agentClient.getMessages).mockResolvedValue({
+      messages: [
+        {
+          id: 'msg-1',
+          sessionId: 'chat-1',
+          role: 'tender_results',
+          content: '',
+          choices: new Uint8Array(),
+          metadata: new Uint8Array(),
+          tenders: new TextEncoder().encode(JSON.stringify(tenders)),
+          createdAt: new Date().toISOString(),
+        },
+      ],
+    } as never);
+
+    useChatStore.setState({ currentChatId: 'chat-1' });
+
+    render(<ChatWindow />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Cestini intelligenti IoT')).toBeInTheDocument();
+    });
   });
 });

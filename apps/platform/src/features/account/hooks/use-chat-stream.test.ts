@@ -103,4 +103,57 @@ describe('useChatStream', () => {
     expect(useChatStore.getState().pendingChoice).toBeNull();
     expect(credits?.remaining).toBe(99);
   });
+
+  it('adds a tender_results message without ending the stream, then keeps concatenating tokens', async () => {
+    vi.mocked(agentClient.chatStream).mockReturnValue(
+      toAsyncIterable([
+        { event: { case: 'token', value: 'Ho trovato ' } },
+        {
+          event: {
+            case: 'tenderResults',
+            value: {
+              tenders: [
+                {
+                  id: 't-1',
+                  title: 'Cestini intelligenti IoT',
+                  buyerName: 'Comune di Torino',
+                  status: 'open',
+                  procedureType: 'open',
+                  country: 'IT',
+                  cpv: '34928480',
+                  value: 250000n,
+                  currency: 'EUR',
+                  publishedAt: '',
+                  deadline: '',
+                  relevanceScore: 0,
+                  source: 'ted',
+                  sourceRef: 'ref-1',
+                  sourceUrl: '',
+                },
+              ],
+            },
+          },
+        },
+        { event: { case: 'token', value: 'un risultato.' } },
+        {
+          event: {
+            case: 'done',
+            value: { usage: undefined, creditsRemaining: 100n, creditsMonthlyMax: 200n },
+          },
+        },
+      ]) as never,
+    );
+
+    const { result } = renderHook(() => useChatStream());
+    await result.current.sendMessage('chat-1', 'cestini intelligenti');
+
+    const state = useChatStore.getState();
+    expect(state.streaming).toBe(false);
+    const tenderMessage = state.messages.find((m) => m.role === 'tender_results');
+    expect(tenderMessage?.tenders).toHaveLength(1);
+    expect(tenderMessage?.tenders?.[0]?.id).toBe('t-1');
+    expect(state.messages).toContainEqual(
+      expect.objectContaining({ role: 'assistant', content: 'Ho trovato un risultato.' }),
+    );
+  });
 });

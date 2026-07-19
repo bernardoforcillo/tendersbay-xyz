@@ -1,14 +1,11 @@
 import { useReducedMotion } from 'motion/react';
+import { usePostHog } from 'posthog-js/react';
 import { useTranslation } from 'react-i18next';
 import { CountryFlag, Marquee } from '~/features/landing/components/atoms';
-import {
-  EU_COUNTRIES,
-  type EuCountry,
-} from '~/features/landing/components/atoms/country-flag/flags';
+import type { EuCountry } from '~/features/landing/components/atoms/country-flag/flags';
+import { EU_COUNTRIES } from '~/features/landing/components/atoms/country-flag/flags';
 import { PORTALS } from '~/features/landing/components/atoms/country-flag/portals';
-
-/** Live coverage. Empty now (teaser); add an ISO code to light up that flag. */
-const AVAILABLE: ReadonlySet<EuCountry> = new Set<EuCountry>([]);
+import { useCoverage } from './use-coverage';
 
 function countryName(locale: string, code: string): string {
   try {
@@ -21,9 +18,21 @@ function countryName(locale: string, code: string): string {
 export function CoverageSection() {
   const { t, i18n } = useTranslation();
   const reduce = useReducedMotion();
+  const posthog = usePostHog();
+  const AVAILABLE = useCoverage();
   const availableLabel = t('landing.coverage.statusAvailable');
   const comingSoonLabel = t('landing.coverage.statusComingSoon');
   const total = EU_COUNTRIES.length;
+
+  // A flag reveal (hover/focus) is a market-interest signal. Categorical props
+  // only (per add-posthog-metrics); consent-gating is automatic via the
+  // provider (opt-out by default), same as landing_search_performed.
+  const onReveal = (country: EuCountry) =>
+    posthog?.capture('coverage_market_focused', {
+      country,
+      status: AVAILABLE.has(country) ? 'available' : 'coming_soon',
+      location: 'coverage_section',
+    });
 
   const flags = EU_COUNTRIES.map((code) => {
     const available = AVAILABLE.has(code);
@@ -88,6 +97,7 @@ export function CoverageSection() {
                   portal={f.portal}
                   available={f.available}
                   statusLabel={f.statusLabel}
+                  onReveal={onReveal}
                   className="w-full"
                 />
               </li>
@@ -105,6 +115,7 @@ export function CoverageSection() {
                     portal={f.portal}
                     available={f.available}
                     statusLabel={f.statusLabel}
+                    onReveal={onReveal}
                     className="w-36"
                   />
                 ))}

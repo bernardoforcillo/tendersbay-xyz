@@ -233,6 +233,34 @@ func TestSearchByFilters_JoinsNoticeDocumentURL(t *testing.T) {
 	}
 }
 
+func TestDistinctCountries_ReturnsDedupedNonEmpty(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	insertTestTender(t, sqlDB, "it-1", withCountry("IT"))
+	insertTestTender(t, sqlDB, "it-2", withCountry("IT")) // duplicate country
+	insertTestTender(t, sqlDB, "pl-1", withCountry("PL"))
+	got, err := repo.DistinctCountries(context.Background())
+	if err != nil {
+		t.Fatalf("DistinctCountries: %v", err)
+	}
+	set := map[string]bool{}
+	for _, c := range got {
+		set[c] = true
+	}
+	if !set["IT"] || !set["PL"] {
+		t.Fatalf("want IT and PL, got %v", got)
+	}
+	// dedup: IT appears once
+	n := 0
+	for _, c := range got {
+		if c == "IT" {
+			n++
+		}
+	}
+	if n != 1 {
+		t.Fatalf("IT appears %d times, want 1 (deduped)", n)
+	}
+}
+
 func TestEnrichTenders_RoundTripsStringIDs(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()

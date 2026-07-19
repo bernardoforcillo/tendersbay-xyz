@@ -69,10 +69,15 @@
       "displayName": "Isem",
       "email": "Email",
       "password": "Password",
-      "submitting": "Qed jinħoloq…",
       "submit": "Oħloq kont",
       "login": "Diġà għandek kont?",
-      "signIn": "Idħol"
+      "signIn": "Idħol",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Iċċekkja l-email tiegħek",
@@ -426,6 +431,10 @@
         "description": "Dettalji tas-sejħa, skadenza, xerrej u opportunitajiet relatati għal \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Taħt il-limitu tal-UE",
+      "aboveEu": "'Il fuq mil-limitu tal-UE"
+    },
     "fit": {
       "tier": {
         "strong": "Tqabbil qawwi",
@@ -696,9 +705,51 @@
       "deleteHint": "Ħassar b'mod permanenti dan il-workbench u d-data kollha tiegħu.",
       "delete": "Ħassar il-workbench",
       "leaveHint": "Itlaq minn dan il-workbench. Maniġer jista' jerġa' jżidek.",
-      "leave": "Itlaq mill-workbench",
-      "confirmDelete": "Tħassar dan il-workbench?",
-      "confirmLeave": "Titlaq minn dan il-workbench?"
+      "leave": "Itlaq mill-workbench"
+    },
+    "overview": {
+      "emptyTitle": "Il-workbench tiegħek lest",
+      "emptyDescription": "Ibda billi tfittex sejħiet, toħloq profil ta' klijent, jew tistieden lit-tim tiegħek. Kulma tagħmel hawn jinqasam mal-membri tal-workbench.",
+      "emptyExplore": "Iftaħ Esplora"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Tistaqsix aktar",
+    "deleteWorkspace": {
+      "title": "Tħassar l-ispazju tax-xogħol?",
+      "description": "Dan se jħassar b'mod permanenti dan l-ispazju tax-xogħol u d-data kollha tiegħu. Din l-azzjoni ma tistax titħassar."
+    },
+    "leaveWorkspace": {
+      "title": "Titlaq mill-ispazju tax-xogħol?",
+      "description": "Titlef l-aċċess għal dan l-ispazju tax-xogħol. Tista' terġa' tissieħeb b'stedina ġdida."
+    },
+    "removeMember": {
+      "title": "Tneħħi l-membru?",
+      "description": "Din il-persuna se titlef l-aċċess għall-ispazju tax-xogħol immedjatament."
+    },
+    "deleteRole": {
+      "title": "Tħassar ir-rwol?",
+      "description": "Il-membri b'dan ir-rwol se jitilfu l-permessi tiegħu."
+    },
+    "revokeInvite": {
+      "title": "Tirrevoka l-istedina?",
+      "description": "Din l-istedina bl-email ma tibqax tista' tintuża."
+    },
+    "revokeLink": {
+      "title": "Tirrevoka l-link?",
+      "description": "Dan il-link tal-istedina se jieqaf jaħdem immedjatament."
+    },
+    "deleteWorkbench": {
+      "title": "Tħassar il-workbench?",
+      "description": "Dan se jħassar b'mod permanenti dan il-workbench u d-data kollha tiegħu. Din l-azzjoni ma tistax titħassar."
+    },
+    "leaveWorkbench": {
+      "title": "Titlaq mill-workbench?",
+      "description": "Titlef l-aċċess għal dan il-workbench. Maniġer jista' jerġa' jżidek."
+    },
+    "removeWorkbenchMember": {
+      "title": "Tneħħi l-membru?",
+      "description": "Din il-persuna se titlef l-aċċess għall-workbench immedjatament."
     }
   }
 }

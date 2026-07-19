@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"strings"
 	"testing"
 
 	"github.com/bernardoforcillo/drops/pg"
@@ -80,7 +81,7 @@ func (f *fakeChatRepo) DeleteSession(_ context.Context, id string) error {
 	return nil
 }
 
-func (f *fakeChatRepo) InsertMessage(_ context.Context, sessionID, role, content string, choices, metadata json.RawMessage) (postgres.DBChatMessage, error) {
+func (f *fakeChatRepo) InsertMessage(_ context.Context, sessionID, role, content string, choices, metadata, tenders json.RawMessage) (postgres.DBChatMessage, error) {
 	f.nextID++
 	m := postgres.DBChatMessage{ID: "msg-" + itoa(f.nextID), SessionID: sessionID, Role: role, Content: content}
 	if choices != nil {
@@ -88,6 +89,9 @@ func (f *fakeChatRepo) InsertMessage(_ context.Context, sessionID, role, content
 	}
 	if metadata != nil {
 		m.Metadata = &metadata
+	}
+	if tenders != nil {
+		m.Tenders = &tenders
 	}
 	f.messages[sessionID] = append(f.messages[sessionID], m)
 	return m, nil
@@ -272,9 +276,9 @@ func TestGetChatForChoice_RejectsAlreadyAnswered(t *testing.T) {
 	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
 
 	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
-	prompt, _ := chatRepo.InsertMessage(context.Background(), session.ID, "choice_prompt", "Q?", json.RawMessage(`[{"key":"A","label":"Yes"}]`), nil)
+	prompt, _ := chatRepo.InsertMessage(context.Background(), session.ID, "choice_prompt", "Q?", json.RawMessage(`[{"key":"A","label":"Yes"}]`), nil, nil)
 	// Answered: another message follows it.
-	if _, err := chatRepo.InsertMessage(context.Background(), session.ID, "choice_response", "A) Yes", nil, nil); err != nil {
+	if _, err := chatRepo.InsertMessage(context.Background(), session.ID, "choice_response", "A) Yes", nil, nil, nil); err != nil {
 		t.Fatalf("seed choice_response: %v", err)
 	}
 
@@ -290,7 +294,7 @@ func TestGetChatForChoice_AllowsStillPending(t *testing.T) {
 	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
 
 	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
-	prompt, _ := chatRepo.InsertMessage(context.Background(), session.ID, "choice_prompt", "Q?", json.RawMessage(`[{"key":"A","label":"Yes"}]`), nil)
+	prompt, _ := chatRepo.InsertMessage(context.Background(), session.ID, "choice_prompt", "Q?", json.RawMessage(`[{"key":"A","label":"Yes"}]`), nil, nil)
 
 	got, err := svc.GetChatForChoice(context.Background(), "user-1", prompt.ID)
 	if err != nil {
@@ -352,5 +356,52 @@ func TestEstimateTokens(t *testing.T) {
 				t.Fatalf("estimateTokens(%q) = %d, want %d", c.in, got, c.want)
 			}
 		})
+	}
+}
+
+func TestPersistAndNotifyTenderResults_PersistsAndSendsResults(t *testing.T) {
+	chatRepo := newFakeChatRepo()
+	svc := newTestService(chatRepo, newFakeMemberRepo(), fakeWorkbenchCreator{})
+	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
+
+	value := int64(500000)
+	results := []tender.ScoredTender{{
+		Tender: tender.Tender{ID: "t-1", Title: "Cestini intelligenti", Country: "IT", CPV: "34928480", Value: &value},
+	}}
+
+	var got TenderResults
+	sendTenderResults := func(tr TenderResults) error { got = tr; return nil }
+
+	if err := svc.persistAndNotifyTenderResults(context.Background(), session.ID, results, sendTenderResults); err != nil {
+		t.Fatalf("persistAndNotifyTenderResults: %v", err)
+	}
+
+	if len(got.Tenders) != 1 || got.Tenders[0].ID != "t-1" {
+		t.Fatalf("sendTenderResults got = %+v", got)
+	}
+
+	msgs, _ := chatRepo.ListMessagesBySession(context.Background(), session.ID)
+	if len(msgs) != 1 || msgs[0].Role != "tender_results" {
+		t.Fatalf("persisted messages = %+v, want one tender_results row", msgs)
+	}
+	if msgs[0].Tenders == nil {
+		t.Fatal("persisted tender_results row has no Tenders JSON")
+	}
+	if !strings.Contains(string(*msgs[0].Tenders), `"id":"t-1"`) {
+		t.Fatalf("persisted tenders JSON = %s, want it to contain the tender id", string(*msgs[0].Tenders))
+	}
+}
+
+func TestPersistAndNotifyTenderResults_PropagatesSendError(t *testing.T) {
+	chatRepo := newFakeChatRepo()
+	svc := newTestService(chatRepo, newFakeMemberRepo(), fakeWorkbenchCreator{})
+	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
+
+	sendErr := errors.New("client disconnected")
+	sendTenderResults := func(TenderResults) error { return sendErr }
+
+	results := []tender.ScoredTender{{Tender: tender.Tender{ID: "t-1"}}}
+	if err := svc.persistAndNotifyTenderResults(context.Background(), session.ID, results, sendTenderResults); !errors.Is(err, sendErr) {
+		t.Fatalf("err = %v, want sendErr", err)
 	}
 }
