@@ -75,7 +75,7 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 
 	results := make([]*tenderv1.TenderResult, len(out.Results))
 	for i, t := range out.Results {
-		results[i] = tenderResultToProto(t)
+		results[i] = h.tenderResultToProto(t)
 	}
 
 	// workspace_id == "" is today's anonymous-safe behavior, left
@@ -133,7 +133,7 @@ func (h *TenderHandler) RecommendTendersForClient(ctx context.Context, req *conn
 	}
 	out := make([]*tenderv1.RecommendedTenderResult, len(recs))
 	for i, r := range recs {
-		out[i] = recommendedTenderToProto(r)
+		out[i] = h.recommendedTenderToProto(r)
 	}
 	return connect.NewResponse(&tenderv1.RecommendTendersForClientResponse{Results: out}), nil
 }
@@ -171,7 +171,11 @@ func filtersFromProto(f *tenderv1.TenderFilters) (tender.Filters, error) {
 	return out, nil
 }
 
-func tenderResultToProto(t tender.ScoredTender) *tenderv1.TenderResult {
+// tenderResultToProto is a method so it can reach h.svc for the eu_threshold
+// band — every result path (SearchTenders, GetRelatedTenders, and
+// RecommendTendersForClient via recommendedTenderToProto) routes through it,
+// so the coarse below/above-EU-threshold band is stamped on all of them.
+func (h *TenderHandler) tenderResultToProto(t tender.ScoredTender) *tenderv1.TenderResult {
 	var value int64
 	if t.Value != nil {
 		value = *t.Value
@@ -188,7 +192,8 @@ func tenderResultToProto(t tender.ScoredTender) *tenderv1.TenderResult {
 		ProcedureType: t.ProcedureType, Country: t.Country, Cpv: t.CPV,
 		Value: value, Currency: t.Currency, PublishedAt: publishedAt, Deadline: deadline,
 		RelevanceScore: t.RelevanceScore, Source: t.Source, SourceRef: t.SourceRef,
-		SourceUrl: t.SourceURL,
+		SourceUrl:   t.SourceURL,
+		EuThreshold: h.svc.EUThresholdBand(t.Value, t.CPV),
 	}
 }
 
@@ -219,9 +224,9 @@ func reasonSignalsToProto(r tender.ReasonSignals) *tenderv1.ReasonSignals {
 // RegionMatch/ProcedureMatch — stay in sync across both RPCs that emit
 // ReasonSignals (SearchTenders' annotation branch and this one), rather than
 // two independently-maintained copies of the same mapping.
-func recommendedTenderToProto(r tender.RecommendedTender) *tenderv1.RecommendedTenderResult {
+func (h *TenderHandler) recommendedTenderToProto(r tender.RecommendedTender) *tenderv1.RecommendedTenderResult {
 	return &tenderv1.RecommendedTenderResult{
-		Tender:  tenderResultToProto(r.ScoredTender),
+		Tender:  h.tenderResultToProto(r.ScoredTender),
 		FitTier: string(r.Tier),
 		Reason:  reasonSignalsToProto(r.Reason),
 	}
@@ -252,7 +257,7 @@ func (h *TenderHandler) GetRelatedTenders(ctx context.Context, req *connect.Requ
 	}
 	results := make([]*tenderv1.TenderResult, len(out))
 	for i, t := range out {
-		results[i] = tenderResultToProto(t)
+		results[i] = h.tenderResultToProto(t)
 	}
 	return connect.NewResponse(&tenderv1.GetRelatedTendersResponse{Results: results}), nil
 }

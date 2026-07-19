@@ -329,6 +329,53 @@ func TestGetCoverage_ReturnsCountriesAnonymously(t *testing.T) {
 	}
 }
 
+// euThresholdTenderConfig defaults the 2026-2027 EU thresholds so the handler
+// maps eu_threshold onto results the same way production main.go does.
+func euThresholdTenderConfig() tender.Config {
+	return tender.Config{
+		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
+		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+		EU: tender.EUThreshold{
+			WorksMinor:              540400000, // €5,404,000
+			SuppliesCentralMinor:    14000000,  // €140,000
+			SuppliesSubCentralMinor: 21600000,  // €216,000
+		},
+	}
+}
+
+// TestTenderResultToProto_SetsEuThreshold proves every SearchTenders result
+// carries the coarse EU-threshold band: a works tender under €5.404M is
+// below_eu, one over is above_eu, and an unknown (nil) value stays "".
+func TestTenderResultToProto_SetsEuThreshold(t *testing.T) {
+	cases := []struct {
+		name  string
+		value *int64
+		want  string
+	}{
+		{"works below threshold", i64(100000_00), "below_eu"},  // €100k < €5.404M
+		{"works above threshold", i64(6000000_00), "above_eu"}, // €6M > €5.404M
+		{"unknown value", nil, ""},
+	}
+	for _, c := range cases {
+		t.Run(c.name, func(t *testing.T) {
+			repo := &fakeRepo{results: []tender.Tender{{ID: "1", CPV: "45210000", Value: c.value}}}
+			svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSource{}, euThresholdTenderConfig())
+			h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+
+			resp, err := h.SearchTenders(context.Background(), connect.NewRequest(&tenderv1.SearchTendersRequest{Limit: 5}))
+			if err != nil {
+				t.Fatalf("SearchTenders: %v", err)
+			}
+			if len(resp.Msg.Results) != 1 {
+				t.Fatalf("len(Results) = %d, want 1", len(resp.Msg.Results))
+			}
+			if got := resp.Msg.Results[0].EuThreshold; got != c.want {
+				t.Fatalf("EuThreshold = %q, want %q", got, c.want)
+			}
+		})
+	}
+}
+
 func TestRecommendTendersForClient_RejectsUnauthenticated(t *testing.T) {
 	h := testTenderHandler(t)
 	_, err := h.RecommendTendersForClient(context.Background(), connect.NewRequest(&tenderv1.RecommendTendersForClientRequest{WorkspaceId: "ws-1"}))
