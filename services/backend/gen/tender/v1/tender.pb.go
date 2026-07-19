@@ -243,10 +243,11 @@ type TenderResult struct {
 	RelevanceScore float64                `protobuf:"fixed64,12,opt,name=relevance_score,json=relevanceScore,proto3" json:"relevance_score,omitempty"` // meaningful only when query was non-empty; 0 for filters-only
 	Source         string                 `protobuf:"bytes,13,opt,name=source,proto3" json:"source,omitempty"`
 	SourceRef      string                 `protobuf:"bytes,14,opt,name=source_ref,json=sourceRef,proto3" json:"source_ref,omitempty"`
-	SourceUrl      string                 `protobuf:"bytes,15,opt,name=source_url,json=sourceUrl,proto3" json:"source_url,omitempty"` // the notice's document URL, empty if none is ingested
-	Nuts           string                 `protobuf:"bytes,16,opt,name=nuts,proto3" json:"nuts,omitempty"`                            // NUTS region code, empty if unset
-	FitTier        string                 `protobuf:"bytes,17,opt,name=fit_tier,json=fitTier,proto3" json:"fit_tier,omitempty"`       // "strong" | "possible" | "long_shot"; empty unless annotated
-	Reason         *ReasonSignals         `protobuf:"bytes,18,opt,name=reason,proto3" json:"reason,omitempty"`                        // nil unless annotated
+	SourceUrl      string                 `protobuf:"bytes,15,opt,name=source_url,json=sourceUrl,proto3" json:"source_url,omitempty"`       // the notice's document URL, empty if none is ingested
+	Nuts           string                 `protobuf:"bytes,16,opt,name=nuts,proto3" json:"nuts,omitempty"`                                  // NUTS region code, empty if unset
+	FitTier        string                 `protobuf:"bytes,17,opt,name=fit_tier,json=fitTier,proto3" json:"fit_tier,omitempty"`             // "strong" | "possible" | "long_shot"; empty unless annotated
+	Reason         *ReasonSignals         `protobuf:"bytes,18,opt,name=reason,proto3" json:"reason,omitempty"`                              // nil unless annotated
+	EuThreshold    string                 `protobuf:"bytes,19,opt,name=eu_threshold,json=euThreshold,proto3" json:"eu_threshold,omitempty"` // "below_eu" | "above_eu" | "" — coarse, buyer-agnostic
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -405,6 +406,13 @@ func (x *TenderResult) GetReason() *ReasonSignals {
 		return x.Reason
 	}
 	return nil
+}
+
+func (x *TenderResult) GetEuThreshold() string {
+	if x != nil {
+		return x.EuThreshold
+	}
+	return ""
 }
 
 type RecommendTendersForClientRequest struct {
@@ -666,6 +674,86 @@ func (x *RecommendTendersForClientResponse) GetNeedsProfile() bool {
 	return false
 }
 
+type GetCoverageRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCoverageRequest) Reset() {
+	*x = GetCoverageRequest{}
+	mi := &file_tender_v1_tender_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCoverageRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCoverageRequest) ProtoMessage() {}
+
+func (x *GetCoverageRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tender_v1_tender_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCoverageRequest.ProtoReflect.Descriptor instead.
+func (*GetCoverageRequest) Descriptor() ([]byte, []int) {
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{8}
+}
+
+type GetCoverageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Countries     []string               `protobuf:"bytes,1,rep,name=countries,proto3" json:"countries,omitempty"` // alpha-2, uppercase; countries with >=1 ingested tender
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetCoverageResponse) Reset() {
+	*x = GetCoverageResponse{}
+	mi := &file_tender_v1_tender_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetCoverageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetCoverageResponse) ProtoMessage() {}
+
+func (x *GetCoverageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tender_v1_tender_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetCoverageResponse.ProtoReflect.Descriptor instead.
+func (*GetCoverageResponse) Descriptor() ([]byte, []int) {
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *GetCoverageResponse) GetCountries() []string {
+	if x != nil {
+		return x.Countries
+	}
+	return nil
+}
+
 type GetTenderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -675,7 +763,7 @@ type GetTenderRequest struct {
 
 func (x *GetTenderRequest) Reset() {
 	*x = GetTenderRequest{}
-	mi := &file_tender_v1_tender_proto_msgTypes[8]
+	mi := &file_tender_v1_tender_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -687,7 +775,7 @@ func (x *GetTenderRequest) String() string {
 func (*GetTenderRequest) ProtoMessage() {}
 
 func (x *GetTenderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[8]
+	mi := &file_tender_v1_tender_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -700,7 +788,7 @@ func (x *GetTenderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTenderRequest.ProtoReflect.Descriptor instead.
 func (*GetTenderRequest) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{8}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetTenderRequest) GetId() string {
@@ -719,7 +807,7 @@ type GetTenderResponse struct {
 
 func (x *GetTenderResponse) Reset() {
 	*x = GetTenderResponse{}
-	mi := &file_tender_v1_tender_proto_msgTypes[9]
+	mi := &file_tender_v1_tender_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -731,7 +819,7 @@ func (x *GetTenderResponse) String() string {
 func (*GetTenderResponse) ProtoMessage() {}
 
 func (x *GetTenderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[9]
+	mi := &file_tender_v1_tender_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -744,7 +832,7 @@ func (x *GetTenderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTenderResponse.ProtoReflect.Descriptor instead.
 func (*GetTenderResponse) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{9}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetTenderResponse) GetTender() *TenderDetail {
@@ -764,7 +852,7 @@ type GetRelatedTendersRequest struct {
 
 func (x *GetRelatedTendersRequest) Reset() {
 	*x = GetRelatedTendersRequest{}
-	mi := &file_tender_v1_tender_proto_msgTypes[10]
+	mi := &file_tender_v1_tender_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -776,7 +864,7 @@ func (x *GetRelatedTendersRequest) String() string {
 func (*GetRelatedTendersRequest) ProtoMessage() {}
 
 func (x *GetRelatedTendersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[10]
+	mi := &file_tender_v1_tender_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -789,7 +877,7 @@ func (x *GetRelatedTendersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRelatedTendersRequest.ProtoReflect.Descriptor instead.
 func (*GetRelatedTendersRequest) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{10}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *GetRelatedTendersRequest) GetId() string {
@@ -815,7 +903,7 @@ type GetRelatedTendersResponse struct {
 
 func (x *GetRelatedTendersResponse) Reset() {
 	*x = GetRelatedTendersResponse{}
-	mi := &file_tender_v1_tender_proto_msgTypes[11]
+	mi := &file_tender_v1_tender_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -827,7 +915,7 @@ func (x *GetRelatedTendersResponse) String() string {
 func (*GetRelatedTendersResponse) ProtoMessage() {}
 
 func (x *GetRelatedTendersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[11]
+	mi := &file_tender_v1_tender_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -840,7 +928,7 @@ func (x *GetRelatedTendersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRelatedTendersResponse.ProtoReflect.Descriptor instead.
 func (*GetRelatedTendersResponse) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{11}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetRelatedTendersResponse) GetResults() []*TenderResult {
@@ -859,7 +947,7 @@ type ListTenderSitemapRequest struct {
 
 func (x *ListTenderSitemapRequest) Reset() {
 	*x = ListTenderSitemapRequest{}
-	mi := &file_tender_v1_tender_proto_msgTypes[12]
+	mi := &file_tender_v1_tender_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -871,7 +959,7 @@ func (x *ListTenderSitemapRequest) String() string {
 func (*ListTenderSitemapRequest) ProtoMessage() {}
 
 func (x *ListTenderSitemapRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[12]
+	mi := &file_tender_v1_tender_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -884,7 +972,7 @@ func (x *ListTenderSitemapRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTenderSitemapRequest.ProtoReflect.Descriptor instead.
 func (*ListTenderSitemapRequest) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{12}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *ListTenderSitemapRequest) GetLimit() int32 {
@@ -903,7 +991,7 @@ type ListTenderSitemapResponse struct {
 
 func (x *ListTenderSitemapResponse) Reset() {
 	*x = ListTenderSitemapResponse{}
-	mi := &file_tender_v1_tender_proto_msgTypes[13]
+	mi := &file_tender_v1_tender_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -915,7 +1003,7 @@ func (x *ListTenderSitemapResponse) String() string {
 func (*ListTenderSitemapResponse) ProtoMessage() {}
 
 func (x *ListTenderSitemapResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[13]
+	mi := &file_tender_v1_tender_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -928,7 +1016,7 @@ func (x *ListTenderSitemapResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTenderSitemapResponse.ProtoReflect.Descriptor instead.
 func (*ListTenderSitemapResponse) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{13}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ListTenderSitemapResponse) GetRefs() []*TenderRef {
@@ -948,7 +1036,7 @@ type TenderRef struct {
 
 func (x *TenderRef) Reset() {
 	*x = TenderRef{}
-	mi := &file_tender_v1_tender_proto_msgTypes[14]
+	mi := &file_tender_v1_tender_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -960,7 +1048,7 @@ func (x *TenderRef) String() string {
 func (*TenderRef) ProtoMessage() {}
 
 func (x *TenderRef) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[14]
+	mi := &file_tender_v1_tender_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -973,7 +1061,7 @@ func (x *TenderRef) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TenderRef.ProtoReflect.Descriptor instead.
 func (*TenderRef) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{14}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *TenderRef) GetId() string {
@@ -1000,7 +1088,7 @@ type TenderDocument struct {
 
 func (x *TenderDocument) Reset() {
 	*x = TenderDocument{}
-	mi := &file_tender_v1_tender_proto_msgTypes[15]
+	mi := &file_tender_v1_tender_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1012,7 +1100,7 @@ func (x *TenderDocument) String() string {
 func (*TenderDocument) ProtoMessage() {}
 
 func (x *TenderDocument) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[15]
+	mi := &file_tender_v1_tender_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1025,7 +1113,7 @@ func (x *TenderDocument) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TenderDocument.ProtoReflect.Descriptor instead.
 func (*TenderDocument) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{15}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *TenderDocument) GetUrl() string {
@@ -1056,7 +1144,7 @@ type TenderLot struct {
 
 func (x *TenderLot) Reset() {
 	*x = TenderLot{}
-	mi := &file_tender_v1_tender_proto_msgTypes[16]
+	mi := &file_tender_v1_tender_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1068,7 +1156,7 @@ func (x *TenderLot) String() string {
 func (*TenderLot) ProtoMessage() {}
 
 func (x *TenderLot) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[16]
+	mi := &file_tender_v1_tender_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1081,7 +1169,7 @@ func (x *TenderLot) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TenderLot.ProtoReflect.Descriptor instead.
 func (*TenderLot) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{16}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *TenderLot) GetRef() string {
@@ -1154,7 +1242,7 @@ type TenderDetail struct {
 
 func (x *TenderDetail) Reset() {
 	*x = TenderDetail{}
-	mi := &file_tender_v1_tender_proto_msgTypes[17]
+	mi := &file_tender_v1_tender_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1166,7 +1254,7 @@ func (x *TenderDetail) String() string {
 func (*TenderDetail) ProtoMessage() {}
 
 func (x *TenderDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[17]
+	mi := &file_tender_v1_tender_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1179,7 +1267,7 @@ func (x *TenderDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TenderDetail.ProtoReflect.Descriptor instead.
 func (*TenderDetail) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{17}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *TenderDetail) GetId() string {
@@ -1342,7 +1430,7 @@ const file_tender_v1_tender_proto_rawDesc = "" +
 	"deadlineTo\"e\n" +
 	"\x15SearchTendersResponse\x121\n" +
 	"\aresults\x18\x01 \x03(\v2\x17.tender.v1.TenderResultR\aresults\x12\x19\n" +
-	"\bhas_more\x18\x02 \x01(\bR\ahasMore\"\x8f\x04\n" +
+	"\bhas_more\x18\x02 \x01(\bR\ahasMore\"\xb2\x04\n" +
 	"\fTenderResult\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1d\n" +
@@ -1365,7 +1453,8 @@ const file_tender_v1_tender_proto_rawDesc = "" +
 	"source_url\x18\x0f \x01(\tR\tsourceUrl\x12\x12\n" +
 	"\x04nuts\x18\x10 \x01(\tR\x04nuts\x12\x19\n" +
 	"\bfit_tier\x18\x11 \x01(\tR\afitTier\x120\n" +
-	"\x06reason\x18\x12 \x01(\v2\x18.tender.v1.ReasonSignalsR\x06reason\"[\n" +
+	"\x06reason\x18\x12 \x01(\v2\x18.tender.v1.ReasonSignalsR\x06reason\x12!\n" +
+	"\feu_threshold\x18\x13 \x01(\tR\veuThreshold\"[\n" +
 	" RecommendTendersForClientRequest\x12!\n" +
 	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x05R\x05limit\"\x88\x02\n" +
@@ -1383,7 +1472,10 @@ const file_tender_v1_tender_proto_rawDesc = "" +
 	"\x06reason\x18\x03 \x01(\v2\x18.tender.v1.ReasonSignalsR\x06reason\"\x86\x01\n" +
 	"!RecommendTendersForClientResponse\x12<\n" +
 	"\aresults\x18\x01 \x03(\v2\".tender.v1.RecommendedTenderResultR\aresults\x12#\n" +
-	"\rneeds_profile\x18\x02 \x01(\bR\fneedsProfile\"\"\n" +
+	"\rneeds_profile\x18\x02 \x01(\bR\fneedsProfile\"\x14\n" +
+	"\x12GetCoverageRequest\"3\n" +
+	"\x13GetCoverageResponse\x12\x1c\n" +
+	"\tcountries\x18\x01 \x03(\tR\tcountries\"\"\n" +
 	"\x10GetTenderRequest\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\"D\n" +
 	"\x11GetTenderResponse\x12/\n" +
@@ -1434,13 +1526,14 @@ const file_tender_v1_tender_proto_rawDesc = "" +
 	"\n" +
 	"source_url\x18\x12 \x01(\tR\tsourceUrl\x127\n" +
 	"\tdocuments\x18\x13 \x03(\v2\x19.tender.v1.TenderDocumentR\tdocuments\x12(\n" +
-	"\x04lots\x18\x14 \x03(\v2\x14.tender.v1.TenderLotR\x04lots2\xe3\x03\n" +
+	"\x04lots\x18\x14 \x03(\v2\x14.tender.v1.TenderLotR\x04lots2\xb1\x04\n" +
 	"\rTenderService\x12R\n" +
 	"\rSearchTenders\x12\x1f.tender.v1.SearchTendersRequest\x1a .tender.v1.SearchTendersResponse\x12F\n" +
 	"\tGetTender\x12\x1b.tender.v1.GetTenderRequest\x1a\x1c.tender.v1.GetTenderResponse\x12^\n" +
 	"\x11GetRelatedTenders\x12#.tender.v1.GetRelatedTendersRequest\x1a$.tender.v1.GetRelatedTendersResponse\x12^\n" +
 	"\x11ListTenderSitemap\x12#.tender.v1.ListTenderSitemapRequest\x1a$.tender.v1.ListTenderSitemapResponse\x12v\n" +
-	"\x19RecommendTendersForClient\x12+.tender.v1.RecommendTendersForClientRequest\x1a,.tender.v1.RecommendTendersForClientResponseBTZRgithub.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1;tenderv1b\x06proto3"
+	"\x19RecommendTendersForClient\x12+.tender.v1.RecommendTendersForClientRequest\x1a,.tender.v1.RecommendTendersForClientResponse\x12L\n" +
+	"\vGetCoverage\x12\x1d.tender.v1.GetCoverageRequest\x1a\x1e.tender.v1.GetCoverageResponseBTZRgithub.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1;tenderv1b\x06proto3"
 
 var (
 	file_tender_v1_tender_proto_rawDescOnce sync.Once
@@ -1454,7 +1547,7 @@ func file_tender_v1_tender_proto_rawDescGZIP() []byte {
 	return file_tender_v1_tender_proto_rawDescData
 }
 
-var file_tender_v1_tender_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_tender_v1_tender_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_tender_v1_tender_proto_goTypes = []any{
 	(*SearchTendersRequest)(nil),              // 0: tender.v1.SearchTendersRequest
 	(*TenderFilters)(nil),                     // 1: tender.v1.TenderFilters
@@ -1464,16 +1557,18 @@ var file_tender_v1_tender_proto_goTypes = []any{
 	(*ReasonSignals)(nil),                     // 5: tender.v1.ReasonSignals
 	(*RecommendedTenderResult)(nil),           // 6: tender.v1.RecommendedTenderResult
 	(*RecommendTendersForClientResponse)(nil), // 7: tender.v1.RecommendTendersForClientResponse
-	(*GetTenderRequest)(nil),                  // 8: tender.v1.GetTenderRequest
-	(*GetTenderResponse)(nil),                 // 9: tender.v1.GetTenderResponse
-	(*GetRelatedTendersRequest)(nil),          // 10: tender.v1.GetRelatedTendersRequest
-	(*GetRelatedTendersResponse)(nil),         // 11: tender.v1.GetRelatedTendersResponse
-	(*ListTenderSitemapRequest)(nil),          // 12: tender.v1.ListTenderSitemapRequest
-	(*ListTenderSitemapResponse)(nil),         // 13: tender.v1.ListTenderSitemapResponse
-	(*TenderRef)(nil),                         // 14: tender.v1.TenderRef
-	(*TenderDocument)(nil),                    // 15: tender.v1.TenderDocument
-	(*TenderLot)(nil),                         // 16: tender.v1.TenderLot
-	(*TenderDetail)(nil),                      // 17: tender.v1.TenderDetail
+	(*GetCoverageRequest)(nil),                // 8: tender.v1.GetCoverageRequest
+	(*GetCoverageResponse)(nil),               // 9: tender.v1.GetCoverageResponse
+	(*GetTenderRequest)(nil),                  // 10: tender.v1.GetTenderRequest
+	(*GetTenderResponse)(nil),                 // 11: tender.v1.GetTenderResponse
+	(*GetRelatedTendersRequest)(nil),          // 12: tender.v1.GetRelatedTendersRequest
+	(*GetRelatedTendersResponse)(nil),         // 13: tender.v1.GetRelatedTendersResponse
+	(*ListTenderSitemapRequest)(nil),          // 14: tender.v1.ListTenderSitemapRequest
+	(*ListTenderSitemapResponse)(nil),         // 15: tender.v1.ListTenderSitemapResponse
+	(*TenderRef)(nil),                         // 16: tender.v1.TenderRef
+	(*TenderDocument)(nil),                    // 17: tender.v1.TenderDocument
+	(*TenderLot)(nil),                         // 18: tender.v1.TenderLot
+	(*TenderDetail)(nil),                      // 19: tender.v1.TenderDetail
 }
 var file_tender_v1_tender_proto_depIdxs = []int32{
 	1,  // 0: tender.v1.SearchTendersRequest.filters:type_name -> tender.v1.TenderFilters
@@ -1482,23 +1577,25 @@ var file_tender_v1_tender_proto_depIdxs = []int32{
 	3,  // 3: tender.v1.RecommendedTenderResult.tender:type_name -> tender.v1.TenderResult
 	5,  // 4: tender.v1.RecommendedTenderResult.reason:type_name -> tender.v1.ReasonSignals
 	6,  // 5: tender.v1.RecommendTendersForClientResponse.results:type_name -> tender.v1.RecommendedTenderResult
-	17, // 6: tender.v1.GetTenderResponse.tender:type_name -> tender.v1.TenderDetail
+	19, // 6: tender.v1.GetTenderResponse.tender:type_name -> tender.v1.TenderDetail
 	3,  // 7: tender.v1.GetRelatedTendersResponse.results:type_name -> tender.v1.TenderResult
-	14, // 8: tender.v1.ListTenderSitemapResponse.refs:type_name -> tender.v1.TenderRef
-	15, // 9: tender.v1.TenderDetail.documents:type_name -> tender.v1.TenderDocument
-	16, // 10: tender.v1.TenderDetail.lots:type_name -> tender.v1.TenderLot
+	16, // 8: tender.v1.ListTenderSitemapResponse.refs:type_name -> tender.v1.TenderRef
+	17, // 9: tender.v1.TenderDetail.documents:type_name -> tender.v1.TenderDocument
+	18, // 10: tender.v1.TenderDetail.lots:type_name -> tender.v1.TenderLot
 	0,  // 11: tender.v1.TenderService.SearchTenders:input_type -> tender.v1.SearchTendersRequest
-	8,  // 12: tender.v1.TenderService.GetTender:input_type -> tender.v1.GetTenderRequest
-	10, // 13: tender.v1.TenderService.GetRelatedTenders:input_type -> tender.v1.GetRelatedTendersRequest
-	12, // 14: tender.v1.TenderService.ListTenderSitemap:input_type -> tender.v1.ListTenderSitemapRequest
+	10, // 12: tender.v1.TenderService.GetTender:input_type -> tender.v1.GetTenderRequest
+	12, // 13: tender.v1.TenderService.GetRelatedTenders:input_type -> tender.v1.GetRelatedTendersRequest
+	14, // 14: tender.v1.TenderService.ListTenderSitemap:input_type -> tender.v1.ListTenderSitemapRequest
 	4,  // 15: tender.v1.TenderService.RecommendTendersForClient:input_type -> tender.v1.RecommendTendersForClientRequest
-	2,  // 16: tender.v1.TenderService.SearchTenders:output_type -> tender.v1.SearchTendersResponse
-	9,  // 17: tender.v1.TenderService.GetTender:output_type -> tender.v1.GetTenderResponse
-	11, // 18: tender.v1.TenderService.GetRelatedTenders:output_type -> tender.v1.GetRelatedTendersResponse
-	13, // 19: tender.v1.TenderService.ListTenderSitemap:output_type -> tender.v1.ListTenderSitemapResponse
-	7,  // 20: tender.v1.TenderService.RecommendTendersForClient:output_type -> tender.v1.RecommendTendersForClientResponse
-	16, // [16:21] is the sub-list for method output_type
-	11, // [11:16] is the sub-list for method input_type
+	8,  // 16: tender.v1.TenderService.GetCoverage:input_type -> tender.v1.GetCoverageRequest
+	2,  // 17: tender.v1.TenderService.SearchTenders:output_type -> tender.v1.SearchTendersResponse
+	11, // 18: tender.v1.TenderService.GetTender:output_type -> tender.v1.GetTenderResponse
+	13, // 19: tender.v1.TenderService.GetRelatedTenders:output_type -> tender.v1.GetRelatedTendersResponse
+	15, // 20: tender.v1.TenderService.ListTenderSitemap:output_type -> tender.v1.ListTenderSitemapResponse
+	7,  // 21: tender.v1.TenderService.RecommendTendersForClient:output_type -> tender.v1.RecommendTendersForClientResponse
+	9,  // 22: tender.v1.TenderService.GetCoverage:output_type -> tender.v1.GetCoverageResponse
+	17, // [17:23] is the sub-list for method output_type
+	11, // [11:17] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
 	11, // [11:11] is the sub-list for extension extendee
 	0,  // [0:11] is the sub-list for field type_name
@@ -1515,7 +1612,7 @@ func file_tender_v1_tender_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tender_v1_tender_proto_rawDesc), len(file_tender_v1_tender_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

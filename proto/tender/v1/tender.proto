@@ -18,6 +18,11 @@ service TenderService {
   // SearchTenders this requires authentication: it is scoped to one client
   // (workspace) and reads that client's ClientProfile.
   rpc RecommendTendersForClient(RecommendTendersForClientRequest) returns (RecommendTendersForClientResponse);
+  // Which countries we currently hold tenders for (DISTINCT country over
+  // ingested_tenders). Anonymous-safe like SearchTenders — the landing
+  // coverage marquee reads it. "available" = we have >=1 tender for that
+  // country (TED-inclusive), not a below-threshold-only claim.
+  rpc GetCoverage(GetCoverageRequest) returns (GetCoverageResponse);
 }
 
 message SearchTendersRequest {
@@ -63,6 +68,9 @@ message TenderResult {
   string nuts = 16;             // NUTS region code, empty if unset
   string fit_tier = 17;         // "strong" | "possible" | "long_shot"; empty unless annotated
   ReasonSignals reason = 18;    // nil unless annotated
+  string eu_threshold = 19;     // "below_eu" | "above_eu" | "" — coarse, buyer-agnostic
+                                 // EU-threshold band (SME-winnable = below). Empty when
+                                 // value is unknown OR the band is ambiguous. NOT value_fit.
 }
 
 message RecommendTendersForClientRequest {
@@ -92,6 +100,11 @@ message RecommendedTenderResult {
 message RecommendTendersForClientResponse {
   repeated RecommendedTenderResult results = 1;
   bool needs_profile = 2; // true = no ClientProfile yet; results is empty
+}
+
+message GetCoverageRequest {}
+message GetCoverageResponse {
+  repeated string countries = 1; // alpha-2, uppercase; countries with >=1 ingested tender
 }
 
 message GetTenderRequest { string id = 1; }

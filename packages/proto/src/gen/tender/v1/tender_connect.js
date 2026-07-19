@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, RecommendTendersForClientRequest, RecommendTendersForClientResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
+import { GetCoverageRequest, GetCoverageResponse, GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, RecommendTendersForClientRequest, RecommendTendersForClientResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -66,6 +66,20 @@ export const TenderService = {
       name: "RecommendTendersForClient",
       I: RecommendTendersForClientRequest,
       O: RecommendTendersForClientResponse,
+      kind: MethodKind.Unary,
+    },
+    /**
+     * Which countries we currently hold tenders for (DISTINCT country over
+     * ingested_tenders). Anonymous-safe like SearchTenders — the landing
+     * coverage marquee reads it. "available" = we have >=1 tender for that
+     * country (TED-inclusive), not a below-threshold-only claim.
+     *
+     * @generated from rpc tender.v1.TenderService.GetCoverage
+     */
+    getCoverage: {
+      name: "GetCoverage",
+      I: GetCoverageRequest,
+      O: GetCoverageResponse,
       kind: MethodKind.Unary,
     },
   }
