@@ -75,7 +75,19 @@ export const useChatStore = create<ChatStore>()(
     }),
     {
       name: 'chat',
-      storage: createJSONStorage(() => sessionStorage),
+      // A `tender_results` message's `tenders[].value` is a protobuf int64,
+      // typed `bigint` — JSON has no native bigint literal, so the default
+      // (de)serializer throws "Do not know how to serialize a BigInt" the
+      // moment one lands in the persisted `messages` array. Round-trip it
+      // through a tagged object instead of losing precision via Number().
+      storage: createJSONStorage(() => sessionStorage, {
+        replacer: (_key, value) =>
+          typeof value === 'bigint' ? { __type: 'bigint', value: value.toString() } : value,
+        reviver: (_key, value) =>
+          value && typeof value === 'object' && (value as { __type?: string }).__type === 'bigint'
+            ? BigInt((value as { value: string }).value)
+            : value,
+      }),
       partialize: (s) => ({
         currentChatId: s.currentChatId,
         messages: s.messages,
