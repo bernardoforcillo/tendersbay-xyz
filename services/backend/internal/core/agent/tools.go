@@ -159,13 +159,34 @@ func newCreateWorkbenchTool(createWorkbench func(name, description string, visib
 // enough to reason about, small enough to stay cheap in the model's context.
 const searchTendersToolLimit = 5
 
+// searchTendersEmptyStreakLimit is how many consecutive zero-result
+// search_tenders calls within one turn trigger the broaden-the-search
+// notice below.
+const searchTendersEmptyStreakLimit = 5
+
+// searchTendersEmptyStreakNotice is appended to the tool's JSON result once
+// searchTendersEmptyStreakLimit consecutive empty searches have happened in
+// this turn. This relies on prompt-based control (the same accepted pattern
+// already used to enforce ask_choice before create_workbench — see
+// newCreateWorkbenchTool's doc comment) rather than a hard code-level stop:
+// berrygem gives this tool no way to end the turn itself the way
+// ask_choice's callback does.
+const searchTendersEmptyStreakNotice = "You have searched 5 times with zero results. STOP calling " +
+	"search_tenders. Call ask_choice now, offering 3-4 broader alternative search terms or CPV " +
+	"categories as clickable options, and briefly explain that no exact matches were found."
+
 // newSearchTendersTool builds the "search live EU tenders" tool — a plain,
 // client-agnostic search on model-provided terms (v1.0 does not auto-scope
 // this to a ClientProfile; see the design spec's architecture section for
 // why). Same callback-reads-current-turnState shape as
 // newCreateWorkbenchTool — see that function's doc comment for the full
 // stale-closure rationale.
+//
+// emptyStreak is captured by the closure below, not passed in: newSearchTendersTool
+// is called once per Service.runTurn (service.go), so it naturally resets to 0 every
+// turn and persists correctly across that turn's repeated tool calls.
 func newSearchTendersTool(search func(query, country, cpv, status string) ([]tender.ScoredTender, error)) tools.Tool {
+	emptyStreak := 0
 	return tools.NewFunc(
 		"search_tenders",
 		"Search live EU public tenders by free-text query and optional filters. Use this whenever "+
@@ -208,7 +229,16 @@ func newSearchTendersTool(search func(query, country, cpv, status string) ([]ten
 			if err != nil {
 				return "", fmt.Errorf("search_tenders: %w", err)
 			}
-			return marshalSearchTendersResult(results)
+			if len(results) == 0 {
+				emptyStreak++
+			} else {
+				emptyStreak = 0
+			}
+			notice := ""
+			if emptyStreak >= searchTendersEmptyStreakLimit {
+				notice = searchTendersEmptyStreakNotice
+			}
+			return marshalSearchTendersResult(results, notice)
 		},
 	)
 }
@@ -227,19 +257,27 @@ type searchTendersResultItem struct {
 	RelevanceScore float64 `json:"relevance_score"`
 }
 
-func marshalSearchTendersResult(results []tender.ScoredTender) (string, error) {
-	out := make([]searchTendersResultItem, len(results))
+// searchTendersResult is the tool's full JSON payload — Notice is only set
+// once searchTendersEmptyStreakLimit consecutive empty searches have
+// happened in this turn (see newSearchTendersTool).
+type searchTendersResult struct {
+	Results []searchTendersResultItem `json:"results"`
+	Notice  string                    `json:"notice,omitempty"`
+}
+
+func marshalSearchTendersResult(results []tender.ScoredTender, notice string) (string, error) {
+	items := make([]searchTendersResultItem, len(results))
 	for i, r := range results {
 		var deadline string
 		if r.Deadline != nil {
 			deadline = r.Deadline.Format(time.RFC3339)
 		}
-		out[i] = searchTendersResultItem{
+		items[i] = searchTendersResultItem{
 			ID: r.ID, Title: r.Title, BuyerName: r.BuyerName, Country: r.Country, CPV: r.CPV,
 			Value: r.Value, Deadline: deadline, RelevanceScore: r.RelevanceScore,
 		}
 	}
-	b, err := json.Marshal(out)
+	b, err := json.Marshal(searchTendersResult{Results: items, Notice: notice})
 	if err != nil {
 		return "", err
 	}
