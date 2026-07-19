@@ -69,10 +69,15 @@
       "displayName": "Naam",
       "email": "E-mail",
       "password": "Wachtwoord",
-      "submitting": "Bezig met aanmaken…",
       "submit": "Account aanmaken",
       "login": "Heb je al een account?",
-      "signIn": "Inloggen"
+      "signIn": "Inloggen",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Controleer je e-mail",

@@ -69,10 +69,15 @@
       "displayName": "Isem",
       "email": "Email",
       "password": "Password",
-      "submitting": "Qed jinħoloq…",
       "submit": "Oħloq kont",
       "login": "Diġà għandek kont?",
-      "signIn": "Idħol"
+      "signIn": "Idħol",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Iċċekkja l-email tiegħek",

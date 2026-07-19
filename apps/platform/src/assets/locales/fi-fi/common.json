@@ -69,10 +69,15 @@
       "displayName": "Nimi",
       "email": "Sähköposti",
       "password": "Salasana",
-      "submitting": "Luodaan…",
       "submit": "Luo tili",
       "login": "Onko sinulla jo tili?",
-      "signIn": "Kirjaudu sisään"
+      "signIn": "Kirjaudu sisään",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Tarkista sähköpostisi",

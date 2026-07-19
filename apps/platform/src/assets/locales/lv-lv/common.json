@@ -69,10 +69,15 @@
       "displayName": "Vārds",
       "email": "E-pasts",
       "password": "Parole",
-      "submitting": "Notiek izveide…",
       "submit": "Izveidot kontu",
       "login": "Vai jums jau ir konts?",
-      "signIn": "Pieteikties"
+      "signIn": "Pieteikties",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Pārbaudiet savu e-pastu",

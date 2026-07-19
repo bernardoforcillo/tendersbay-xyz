@@ -69,10 +69,15 @@
       "displayName": "Ime",
       "email": "E-pošta",
       "password": "Lozinka",
-      "submitting": "Izrada u tijeku…",
       "submit": "Izradite račun",
       "login": "Već imate račun?",
-      "signIn": "Prijava"
+      "signIn": "Prijava",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Provjerite svoju e-poštu",

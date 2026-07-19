@@ -69,10 +69,15 @@
       "displayName": "Navn",
       "email": "E-mail",
       "password": "Adgangskode",
-      "submitting": "Opretter…",
       "submit": "Opret konto",
       "login": "Har du allerede en konto?",
-      "signIn": "Log ind"
+      "signIn": "Log ind",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Tjek din e-mail",

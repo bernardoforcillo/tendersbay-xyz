@@ -69,10 +69,15 @@
       "displayName": "Meno",
       "email": "E-mail",
       "password": "Heslo",
-      "submitting": "Vytváranie…",
       "submit": "Vytvoriť účet",
       "login": "Máte už účet?",
-      "signIn": "Prihlásiť sa"
+      "signIn": "Prihlásiť sa",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Skontrolujte svoj e-mail",

@@ -69,10 +69,15 @@
       "displayName": "Namn",
       "email": "E-post",
       "password": "Lösenord",
-      "submitting": "Skapar…",
       "submit": "Skapa konto",
       "login": "Har du redan ett konto?",
-      "signIn": "Logga in"
+      "signIn": "Logga in",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Kontrollera din e-post",

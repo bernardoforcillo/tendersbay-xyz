@@ -10,6 +10,7 @@ export type ButtonProps = Omit<RACButtonProps, 'className' | 'children'> & {
   size?: Size;
   className?: string;
   children?: ReactNode;
+  isLoading?: boolean;
 };
 
 const BASE =
@@ -32,6 +33,35 @@ const SIZES: Record<Size, string> = {
   lg: 'h-12 px-6 text-base',
 };
 
-export function Button({ variant = 'primary', size = 'md', className, ...props }: ButtonProps) {
-  return <RACButton {...props} className={cn(BASE, VARIANTS[variant], SIZES[size], className)} />;
+function Spinner() {
+  return (
+    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+      />
+    </svg>
+  );
+}
+
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  isLoading = false,
+  className,
+  children,
+  ...props
+}: ButtonProps) {
+  return (
+    <RACButton
+      {...props}
+      isDisabled={props.isDisabled || isLoading}
+      className={cn(BASE, VARIANTS[variant], SIZES[size], className)}
+    >
+      {isLoading && <Spinner />}
+      <span aria-hidden={isLoading}>{children}</span>
+    </RACButton>
+  );
 }

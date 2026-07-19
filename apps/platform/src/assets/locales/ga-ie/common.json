@@ -69,10 +69,15 @@
       "displayName": "Ainm",
       "email": "Ríomhphost",
       "password": "Focal faire",
-      "submitting": "Ag cruthú…",
       "submit": "Cruthaigh cuntas",
       "login": "An bhfuil cuntas agat cheana féin?",
-      "signIn": "Sínigh isteach"
+      "signIn": "Sínigh isteach",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Seiceáil do ríomhphost",

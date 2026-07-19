@@ -69,10 +69,15 @@
       "displayName": "Nume",
       "email": "E-mail",
       "password": "Parolă",
-      "submitting": "Se creează…",
       "submit": "Creează cont",
       "login": "Ai deja un cont?",
-      "signIn": "Autentifică-te"
+      "signIn": "Autentifică-te",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Verifică-ți e-mailul",

@@ -69,10 +69,15 @@
       "displayName": "Jméno",
       "email": "E-mail",
       "password": "Heslo",
-      "submitting": "Vytváření…",
       "submit": "Vytvořit účet",
       "login": "Máte již účet?",
-      "signIn": "Přihlásit se"
+      "signIn": "Přihlásit se",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Zkontrolujte svůj e-mail",

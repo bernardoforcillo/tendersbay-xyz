@@ -69,10 +69,15 @@
       "displayName": "Név",
       "email": "E-mail",
       "password": "Jelszó",
-      "submitting": "Létrehozás…",
       "submit": "Fiók létrehozása",
       "login": "Már van fiókja?",
-      "signIn": "Bejelentkezés"
+      "signIn": "Bejelentkezés",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Ellenőrizze az e-mailjét",

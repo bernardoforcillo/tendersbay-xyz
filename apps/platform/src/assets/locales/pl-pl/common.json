@@ -69,10 +69,15 @@
       "displayName": "Imię",
       "email": "E-mail",
       "password": "Hasło",
-      "submitting": "Tworzenie…",
       "submit": "Utwórz konto",
       "login": "Masz już konto?",
-      "signIn": "Zaloguj się"
+      "signIn": "Zaloguj się",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Sprawdź swoją skrzynkę e-mail",

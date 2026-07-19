@@ -69,10 +69,15 @@
       "displayName": "Vardas",
       "email": "El. paštas",
       "password": "Slaptažodis",
-      "submitting": "Kuriama…",
       "submit": "Sukurti paskyrą",
       "login": "Jau turite paskyrą?",
-      "signIn": "Prisijungti"
+      "signIn": "Prisijungti",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Patikrinkite savo el. paštą",

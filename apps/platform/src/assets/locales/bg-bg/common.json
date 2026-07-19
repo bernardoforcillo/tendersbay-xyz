@@ -69,10 +69,15 @@
       "displayName": "Име",
       "email": "Имейл",
       "password": "Парола",
-      "submitting": "Създаване…",
       "submit": "Създаване на акаунт",
       "login": "Вече имате акаунт?",
-      "signIn": "Вход"
+      "signIn": "Вход",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Проверете имейла си",

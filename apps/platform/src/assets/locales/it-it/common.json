@@ -69,10 +69,15 @@
       "displayName": "Nome",
       "email": "Email",
       "password": "Password",
-      "submitting": "Creazione in corso…",
       "submit": "Crea account",
       "login": "Hai già un account?",
-      "signIn": "Accedi"
+      "signIn": "Accedi",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Controlla la tua email",
