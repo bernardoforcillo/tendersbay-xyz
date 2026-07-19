@@ -1,14 +1,12 @@
-import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 export interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant' | 'choice_prompt' | 'choice_response' | 'tender_results';
+  role: 'user' | 'assistant' | 'choice_prompt' | 'choice_response';
   content: string;
   createdAt: string;
   choices?: { key: string; label: string; description: string }[];
-  tenders?: TenderResult[];
 }
 
 interface ChatStore {
