@@ -69,10 +69,15 @@
       "displayName": "Isem",
       "email": "Email",
       "password": "Password",
-      "submitting": "Qed jinħoloq…",
       "submit": "Oħloq kont",
       "login": "Diġà għandek kont?",
-      "signIn": "Idħol"
+      "signIn": "Idħol",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Iċċekkja l-email tiegħek",
@@ -104,6 +109,36 @@
       "loading": "Mument."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Setturi",
+      "countries": "Pajjiżi",
+      "valueMin": "Valur minimu",
+      "valueMax": "Valur massimu",
+      "notes": "Noti",
+      "notesPlaceholder": "Fuq xiex normalment joffri dan il-klijent?",
+      "save": "Issejvja l-profil",
+      "invalidBand": "Il-valur minimu ma jistax jaqbeż il-valur massimu.",
+      "error": "Ma stajniex insejvjaw il-profil — erġa' pprova.",
+      "procedureTypesLabel": "Tipi ta' proċedura",
+      "procedureTypes": {
+        "open": "Proċedura miftuħa",
+        "restricted": "Proċedura ristretta",
+        "negotiated": "Proċedura nnegozjata",
+        "competitive_dialogue": "Djalogu kompetittiv",
+        "innovation_partnership": "Sħubija għall-innovazzjoni",
+        "other": "Oħra"
+      },
+      "regions": "Reġjuni (NUTS)",
+      "regionsPlaceholder": "eż. ITC, DE3",
+      "regionsHint": "Prefissi NUTS separati b'virgola. Ħalli vojt biex tinkludi kwalunkwe reġjun."
+    },
+    "shortlist": {
+      "title": "L-aħjar tqabbil għal dan il-klijent",
+      "emptyTitle": "Għadu ma hemm ebda sejħa adattata",
+      "emptyDescription": "Ipprova tfittxija manwali hawn taħt, jew wessa' l-profil ta' dan il-klijent."
+    }
+  },
   "landing": {
     "header": {
       "login": "Idħol",
@@ -116,12 +151,27 @@
         "Rinnovazzjoni ta' skejjel pubbliċi",
         "Modernizzazzjoni tal-IT tal-isptarijiet",
         "Kostruzzjoni ta' impjanti solari",
-        "Flotot ta' karozzi tal-linja elettriċi"
-      ]
+        "Flotot ta' karozzi tal-linja elettriċi",
+        "Xogħlijiet ferrovjarji, Milan",
+        "Servizzi tal-cloud, Varsavja",
+        "Titjib fl-enerġija, Vjenna",
+        "Manutenzjoni tal-parkijiet, Ateni"
+      ],
+      "filters": {
+        "country": "Pajjiż",
+        "sector": "Settur",
+        "deadline": "Skadenza",
+        "value": "Valur"
+      },
+      "loading": "Qed infittxu…",
+      "empty": "L-ebda sejħa ma nstabet",
+      "error": "It-tfittxija mhix disponibbli bħalissa — erġa' pprova fi ftit ħin.",
+      "results_one": "{{count}} sejħa",
+      "results_other": "{{count}} sejħiet"
     },
     "meta": {
       "title": "tendersbay — Sejħiet għall-offerti, mogħtija mill-aġenti AI",
-      "description": "Aġenti AI li jsibu s-sejħiet għall-offerti u l-offerti pubbliċi Ewropej it-tajbin, ifarrku l-burokrazija u jieħdu l-SME tiegħek sal-għoti tal-kuntratt."
+      "description": "Aġenti AI li jfittxu l-aħjar sejħiet għall-offerti pubbliċi madwar l-Ewropa, ifarrku l-burokrazija, u jwasslu lill-SME tiegħek mill-ewwel sejħa sal-għoti tal-kuntratt."
     },
     "nav": {
       "problem": "L-Ispiża",
@@ -129,19 +179,38 @@
       "vision": "Viżjoni"
     },
     "hero": {
-      "titleLead": "L-offerta li diġà qisuha tagħhom?",
+      "titleLead": "Is-sejħa li diġà qisuha tagħhom?",
       "titleHighlight": "Mogħtija.",
-      "subtitle": "Illejla tagħlaq offerta b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
+      "subtitle": "Illejla tagħlaq sejħa b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
       "ctaPrimary": "Poġġi l-aġenti tiegħek jaħdmu",
       "ctaSecondary": "Ara l-viżjoni",
-      "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"]
+      "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"],
+      "deckLabel": "Riżultati ta' eżempju"
+    },
+    "proof": {
+      "lead": "Kull sena fl-Ewropa jintnefqu aktar minn żewġ triljun ewro ta’ flus pubbliċi. Il-biċċa l-kbira tgħaddi minn sejħiet għall-offerti li qatt ma tara.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "nefqa pubblika fis-sena fl-UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "xerrejja pubbliċi li joħorġu sejħiet għall-offerti"
+        },
+        {
+          "value": "~800,000",
+          "label": "sejħiet fis-sena — l-ebda tim ma jaqrahom kollha"
+        }
+      ],
+      "source": "Il-Kummissjoni Ewropea · TED (Tenders Electronic Daily)"
     },
     "problem": {
-      "title": "Il-logħba hija mqassma biex iżżommok barra. U qed taħdem.",
+      "title": "Il-logħba kienet iffissata biex iżżommok barra. U qed taħdem.",
       "items": [
         {
           "title": "Midfuna fi 27 pajjiż",
-          "body": "L-offerti li jaqblu miegħek huma mxerrda fuq għexieren ta' portali nazzjonali, f'lingwi li ma titkellimx, f'formati li jirreżistu."
+          "body": "Is-sejħiet li jaqblu miegħek huma mxerrda fuq għexieren ta' portali nazzjonali, f'lingwi li ma titkellimx, f'formati li jirreżistu."
         },
         {
           "title": "Tegħreq fil-karti",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Tliet aġenti. Ma jfallux, ma jorqdux, ma jċedux.",
+      "title": "Dan hu li għamlu l-aġenti tiegħek waqt li kont rieqed.",
+      "lead": "Mhux search bar aktar mgħaġġla li xorta trid tħaddem int. Tim ta’ aġenti li jaħdem is-sejħa kollha — isib, iħejji, jirbaħ — matul il-lejl, biex tqum diġà fit-tellieqa.",
       "items": [
         {
-          "title": "Sib",
-          "body": "Kuljum ifittxu sew il-27 pajjiż kollha u joħorġu biss l-offerti li jistħoqqilhom il-ħin tiegħek — imfassla għal dak li tagħmel tabilħaqq."
+          "time": "02:14",
+          "title": "Sab dik li tgħodd għalik",
+          "body": "Waqt li s-suq kien rieqed, l-aġenti fittxew sew il-27 pajjiż kollha u ħarġu l-unika sejħa li jistħoqqilha l-ħin tiegħek — imfassla għal dak li tagħmel tabilħaqq, mhux gozz kliem ta’ tiftix."
         },
         {
-          "title": "Ipprepara",
-          "body": "Rekwiżiti, ċertifikati, ESPD, skadenzieri: estratti, ivverifikati, miġbura. Il-burokrazija li kissritek, solvuta."
+          "time": "05:30",
+          "title": "Bena l-burokrazija",
+          "body": "Rekwiżiti moqrija, ċertifikati mqabbla, l-ESPD miġbur, kull skadenza rreġistrata. Il-burokrazija li kienet taħraqlek il-weekend — lesta qabel il-kafè."
         },
         {
-          "title": "Irbaħ",
-          "body": "Ibiddlu d-dokumenti tal-offerta fi strateġija rebbieħa, biex tidħol bl-istess saħħa bħall-ġganti."
+          "time": "07:00",
+          "title": "Qomt diġà fit-tellieqa",
+          "body": "L-ebda paġna vojta. L-ispeċifikazzjoni saret strateġija rebbieħa għall-offerta, lesta għad-deċiżjoni tiegħek — l-istess saħħa li l-ġganti jħallsu uffiċċju sħiħ għaliha, tistennik fuq l-iskrivanija."
         }
       ]
     },
@@ -196,7 +269,7 @@
         },
         {
           "title": "„Taqbad tivvinta l-affarijiet?“",
-          "body": "Taqra l-offerta vera u tikkwota l-paġna. Kull rekwiżit imur lura għad-dokument — ebda speċifikazzjoni vvintata."
+          "body": "Taqra s-sejħa vera u tikkwota l-paġna. Kull rekwiżit imur lura għad-dokument — ebda speċifikazzjoni vvintata."
         },
         {
           "title": "„Id-data ta' kull klijent hija tabilħaqq separata?“",
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "L-aġenti tiegħek lesti. L-uniku li jonqos huwa int.",
-      "body": "Qed nixegħlu l-UE suq wara suq. Irreġistra fuq il-lista ta' stennija — fil-mument li pajjiżek jixgħel, l-aġenti tiegħek joħorġu għall-kaċċa.",
-      "button": "Iżgura postok"
+      "body": "Oħloq il-kont tiegħek u poġġi l-aġenti fis-suq tiegħek — isibu, iħejju, jirbħu, mingħajr dipartiment tal-offerti tiegħek stess.",
+      "button": "Oħloq kont"
     },
     "tenderCard": {
       "value": "Valur",
@@ -278,23 +351,21 @@
     }
   },
   "tenders": {
-    "results_one": "{{count}} offerta",
-    "results_two": "{{count}} offerti",
-    "results_few": "{{count}} offerti",
-    "results_many": "{{count}} offerta",
-    "results_other": "{{count}} offerta",
+    "results_one": "{{count}} sejħa",
+    "results_few": "{{count}} sejħiet",
+    "results_many": "{{count}}-il sejħa",
+    "results_other": "{{count}} sejħa",
     "searching": "Qed infittxu…",
     "empty": {
-      "title": "L-ebda offerta ma nstabet",
+      "title": "L-ebda sejħa ma nstabet",
       "description": "Ipprova tfittxija usa' jew inqas filtri."
     },
     "error": "It-tfittxija mhix disponibbli bħalissa — erġa' pprova fi ftit ħin.",
     "loadMore": "Tella' aktar",
     "deadline": {
       "days_one": "{{count}} jum fadal",
-      "days_two": "{{count}} jiem fadal",
       "days_few": "{{count}} jiem fadal",
-      "days_many": "{{count}} jum fadal",
+      "days_many": "{{count}}-il jum fadal",
       "days_other": "{{count}} jum fadal",
       "today": "Tagħlaq illum",
       "expired": "Magħluqa"
@@ -308,12 +379,84 @@
       "cancelled": "Ikkanċellata",
       "closed": "Magħluqa",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Pajjiż",
+      "anyCountry": "Il-pajjiżi kollha",
+      "sector": "Settur",
+      "anySector": "Is-setturi kollha",
+      "sectors": {
+        "construction": "Kostruzzjoni",
+        "it": "IT u software",
+        "health": "Saħħa",
+        "energy": "Enerġija",
+        "transport": "Trasport",
+        "education": "Edukazzjoni",
+        "environment": "Ambjent",
+        "business": "Servizzi tan-negozju"
+      },
+      "status": "Status",
+      "anyStatus": "L-istatusi kollha",
+      "deadline": "Skadenza",
+      "anyDeadline": "Fi kwalunkwe ħin",
+      "deadline7": "Li jmiss 7 jiem",
+      "deadline30": "Li jmiss 30 jum",
+      "deadline90": "Li jmiss 90 jum",
+      "clear": "Ħassar kollox"
+    },
+    "detail": {
+      "overview": "Ħarsa ġenerali",
+      "buyer": "Xerrej",
+      "value": "Valur stmat",
+      "published": "Ippubblikat",
+      "deadline": "Skadenza",
+      "status": "Status",
+      "procedure": "Proċedura",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV addizzjonali",
+      "region": "Reġjun (NUTS)",
+      "language": "Lingwa",
+      "documents": "Dokumenti",
+      "officialNotice": "Avviż uffiċjali (PDF)",
+      "viewSource": "Ara fuq is-sors",
+      "lots": "Lotti",
+      "lotsNone": "Din is-sejħa m'għandhiex lotti separati.",
+      "related": "Sejħiet relatati",
+      "relatedNone": "L-ebda sejħa relatata ma nstabet.",
+      "notFound": "Din is-sejħa ma setgħetx tinstab.",
+      "backToSearch": "Lura għat-tfittxija",
+      "searchPlaceholder": "Fittex sejħiet…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Dettalji tas-sejħa, skadenza, xerrej u opportunitajiet relatati għal \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Taħt il-limitu tal-UE",
+      "aboveEu": "'Il fuq mil-limitu tal-UE"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Tqabbil qawwi",
+        "possible": "Tqabbil possibbli",
+        "longShot": "Ċans żgħir"
+      },
+      "reasonSector": "Jaqbel mas-settur tiegħek",
+      "reasonCountry": "Fil-pajjiż fil-mira tiegħek",
+      "reasonValueInBand": "Fil-firxa ta' valur tiegħek",
+      "reasonValueBelow": "Taħt il-firxa ta' valur tiegħek",
+      "reasonValueAbove": "Fuq il-firxa ta' valur tiegħek",
+      "reasonRegion": "Fir-reġjun tiegħek",
+      "reasonProcedure": "Jaqbel mat-tip ta' proċedura tiegħek"
     }
   },
   "today": {
     "recommended": {
-      "title": "Rakkomandati għalik",
-      "seeAll": "Kollox f'Esplora →"
+      "seeAll": "Kollox f'Esplora →",
+      "clientCount_one": "{{count}} sejħa adattata lesta għal {{client}}",
+      "clientCount_few": "{{count}} sejħiet adattati lesti għal {{client}}",
+      "clientCount_many": "{{count}}-il sejħa adattata lesta għal {{client}}",
+      "clientCount_other": "{{count}} sejħa adattata lesta għal {{client}}"
     },
     "greeting": {
       "morning": "L-għodwa t-tajba.",
@@ -329,7 +472,7 @@
     },
     "explore": {
       "title": "Sib l-offerta li jmiss tiegħek",
-      "description": "Staqsi lill-aġent dwar swieq, rekwiżiti, jew offerta speċifika — rakkomandazzjonijiet personalizzati jidhru hawn hekk kif jieħdu forma l-profili tat-tiftix tiegħek.",
+      "description": "Staqsi lill-aġent dwar swieq, rekwiżiti, jew sejħa speċifika — rakkomandazzjonijiet personalizzati jidhru hawn hekk kif jieħdu forma l-profili tat-tiftix tiegħek.",
       "action": "Iftaħ Esplora"
     }
   },
@@ -346,6 +489,7 @@
     },
     "nav": {
       "general": "Ġenerali",
+      "profile": "Profil tal-klijent",
       "overview": "Ħarsa ġenerali",
       "members": "Membri",
       "roles": "Rwoli",
@@ -457,6 +601,16 @@
       "settings": "Settings tal-workspace",
       "label": "Spazji tax-xogħol",
       "manage": "L-ispazji tax-xogħol kollha"
+    },
+    "firstRun": {
+      "title": "Żid profil ta' offerta tal-klijent",
+      "subtitle": "Għidilna fuq xiex normalment joffri dan il-klijent biex ir-rakkomandazzjonijiet ikunu preċiżi mill-ewwel. Tista' tlesti dan aktar tard mis-Settings.",
+      "skip": "Aqbeż għalissa"
+    },
+    "clientProfile": {
+      "title": "Profil ta' offerta tal-klijent",
+      "subtitle": "Fuq xiex joffri dan il-klijent — setturi, pajjiżi, u firxa ta’ valur — jiggwida kull rakkomandazzjoni.",
+      "saved": "Profil issejvjat."
     }
   },
   "workbench": {
@@ -551,9 +705,51 @@
       "deleteHint": "Ħassar b'mod permanenti dan il-workbench u d-data kollha tiegħu.",
       "delete": "Ħassar il-workbench",
       "leaveHint": "Itlaq minn dan il-workbench. Maniġer jista' jerġa' jżidek.",
-      "leave": "Itlaq mill-workbench",
-      "confirmDelete": "Tħassar dan il-workbench?",
-      "confirmLeave": "Titlaq minn dan il-workbench?"
+      "leave": "Itlaq mill-workbench"
+    },
+    "overview": {
+      "emptyTitle": "Il-workbench tiegħek lest",
+      "emptyDescription": "Ibda billi tfittex sejħiet, toħloq profil ta' klijent, jew tistieden lit-tim tiegħek. Kulma tagħmel hawn jinqasam mal-membri tal-workbench.",
+      "emptyExplore": "Iftaħ Esplora"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Tistaqsix aktar",
+    "deleteWorkspace": {
+      "title": "Tħassar l-ispazju tax-xogħol?",
+      "description": "Dan se jħassar b'mod permanenti dan l-ispazju tax-xogħol u d-data kollha tiegħu. Din l-azzjoni ma tistax titħassar."
+    },
+    "leaveWorkspace": {
+      "title": "Titlaq mill-ispazju tax-xogħol?",
+      "description": "Titlef l-aċċess għal dan l-ispazju tax-xogħol. Tista' terġa' tissieħeb b'stedina ġdida."
+    },
+    "removeMember": {
+      "title": "Tneħħi l-membru?",
+      "description": "Din il-persuna se titlef l-aċċess għall-ispazju tax-xogħol immedjatament."
+    },
+    "deleteRole": {
+      "title": "Tħassar ir-rwol?",
+      "description": "Il-membri b'dan ir-rwol se jitilfu l-permessi tiegħu."
+    },
+    "revokeInvite": {
+      "title": "Tirrevoka l-istedina?",
+      "description": "Din l-istedina bl-email ma tibqax tista' tintuża."
+    },
+    "revokeLink": {
+      "title": "Tirrevoka l-link?",
+      "description": "Dan il-link tal-istedina se jieqaf jaħdem immedjatament."
+    },
+    "deleteWorkbench": {
+      "title": "Tħassar il-workbench?",
+      "description": "Dan se jħassar b'mod permanenti dan il-workbench u d-data kollha tiegħu. Din l-azzjoni ma tistax titħassar."
+    },
+    "leaveWorkbench": {
+      "title": "Titlaq mill-workbench?",
+      "description": "Titlef l-aċċess għal dan il-workbench. Maniġer jista' jerġa' jżidek."
+    },
+    "removeWorkbenchMember": {
+      "title": "Tneħħi l-membru?",
+      "description": "Din il-persuna se titlef l-aċċess għall-workbench immedjatament."
     }
   }
 }

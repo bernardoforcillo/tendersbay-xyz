@@ -79,7 +79,13 @@ recipe (two duplicated `SIGN_IN_LINK` copies sit in the workspace join/accept
 pages); keep `Banner`'s live region mounted (a `role="alert"` that mounts together
 with its message can be missed by screen readers); `Field` `min`/input-props
 pass-through; the five account organisms have no rendering tests; the two
-role-editor organisms (workspace/workbench) remain duplicated.
+role-editor organisms (workspace/workbench) remain duplicated. **Two more, verified
+against the actual components (not assumed):** `Button` has hover/pressed/
+focus-visible/disabled states baked into every variant but no loading/pending
+state (no spinner, no `isPending`-style prop) — any async action currently has
+nowhere to show it's working; `Banner`'s `Tone` union is only `'error' | 'success'`
+— there is no `warning` tone for a non-blocking, non-error notice.
 
 Pairs with the app-side stack in [[frontend-ui-stack]] and the design language in
-[[landing-page-design]].
+[[landing-page-design]]. Spacing/proximity decisions between elements inside a
+component (e.g. `Card`, `PageHeader`) follow [[spacing-and-visual-rhythm]].

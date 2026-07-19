@@ -66,6 +66,16 @@ Kubernetes deployment lives in `infrastructure/kubernetes/`, reconciled by Flux
 hardening, and image-automation conventions are documented in
 @.claude/rules/infrastructure.md.
 
+Scaling and service-boundary decisions (when to split a service, add a gateway, a
+broker, a cache, a CDN, or rate limiting) follow a trigger-based checklist documented
+in @.claude/rules/system-design.md; dispatch the `software-architect` agent to apply
+it to a design review or to scaffold the result.
+
+Internal code organization (which layer — UI, transport, domain, capabilities/vendors,
+supporting foundations — may depend on which other layer, mapped across `apps/platform`
+and `services/backend`) is documented in @.claude/rules/code-organization.md; the same
+`software-architect` agent reviews changes against it.
+
 ## Memory wiki
 
 Project knowledge accumulates in `.claude/memory/` — a committed markdown wiki
@@ -97,9 +107,13 @@ The catalog is imported here so it loads every session:
   The `commit-msg` hook rejects non-conforming messages. Use the `/commit` skill to draft them.
 - Declare per-package tasks (`build`, `dev`, `lint`, `check`, `test`) as scripts so Turbo
   can orchestrate them; wire cross-package ordering via `dependsOn` in `turbo.json`.
-- Design specs (`docs/superpowers/specs/`) and implementation plans
+- Product requirements (`docs/superpowers/prd/`), design specs
+  (`docs/superpowers/specs/`), and implementation plans
   (`docs/superpowers/plans/`) are local-only working docs — kept on disk, never
-  committed (they are gitignored).
+  committed (they are gitignored). The pipeline is
+  `/prd → superpowers:brainstorming → writing-plans → implement`: `/prd` runs a
+  design-thinking process (skill `.claude/skills/prd/` + agent
+  `product-strategist`) to produce a PRD, which then feeds the technical spec.
 - Go code lives in `apps/platform`. Format with `gofmt`, vet with `go vet ./...`
   (wired as the app's `lint`); run tests with `go test ./...` (the app's `test`).
 - The Go binary embeds the Vite build with `//go:embed all:dist` — run `vite build`

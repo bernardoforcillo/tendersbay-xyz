@@ -69,10 +69,15 @@
       "displayName": "Imię",
       "email": "E-mail",
       "password": "Hasło",
-      "submitting": "Tworzenie…",
       "submit": "Utwórz konto",
       "login": "Masz już konto?",
-      "signIn": "Zaloguj się"
+      "signIn": "Zaloguj się",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Sprawdź swoją skrzynkę e-mail",
@@ -104,6 +109,36 @@
       "loading": "Chwileczkę."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektory",
+      "countries": "Kraje",
+      "valueMin": "Wartość minimalna",
+      "valueMax": "Wartość maksymalna",
+      "notes": "Notatki",
+      "notesPlaceholder": "W czym zwykle startuje ten klient?",
+      "save": "Zapisz profil",
+      "invalidBand": "Wartość minimalna nie może przekraczać wartości maksymalnej.",
+      "error": "Nie udało się zapisać profilu — spróbuj ponownie.",
+      "procedureTypesLabel": "Typy procedur",
+      "procedureTypes": {
+        "open": "Procedura otwarta",
+        "restricted": "Procedura ograniczona",
+        "negotiated": "Procedura negocjacyjna",
+        "competitive_dialogue": "Dialog konkurencyjny",
+        "innovation_partnership": "Partnerstwo innowacyjne",
+        "other": "Inne"
+      },
+      "regions": "Regiony (NUTS)",
+      "regionsPlaceholder": "np. ITC, DE3",
+      "regionsHint": "Prefiksy NUTS oddzielone przecinkami. Zostaw puste, aby uwzględnić dowolny region."
+    },
+    "shortlist": {
+      "title": "Najlepsze dopasowanie dla tego klienta",
+      "emptyTitle": "Brak jeszcze dopasowanych przetargów",
+      "emptyDescription": "Wypróbuj wyszukiwanie ręczne poniżej lub rozszerz profil tego klienta."
+    }
+  },
   "landing": {
     "header": {
       "login": "Zaloguj się",
@@ -116,8 +151,23 @@
         "Remonty szkół publicznych",
         "Modernizacja IT szpitali",
         "Budowa farm słonecznych",
-        "Floty autobusów elektrycznych"
-      ]
+        "Floty autobusów elektrycznych",
+        "Prace kolejowe, Mediolan",
+        "Usługi chmurowe, Warszawa",
+        "Modernizacja energetyczna, Wiedeń",
+        "Utrzymanie parków, Ateny"
+      ],
+      "filters": {
+        "country": "Kraj",
+        "sector": "Sektor",
+        "deadline": "Termin",
+        "value": "Wartość"
+      },
+      "loading": "Wyszukiwanie…",
+      "empty": "Nie znaleziono przetargów",
+      "error": "Wyszukiwanie jest obecnie niedostępne — spróbuj ponownie za chwilę.",
+      "results_one": "{{count}} przetarg",
+      "results_other": "{{count}} przetargu"
     },
     "meta": {
       "title": "tendersbay — Przetargi w Europie, rozstrzygnięte z agentami AI",
@@ -138,7 +188,26 @@
         "27 krajów, jedno wyszukiwanie",
         "Agenci, którzy nigdy nie śpią",
         "Papierkowa robota: ogarnięta"
-      ]
+      ],
+      "deckLabel": "Przykładowe wyniki"
+    },
+    "proof": {
+      "lead": "Każdego roku w Europie wydaje się ponad dwa biliony euro publicznych pieniędzy. Większość przechodzi przez przetargi, których nigdy nie widzisz.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "wydatków publicznych rocznie w UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "publicznych zamawiających ogłaszających przetargi"
+        },
+        {
+          "value": "~800,000",
+          "label": "przetargów rocznie — żaden zespół nie przeczyta ich wszystkich"
+        }
+      ],
+      "source": "Komisja Europejska · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Gra jest ustawiona, by trzymać cię na zewnątrz. I działa.",
@@ -158,19 +227,23 @@
       ]
     },
     "agents": {
-      "title": "Trzej agenci. Nie chybiają, nie śpią, nie odpuszczają.",
+      "title": "Oto co zrobili twoi agenci, gdy spałeś.",
+      "lead": "Nie szybsza wyszukiwarka, którą i tak musisz sterować sam. Zespół agentów, który obrabia cały przetarg — znajduje, przygotowuje, wygrywa — przez noc, żebyś obudził się już w grze.",
       "items": [
         {
-          "title": "Znajdź",
-          "body": "Codziennie przeczesują wszystkie 27 krajów i pokazują tylko przetargi warte twojego czasu — dopasowane do tego, co naprawdę robisz."
+          "time": "02:14",
+          "title": "Znalazł ten, który pasuje do ciebie",
+          "body": "Gdy rynek spał, agenci przeczesali wszystkie 27 krajów i wyciągnęli jedyny przetarg wart twojego czasu — dopasowany do tego, co naprawdę robisz, a nie stertę słów kluczowych."
         },
         {
-          "title": "Przygotuj",
-          "body": "Wymagania, zaświadczenia, JEDZ, terminy: wyciągnięte, sprawdzone, złożone. Papierkowa robota, która cię łamała, ogarnięta."
+          "time": "05:30",
+          "title": "Złożył papierkową robotę",
+          "body": "Wymagania przeczytane, zaświadczenia dopasowane, JEDZ złożony, każdy termin zapisany. Biurokracja, która spalała ci weekend — gotowa przed kawą."
         },
         {
-          "title": "Wygrywaj",
-          "body": "Zamieniają specyfikację w zwycięską strategię, byś wszedł z taką samą siłą rażenia jak giganci."
+          "time": "07:00",
+          "title": "Obudziłeś się już w grze",
+          "body": "Żadnej pustej strony. Specyfikacja zamieniła się w zwycięską strategię oferty, gotową na twoją decyzję — ta sama siła rażenia, za którą giganci płacą całe biuro, czeka na twoim biurku."
         }
       ]
     },
@@ -246,8 +319,8 @@
     },
     "cta": {
       "title": "Twoi agenci są gotowi. Brakuje tylko ciebie.",
-      "body": "Uruchamiamy UE rynek po rynku. Dołącz do listy — w chwili, gdy twój kraj się rozświetli, twoi agenci ruszają na łowy.",
-      "button": "Zarezerwuj swoje miejsce"
+      "body": "Załóż konto i puść agentów na swój rynek — znaleźć, przygotować, wygrać, bez własnego działu przetargów.",
+      "button": "Załóż konto"
     },
     "tenderCard": {
       "value": "Wartość",
@@ -310,12 +383,84 @@
       "cancelled": "Anulowany",
       "closed": "Zamknięty",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Kraj",
+      "anyCountry": "Wszystkie kraje",
+      "sector": "Sektor",
+      "anySector": "Wszystkie sektory",
+      "sectors": {
+        "construction": "Budownictwo",
+        "it": "IT i oprogramowanie",
+        "health": "Zdrowie",
+        "energy": "Energia",
+        "transport": "Transport",
+        "education": "Edukacja",
+        "environment": "Środowisko",
+        "business": "Usługi dla firm"
+      },
+      "status": "Status",
+      "anyStatus": "Wszystkie statusy",
+      "deadline": "Termin",
+      "anyDeadline": "Dowolny termin",
+      "deadline7": "Najbliższe 7 dni",
+      "deadline30": "Najbliższe 30 dni",
+      "deadline90": "Najbliższe 90 dni",
+      "clear": "Wyczyść wszystko"
+    },
+    "detail": {
+      "overview": "Przegląd",
+      "buyer": "Zamawiający",
+      "value": "Szacunkowa wartość",
+      "published": "Opublikowano",
+      "deadline": "Termin składania ofert",
+      "status": "Status",
+      "procedure": "Tryb postępowania",
+      "cpv": "CPV",
+      "cpvSecondary": "Dodatkowe CPV",
+      "region": "Region (NUTS)",
+      "language": "Język",
+      "documents": "Dokumenty",
+      "officialNotice": "Ogłoszenie urzędowe (PDF)",
+      "viewSource": "Zobacz źródło",
+      "lots": "Części",
+      "lotsNone": "To postępowanie nie ma odrębnych części.",
+      "related": "Powiązane postępowania",
+      "relatedNone": "Nie znaleziono powiązanych postępowań.",
+      "notFound": "Nie znaleziono tego postępowania.",
+      "backToSearch": "Powrót do wyszukiwania",
+      "searchPlaceholder": "Szukaj postępowań…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Szczegóły postępowania, termin składania ofert, zamawiający i powiązane zamówienia dla „{{title}}”."
+      }
+    },
+    "threshold": {
+      "belowEu": "Poniżej progu UE",
+      "aboveEu": "Powyżej progu UE"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Silne dopasowanie",
+        "possible": "Możliwe dopasowanie",
+        "longShot": "Mała szansa"
+      },
+      "reasonSector": "Pasuje do Twojego sektora",
+      "reasonCountry": "W Twoim kraju docelowym",
+      "reasonValueInBand": "W Twoim przedziale wartości",
+      "reasonValueBelow": "Poniżej Twojego przedziału wartości",
+      "reasonValueAbove": "Powyżej Twojego przedziału wartości",
+      "reasonRegion": "W Twoim regionie",
+      "reasonProcedure": "Pasuje do Twojego typu procedury"
     }
   },
   "today": {
     "recommended": {
-      "title": "Polecane dla Ciebie",
-      "seeAll": "Wszystko w sekcji Odkrywaj →"
+      "seeAll": "Wszystko w sekcji Odkrywaj →",
+      "clientCount_one": "{{count}} dopasowany przetarg gotowy dla {{client}}",
+      "clientCount_few": "{{count}} dopasowane przetargi gotowe dla {{client}}",
+      "clientCount_many": "{{count}} dopasowanych przetargów gotowych dla {{client}}",
+      "clientCount_other": "{{count}} dopasowanego przetargu gotowego dla {{client}}"
     },
     "greeting": {
       "morning": "Dzień dobry.",
@@ -348,6 +493,7 @@
     },
     "nav": {
       "general": "Ogólne",
+      "profile": "Profil klienta",
       "overview": "Przegląd",
       "members": "Członkowie",
       "roles": "Role",
@@ -459,6 +605,16 @@
       "settings": "Ustawienia workspace",
       "label": "Przestrzenie robocze",
       "manage": "Wszystkie przestrzenie robocze"
+    },
+    "firstRun": {
+      "title": "Dodaj profil ofertowy klienta",
+      "subtitle": "Powiedz nam, w czym startuje ten klient, aby rekomendacje od razu były trafne. Możesz dokończyć to później w Ustawieniach.",
+      "skip": "Pomiń na razie"
+    },
+    "clientProfile": {
+      "title": "Profil ofertowy klienta",
+      "subtitle": "To, w czym startuje ten klient — sektory, kraje i przedział wartości — kształtuje każdą rekomendację.",
+      "saved": "Profil zapisany."
     }
   },
   "workbench": {
@@ -553,9 +709,51 @@
       "deleteHint": "Trwale usuń ten panel roboczy i wszystkie jego dane.",
       "delete": "Usuń panel roboczy",
       "leaveHint": "Opuść ten panel roboczy. Menedżer może dodać Cię ponownie.",
-      "leave": "Opuść panel roboczy",
-      "confirmDelete": "Usunąć ten panel roboczy?",
-      "confirmLeave": "Opuścić ten panel roboczy?"
+      "leave": "Opuść panel roboczy"
+    },
+    "overview": {
+      "emptyTitle": "Twój panel roboczy jest gotowy",
+      "emptyDescription": "Zacznij od wyszukiwania przetargów, utworzenia profilu klienta lub zaproszenia zespołu. Wszystko, co tu robisz, jest udostępniane członkom panelu roboczego.",
+      "emptyExplore": "Otwórz Odkrywaj"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Nie pytaj ponownie",
+    "deleteWorkspace": {
+      "title": "Usunąć przestrzeń roboczą?",
+      "description": "Spowoduje to trwałe usunięcie tej przestrzeni roboczej i wszystkich jej danych. Tej czynności nie można cofnąć."
+    },
+    "leaveWorkspace": {
+      "title": "Opuścić przestrzeń roboczą?",
+      "description": "Utracisz dostęp do tej przestrzeni roboczej. Możesz do niej dołączyć ponownie z nowym zaproszeniem."
+    },
+    "removeMember": {
+      "title": "Usunąć członka?",
+      "description": "Ta osoba natychmiast utraci dostęp do przestrzeni roboczej."
+    },
+    "deleteRole": {
+      "title": "Usunąć rolę?",
+      "description": "Członkowie z tą rolą utracą jej uprawnienia."
+    },
+    "revokeInvite": {
+      "title": "Unieważnić zaproszenie?",
+      "description": "Tego zaproszenia e-mail nie będzie już można użyć."
+    },
+    "revokeLink": {
+      "title": "Unieważnić link?",
+      "description": "Ten link zaproszenia natychmiast przestanie działać."
+    },
+    "deleteWorkbench": {
+      "title": "Usunąć panel roboczy?",
+      "description": "Spowoduje to trwałe usunięcie tego panelu roboczego i wszystkich jego danych. Tej czynności nie można cofnąć."
+    },
+    "leaveWorkbench": {
+      "title": "Opuścić panel roboczy?",
+      "description": "Utracisz dostęp do tego panelu roboczego. Menedżer może dodać Cię ponownie."
+    },
+    "removeWorkbenchMember": {
+      "title": "Usunąć członka?",
+      "description": "Ta osoba natychmiast utraci dostęp do panelu roboczego."
     }
   }
 }

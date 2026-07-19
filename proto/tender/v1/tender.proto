@@ -10,6 +10,19 @@ option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend
 // lower result cap and a stricter rate limit; see the server-side config).
 service TenderService {
   rpc SearchTenders(SearchTendersRequest) returns (SearchTendersResponse);
+  rpc GetTender(GetTenderRequest) returns (GetTenderResponse);
+  rpc GetRelatedTenders(GetRelatedTendersRequest) returns (GetRelatedTendersResponse);
+  rpc ListTenderSitemap(ListTenderSitemapRequest) returns (ListTenderSitemapResponse);
+  // Deterministic, membership-checked, unmetered per-client best-fit
+  // shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+  // SearchTenders this requires authentication: it is scoped to one client
+  // (workspace) and reads that client's ClientProfile.
+  rpc RecommendTendersForClient(RecommendTendersForClientRequest) returns (RecommendTendersForClientResponse);
+  // Which countries we currently hold tenders for (DISTINCT country over
+  // ingested_tenders). Anonymous-safe like SearchTenders — the landing
+  // coverage marquee reads it. "available" = we have >=1 tender for that
+  // country (TED-inclusive), not a below-threshold-only claim.
+  rpc GetCoverage(GetCoverageRequest) returns (GetCoverageResponse);
 }
 
 message SearchTendersRequest {
@@ -19,10 +32,11 @@ message SearchTendersRequest {
   int32 offset = 4;          // optional, default 0; for semantic (non-empty query) searches,
                               // paging is bounded by the candidate window (~250 results) —
                               // very deep pages may return empty even with more matches server-side
+  string workspace_id = 5;   // optional; empty = today's anonymous-safe behavior
 }
 
 message TenderFilters {
-  string country = 1;         // alpha-3, matches the TED connector's convention
+  string country = 1;         // alpha-2, e.g. "IT", "DE"
   string cpv = 2;              // prefix match
   string status = 3;           // open/awarded/cancelled/closed/unknown
   string deadline_from = 4;    // RFC3339
@@ -41,7 +55,7 @@ message TenderResult {
   string buyer_name = 3;
   string status = 4;
   string procedure_type = 5;
-  string country = 6;
+  string country = 6;           // alpha-2, e.g. "IT", "DE"
   string cpv = 7;
   int64 value = 8;
   string currency = 9;
@@ -50,4 +64,99 @@ message TenderResult {
   double relevance_score = 12;  // meaningful only when query was non-empty; 0 for filters-only
   string source = 13;
   string source_ref = 14;
+  string source_url = 15;       // the notice's document URL, empty if none is ingested
+  string nuts = 16;             // NUTS region code, empty if unset
+  string fit_tier = 17;         // "strong" | "possible" | "long_shot"; empty unless annotated
+  ReasonSignals reason = 18;    // nil unless annotated
+  string eu_threshold = 19;     // "below_eu" | "above_eu" | "" — coarse, buyer-agnostic
+                                 // EU-threshold band (SME-winnable = below). Empty when
+                                 // value is unknown OR the band is ambiguous. NOT value_fit.
+}
+
+message RecommendTendersForClientRequest {
+  string workspace_id = 1;
+  int32 limit = 2; // optional, server-defaulted
+}
+
+// ReasonSignals are the localizable FACTS behind a fit tier — never a
+// prebuilt sentence. The frontend renders the sentence from these booleans/
+// enums so every locale controls its own phrasing.
+message ReasonSignals {
+  bool sector_match = 1;
+  bool country_match = 2;
+  string value_fit = 3;    // "in_band" | "below" | "above" | "unknown"
+  int32 deadline_days = 4; // meaningful only when has_deadline is true
+  bool has_deadline = 5;
+  bool region_match = 6;
+  bool procedure_match = 7;
+}
+
+message RecommendedTenderResult {
+  TenderResult tender = 1;
+  string fit_tier = 2; // "strong" | "possible" | "long_shot"
+  ReasonSignals reason = 3;
+}
+
+message RecommendTendersForClientResponse {
+  repeated RecommendedTenderResult results = 1;
+  bool needs_profile = 2; // true = no ClientProfile yet; results is empty
+}
+
+message GetCoverageRequest {}
+message GetCoverageResponse {
+  repeated string countries = 1; // alpha-2, uppercase; countries with >=1 ingested tender
+}
+
+message GetTenderRequest { string id = 1; }
+message GetTenderResponse { TenderDetail tender = 1; }
+
+message GetRelatedTendersRequest {
+  string id = 1;
+  int32 limit = 2; // optional, server-clamped
+}
+message GetRelatedTendersResponse { repeated TenderResult results = 1; }
+
+message ListTenderSitemapRequest { int32 limit = 1; } // optional, server-clamped to <=50000
+message ListTenderSitemapResponse { repeated TenderRef refs = 1; }
+
+message TenderRef {
+  string id = 1;
+  string lastmod = 2; // RFC3339 (published_at), empty if unset
+}
+
+message TenderDocument {
+  string url = 1;
+  string type = 2;
+}
+
+message TenderLot {
+  string ref = 1;
+  string title = 2;
+  string cpv = 3;
+  int64  value = 4;
+  string currency = 5;
+  string deadline = 6; // RFC3339, empty if unset
+}
+
+message TenderDetail {
+  string id = 1;
+  string title = 2;
+  string buyer_name = 3;
+  string buyer_id = 4;
+  string status = 5;
+  string procedure_type = 6;
+  string country = 7;
+  string nuts = 8;
+  string language = 9;
+  string cpv = 10;
+  repeated string cpv_secondary = 11;
+  int64  value = 12;
+  string currency = 13;
+  string published_at = 14; // RFC3339, empty if unset
+  string deadline = 15;     // RFC3339, empty if unset
+  string source = 16;
+  string source_ref = 17;
+  string source_url = 18;   // best-effort; may be empty
+  repeated TenderDocument documents = 19;
+  repeated TenderLot lots = 20;
 }

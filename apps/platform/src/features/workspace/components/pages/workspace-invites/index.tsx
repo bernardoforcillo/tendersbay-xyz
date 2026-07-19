@@ -1,4 +1,4 @@
-import { Banner, Button, Card, Field, Select } from '@tendersbay/components/core';
+import { Banner, Button, Card, ConfirmDialog, Field, Select } from '@tendersbay/components/core';
 import { useState } from 'react';
 import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +6,7 @@ import { useWorkspaceContext } from '~/features/workspace/context';
 import { useEmailInvites, useInviteLinks, useRoles } from '~/features/workspace/hooks';
 import { can, Permission } from '~/features/workspace/permissions';
 import { workspaceClient } from '~/lib/api/client';
+import { usePreferencesStore } from '~/store/preferences';
 
 export function WorkspaceInvitesPage() {
   const { t, i18n } = useTranslation();
@@ -22,6 +23,11 @@ export function WorkspaceInvitesPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const shouldSkipRevokeInvite = usePreferencesStore((s) =>
+    s.shouldSkip('workspace-revoke-invite'),
+  );
+  const shouldSkipRevokeLink = usePreferencesStore((s) => s.shouldSkip('workspace-revoke-link'));
+  const setSkip = usePreferencesStore((s) => s.setSkipConfirmation);
 
   const roleOptions = roles ?? [];
   const defaultRoleId = roleOptions.find((r) => r.isDefault)?.id ?? roleOptions[0]?.id ?? '';
@@ -138,9 +144,20 @@ export function WorkspaceInvitesPage() {
             <li key={inv.id}>
               <Card className="flex items-center justify-between gap-3 py-3">
                 <span className="truncate text-sm text-ink-800">{inv.email}</span>
-                <Button variant="danger" onPress={() => revokeInvite(inv.id)}>
-                  {t('workspace.invites.revoke', 'Revoke')}
-                </Button>
+                <ConfirmDialog
+                  title={t('confirm.revokeInvite.title', 'Revoke invitation?')}
+                  description={t(
+                    'confirm.revokeInvite.description',
+                    'This email invitation will no longer be usable.',
+                  )}
+                  confirmLabel={t('workspace.invites.revoke', 'Revoke')}
+                  onConfirm={() => revokeInvite(inv.id)}
+                  skipConfirmation={shouldSkipRevokeInvite}
+                  onSkipChange={(skip) => setSkip('workspace-revoke-invite', skip)}
+                  trigger={
+                    <Button variant="danger">{t('workspace.invites.revoke', 'Revoke')}</Button>
+                  }
+                />
               </Card>
             </li>
           ))}
@@ -202,9 +219,20 @@ export function WorkspaceInvitesPage() {
                         ? t('workspace.invites.copied', 'Copied')
                         : t('workspace.invites.copy', 'Copy')}
                     </Button>
-                    <Button variant="danger" onPress={() => revokeLink(l.id)}>
-                      {t('workspace.invites.revoke', 'Revoke')}
-                    </Button>
+                    <ConfirmDialog
+                      title={t('confirm.revokeLink.title', 'Revoke link?')}
+                      description={t(
+                        'confirm.revokeLink.description',
+                        'This invite link will stop working immediately.',
+                      )}
+                      confirmLabel={t('workspace.invites.revoke', 'Revoke')}
+                      onConfirm={() => revokeLink(l.id)}
+                      skipConfirmation={shouldSkipRevokeLink}
+                      onSkipChange={(skip) => setSkip('workspace-revoke-link', skip)}
+                      trigger={
+                        <Button variant="danger">{t('workspace.invites.revoke', 'Revoke')}</Button>
+                      }
+                    />
                   </div>
                 </Card>
               </li>

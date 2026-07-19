@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 // reads them from every locale file at config time to build the per-locale
 // <noscript> hero content block emitted into dist/<locale>/index.html.
 type Landing = {
-  hero?: { titleLead?: string; titleHighlight?: string; subtitle?: string };
+  hero?: { titleLead?: string; titleHighlight?: string; subtitle?: string; deckLabel?: string };
 };
 
 const modules = import.meta.glob('./*/common.json', { eager: true }) as Record<
@@ -26,5 +26,9 @@ describe('landing hero locale keys', () => {
     expect(hero?.titleLead, 'landing.hero.titleLead').toBeTruthy();
     expect(hero?.titleHighlight, 'landing.hero.titleHighlight').toBeTruthy();
     expect(hero?.subtitle, 'landing.hero.subtitle').toBeTruthy();
+  });
+
+  it.each(entries)('%s has an honest landing.hero.deckLabel', (_path, mod) => {
+    expect(mod.default.landing.hero?.deckLabel, 'landing.hero.deckLabel').toBeTruthy();
   });
 });

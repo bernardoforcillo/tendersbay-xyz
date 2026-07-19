@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { AcceptEmailInviteRequest, AcceptEmailInviteResponse, ChangeMemberRoleRequest, ChangeMemberRoleResponse, CreateInviteLinkRequest, CreateInviteLinkResponse, CreateRoleRequest, CreateRoleResponse, CreateWorkspaceRequest, CreateWorkspaceResponse, DeleteRoleRequest, DeleteRoleResponse, DeleteWorkspaceRequest, DeleteWorkspaceResponse, GetWorkspaceRequest, GetWorkspaceResponse, InviteByEmailRequest, InviteByEmailResponse, JoinViaInviteLinkRequest, JoinViaInviteLinkResponse, LeaveWorkspaceRequest, LeaveWorkspaceResponse, ListEmailInvitationsRequest, ListEmailInvitationsResponse, ListInviteLinksRequest, ListInviteLinksResponse, ListMembersRequest, ListMembersResponse, ListMyWorkspacesRequest, ListMyWorkspacesResponse, ListRolesRequest, ListRolesResponse, PreviewEmailInviteRequest, PreviewEmailInviteResponse, PreviewInviteLinkRequest, PreviewInviteLinkResponse, RemoveMemberRequest, RemoveMemberResponse, RevokeEmailInvitationRequest, RevokeEmailInvitationResponse, RevokeInviteLinkRequest, RevokeInviteLinkResponse, TransferOwnershipRequest, TransferOwnershipResponse, UpdateRoleRequest, UpdateRoleResponse, UpdateWorkspaceRequest, UpdateWorkspaceResponse } from "./workspace_pb.js";
+import { AcceptEmailInviteRequest, AcceptEmailInviteResponse, ChangeMemberRoleRequest, ChangeMemberRoleResponse, CreateInviteLinkRequest, CreateInviteLinkResponse, CreateRoleRequest, CreateRoleResponse, CreateWorkspaceRequest, CreateWorkspaceResponse, DeleteRoleRequest, DeleteRoleResponse, DeleteWorkspaceRequest, DeleteWorkspaceResponse, GetClientProfileRequest, GetClientProfileResponse, GetWorkspaceRequest, GetWorkspaceResponse, InviteByEmailRequest, InviteByEmailResponse, JoinViaInviteLinkRequest, JoinViaInviteLinkResponse, LeaveWorkspaceRequest, LeaveWorkspaceResponse, ListEmailInvitationsRequest, ListEmailInvitationsResponse, ListInviteLinksRequest, ListInviteLinksResponse, ListMembersRequest, ListMembersResponse, ListMyWorkspacesRequest, ListMyWorkspacesResponse, ListRolesRequest, ListRolesResponse, PreviewEmailInviteRequest, PreviewEmailInviteResponse, PreviewInviteLinkRequest, PreviewInviteLinkResponse, RemoveMemberRequest, RemoveMemberResponse, RevokeEmailInvitationRequest, RevokeEmailInvitationResponse, RevokeInviteLinkRequest, RevokeInviteLinkResponse, TransferOwnershipRequest, TransferOwnershipResponse, UpdateClientProfileRequest, UpdateClientProfileResponse, UpdateRoleRequest, UpdateRoleResponse, UpdateWorkspaceRequest, UpdateWorkspaceResponse } from "./workspace_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -81,6 +81,27 @@ export declare const WorkspaceService: {
       readonly name: "LeaveWorkspace",
       readonly I: typeof LeaveWorkspaceRequest,
       readonly O: typeof LeaveWorkspaceResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * Client profile (per-client bid-qualification agent, v1.0) — the
+     * workspace IS the client; one profile per workspace.
+     *
+     * @generated from rpc workspace.v1.WorkspaceService.GetClientProfile
+     */
+    readonly getClientProfile: {
+      readonly name: "GetClientProfile",
+      readonly I: typeof GetClientProfileRequest,
+      readonly O: typeof GetClientProfileResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc workspace.v1.WorkspaceService.UpdateClientProfile
+     */
+    readonly updateClientProfile: {
+      readonly name: "UpdateClientProfile",
+      readonly I: typeof UpdateClientProfileRequest,
+      readonly O: typeof UpdateClientProfileResponse,
       readonly kind: MethodKind.Unary,
     },
     /**

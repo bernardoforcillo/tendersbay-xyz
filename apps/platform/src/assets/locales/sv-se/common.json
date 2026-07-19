@@ -69,10 +69,15 @@
       "displayName": "Namn",
       "email": "E-post",
       "password": "Lösenord",
-      "submitting": "Skapar…",
       "submit": "Skapa konto",
       "login": "Har du redan ett konto?",
-      "signIn": "Logga in"
+      "signIn": "Logga in",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Kontrollera din e-post",
@@ -104,6 +109,36 @@
       "loading": "Ett ögonblick."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektorer",
+      "countries": "Länder",
+      "valueMin": "Minimivärde",
+      "valueMax": "Maxvärde",
+      "notes": "Anteckningar",
+      "notesPlaceholder": "Vad brukar den här kunden lämna anbud på?",
+      "save": "Spara profil",
+      "invalidBand": "Minimivärdet får inte överstiga maxvärdet.",
+      "error": "Det gick inte att spara profilen — försök igen.",
+      "procedureTypesLabel": "Förfarandetyper",
+      "procedureTypes": {
+        "open": "Öppet förfarande",
+        "restricted": "Selektivt förfarande",
+        "negotiated": "Förhandlat förfarande",
+        "competitive_dialogue": "Konkurrenspräglad dialog",
+        "innovation_partnership": "Innovationspartnerskap",
+        "other": "Övrigt"
+      },
+      "regions": "Regioner (NUTS)",
+      "regionsPlaceholder": "t.ex. ITC, DE3",
+      "regionsHint": "Kommaseparerade NUTS-prefix. Lämna tomt för att inkludera alla regioner."
+    },
+    "shortlist": {
+      "title": "Bästa matchning för den här kunden",
+      "emptyTitle": "Inga matchande upphandlingar än",
+      "emptyDescription": "Prova en manuell sökning nedan, eller utöka den här kundens profil."
+    }
+  },
   "landing": {
     "header": {
       "login": "Logga in",
@@ -116,8 +151,23 @@
         "Renovering av offentliga skolor",
         "IT-modernisering av sjukhus",
         "Byggnation av solparker",
-        "Elbussflottor"
-      ]
+        "Elbussflottor",
+        "Järnvägsarbeten, Milano",
+        "Molntjänster, Warszawa",
+        "Energieffektivisering, Wien",
+        "Parkskötsel, Aten"
+      ],
+      "filters": {
+        "country": "Land",
+        "sector": "Sektor",
+        "deadline": "Sista dag",
+        "value": "Värde"
+      },
+      "loading": "Söker…",
+      "empty": "Inga upphandlingar hittades",
+      "error": "Sökningen är inte tillgänglig just nu — försök igen om en stund.",
+      "results_one": "{{count}} upphandling",
+      "results_other": "{{count}} upphandlingar"
     },
     "meta": {
       "title": "tendersbay — Offentliga upphandlingar, tilldelade av AI-agenter",
@@ -134,7 +184,26 @@
       "subtitle": "Ikväll stänger en upphandling med ditt namn på. De stora aktörerna har redan ett team på den. Du har tre flikar öppna i Excel. Det slutar här — AI-agenter som hittar den, sliter sönder pappersarbetet och placerar dig i anbudet. Medan du sover.",
       "ctaPrimary": "Sätt dina agenter i arbete",
       "ctaSecondary": "Se visionen",
-      "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"]
+      "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"],
+      "deckLabel": "Exempelresultat"
+    },
+    "proof": {
+      "lead": "Varje år spenderas i Europa över två biljoner euro av offentliga medel. Det mesta går genom offentliga upphandlingar som du aldrig ser.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "offentliga utgifter per år i EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "offentliga köpare som upphandlar uppdrag"
+        },
+        {
+          "value": "~800,000",
+          "label": "upphandlingar per år — inget team läser alla"
+        }
+      ],
+      "source": "Europeiska kommissionen · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Spelet är riggat för att hålla dig ute. Och det fungerar.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Tre agenter. De missar inte, sover inte, ger inte upp.",
+      "title": "Det här gjorde dina agenter medan du sov.",
+      "lead": "Inte en snabbare sökruta som du ändå måste styra själv. Ett team av agenter som arbetar med hela upphandlingen — hittar, förbereder, vinner — under natten, så att du vaknar redan med i loppet.",
       "items": [
         {
-          "title": "Hitta",
-          "body": "De finkammar alla 27 länder varje dag och lyfter bara fram upphandlingarna som är värda din tid — anpassade efter vad du faktiskt gör."
+          "time": "02:14",
+          "title": "Den hittade den som passar dig",
+          "body": "Medan marknaden sov finkammade agenterna alla 27 länder och lyfte fram den enda upphandlingen som är värd din tid — anpassad efter vad du faktiskt gör, inte en hög med sökord."
         },
         {
-          "title": "Förbered",
-          "body": "Krav, certifikat, ESPD, deadlines: extraherade, korskontrollerade, sammanställda. Pappersarbetet som knäckte dig, löst."
+          "time": "05:30",
+          "title": "Den byggde pappersarbetet",
+          "body": "Krav lästa, certifikat matchade, ESPD sammanställt, varje deadline noterad. Byråkratin som brukade bränna din helg — klar före kaffet."
         },
         {
-          "title": "Vinn",
-          "body": "De gör om förfrågningsunderlaget till en vinnande strategi, så att du går in med samma eldkraft som jättarna."
+          "time": "07:00",
+          "title": "Du vaknade redan med i loppet",
+          "body": "Ingen tom sida. Förfrågningsunderlaget blev en vinnande anbudsstrategi, redo för ditt beslut — samma eldkraft som jättarna betalar ett helt kontor för, väntar på ditt skrivbord."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Dina agenter är redo. Det enda som saknas är du.",
-      "body": "Vi slår på EU marknad för marknad. Gå med på väntelistan — i samma stund ditt land tänds börjar dina agenter jaga.",
-      "button": "Säkra din plats"
+      "body": "Skapa ditt konto och sätt agenterna på din marknad — hitta, förbereda, vinna, utan en egen anbudsavdelning.",
+      "button": "Skapa konto"
     },
     "tenderCard": {
       "value": "Värde",
@@ -302,12 +375,82 @@
       "cancelled": "Avbruten",
       "closed": "Stängd",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Land",
+      "anyCountry": "Alla länder",
+      "sector": "Sektor",
+      "anySector": "Alla sektorer",
+      "sectors": {
+        "construction": "Bygg",
+        "it": "IT och mjukvara",
+        "health": "Hälsa",
+        "energy": "Energi",
+        "transport": "Transport",
+        "education": "Utbildning",
+        "environment": "Miljö",
+        "business": "Företagstjänster"
+      },
+      "status": "Status",
+      "anyStatus": "Alla statusar",
+      "deadline": "Sista dag",
+      "anyDeadline": "När som helst",
+      "deadline7": "Nästa 7 dagar",
+      "deadline30": "Nästa 30 dagar",
+      "deadline90": "Nästa 90 dagar",
+      "clear": "Rensa allt"
+    },
+    "detail": {
+      "overview": "Översikt",
+      "buyer": "Upphandlande myndighet",
+      "value": "Uppskattat värde",
+      "published": "Publicerad",
+      "deadline": "Sista anbudsdag",
+      "status": "Status",
+      "procedure": "Förfarande",
+      "cpv": "CPV",
+      "cpvSecondary": "Ytterligare CPV",
+      "region": "Region (NUTS)",
+      "language": "Språk",
+      "documents": "Dokument",
+      "officialNotice": "Officiellt meddelande (PDF)",
+      "viewSource": "Visa på källan",
+      "lots": "Delar",
+      "lotsNone": "Denna upphandling har inga separata delar.",
+      "related": "Relaterade upphandlingar",
+      "relatedNone": "Inga relaterade upphandlingar hittades.",
+      "notFound": "Denna upphandling kunde inte hittas.",
+      "backToSearch": "Tillbaka till sökningen",
+      "searchPlaceholder": "Sök upphandlingar…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Upphandlingsdetaljer, sista anbudsdag, upphandlande myndighet och relaterade möjligheter för \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Under EU:s tröskelvärde",
+      "aboveEu": "Över EU:s tröskelvärde"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Stark matchning",
+        "possible": "Möjlig matchning",
+        "longShot": "Liten chans"
+      },
+      "reasonSector": "Matchar din sektor",
+      "reasonCountry": "I ditt målland",
+      "reasonValueInBand": "Inom ditt värdeintervall",
+      "reasonValueBelow": "Under ditt värdeintervall",
+      "reasonValueAbove": "Över ditt värdeintervall",
+      "reasonRegion": "I din region",
+      "reasonProcedure": "Matchar din förfarandetyp"
     }
   },
   "today": {
     "recommended": {
-      "title": "Rekommenderat för dig",
-      "seeAll": "Allt i Utforska →"
+      "seeAll": "Allt i Utforska →",
+      "clientCount_one": "{{count}} matchande upphandling redo för {{client}}",
+      "clientCount_other": "{{count}} matchande upphandlingar redo för {{client}}"
     },
     "greeting": {
       "morning": "God morgon.",
@@ -340,6 +483,7 @@
     },
     "nav": {
       "general": "Allmänt",
+      "profile": "Kundprofil",
       "overview": "Översikt",
       "members": "Medlemmar",
       "roles": "Roller",
@@ -451,6 +595,16 @@
       "settings": "Workspace-inställningar",
       "label": "Arbetsytor",
       "manage": "Alla arbetsytor"
+    },
+    "firstRun": {
+      "title": "Lägg till en kunds anbudsprofil",
+      "subtitle": "Berätta vad den här kunden brukar lämna anbud på så att rekommendationerna blir träffsäkra från start. Du kan slutföra det senare under Inställningar.",
+      "skip": "Hoppa över för nu"
+    },
+    "clientProfile": {
+      "title": "Kundens anbudsprofil",
+      "subtitle": "Det den här kunden lämnar anbud på — sektorer, länder och värdeintervall — styr varje rekommendation.",
+      "saved": "Profil sparad."
     }
   },
   "workbench": {
@@ -545,9 +699,51 @@
       "deleteHint": "Ta bort den här arbetsbänken och all dess data permanent.",
       "delete": "Ta bort arbetsbänk",
       "leaveHint": "Lämna den här arbetsbänken. En administratör kan lägga till dig igen.",
-      "leave": "Lämna arbetsbänk",
-      "confirmDelete": "Ta bort den här arbetsbänken?",
-      "confirmLeave": "Lämna den här arbetsbänken?"
+      "leave": "Lämna arbetsbänk"
+    },
+    "overview": {
+      "emptyTitle": "Din arbetsbänk är klar",
+      "emptyDescription": "Börja med att söka efter upphandlingar, skapa en kundprofil eller bjuda in ditt team. Allt du gör här delas med arbetsbänkens medlemmar.",
+      "emptyExplore": "Öppna Utforska"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Fråga inte igen",
+    "deleteWorkspace": {
+      "title": "Ta bort arbetsyta?",
+      "description": "Detta tar bort den här arbetsytan och all dess data permanent. Åtgärden kan inte ångras."
+    },
+    "leaveWorkspace": {
+      "title": "Lämna arbetsyta?",
+      "description": "Du förlorar åtkomsten till den här arbetsytan. Du kan gå med igen med en ny inbjudan."
+    },
+    "removeMember": {
+      "title": "Ta bort medlem?",
+      "description": "Den här personen förlorar omedelbart åtkomsten till arbetsytan."
+    },
+    "deleteRole": {
+      "title": "Ta bort roll?",
+      "description": "Medlemmar med den här rollen förlorar dess behörigheter."
+    },
+    "revokeInvite": {
+      "title": "Återkalla inbjudan?",
+      "description": "Den här e-postinbjudan går inte längre att använda."
+    },
+    "revokeLink": {
+      "title": "Återkalla länk?",
+      "description": "Den här inbjudningslänken slutar omedelbart att fungera."
+    },
+    "deleteWorkbench": {
+      "title": "Ta bort arbetsbänk?",
+      "description": "Detta tar bort den här arbetsbänken och all dess data permanent. Åtgärden kan inte ångras."
+    },
+    "leaveWorkbench": {
+      "title": "Lämna arbetsbänk?",
+      "description": "Du förlorar åtkomsten till den här arbetsbänken. En administratör kan lägga till dig igen."
+    },
+    "removeWorkbenchMember": {
+      "title": "Ta bort medlem?",
+      "description": "Den här personen förlorar omedelbart åtkomsten till arbetsbänken."
     }
   }
 }

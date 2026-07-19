@@ -69,10 +69,15 @@
       "displayName": "Nome",
       "email": "Email",
       "password": "Password",
-      "submitting": "Creazione in corso…",
       "submit": "Crea account",
       "login": "Hai già un account?",
-      "signIn": "Accedi"
+      "signIn": "Accedi",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Controlla la tua email",
@@ -104,6 +109,36 @@
       "loading": "Un momento."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Settori",
+      "countries": "Paesi",
+      "valueMin": "Valore minimo",
+      "valueMax": "Valore massimo",
+      "notes": "Note",
+      "notesPlaceholder": "Su cosa fa offerte di solito questo cliente?",
+      "save": "Salva profilo",
+      "invalidBand": "Il valore minimo non può superare il valore massimo.",
+      "error": "Impossibile salvare il profilo — riprova.",
+      "procedureTypesLabel": "Tipo di procedura",
+      "procedureTypes": {
+        "open": "Procedura aperta",
+        "restricted": "Procedura ristretta",
+        "negotiated": "Procedura negoziata",
+        "competitive_dialogue": "Dialogo competitivo",
+        "innovation_partnership": "Partenariato per l'innovazione",
+        "other": "Altro"
+      },
+      "regions": "Regioni (NUTS)",
+      "regionsPlaceholder": "es. ITC, DE3",
+      "regionsHint": "Prefissi NUTS separati da virgola. Lascia vuoto per includere qualsiasi regione."
+    },
+    "shortlist": {
+      "title": "Il migliore per questo cliente",
+      "emptyTitle": "Nessun bando adatto per ora",
+      "emptyDescription": "Prova una ricerca manuale qui sotto, oppure amplia il profilo di questo cliente."
+    }
+  },
   "landing": {
     "header": {
       "login": "Accedi",
@@ -116,8 +151,23 @@
         "Ristrutturazione di scuole pubbliche",
         "Modernizzazione IT degli ospedali",
         "Costruzione di impianti solari",
-        "Flotte di autobus elettrici"
-      ]
+        "Flotte di autobus elettrici",
+        "Lavori ferroviari, Milano",
+        "Servizi cloud, Varsavia",
+        "Riqualificazione energetica, Vienna",
+        "Manutenzione dei parchi, Atene"
+      ],
+      "filters": {
+        "country": "Paese",
+        "sector": "Settore",
+        "deadline": "Scadenza",
+        "value": "Valore"
+      },
+      "loading": "Ricerca in corso…",
+      "empty": "Nessuna gara trovata",
+      "error": "La ricerca non è disponibile al momento — riprova tra poco.",
+      "results_one": "{{count}} gara",
+      "results_other": "{{count}} gare"
     },
     "meta": {
       "title": "tendersbay — Bandi di gara, aggiudicati dai tuoi agenti AI",
@@ -134,7 +184,26 @@
       "subtitle": "Stanotte scade una gara col tuo nome sopra. I grandi ci hanno messo una squadra. Tu hai tre schede aperte in Excel. Finisce qui — agenti AI che la trovano, sbranano la burocrazia e ti mettono in gara. Mentre dormi.",
       "ctaPrimary": "Metti al lavoro i tuoi agenti",
       "ctaSecondary": "Guarda la vision",
-      "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"]
+      "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"],
+      "deckLabel": "Risultati di esempio"
+    },
+    "proof": {
+      "lead": "Ogni anno in Europa si spendono oltre duemila miliardi di euro di denaro pubblico. La maggior parte passa da bandi di gara che non vedi mai.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "di spesa pubblica all’anno nell’UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "enti pubblici che vanno a gara"
+        },
+        {
+          "value": "~800,000",
+          "label": "gare d’appalto all’anno — nessuno le legge tutte"
+        }
+      ],
+      "source": "Commissione europea · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Il gioco è truccato per tenerti fuori. E funziona.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Tre agenti. Non sbagliano, non dormono, non mollano.",
+      "title": "Ecco cosa hanno fatto i tuoi agenti mentre dormivi.",
+      "lead": "Non una barra di ricerca più veloce che devi comunque guidare tu. Una squadra di agenti che lavora l’intera gara — scova, prepara, vince — nella notte, così ti svegli già in corsa.",
       "items": [
         {
-          "title": "Scova",
-          "body": "Setacciano tutti i 27 paesi ogni giorno e ti mostrano solo le gare che valgono il tuo tempo — su misura per ciò che fai davvero."
+          "time": "02:14",
+          "title": "Ha scovato quella giusta per te",
+          "body": "Mentre il mercato dormiva, gli agenti hanno setacciato tutti i 27 paesi e tirato fuori l’unica gara che vale il tuo tempo — su misura per ciò che fai davvero, non un mucchio di parole chiave."
         },
         {
-          "title": "Prepara",
-          "body": "Requisiti, certificati, DGUE, scadenze: estratti, verificati, assemblati. La burocrazia che ti spezzava, risolta."
+          "time": "05:30",
+          "title": "Ha costruito le scartoffie",
+          "body": "Requisiti letti, certificati abbinati, il DGUE assemblato, ogni scadenza annotata. La burocrazia che ti bruciava il weekend — pronta prima del caffè."
         },
         {
-          "title": "Vinci",
-          "body": "Trasformano il capitolato in una strategia vincente, così entri con la stessa potenza di fuoco dei giganti."
+          "time": "07:00",
+          "title": "Ti sei svegliato già in corsa",
+          "body": "Niente pagina bianca. Il capitolato è diventato una strategia di gara, pronta per la tua decisione — la stessa potenza di fuoco per cui i giganti pagano un ufficio intero, che ti aspetta sulla scrivania."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "I tuoi agenti sono pronti. Manca solo tu.",
-      "body": "Stiamo accendendo l'UE un mercato alla volta. Iscriviti alla lista — nel momento in cui il tuo paese si accende, i tuoi agenti partono a caccia.",
-      "button": "Prendi il tuo posto"
+      "body": "Crea il tuo account e metti gli agenti sul tuo mercato — trovare, preparare, vincere, senza un ufficio gare tutto tuo.",
+      "button": "Crea il tuo account"
     },
     "tenderCard": {
       "value": "Valore",
@@ -302,12 +375,82 @@
       "cancelled": "Annullata",
       "closed": "Chiusa",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Paese",
+      "anyCountry": "Tutti i paesi",
+      "sector": "Settore",
+      "anySector": "Tutti i settori",
+      "sectors": {
+        "construction": "Edilizia",
+        "it": "IT e software",
+        "health": "Sanità",
+        "energy": "Energia",
+        "transport": "Trasporti",
+        "education": "Istruzione",
+        "environment": "Ambiente",
+        "business": "Servizi alle imprese"
+      },
+      "status": "Stato",
+      "anyStatus": "Tutti gli stati",
+      "deadline": "Scadenza",
+      "anyDeadline": "Qualsiasi data",
+      "deadline7": "Prossimi 7 giorni",
+      "deadline30": "Prossimi 30 giorni",
+      "deadline90": "Prossimi 90 giorni",
+      "clear": "Cancella tutto"
+    },
+    "detail": {
+      "overview": "Panoramica",
+      "buyer": "Ente appaltante",
+      "value": "Valore stimato",
+      "published": "Pubblicato",
+      "deadline": "Scadenza",
+      "status": "Stato",
+      "procedure": "Procedura",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV aggiuntivo",
+      "region": "Regione (NUTS)",
+      "language": "Lingua",
+      "documents": "Documenti",
+      "officialNotice": "Bando ufficiale (PDF)",
+      "viewSource": "Visualizza sulla fonte",
+      "lots": "Lotti",
+      "lotsNone": "Questo bando non prevede lotti separati.",
+      "related": "Bandi correlati",
+      "relatedNone": "Nessun bando correlato trovato.",
+      "notFound": "Impossibile trovare questo bando.",
+      "backToSearch": "Torna alla ricerca",
+      "searchPlaceholder": "Cerca bandi…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Dettagli del bando, scadenza, ente appaltante e opportunità correlate per \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Sotto la soglia UE",
+      "aboveEu": "Sopra la soglia UE"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Ottima corrispondenza",
+        "possible": "Possibile corrispondenza",
+        "longShot": "Improbabile"
+      },
+      "reasonSector": "Corrisponde al tuo settore",
+      "reasonCountry": "Nel paese target",
+      "reasonValueInBand": "Nella tua fascia di valore",
+      "reasonValueBelow": "Sotto la tua fascia di valore",
+      "reasonValueAbove": "Sopra la tua fascia di valore",
+      "reasonRegion": "Nella tua regione",
+      "reasonProcedure": "Corrisponde al tuo tipo di procedura"
     }
   },
   "today": {
     "recommended": {
-      "title": "Consigliate per te",
-      "seeAll": "Tutto in Esplora →"
+      "seeAll": "Tutto in Esplora →",
+      "clientCount_one": "{{count}} bando ideale pronto per {{client}}",
+      "clientCount_other": "{{count}} bandi ideali pronti per {{client}}"
     },
     "greeting": {
       "morning": "Buongiorno.",
@@ -340,6 +483,7 @@
     },
     "nav": {
       "general": "Generale",
+      "profile": "Profilo cliente",
       "overview": "Panoramica",
       "members": "Membri",
       "roles": "Ruoli",
@@ -451,6 +595,16 @@
       "settings": "Impostazioni workspace",
       "label": "Spazi di lavoro",
       "manage": "Tutti gli spazi di lavoro"
+    },
+    "firstRun": {
+      "title": "Aggiungi un profilo cliente",
+      "subtitle": "Raccontaci su cosa fa offerte questo cliente per affinare subito i suggerimenti. Puoi completarlo più tardi dalle Impostazioni.",
+      "skip": "Salta per ora"
+    },
+    "clientProfile": {
+      "title": "Profilo di offerta del cliente",
+      "subtitle": "Su cosa fa offerte questo cliente — settori, paesi e fascia di valore — guida ogni suggerimento.",
+      "saved": "Profilo salvato."
     }
   },
   "workbench": {
@@ -545,9 +699,51 @@
       "deleteHint": "Elimina definitivamente questo workbench e tutti i suoi dati.",
       "delete": "Elimina workbench",
       "leaveHint": "Abbandona questo workbench. Un gestore potrà aggiungerti di nuovo.",
-      "leave": "Abbandona workbench",
-      "confirmDelete": "Eliminare questo workbench?",
-      "confirmLeave": "Abbandonare questo workbench?"
+      "leave": "Abbandona workbench"
+    },
+    "overview": {
+      "emptyTitle": "Il tuo workbench è pronto",
+      "emptyDescription": "Inizia cercando gare, creando un profilo cliente o invitando il tuo team. Tutto ciò che fai qui viene condiviso con i membri del workbench.",
+      "emptyExplore": "Apri Esplora"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Non chiedere più",
+    "deleteWorkspace": {
+      "title": "Eliminare lo spazio di lavoro?",
+      "description": "Questo eliminerà definitivamente questo spazio di lavoro e tutti i suoi dati. Questa azione non può essere annullata."
+    },
+    "leaveWorkspace": {
+      "title": "Abbandonare lo spazio di lavoro?",
+      "description": "Perderai l'accesso a questo spazio di lavoro. Potrai rientrare con un nuovo invito."
+    },
+    "removeMember": {
+      "title": "Rimuovere il membro?",
+      "description": "Questa persona perderà immediatamente l'accesso allo spazio di lavoro."
+    },
+    "deleteRole": {
+      "title": "Eliminare il ruolo?",
+      "description": "I membri con questo ruolo perderanno i suoi permessi."
+    },
+    "revokeInvite": {
+      "title": "Revocare l'invito?",
+      "description": "Questo invito via e-mail non sarà più utilizzabile."
+    },
+    "revokeLink": {
+      "title": "Revocare il link?",
+      "description": "Questo link di invito smetterà di funzionare immediatamente."
+    },
+    "deleteWorkbench": {
+      "title": "Eliminare il workbench?",
+      "description": "Questo eliminerà definitivamente questo workbench e tutti i suoi dati. Questa azione non può essere annullata."
+    },
+    "leaveWorkbench": {
+      "title": "Abbandonare il workbench?",
+      "description": "Perderai l'accesso a questo workbench. Un gestore potrà aggiungerti di nuovo."
+    },
+    "removeWorkbenchMember": {
+      "title": "Rimuovere il membro?",
+      "description": "Questa persona perderà immediatamente l'accesso al workbench."
     }
   }
 }

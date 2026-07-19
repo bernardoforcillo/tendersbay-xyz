@@ -69,10 +69,15 @@
       "displayName": "Ime",
       "email": "E-poštni naslov",
       "password": "Geslo",
-      "submitting": "Ustvarjanje…",
       "submit": "Ustvarite račun",
       "login": "Že imate račun?",
-      "signIn": "Prijava"
+      "signIn": "Prijava",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Preverite svojo e-pošto",
@@ -104,6 +109,36 @@
       "loading": "Trenutek."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektorji",
+      "countries": "Države",
+      "valueMin": "Najnižja vrednost",
+      "valueMax": "Najvišja vrednost",
+      "notes": "Opombe",
+      "notesPlaceholder": "Za kaj se ta stranka običajno poteguje?",
+      "save": "Shrani profil",
+      "invalidBand": "Najnižja vrednost ne sme presegati najvišje vrednosti.",
+      "error": "Profila ni bilo mogoče shraniti — poskusite znova.",
+      "procedureTypesLabel": "Vrste postopkov",
+      "procedureTypes": {
+        "open": "Odprti postopek",
+        "restricted": "Omejeni postopek",
+        "negotiated": "Postopek s pogajanji",
+        "competitive_dialogue": "Konkurenčni dialog",
+        "innovation_partnership": "Partnerstvo za inovacije",
+        "other": "Drugo"
+      },
+      "regions": "Regije (NUTS)",
+      "regionsPlaceholder": "npr. ITC, DE3",
+      "regionsHint": "Predpone NUTS, ločene z vejico. Pustite prazno za vključitev katere koli regije."
+    },
+    "shortlist": {
+      "title": "Najboljše ujemanje za to stranko",
+      "emptyTitle": "Še ni ustreznih razpisov",
+      "emptyDescription": "Poskusite z ročnim iskanjem spodaj ali razširite profil te stranke."
+    }
+  },
   "landing": {
     "header": {
       "login": "Prijava",
@@ -116,8 +151,23 @@
         "Prenova javnih šol",
         "IT posodobitev bolnišnic",
         "Gradnja sončnih elektrarn",
-        "Flote električnih avtobusov"
-      ]
+        "Flote električnih avtobusov",
+        "Železniška dela, Milano",
+        "Storitve v oblaku, Varšava",
+        "Energetska prenova, Dunaj",
+        "Vzdrževanje parkov, Atene"
+      ],
+      "filters": {
+        "country": "Država",
+        "sector": "Sektor",
+        "deadline": "Rok",
+        "value": "Vrednost"
+      },
+      "loading": "Iskanje…",
+      "empty": "Ni najdenih razpisov",
+      "error": "Iskanje trenutno ni na voljo — poskusite znova čez trenutek.",
+      "results_one": "{{count}} razpis",
+      "results_other": "{{count}} razpisov"
     },
     "meta": {
       "title": "tendersbay — Javna naročila v Evropi, dodeljena z agenti UI",
@@ -134,7 +184,26 @@
       "subtitle": "Nocoj se zapre razpis z vašim imenom. Veliki igralci že imajo ekipo na njem. Vi imate odprte tri zavihke v Excelu. Tu je konec — agenti UI, ki ga najdejo, raztrgajo birokracijo in vas postavijo v ponudbo. Medtem ko spite.",
       "ctaPrimary": "Pošljite svoje agente na delo",
       "ctaSecondary": "Oglejte si vizijo",
-      "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"]
+      "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"],
+      "deckLabel": "Vzorčni rezultati"
+    },
+    "proof": {
+      "lead": "Vsako leto se v Evropi porabi več kot dva bilijona evrov javnega denarja. Večina gre skozi javna naročila, ki jih nikoli ne vidite.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "javne porabe na leto v EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "javnih naročnikov, ki objavljajo naročila"
+        },
+        {
+          "value": "~800,000",
+          "label": "javnih naročil na leto — nobena ekipa jih ne prebere vseh"
+        }
+      ],
+      "source": "Evropska komisija · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Igra je prirejena, da vas drži zunaj. In deluje.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Trije agenti. Ne zgrešijo, ne spijo, ne odnehajo.",
+      "title": "Tole so vaši agenti postorili, medtem ko ste spali.",
+      "lead": "Ne hitrejša iskalna vrstica, ki jo morate vseeno upravljati sami. Ekipa agentov, ki obdela celotno naročilo — poišče, pripravi, zmaga — čez noč, da se zbudite že v tekmi.",
       "items": [
         {
-          "title": "Poiščite",
-          "body": "Vsak dan prečešejo vseh 27 držav in izpostavijo le razpise, vredne vašega časa — prilagojene temu, kar resnično počnete."
+          "time": "02:14",
+          "title": "Našel je tistega, ki vam ustreza",
+          "body": "Medtem ko je trg spal, so agenti prečesali vseh 27 držav in izluščili edino naročilo, vredno vašega časa — prilagojeno temu, kar resnično počnete, ne kupa ključnih besed."
         },
         {
-          "title": "Pripravite",
-          "body": "Zahteve, potrdila, ESPD, roki: izvlečeni, navzkrižno preverjeni, sestavljeni. Birokracija, ki vas je lomila, urejena."
+          "time": "05:30",
+          "title": "Sestavil je papirologijo",
+          "body": "Zahteve prebrane, potrdila usklajena, ESPD sestavljen, vsak rok zabeležen. Birokracija, ki vam je požirala vikend — pripravljena pred kavo."
         },
         {
-          "title": "Zmagajte",
-          "body": "Razpisno dokumentacijo spremenijo v zmagovalno strategijo, da vstopite z enako ognjeno močjo kot velikani."
+          "time": "07:00",
+          "title": "Zbudili ste se že v tekmi",
+          "body": "Nobenega praznega lista. Iz razpisne dokumentacije je nastala zmagovalna ponudbena strategija, pripravljena za vašo odločitev — enaka ognjena moč, za katero velikani plačujejo celotno pisarno, vas čaka na mizi."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Vaši agenti so pripravljeni. Manjkate samo še vi.",
-      "body": "Prižigamo EU trg za trgom. Pridružite se čakalni listi — v trenutku, ko vaša država zasveti, vaši agenti odidejo na lov.",
-      "button": "Zagotovite si svoje mesto"
+      "body": "Ustvarite račun in pošljite agente na svoj trg — poiskati, pripraviti, zmagati, brez lastnega oddelka za javna naročila.",
+      "button": "Ustvarite račun"
     },
     "tenderCard": {
       "value": "Vrednost",
@@ -306,12 +379,84 @@
       "cancelled": "Preklican",
       "closed": "Zaprt",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Država",
+      "anyCountry": "Vse države",
+      "sector": "Sektor",
+      "anySector": "Vsi sektorji",
+      "sectors": {
+        "construction": "Gradbeništvo",
+        "it": "IT in programska oprema",
+        "health": "Zdravstvo",
+        "energy": "Energetika",
+        "transport": "Promet",
+        "education": "Izobraževanje",
+        "environment": "Okolje",
+        "business": "Poslovne storitve"
+      },
+      "status": "Stanje",
+      "anyStatus": "Vsa stanja",
+      "deadline": "Rok",
+      "anyDeadline": "Kadar koli",
+      "deadline7": "Naslednjih 7 dni",
+      "deadline30": "Naslednjih 30 dni",
+      "deadline90": "Naslednjih 90 dni",
+      "clear": "Počisti vse"
+    },
+    "detail": {
+      "overview": "Pregled",
+      "buyer": "Naročnik",
+      "value": "Ocenjena vrednost",
+      "published": "Objavljeno",
+      "deadline": "Rok",
+      "status": "Status",
+      "procedure": "Postopek",
+      "cpv": "CPV",
+      "cpvSecondary": "Dodatni CPV",
+      "region": "Regija (NUTS)",
+      "language": "Jezik",
+      "documents": "Dokumenti",
+      "officialNotice": "Uradno obvestilo (PDF)",
+      "viewSource": "Ogled na viru",
+      "lots": "Sklopi",
+      "lotsNone": "Ta razpis nima ločenih sklopov.",
+      "related": "Sorodni razpisi",
+      "relatedNone": "Ni najdenih sorodnih razpisov.",
+      "notFound": "Tega razpisa ni bilo mogoče najti.",
+      "backToSearch": "Nazaj na iskanje",
+      "searchPlaceholder": "Iskanje razpisov…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Podrobnosti razpisa, rok, naročnik in sorodne priložnosti za \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Pod pragom EU",
+      "aboveEu": "Nad pragom EU"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Močno ujemanje",
+        "possible": "Možno ujemanje",
+        "longShot": "Majhna verjetnost"
+      },
+      "reasonSector": "Ujema se z vašim sektorjem",
+      "reasonCountry": "V vaši ciljni državi",
+      "reasonValueInBand": "V vašem vrednostnem razponu",
+      "reasonValueBelow": "Pod vašim vrednostnim razponom",
+      "reasonValueAbove": "Nad vašim vrednostnim razponom",
+      "reasonRegion": "V vaši regiji",
+      "reasonProcedure": "Ujema se z vrsto vašega postopka"
     }
   },
   "today": {
     "recommended": {
-      "title": "Priporočeno za vas",
-      "seeAll": "Vse v razdelku Razišči →"
+      "seeAll": "Vse v razdelku Razišči →",
+      "clientCount_one": "{{count}} ustrezen razpis pripravljen za {{client}}",
+      "clientCount_two": "{{count}} ustrezna razpisa pripravljena za {{client}}",
+      "clientCount_few": "{{count}} ustrezni razpisi pripravljeni za {{client}}",
+      "clientCount_other": "{{count}} ustreznih razpisov pripravljenih za {{client}}"
     },
     "greeting": {
       "morning": "Dobro jutro.",
@@ -344,6 +489,7 @@
     },
     "nav": {
       "general": "Splošno",
+      "profile": "Profil stranke",
       "overview": "Pregled",
       "members": "Člani",
       "roles": "Vloge",
@@ -455,6 +601,16 @@
       "settings": "Nastavitve workspace",
       "label": "Delovni prostori",
       "manage": "Vsi delovni prostori"
+    },
+    "firstRun": {
+      "title": "Dodaj profil ponudb stranke",
+      "subtitle": "Povejte nam, za kaj se ta stranka poteguje, da bodo priporočila od začetka natančna. To lahko dokončate pozneje v Nastavitvah.",
+      "skip": "Preskoči za zdaj"
+    },
+    "clientProfile": {
+      "title": "Profil ponudb stranke",
+      "subtitle": "Za kaj se ta stranka poteguje — sektorji, države in vrednostni razpon — usmerja vsako priporočilo.",
+      "saved": "Profil shranjen."
     }
   },
   "workbench": {
@@ -549,9 +705,51 @@
       "deleteHint": "Trajno izbriši ta delovni pult in vse njegove podatke.",
       "delete": "Izbriši delovni pult",
       "leaveHint": "Zapusti ta delovni pult. Upravitelj vas lahko znova doda.",
-      "leave": "Zapusti delovni pult",
-      "confirmDelete": "Izbrisati ta delovni pult?",
-      "confirmLeave": "Zapustiti ta delovni pult?"
+      "leave": "Zapusti delovni pult"
+    },
+    "overview": {
+      "emptyTitle": "Vaš delovni pult je pripravljen",
+      "emptyDescription": "Začnite z iskanjem razpisov, ustvarjanjem profila stranke ali povabilom svoje ekipe. Vse, kar tukaj počnete, je deljeno s člani delovnega pulta.",
+      "emptyExplore": "Odprite Razišči"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ne sprašujte več",
+    "deleteWorkspace": {
+      "title": "Izbrisati delovni prostor?",
+      "description": "S tem boste trajno izbrisali ta delovni prostor in vse njegove podatke. Tega dejanja ni mogoče razveljaviti."
+    },
+    "leaveWorkspace": {
+      "title": "Zapustiti delovni prostor?",
+      "description": "Izgubili boste dostop do tega delovnega prostora. Znova se lahko pridružite z novim vabilom."
+    },
+    "removeMember": {
+      "title": "Odstraniti člana?",
+      "description": "Ta oseba bo takoj izgubila dostop do delovnega prostora."
+    },
+    "deleteRole": {
+      "title": "Izbrisati vlogo?",
+      "description": "Člani s to vlogo bodo izgubili njene pravice."
+    },
+    "revokeInvite": {
+      "title": "Preklicati vabilo?",
+      "description": "To vabilo po e-pošti ne bo več uporabno."
+    },
+    "revokeLink": {
+      "title": "Preklicati povezavo?",
+      "description": "Ta povezava za vabilo bo takoj prenehala delovati."
+    },
+    "deleteWorkbench": {
+      "title": "Izbrisati delovni pult?",
+      "description": "S tem boste trajno izbrisali ta delovni pult in vse njegove podatke. Tega dejanja ni mogoče razveljaviti."
+    },
+    "leaveWorkbench": {
+      "title": "Zapustiti delovni pult?",
+      "description": "Izgubili boste dostop do tega delovnega pulta. Upravitelj vas lahko znova doda."
+    },
+    "removeWorkbenchMember": {
+      "title": "Odstraniti člana?",
+      "description": "Ta oseba bo takoj izgubila dostop do delovnega pulta."
     }
   }
 }

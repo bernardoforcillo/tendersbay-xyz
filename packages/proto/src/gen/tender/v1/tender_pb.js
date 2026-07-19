@@ -8,7 +8,7 @@ import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2
  * Describes the file tender/v1/tender.proto.
  */
 export const file_tender_v1_tender = /*@__PURE__*/
-  fileDesc("ChZ0ZW5kZXIvdjEvdGVuZGVyLnByb3RvEgl0ZW5kZXIudjEibwoUU2VhcmNoVGVuZGVyc1JlcXVlc3QSDQoFcXVlcnkYASABKAkSKQoHZmlsdGVycxgCIAEoCzIYLnRlbmRlci52MS5UZW5kZXJGaWx0ZXJzEg0KBWxpbWl0GAMgASgFEg4KBm9mZnNldBgEIAEoBSJpCg1UZW5kZXJGaWx0ZXJzEg8KB2NvdW50cnkYASABKAkSCwoDY3B2GAIgASgJEg4KBnN0YXR1cxgDIAEoCRIVCg1kZWFkbGluZV9mcm9tGAQgASgJEhMKC2RlYWRsaW5lX3RvGAUgASgJIlMKFVNlYXJjaFRlbmRlcnNSZXNwb25zZRIoCgdyZXN1bHRzGAEgAygLMhcudGVuZGVyLnYxLlRlbmRlclJlc3VsdBIQCghoYXNfbW9yZRgCIAEoCCKJAgoMVGVuZGVyUmVzdWx0EgoKAmlkGAEgASgJEg0KBXRpdGxlGAIgASgJEhIKCmJ1eWVyX25hbWUYAyABKAkSDgoGc3RhdHVzGAQgASgJEhYKDnByb2NlZHVyZV90eXBlGAUgASgJEg8KB2NvdW50cnkYBiABKAkSCwoDY3B2GAcgASgJEg0KBXZhbHVlGAggASgDEhAKCGN1cnJlbmN5GAkgASgJEhQKDHB1Ymxpc2hlZF9hdBgKIAEoCRIQCghkZWFkbGluZRgLIAEoCRIXCg9yZWxldmFuY2Vfc2NvcmUYDCABKAESDgoGc291cmNlGA0gASgJEhIKCnNvdXJjZV9yZWYYDiABKAkyYwoNVGVuZGVyU2VydmljZRJSCg1TZWFyY2hUZW5kZXJzEh8udGVuZGVyLnYxLlNlYXJjaFRlbmRlcnNSZXF1ZXN0GiAudGVuZGVyLnYxLlNlYXJjaFRlbmRlcnNSZXNwb25zZUJUWlJnaXRodWIuY29tL2Jlcm5hcmRvZm9yY2lsbG8vdGVuZGVyc2JheS14eXovc2VydmljZXMvYmFja2VuZC9nZW4vdGVuZGVyL3YxO3RlbmRlcnYxYgZwcm90bzM");
+  fileDesc("ChZ0ZW5kZXIvdjEvdGVuZGVyLnByb3RvEgl0ZW5kZXIudjEihQEKFFNlYXJjaFRlbmRlcnNSZXF1ZXN0Eg0KBXF1ZXJ5GAEgASgJEikKB2ZpbHRlcnMYAiABKAsyGC50ZW5kZXIudjEuVGVuZGVyRmlsdGVycxINCgVsaW1pdBgDIAEoBRIOCgZvZmZzZXQYBCABKAUSFAoMd29ya3NwYWNlX2lkGAUgASgJImkKDVRlbmRlckZpbHRlcnMSDwoHY291bnRyeRgBIAEoCRILCgNjcHYYAiABKAkSDgoGc3RhdHVzGAMgASgJEhUKDWRlYWRsaW5lX2Zyb20YBCABKAkSEwoLZGVhZGxpbmVfdG8YBSABKAkiUwoVU2VhcmNoVGVuZGVyc1Jlc3BvbnNlEigKB3Jlc3VsdHMYASADKAsyFy50ZW5kZXIudjEuVGVuZGVyUmVzdWx0EhAKCGhhc19tb3JlGAIgASgIIv0CCgxUZW5kZXJSZXN1bHQSCgoCaWQYASABKAkSDQoFdGl0bGUYAiABKAkSEgoKYnV5ZXJfbmFtZRgDIAEoCRIOCgZzdGF0dXMYBCABKAkSFgoOcHJvY2VkdXJlX3R5cGUYBSABKAkSDwoHY291bnRyeRgGIAEoCRILCgNjcHYYByABKAkSDQoFdmFsdWUYCCABKAMSEAoIY3VycmVuY3kYCSABKAkSFAoMcHVibGlzaGVkX2F0GAogASgJEhAKCGRlYWRsaW5lGAsgASgJEhcKD3JlbGV2YW5jZV9zY29yZRgMIAEoARIOCgZzb3VyY2UYDSABKAkSEgoKc291cmNlX3JlZhgOIAEoCRISCgpzb3VyY2VfdXJsGA8gASgJEgwKBG51dHMYECABKAkSEAoIZml0X3RpZXIYESABKAkSKAoGcmVhc29uGBIgASgLMhgudGVuZGVyLnYxLlJlYXNvblNpZ25hbHMSFAoMZXVfdGhyZXNob2xkGBMgASgJIkcKIFJlY29tbWVuZFRlbmRlcnNGb3JDbGllbnRSZXF1ZXN0EhQKDHdvcmtzcGFjZV9pZBgBIAEoCRINCgVsaW1pdBgCIAEoBSKrAQoNUmVhc29uU2lnbmFscxIUCgxzZWN0b3JfbWF0Y2gYASABKAgSFQoNY291bnRyeV9tYXRjaBgCIAEoCBIRCgl2YWx1ZV9maXQYAyABKAkSFQoNZGVhZGxpbmVfZGF5cxgEIAEoBRIUCgxoYXNfZGVhZGxpbmUYBSABKAgSFAoMcmVnaW9uX21hdGNoGAYgASgIEhcKD3Byb2NlZHVyZV9tYXRjaBgHIAEoCCJ+ChdSZWNvbW1lbmRlZFRlbmRlclJlc3VsdBInCgZ0ZW5kZXIYASABKAsyFy50ZW5kZXIudjEuVGVuZGVyUmVzdWx0EhAKCGZpdF90aWVyGAIgASgJEigKBnJlYXNvbhgDIAEoCzIYLnRlbmRlci52MS5SZWFzb25TaWduYWxzIm8KIVJlY29tbWVuZFRlbmRlcnNGb3JDbGllbnRSZXNwb25zZRIzCgdyZXN1bHRzGAEgAygLMiIudGVuZGVyLnYxLlJlY29tbWVuZGVkVGVuZGVyUmVzdWx0EhUKDW5lZWRzX3Byb2ZpbGUYAiABKAgiFAoSR2V0Q292ZXJhZ2VSZXF1ZXN0IigKE0dldENvdmVyYWdlUmVzcG9uc2USEQoJY291bnRyaWVzGAEgAygJIh4KEEdldFRlbmRlclJlcXVlc3QSCgoCaWQYASABKAkiPAoRR2V0VGVuZGVyUmVzcG9uc2USJwoGdGVuZGVyGAEgASgLMhcudGVuZGVyLnYxLlRlbmRlckRldGFpbCI1ChhHZXRSZWxhdGVkVGVuZGVyc1JlcXVlc3QSCgoCaWQYASABKAkSDQoFbGltaXQYAiABKAUiRQoZR2V0UmVsYXRlZFRlbmRlcnNSZXNwb25zZRIoCgdyZXN1bHRzGAEgAygLMhcudGVuZGVyLnYxLlRlbmRlclJlc3VsdCIpChhMaXN0VGVuZGVyU2l0ZW1hcFJlcXVlc3QSDQoFbGltaXQYASABKAUiPwoZTGlzdFRlbmRlclNpdGVtYXBSZXNwb25zZRIiCgRyZWZzGAEgAygLMhQudGVuZGVyLnYxLlRlbmRlclJlZiIoCglUZW5kZXJSZWYSCgoCaWQYASABKAkSDwoHbGFzdG1vZBgCIAEoCSIrCg5UZW5kZXJEb2N1bWVudBILCgN1cmwYASABKAkSDAoEdHlwZRgCIAEoCSJnCglUZW5kZXJMb3QSCwoDcmVmGAEgASgJEg0KBXRpdGxlGAIgASgJEgsKA2NwdhgDIAEoCRINCgV2YWx1ZRgEIAEoAxIQCghjdXJyZW5jeRgFIAEoCRIQCghkZWFkbGluZRgGIAEoCSKfAwoMVGVuZGVyRGV0YWlsEgoKAmlkGAEgASgJEg0KBXRpdGxlGAIgASgJEhIKCmJ1eWVyX25hbWUYAyABKAkSEAoIYnV5ZXJfaWQYBCABKAkSDgoGc3RhdHVzGAUgASgJEhYKDnByb2NlZHVyZV90eXBlGAYgASgJEg8KB2NvdW50cnkYByABKAkSDAoEbnV0cxgIIAEoCRIQCghsYW5ndWFnZRgJIAEoCRILCgNjcHYYCiABKAkSFQoNY3B2X3NlY29uZGFyeRgLIAMoCRINCgV2YWx1ZRgMIAEoAxIQCghjdXJyZW5jeRgNIAEoCRIUCgxwdWJsaXNoZWRfYXQYDiABKAkSEAoIZGVhZGxpbmUYDyABKAkSDgoGc291cmNlGBAgASgJEhIKCnNvdXJjZV9yZWYYESABKAkSEgoKc291cmNlX3VybBgSIAEoCRIsCglkb2N1bWVudHMYEyADKAsyGS50ZW5kZXIudjEuVGVuZGVyRG9jdW1lbnQSIgoEbG90cxgUIAMoCzIULnRlbmRlci52MS5UZW5kZXJMb3QysQQKDVRlbmRlclNlcnZpY2USUgoNU2VhcmNoVGVuZGVycxIfLnRlbmRlci52MS5TZWFyY2hUZW5kZXJzUmVxdWVzdBogLnRlbmRlci52MS5TZWFyY2hUZW5kZXJzUmVzcG9uc2USRgoJR2V0VGVuZGVyEhsudGVuZGVyLnYxLkdldFRlbmRlclJlcXVlc3QaHC50ZW5kZXIudjEuR2V0VGVuZGVyUmVzcG9uc2USXgoRR2V0UmVsYXRlZFRlbmRlcnMSIy50ZW5kZXIudjEuR2V0UmVsYXRlZFRlbmRlcnNSZXF1ZXN0GiQudGVuZGVyLnYxLkdldFJlbGF0ZWRUZW5kZXJzUmVzcG9uc2USXgoRTGlzdFRlbmRlclNpdGVtYXASIy50ZW5kZXIudjEuTGlzdFRlbmRlclNpdGVtYXBSZXF1ZXN0GiQudGVuZGVyLnYxLkxpc3RUZW5kZXJTaXRlbWFwUmVzcG9uc2USdgoZUmVjb21tZW5kVGVuZGVyc0ZvckNsaWVudBIrLnRlbmRlci52MS5SZWNvbW1lbmRUZW5kZXJzRm9yQ2xpZW50UmVxdWVzdBosLnRlbmRlci52MS5SZWNvbW1lbmRUZW5kZXJzRm9yQ2xpZW50UmVzcG9uc2USTAoLR2V0Q292ZXJhZ2USHS50ZW5kZXIudjEuR2V0Q292ZXJhZ2VSZXF1ZXN0Gh4udGVuZGVyLnYxLkdldENvdmVyYWdlUmVzcG9uc2VCVFpSZ2l0aHViLmNvbS9iZXJuYXJkb2ZvcmNpbGxvL3RlbmRlcnNiYXkteHl6L3NlcnZpY2VzL2JhY2tlbmQvZ2VuL3RlbmRlci92MTt0ZW5kZXJ2MWIGcHJvdG8z");
 
 /**
  * Describes the message tender.v1.SearchTendersRequest.
@@ -37,6 +37,118 @@ export const SearchTendersResponseSchema = /*@__PURE__*/
  */
 export const TenderResultSchema = /*@__PURE__*/
   messageDesc(file_tender_v1_tender, 3);
+
+/**
+ * Describes the message tender.v1.RecommendTendersForClientRequest.
+ * Use `create(RecommendTendersForClientRequestSchema)` to create a new message.
+ */
+export const RecommendTendersForClientRequestSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 4);
+
+/**
+ * Describes the message tender.v1.ReasonSignals.
+ * Use `create(ReasonSignalsSchema)` to create a new message.
+ */
+export const ReasonSignalsSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 5);
+
+/**
+ * Describes the message tender.v1.RecommendedTenderResult.
+ * Use `create(RecommendedTenderResultSchema)` to create a new message.
+ */
+export const RecommendedTenderResultSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 6);
+
+/**
+ * Describes the message tender.v1.RecommendTendersForClientResponse.
+ * Use `create(RecommendTendersForClientResponseSchema)` to create a new message.
+ */
+export const RecommendTendersForClientResponseSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 7);
+
+/**
+ * Describes the message tender.v1.GetCoverageRequest.
+ * Use `create(GetCoverageRequestSchema)` to create a new message.
+ */
+export const GetCoverageRequestSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 8);
+
+/**
+ * Describes the message tender.v1.GetCoverageResponse.
+ * Use `create(GetCoverageResponseSchema)` to create a new message.
+ */
+export const GetCoverageResponseSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 9);
+
+/**
+ * Describes the message tender.v1.GetTenderRequest.
+ * Use `create(GetTenderRequestSchema)` to create a new message.
+ */
+export const GetTenderRequestSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 10);
+
+/**
+ * Describes the message tender.v1.GetTenderResponse.
+ * Use `create(GetTenderResponseSchema)` to create a new message.
+ */
+export const GetTenderResponseSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 11);
+
+/**
+ * Describes the message tender.v1.GetRelatedTendersRequest.
+ * Use `create(GetRelatedTendersRequestSchema)` to create a new message.
+ */
+export const GetRelatedTendersRequestSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 12);
+
+/**
+ * Describes the message tender.v1.GetRelatedTendersResponse.
+ * Use `create(GetRelatedTendersResponseSchema)` to create a new message.
+ */
+export const GetRelatedTendersResponseSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 13);
+
+/**
+ * Describes the message tender.v1.ListTenderSitemapRequest.
+ * Use `create(ListTenderSitemapRequestSchema)` to create a new message.
+ */
+export const ListTenderSitemapRequestSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 14);
+
+/**
+ * Describes the message tender.v1.ListTenderSitemapResponse.
+ * Use `create(ListTenderSitemapResponseSchema)` to create a new message.
+ */
+export const ListTenderSitemapResponseSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 15);
+
+/**
+ * Describes the message tender.v1.TenderRef.
+ * Use `create(TenderRefSchema)` to create a new message.
+ */
+export const TenderRefSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 16);
+
+/**
+ * Describes the message tender.v1.TenderDocument.
+ * Use `create(TenderDocumentSchema)` to create a new message.
+ */
+export const TenderDocumentSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 17);
+
+/**
+ * Describes the message tender.v1.TenderLot.
+ * Use `create(TenderLotSchema)` to create a new message.
+ */
+export const TenderLotSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 18);
+
+/**
+ * Describes the message tender.v1.TenderDetail.
+ * Use `create(TenderDetailSchema)` to create a new message.
+ */
+export const TenderDetailSchema = /*@__PURE__*/
+  messageDesc(file_tender_v1_tender, 19);
 
 /**
  * TenderService serves the direct tender search endpoint behind the

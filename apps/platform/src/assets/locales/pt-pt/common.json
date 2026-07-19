@@ -69,10 +69,15 @@
       "displayName": "Nome",
       "email": "E-mail",
       "password": "Palavra-passe",
-      "submitting": "A criar…",
       "submit": "Criar conta",
       "login": "Já tem conta?",
-      "signIn": "Iniciar sessão"
+      "signIn": "Iniciar sessão",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Verifique o seu e-mail",
@@ -104,6 +109,36 @@
       "loading": "Um momento."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Setores",
+      "countries": "Países",
+      "valueMin": "Valor mínimo",
+      "valueMax": "Valor máximo",
+      "notes": "Notas",
+      "notesPlaceholder": "Em que é que este cliente normalmente concorre?",
+      "save": "Guardar perfil",
+      "invalidBand": "O valor mínimo não pode exceder o valor máximo.",
+      "error": "Não foi possível guardar o perfil — tente novamente.",
+      "procedureTypesLabel": "Tipos de procedimento",
+      "procedureTypes": {
+        "open": "Procedimento aberto",
+        "restricted": "Procedimento restrito",
+        "negotiated": "Procedimento por negociação",
+        "competitive_dialogue": "Diálogo concorrencial",
+        "innovation_partnership": "Parceria para a inovação",
+        "other": "Outro"
+      },
+      "regions": "Regiões (NUTS)",
+      "regionsPlaceholder": "ex.: ITC, DE3",
+      "regionsHint": "Prefixos NUTS separados por vírgulas. Deixe em branco para incluir qualquer região."
+    },
+    "shortlist": {
+      "title": "Melhor opção para este cliente",
+      "emptyTitle": "Ainda não há concursos adequados",
+      "emptyDescription": "Experimente uma pesquisa manual abaixo, ou alargue o perfil deste cliente."
+    }
+  },
   "landing": {
     "header": {
       "login": "Iniciar sessão",
@@ -116,8 +151,23 @@
         "Renovação de escolas públicas",
         "Modernização de TI hospitalar",
         "Construção de centrais solares",
-        "Frotas de autocarros elétricos"
-      ]
+        "Frotas de autocarros elétricos",
+        "Obras ferroviárias, Milão",
+        "Serviços na nuvem, Varsóvia",
+        "Eficiência energética, Viena",
+        "Manutenção de parques, Atenas"
+      ],
+      "filters": {
+        "country": "País",
+        "sector": "Setor",
+        "deadline": "Prazo",
+        "value": "Valor"
+      },
+      "loading": "A pesquisar…",
+      "empty": "Não foram encontrados concursos",
+      "error": "A pesquisa não está disponível de momento — tente novamente daqui a instantes.",
+      "results_one": "{{count}} concurso",
+      "results_other": "{{count}} concursos"
     },
     "meta": {
       "title": "tendersbay — Concursos públicos, adjudicados por agentes de IA",
@@ -134,7 +184,26 @@
       "subtitle": "Esta noite fecha um concurso com o seu nome. Os grandes já têm uma equipa nele. Você tem três separadores abertos no Excel. Acaba aqui — agentes de IA que o encontram, despedaçam a burocracia e põem-no na proposta. Enquanto dorme.",
       "ctaPrimary": "Ponha os seus agentes a trabalhar",
       "ctaSecondary": "Veja a visão",
-      "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"]
+      "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"],
+      "deckLabel": "Resultados de exemplo"
+    },
+    "proof": {
+      "lead": "Todos os anos são gastos na Europa mais de dois biliões de euros de dinheiro público. A maior parte passa por concursos públicos que você nunca vê.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "de despesa pública por ano na UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "compradores públicos que abrem concursos"
+        },
+        {
+          "value": "~800,000",
+          "label": "concursos por ano — nenhuma equipa os lê a todos"
+        }
+      ],
+      "source": "Comissão Europeia · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "O jogo está viciado para o deixar de fora. E está a resultar.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Três agentes. Não falham, não dormem, não desistem.",
+      "title": "Eis o que os seus agentes fizeram enquanto dormia.",
+      "lead": "Não uma barra de pesquisa mais rápida que ainda tem de conduzir. Uma equipa de agentes que trata o concurso inteiro — encontrar, preparar, vencer — durante a noite, para que acorde já na corrida.",
       "items": [
         {
-          "title": "Encontre",
-          "body": "Vasculham os 27 países todos os dias e mostram-lhe apenas os concursos que valem o seu tempo — à medida do que faz de facto."
+          "time": "02:14",
+          "title": "Encontrou o que lhe serve",
+          "body": "Enquanto o mercado dormia, os agentes vasculharam os 27 países e trouxeram o único concurso que vale o seu tempo — à medida do que faz de facto, não um amontoado de palavras-chave."
         },
         {
-          "title": "Prepare",
-          "body": "Requisitos, certificados, DEUCP, prazos: extraídos, cruzados, montados. A burocracia que o derrubava, tratada."
+          "time": "05:30",
+          "title": "Montou a papelada",
+          "body": "Requisitos lidos, certificados cruzados, o DEUCP montado, cada prazo registado. A burocracia que lhe queimava o fim de semana — pronta antes do café."
         },
         {
-          "title": "Vença",
-          "body": "Transformam o caderno de encargos numa estratégia vencedora, para entrar com o mesmo poder de fogo dos gigantes."
+          "time": "07:00",
+          "title": "Acordou já na corrida",
+          "body": "Sem página em branco. O caderno de encargos tornou-se uma estratégia de concurso, pronta para a sua decisão — o mesmo poder de fogo que os gigantes pagam com um escritório inteiro, à sua espera na secretária."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Os seus agentes estão prontos. Só falta você.",
-      "body": "Estamos a ligar a UE mercado a mercado. Inscreva-se na lista — assim que o seu país acender, os seus agentes vão à caça.",
-      "button": "Garanta o seu lugar"
+      "body": "Crie a sua conta e ponha os agentes no seu mercado — encontrar, preparar, ganhar, sem um departamento de concursos próprio.",
+      "button": "Crie a sua conta"
     },
     "tenderCard": {
       "value": "Valor",
@@ -302,12 +375,82 @@
       "cancelled": "Cancelado",
       "closed": "Encerrado",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "País",
+      "anyCountry": "Todos os países",
+      "sector": "Setor",
+      "anySector": "Todos os setores",
+      "sectors": {
+        "construction": "Construção",
+        "it": "TI e software",
+        "health": "Saúde",
+        "energy": "Energia",
+        "transport": "Transportes",
+        "education": "Educação",
+        "environment": "Ambiente",
+        "business": "Serviços às empresas"
+      },
+      "status": "Estado",
+      "anyStatus": "Todos os estados",
+      "deadline": "Prazo",
+      "anyDeadline": "Qualquer data",
+      "deadline7": "Próximos 7 dias",
+      "deadline30": "Próximos 30 dias",
+      "deadline90": "Próximos 90 dias",
+      "clear": "Limpar tudo"
+    },
+    "detail": {
+      "overview": "Visão geral",
+      "buyer": "Comprador",
+      "value": "Valor estimado",
+      "published": "Publicado",
+      "deadline": "Prazo",
+      "status": "Estado",
+      "procedure": "Procedimento",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV adicional",
+      "region": "Região (NUTS)",
+      "language": "Idioma",
+      "documents": "Documentos",
+      "officialNotice": "Anúncio oficial (PDF)",
+      "viewSource": "Ver na fonte",
+      "lots": "Lotes",
+      "lotsNone": "Este concurso não tem lotes separados.",
+      "related": "Concursos relacionados",
+      "relatedNone": "Não foram encontrados concursos relacionados.",
+      "notFound": "Este concurso não foi encontrado.",
+      "backToSearch": "Voltar à pesquisa",
+      "searchPlaceholder": "Pesquisar concursos…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Detalhes do concurso, prazo, comprador e oportunidades relacionadas para \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Abaixo do limiar da UE",
+      "aboveEu": "Acima do limiar da UE"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Correspondência forte",
+        "possible": "Correspondência possível",
+        "longShot": "Pouco provável"
+      },
+      "reasonSector": "Corresponde ao seu setor",
+      "reasonCountry": "No seu país-alvo",
+      "reasonValueInBand": "Dentro do seu intervalo de valor",
+      "reasonValueBelow": "Abaixo do seu intervalo de valor",
+      "reasonValueAbove": "Acima do seu intervalo de valor",
+      "reasonRegion": "Na sua região",
+      "reasonProcedure": "Corresponde ao seu tipo de procedimento"
     }
   },
   "today": {
     "recommended": {
-      "title": "Recomendado para si",
-      "seeAll": "Tudo em Explorar →"
+      "seeAll": "Tudo em Explorar →",
+      "clientCount_one": "{{count}} concurso adequado pronto para {{client}}",
+      "clientCount_other": "{{count}} concursos adequados prontos para {{client}}"
     },
     "greeting": {
       "morning": "Bom dia.",
@@ -340,6 +483,7 @@
     },
     "nav": {
       "general": "Geral",
+      "profile": "Perfil do cliente",
       "overview": "Visão geral",
       "members": "Membros",
       "roles": "Funções",
@@ -451,6 +595,16 @@
       "settings": "Definições do workspace",
       "label": "Espaços de trabalho",
       "manage": "Todos os espaços de trabalho"
+    },
+    "firstRun": {
+      "title": "Adicionar um perfil de concurso do cliente",
+      "subtitle": "Diga-nos a que concorre este cliente para que as recomendações comecem certeiras. Pode terminar mais tarde nas Definições.",
+      "skip": "Ignorar por agora"
+    },
+    "clientProfile": {
+      "title": "Perfil de concurso do cliente",
+      "subtitle": "Aquilo a que este cliente concorre — setores, países e intervalo de valor — orienta cada recomendação.",
+      "saved": "Perfil guardado."
     }
   },
   "workbench": {
@@ -545,9 +699,51 @@
       "deleteHint": "Eliminar permanentemente este workbench e todos os respetivos dados.",
       "delete": "Eliminar workbench",
       "leaveHint": "Sair deste workbench. Um gestor pode voltar a adicioná-lo.",
-      "leave": "Sair do workbench",
-      "confirmDelete": "Eliminar este workbench?",
-      "confirmLeave": "Sair deste workbench?"
+      "leave": "Sair do workbench"
+    },
+    "overview": {
+      "emptyTitle": "O seu workbench está pronto",
+      "emptyDescription": "Comece por pesquisar concursos, criar um perfil de cliente ou convidar a sua equipa. Tudo o que fizer aqui é partilhado com os membros do workbench.",
+      "emptyExplore": "Abra Explorar"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Não perguntar novamente",
+    "deleteWorkspace": {
+      "title": "Eliminar espaço de trabalho?",
+      "description": "Isto irá eliminar permanentemente este espaço de trabalho e todos os respetivos dados. Esta ação não pode ser anulada."
+    },
+    "leaveWorkspace": {
+      "title": "Sair do espaço de trabalho?",
+      "description": "Perderá o acesso a este espaço de trabalho. Poderá voltar a entrar com um novo convite."
+    },
+    "removeMember": {
+      "title": "Remover membro?",
+      "description": "Esta pessoa perderá imediatamente o acesso ao espaço de trabalho."
+    },
+    "deleteRole": {
+      "title": "Eliminar função?",
+      "description": "Os membros com esta função perderão as suas permissões."
+    },
+    "revokeInvite": {
+      "title": "Revogar convite?",
+      "description": "Este convite por e-mail deixará de poder ser utilizado."
+    },
+    "revokeLink": {
+      "title": "Revogar ligação?",
+      "description": "Esta ligação de convite deixará de funcionar imediatamente."
+    },
+    "deleteWorkbench": {
+      "title": "Eliminar workbench?",
+      "description": "Isto irá eliminar permanentemente este workbench e todos os respetivos dados. Esta ação não pode ser anulada."
+    },
+    "leaveWorkbench": {
+      "title": "Sair do workbench?",
+      "description": "Perderá o acesso a este workbench. Um gestor pode voltar a adicioná-lo."
+    },
+    "removeWorkbenchMember": {
+      "title": "Remover membro?",
+      "description": "Esta pessoa perderá imediatamente o acesso ao workbench."
     }
   }
 }

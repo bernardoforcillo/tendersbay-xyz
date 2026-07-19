@@ -20,6 +20,8 @@ const REQUIRED_SECTIONS = [
   'accept',
   'join',
   'switcher',
+  'firstRun',
+  'clientProfile',
 ] as const;
 
 describe('workspace locale keys', () => {
@@ -37,5 +39,7 @@ describe('workspace locale keys', () => {
     expect(ws?.permissions?.administrator, 'permissions.administrator').toBeTruthy();
     expect(ws?.accept?.body, 'accept.body').toBeTruthy();
     expect(ws?.nav?.general, 'nav.general').toBeTruthy();
+    expect(ws?.nav?.profile, 'nav.profile').toBeTruthy();
+    expect(ws?.firstRun?.skip, 'firstRun.skip').toBeTruthy();
   });
 });

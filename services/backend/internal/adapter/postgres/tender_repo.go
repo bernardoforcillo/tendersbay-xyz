@@ -41,6 +41,8 @@ type TenderResultRow struct {
 	Deadline      *time.Time
 	Source        string
 	SourceRef     string
+	NUTS          string
+	SourceURL     *string
 }
 
 type TenderRepo struct{ db *pg.DB }
@@ -51,7 +53,7 @@ func NewTenderRepo(db *pg.DB) *TenderRepo { return &TenderRepo{db: db} }
 var tenderResultColumns = []drops.Expression{
 	TenderID, TenderTitle, TenderBuyerName, TenderStatus, TenderProcedureType,
 	TenderCountry, TenderCPV, TenderValue, TenderCurrency, TenderPublishedAt,
-	TenderDeadline, TenderSource, TenderSourceRef,
+	TenderDeadline, TenderSource, TenderSourceRef, TenderNUTS, TDocURL,
 }
 
 // SearchByFilters returns up to limit tenders matching filters, ordered by
@@ -59,6 +61,7 @@ var tenderResultColumns = []drops.Expression{
 // caller to compute has_more without a separate COUNT(*).
 func (r *TenderRepo) SearchByFilters(ctx context.Context, filters TenderFilters, limit, offset int) ([]TenderResultRow, error) {
 	q := r.db.Select(tenderResultColumns...).From(Tenders).
+		LeftJoin(TenderDocuments, pg.And(TDocTenderID.EqCol(TenderID), TDocType.Eq("notice"))).
 		OrderBy(TenderPublishedAt.Desc()).Limit(int64(limit)).Offset(int64(offset))
 	if preds := filterPredicates(filters); len(preds) > 0 {
 		q = q.Where(preds...)
@@ -81,7 +84,9 @@ func (r *TenderRepo) FindByIDs(ctx context.Context, ids []int64, filters TenderF
 	}
 	preds := append([]drops.Expression{TenderID.In(ids...)}, filterPredicates(filters)...)
 	var rows []DBTender
-	if err := r.db.Select(tenderResultColumns...).From(Tenders).Where(preds...).All(ctx, &rows); err != nil {
+	if err := r.db.Select(tenderResultColumns...).From(Tenders).
+		LeftJoin(TenderDocuments, pg.And(TDocTenderID.EqCol(TenderID), TDocType.Eq("notice"))).
+		Where(preds...).All(ctx, &rows); err != nil {
 		return nil, fmt.Errorf("postgres: find tenders by ids: %w", err)
 	}
 	return dbTendersToRows(rows), nil
@@ -115,6 +120,7 @@ func dbTendersToRows(rows []DBTender) []TenderResultRow {
 			ProcedureType: row.ProcedureType, Country: row.Country, CPV: row.CPV,
 			Value: row.Value, Currency: row.Currency, PublishedAt: row.PublishedAt,
 			Deadline: row.Deadline, Source: row.Source, SourceRef: row.SourceRef,
+			NUTS: row.NUTS, SourceURL: row.SourceURL,
 		}
 	}
 	return out
@@ -162,6 +168,26 @@ func (r *TenderRepo) EnrichTenders(ctx context.Context, ids []string, filters te
 	return rowsToTenders(rows), nil
 }
 
+// DistinctCountries returns each distinct non-empty alpha-2 country with at
+// least one ingested tender. Cheap and cacheable; the landing coverage
+// marquee is the only caller.
+func (r *TenderRepo) DistinctCountries(ctx context.Context) ([]string, error) {
+	var rows []struct {
+		Country string `drop:"country"`
+	}
+	if err := r.db.Select(TenderCountry).From(Tenders).
+		GroupBy(TenderCountry).All(ctx, &rows); err != nil {
+		return nil, fmt.Errorf("postgres: distinct countries: %w", err)
+	}
+	out := make([]string, 0, len(rows))
+	for _, row := range rows {
+		if row.Country != "" {
+			out = append(out, row.Country)
+		}
+	}
+	return out, nil
+}
+
 func toTenderFilters(f tender.Filters) TenderFilters {
 	return TenderFilters{
 		Country: f.Country, CPV: f.CPV, Status: f.Status,
@@ -172,12 +198,17 @@ func toTenderFilters(f tender.Filters) TenderFilters {
 func rowsToTenders(rows []TenderResultRow) []tender.Tender {
 	out := make([]tender.Tender, len(rows))
 	for i, row := range rows {
+		var sourceURL string
+		if row.SourceURL != nil {
+			sourceURL = *row.SourceURL
+		}
 		out[i] = tender.Tender{
 			ID: strconv.FormatInt(row.ID, 10), Title: row.Title, BuyerName: row.BuyerName,
 			Status: row.Status, ProcedureType: row.ProcedureType, Country: row.Country,
 			CPV: row.CPV, Value: row.Value, Currency: row.Currency,
 			PublishedAt: row.PublishedAt, Deadline: row.Deadline,
 			Source: row.Source, SourceRef: row.SourceRef,
+			NUTS: row.NUTS, SourceURL: sourceURL,
 		}
 	}
 	return out

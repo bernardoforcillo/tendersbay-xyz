@@ -7,6 +7,7 @@
 package agentv1
 
 import (
+	v1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -125,10 +126,11 @@ type ChatMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	SessionId     string                 `protobuf:"bytes,2,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
-	Role          string                 `protobuf:"bytes,3,opt,name=role,proto3" json:"role,omitempty"` // "user" | "assistant" | "choice_prompt" | "choice_response"
+	Role          string                 `protobuf:"bytes,3,opt,name=role,proto3" json:"role,omitempty"` // "user" | "assistant" | "choice_prompt" | "choice_response" | "tender_results"
 	Content       string                 `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`
 	Choices       []byte                 `protobuf:"bytes,5,opt,name=choices,proto3" json:"choices,omitempty"`                      // JSON — ChoiceOption list (for choice_prompt)
 	Metadata      []byte                 `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`                    // JSON — tokens, model, choice_id, …
+	Tenders       []byte                 `protobuf:"bytes,8,opt,name=tenders,proto3" json:"tenders,omitempty"`                      // JSON — persisted tender card list (for tender_results)
 	CreatedAt     string                 `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"` // RFC3339
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -202,6 +204,13 @@ func (x *ChatMessage) GetChoices() []byte {
 func (x *ChatMessage) GetMetadata() []byte {
 	if x != nil {
 		return x.Metadata
+	}
+	return nil
+}
+
+func (x *ChatMessage) GetTenders() []byte {
+	if x != nil {
+		return x.Tenders
 	}
 	return nil
 }
@@ -953,6 +962,7 @@ type ChatStreamResponse struct {
 	//	*ChatStreamResponse_Choice
 	//	*ChatStreamResponse_Error
 	//	*ChatStreamResponse_Done
+	//	*ChatStreamResponse_TenderResults
 	Event         isChatStreamResponse_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1031,6 +1041,15 @@ func (x *ChatStreamResponse) GetDone() *StreamDone {
 	return nil
 }
 
+func (x *ChatStreamResponse) GetTenderResults() *TenderResults {
+	if x != nil {
+		if x, ok := x.Event.(*ChatStreamResponse_TenderResults); ok {
+			return x.TenderResults
+		}
+	}
+	return nil
+}
+
 type isChatStreamResponse_Event interface {
 	isChatStreamResponse_Event()
 }
@@ -1051,6 +1070,10 @@ type ChatStreamResponse_Done struct {
 	Done *StreamDone `protobuf:"bytes,4,opt,name=done,proto3,oneof"` // stream completed successfully
 }
 
+type ChatStreamResponse_TenderResults struct {
+	TenderResults *TenderResults `protobuf:"bytes,5,opt,name=tender_results,json=tenderResults,proto3,oneof"` // search_tenders returned ≥1 result
+}
+
 func (*ChatStreamResponse_Token) isChatStreamResponse_Event() {}
 
 func (*ChatStreamResponse_Choice) isChatStreamResponse_Event() {}
@@ -1058,6 +1081,8 @@ func (*ChatStreamResponse_Choice) isChatStreamResponse_Event() {}
 func (*ChatStreamResponse_Error) isChatStreamResponse_Event() {}
 
 func (*ChatStreamResponse_Done) isChatStreamResponse_Event() {}
+
+func (*ChatStreamResponse_TenderResults) isChatStreamResponse_Event() {}
 
 type ChoicePrompt struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -1127,6 +1152,50 @@ func (x *ChoicePrompt) GetAllowCustom() bool {
 	return false
 }
 
+type TenderResults struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Tenders       []*v1.TenderResult     `protobuf:"bytes,1,rep,name=tenders,proto3" json:"tenders,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TenderResults) Reset() {
+	*x = TenderResults{}
+	mi := &file_agent_v1_agent_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TenderResults) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TenderResults) ProtoMessage() {}
+
+func (x *TenderResults) ProtoReflect() protoreflect.Message {
+	mi := &file_agent_v1_agent_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TenderResults.ProtoReflect.Descriptor instead.
+func (*TenderResults) Descriptor() ([]byte, []int) {
+	return file_agent_v1_agent_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *TenderResults) GetTenders() []*v1.TenderResult {
+	if x != nil {
+		return x.Tenders
+	}
+	return nil
+}
+
 type StreamError struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Code          string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"` // e.g. "INSUFFICIENT_CREDITS"
@@ -1137,7 +1206,7 @@ type StreamError struct {
 
 func (x *StreamError) Reset() {
 	*x = StreamError{}
-	mi := &file_agent_v1_agent_proto_msgTypes[19]
+	mi := &file_agent_v1_agent_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1149,7 +1218,7 @@ func (x *StreamError) String() string {
 func (*StreamError) ProtoMessage() {}
 
 func (x *StreamError) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_v1_agent_proto_msgTypes[19]
+	mi := &file_agent_v1_agent_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1162,7 +1231,7 @@ func (x *StreamError) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamError.ProtoReflect.Descriptor instead.
 func (*StreamError) Descriptor() ([]byte, []int) {
-	return file_agent_v1_agent_proto_rawDescGZIP(), []int{19}
+	return file_agent_v1_agent_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *StreamError) GetCode() string {
@@ -1190,7 +1259,7 @@ type StreamDone struct {
 
 func (x *StreamDone) Reset() {
 	*x = StreamDone{}
-	mi := &file_agent_v1_agent_proto_msgTypes[20]
+	mi := &file_agent_v1_agent_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1202,7 +1271,7 @@ func (x *StreamDone) String() string {
 func (*StreamDone) ProtoMessage() {}
 
 func (x *StreamDone) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_v1_agent_proto_msgTypes[20]
+	mi := &file_agent_v1_agent_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1215,7 +1284,7 @@ func (x *StreamDone) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StreamDone.ProtoReflect.Descriptor instead.
 func (*StreamDone) Descriptor() ([]byte, []int) {
-	return file_agent_v1_agent_proto_rawDescGZIP(), []int{20}
+	return file_agent_v1_agent_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *StreamDone) GetUsage() *AgentUsage {
@@ -1250,7 +1319,7 @@ type SubmitChoiceRequest struct {
 
 func (x *SubmitChoiceRequest) Reset() {
 	*x = SubmitChoiceRequest{}
-	mi := &file_agent_v1_agent_proto_msgTypes[21]
+	mi := &file_agent_v1_agent_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1262,7 +1331,7 @@ func (x *SubmitChoiceRequest) String() string {
 func (*SubmitChoiceRequest) ProtoMessage() {}
 
 func (x *SubmitChoiceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_v1_agent_proto_msgTypes[21]
+	mi := &file_agent_v1_agent_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1275,7 +1344,7 @@ func (x *SubmitChoiceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubmitChoiceRequest.ProtoReflect.Descriptor instead.
 func (*SubmitChoiceRequest) Descriptor() ([]byte, []int) {
-	return file_agent_v1_agent_proto_rawDescGZIP(), []int{21}
+	return file_agent_v1_agent_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *SubmitChoiceRequest) GetChoiceId() string {
@@ -1308,7 +1377,7 @@ type GetCreditsRequest struct {
 
 func (x *GetCreditsRequest) Reset() {
 	*x = GetCreditsRequest{}
-	mi := &file_agent_v1_agent_proto_msgTypes[22]
+	mi := &file_agent_v1_agent_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1320,7 +1389,7 @@ func (x *GetCreditsRequest) String() string {
 func (*GetCreditsRequest) ProtoMessage() {}
 
 func (x *GetCreditsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_v1_agent_proto_msgTypes[22]
+	mi := &file_agent_v1_agent_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1333,7 +1402,7 @@ func (x *GetCreditsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCreditsRequest.ProtoReflect.Descriptor instead.
 func (*GetCreditsRequest) Descriptor() ([]byte, []int) {
-	return file_agent_v1_agent_proto_rawDescGZIP(), []int{22}
+	return file_agent_v1_agent_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *GetCreditsRequest) GetWorkspaceId() string {
@@ -1355,7 +1424,7 @@ type GetCreditsResponse struct {
 
 func (x *GetCreditsResponse) Reset() {
 	*x = GetCreditsResponse{}
-	mi := &file_agent_v1_agent_proto_msgTypes[23]
+	mi := &file_agent_v1_agent_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1367,7 +1436,7 @@ func (x *GetCreditsResponse) String() string {
 func (*GetCreditsResponse) ProtoMessage() {}
 
 func (x *GetCreditsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_agent_v1_agent_proto_msgTypes[23]
+	mi := &file_agent_v1_agent_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1380,7 +1449,7 @@ func (x *GetCreditsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCreditsResponse.ProtoReflect.Descriptor instead.
 func (*GetCreditsResponse) Descriptor() ([]byte, []int) {
-	return file_agent_v1_agent_proto_rawDescGZIP(), []int{23}
+	return file_agent_v1_agent_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetCreditsResponse) GetRemaining() int64 {
@@ -1415,7 +1484,7 @@ var File_agent_v1_agent_proto protoreflect.FileDescriptor
 
 const file_agent_v1_agent_proto_rawDesc = "" +
 	"\n" +
-	"\x14agent/v1/agent.proto\x12\bagent.v1\"\xef\x01\n" +
+	"\x14agent/v1/agent.proto\x12\bagent.v1\x1a\x16tender/v1/tender.proto\"\xef\x01\n" +
 	"\vChatSession\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\tR\x06userId\x12!\n" +
@@ -1427,7 +1496,7 @@ const file_agent_v1_agent_proto_rawDesc = "" +
 	"\n" +
 	"created_at\x18\a \x01(\tR\tcreatedAt\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\tR\tupdatedAt\"\xbf\x01\n" +
+	"updated_at\x18\b \x01(\tR\tupdatedAt\"\xd9\x01\n" +
 	"\vChatMessage\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1d\n" +
 	"\n" +
@@ -1435,7 +1504,8 @@ const file_agent_v1_agent_proto_rawDesc = "" +
 	"\x04role\x18\x03 \x01(\tR\x04role\x12\x18\n" +
 	"\acontent\x18\x04 \x01(\tR\acontent\x12\x18\n" +
 	"\achoices\x18\x05 \x01(\fR\achoices\x12\x1a\n" +
-	"\bmetadata\x18\x06 \x01(\fR\bmetadata\x12\x1d\n" +
+	"\bmetadata\x18\x06 \x01(\fR\bmetadata\x12\x18\n" +
+	"\atenders\x18\b \x01(\fR\atenders\x12\x1d\n" +
 	"\n" +
 	"created_at\x18\a \x01(\tR\tcreatedAt\"w\n" +
 	"\n" +
@@ -1478,18 +1548,21 @@ const file_agent_v1_agent_proto_rawDesc = "" +
 	"\bmessages\x18\x01 \x03(\v2\x15.agent.v1.ChatMessageR\bmessages\"F\n" +
 	"\x11ChatStreamRequest\x12\x17\n" +
 	"\achat_id\x18\x01 \x01(\tR\x06chatId\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"\xc2\x01\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\x84\x02\n" +
 	"\x12ChatStreamResponse\x12\x16\n" +
 	"\x05token\x18\x01 \x01(\tH\x00R\x05token\x120\n" +
 	"\x06choice\x18\x02 \x01(\v2\x16.agent.v1.ChoicePromptH\x00R\x06choice\x12-\n" +
 	"\x05error\x18\x03 \x01(\v2\x15.agent.v1.StreamErrorH\x00R\x05error\x12*\n" +
-	"\x04done\x18\x04 \x01(\v2\x14.agent.v1.StreamDoneH\x00R\x04doneB\a\n" +
+	"\x04done\x18\x04 \x01(\v2\x14.agent.v1.StreamDoneH\x00R\x04done\x12@\n" +
+	"\x0etender_results\x18\x05 \x01(\v2\x17.agent.v1.TenderResultsH\x00R\rtenderResultsB\a\n" +
 	"\x05event\"\x8f\x01\n" +
 	"\fChoicePrompt\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bquestion\x18\x02 \x01(\tR\bquestion\x120\n" +
 	"\aoptions\x18\x03 \x03(\v2\x16.agent.v1.ChoiceOptionR\aoptions\x12!\n" +
-	"\fallow_custom\x18\x04 \x01(\bR\vallowCustom\";\n" +
+	"\fallow_custom\x18\x04 \x01(\bR\vallowCustom\"B\n" +
+	"\rTenderResults\x121\n" +
+	"\atenders\x18\x01 \x03(\v2\x17.tender.v1.TenderResultR\atenders\";\n" +
 	"\vStreamError\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"\x95\x01\n" +
@@ -1539,7 +1612,7 @@ func file_agent_v1_agent_proto_rawDescGZIP() []byte {
 	return file_agent_v1_agent_proto_rawDescData
 }
 
-var file_agent_v1_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_agent_v1_agent_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_agent_v1_agent_proto_goTypes = []any{
 	(*ChatSession)(nil),         // 0: agent.v1.ChatSession
 	(*ChatMessage)(nil),         // 1: agent.v1.ChatMessage
@@ -1560,11 +1633,13 @@ var file_agent_v1_agent_proto_goTypes = []any{
 	(*ChatStreamRequest)(nil),   // 16: agent.v1.ChatStreamRequest
 	(*ChatStreamResponse)(nil),  // 17: agent.v1.ChatStreamResponse
 	(*ChoicePrompt)(nil),        // 18: agent.v1.ChoicePrompt
-	(*StreamError)(nil),         // 19: agent.v1.StreamError
-	(*StreamDone)(nil),          // 20: agent.v1.StreamDone
-	(*SubmitChoiceRequest)(nil), // 21: agent.v1.SubmitChoiceRequest
-	(*GetCreditsRequest)(nil),   // 22: agent.v1.GetCreditsRequest
-	(*GetCreditsResponse)(nil),  // 23: agent.v1.GetCreditsResponse
+	(*TenderResults)(nil),       // 19: agent.v1.TenderResults
+	(*StreamError)(nil),         // 20: agent.v1.StreamError
+	(*StreamDone)(nil),          // 21: agent.v1.StreamDone
+	(*SubmitChoiceRequest)(nil), // 22: agent.v1.SubmitChoiceRequest
+	(*GetCreditsRequest)(nil),   // 23: agent.v1.GetCreditsRequest
+	(*GetCreditsResponse)(nil),  // 24: agent.v1.GetCreditsResponse
+	(*v1.TenderResult)(nil),     // 25: tender.v1.TenderResult
 }
 var file_agent_v1_agent_proto_depIdxs = []int32{
 	0,  // 0: agent.v1.CreateChatResponse.chat:type_name -> agent.v1.ChatSession
@@ -1573,33 +1648,35 @@ var file_agent_v1_agent_proto_depIdxs = []int32{
 	0,  // 3: agent.v1.UpdateChatResponse.chat:type_name -> agent.v1.ChatSession
 	1,  // 4: agent.v1.GetMessagesResponse.messages:type_name -> agent.v1.ChatMessage
 	18, // 5: agent.v1.ChatStreamResponse.choice:type_name -> agent.v1.ChoicePrompt
-	19, // 6: agent.v1.ChatStreamResponse.error:type_name -> agent.v1.StreamError
-	20, // 7: agent.v1.ChatStreamResponse.done:type_name -> agent.v1.StreamDone
-	3,  // 8: agent.v1.ChoicePrompt.options:type_name -> agent.v1.ChoiceOption
-	2,  // 9: agent.v1.StreamDone.usage:type_name -> agent.v1.AgentUsage
-	4,  // 10: agent.v1.AgentService.CreateChat:input_type -> agent.v1.CreateChatRequest
-	6,  // 11: agent.v1.AgentService.ListChats:input_type -> agent.v1.ListChatsRequest
-	8,  // 12: agent.v1.AgentService.GetChat:input_type -> agent.v1.GetChatRequest
-	10, // 13: agent.v1.AgentService.UpdateChat:input_type -> agent.v1.UpdateChatRequest
-	12, // 14: agent.v1.AgentService.DeleteChat:input_type -> agent.v1.DeleteChatRequest
-	14, // 15: agent.v1.AgentService.GetMessages:input_type -> agent.v1.GetMessagesRequest
-	16, // 16: agent.v1.AgentService.ChatStream:input_type -> agent.v1.ChatStreamRequest
-	21, // 17: agent.v1.AgentService.SubmitChoice:input_type -> agent.v1.SubmitChoiceRequest
-	22, // 18: agent.v1.AgentService.GetCredits:input_type -> agent.v1.GetCreditsRequest
-	5,  // 19: agent.v1.AgentService.CreateChat:output_type -> agent.v1.CreateChatResponse
-	7,  // 20: agent.v1.AgentService.ListChats:output_type -> agent.v1.ListChatsResponse
-	9,  // 21: agent.v1.AgentService.GetChat:output_type -> agent.v1.GetChatResponse
-	11, // 22: agent.v1.AgentService.UpdateChat:output_type -> agent.v1.UpdateChatResponse
-	13, // 23: agent.v1.AgentService.DeleteChat:output_type -> agent.v1.DeleteChatResponse
-	15, // 24: agent.v1.AgentService.GetMessages:output_type -> agent.v1.GetMessagesResponse
-	17, // 25: agent.v1.AgentService.ChatStream:output_type -> agent.v1.ChatStreamResponse
-	17, // 26: agent.v1.AgentService.SubmitChoice:output_type -> agent.v1.ChatStreamResponse
-	23, // 27: agent.v1.AgentService.GetCredits:output_type -> agent.v1.GetCreditsResponse
-	19, // [19:28] is the sub-list for method output_type
-	10, // [10:19] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	20, // 6: agent.v1.ChatStreamResponse.error:type_name -> agent.v1.StreamError
+	21, // 7: agent.v1.ChatStreamResponse.done:type_name -> agent.v1.StreamDone
+	19, // 8: agent.v1.ChatStreamResponse.tender_results:type_name -> agent.v1.TenderResults
+	3,  // 9: agent.v1.ChoicePrompt.options:type_name -> agent.v1.ChoiceOption
+	25, // 10: agent.v1.TenderResults.tenders:type_name -> tender.v1.TenderResult
+	2,  // 11: agent.v1.StreamDone.usage:type_name -> agent.v1.AgentUsage
+	4,  // 12: agent.v1.AgentService.CreateChat:input_type -> agent.v1.CreateChatRequest
+	6,  // 13: agent.v1.AgentService.ListChats:input_type -> agent.v1.ListChatsRequest
+	8,  // 14: agent.v1.AgentService.GetChat:input_type -> agent.v1.GetChatRequest
+	10, // 15: agent.v1.AgentService.UpdateChat:input_type -> agent.v1.UpdateChatRequest
+	12, // 16: agent.v1.AgentService.DeleteChat:input_type -> agent.v1.DeleteChatRequest
+	14, // 17: agent.v1.AgentService.GetMessages:input_type -> agent.v1.GetMessagesRequest
+	16, // 18: agent.v1.AgentService.ChatStream:input_type -> agent.v1.ChatStreamRequest
+	22, // 19: agent.v1.AgentService.SubmitChoice:input_type -> agent.v1.SubmitChoiceRequest
+	23, // 20: agent.v1.AgentService.GetCredits:input_type -> agent.v1.GetCreditsRequest
+	5,  // 21: agent.v1.AgentService.CreateChat:output_type -> agent.v1.CreateChatResponse
+	7,  // 22: agent.v1.AgentService.ListChats:output_type -> agent.v1.ListChatsResponse
+	9,  // 23: agent.v1.AgentService.GetChat:output_type -> agent.v1.GetChatResponse
+	11, // 24: agent.v1.AgentService.UpdateChat:output_type -> agent.v1.UpdateChatResponse
+	13, // 25: agent.v1.AgentService.DeleteChat:output_type -> agent.v1.DeleteChatResponse
+	15, // 26: agent.v1.AgentService.GetMessages:output_type -> agent.v1.GetMessagesResponse
+	17, // 27: agent.v1.AgentService.ChatStream:output_type -> agent.v1.ChatStreamResponse
+	17, // 28: agent.v1.AgentService.SubmitChoice:output_type -> agent.v1.ChatStreamResponse
+	24, // 29: agent.v1.AgentService.GetCredits:output_type -> agent.v1.GetCreditsResponse
+	21, // [21:30] is the sub-list for method output_type
+	12, // [12:21] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_agent_v1_agent_proto_init() }
@@ -1612,6 +1689,7 @@ func file_agent_v1_agent_proto_init() {
 		(*ChatStreamResponse_Choice)(nil),
 		(*ChatStreamResponse_Error)(nil),
 		(*ChatStreamResponse_Done)(nil),
+		(*ChatStreamResponse_TenderResults)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1619,7 +1697,7 @@ func file_agent_v1_agent_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_agent_v1_agent_proto_rawDesc), len(file_agent_v1_agent_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   24,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -41,6 +41,16 @@ export declare type SearchTendersRequest = Message<"tender.v1.SearchTendersReque
    * @generated from field: int32 offset = 4;
    */
   offset: number;
+
+  /**
+   * paging is bounded by the candidate window (~250 results) —
+   * very deep pages may return empty even with more matches server-side
+   *
+   * optional; empty = today's anonymous-safe behavior
+   *
+   * @generated from field: string workspace_id = 5;
+   */
+  workspaceId: string;
 };
 
 /**
@@ -54,7 +64,7 @@ export declare const SearchTendersRequestSchema: GenMessage<SearchTendersRequest
  */
 export declare type TenderFilters = Message<"tender.v1.TenderFilters"> & {
   /**
-   * alpha-3, matches the TED connector's convention
+   * alpha-2, e.g. "IT", "DE"
    *
    * @generated from field: string country = 1;
    */
@@ -150,6 +160,8 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
   procedureType: string;
 
   /**
+   * alpha-2, e.g. "IT", "DE"
+   *
    * @generated from field: string country = 6;
    */
   country: string;
@@ -199,6 +211,41 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
    * @generated from field: string source_ref = 14;
    */
   sourceRef: string;
+
+  /**
+   * the notice's document URL, empty if none is ingested
+   *
+   * @generated from field: string source_url = 15;
+   */
+  sourceUrl: string;
+
+  /**
+   * NUTS region code, empty if unset
+   *
+   * @generated from field: string nuts = 16;
+   */
+  nuts: string;
+
+  /**
+   * "strong" | "possible" | "long_shot"; empty unless annotated
+   *
+   * @generated from field: string fit_tier = 17;
+   */
+  fitTier: string;
+
+  /**
+   * nil unless annotated
+   *
+   * @generated from field: tender.v1.ReasonSignals reason = 18;
+   */
+  reason?: ReasonSignals | undefined;
+
+  /**
+   * "below_eu" | "above_eu" | "" — coarse, buyer-agnostic
+   *
+   * @generated from field: string eu_threshold = 19;
+   */
+  euThreshold: string;
 };
 
 /**
@@ -206,6 +253,471 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
  * Use `create(TenderResultSchema)` to create a new message.
  */
 export declare const TenderResultSchema: GenMessage<TenderResult>;
+
+/**
+ * @generated from message tender.v1.RecommendTendersForClientRequest
+ */
+export declare type RecommendTendersForClientRequest = Message<"tender.v1.RecommendTendersForClientRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * optional, server-defaulted
+   *
+   * @generated from field: int32 limit = 2;
+   */
+  limit: number;
+};
+
+/**
+ * Describes the message tender.v1.RecommendTendersForClientRequest.
+ * Use `create(RecommendTendersForClientRequestSchema)` to create a new message.
+ */
+export declare const RecommendTendersForClientRequestSchema: GenMessage<RecommendTendersForClientRequest>;
+
+/**
+ * ReasonSignals are the localizable FACTS behind a fit tier — never a
+ * prebuilt sentence. The frontend renders the sentence from these booleans/
+ * enums so every locale controls its own phrasing.
+ *
+ * @generated from message tender.v1.ReasonSignals
+ */
+export declare type ReasonSignals = Message<"tender.v1.ReasonSignals"> & {
+  /**
+   * @generated from field: bool sector_match = 1;
+   */
+  sectorMatch: boolean;
+
+  /**
+   * @generated from field: bool country_match = 2;
+   */
+  countryMatch: boolean;
+
+  /**
+   * "in_band" | "below" | "above" | "unknown"
+   *
+   * @generated from field: string value_fit = 3;
+   */
+  valueFit: string;
+
+  /**
+   * meaningful only when has_deadline is true
+   *
+   * @generated from field: int32 deadline_days = 4;
+   */
+  deadlineDays: number;
+
+  /**
+   * @generated from field: bool has_deadline = 5;
+   */
+  hasDeadline: boolean;
+
+  /**
+   * @generated from field: bool region_match = 6;
+   */
+  regionMatch: boolean;
+
+  /**
+   * @generated from field: bool procedure_match = 7;
+   */
+  procedureMatch: boolean;
+};
+
+/**
+ * Describes the message tender.v1.ReasonSignals.
+ * Use `create(ReasonSignalsSchema)` to create a new message.
+ */
+export declare const ReasonSignalsSchema: GenMessage<ReasonSignals>;
+
+/**
+ * @generated from message tender.v1.RecommendedTenderResult
+ */
+export declare type RecommendedTenderResult = Message<"tender.v1.RecommendedTenderResult"> & {
+  /**
+   * @generated from field: tender.v1.TenderResult tender = 1;
+   */
+  tender?: TenderResult | undefined;
+
+  /**
+   * "strong" | "possible" | "long_shot"
+   *
+   * @generated from field: string fit_tier = 2;
+   */
+  fitTier: string;
+
+  /**
+   * @generated from field: tender.v1.ReasonSignals reason = 3;
+   */
+  reason?: ReasonSignals | undefined;
+};
+
+/**
+ * Describes the message tender.v1.RecommendedTenderResult.
+ * Use `create(RecommendedTenderResultSchema)` to create a new message.
+ */
+export declare const RecommendedTenderResultSchema: GenMessage<RecommendedTenderResult>;
+
+/**
+ * @generated from message tender.v1.RecommendTendersForClientResponse
+ */
+export declare type RecommendTendersForClientResponse = Message<"tender.v1.RecommendTendersForClientResponse"> & {
+  /**
+   * @generated from field: repeated tender.v1.RecommendedTenderResult results = 1;
+   */
+  results: RecommendedTenderResult[];
+
+  /**
+   * true = no ClientProfile yet; results is empty
+   *
+   * @generated from field: bool needs_profile = 2;
+   */
+  needsProfile: boolean;
+};
+
+/**
+ * Describes the message tender.v1.RecommendTendersForClientResponse.
+ * Use `create(RecommendTendersForClientResponseSchema)` to create a new message.
+ */
+export declare const RecommendTendersForClientResponseSchema: GenMessage<RecommendTendersForClientResponse>;
+
+/**
+ * @generated from message tender.v1.GetCoverageRequest
+ */
+export declare type GetCoverageRequest = Message<"tender.v1.GetCoverageRequest"> & {
+};
+
+/**
+ * Describes the message tender.v1.GetCoverageRequest.
+ * Use `create(GetCoverageRequestSchema)` to create a new message.
+ */
+export declare const GetCoverageRequestSchema: GenMessage<GetCoverageRequest>;
+
+/**
+ * @generated from message tender.v1.GetCoverageResponse
+ */
+export declare type GetCoverageResponse = Message<"tender.v1.GetCoverageResponse"> & {
+  /**
+   * alpha-2, uppercase; countries with >=1 ingested tender
+   *
+   * @generated from field: repeated string countries = 1;
+   */
+  countries: string[];
+};
+
+/**
+ * Describes the message tender.v1.GetCoverageResponse.
+ * Use `create(GetCoverageResponseSchema)` to create a new message.
+ */
+export declare const GetCoverageResponseSchema: GenMessage<GetCoverageResponse>;
+
+/**
+ * @generated from message tender.v1.GetTenderRequest
+ */
+export declare type GetTenderRequest = Message<"tender.v1.GetTenderRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message tender.v1.GetTenderRequest.
+ * Use `create(GetTenderRequestSchema)` to create a new message.
+ */
+export declare const GetTenderRequestSchema: GenMessage<GetTenderRequest>;
+
+/**
+ * @generated from message tender.v1.GetTenderResponse
+ */
+export declare type GetTenderResponse = Message<"tender.v1.GetTenderResponse"> & {
+  /**
+   * @generated from field: tender.v1.TenderDetail tender = 1;
+   */
+  tender?: TenderDetail | undefined;
+};
+
+/**
+ * Describes the message tender.v1.GetTenderResponse.
+ * Use `create(GetTenderResponseSchema)` to create a new message.
+ */
+export declare const GetTenderResponseSchema: GenMessage<GetTenderResponse>;
+
+/**
+ * @generated from message tender.v1.GetRelatedTendersRequest
+ */
+export declare type GetRelatedTendersRequest = Message<"tender.v1.GetRelatedTendersRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * optional, server-clamped
+   *
+   * @generated from field: int32 limit = 2;
+   */
+  limit: number;
+};
+
+/**
+ * Describes the message tender.v1.GetRelatedTendersRequest.
+ * Use `create(GetRelatedTendersRequestSchema)` to create a new message.
+ */
+export declare const GetRelatedTendersRequestSchema: GenMessage<GetRelatedTendersRequest>;
+
+/**
+ * @generated from message tender.v1.GetRelatedTendersResponse
+ */
+export declare type GetRelatedTendersResponse = Message<"tender.v1.GetRelatedTendersResponse"> & {
+  /**
+   * @generated from field: repeated tender.v1.TenderResult results = 1;
+   */
+  results: TenderResult[];
+};
+
+/**
+ * Describes the message tender.v1.GetRelatedTendersResponse.
+ * Use `create(GetRelatedTendersResponseSchema)` to create a new message.
+ */
+export declare const GetRelatedTendersResponseSchema: GenMessage<GetRelatedTendersResponse>;
+
+/**
+ * @generated from message tender.v1.ListTenderSitemapRequest
+ */
+export declare type ListTenderSitemapRequest = Message<"tender.v1.ListTenderSitemapRequest"> & {
+  /**
+   * @generated from field: int32 limit = 1;
+   */
+  limit: number;
+};
+
+/**
+ * Describes the message tender.v1.ListTenderSitemapRequest.
+ * Use `create(ListTenderSitemapRequestSchema)` to create a new message.
+ */
+export declare const ListTenderSitemapRequestSchema: GenMessage<ListTenderSitemapRequest>;
+
+/**
+ * @generated from message tender.v1.ListTenderSitemapResponse
+ */
+export declare type ListTenderSitemapResponse = Message<"tender.v1.ListTenderSitemapResponse"> & {
+  /**
+   * @generated from field: repeated tender.v1.TenderRef refs = 1;
+   */
+  refs: TenderRef[];
+};
+
+/**
+ * Describes the message tender.v1.ListTenderSitemapResponse.
+ * Use `create(ListTenderSitemapResponseSchema)` to create a new message.
+ */
+export declare const ListTenderSitemapResponseSchema: GenMessage<ListTenderSitemapResponse>;
+
+/**
+ * @generated from message tender.v1.TenderRef
+ */
+export declare type TenderRef = Message<"tender.v1.TenderRef"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * RFC3339 (published_at), empty if unset
+   *
+   * @generated from field: string lastmod = 2;
+   */
+  lastmod: string;
+};
+
+/**
+ * Describes the message tender.v1.TenderRef.
+ * Use `create(TenderRefSchema)` to create a new message.
+ */
+export declare const TenderRefSchema: GenMessage<TenderRef>;
+
+/**
+ * @generated from message tender.v1.TenderDocument
+ */
+export declare type TenderDocument = Message<"tender.v1.TenderDocument"> & {
+  /**
+   * @generated from field: string url = 1;
+   */
+  url: string;
+
+  /**
+   * @generated from field: string type = 2;
+   */
+  type: string;
+};
+
+/**
+ * Describes the message tender.v1.TenderDocument.
+ * Use `create(TenderDocumentSchema)` to create a new message.
+ */
+export declare const TenderDocumentSchema: GenMessage<TenderDocument>;
+
+/**
+ * @generated from message tender.v1.TenderLot
+ */
+export declare type TenderLot = Message<"tender.v1.TenderLot"> & {
+  /**
+   * @generated from field: string ref = 1;
+   */
+  ref: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string cpv = 3;
+   */
+  cpv: string;
+
+  /**
+   * @generated from field: int64 value = 4;
+   */
+  value: bigint;
+
+  /**
+   * @generated from field: string currency = 5;
+   */
+  currency: string;
+
+  /**
+   * RFC3339, empty if unset
+   *
+   * @generated from field: string deadline = 6;
+   */
+  deadline: string;
+};
+
+/**
+ * Describes the message tender.v1.TenderLot.
+ * Use `create(TenderLotSchema)` to create a new message.
+ */
+export declare const TenderLotSchema: GenMessage<TenderLot>;
+
+/**
+ * @generated from message tender.v1.TenderDetail
+ */
+export declare type TenderDetail = Message<"tender.v1.TenderDetail"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string title = 2;
+   */
+  title: string;
+
+  /**
+   * @generated from field: string buyer_name = 3;
+   */
+  buyerName: string;
+
+  /**
+   * @generated from field: string buyer_id = 4;
+   */
+  buyerId: string;
+
+  /**
+   * @generated from field: string status = 5;
+   */
+  status: string;
+
+  /**
+   * @generated from field: string procedure_type = 6;
+   */
+  procedureType: string;
+
+  /**
+   * @generated from field: string country = 7;
+   */
+  country: string;
+
+  /**
+   * @generated from field: string nuts = 8;
+   */
+  nuts: string;
+
+  /**
+   * @generated from field: string language = 9;
+   */
+  language: string;
+
+  /**
+   * @generated from field: string cpv = 10;
+   */
+  cpv: string;
+
+  /**
+   * @generated from field: repeated string cpv_secondary = 11;
+   */
+  cpvSecondary: string[];
+
+  /**
+   * @generated from field: int64 value = 12;
+   */
+  value: bigint;
+
+  /**
+   * @generated from field: string currency = 13;
+   */
+  currency: string;
+
+  /**
+   * RFC3339, empty if unset
+   *
+   * @generated from field: string published_at = 14;
+   */
+  publishedAt: string;
+
+  /**
+   * RFC3339, empty if unset
+   *
+   * @generated from field: string deadline = 15;
+   */
+  deadline: string;
+
+  /**
+   * @generated from field: string source = 16;
+   */
+  source: string;
+
+  /**
+   * @generated from field: string source_ref = 17;
+   */
+  sourceRef: string;
+
+  /**
+   * best-effort; may be empty
+   *
+   * @generated from field: string source_url = 18;
+   */
+  sourceUrl: string;
+
+  /**
+   * @generated from field: repeated tender.v1.TenderDocument documents = 19;
+   */
+  documents: TenderDocument[];
+
+  /**
+   * @generated from field: repeated tender.v1.TenderLot lots = 20;
+   */
+  lots: TenderLot[];
+};
+
+/**
+ * Describes the message tender.v1.TenderDetail.
+ * Use `create(TenderDetailSchema)` to create a new message.
+ */
+export declare const TenderDetailSchema: GenMessage<TenderDetail>;
 
 /**
  * TenderService serves the direct tender search endpoint behind the
@@ -224,6 +736,56 @@ export declare const TenderService: GenService<{
     methodKind: "unary";
     input: typeof SearchTendersRequestSchema;
     output: typeof SearchTendersResponseSchema;
+  },
+  /**
+   * @generated from rpc tender.v1.TenderService.GetTender
+   */
+  getTender: {
+    methodKind: "unary";
+    input: typeof GetTenderRequestSchema;
+    output: typeof GetTenderResponseSchema;
+  },
+  /**
+   * @generated from rpc tender.v1.TenderService.GetRelatedTenders
+   */
+  getRelatedTenders: {
+    methodKind: "unary";
+    input: typeof GetRelatedTendersRequestSchema;
+    output: typeof GetRelatedTendersResponseSchema;
+  },
+  /**
+   * @generated from rpc tender.v1.TenderService.ListTenderSitemap
+   */
+  listTenderSitemap: {
+    methodKind: "unary";
+    input: typeof ListTenderSitemapRequestSchema;
+    output: typeof ListTenderSitemapResponseSchema;
+  },
+  /**
+   * Deterministic, membership-checked, unmetered per-client best-fit
+   * shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+   * SearchTenders this requires authentication: it is scoped to one client
+   * (workspace) and reads that client's ClientProfile.
+   *
+   * @generated from rpc tender.v1.TenderService.RecommendTendersForClient
+   */
+  recommendTendersForClient: {
+    methodKind: "unary";
+    input: typeof RecommendTendersForClientRequestSchema;
+    output: typeof RecommendTendersForClientResponseSchema;
+  },
+  /**
+   * Which countries we currently hold tenders for (DISTINCT country over
+   * ingested_tenders). Anonymous-safe like SearchTenders — the landing
+   * coverage marquee reads it. "available" = we have >=1 tender for that
+   * country (TED-inclusive), not a below-threshold-only claim.
+   *
+   * @generated from rpc tender.v1.TenderService.GetCoverage
+   */
+  getCoverage: {
+    methodKind: "unary";
+    input: typeof GetCoverageRequestSchema;
+    output: typeof GetCoverageResponseSchema;
   },
 }>;
 

@@ -69,10 +69,15 @@
       "displayName": "Naam",
       "email": "E-mail",
       "password": "Wachtwoord",
-      "submitting": "Bezig met aanmaken…",
       "submit": "Account aanmaken",
       "login": "Heb je al een account?",
-      "signIn": "Inloggen"
+      "signIn": "Inloggen",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Controleer je e-mail",
@@ -104,6 +109,36 @@
       "loading": "Een moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sectoren",
+      "countries": "Landen",
+      "valueMin": "Minimumwaarde",
+      "valueMax": "Maximumwaarde",
+      "notes": "Notities",
+      "notesPlaceholder": "Waar biedt deze klant meestal op?",
+      "save": "Profiel opslaan",
+      "invalidBand": "De minimumwaarde mag niet hoger zijn dan de maximumwaarde.",
+      "error": "Het profiel kon niet worden opgeslagen — probeer het opnieuw.",
+      "procedureTypesLabel": "Soorten procedure",
+      "procedureTypes": {
+        "open": "Openbare procedure",
+        "restricted": "Niet-openbare procedure",
+        "negotiated": "Onderhandelingsprocedure",
+        "competitive_dialogue": "Concurrentiegerichte dialoog",
+        "innovation_partnership": "Innovatiepartnerschap",
+        "other": "Overig"
+      },
+      "regions": "Regio's (NUTS)",
+      "regionsPlaceholder": "bijv. ITC, DE3",
+      "regionsHint": "Kommagescheiden NUTS-voorvoegsels. Laat leeg om elke regio mee te nemen."
+    },
+    "shortlist": {
+      "title": "Beste match voor deze klant",
+      "emptyTitle": "Nog geen passende aanbestedingen",
+      "emptyDescription": "Probeer hieronder een handmatige zoekopdracht, of verbreed het profiel van deze klant."
+    }
+  },
   "landing": {
     "header": {
       "login": "Inloggen",
@@ -116,8 +151,23 @@
         "Renovatie van openbare scholen",
         "IT-modernisering van ziekenhuizen",
         "Bouw van zonneparken",
-        "Elektrische busvloten"
-      ]
+        "Elektrische busvloten",
+        "Spoorwerkzaamheden, Milaan",
+        "Clouddiensten, Warschau",
+        "Energierenovatie, Wenen",
+        "Parkonderhoud, Athene"
+      ],
+      "filters": {
+        "country": "Land",
+        "sector": "Sector",
+        "deadline": "Deadline",
+        "value": "Waarde"
+      },
+      "loading": "Zoeken…",
+      "empty": "Geen aanbestedingen gevonden",
+      "error": "Zoeken is nu niet beschikbaar — probeer het zo weer.",
+      "results_one": "{{count}} aanbesteding",
+      "results_other": "{{count}} aanbestedingen"
     },
     "meta": {
       "title": "tendersbay — Openbare aanbestedingen, gegund door uw AI-agenten",
@@ -134,7 +184,26 @@
       "subtitle": "Vanavond sluit een aanbesteding met uw naam erop. De grote spelers hebben er al een team op. U heeft drie tabbladen open in Excel. Daar is het mee gedaan — AI-agenten die haar vinden, het papierwerk slopen en u op de inschrijving zetten. Terwijl u slaapt.",
       "ctaPrimary": "Zet uw agenten aan het werk",
       "ctaSecondary": "Bekijk de visie",
-      "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"]
+      "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"],
+      "deckLabel": "Voorbeeldresultaten"
+    },
+    "proof": {
+      "lead": "Elk jaar wordt in Europa ruim twee biljoen euro aan publiek geld uitgegeven. Het meeste loopt via aanbestedingen die u nooit ziet.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "aan publieke uitgaven per jaar in de EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "publieke inkopers die opdrachten aanbesteden"
+        },
+        {
+          "value": "~800,000",
+          "label": "aanbestedingen per jaar — geen enkel team leest ze allemaal"
+        }
+      ],
+      "source": "Europese Commissie · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Het spel is opgezet om u buiten te houden. En het werkt.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Drie agenten. Ze missen niets, slapen niet, geven niet op.",
+      "title": "Dit deden uw agenten terwijl u sliep.",
+      "lead": "Geen snellere zoekbalk die u alsnog zelf moet besturen. Een team van agenten dat de hele aanbesteding afhandelt — vinden, voorbereiden, winnen — ’s nachts, zodat u al in de race wakker wordt.",
       "items": [
         {
-          "title": "Vind",
-          "body": "Ze kammen elke dag alle 27 landen uit en tonen alleen de aanbestedingen die uw tijd waard zijn — afgestemd op wat u echt doet."
+          "time": "02:14",
+          "title": "Het vond de aanbesteding die bij u past",
+          "body": "Terwijl de markt sliep, kamden de agenten alle 27 landen uit en haalden de enige aanbesteding op die uw tijd waard is — afgestemd op wat u echt doet, geen bak vol zoekwoorden."
         },
         {
-          "title": "Bereid voor",
-          "body": "Eisen, certificaten, UEA, deadlines: opgehaald, gecontroleerd, samengesteld. Het papierwerk dat u brak, geregeld."
+          "time": "05:30",
+          "title": "Het bouwde het papierwerk",
+          "body": "Eisen gelezen, certificaten gematcht, de UEA samengesteld, elke deadline vastgelegd. De bureaucratie die uw weekend opslokte — klaar vóór de koffie."
         },
         {
-          "title": "Win",
-          "body": "Ze maken van het bestek een winnende strategie, zodat u binnenkomt met dezelfde slagkracht als de reuzen."
+          "time": "07:00",
+          "title": "U werd al in de race wakker",
+          "body": "Geen leeg blad. Het bestek werd een winnende biedstrategie, klaar voor uw beslissing — dezelfde slagkracht waarvoor de reuzen een heel kantoor betalen, klaar op uw bureau."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Uw agenten staan klaar. Alleen u ontbreekt nog.",
-      "body": "We zetten de EU markt voor markt aan. Schrijf u in op de wachtlijst — zodra uw land oplicht, gaan uw agenten op jacht.",
-      "button": "Claim uw plek"
+      "body": "Maak uw account aan en zet de agenten op uw markt — vinden, voorbereiden, winnen, zonder eigen aanbestedingsteam.",
+      "button": "Maak uw account aan"
     },
     "tenderCard": {
       "value": "Waarde",
@@ -302,12 +375,82 @@
       "cancelled": "Geannuleerd",
       "closed": "Gesloten",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Land",
+      "anyCountry": "Alle landen",
+      "sector": "Sector",
+      "anySector": "Alle sectoren",
+      "sectors": {
+        "construction": "Bouw",
+        "it": "IT & software",
+        "health": "Gezondheidszorg",
+        "energy": "Energie",
+        "transport": "Vervoer",
+        "education": "Onderwijs",
+        "environment": "Milieu",
+        "business": "Zakelijke dienstverlening"
+      },
+      "status": "Status",
+      "anyStatus": "Alle statussen",
+      "deadline": "Deadline",
+      "anyDeadline": "Elk moment",
+      "deadline7": "Komende 7 dagen",
+      "deadline30": "Komende 30 dagen",
+      "deadline90": "Komende 90 dagen",
+      "clear": "Alles wissen"
+    },
+    "detail": {
+      "overview": "Overzicht",
+      "buyer": "Aanbestedende dienst",
+      "value": "Geraamde waarde",
+      "published": "Gepubliceerd",
+      "deadline": "Termijn",
+      "status": "Status",
+      "procedure": "Procedure",
+      "cpv": "CPV",
+      "cpvSecondary": "Aanvullende CPV",
+      "region": "Regio (NUTS)",
+      "language": "Taal",
+      "documents": "Documenten",
+      "officialNotice": "Officiële aankondiging (PDF)",
+      "viewSource": "Bekijk bron",
+      "lots": "Percelen",
+      "lotsNone": "Deze aanbesteding heeft geen aparte percelen.",
+      "related": "Vergelijkbare aanbestedingen",
+      "relatedNone": "Geen vergelijkbare aanbestedingen gevonden.",
+      "notFound": "Deze aanbesteding kon niet worden gevonden.",
+      "backToSearch": "Terug naar zoeken",
+      "searchPlaceholder": "Zoek aanbestedingen…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Details, termijn, aanbestedende dienst en vergelijkbare kansen voor \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Onder EU-drempel",
+      "aboveEu": "Boven EU-drempel"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Sterke match",
+        "possible": "Mogelijke match",
+        "longShot": "Kleine kans"
+      },
+      "reasonSector": "Komt overeen met jouw sector",
+      "reasonCountry": "In jouw doelland",
+      "reasonValueInBand": "Binnen jouw waardebereik",
+      "reasonValueBelow": "Onder jouw waardebereik",
+      "reasonValueAbove": "Boven jouw waardebereik",
+      "reasonRegion": "In jouw regio",
+      "reasonProcedure": "Komt overeen met jouw procedure type"
     }
   },
   "today": {
     "recommended": {
-      "title": "Aanbevolen voor jou",
-      "seeAll": "Alles in Ontdekken →"
+      "seeAll": "Alles in Ontdekken →",
+      "clientCount_one": "{{count}} passende aanbesteding klaar voor {{client}}",
+      "clientCount_other": "{{count}} passende aanbestedingen klaar voor {{client}}"
     },
     "greeting": {
       "morning": "Goedemorgen.",
@@ -340,6 +483,7 @@
     },
     "nav": {
       "general": "Algemeen",
+      "profile": "Klantprofiel",
       "overview": "Overzicht",
       "members": "Leden",
       "roles": "Rollen",
@@ -451,6 +595,16 @@
       "settings": "Workspace-instellingen",
       "label": "Werkruimtes",
       "manage": "Alle werkruimtes"
+    },
+    "firstRun": {
+      "title": "Voeg een biedprofiel van de klant toe",
+      "subtitle": "Vertel ons waar deze klant meestal op biedt, zodat de aanbevelingen vanaf het begin raak zijn. Je kunt dit later afronden via Instellingen.",
+      "skip": "Voorlopig overslaan"
+    },
+    "clientProfile": {
+      "title": "Biedprofiel van de klant",
+      "subtitle": "Waar deze klant op biedt — sectoren, landen en waardebereik — stuurt elke aanbeveling.",
+      "saved": "Profiel opgeslagen."
     }
   },
   "workbench": {
@@ -545,9 +699,51 @@
       "deleteHint": "Deze werkbank en alle bijbehorende gegevens permanent verwijderen.",
       "delete": "Werkbank verwijderen",
       "leaveHint": "Deze werkbank verlaten. Een beheerder kan je opnieuw toevoegen.",
-      "leave": "Werkbank verlaten",
-      "confirmDelete": "Deze werkbank verwijderen?",
-      "confirmLeave": "Deze werkbank verlaten?"
+      "leave": "Werkbank verlaten"
+    },
+    "overview": {
+      "emptyTitle": "Je werkbank is klaar",
+      "emptyDescription": "Begin met het zoeken naar aanbestedingen, het aanmaken van een klantprofiel of het uitnodigen van je team. Alles wat je hier doet, wordt gedeeld met de leden van de werkbank.",
+      "emptyExplore": "Open Ontdekken"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Niet opnieuw vragen",
+    "deleteWorkspace": {
+      "title": "Werkruimte verwijderen?",
+      "description": "Hierdoor worden deze werkruimte en alle bijbehorende gegevens permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt."
+    },
+    "leaveWorkspace": {
+      "title": "Werkruimte verlaten?",
+      "description": "Je verliest de toegang tot deze werkruimte. Je kunt met een nieuwe uitnodiging opnieuw deelnemen."
+    },
+    "removeMember": {
+      "title": "Lid verwijderen?",
+      "description": "Deze persoon verliest direct de toegang tot de werkruimte."
+    },
+    "deleteRole": {
+      "title": "Rol verwijderen?",
+      "description": "Leden met deze rol verliezen de bijbehorende rechten."
+    },
+    "revokeInvite": {
+      "title": "Uitnodiging intrekken?",
+      "description": "Deze e-mailuitnodiging kan daarna niet meer worden gebruikt."
+    },
+    "revokeLink": {
+      "title": "Link intrekken?",
+      "description": "Deze uitnodigingslink stopt direct met werken."
+    },
+    "deleteWorkbench": {
+      "title": "Werkbank verwijderen?",
+      "description": "Hierdoor worden deze werkbank en alle bijbehorende gegevens permanent verwijderd. Deze actie kan niet ongedaan worden gemaakt."
+    },
+    "leaveWorkbench": {
+      "title": "Werkbank verlaten?",
+      "description": "Je verliest de toegang tot deze werkbank. Een beheerder kan je opnieuw toevoegen."
+    },
+    "removeWorkbenchMember": {
+      "title": "Lid verwijderen?",
+      "description": "Deze persoon verliest direct de toegang tot de werkbank."
     }
   }
 }

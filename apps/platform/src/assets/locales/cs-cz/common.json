@@ -69,10 +69,15 @@
       "displayName": "Jméno",
       "email": "E-mail",
       "password": "Heslo",
-      "submitting": "Vytváření…",
       "submit": "Vytvořit účet",
       "login": "Máte již účet?",
-      "signIn": "Přihlásit se"
+      "signIn": "Přihlásit se",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Zkontrolujte svůj e-mail",
@@ -104,6 +109,36 @@
       "loading": "Okamžik."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektory",
+      "countries": "Země",
+      "valueMin": "Minimální hodnota",
+      "valueMax": "Maximální hodnota",
+      "notes": "Poznámky",
+      "notesPlaceholder": "Na co tento klient obvykle podává nabídky?",
+      "save": "Uložit profil",
+      "invalidBand": "Minimální hodnota nesmí přesáhnout maximální hodnotu.",
+      "error": "Profil se nepodařilo uložit — zkuste to znovu.",
+      "procedureTypesLabel": "Typy řízení",
+      "procedureTypes": {
+        "open": "Otevřené řízení",
+        "restricted": "Užší řízení",
+        "negotiated": "Jednací řízení",
+        "competitive_dialogue": "Soutěžní dialog",
+        "innovation_partnership": "Inovační partnerství",
+        "other": "Jiné"
+      },
+      "regions": "Regiony (NUTS)",
+      "regionsPlaceholder": "např. ITC, DE3",
+      "regionsHint": "Předpony NUTS oddělené čárkami. Ponechte prázdné pro zahrnutí libovolného regionu."
+    },
+    "shortlist": {
+      "title": "Nejlepší shoda pro tohoto klienta",
+      "emptyTitle": "Zatím žádné vhodné zakázky",
+      "emptyDescription": "Vyzkoušejte ruční vyhledávání níže, nebo rozšiřte profil tohoto klienta."
+    }
+  },
   "landing": {
     "header": {
       "login": "Přihlásit se",
@@ -116,8 +151,23 @@
         "Rekonstrukce veřejných škol",
         "IT modernizace nemocnic",
         "Výstavba solárních parků",
-        "Flotily elektrobusů"
-      ]
+        "Flotily elektrobusů",
+        "Železniční práce, Milán",
+        "Cloudové služby, Varšava",
+        "Energetické úspory, Vídeň",
+        "Údržba parků, Atény"
+      ],
+      "filters": {
+        "country": "Země",
+        "sector": "Sektor",
+        "deadline": "Termín",
+        "value": "Hodnota"
+      },
+      "loading": "Vyhledávání…",
+      "empty": "Nenalezeny žádné zakázky",
+      "error": "Vyhledávání je momentálně nedostupné — zkuste to za chvíli znovu.",
+      "results_one": "{{count}} zakázka",
+      "results_other": "{{count}} zakázek"
     },
     "meta": {
       "title": "tendersbay — Veřejné zakázky v Evropě, přidělené AI agenty",
@@ -134,7 +184,26 @@
       "subtitle": "Dnes v noci se uzavírá zakázka s vaším jménem. Velcí hráči na ní už mají tým. Vy máte otevřené tři panely v Excelu. Tady to končí — AI agenti, kteří ji najdou, rozcupují papírování a postaví vás do nabídky. Zatímco spíte.",
       "ctaPrimary": "Pošlete své agenty do práce",
       "ctaSecondary": "Podívejte se na vizi",
-      "trust": ["27 zemí, jedno hledání", "Agenti, kteří nikdy nespí", "Papírování: vyřízeno"]
+      "trust": ["27 zemí, jedno hledání", "Agenti, kteří nikdy nespí", "Papírování: vyřízeno"],
+      "deckLabel": "Ukázkové výsledky"
+    },
+    "proof": {
+      "lead": "Každý rok se v Evropě utratí přes dva biliony eur veřejných peněz. Většina projde veřejnými zakázkami, které nikdy nevidíte.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "veřejných výdajů ročně v EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "veřejných zadavatelů vypisujících zakázky"
+        },
+        {
+          "value": "~800,000",
+          "label": "zakázek ročně — žádný tým je nepřečte všechny"
+        }
+      ],
+      "source": "Evropská komise · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Hra je nastavená tak, aby vás držela venku. A funguje to.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Tři agenti. Neminou, nespí, nevzdávají se.",
+      "title": "Tohle udělali vaši agenti, zatímco jste spali.",
+      "lead": "Ne rychlejší vyhledávací pole, které stejně musíte řídit vy. Tým agentů, který zpracuje celou zakázku — najde, připraví, vyhraje — přes noc, takže se probudíte už ve hře.",
       "items": [
         {
-          "title": "Najděte",
-          "body": "Každý den pročešou všech 27 zemí a vytáhnou jen zakázky, které stojí za váš čas — na míru tomu, co opravdu děláte."
+          "time": "02:14",
+          "title": "Našel tu, která vám sedí",
+          "body": "Zatímco trh spal, agenti pročesali všech 27 zemí a vytáhli jedinou zakázku, která stojí za váš čas — na míru tomu, co opravdu děláte, ne hromadu klíčových slov."
         },
         {
-          "title": "Připravte",
-          "body": "Požadavky, certifikáty, ESPD, termíny: extrahované, zkontrolované, sestavené. Papírování, které vás lámalo, vyřízeno."
+          "time": "05:30",
+          "title": "Sestavil papírování",
+          "body": "Požadavky přečteny, certifikáty spárovány, ESPD sestaveno, každý termín zaznamenán. Byrokracie, která vám spalovala víkend — hotová před kávou."
         },
         {
-          "title": "Vyhrajte",
-          "body": "Promění zadávací dokumentaci ve vítěznou strategii, abyste vstoupili se stejnou palebnou silou jako giganti."
+          "time": "07:00",
+          "title": "Probudili jste se už ve hře",
+          "body": "Žádná prázdná stránka. Ze zadávací dokumentace se stala vítězná strategie nabídky, připravená na vaše rozhodnutí — stejná palebná síla, za kterou giganti platí celou kancelář, čeká na vašem stole."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Vaši agenti jsou připraveni. Chybíte už jen vy.",
-      "body": "Zapínáme EU trh po trhu. Zaregistrujte se na čekací listinu — ve chvíli, kdy se vaše země rozsvítí, vyrazí vaši agenti na lov.",
-      "button": "Zajistěte si své místo"
+      "body": "Vytvořte si účet a pusťte agenty na svůj trh — najít, připravit, vyhrát, bez vlastního oddělení pro zakázky.",
+      "button": "Vytvořit účet"
     },
     "tenderCard": {
       "value": "Hodnota",
@@ -304,12 +377,83 @@
       "cancelled": "Zrušená",
       "closed": "Uzavřená",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Země",
+      "anyCountry": "Všechny země",
+      "sector": "Odvětví",
+      "anySector": "Všechna odvětví",
+      "sectors": {
+        "construction": "Stavebnictví",
+        "it": "IT a software",
+        "health": "Zdravotnictví",
+        "energy": "Energetika",
+        "transport": "Doprava",
+        "education": "Vzdělávání",
+        "environment": "Životní prostředí",
+        "business": "Podnikové služby"
+      },
+      "status": "Stav",
+      "anyStatus": "Všechny stavy",
+      "deadline": "Lhůta",
+      "anyDeadline": "Kdykoli",
+      "deadline7": "Příštích 7 dní",
+      "deadline30": "Příštích 30 dní",
+      "deadline90": "Příštích 90 dní",
+      "clear": "Vymazat vše"
+    },
+    "detail": {
+      "overview": "Přehled",
+      "buyer": "Zadavatel",
+      "value": "Odhadovaná hodnota",
+      "published": "Zveřejněno",
+      "deadline": "Lhůta",
+      "status": "Stav",
+      "procedure": "Druh řízení",
+      "cpv": "CPV",
+      "cpvSecondary": "Doplňkové CPV",
+      "region": "Region (NUTS)",
+      "language": "Jazyk",
+      "documents": "Dokumenty",
+      "officialNotice": "Úřední oznámení (PDF)",
+      "viewSource": "Zobrazit zdroj",
+      "lots": "Části",
+      "lotsNone": "Tato zakázka nemá samostatné části.",
+      "related": "Související zakázky",
+      "relatedNone": "Nebyly nalezeny žádné související zakázky.",
+      "notFound": "Tuto zakázku se nepodařilo najít.",
+      "backToSearch": "Zpět na vyhledávání",
+      "searchPlaceholder": "Hledat zakázky…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Podrobnosti o zakázce, lhůta, zadavatel a související příležitosti pro „{{title}}“."
+      }
+    },
+    "threshold": {
+      "belowEu": "Pod prahem EU",
+      "aboveEu": "Nad prahem EU"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Silná shoda",
+        "possible": "Možná shoda",
+        "longShot": "Malá šance"
+      },
+      "reasonSector": "Odpovídá vašemu sektoru",
+      "reasonCountry": "Ve vaší cílové zemi",
+      "reasonValueInBand": "Ve vašem hodnotovém rozpětí",
+      "reasonValueBelow": "Pod vaším hodnotovým rozpětím",
+      "reasonValueAbove": "Nad vaším hodnotovým rozpětím",
+      "reasonRegion": "Ve vašem regionu",
+      "reasonProcedure": "Odpovídá vašemu typu řízení"
     }
   },
   "today": {
     "recommended": {
-      "title": "Doporučeno pro vás",
-      "seeAll": "Vše v sekci Prozkoumat →"
+      "seeAll": "Vše v sekci Prozkoumat →",
+      "clientCount_one": "{{count}} vhodná zakázka připravena pro {{client}}",
+      "clientCount_few": "{{count}} vhodné zakázky připraveny pro {{client}}",
+      "clientCount_other": "{{count}} vhodných zakázek připraveno pro {{client}}"
     },
     "greeting": {
       "morning": "Dobré ráno.",
@@ -342,6 +486,7 @@
     },
     "nav": {
       "general": "Obecné",
+      "profile": "Profil klienta",
       "overview": "Přehled",
       "members": "Členové",
       "roles": "Role",
@@ -453,6 +598,16 @@
       "settings": "Nastavení workspace",
       "label": "Pracovní prostory",
       "manage": "Všechny pracovní prostory"
+    },
+    "firstRun": {
+      "title": "Přidat profil nabídek klienta",
+      "subtitle": "Řekněte nám, na co tento klient obvykle podává nabídky, aby byla doporučení od začátku přesná. Dokončit to můžete později v Nastavení.",
+      "skip": "Zatím přeskočit"
+    },
+    "clientProfile": {
+      "title": "Profil nabídek klienta",
+      "subtitle": "To, na co tento klient podává nabídky — sektory, země a hodnotové rozpětí — určuje každé doporučení.",
+      "saved": "Profil uložen."
     }
   },
   "workbench": {
@@ -547,9 +702,51 @@
       "deleteHint": "Trvale odstranit tuto pracovní plochu a všechna její data.",
       "delete": "Odstranit pracovní plochu",
       "leaveHint": "Opustit tuto pracovní plochu. Správce vás může znovu přidat.",
-      "leave": "Opustit pracovní plochu",
-      "confirmDelete": "Odstranit tuto pracovní plochu?",
-      "confirmLeave": "Opustit tuto pracovní plochu?"
+      "leave": "Opustit pracovní plochu"
+    },
+    "overview": {
+      "emptyTitle": "Vaše pracovní plocha je připravena",
+      "emptyDescription": "Začněte vyhledáváním zakázek, vytvořením profilu klienta nebo pozváním svého týmu. Vše, co zde uděláte, sdílíte s ostatními členy pracovní plochy.",
+      "emptyExplore": "Otevřete Prozkoumat"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Znovu se neptat",
+    "deleteWorkspace": {
+      "title": "Odstranit pracovní prostor?",
+      "description": "Tímto trvale odstraníte tento pracovní prostor a všechna jeho data. Tuto akci nelze vrátit zpět."
+    },
+    "leaveWorkspace": {
+      "title": "Opustit pracovní prostor?",
+      "description": "Ztratíte přístup k tomuto pracovnímu prostoru. Můžete se znovu připojit s novou pozvánkou."
+    },
+    "removeMember": {
+      "title": "Odebrat člena?",
+      "description": "Tato osoba okamžitě ztratí přístup k pracovnímu prostoru."
+    },
+    "deleteRole": {
+      "title": "Odstranit roli?",
+      "description": "Členové s touto rolí ztratí její oprávnění."
+    },
+    "revokeInvite": {
+      "title": "Zrušit pozvánku?",
+      "description": "Tuto e-mailovou pozvánku již nebude možné použít."
+    },
+    "revokeLink": {
+      "title": "Zrušit odkaz?",
+      "description": "Tento pozvánkový odkaz okamžitě přestane fungovat."
+    },
+    "deleteWorkbench": {
+      "title": "Odstranit pracovní plochu?",
+      "description": "Tímto trvale odstraníte tuto pracovní plochu a všechna její data. Tuto akci nelze vrátit zpět."
+    },
+    "leaveWorkbench": {
+      "title": "Opustit pracovní plochu?",
+      "description": "Ztratíte přístup k této pracovní ploše. Správce vás může znovu přidat."
+    },
+    "removeWorkbenchMember": {
+      "title": "Odebrat člena?",
+      "description": "Tato osoba okamžitě ztratí přístup k pracovní ploše."
     }
   }
 }

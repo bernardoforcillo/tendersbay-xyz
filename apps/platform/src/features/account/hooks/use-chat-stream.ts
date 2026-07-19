@@ -44,6 +44,14 @@ export function useChatStream() {
           if (event.case === 'token') {
             fullContent += event.value;
             useChatStore.getState().appendStreamToken(event.value);
+          } else if (event.case === 'tenderResults') {
+            useChatStore.getState().addMessage({
+              id: crypto.randomUUID(),
+              role: 'tender_results',
+              content: '',
+              createdAt: new Date().toISOString(),
+              tenders: event.value.tenders,
+            });
           } else if (event.case === 'choice') {
             const options = event.value.options.map((o) => ({
               key: o.key,
@@ -145,6 +153,14 @@ export function useChatStream() {
           if (event.case === 'token') {
             fullContent += event.value;
             useChatStore.getState().appendStreamToken(event.value);
+          } else if (event.case === 'tenderResults') {
+            useChatStore.getState().addMessage({
+              id: crypto.randomUUID(),
+              role: 'tender_results',
+              content: '',
+              createdAt: new Date().toISOString(),
+              tenders: event.value.tenders,
+            });
           } else if (event.case === 'choice') {
             const options = event.value.options.map((o) => ({
               key: o.key,

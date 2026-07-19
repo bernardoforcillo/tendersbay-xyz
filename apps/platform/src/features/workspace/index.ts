@@ -1,6 +1,7 @@
 export { AcceptInvitePage } from './components/pages/accept-invite';
 export { JoinWorkspacePage } from './components/pages/join-workspace';
 export { WorkspaceTodayPage } from './components/pages/today';
+export { WorkspaceClientProfilePage } from './components/pages/workspace-client-profile';
 export { WorkspaceInvitesPage } from './components/pages/workspace-invites';
 export { WorkspaceMembersPage } from './components/pages/workspace-members';
 export { WorkspaceRolesPage } from './components/pages/workspace-roles';

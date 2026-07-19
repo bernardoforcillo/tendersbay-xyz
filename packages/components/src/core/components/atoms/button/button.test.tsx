@@ -48,4 +48,24 @@ describe('Button', () => {
     await user.click(screen.getByRole('button', { name: 'Nope' }));
     expect(onPress).not.toHaveBeenCalled();
   });
+
+  it('shows spinner and hides text when isLoading', () => {
+    render(<Button isLoading>Save</Button>);
+    const button = screen.getByRole('button');
+    expect(button.querySelector('svg')).toBeInTheDocument();
+    const span = button.querySelector('span[aria-hidden="true"]');
+    expect(span).toHaveTextContent('Save');
+  });
+
+  it('disables interaction when isLoading', async () => {
+    const user = userEvent.setup();
+    const onPress = vi.fn();
+    render(
+      <Button isLoading onPress={onPress}>
+        Save
+      </Button>,
+    );
+    await user.click(screen.getByRole('button'));
+    expect(onPress).not.toHaveBeenCalled();
+  });
 });

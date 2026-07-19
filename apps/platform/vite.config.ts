@@ -59,6 +59,11 @@ export default defineConfig({
       hostname: 'https://tendersbay.xyz',
       locales: SUPPORTED_LOCALES,
       defaultLocale: DEFAULT_LOCALE,
+      // Keep only genuinely indexable pages in the sitemap. Auth and workspace
+      // routes are token-gated / transactional (login, signup, password reset,
+      // email verification, invite acceptance): no SEO value, and Google flags
+      // them as thin/soft-404. Re-add a specific route here if it should rank.
+      exclude: ['/auth/*', '/workspace/*'],
       siteName: 'tendersbay',
       title: defaultMeta.title,
       description: defaultMeta.description,

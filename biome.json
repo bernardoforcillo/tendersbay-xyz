@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/routeTree.gen.ts", "!packages/proto/src/gen"]
+    "includes": ["**", "!**/routeTree.gen.ts", "!packages/proto/src/gen", "!**/testdata"]
   },
   "formatter": {
     "enabled": true,

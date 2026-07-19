@@ -1,5 +1,5 @@
 import { cn } from '@tendersbay/components/core';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button, OverlayArrow, Tooltip, TooltipTrigger } from 'react-aria-components';
 import { Icon } from '~/features/landing/components/atoms/icon';
 import { type EuCountry, FLAGS } from './flags';
@@ -13,6 +13,12 @@ type CountryFlagProps = {
   className?: string;
   /** Duplicate marquee copy: still hoverable, but kept out of the tab order. */
   decorative?: boolean;
+  /**
+   * Fired once per reveal (hover or focus), with the country code. Lets the
+   * section emit the `coverage_market_focused` analytics event without the atom
+   * knowing about PostHog. Re-armed when the card closes.
+   */
+  onReveal?: (code: EuCountry) => void;
 };
 
 export function CountryFlag({
@@ -23,6 +29,7 @@ export function CountryFlag({
   statusLabel,
   className,
   decorative,
+  onReveal,
 }: CountryFlagProps) {
   const Flag = FLAGS[code];
   const label = `${name} — ${statusLabel}`;
@@ -30,6 +37,18 @@ export function CountryFlag({
   // react-aria's global tooltip warmup (~1.5s) so the first hover isn't dead.
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
+  // Fire onReveal on the rising edge of a reveal cycle only — a hover then a
+  // focus within the same interaction is one market focus, not two. Re-armed
+  // when the card closes (onOpenChange below).
+  const revealed = useRef(false);
+  const reveal = () => {
+    // Decorative duplicates (the marquee's second track) are silent: the
+    // primary track already emits the focus event, so a mouse user hovering
+    // both copies of a country must not double-count it.
+    if (revealed.current || decorative) return;
+    revealed.current = true;
+    onReveal?.(code);
+  };
 
   return (
     <TooltipTrigger
@@ -38,14 +57,21 @@ export function CountryFlag({
         if (!open) {
           setHovered(false);
           setFocused(false);
+          revealed.current = false;
         }
       }}
     >
       <Button
         aria-label={label}
         excludeFromTabOrder={decorative}
-        onHoverChange={setHovered}
-        onFocusChange={setFocused}
+        onHoverChange={(v) => {
+          setHovered(v);
+          if (v) reveal();
+        }}
+        onFocusChange={(v) => {
+          setFocused(v);
+          if (v) reveal();
+        }}
         className={cn(
           'group/flag flex cursor-pointer flex-col gap-1.5 rounded-xl border bg-white p-1.5 outline-none transition duration-300',
           'hover:-translate-y-1 motion-reduce:transform-none',

@@ -69,10 +69,15 @@
       "displayName": "Name",
       "email": "E-Mail",
       "password": "Passwort",
-      "submitting": "Wird erstellt…",
       "submit": "Konto erstellen",
       "login": "Bereits ein Konto?",
-      "signIn": "Anmelden"
+      "signIn": "Anmelden",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Prüfen Sie Ihre E-Mails",
@@ -104,6 +109,36 @@
       "loading": "Einen Moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektoren",
+      "countries": "Länder",
+      "valueMin": "Mindestwert",
+      "valueMax": "Höchstwert",
+      "notes": "Notizen",
+      "notesPlaceholder": "Worauf bietet dieser Kunde typischerweise?",
+      "save": "Profil speichern",
+      "invalidBand": "Der Mindestwert darf den Höchstwert nicht überschreiten.",
+      "error": "Das Profil konnte nicht gespeichert werden — versuchen Sie es erneut.",
+      "procedureTypesLabel": "Verfahrensarten",
+      "procedureTypes": {
+        "open": "Offenes Verfahren",
+        "restricted": "Nicht offenes Verfahren",
+        "negotiated": "Verhandlungsverfahren",
+        "competitive_dialogue": "Wettbewerblicher Dialog",
+        "innovation_partnership": "Innovationspartnerschaft",
+        "other": "Sonstige"
+      },
+      "regions": "Regionen (NUTS)",
+      "regionsPlaceholder": "z. B. ITC, DE3",
+      "regionsHint": "Durch Kommas getrennte NUTS-Präfixe. Leer lassen, um jede Region einzuschließen."
+    },
+    "shortlist": {
+      "title": "Beste Treffer für diesen Kunden",
+      "emptyTitle": "Noch keine passenden Ausschreibungen",
+      "emptyDescription": "Versuchen Sie unten eine manuelle Suche, oder erweitern Sie das Profil dieses Kunden."
+    }
+  },
   "landing": {
     "header": {
       "login": "Anmelden",
@@ -116,8 +151,23 @@
         "Sanierung öffentlicher Schulen",
         "IT-Modernisierung von Krankenhäusern",
         "Bau von Solarparks",
-        "Elektrobus-Flotten"
-      ]
+        "Elektrobus-Flotten",
+        "Gleisbauarbeiten, Mailand",
+        "Cloud-Dienste, Warschau",
+        "Energetische Sanierung, Wien",
+        "Parkpflege, Athen"
+      ],
+      "filters": {
+        "country": "Land",
+        "sector": "Branche",
+        "deadline": "Frist",
+        "value": "Wert"
+      },
+      "loading": "Suche läuft…",
+      "empty": "Keine Ausschreibungen gefunden",
+      "error": "Die Suche ist momentan nicht verfügbar — versuchen Sie es in Kürze erneut.",
+      "results_one": "{{count}} Ausschreibung",
+      "results_other": "{{count}} Ausschreibungen"
     },
     "meta": {
       "title": "tendersbay — Öffentliche Ausschreibungen, zugeschlagen von KI-Agenten",
@@ -134,7 +184,26 @@
       "subtitle": "Heute Nacht läuft eine Ausschreibung mit Ihrem Namen aus. Die Großen haben längst ein Team daran. Sie haben drei Excel-Tabs offen. Damit ist Schluss — KI-Agenten, die sie finden, den Papierkram zerlegen und Sie ins Angebot bringen. Während Sie schlafen.",
       "ctaPrimary": "Setzen Sie Ihre Agenten ein",
       "ctaSecondary": "Vision ansehen",
-      "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"]
+      "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"],
+      "deckLabel": "Beispielergebnisse"
+    },
+    "proof": {
+      "lead": "Jedes Jahr werden in Europa über zwei Billionen Euro an öffentlichen Geldern ausgegeben. Das meiste läuft über Ausschreibungen, die Sie nie zu sehen bekommen.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "öffentliche Ausgaben pro Jahr in der EU"
+        },
+        {
+          "value": "250,000+",
+          "label": "öffentliche Auftraggeber, die ausschreiben"
+        },
+        {
+          "value": "~800,000",
+          "label": "Ausschreibungen pro Jahr — kein Team liest sie alle"
+        }
+      ],
+      "source": "Europäische Kommission · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Das Spiel ist manipuliert, um Sie draußen zu halten. Und es funktioniert.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Drei Agenten. Sie verfehlen nichts, schlafen nicht, geben nicht auf.",
+      "title": "Das haben Ihre Agenten getan, während Sie schliefen.",
+      "lead": "Keine schnellere Suchleiste, die Sie trotzdem selbst bedienen müssen. Ein Team von Agenten, das die ganze Ausschreibung bearbeitet — finden, vorbereiten, gewinnen — über Nacht, sodass Sie schon im Rennen aufwachen.",
       "items": [
         {
-          "title": "Finden",
-          "body": "Sie durchkämmen täglich alle 27 Länder und zeigen nur die Ausschreibungen, die Ihre Zeit wert sind — zugeschnitten auf das, was Sie wirklich tun."
+          "time": "02:14",
+          "title": "Sie fand die eine, die passt",
+          "body": "Während der Markt schlief, durchkämmten die Agenten alle 27 Länder und zogen die eine Ausschreibung heraus, die Ihre Zeit wert ist — zugeschnitten auf das, was Sie wirklich tun, kein Stichwort-Wust."
         },
         {
-          "title": "Vorbereiten",
-          "body": "Anforderungen, Zertifikate, EEE, Fristen: extrahiert, abgeglichen, zusammengestellt. Der Papierkram, der Sie zermürbt hat, erledigt."
+          "time": "05:30",
+          "title": "Sie erledigte den Papierkram",
+          "body": "Anforderungen gelesen, Zertifikate abgeglichen, die EEE zusammengestellt, jede Frist notiert. Die Bürokratie, die Ihnen früher das Wochenende raubte — fertig vor dem Kaffee."
         },
         {
-          "title": "Gewinnen",
-          "body": "Sie machen aus den Vergabeunterlagen eine Gewinnstrategie, damit Sie mit derselben Schlagkraft antreten wie die Großen."
+          "time": "07:00",
+          "title": "Sie wachten schon im Rennen auf",
+          "body": "Kein leeres Blatt. Aus den Vergabeunterlagen wurde eine Gewinnstrategie, bereit für Ihre Entscheidung — dieselbe Schlagkraft, für die die Großen ein ganzes Büro bezahlen, wartet auf Ihrem Schreibtisch."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Ihre Agenten sind bereit. Es fehlen nur Sie.",
-      "body": "Wir schalten die EU Markt für Markt frei. Tragen Sie sich in die Warteliste ein — sobald Ihr Land aufleuchtet, gehen Ihre Agenten auf die Jagd.",
-      "button": "Sichern Sie sich Ihren Platz"
+      "body": "Erstellen Sie Ihr Konto und setzen Sie die Agenten auf Ihren Markt an — finden, vorbereiten, gewinnen, ganz ohne eigenes Vergabebüro.",
+      "button": "Konto erstellen"
     },
     "tenderCard": {
       "value": "Wert",
@@ -302,12 +375,82 @@
       "cancelled": "Storniert",
       "closed": "Geschlossen",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Land",
+      "anyCountry": "Alle Länder",
+      "sector": "Sektor",
+      "anySector": "Alle Sektoren",
+      "sectors": {
+        "construction": "Bauwesen",
+        "it": "IT & Software",
+        "health": "Gesundheit",
+        "energy": "Energie",
+        "transport": "Verkehr",
+        "education": "Bildung",
+        "environment": "Umwelt",
+        "business": "Unternehmensdienstleistungen"
+      },
+      "status": "Status",
+      "anyStatus": "Alle Status",
+      "deadline": "Frist",
+      "anyDeadline": "Jederzeit",
+      "deadline7": "Nächste 7 Tage",
+      "deadline30": "Nächste 30 Tage",
+      "deadline90": "Nächste 90 Tage",
+      "clear": "Alle löschen"
+    },
+    "detail": {
+      "overview": "Übersicht",
+      "buyer": "Auftraggeber",
+      "value": "Geschätzter Wert",
+      "published": "Veröffentlicht",
+      "deadline": "Frist",
+      "status": "Status",
+      "procedure": "Verfahren",
+      "cpv": "CPV",
+      "cpvSecondary": "Zusätzliche CPV",
+      "region": "Region (NUTS)",
+      "language": "Sprache",
+      "documents": "Dokumente",
+      "officialNotice": "Amtliche Bekanntmachung (PDF)",
+      "viewSource": "Auf Quelle ansehen",
+      "lots": "Lose",
+      "lotsNone": "Diese Ausschreibung hat keine separaten Lose.",
+      "related": "Ähnliche Ausschreibungen",
+      "relatedNone": "Keine ähnlichen Ausschreibungen gefunden.",
+      "notFound": "Diese Ausschreibung konnte nicht gefunden werden.",
+      "backToSearch": "Zurück zur Suche",
+      "searchPlaceholder": "Ausschreibungen durchsuchen…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Details zur Ausschreibung, Frist, Auftraggeber und ähnliche Gelegenheiten für „{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Unter EU-Schwellenwert",
+      "aboveEu": "Über EU-Schwellenwert"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Starke Übereinstimmung",
+        "possible": "Mögliche Übereinstimmung",
+        "longShot": "Unwahrscheinlich"
+      },
+      "reasonSector": "Entspricht Ihrem Sektor",
+      "reasonCountry": "In Ihrem Zielland",
+      "reasonValueInBand": "In Ihrer Wertspanne",
+      "reasonValueBelow": "Unter Ihrer Wertspanne",
+      "reasonValueAbove": "Über Ihrer Wertspanne",
+      "reasonRegion": "In Ihrer Region",
+      "reasonProcedure": "Entspricht Ihrer Verfahrensart"
     }
   },
   "today": {
     "recommended": {
-      "title": "Für Sie empfohlen",
-      "seeAll": "Alles in Entdecken →"
+      "seeAll": "Alles in Entdecken →",
+      "clientCount_one": "{{count}} passende Ausschreibung bereit für {{client}}",
+      "clientCount_other": "{{count}} passende Ausschreibungen bereit für {{client}}"
     },
     "greeting": {
       "morning": "Guten Morgen.",
@@ -340,6 +483,7 @@
     },
     "nav": {
       "general": "Allgemein",
+      "profile": "Kundenprofil",
       "overview": "Übersicht",
       "members": "Mitglieder",
       "roles": "Rollen",
@@ -451,6 +595,16 @@
       "settings": "Workspace-Einstellungen",
       "label": "Workspaces",
       "manage": "Alle Workspaces"
+    },
+    "firstRun": {
+      "title": "Kunden-Angebotsprofil hinzufügen",
+      "subtitle": "Sagen Sie uns, worauf dieser Kunde bietet, damit die Empfehlungen von Anfang an treffsicher sind. Sie können dies später in den Einstellungen abschließen.",
+      "skip": "Vorerst überspringen"
+    },
+    "clientProfile": {
+      "title": "Kunden-Angebotsprofil",
+      "subtitle": "Worauf dieser Kunde bietet — Sektoren, Länder und Wertspanne — bestimmt jede Empfehlung.",
+      "saved": "Profil gespeichert."
     }
   },
   "workbench": {
@@ -545,9 +699,51 @@
       "deleteHint": "Diese Workbench und alle zugehörigen Daten dauerhaft löschen.",
       "delete": "Workbench löschen",
       "leaveHint": "Diese Workbench verlassen. Ein Manager kann Sie erneut hinzufügen.",
-      "leave": "Workbench verlassen",
-      "confirmDelete": "Diese Workbench löschen?",
-      "confirmLeave": "Diese Workbench verlassen?"
+      "leave": "Workbench verlassen"
+    },
+    "overview": {
+      "emptyTitle": "Ihre Workbench ist bereit",
+      "emptyDescription": "Beginnen Sie, indem Sie nach Ausschreibungen suchen, ein Kundenprofil erstellen oder Ihr Team einladen. Alles, was Sie hier tun, wird mit den Workbench-Mitgliedern geteilt.",
+      "emptyExplore": "Öffnen Sie Entdecken"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Nicht erneut fragen",
+    "deleteWorkspace": {
+      "title": "Workspace löschen?",
+      "description": "Dadurch werden dieser Workspace und alle zugehörigen Daten dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "leaveWorkspace": {
+      "title": "Workspace verlassen?",
+      "description": "Sie verlieren den Zugriff auf diesen Workspace. Sie können mit einer neuen Einladung wieder beitreten."
+    },
+    "removeMember": {
+      "title": "Mitglied entfernen?",
+      "description": "Diese Person verliert sofort den Zugriff auf den Workspace."
+    },
+    "deleteRole": {
+      "title": "Rolle löschen?",
+      "description": "Mitglieder mit dieser Rolle verlieren deren Berechtigungen."
+    },
+    "revokeInvite": {
+      "title": "Einladung widerrufen?",
+      "description": "Diese E-Mail-Einladung kann danach nicht mehr verwendet werden."
+    },
+    "revokeLink": {
+      "title": "Link widerrufen?",
+      "description": "Dieser Einladungslink funktioniert danach sofort nicht mehr."
+    },
+    "deleteWorkbench": {
+      "title": "Workbench löschen?",
+      "description": "Dadurch werden diese Workbench und alle zugehörigen Daten dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "leaveWorkbench": {
+      "title": "Workbench verlassen?",
+      "description": "Sie verlieren den Zugriff auf diese Workbench. Ein Manager kann Sie erneut hinzufügen."
+    },
+    "removeWorkbenchMember": {
+      "title": "Mitglied entfernen?",
+      "description": "Diese Person verliert sofort den Zugriff auf die Workbench."
     }
   }
 }

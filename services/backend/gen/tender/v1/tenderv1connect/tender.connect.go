@@ -36,11 +36,38 @@ const (
 	// TenderServiceSearchTendersProcedure is the fully-qualified name of the TenderService's
 	// SearchTenders RPC.
 	TenderServiceSearchTendersProcedure = "/tender.v1.TenderService/SearchTenders"
+	// TenderServiceGetTenderProcedure is the fully-qualified name of the TenderService's GetTender RPC.
+	TenderServiceGetTenderProcedure = "/tender.v1.TenderService/GetTender"
+	// TenderServiceGetRelatedTendersProcedure is the fully-qualified name of the TenderService's
+	// GetRelatedTenders RPC.
+	TenderServiceGetRelatedTendersProcedure = "/tender.v1.TenderService/GetRelatedTenders"
+	// TenderServiceListTenderSitemapProcedure is the fully-qualified name of the TenderService's
+	// ListTenderSitemap RPC.
+	TenderServiceListTenderSitemapProcedure = "/tender.v1.TenderService/ListTenderSitemap"
+	// TenderServiceRecommendTendersForClientProcedure is the fully-qualified name of the
+	// TenderService's RecommendTendersForClient RPC.
+	TenderServiceRecommendTendersForClientProcedure = "/tender.v1.TenderService/RecommendTendersForClient"
+	// TenderServiceGetCoverageProcedure is the fully-qualified name of the TenderService's GetCoverage
+	// RPC.
+	TenderServiceGetCoverageProcedure = "/tender.v1.TenderService/GetCoverage"
 )
 
 // TenderServiceClient is a client for the tender.v1.TenderService service.
 type TenderServiceClient interface {
 	SearchTenders(context.Context, *connect.Request[v1.SearchTendersRequest]) (*connect.Response[v1.SearchTendersResponse], error)
+	GetTender(context.Context, *connect.Request[v1.GetTenderRequest]) (*connect.Response[v1.GetTenderResponse], error)
+	GetRelatedTenders(context.Context, *connect.Request[v1.GetRelatedTendersRequest]) (*connect.Response[v1.GetRelatedTendersResponse], error)
+	ListTenderSitemap(context.Context, *connect.Request[v1.ListTenderSitemapRequest]) (*connect.Response[v1.ListTenderSitemapResponse], error)
+	// Deterministic, membership-checked, unmetered per-client best-fit
+	// shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+	// SearchTenders this requires authentication: it is scoped to one client
+	// (workspace) and reads that client's ClientProfile.
+	RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error)
+	// Which countries we currently hold tenders for (DISTINCT country over
+	// ingested_tenders). Anonymous-safe like SearchTenders — the landing
+	// coverage marquee reads it. "available" = we have >=1 tender for that
+	// country (TED-inclusive), not a below-threshold-only claim.
+	GetCoverage(context.Context, *connect.Request[v1.GetCoverageRequest]) (*connect.Response[v1.GetCoverageResponse], error)
 }
 
 // NewTenderServiceClient constructs a client for the tender.v1.TenderService service. By default,
@@ -60,12 +87,47 @@ func NewTenderServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(tenderServiceMethods.ByName("SearchTenders")),
 			connect.WithClientOptions(opts...),
 		),
+		getTender: connect.NewClient[v1.GetTenderRequest, v1.GetTenderResponse](
+			httpClient,
+			baseURL+TenderServiceGetTenderProcedure,
+			connect.WithSchema(tenderServiceMethods.ByName("GetTender")),
+			connect.WithClientOptions(opts...),
+		),
+		getRelatedTenders: connect.NewClient[v1.GetRelatedTendersRequest, v1.GetRelatedTendersResponse](
+			httpClient,
+			baseURL+TenderServiceGetRelatedTendersProcedure,
+			connect.WithSchema(tenderServiceMethods.ByName("GetRelatedTenders")),
+			connect.WithClientOptions(opts...),
+		),
+		listTenderSitemap: connect.NewClient[v1.ListTenderSitemapRequest, v1.ListTenderSitemapResponse](
+			httpClient,
+			baseURL+TenderServiceListTenderSitemapProcedure,
+			connect.WithSchema(tenderServiceMethods.ByName("ListTenderSitemap")),
+			connect.WithClientOptions(opts...),
+		),
+		recommendTendersForClient: connect.NewClient[v1.RecommendTendersForClientRequest, v1.RecommendTendersForClientResponse](
+			httpClient,
+			baseURL+TenderServiceRecommendTendersForClientProcedure,
+			connect.WithSchema(tenderServiceMethods.ByName("RecommendTendersForClient")),
+			connect.WithClientOptions(opts...),
+		),
+		getCoverage: connect.NewClient[v1.GetCoverageRequest, v1.GetCoverageResponse](
+			httpClient,
+			baseURL+TenderServiceGetCoverageProcedure,
+			connect.WithSchema(tenderServiceMethods.ByName("GetCoverage")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // tenderServiceClient implements TenderServiceClient.
 type tenderServiceClient struct {
-	searchTenders *connect.Client[v1.SearchTendersRequest, v1.SearchTendersResponse]
+	searchTenders             *connect.Client[v1.SearchTendersRequest, v1.SearchTendersResponse]
+	getTender                 *connect.Client[v1.GetTenderRequest, v1.GetTenderResponse]
+	getRelatedTenders         *connect.Client[v1.GetRelatedTendersRequest, v1.GetRelatedTendersResponse]
+	listTenderSitemap         *connect.Client[v1.ListTenderSitemapRequest, v1.ListTenderSitemapResponse]
+	recommendTendersForClient *connect.Client[v1.RecommendTendersForClientRequest, v1.RecommendTendersForClientResponse]
+	getCoverage               *connect.Client[v1.GetCoverageRequest, v1.GetCoverageResponse]
 }
 
 // SearchTenders calls tender.v1.TenderService.SearchTenders.
@@ -73,9 +135,47 @@ func (c *tenderServiceClient) SearchTenders(ctx context.Context, req *connect.Re
 	return c.searchTenders.CallUnary(ctx, req)
 }
 
+// GetTender calls tender.v1.TenderService.GetTender.
+func (c *tenderServiceClient) GetTender(ctx context.Context, req *connect.Request[v1.GetTenderRequest]) (*connect.Response[v1.GetTenderResponse], error) {
+	return c.getTender.CallUnary(ctx, req)
+}
+
+// GetRelatedTenders calls tender.v1.TenderService.GetRelatedTenders.
+func (c *tenderServiceClient) GetRelatedTenders(ctx context.Context, req *connect.Request[v1.GetRelatedTendersRequest]) (*connect.Response[v1.GetRelatedTendersResponse], error) {
+	return c.getRelatedTenders.CallUnary(ctx, req)
+}
+
+// ListTenderSitemap calls tender.v1.TenderService.ListTenderSitemap.
+func (c *tenderServiceClient) ListTenderSitemap(ctx context.Context, req *connect.Request[v1.ListTenderSitemapRequest]) (*connect.Response[v1.ListTenderSitemapResponse], error) {
+	return c.listTenderSitemap.CallUnary(ctx, req)
+}
+
+// RecommendTendersForClient calls tender.v1.TenderService.RecommendTendersForClient.
+func (c *tenderServiceClient) RecommendTendersForClient(ctx context.Context, req *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error) {
+	return c.recommendTendersForClient.CallUnary(ctx, req)
+}
+
+// GetCoverage calls tender.v1.TenderService.GetCoverage.
+func (c *tenderServiceClient) GetCoverage(ctx context.Context, req *connect.Request[v1.GetCoverageRequest]) (*connect.Response[v1.GetCoverageResponse], error) {
+	return c.getCoverage.CallUnary(ctx, req)
+}
+
 // TenderServiceHandler is an implementation of the tender.v1.TenderService service.
 type TenderServiceHandler interface {
 	SearchTenders(context.Context, *connect.Request[v1.SearchTendersRequest]) (*connect.Response[v1.SearchTendersResponse], error)
+	GetTender(context.Context, *connect.Request[v1.GetTenderRequest]) (*connect.Response[v1.GetTenderResponse], error)
+	GetRelatedTenders(context.Context, *connect.Request[v1.GetRelatedTendersRequest]) (*connect.Response[v1.GetRelatedTendersResponse], error)
+	ListTenderSitemap(context.Context, *connect.Request[v1.ListTenderSitemapRequest]) (*connect.Response[v1.ListTenderSitemapResponse], error)
+	// Deterministic, membership-checked, unmetered per-client best-fit
+	// shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+	// SearchTenders this requires authentication: it is scoped to one client
+	// (workspace) and reads that client's ClientProfile.
+	RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error)
+	// Which countries we currently hold tenders for (DISTINCT country over
+	// ingested_tenders). Anonymous-safe like SearchTenders — the landing
+	// coverage marquee reads it. "available" = we have >=1 tender for that
+	// country (TED-inclusive), not a below-threshold-only claim.
+	GetCoverage(context.Context, *connect.Request[v1.GetCoverageRequest]) (*connect.Response[v1.GetCoverageResponse], error)
 }
 
 // NewTenderServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -91,10 +191,50 @@ func NewTenderServiceHandler(svc TenderServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(tenderServiceMethods.ByName("SearchTenders")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenderServiceGetTenderHandler := connect.NewUnaryHandler(
+		TenderServiceGetTenderProcedure,
+		svc.GetTender,
+		connect.WithSchema(tenderServiceMethods.ByName("GetTender")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenderServiceGetRelatedTendersHandler := connect.NewUnaryHandler(
+		TenderServiceGetRelatedTendersProcedure,
+		svc.GetRelatedTenders,
+		connect.WithSchema(tenderServiceMethods.ByName("GetRelatedTenders")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenderServiceListTenderSitemapHandler := connect.NewUnaryHandler(
+		TenderServiceListTenderSitemapProcedure,
+		svc.ListTenderSitemap,
+		connect.WithSchema(tenderServiceMethods.ByName("ListTenderSitemap")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenderServiceRecommendTendersForClientHandler := connect.NewUnaryHandler(
+		TenderServiceRecommendTendersForClientProcedure,
+		svc.RecommendTendersForClient,
+		connect.WithSchema(tenderServiceMethods.ByName("RecommendTendersForClient")),
+		connect.WithHandlerOptions(opts...),
+	)
+	tenderServiceGetCoverageHandler := connect.NewUnaryHandler(
+		TenderServiceGetCoverageProcedure,
+		svc.GetCoverage,
+		connect.WithSchema(tenderServiceMethods.ByName("GetCoverage")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/tender.v1.TenderService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenderServiceSearchTendersProcedure:
 			tenderServiceSearchTendersHandler.ServeHTTP(w, r)
+		case TenderServiceGetTenderProcedure:
+			tenderServiceGetTenderHandler.ServeHTTP(w, r)
+		case TenderServiceGetRelatedTendersProcedure:
+			tenderServiceGetRelatedTendersHandler.ServeHTTP(w, r)
+		case TenderServiceListTenderSitemapProcedure:
+			tenderServiceListTenderSitemapHandler.ServeHTTP(w, r)
+		case TenderServiceRecommendTendersForClientProcedure:
+			tenderServiceRecommendTendersForClientHandler.ServeHTTP(w, r)
+		case TenderServiceGetCoverageProcedure:
+			tenderServiceGetCoverageHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -106,4 +246,24 @@ type UnimplementedTenderServiceHandler struct{}
 
 func (UnimplementedTenderServiceHandler) SearchTenders(context.Context, *connect.Request[v1.SearchTendersRequest]) (*connect.Response[v1.SearchTendersResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.SearchTenders is not implemented"))
+}
+
+func (UnimplementedTenderServiceHandler) GetTender(context.Context, *connect.Request[v1.GetTenderRequest]) (*connect.Response[v1.GetTenderResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.GetTender is not implemented"))
+}
+
+func (UnimplementedTenderServiceHandler) GetRelatedTenders(context.Context, *connect.Request[v1.GetRelatedTendersRequest]) (*connect.Response[v1.GetRelatedTendersResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.GetRelatedTenders is not implemented"))
+}
+
+func (UnimplementedTenderServiceHandler) ListTenderSitemap(context.Context, *connect.Request[v1.ListTenderSitemapRequest]) (*connect.Response[v1.ListTenderSitemapResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.ListTenderSitemap is not implemented"))
+}
+
+func (UnimplementedTenderServiceHandler) RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.RecommendTendersForClient is not implemented"))
+}
+
+func (UnimplementedTenderServiceHandler) GetCoverage(context.Context, *connect.Request[v1.GetCoverageRequest]) (*connect.Response[v1.GetCoverageResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.GetCoverage is not implemented"))
 }

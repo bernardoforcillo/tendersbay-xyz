@@ -31,7 +31,7 @@
     "changePassword": {
       "successTitle": "Focal faire nuashonraithe",
       "title": "Athraigh focal faire",
-      "successBody": "Athraíodh d'fhocal faire. Sínigh isteach arís ar ghléasanna eile.",
+      "successBody": "Athraíodh d'fhocal faire. Sínigh isteach arís ar gléasanna eile.",
       "description": "Caithfidh an focal faire nua a bheith 12 charachtar ar a laghad.",
       "successHint": "Fanann seisiúin ghníomhacha eile bailí go dtí go rachaidh siad in éag.",
       "current": "Focal faire reatha",
@@ -69,10 +69,15 @@
       "displayName": "Ainm",
       "email": "Ríomhphost",
       "password": "Focal faire",
-      "submitting": "Ag cruthú…",
       "submit": "Cruthaigh cuntas",
-      "login": "Cuntas agat cheana féin?",
-      "signIn": "Sínigh isteach"
+      "login": "An bhfuil cuntas agat cheana féin?",
+      "signIn": "Sínigh isteach",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Seiceáil do ríomhphost",
@@ -104,6 +109,36 @@
       "loading": "Nóiméad amháin."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Earnálacha",
+      "countries": "Tíortha",
+      "valueMin": "Luach íosta",
+      "valueMax": "Luach uasta",
+      "notes": "Nótaí",
+      "notesPlaceholder": "Cad air a dtairgeann an cliant seo de ghnáth?",
+      "save": "Sábháil an phróifíl",
+      "invalidBand": "Ní féidir leis an luach íosta a bheith níos airde ná an luach uasta.",
+      "error": "Níorbh fhéidir an phróifíl a shábháil — bain triail eile as.",
+      "procedureTypesLabel": "Cineálacha nós imeachta",
+      "procedureTypes": {
+        "open": "Nós imeachta oscailte",
+        "restricted": "Nós imeachta srianta",
+        "negotiated": "Nós imeachta caibidlíochta",
+        "competitive_dialogue": "Comhphlé iomaíoch",
+        "innovation_partnership": "Comhpháirtíocht nuálaíochta",
+        "other": "Eile"
+      },
+      "regions": "Réigiúin (NUTS)",
+      "regionsPlaceholder": "m.sh. ITC, DE3",
+      "regionsHint": "Réimíreanna NUTS scartha le camóga. Fág bán chun aon réigiún a áireamh."
+    },
+    "shortlist": {
+      "title": "An t-oiriúnú is fearr don chliant seo",
+      "emptyTitle": "Níl aon tairiscintí oiriúnacha go fóill",
+      "emptyDescription": "Bain triail as cuardach láimhe thíos, nó leathnaigh próifíl an chliaint seo."
+    }
+  },
   "landing": {
     "header": {
       "login": "Sínigh isteach",
@@ -116,8 +151,23 @@
         "Athchóiriú scoileanna poiblí",
         "Nuachóiriú TF ospidéal",
         "Tógáil feirmeacha gréine",
-        "Flíteanna bus leictreach"
-      ]
+        "Flíteanna busanna leictreacha",
+        "Oibreacha iarnróid, Milán",
+        "Seirbhísí scamaill, Vársá",
+        "Uasghrádú fuinnimh, Vín",
+        "Cothabháil páirceanna, An Aithin"
+      ],
+      "filters": {
+        "country": "Tír",
+        "sector": "Earnáil",
+        "deadline": "Spriocdháta",
+        "value": "Luach"
+      },
+      "loading": "Ag cuardach…",
+      "empty": "Níor aimsíodh aon tairiscint",
+      "error": "Níl an cuardach ar fáil faoi láthair — bain triail eile as i gceann nóiméid.",
+      "results_one": "{{count}} thairiscint",
+      "results_other": "{{count}} tairiscint"
     },
     "meta": {
       "title": "tendersbay — Tairiscintí poiblí, bronnta ag do ghníomhairí AI",
@@ -138,7 +188,26 @@
         "27 tír, aon chuardach amháin",
         "Gníomhairí nach gcodlaíonn riamh",
         "Obair pháipéir: réitithe"
-      ]
+      ],
+      "deckLabel": "Torthaí samplacha"
+    },
+    "proof": {
+      "lead": "Gach bliain caitear breis is dhá thrilliún euro d’airgead poiblí ar fud na hEorpa. Téann formhór de trí thairiscintí poiblí nach bhfeiceann tú riamh.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "de chaiteachas poiblí sa bhliain san AE"
+        },
+        {
+          "value": "250,000+",
+          "label": "ceannaitheoirí poiblí a chuireann obair amach ar tairiscint"
+        },
+        {
+          "value": "~800,000",
+          "label": "tairiscintí sa bhliain — ní léann aon fhoireann iad go léir"
+        }
+      ],
+      "source": "An Coimisiún Eorpach · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Tá an cluiche socraithe chun thú a choinneáil amuigh. Agus tá ag éirí leis.",
@@ -153,24 +222,28 @@
         },
         {
           "title": "Gan foireann tairisceana, gan seans",
-          "body": "Tá foireann ag na fathaigh dó seo. Tá oícheanta, deirí seachtaine agus scarbhileog agat. Buille faoi thuairim cé a bhuann."
+          "body": "Tá foireann ag na fathaigh dó seo. Tá oícheanta, deirí seachtaine agus scarbhileog agat. Tomhais cé a bhuann."
         }
       ]
     },
     "agents": {
-      "title": "Trí ghníomhaire. Ní chailleann siad, ní chodlaíonn siad, ní éiríonn siad as.",
+      "title": "Seo a rinne do chuid gníomhairí agus tú i do chodladh.",
+      "lead": "Ní barra cuardaigh níos tapúla a chaithfidh tú a stiúradh fós. Foireann gníomhairí a oibríonn an tairiscint iomlán — aimsiú, ullmhú, buachan — thar oíche, ionas go músclaíonn tú agus tú san iomaíocht cheana.",
       "items": [
         {
-          "title": "Aimsigh",
-          "body": "Cíorann siad na 27 tír gach lá agus ní thugann chun solais ach na tairiscintí ar fiú do chuid ama iad — oiriúnaithe don rud a dhéanann tú i ndáiríre."
+          "time": "02:14",
+          "title": "D’aimsigh sé an ceann a oireann duit",
+          "body": "Agus an margadh ina chodladh, chíor na gníomhairí na 27 tír ar fad agus tharraing siad amach an t-aon tairiscint is fiú do chuid ama — oiriúnaithe don rud a dhéanann tú i ndáiríre, ní carn eochairfhocal."
         },
         {
-          "title": "Ullmhaigh",
-          "body": "Riachtanais, teastais, ESPD, spriocdhátaí: bainte amach, cros-seiceáilte, curtha le chéile. An obair pháipéir a bhris thú, réitithe."
+          "time": "05:30",
+          "title": "Thóg sé an obair pháipéir",
+          "body": "Riachtanais léite, teastais meaitseáilte, an ESPD curtha le chéile, gach spriocdháta logáilte. An maorlathas a dhódh do dheireadh seachtaine — déanta roimh an gcaife."
         },
         {
-          "title": "Buaigh",
-          "body": "Athraíonn siad na cáipéisí tairisceana ina straitéis bhuacach, ionas go siúlfaidh tú isteach leis an gcumhacht chéanna leis na fathaigh."
+          "time": "07:00",
+          "title": "Dhúisigh tú san iomaíocht cheana",
+          "body": "Gan leathanach bán. Rinneadh straitéis tairisceana bhuacach den tsonraíocht, réidh do do chinneadh — an chumhacht chéanna a n-íocann na fathaigh oifig iomlán aisti, ag fanacht ar do dheasc."
         }
       ]
     },
@@ -187,7 +260,7 @@
         },
         {
           "title": "Méadaíonn tú do chliaint",
-          "body": "Is domhan ann féin gach cliant, agus is cliant breise gach uair an chloig a shábhálann tú, ar féidir leat glacadh leis. Spásanna oibre ar leithligh, sonraí glana in aghaidh an chliaint, do chorrlach."
+          "body": "Is domhan ann féin gach cliant, agus is cliant breise gach uair an chloig a shábhálann tú, is féidir leat glacadh leis. Spásanna oibre ar leithligh, sonraí glana in aghaidh an chliaint, do chorrlach."
         }
       ]
     },
@@ -195,8 +268,8 @@
       "title": "Cuir na ceisteanna a mharaíonn an margadh de ghnáth.",
       "items": [
         {
-          "title": "„An dtraenálann mo chuid sonraí do AI?“",
-          "body": "Ní dhéanann. Fanann do cháipéisí, do liostaí praghsanna, do thairiscintí mar do chuid féin. Ní chuirtear isteach i samhail aon duine riamh iad."
+          "title": "„An dtraenálann mo chuid sonraí d'AI?“",
+          "body": "Ní thraenálann. Fanann do cháipéisí, do liostaí praghsanna, do thairiscintí mar do chuid féin. Ní chuirtear isteach i samhail aon duine riamh iad."
         },
         {
           "title": "„An ndéanann sé rudaí a chumadh?“",
@@ -204,7 +277,7 @@
         },
         {
           "title": "„An bhfuil sonraí gach cliaint scartha i ndáiríre?“",
-          "body": "Spásanna oibre faoi bhalla in aghaidh an chliaint. An rud is leo, fanann sé leo. Ní sceitheann aon rud idir chuntais."
+          "body": "Spásanna oibre faoi bhalla in aghaidh an chliaint. An rud is leo, fanann sé leo. Ní sceitheann aon rud idir cuntais."
         },
         {
           "title": "„An n-oireann sé don rud a úsáidim cheana?“",
@@ -246,8 +319,8 @@
     },
     "cta": {
       "title": "Tá do ghníomhairí réidh. Níl in easnamh ach tusa.",
-      "body": "Táimid ag lasadh an AE margadh ar mhargadh. Cláraigh ar an liosta feithimh — an nóiméad a lasann do thír, téann do ghníomhairí ag fiach.",
-      "button": "Cinntigh d'áit"
+      "body": "Cruthaigh do chuntas agus cuir na gníomhairí ar do mhargadh — aimsiú, ullmhú, buachan, gan foireann tairisceana de do chuid féin.",
+      "button": "Cruthaigh do chuntas"
     },
     "tenderCard": {
       "value": "Luach",
@@ -282,7 +355,7 @@
     }
   },
   "tenders": {
-    "results_one": "{{count}} thairiscint",
+    "results_one": "{{count}} tairiscint",
     "results_two": "{{count}} thairiscint",
     "results_few": "{{count}} thairiscint",
     "results_many": "{{count}} dtairiscint",
@@ -312,12 +385,85 @@
       "cancelled": "Cealaithe",
       "closed": "Dúnta",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Tír",
+      "anyCountry": "Gach tír",
+      "sector": "Earnáil",
+      "anySector": "Gach earnáil",
+      "sectors": {
+        "construction": "Tógáil",
+        "it": "TF agus bogearraí",
+        "health": "Sláinte",
+        "energy": "Fuinneamh",
+        "transport": "Iompar",
+        "education": "Oideachas",
+        "environment": "Comhshaol",
+        "business": "Seirbhísí gnó"
+      },
+      "status": "Stádas",
+      "anyStatus": "Gach stádas",
+      "deadline": "Spriocdháta",
+      "anyDeadline": "Am ar bith",
+      "deadline7": "An chéad 7 lá eile",
+      "deadline30": "An chéad 30 lá eile",
+      "deadline90": "An chéad 90 lá eile",
+      "clear": "Glan gach rud"
+    },
+    "detail": {
+      "overview": "Forbhreathnú",
+      "buyer": "Ceannaitheoir",
+      "value": "Luach measta",
+      "published": "Foilsithe",
+      "deadline": "Spriocdháta",
+      "status": "Stádas",
+      "procedure": "Nós imeachta",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV breise",
+      "region": "Réigiún (NUTS)",
+      "language": "Teanga",
+      "documents": "Doiciméid",
+      "officialNotice": "Fógra oifigiúil (PDF)",
+      "viewSource": "Féach ar an bhfoinse",
+      "lots": "Lotanna",
+      "lotsNone": "Níl lotanna ar leith ag an tairiscint seo.",
+      "related": "Tairiscintí gaolmhara",
+      "relatedNone": "Níor aimsíodh aon tairiscintí gaolmhara.",
+      "notFound": "Níorbh fhéidir an tairiscint seo a aimsiú.",
+      "backToSearch": "Ar ais go dtí an cuardach",
+      "searchPlaceholder": "Cuardaigh tairiscintí…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Sonraí na tairisceana, spriocdháta, ceannaitheoir agus deiseanna gaolmhara le haghaidh \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Faoi bhun tairseach an AE",
+      "aboveEu": "Os cionn tairseach an AE"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Oiriúnú láidir",
+        "possible": "Oiriúnú féideartha",
+        "longShot": "Seans beag"
+      },
+      "reasonSector": "Ag teacht le d'earnáil",
+      "reasonCountry": "I do spriocthír",
+      "reasonValueInBand": "I do raon luacha",
+      "reasonValueBelow": "Faoi bhun do raoin luacha",
+      "reasonValueAbove": "Os cionn do raoin luacha",
+      "reasonRegion": "I do réigiún",
+      "reasonProcedure": "Ag teacht le do chineál nóis imeachta"
     }
   },
   "today": {
     "recommended": {
-      "title": "Molta duit",
-      "seeAll": "Gach rud in Iniúchadh →"
+      "seeAll": "Gach rud in Iniúchadh →",
+      "clientCount_one": "{{count}} tairiscint oiriúnach réidh do {{client}}",
+      "clientCount_two": "{{count}} thairiscint oiriúnach réidh do {{client}}",
+      "clientCount_few": "{{count}} thairiscint oiriúnach réidh do {{client}}",
+      "clientCount_many": "{{count}} dtairiscint oiriúnach réidh do {{client}}",
+      "clientCount_other": "{{count}} tairiscint oiriúnach réidh do {{client}}"
     },
     "greeting": {
       "morning": "Maidin mhaith.",
@@ -332,7 +478,7 @@
       "untitled": "Comhrá gan teideal"
     },
     "explore": {
-      "title": "Aimsigh an chéad tairiscint eile agat",
+      "title": "Aimsigh do chéad tairiscint eile",
       "description": "Fiafraigh den ghníomhaire faoi mhargaí, riachtanais, nó tairiscint ar leith — beidh moltaí pearsantaithe le feiceáil anseo de réir mar a fhorbraíonn do phróifílí cuardaigh.",
       "action": "Oscail Iniúchadh"
     }
@@ -350,6 +496,7 @@
     },
     "nav": {
       "general": "Ginearálta",
+      "profile": "Próifíl an chliaint",
       "overview": "Forbhreathnú",
       "members": "Baill",
       "roles": "Róil",
@@ -461,6 +608,16 @@
       "settings": "Socruithe workspace",
       "label": "Spásanna oibre",
       "manage": "Gach spás oibre"
+    },
+    "firstRun": {
+      "title": "Cuir próifíl tairisceana cliaint leis",
+      "subtitle": "Inis dúinn cad air a dtairgeann an cliant seo de ghnáth ionas go mbeidh na moltaí cruinn ón tús. Is féidir leat é seo a chríochnú níos déanaí sna Socruithe.",
+      "skip": "Ná bac leis faoi láthair"
+    },
+    "clientProfile": {
+      "title": "Próifíl tairisceana an chliaint",
+      "subtitle": "An rud a dtairgeann an cliant seo air — earnálacha, tíortha, agus raon luacha — a stiúrann gach moladh.",
+      "saved": "Próifíl sábháilte."
     }
   },
   "workbench": {
@@ -555,9 +712,51 @@
       "deleteHint": "Scrios an binse oibre seo agus a shonraí go léir go buan.",
       "delete": "Scrios an binse oibre",
       "leaveHint": "Fág an binse oibre seo. Is féidir le bainisteoir tú a chur leis arís.",
-      "leave": "Fág an binse oibre",
-      "confirmDelete": "An binse oibre seo a scriosadh?",
-      "confirmLeave": "An binse oibre seo a fhágáil?"
+      "leave": "Fág an binse oibre"
+    },
+    "overview": {
+      "emptyTitle": "Tá do bhinse oibre réidh",
+      "emptyDescription": "Tosaigh trí thairiscintí a chuardach, próifíl chliaint a chruthú, nó cuireadh a thabhairt do d'fhoireann. Roinntear gach rud a dhéanann tú anseo le baill an bhinse oibre.",
+      "emptyExplore": "Oscail Iniúchadh"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ná fiafraigh arís",
+    "deleteWorkspace": {
+      "title": "An spás oibre a scriosadh?",
+      "description": "Scriosfaidh sé seo an spás oibre seo agus a shonraí go léir go buan. Ní féidir an gníomh seo a chur ar ceal."
+    },
+    "leaveWorkspace": {
+      "title": "An spás oibre a fhágáil?",
+      "description": "Caillfidh tú rochtain ar an spás oibre seo. Is féidir leat filleadh le cuireadh nua."
+    },
+    "removeMember": {
+      "title": "An ball a bhaint?",
+      "description": "Caillfidh an duine seo rochtain ar an spás oibre láithreach."
+    },
+    "deleteRole": {
+      "title": "An ról a scriosadh?",
+      "description": "Caillfidh baill a bhfuil an ról seo acu a chuid ceadanna."
+    },
+    "revokeInvite": {
+      "title": "An cuireadh a chúlghairm?",
+      "description": "Ní bheidh an cuireadh ríomhphoist seo inúsáidte a thuilleadh."
+    },
+    "revokeLink": {
+      "title": "An nasc a chúlghairm?",
+      "description": "Stopfaidh an nasc cuiridh seo ag obair láithreach."
+    },
+    "deleteWorkbench": {
+      "title": "An binse oibre a scriosadh?",
+      "description": "Scriosfaidh sé seo an binse oibre seo agus a shonraí go léir go buan. Ní féidir an gníomh seo a chur ar ceal."
+    },
+    "leaveWorkbench": {
+      "title": "An binse oibre a fhágáil?",
+      "description": "Caillfidh tú rochtain ar an mbinse oibre seo. Is féidir le bainisteoir tú a chur leis arís."
+    },
+    "removeWorkbenchMember": {
+      "title": "An ball a bhaint?",
+      "description": "Caillfidh an duine seo rochtain ar an mbinse oibre láithreach."
     }
   }
 }

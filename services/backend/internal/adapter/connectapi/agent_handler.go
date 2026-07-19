@@ -7,6 +7,7 @@ import (
 	"connectrpc.com/connect"
 	agentv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
+	tenderv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
@@ -118,7 +119,7 @@ func (h *AgentHandler) GetMessages(ctx context.Context, req *connect.Request[age
 	return connect.NewResponse(&agentv1.GetMessagesResponse{Messages: out}), nil
 }
 
-func newStreamCallbacks(stream *connect.ServerStream[agentv1.ChatStreamResponse]) (agent.StreamToken, agent.SendChoice) {
+func newStreamCallbacks(stream *connect.ServerStream[agentv1.ChatStreamResponse]) (agent.StreamToken, agent.SendChoice, agent.SendTenderResults) {
 	sendToken := func(token string) error {
 		return stream.Send(&agentv1.ChatStreamResponse{
 			Event: &agentv1.ChatStreamResponse_Token{Token: token},
@@ -129,7 +130,20 @@ func newStreamCallbacks(stream *connect.ServerStream[agentv1.ChatStreamResponse]
 			Event: &agentv1.ChatStreamResponse_Choice{Choice: toProtoChoicePrompt(cp)},
 		})
 	}
-	return sendToken, sendChoice
+	sendTenderResults := func(tr agent.TenderResults) error {
+		return stream.Send(&agentv1.ChatStreamResponse{
+			Event: &agentv1.ChatStreamResponse_TenderResults{TenderResults: toProtoTenderResults(tr)},
+		})
+	}
+	return sendToken, sendChoice, sendTenderResults
+}
+
+func toProtoTenderResults(tr agent.TenderResults) *agentv1.TenderResults {
+	tenders := make([]*tenderv1.TenderResult, len(tr.Tenders))
+	for i, t := range tr.Tenders {
+		tenders[i] = tenderResultToProto(t)
+	}
+	return &agentv1.TenderResults{Tenders: tenders}
 }
 
 // runAndFinish runs a service-layer turn (ChatStream or SubmitChoice) and,
@@ -187,10 +201,10 @@ func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agen
 		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
 	}
 
-	sendToken, sendChoice := newStreamCallbacks(stream)
+	sendToken, sendChoice, sendTenderResults := newStreamCallbacks(stream)
 
 	return h.runAndFinish(ctx, uid, session.WorkspaceID, check.Allowance, stream, func(usageCh chan<- credits.Usage) error {
-		return h.svc.ChatStream(ctx, session.ID, uid, session.WorkspaceID, req.Msg.Message, session.AgentType, sendToken, sendChoice, usageCh)
+		return h.svc.ChatStream(ctx, session.ID, uid, session.WorkspaceID, req.Msg.Message, session.AgentType, sendToken, sendChoice, sendTenderResults, usageCh)
 	})
 }
 
@@ -213,10 +227,10 @@ func (h *AgentHandler) SubmitChoice(ctx context.Context, req *connect.Request[ag
 		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
 	}
 
-	sendToken, sendChoice := newStreamCallbacks(stream)
+	sendToken, sendChoice, sendTenderResults := newStreamCallbacks(stream)
 
 	return h.runAndFinish(ctx, uid, session.WorkspaceID, check.Allowance, stream, func(usageCh chan<- credits.Usage) error {
-		return h.svc.SubmitChoice(ctx, session, uid, req.Msg.ChoiceId, req.Msg.SelectedKey, req.Msg.CustomValue, sendToken, sendChoice, usageCh)
+		return h.svc.SubmitChoice(ctx, session, uid, req.Msg.ChoiceId, req.Msg.SelectedKey, req.Msg.CustomValue, sendToken, sendChoice, sendTenderResults, usageCh)
 	})
 }
 
@@ -275,6 +289,9 @@ func toProtoChatMessage(m postgres.DBChatMessage) *agentv1.ChatMessage {
 	}
 	if m.Metadata != nil {
 		p.Metadata = []byte(*m.Metadata)
+	}
+	if m.Tenders != nil {
+		p.Tenders = []byte(*m.Tenders)
 	}
 	return p
 }

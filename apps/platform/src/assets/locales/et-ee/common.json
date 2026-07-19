@@ -53,34 +53,39 @@
       "description": "Tere tulemast tagasi tendersbaysse.",
       "email": "E-post",
       "password": "Parool",
-      "forgotPassword": "Unustasid parooli?",
+      "forgotPassword": "Unustasite parooli?",
       "submitting": "Sisselogimine…",
       "submit": "Logi sisse",
-      "noAccount": "Kas sul pole kontot?",
+      "noAccount": "Kas teil pole kontot?",
       "signUp": "Registreeru"
     },
     "signup": {
-      "checkEmail": "Kontrolli oma e-posti",
-      "verifyPrompt": "Saatsime sulle kinnituslingi. Klõpsa sellel, et konto aktiveerida.",
-      "checkEmailHint": "Link aegub 24 tunni pärast. Kontrolli rämpspostikausta, kui sa seda ei näe.",
+      "checkEmail": "Kontrollige oma e-posti",
+      "verifyPrompt": "Saatsime teile kinnituslingi. Klõpsake sellel, et konto aktiveerida.",
+      "checkEmailHint": "Link aegub 24 tunni pärast. Kontrollige rämpspostikausta, kui te seda ei näe.",
       "backToLogin": "Tagasi sisselogimise juurde",
       "title": "Loo konto",
-      "description": "Hakka võitma ELi hankeid tehisintellekti agentidega.",
+      "description": "Hakake võitma ELi hankeid tehisintellekti agentidega.",
       "displayName": "Nimi",
       "email": "E-post",
       "password": "Parool",
-      "submitting": "Loomine…",
       "submit": "Loo konto",
-      "login": "Kas sul on juba konto?",
-      "signIn": "Logi sisse"
+      "login": "Kas teil on juba konto?",
+      "signIn": "Logi sisse",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
-      "checkEmail": "Kontrolli oma e-posti",
-      "checkEmailBody": "Kui selle aadressiga konto on olemas, saad peagi lähtestamislingi.",
-      "checkEmailHint": "Link aegub 1 tunni pärast. Kontrolli rämpspostikausta, kui sa seda ei näe.",
+      "checkEmail": "Kontrollige oma e-posti",
+      "checkEmailBody": "Kui selle aadressiga konto on olemas, saate peagi lähtestamislingi.",
+      "checkEmailHint": "Link aegub 1 tunni pärast. Kontrollige rämpspostikausta, kui te seda ei näe.",
       "backToLogin": "Tagasi sisselogimise juurde",
       "title": "Lähtesta parool",
-      "description": "Sisesta oma e-post ja saadame sulle lähtestamislingi.",
+      "description": "Sisestage oma e-post ja saadame teile lähtestamislingi.",
       "email": "E-post",
       "submitting": "Saatmine…",
       "submit": "Saada lähtestamislink"
@@ -90,18 +95,48 @@
       "invalid": "See lähtestamislink puudub või on aegunud.",
       "requestNew": "Küsi uus link",
       "title": "Määra uus parool",
-      "description": "Vali tugev parool, mis on vähemalt 12 tähemärki pikk.",
+      "description": "Valige tugev parool, mis on vähemalt 12 tähemärki pikk.",
       "password": "Uus parool",
       "submitting": "Salvestamine…",
       "submit": "Määra parool"
     },
     "verify": {
       "errorTitle": "Link on aegunud",
-      "error": "See link on vigane või aegunud. Küsi uus.",
+      "error": "See link on vigane või aegunud. Küsige uus.",
       "successTitle": "E-post kinnitatud",
-      "success": "Kõik on valmis. Sind suunatakse nüüd ümber…",
-      "loadingTitle": "Sinu e-posti kinnitamine…",
+      "success": "Kõik on valmis. Teid suunatakse nüüd ümber…",
+      "loadingTitle": "Teie e-posti kinnitamine…",
       "loading": "Hetk veel."
+    }
+  },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektorid",
+      "countries": "Riigid",
+      "valueMin": "Minimaalne väärtus",
+      "valueMax": "Maksimaalne väärtus",
+      "notes": "Märkmed",
+      "notesPlaceholder": "Millele see klient tavaliselt pakkumusi teeb?",
+      "save": "Salvesta profiil",
+      "invalidBand": "Minimaalne väärtus ei tohi ületada maksimaalset väärtust.",
+      "error": "Profiili salvestamine ebaõnnestus — proovige uuesti.",
+      "procedureTypesLabel": "Menetlusliigid",
+      "procedureTypes": {
+        "open": "Avatud hankemenetlus",
+        "restricted": "Piiratud hankemenetlus",
+        "negotiated": "Väljakuulutamisega läbirääkimistega hankemenetlus",
+        "competitive_dialogue": "Võistlev dialoog",
+        "innovation_partnership": "Innovatsioonipartnerlus",
+        "other": "Muu"
+      },
+      "regions": "Piirkonnad (NUTS)",
+      "regionsPlaceholder": "nt ITC, DE3",
+      "regionsHint": "Komadega eraldatud NUTS-eesliited. Jätke tühjaks, et hõlmata mis tahes piirkonda."
+    },
+    "shortlist": {
+      "title": "Parim sobivus sellele kliendile",
+      "emptyTitle": "Sobivaid hankeid pole veel",
+      "emptyDescription": "Proovige allpool käsitsi otsingut või laiendage selle kliendi profiili."
     }
   },
   "landing": {
@@ -116,31 +151,65 @@
         "Avalike koolide renoveerimine",
         "Haiglate IT-uuendus",
         "Päikeseparkide ehitus",
-        "Elektribusside pargid"
-      ]
+        "Elektribusside pargid",
+        "Raudteetööd, Milano",
+        "Pilveteenused, Varssavi",
+        "Energiatõhususe parandamine, Viin",
+        "Parkide hooldus, Ateena"
+      ],
+      "filters": {
+        "country": "Riik",
+        "sector": "Sektor",
+        "deadline": "Tähtaeg",
+        "value": "Väärtus"
+      },
+      "loading": "Otsimine…",
+      "empty": "Hankeid ei leitud",
+      "error": "Otsing ei ole hetkel saadaval — proovige veidi hiljem uuesti.",
+      "results_one": "{{count}} hange",
+      "results_other": "{{count}} hanget"
     },
     "meta": {
       "title": "tendersbay — Euroopa riigihanked, lepinguni teie AI-agentide abil",
-      "description": "Tehisintellekti agendid, kes jälitavad õigeid Euroopa riigihankeid ja hanketeateid, purustavad paberimajanduse ja viivad teie VKE hankelepingu sõlmimiseni."
+      "description": "Tehisintellekti agendid, kes jälitavad õigeid riigihankeid üle Euroopa, purustavad paberimajanduse ja viivad teie VKE esimesest hankevõimalusest kuni hankelepingu sõlmimiseni."
     },
     "nav": {
-      "problem": "Hind",
+      "problem": "Kulu",
       "agents": "Agendid",
       "vision": "Visioon"
     },
     "hero": {
       "titleLead": "Hange, mille nad juba enda omaks lugesid?",
-      "titleHighlight": "Omistatud.",
-      "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja panevad teid pakkumisse. Sel ajal kui magate.",
+      "titleHighlight": "Sõlmitud.",
+      "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja viivad teid pakkumiseni. Sel ajal kui magate.",
       "ctaPrimary": "Pange oma agendid tööle",
       "ctaSecondary": "Vaadake visiooni",
-      "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"]
+      "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"],
+      "deckLabel": "Näidistulemused"
+    },
+    "proof": {
+      "lead": "Igal aastal kulutatakse Euroopas üle kahe tuhande miljardi euro avalikku raha. Suurem osa liigub läbi riigihangete, mida te kunagi ei näe.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "avalikke kulutusi aastas ELis"
+        },
+        {
+          "value": "250,000+",
+          "label": "avalikku hankijat, kes korraldavad hankeid"
+        },
+        {
+          "value": "~800,000",
+          "label": "riigihanget aastas — ükski meeskond ei loe neid kõiki"
+        }
+      ],
+      "source": "Euroopa Komisjon · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Mäng on seatud teid välja jätma. Ja see töötab.",
       "items": [
         {
-          "title": "Maetud 27 riiki",
+          "title": "Maetud 27 riigis",
           "body": "Teile sobivad hanked on laiali kümnetes riiklikes portaalides, keeltes, mida te ei räägi, vormingutes, mis panevad vastu."
         },
         {
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Kolm agenti. Nad ei eksi, ei maga, ei anna alla.",
+      "title": "Vaadake, mida teie agendid tegid, kui te magasite.",
+      "lead": "Mitte kiirem otsinguriba, mida peate ikkagi ise juhtima. Agentide meeskond, kes töötab läbi kogu hanke — leiab, valmistab ette, võidab — öö jooksul, nii et ärkate juba mängus.",
       "items": [
         {
-          "title": "Leia",
-          "body": "Nad kammivad iga päev läbi kõik 27 riiki ja toovad esile ainult hanked, mis on teie aega väärt — kohandatuna sellele, mida te tegelikult teete."
+          "time": "02:14",
+          "title": "Leidis selle, mis teile sobib",
+          "body": "Kui turg magas, kammisid agendid läbi kõik 27 riiki ja tõid välja ainsa hanke, mis on teie aega väärt — kohandatud sellele, mida te tegelikult teete, mitte hunnik märksõnu."
         },
         {
-          "title": "Valmista ette",
-          "body": "Nõuded, sertifikaadid, ESPD, tähtajad: välja võetud, ristkontrollitud, kokku pandud. Paberimajandus, mis teid murdis, korras."
+          "time": "05:30",
+          "title": "Pani paberimajanduse kokku",
+          "body": "Nõuded loetud, sertifikaadid sobitatud, ESPD kokku pandud, iga tähtaeg kirja pandud. Bürokraatia, mis varem teie nädalavahetust põletas — valmis enne kohvi."
         },
         {
-          "title": "Võida",
-          "body": "Nad muudavad hankedokumendid võidustrateegiaks, et astuksite sisse sama löögijõuga kui hiiglased."
+          "time": "07:00",
+          "title": "Ärkasite juba mängus",
+          "body": "Ei mingit tühja lehte. Hankedokumentidest sai võidustrateegia, valmis teie otsuseks — sama löögijõud, mille eest hiiglased maksavad terve kontori, ootab teie laual."
         }
       ]
     },
@@ -175,7 +248,7 @@
       "items": [
         {
           "title": "Teie koostate pakkumised",
-          "body": "Kesköö, järjekordne ESPD käsitsi. Andke dokumendid agentidele. Kulutage oma tunnid pakkumisele, mis tegelikult võidab."
+          "body": "Kesköö, järjekordne ESPD käsitsi. Andke dokumendid agentidele. Kulutage oma tunde pakkumisele, mis tegelikult võidab."
         },
         {
           "title": "Teie vastutate numbri eest",
@@ -192,7 +265,7 @@
       "items": [
         {
           "title": "„Kas mu andmed treenivad teie tehisintellekti?“",
-          "body": "Ei. Teie hankedokumendid, hinnakirjad, pakkumised jäävad teie omaks. Kunagi ei söödeta kellegi mudelisse."
+          "body": "Ei. Teie spetsifikatsioonid, hinnakirjad, pakkumised jäävad teie omaks. Kunagi ei söödeta kellegi mudelisse."
         },
         {
           "title": "„Kas see lihtsalt mõtleb asju välja?“",
@@ -204,7 +277,7 @@
         },
         {
           "title": "„Kas see sobib sellega, mida ma juba kasutan?“",
-          "body": "See sobitub teie stäkki. See ei palu teil midagi ära visata."
+          "body": "See sobitub teie stacki. See ei palu teil midagi ära visata."
         }
       ]
     },
@@ -215,7 +288,7 @@
     },
     "coverage": {
       "title": "27 riiki. Võtame need ükshaaval.",
-      "body": "Laieneme üle kogu Euroopa Liidu, turg turu haaval. Iga lipp süttib päeval, mil teie riik käivitub.",
+      "body": "Laieneme üle kogu Euroopa Liidu, turgude kaupa. Iga lipp süttib päeval, mil teie riik käivitub.",
       "statusAvailable": "Aktiivne",
       "statusComingSoon": "Tulekul",
       "note": "Kaetus jõuab kõigisse 27 EL-i riiki."
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Teie agendid on valmis. Puudute ainult teie.",
-      "body": "Lülitame ELi sisse turg turu haaval. Liituge ootenimekirjaga — hetkel, mil teie riik süttib, lähevad teie agendid jahile.",
-      "button": "Broneerige oma koht"
+      "body": "Looge konto ja pange agendid oma turule — leida, ette valmistada, võita, ilma oma hankeosakonnata.",
+      "button": "Loo konto"
     },
     "tenderCard": {
       "value": "Väärtus",
@@ -302,12 +375,82 @@
       "cancelled": "Tühistatud",
       "closed": "Suletud",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Riik",
+      "anyCountry": "Kõik riigid",
+      "sector": "Sektor",
+      "anySector": "Kõik sektorid",
+      "sectors": {
+        "construction": "Ehitus",
+        "it": "IT ja tarkvara",
+        "health": "Tervishoid",
+        "energy": "Energeetika",
+        "transport": "Transport",
+        "education": "Haridus",
+        "environment": "Keskkond",
+        "business": "Äriteenused"
+      },
+      "status": "Olek",
+      "anyStatus": "Kõik olekud",
+      "deadline": "Tähtaeg",
+      "anyDeadline": "Ükskõik millal",
+      "deadline7": "Järgmised 7 päeva",
+      "deadline30": "Järgmised 30 päeva",
+      "deadline90": "Järgmised 90 päeva",
+      "clear": "Tühjenda kõik"
+    },
+    "detail": {
+      "overview": "Ülevaade",
+      "buyer": "Hankija",
+      "value": "Eeldatav maksumus",
+      "published": "Avaldatud",
+      "deadline": "Tähtaeg",
+      "status": "Olek",
+      "procedure": "Menetlus",
+      "cpv": "CPV",
+      "cpvSecondary": "Täiendav CPV",
+      "region": "Piirkond (NUTS)",
+      "language": "Keel",
+      "documents": "Dokumendid",
+      "officialNotice": "Ametlik teade (PDF)",
+      "viewSource": "Vaata allikat",
+      "lots": "Osad",
+      "lotsNone": "Sellel hankel eraldi osi ei ole.",
+      "related": "Seotud hanked",
+      "relatedNone": "Seotud hankeid ei leitud.",
+      "notFound": "Seda hanget ei leitud.",
+      "backToSearch": "Tagasi otsingusse",
+      "searchPlaceholder": "Otsi hankeid…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Hanke üksikasjad, tähtaeg, hankija ja seotud võimalused hankele \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Alla ELi piirmäära",
+      "aboveEu": "Üle ELi piirmäära"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Tugev sobivus",
+        "possible": "Võimalik sobivus",
+        "longShot": "Väike tõenäosus"
+      },
+      "reasonSector": "Vastab teie sektorile",
+      "reasonCountry": "Teie sihtriigis",
+      "reasonValueInBand": "Teie väärtusvahemikus",
+      "reasonValueBelow": "Alla teie väärtusvahemiku",
+      "reasonValueAbove": "Üle teie väärtusvahemiku",
+      "reasonRegion": "Teie piirkonnas",
+      "reasonProcedure": "Vastab teie menetlusliigile"
     }
   },
   "today": {
     "recommended": {
-      "title": "Teile soovitatud",
-      "seeAll": "Kõik jaotises Avasta →"
+      "seeAll": "Kõik jaotises Avasta →",
+      "clientCount_one": "{{count}} sobiv hange valmis kliendile {{client}}",
+      "clientCount_other": "{{count}} sobivat hanget valmis kliendile {{client}}"
     },
     "greeting": {
       "morning": "Tere hommikust.",
@@ -340,6 +483,7 @@
     },
     "nav": {
       "general": "Üldine",
+      "profile": "Kliendi profiil",
       "overview": "Ülevaade",
       "members": "Liikmed",
       "roles": "Rollid",
@@ -356,12 +500,12 @@
       "nameLabel": "Tööruumi nimi",
       "namePlaceholder": "Acme Procurement",
       "create": "Loo tööruum",
-      "empty": "Sa ei kuulu veel ühessegi tööruumi.",
+      "empty": "Te ei kuulu veel ühessegi tööruumi.",
       "createFirst": "Loo oma esimene tööruum"
     },
     "overview": {
       "welcome": "Tere tulemast",
-      "workbenchSoon": "Peagi valmib ühine töölaud, kus su meeskond saab hankeid koos menetleda. Praegu halda liikmeid, rolle ja kutseid ülalolevatelt vahekaartidelt."
+      "workbenchSoon": "Peagi valmib ühine töölaud, kus teie meeskond saab hankeid koos menetleda. Praegu hallake liikmeid, rolle ja kutseid ülalolevatelt vahekaartidelt."
     },
     "members": {
       "title": "Liikmed",
@@ -411,7 +555,7 @@
       "copied": "Kopeeritud",
       "usesLimited": "{{used}} / {{max}} kasutuskorda",
       "usesUnlimited": "{{used}} kasutuskorda",
-      "noPermission": "Sul pole õigust kutseid hallata."
+      "noPermission": "Teil pole õigust kutseid hallata."
     },
     "settings": {
       "detailsTitle": "Tööruumi andmed",
@@ -424,14 +568,14 @@
       "dangerTitle": "Ohutsoon",
       "deleteHint": "Kustuta see tööruum ja kõik selle andmed jäädavalt.",
       "delete": "Kustuta tööruum",
-      "leaveHint": "Lahku sellest tööruumist. Saad uue kutsega uuesti liituda.",
+      "leaveHint": "Lahkuge sellest tööruumist. Saate uue kutsega uuesti liituda.",
       "leave": "Lahku tööruumist"
     },
     "accept": {
       "loading": "Kutse kontrollimine…",
       "invalidTitle": "Kutse pole saadaval",
       "invalidBody": "See kutse on kehtetu või aegunud.",
-      "title": "Sind on kutsutud",
+      "title": "Teid on kutsutud",
       "body": "Liitu tööruumiga {{workspace}} rollis {{role}}.",
       "accept": "Võta kutse vastu",
       "accepting": "Liitumine…",
@@ -451,6 +595,16 @@
       "settings": "Workspace'i seaded",
       "label": "Tööruumid",
       "manage": "Kõik tööruumid"
+    },
+    "firstRun": {
+      "title": "Lisa kliendi pakkumisprofiil",
+      "subtitle": "Öelge meile, millele see klient tavaliselt pakkumusi teeb, et soovitused oleksid algusest peale täpsed. Saate selle hiljem lõpetada seadetes.",
+      "skip": "Jäta praegu vahele"
+    },
+    "clientProfile": {
+      "title": "Kliendi pakkumisprofiil",
+      "subtitle": "See, millele see klient pakkumusi teeb — sektorid, riigid ja väärtusvahemik — mõjutab iga soovitust.",
+      "saved": "Profiil salvestatud."
     }
   },
   "workbench": {
@@ -544,10 +698,52 @@
       "dangerTitle": "Ohutsoon",
       "deleteHint": "Kustuta see töölaud ja kõik selle andmed jäädavalt.",
       "delete": "Kustuta töölaud",
-      "leaveHint": "Lahku sellest töölauast. Haldur saab sind uuesti lisada.",
-      "leave": "Lahku töölauast",
-      "confirmDelete": "Kustutada see töölaud?",
-      "confirmLeave": "Lahkuda sellest töölauast?"
+      "leaveHint": "Lahkuge sellest töölauast. Haldur saab teid uuesti lisada.",
+      "leave": "Lahku töölauast"
+    },
+    "overview": {
+      "emptyTitle": "Teie töölaud on valmis",
+      "emptyDescription": "Alustage hangete otsimisega, kliendiprofiili loomisega või oma meeskonna kutsumisega. Kõik, mida siin teete, on jagatud töölaua liikmetega.",
+      "emptyExplore": "Avage Avasta"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ära küsi uuesti",
+    "deleteWorkspace": {
+      "title": "Kustutada tööruum?",
+      "description": "See kustutab jäädavalt selle tööruumi ja kõik selle andmed. Seda toimingut ei saa tagasi võtta."
+    },
+    "leaveWorkspace": {
+      "title": "Lahkuda tööruumist?",
+      "description": "Kaotate juurdepääsu sellele tööruumile. Saate uue kutsega uuesti liituda."
+    },
+    "removeMember": {
+      "title": "Eemaldada liige?",
+      "description": "See inimene kaotab kohe juurdepääsu tööruumile."
+    },
+    "deleteRole": {
+      "title": "Kustutada roll?",
+      "description": "Selle rolliga liikmed kaotavad selle õigused."
+    },
+    "revokeInvite": {
+      "title": "Tühistada kutse?",
+      "description": "Seda e-posti kutset ei saa enam kasutada."
+    },
+    "revokeLink": {
+      "title": "Tühistada link?",
+      "description": "See kutselink lakkab kohe töötamast."
+    },
+    "deleteWorkbench": {
+      "title": "Kustutada töölaud?",
+      "description": "See kustutab jäädavalt selle töölaua ja kõik selle andmed. Seda toimingut ei saa tagasi võtta."
+    },
+    "leaveWorkbench": {
+      "title": "Lahkuda töölauast?",
+      "description": "Kaotate juurdepääsu sellele töölauale. Haldur saab teid uuesti lisada."
+    },
+    "removeWorkbenchMember": {
+      "title": "Eemaldada liige?",
+      "description": "See inimene kaotab kohe juurdepääsu töölauale."
     }
   }
 }

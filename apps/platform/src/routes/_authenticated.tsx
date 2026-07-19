@@ -1,4 +1,5 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import { ToastContainer } from '~/features/toast';
 import { detectLocale } from '~/i18n/detect-locale';
 
 export const Route = createFileRoute('/_authenticated')({
@@ -12,5 +13,14 @@ export const Route = createFileRoute('/_authenticated')({
       });
     }
   },
-  component: () => <Outlet />,
+  component: AuthenticatedLayout,
 });
+
+function AuthenticatedLayout() {
+  return (
+    <>
+      <Outlet />
+      <ToastContainer />
+    </>
+  );
+}

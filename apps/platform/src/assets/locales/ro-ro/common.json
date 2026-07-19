@@ -69,10 +69,15 @@
       "displayName": "Nume",
       "email": "E-mail",
       "password": "Parolă",
-      "submitting": "Se creează…",
       "submit": "Creează cont",
       "login": "Ai deja un cont?",
-      "signIn": "Autentifică-te"
+      "signIn": "Autentifică-te",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Verifică-ți e-mailul",
@@ -104,6 +109,36 @@
       "loading": "Un moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sectoare",
+      "countries": "Țări",
+      "valueMin": "Valoare minimă",
+      "valueMax": "Valoare maximă",
+      "notes": "Note",
+      "notesPlaceholder": "Pentru ce licitează de obicei acest client?",
+      "save": "Salvează profilul",
+      "invalidBand": "Valoarea minimă nu trebuie să depășească valoarea maximă.",
+      "error": "Profilul nu a putut fi salvat — încercați din nou.",
+      "procedureTypesLabel": "Tipuri de procedură",
+      "procedureTypes": {
+        "open": "Procedură deschisă",
+        "restricted": "Procedură restrânsă",
+        "negotiated": "Procedură negociată",
+        "competitive_dialogue": "Dialog competitiv",
+        "innovation_partnership": "Parteneriat pentru inovare",
+        "other": "Altul"
+      },
+      "regions": "Regiuni (NUTS)",
+      "regionsPlaceholder": "ex. ITC, DE3",
+      "regionsHint": "Prefixe NUTS separate prin virgulă. Lăsați necompletat pentru a include orice regiune."
+    },
+    "shortlist": {
+      "title": "Cea mai bună potrivire pentru acest client",
+      "emptyTitle": "Încă nu există licitații potrivite",
+      "emptyDescription": "Încercați o căutare manuală mai jos sau extindeți profilul acestui client."
+    }
+  },
   "landing": {
     "header": {
       "login": "Autentificare",
@@ -116,8 +151,23 @@
         "Renovarea școlilor publice",
         "Modernizarea IT a spitalelor",
         "Construcția de parcuri solare",
-        "Flote de autobuze electrice"
-      ]
+        "Flote de autobuze electrice",
+        "Lucrări feroviare, Milano",
+        "Servicii cloud, Varșovia",
+        "Modernizare energetică, Viena",
+        "Întreținerea parcurilor, Atena"
+      ],
+      "filters": {
+        "country": "Țară",
+        "sector": "Sector",
+        "deadline": "Termen",
+        "value": "Valoare"
+      },
+      "loading": "Se caută…",
+      "empty": "Nu s-au găsit licitații",
+      "error": "Căutarea nu este disponibilă momentan — încercați din nou peste puțin timp.",
+      "results_one": "{{count}} licitație",
+      "results_other": "{{count}} de licitații"
     },
     "meta": {
       "title": "tendersbay — Licitații publice, atribuite de agenții dvs. AI",
@@ -134,7 +184,26 @@
       "subtitle": "În seara asta se închide o licitație cu numele dvs. Marii jucători au deja o echipă pe ea. Dvs. aveți trei file deschise în Excel. Aici se termină — agenți AI care o găsesc, sfâșie birocrația și vă pun pe ofertă. În timp ce dormiți.",
       "ctaPrimary": "Puneți-vă agenții la treabă",
       "ctaSecondary": "Vedeți viziunea",
-      "trust": ["27 de țări, o căutare", "Agenți care nu dorm niciodată", "Birocrație: rezolvată"]
+      "trust": ["27 de țări, o căutare", "Agenți care nu dorm niciodată", "Birocrație: rezolvată"],
+      "deckLabel": "Rezultate exemplu"
+    },
+    "proof": {
+      "lead": "În fiecare an, în Europa se cheltuiesc peste două trilioane de euro din bani publici. Cea mai mare parte trece prin licitații publice pe care nu le vedeți niciodată.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "cheltuieli publice pe an în UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "cumpărători publici care scot contracte la licitație"
+        },
+        {
+          "value": "~800,000",
+          "label": "licitații pe an — nicio echipă nu le citește pe toate"
+        }
+      ],
+      "source": "Comisia Europeană · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Jocul e măsluit ca să vă țină pe dinafară. Și funcționează.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Trei agenți. Nu ratează, nu dorm, nu renunță.",
+      "title": "Iată ce au făcut agenții dvs. cât ați dormit.",
+      "lead": "Nu o bară de căutare mai rapidă pe care tot dvs. trebuie să o conduceți. O echipă de agenți care lucrează întreaga licitație — găsește, pregătește, câștigă — peste noapte, ca să vă treziți deja în cursă.",
       "items": [
         {
-          "title": "Găsiți",
-          "body": "Răscolesc toate cele 27 de țări în fiecare zi și scot la suprafață doar licitațiile care merită timpul dvs. — pe măsura a ceea ce faceți cu adevărat."
+          "time": "02:14",
+          "title": "A găsit-o pe cea care vi se potrivește",
+          "body": "Cât timp piața dormea, agenții au răscolit toate cele 27 de țări și au scos la suprafață singura licitație care merită timpul dvs. — pe măsura a ceea ce faceți cu adevărat, nu un morman de cuvinte-cheie."
         },
         {
-          "title": "Pregătiți",
-          "body": "Cerințe, certificate, DUAE, termene: extrase, verificate încrucișat, asamblate. Birocrația care vă frângea, rezolvată."
+          "time": "05:30",
+          "title": "A construit hârțogăria",
+          "body": "Cerințe citite, certificate potrivite, DUAE asamblat, fiecare termen notat. Birocrația care vă ardea weekendul — gata înainte de cafea."
         },
         {
-          "title": "Câștigați",
-          "body": "Transformă caietul de sarcini într-o strategie câștigătoare, ca să intrați cu aceeași putere de foc ca giganții."
+          "time": "07:00",
+          "title": "V-ați trezit deja în cursă",
+          "body": "Nicio pagină albă. Caietul de sarcini a devenit o strategie de ofertă câștigătoare, gata pentru decizia dvs. — aceeași putere de foc pentru care giganții plătesc un birou întreg, așteptând pe biroul dvs."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Agenții dvs. sunt gata. Singurul care lipsește sunteți dvs.",
-      "body": "Aprindem UE piață cu piață. Înscrieți-vă pe lista de așteptare — în clipa în care țara dvs. se aprinde, agenții dvs. pornesc la vânătoare.",
-      "button": "Rezervați-vă locul"
+      "body": "Creați-vă contul și puneți agenții pe piața dvs. — să găsească, să pregătească, să câștige, fără un departament de licitații propriu.",
+      "button": "Creați-vă contul"
     },
     "tenderCard": {
       "value": "Valoare",
@@ -304,12 +377,83 @@
       "cancelled": "Anulată",
       "closed": "Închisă",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Țară",
+      "anyCountry": "Toate țările",
+      "sector": "Sector",
+      "anySector": "Toate sectoarele",
+      "sectors": {
+        "construction": "Construcții",
+        "it": "IT și software",
+        "health": "Sănătate",
+        "energy": "Energie",
+        "transport": "Transport",
+        "education": "Educație",
+        "environment": "Mediu",
+        "business": "Servicii pentru afaceri"
+      },
+      "status": "Stare",
+      "anyStatus": "Toate stările",
+      "deadline": "Termen",
+      "anyDeadline": "Oricând",
+      "deadline7": "Următoarele 7 zile",
+      "deadline30": "Următoarele 30 de zile",
+      "deadline90": "Următoarele 90 de zile",
+      "clear": "Șterge tot"
+    },
+    "detail": {
+      "overview": "Prezentare generală",
+      "buyer": "Autoritate contractantă",
+      "value": "Valoare estimată",
+      "published": "Publicat",
+      "deadline": "Termen limită",
+      "status": "Stare",
+      "procedure": "Procedură",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV suplimentar",
+      "region": "Regiune (NUTS)",
+      "language": "Limbă",
+      "documents": "Documente",
+      "officialNotice": "Anunț oficial (PDF)",
+      "viewSource": "Vezi sursa",
+      "lots": "Loturi",
+      "lotsNone": "Această licitație nu are loturi separate.",
+      "related": "Licitații conexe",
+      "relatedNone": "Nu au fost găsite licitații conexe.",
+      "notFound": "Această licitație nu a putut fi găsită.",
+      "backToSearch": "Înapoi la căutare",
+      "searchPlaceholder": "Caută licitații…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Detalii licitație, termen limită, autoritate contractantă și oportunități conexe pentru „{{title}}”."
+      }
+    },
+    "threshold": {
+      "belowEu": "Sub pragul UE",
+      "aboveEu": "Peste pragul UE"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Potrivire puternică",
+        "possible": "Potrivire posibilă",
+        "longShot": "Șansă mică"
+      },
+      "reasonSector": "Se potrivește cu sectorul dumneavoastră",
+      "reasonCountry": "În țara dumneavoastră țintă",
+      "reasonValueInBand": "În intervalul dumneavoastră de valoare",
+      "reasonValueBelow": "Sub intervalul dumneavoastră de valoare",
+      "reasonValueAbove": "Peste intervalul dumneavoastră de valoare",
+      "reasonRegion": "În regiunea dumneavoastră",
+      "reasonProcedure": "Se potrivește cu tipul dumneavoastră de procedură"
     }
   },
   "today": {
     "recommended": {
-      "title": "Recomandate pentru dumneavoastră",
-      "seeAll": "Toate în secțiunea Explorează →"
+      "seeAll": "Toate în secțiunea Explorează →",
+      "clientCount_one": "{{count}} licitație potrivită pregătită pentru {{client}}",
+      "clientCount_few": "{{count}} licitații potrivite pregătite pentru {{client}}",
+      "clientCount_other": "{{count}} de licitații potrivite pregătite pentru {{client}}"
     },
     "greeting": {
       "morning": "Bună dimineața.",
@@ -342,6 +486,7 @@
     },
     "nav": {
       "general": "General",
+      "profile": "Profil client",
       "overview": "Prezentare generală",
       "members": "Membri",
       "roles": "Roluri",
@@ -453,6 +598,16 @@
       "settings": "Setări workspace",
       "label": "Spații de lucru",
       "manage": "Toate spațiile de lucru"
+    },
+    "firstRun": {
+      "title": "Adăugați un profil de licitație pentru client",
+      "subtitle": "Spuneți-ne pentru ce licitează acest client, astfel încât recomandările să fie precise de la început. Puteți finaliza mai târziu din Setări.",
+      "skip": "Omite pentru moment"
+    },
+    "clientProfile": {
+      "title": "Profil de licitație al clientului",
+      "subtitle": "Ceea ce licitează acest client — sectoare, țări și interval de valoare — ghidează fiecare recomandare.",
+      "saved": "Profil salvat."
     }
   },
   "workbench": {
@@ -547,9 +702,51 @@
       "deleteHint": "Șterge definitiv acest spațiu colaborativ și toate datele sale.",
       "delete": "Șterge spațiul colaborativ",
       "leaveHint": "Părăsește acest spațiu colaborativ. Un manager te poate readăuga.",
-      "leave": "Părăsește spațiul colaborativ",
-      "confirmDelete": "Ștergi acest spațiu colaborativ?",
-      "confirmLeave": "Părăsești acest spațiu colaborativ?"
+      "leave": "Părăsește spațiul colaborativ"
+    },
+    "overview": {
+      "emptyTitle": "Spațiul tău colaborativ este pregătit",
+      "emptyDescription": "Începe căutând licitații, creând un profil de client sau invitându-ți echipa. Tot ce faci aici este partajat cu membrii spațiului colaborativ.",
+      "emptyExplore": "Deschideți Explorează"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Nu mai întreba",
+    "deleteWorkspace": {
+      "title": "Ștergi spațiul de lucru?",
+      "description": "Această acțiune va șterge definitiv acest spațiu de lucru și toate datele sale. Nu poate fi anulată."
+    },
+    "leaveWorkspace": {
+      "title": "Părăsești spațiul de lucru?",
+      "description": "Vei pierde accesul la acest spațiu de lucru. Poți reveni cu o invitație nouă."
+    },
+    "removeMember": {
+      "title": "Elimini membrul?",
+      "description": "Această persoană va pierde imediat accesul la spațiul de lucru."
+    },
+    "deleteRole": {
+      "title": "Ștergi rolul?",
+      "description": "Membrii cu acest rol vor pierde permisiunile sale."
+    },
+    "revokeInvite": {
+      "title": "Revoci invitația?",
+      "description": "Această invitație prin e-mail nu va mai putea fi folosită."
+    },
+    "revokeLink": {
+      "title": "Revoci linkul?",
+      "description": "Acest link de invitație va înceta imediat să funcționeze."
+    },
+    "deleteWorkbench": {
+      "title": "Ștergi spațiul colaborativ?",
+      "description": "Această acțiune va șterge definitiv acest spațiu colaborativ și toate datele sale. Nu poate fi anulată."
+    },
+    "leaveWorkbench": {
+      "title": "Părăsești spațiul colaborativ?",
+      "description": "Vei pierde accesul la acest spațiu colaborativ. Un manager te poate readăuga."
+    },
+    "removeWorkbenchMember": {
+      "title": "Elimini membrul?",
+      "description": "Această persoană va pierde imediat accesul la spațiul colaborativ."
     }
   }
 }

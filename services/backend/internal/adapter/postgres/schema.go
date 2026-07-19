@@ -280,6 +280,7 @@ var (
 	ChatMessageContent   = pg.Add(ChatMessages, pg.Text("content").NotNull())
 	ChatMessageChoices   = pg.Add(ChatMessages, pg.JSONB("choices"))
 	ChatMessageMetadata  = pg.Add(ChatMessages, pg.JSONB("metadata"))
+	ChatMessageTenders   = pg.Add(ChatMessages, pg.JSONB("tenders"))
 	ChatMessageCreatedAt = pg.Add(ChatMessages, pg.Timestamp("created_at", true).NotNull().Default("now()"))
 
 	WorkspaceCredits              = pg.NewTable("workspace_credits")
@@ -330,6 +331,7 @@ type DBChatMessage struct {
 	Content   string           `drop:"content"`
 	Choices   *json.RawMessage `drop:"choices"`
 	Metadata  *json.RawMessage `drop:"metadata"`
+	Tenders   *json.RawMessage `drop:"tenders"`
 	CreatedAt time.Time        `drop:"created_at"`
 }
 
@@ -386,6 +388,16 @@ var (
 	TenderCurrency      = pg.Add(Tenders, pg.Text("currency").NotNull())
 	TenderPublishedAt   = pg.Add(Tenders, pg.Timestamp("published_at", true)) // nullable
 	TenderDeadline      = pg.Add(Tenders, pg.Timestamp("deadline", true))     // nullable
+	TenderNUTS          = pg.Add(Tenders, pg.Text("nuts").NotNull())
+	// NOTE: cpv_secondary (text[]) is intentionally NOT declared here — drops
+	// (v0.4.1) has no array-typed column constructor (its pg package only
+	// exposes query-time array *operators* in array.go — ArrayContains,
+	// ArrayAgg, Any, Unnest, etc. — not a column DSL type), so it cannot be
+	// added to tenderResultColumns or scanned via the typed Select()+struct
+	// path. See Task A0's report for the fuller analysis, including why the
+	// candidate raw-SQL fallback (scanning text[] via the pgx/v5 stdlib
+	// driver's plain database/sql path) doesn't work either. Secondary-CPV
+	// matching is deferred; SectorMatch degrades to primary CPV only.
 )
 
 type DBTender struct {
@@ -402,4 +414,109 @@ type DBTender struct {
 	Currency      string     `drop:"currency"`
 	PublishedAt   *time.Time `drop:"published_at"`
 	Deadline      *time.Time `drop:"deadline"`
+	NUTS          string     `drop:"nuts"`
+	SourceURL     *string    `drop:"url"`
+}
+
+// TenderDocuments references tenders.ingested_tender_documents — like
+// Tenders above, owned and migrated exclusively by services/ingestion; this
+// service only ever reads it, to resolve one tender's notice-document URL
+// (the eForms mapper writes at most one row of type "notice" per tender —
+// see services/ingestion/internal/adapter/source/eforms/map.go).
+var (
+	TenderDocuments = pg.NewSchemaTable("tenders", "ingested_tender_documents")
+	TDocID          = pg.Add(TenderDocuments, pg.BigInt("id").PrimaryKey())
+	TDocTenderID    = pg.Add(TenderDocuments, pg.BigInt("tender_id").NotNull())
+	TDocURL         = pg.Add(TenderDocuments, pg.Text("url").NotNull())
+	TDocType        = pg.Add(TenderDocuments, pg.Text("type").NotNull())
+)
+
+// ── Client profile table (per-client bid-qualification agent, v1.0) ────────
+// One row per workspace (PK = FK to workspaces.id) — the workspace IS the
+// client (see docs/superpowers/specs/2026-07-17-per-client-bid-qualification-agent-design.md).
+// sectors/countries are JSONB (drops has no array column type; JSONB is this
+// codebase's existing precedent for list-shaped columns, e.g. chat_messages).
+var (
+	ClientProfiles   = pg.NewTable("workspace_client_profiles")
+	CPWorkspaceID    = pg.Add(ClientProfiles, pg.UUID("workspace_id").PrimaryKey().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	CPSectors        = pg.Add(ClientProfiles, pg.JSONB("sectors").NotNull().Default("'[]'::jsonb"))
+	CPCountries      = pg.Add(ClientProfiles, pg.JSONB("countries").NotNull().Default("'[]'::jsonb"))
+	CPRegions        = pg.Add(ClientProfiles, pg.JSONB("regions").NotNull().Default("'[]'::jsonb"))
+	CPProcedureTypes = pg.Add(ClientProfiles, pg.JSONB("procedure_types").NotNull().Default("'[]'::jsonb"))
+	CPValueMin       = pg.Add(ClientProfiles, pg.BigInt("value_min")) // nullable
+	CPValueMax       = pg.Add(ClientProfiles, pg.BigInt("value_max")) // nullable
+	CPNotes          = pg.Add(ClientProfiles, pg.Text("notes").NotNull().Default("''"))
+	CPUpdatedAt      = pg.Add(ClientProfiles, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+)
+
+type DBClientProfile struct {
+	WorkspaceID    string          `drop:"workspace_id"`
+	Sectors        json.RawMessage `drop:"sectors"`
+	Countries      json.RawMessage `drop:"countries"`
+	Regions        json.RawMessage `drop:"regions"`
+	ProcedureTypes json.RawMessage `drop:"procedure_types"`
+	ValueMin       *int64          `drop:"value_min"`
+	ValueMax       *int64          `drop:"value_max"`
+	Notes          string          `drop:"notes"`
+	UpdatedAt      time.Time       `drop:"updated_at"`
+}
+
+// Extra ingested_tenders scalar columns the detail API needs.
+// TenderNUTS is declared above, alongside the other Tenders columns.
+var (
+	TenderBuyerID  = pg.Add(Tenders, pg.Text("buyer_id").NotNull())
+	TenderLanguage = pg.Add(Tenders, pg.Text("language").NotNull())
+)
+
+// Read-only child tables of tenders.ingested_tenders (owned by services/ingestion).
+// TenderDocuments (the table itself) is declared above, alongside TDocID/TDocTenderID/
+// TDocURL/TDocType; these are additional column bindings against that same table.
+var (
+	TenderDocTenderID = pg.Add(TenderDocuments, pg.BigInt("tender_id").NotNull())
+	TenderDocURL      = pg.Add(TenderDocuments, pg.Text("url").NotNull())
+	TenderDocType     = pg.Add(TenderDocuments, pg.Text("type").NotNull())
+
+	TenderLots        = pg.NewSchemaTable("tenders", "ingested_tender_lots")
+	TenderLotTenderID = pg.Add(TenderLots, pg.BigInt("tender_id").NotNull())
+	TenderLotRef      = pg.Add(TenderLots, pg.Text("ref").NotNull())
+	TenderLotTitle    = pg.Add(TenderLots, pg.Text("title").NotNull())
+	TenderLotCPV      = pg.Add(TenderLots, pg.Text("cpv").NotNull())
+	TenderLotValue    = pg.Add(TenderLots, pg.BigInt("value"))
+	TenderLotCurrency = pg.Add(TenderLots, pg.Text("currency").NotNull())
+	TenderLotDeadline = pg.Add(TenderLots, pg.Timestamp("deadline", true))
+)
+
+// DBTenderDetail scans the scalar detail columns (NOT cpv_secondary — that text[]
+// column is read separately via array_to_string; see the repo).
+type DBTenderDetail struct {
+	ID            int64      `drop:"id"`
+	Source        string     `drop:"source"`
+	SourceRef     string     `drop:"source_ref"`
+	Title         string     `drop:"title"`
+	BuyerName     string     `drop:"buyer_name"`
+	BuyerID       string     `drop:"buyer_id"`
+	Status        string     `drop:"status"`
+	ProcedureType string     `drop:"procedure_type"`
+	Country       string     `drop:"country"`
+	NUTS          string     `drop:"nuts"`
+	Language      string     `drop:"language"`
+	CPV           string     `drop:"cpv"`
+	Value         *int64     `drop:"value"`
+	Currency      string     `drop:"currency"`
+	PublishedAt   *time.Time `drop:"published_at"`
+	Deadline      *time.Time `drop:"deadline"`
+}
+
+type DBTenderDocument struct {
+	URL  string `drop:"url"`
+	Type string `drop:"type"`
+}
+
+type DBTenderLot struct {
+	Ref      string     `drop:"ref"`
+	Title    string     `drop:"title"`
+	CPV      string     `drop:"cpv"`
+	Value    *int64     `drop:"value"`
+	Currency string     `drop:"currency"`
+	Deadline *time.Time `drop:"deadline"`
 }

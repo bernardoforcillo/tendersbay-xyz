@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { CountryFlag } from './index';
 
 function renderFlag(props: Partial<React.ComponentProps<typeof CountryFlag>> = {}) {
@@ -38,5 +38,23 @@ describe('CountryFlag', () => {
     await user.tab();
     const card = await screen.findByRole('tooltip');
     expect(card).toHaveTextContent('Acquisti in Rete (MEPA)');
+  });
+
+  it('fires onReveal on a primary flag focus', async () => {
+    const user = userEvent.setup();
+    const onReveal = vi.fn();
+    renderFlag({ onReveal });
+    await user.tab();
+    expect(onReveal).toHaveBeenCalledWith('IT');
+  });
+
+  it('stays silent for a decorative marquee duplicate (no double-count)', async () => {
+    const user = userEvent.setup();
+    const onReveal = vi.fn();
+    renderFlag({ decorative: true, onReveal });
+    // click focuses even though decorative is excluded from tab order — the
+    // guard, not the tab order, is what must keep the duplicate silent.
+    await user.click(screen.getByRole('button'));
+    expect(onReveal).not.toHaveBeenCalled();
   });
 });

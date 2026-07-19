@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
+import { GetCoverageRequest, GetCoverageResponse, GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, RecommendTendersForClientRequest, RecommendTendersForClientResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -25,6 +25,61 @@ export declare const TenderService: {
       readonly name: "SearchTenders",
       readonly I: typeof SearchTendersRequest,
       readonly O: typeof SearchTendersResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.GetTender
+     */
+    readonly getTender: {
+      readonly name: "GetTender",
+      readonly I: typeof GetTenderRequest,
+      readonly O: typeof GetTenderResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.GetRelatedTenders
+     */
+    readonly getRelatedTenders: {
+      readonly name: "GetRelatedTenders",
+      readonly I: typeof GetRelatedTendersRequest,
+      readonly O: typeof GetRelatedTendersResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc tender.v1.TenderService.ListTenderSitemap
+     */
+    readonly listTenderSitemap: {
+      readonly name: "ListTenderSitemap",
+      readonly I: typeof ListTenderSitemapRequest,
+      readonly O: typeof ListTenderSitemapResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * Deterministic, membership-checked, unmetered per-client best-fit
+     * shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+     * SearchTenders this requires authentication: it is scoped to one client
+     * (workspace) and reads that client's ClientProfile.
+     *
+     * @generated from rpc tender.v1.TenderService.RecommendTendersForClient
+     */
+    readonly recommendTendersForClient: {
+      readonly name: "RecommendTendersForClient",
+      readonly I: typeof RecommendTendersForClientRequest,
+      readonly O: typeof RecommendTendersForClientResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * Which countries we currently hold tenders for (DISTINCT country over
+     * ingested_tenders). Anonymous-safe like SearchTenders — the landing
+     * coverage marquee reads it. "available" = we have >=1 tender for that
+     * country (TED-inclusive), not a below-threshold-only claim.
+     *
+     * @generated from rpc tender.v1.TenderService.GetCoverage
+     */
+    readonly getCoverage: {
+      readonly name: "GetCoverage",
+      readonly I: typeof GetCoverageRequest,
+      readonly O: typeof GetCoverageResponse,
       readonly kind: MethodKind.Unary,
     },
   }

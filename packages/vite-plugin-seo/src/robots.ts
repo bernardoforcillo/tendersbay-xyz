@@ -39,6 +39,9 @@ export function buildRobots(options: RobotsOptions): string {
   lines.push(
     `# LLM-readable overview for AI crawlers: ${options.hostname}/llms.txt`,
     `Sitemap: ${options.hostname}/sitemap.xml`,
+    // The tenders sitemap is served dynamically by the Go platform server
+    // (not emitted at build), so it must be advertised here to be discoverable.
+    `Sitemap: ${options.hostname}/sitemap-tenders.xml`,
     '',
   );
   return lines.join('\n');

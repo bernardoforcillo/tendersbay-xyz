@@ -69,10 +69,15 @@
       "displayName": "Nom",
       "email": "E-mail",
       "password": "Mot de passe",
-      "submitting": "Création en cours…",
       "submit": "Créer un compte",
       "login": "Vous avez déjà un compte ?",
-      "signIn": "Se connecter"
+      "signIn": "Se connecter",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Vérifiez votre e-mail",
@@ -104,6 +109,36 @@
       "loading": "Un instant."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Secteurs",
+      "countries": "Pays",
+      "valueMin": "Valeur minimale",
+      "valueMax": "Valeur maximale",
+      "notes": "Notes",
+      "notesPlaceholder": "Sur quoi ce client soumissionne-t-il habituellement ?",
+      "save": "Enregistrer le profil",
+      "invalidBand": "La valeur minimale ne doit pas dépasser la valeur maximale.",
+      "error": "Impossible d'enregistrer le profil — réessayez.",
+      "procedureTypesLabel": "Types de procédure",
+      "procedureTypes": {
+        "open": "Procédure ouverte",
+        "restricted": "Procédure restreinte",
+        "negotiated": "Procédure négociée",
+        "competitive_dialogue": "Dialogue compétitif",
+        "innovation_partnership": "Partenariat d'innovation",
+        "other": "Autre"
+      },
+      "regions": "Régions (NUTS)",
+      "regionsPlaceholder": "ex. ITC, DE3",
+      "regionsHint": "Préfixes NUTS séparés par des virgules. Laissez vide pour inclure toutes les régions."
+    },
+    "shortlist": {
+      "title": "Meilleure correspondance pour ce client",
+      "emptyTitle": "Aucun appel d'offres adapté pour l'instant",
+      "emptyDescription": "Essayez une recherche manuelle ci-dessous, ou élargissez le profil de ce client."
+    }
+  },
   "landing": {
     "header": {
       "login": "Connexion",
@@ -116,8 +151,23 @@
         "Rénovation d'écoles publiques",
         "Modernisation IT des hôpitaux",
         "Construction de fermes solaires",
-        "Flottes de bus électriques"
-      ]
+        "Flottes de bus électriques",
+        "Travaux ferroviaires, Milan",
+        "Services cloud, Varsovie",
+        "Rénovation énergétique, Vienne",
+        "Entretien des parcs, Athènes"
+      ],
+      "filters": {
+        "country": "Pays",
+        "sector": "Secteur",
+        "deadline": "Échéance",
+        "value": "Valeur"
+      },
+      "loading": "Recherche en cours…",
+      "empty": "Aucun marché trouvé",
+      "error": "La recherche est indisponible pour le moment — réessayez dans un instant.",
+      "results_one": "{{count}} marché",
+      "results_other": "{{count}} marchés"
     },
     "meta": {
       "title": "tendersbay — Appels d'offres publics, attribués par vos agents IA",
@@ -134,7 +184,26 @@
       "subtitle": "Un marché à votre nom se clôt ce soir. Les gros ont déjà une équipe dessus. Vous avez trois onglets ouverts dans Excel. Ça s'arrête ici — des agents IA qui le trouvent, étripent la paperasse et vous placent sur l'offre. Pendant que vous dormez.",
       "ctaPrimary": "Mettez vos agents au travail",
       "ctaSecondary": "Voir la vision",
-      "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"]
+      "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"],
+      "deckLabel": "Exemples de résultats"
+    },
+    "proof": {
+      "lead": "Chaque année, plus de deux mille milliards d’euros d’argent public sont dépensés en Europe. La plupart passe par des appels d’offres que vous ne voyez jamais.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "de dépenses publiques par an dans l’UE"
+        },
+        {
+          "value": "250,000+",
+          "label": "acheteurs publics qui lancent des appels d’offres"
+        },
+        {
+          "value": "~800,000",
+          "label": "appels d’offres par an — aucune équipe ne les lit tous"
+        }
+      ],
+      "source": "Commission européenne · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Le jeu est truqué pour vous tenir dehors. Et ça marche.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Trois agents. Ils ne ratent rien, ne dorment pas, n'abandonnent jamais.",
+      "title": "Voici ce que vos agents ont fait pendant votre sommeil.",
+      "lead": "Pas une barre de recherche plus rapide que vous devez quand même piloter. Une équipe d’agents qui traite l’appel d’offres de bout en bout — trouver, préparer, remporter — pendant la nuit, pour que vous vous réveilliez déjà dans la course.",
       "items": [
         {
-          "title": "Trouver",
-          "body": "Ils passent les 27 pays au peigne fin chaque jour et ne remontent que les marchés qui valent votre temps — adaptés à ce que vous faites vraiment."
+          "time": "02:14",
+          "title": "Il a trouvé celui qui vous correspond",
+          "body": "Pendant que le marché dormait, les agents ont passé les 27 pays au peigne fin et remonté le seul appel d’offres qui vaut votre temps — adapté à ce que vous faites vraiment, pas un fatras de mots-clés."
         },
         {
-          "title": "Préparer",
-          "body": "Exigences, certificats, DUME, délais : extraits, recoupés, assemblés. La paperasse qui vous brisait, réglée."
+          "time": "05:30",
+          "title": "Il a monté la paperasse",
+          "body": "Exigences lues, certificats appariés, le DUME assemblé, chaque délai consigné. La paperasse qui vous brûlait le week-end — réglée avant le café."
         },
         {
-          "title": "Remporter",
-          "body": "Ils transforment le cahier des charges en stratégie gagnante, pour que vous entriez avec la même puissance de feu que les géants."
+          "time": "07:00",
+          "title": "Vous vous êtes réveillé déjà dans la course",
+          "body": "Pas de page blanche. Le cahier des charges est devenu une stratégie d’offre, prête pour votre décision — la même puissance de feu pour laquelle les géants paient un bureau entier, qui vous attend sur votre bureau."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Vos agents sont prêts. Il ne manque que vous.",
-      "body": "Nous allumons l'UE marché après marché. Inscrivez-vous sur la liste — dès que votre pays s'allume, vos agents partent en chasse.",
-      "button": "Réservez votre place"
+      "body": "Créez votre compte et mettez les agents sur votre marché — trouver, préparer, gagner, sans avoir votre propre cellule appels d’offres.",
+      "button": "Créez votre compte"
     },
     "tenderCard": {
       "value": "Valeur",
@@ -302,12 +375,82 @@
       "cancelled": "Annulé",
       "closed": "Clôturé",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Pays",
+      "anyCountry": "Tous les pays",
+      "sector": "Secteur",
+      "anySector": "Tous les secteurs",
+      "sectors": {
+        "construction": "Construction",
+        "it": "IT et logiciels",
+        "health": "Santé",
+        "energy": "Énergie",
+        "transport": "Transport",
+        "education": "Éducation",
+        "environment": "Environnement",
+        "business": "Services aux entreprises"
+      },
+      "status": "Statut",
+      "anyStatus": "Tous les statuts",
+      "deadline": "Échéance",
+      "anyDeadline": "N'importe quand",
+      "deadline7": "7 prochains jours",
+      "deadline30": "30 prochains jours",
+      "deadline90": "90 prochains jours",
+      "clear": "Tout effacer"
+    },
+    "detail": {
+      "overview": "Aperçu",
+      "buyer": "Acheteur",
+      "value": "Valeur estimée",
+      "published": "Publié",
+      "deadline": "Date limite",
+      "status": "Statut",
+      "procedure": "Procédure",
+      "cpv": "CPV",
+      "cpvSecondary": "CPV additionnel",
+      "region": "Région (NUTS)",
+      "language": "Langue",
+      "documents": "Documents",
+      "officialNotice": "Avis officiel (PDF)",
+      "viewSource": "Voir la source",
+      "lots": "Lots",
+      "lotsNone": "Cet appel d'offres ne comporte pas de lots séparés.",
+      "related": "Appels d'offres similaires",
+      "relatedNone": "Aucun appel d'offres similaire trouvé.",
+      "notFound": "Cet appel d'offres est introuvable.",
+      "backToSearch": "Retour à la recherche",
+      "searchPlaceholder": "Rechercher des appels d'offres…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Détails de l'appel d'offres, date limite, acheteur et opportunités similaires pour « {{title}} »."
+      }
+    },
+    "threshold": {
+      "belowEu": "Sous le seuil de l'UE",
+      "aboveEu": "Au-dessus du seuil de l'UE"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Forte correspondance",
+        "possible": "Correspondance possible",
+        "longShot": "Peu probable"
+      },
+      "reasonSector": "Correspond à votre secteur",
+      "reasonCountry": "Dans votre pays cible",
+      "reasonValueInBand": "Dans votre fourchette de valeur",
+      "reasonValueBelow": "Sous votre fourchette de valeur",
+      "reasonValueAbove": "Au-dessus de votre fourchette de valeur",
+      "reasonRegion": "Dans votre région",
+      "reasonProcedure": "Correspond à votre type de procédure"
     }
   },
   "today": {
     "recommended": {
-      "title": "Recommandés pour vous",
-      "seeAll": "Tout dans Explorer →"
+      "seeAll": "Tout dans Explorer →",
+      "clientCount_one": "{{count}} marché adapté prêt pour {{client}}",
+      "clientCount_other": "{{count}} marchés adaptés prêts pour {{client}}"
     },
     "greeting": {
       "morning": "Bonjour.",
@@ -340,6 +483,7 @@
     },
     "nav": {
       "general": "Général",
+      "profile": "Profil client",
       "overview": "Vue d'ensemble",
       "members": "Membres",
       "roles": "Rôles",
@@ -451,6 +595,16 @@
       "settings": "Paramètres du workspace",
       "label": "Espaces de travail",
       "manage": "Tous les espaces de travail"
+    },
+    "firstRun": {
+      "title": "Ajouter un profil d'offre client",
+      "subtitle": "Indiquez-nous sur quoi ce client soumissionne pour que les recommandations soient pertinentes dès le départ. Vous pourrez terminer plus tard depuis les Paramètres.",
+      "skip": "Passer pour l'instant"
+    },
+    "clientProfile": {
+      "title": "Profil d'offre client",
+      "subtitle": "Ce sur quoi ce client soumissionne — secteurs, pays et fourchette de valeur — oriente chaque recommandation.",
+      "saved": "Profil enregistré."
     }
   },
   "workbench": {
@@ -545,9 +699,51 @@
       "deleteHint": "Supprimer définitivement cet espace collaboratif et toutes ses données.",
       "delete": "Supprimer l'espace collaboratif",
       "leaveHint": "Quitter cet espace collaboratif. Un gestionnaire pourra vous y réajouter.",
-      "leave": "Quitter l'espace collaboratif",
-      "confirmDelete": "Supprimer cet espace collaboratif ?",
-      "confirmLeave": "Quitter cet espace collaboratif ?"
+      "leave": "Quitter l'espace collaboratif"
+    },
+    "overview": {
+      "emptyTitle": "Votre espace collaboratif est prêt",
+      "emptyDescription": "Commencez par rechercher des marchés, créer un profil client ou inviter votre équipe. Tout ce que vous faites ici est partagé avec les membres de l'espace collaboratif.",
+      "emptyExplore": "Ouvrez Explorer"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ne plus demander",
+    "deleteWorkspace": {
+      "title": "Supprimer l'espace de travail ?",
+      "description": "Cela supprimera définitivement cet espace de travail et toutes ses données. Cette action est irréversible."
+    },
+    "leaveWorkspace": {
+      "title": "Quitter l'espace de travail ?",
+      "description": "Vous perdrez l'accès à cet espace de travail. Vous pourrez le rejoindre avec une nouvelle invitation."
+    },
+    "removeMember": {
+      "title": "Retirer le membre ?",
+      "description": "Cette personne perdra immédiatement l'accès à l'espace de travail."
+    },
+    "deleteRole": {
+      "title": "Supprimer le rôle ?",
+      "description": "Les membres ayant ce rôle perdront ses autorisations."
+    },
+    "revokeInvite": {
+      "title": "Révoquer l'invitation ?",
+      "description": "Cette invitation par e-mail ne pourra plus être utilisée."
+    },
+    "revokeLink": {
+      "title": "Révoquer le lien ?",
+      "description": "Ce lien d'invitation cessera immédiatement de fonctionner."
+    },
+    "deleteWorkbench": {
+      "title": "Supprimer l'espace collaboratif ?",
+      "description": "Cela supprimera définitivement cet espace collaboratif et toutes ses données. Cette action est irréversible."
+    },
+    "leaveWorkbench": {
+      "title": "Quitter l'espace collaboratif ?",
+      "description": "Vous perdrez l'accès à cet espace collaboratif. Un gestionnaire pourra vous y réajouter."
+    },
+    "removeWorkbenchMember": {
+      "title": "Retirer le membre ?",
+      "description": "Cette personne perdra immédiatement l'accès à l'espace collaboratif."
     }
   }
 }

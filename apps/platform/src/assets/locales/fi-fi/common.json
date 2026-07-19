@@ -69,10 +69,15 @@
       "displayName": "Nimi",
       "email": "Sähköposti",
       "password": "Salasana",
-      "submitting": "Luodaan…",
       "submit": "Luo tili",
       "login": "Onko sinulla jo tili?",
-      "signIn": "Kirjaudu sisään"
+      "signIn": "Kirjaudu sisään",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Tarkista sähköpostisi",
@@ -104,6 +109,36 @@
       "loading": "Hetki vielä."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Toimialat",
+      "countries": "Maat",
+      "valueMin": "Vähimmäisarvo",
+      "valueMax": "Enimmäisarvo",
+      "notes": "Muistiinpanot",
+      "notesPlaceholder": "Mihin tämä asiakas yleensä tarjoaa?",
+      "save": "Tallenna profiili",
+      "invalidBand": "Vähimmäisarvo ei saa ylittää enimmäisarvoa.",
+      "error": "Profiilia ei voitu tallentaa — yritä uudelleen.",
+      "procedureTypesLabel": "Menettelytyypit",
+      "procedureTypes": {
+        "open": "Avoin menettely",
+        "restricted": "Rajoitettu menettely",
+        "negotiated": "Neuvottelumenettely",
+        "competitive_dialogue": "Kilpailullinen neuvottelumenettely",
+        "innovation_partnership": "Innovaatiokumppanuus",
+        "other": "Muu"
+      },
+      "regions": "Alueet (NUTS)",
+      "regionsPlaceholder": "esim. ITC, DE3",
+      "regionsHint": "Pilkuilla erotetut NUTS-etuliitteet. Jätä tyhjäksi, jos haluat sisällyttää minkä tahansa alueen."
+    },
+    "shortlist": {
+      "title": "Paras osuma tälle asiakkaalle",
+      "emptyTitle": "Ei vielä sopivia hankintoja",
+      "emptyDescription": "Kokeile manuaalista hakua alla, tai laajenna tämän asiakkaan profiilia."
+    }
+  },
   "landing": {
     "header": {
       "login": "Kirjaudu sisään",
@@ -116,8 +151,23 @@
         "Julkisten koulujen peruskorjaukset",
         "Sairaaloiden IT-uudistus",
         "Aurinkovoimaloiden rakentaminen",
-        "Sähköbussikalustot"
-      ]
+        "Sähköbussikalustot",
+        "Ratatyöt, Milano",
+        "Pilvipalvelut, Varsova",
+        "Energiaparannukset, Wien",
+        "Puistojen kunnossapito, Ateena"
+      ],
+      "filters": {
+        "country": "Maa",
+        "sector": "Toimiala",
+        "deadline": "Määräaika",
+        "value": "Arvo"
+      },
+      "loading": "Haetaan…",
+      "empty": "Hankintoja ei löytynyt",
+      "error": "Haku ei ole juuri nyt käytettävissä — yritä hetken kuluttua uudelleen.",
+      "results_one": "{{count}} hankinta",
+      "results_other": "{{count}} hankintaa"
     },
     "meta": {
       "title": "tendersbay — Julkiset hankinnat, tekoälyagenttiesi valmistelemina",
@@ -134,7 +184,26 @@
       "subtitle": "Tänä yönä sulkeutuu hankinta, jossa on sinun nimesi. Suurilla toimijoilla on jo tiimi sen kimpussa. Sinulla on kolme välilehteä auki Excelissä. Se loppuu tähän — tekoälyagentit, jotka löytävät sen, repivät paperityöt kappaleiksi ja nostavat sinut tarjoukseen. Sillä aikaa kun nukut.",
       "ctaPrimary": "Pane agenttisi töihin",
       "ctaSecondary": "Katso visio",
-      "trust": ["27 maata, yksi haku", "Agentit jotka eivät koskaan nuku", "Paperityöt: hoidettu"]
+      "trust": ["27 maata, yksi haku", "Agentit jotka eivät koskaan nuku", "Paperityöt: hoidettu"],
+      "deckLabel": "Esimerkkituloksia"
+    },
+    "proof": {
+      "lead": "Euroopassa käytetään joka vuosi yli kaksi biljoonaa euroa julkista rahaa. Suurin osa kulkee julkisten hankintojen kautta, joita et koskaan näe.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "julkisia menoja vuodessa EU:ssa"
+        },
+        {
+          "value": "250,000+",
+          "label": "julkista hankkijaa, jotka kilpailuttavat hankintoja"
+        },
+        {
+          "value": "~800,000",
+          "label": "hankintaa vuodessa — mikään tiimi ei lue niitä kaikkia"
+        }
+      ],
+      "source": "Euroopan komissio · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Peli on viritetty pitämään sinut ulkona. Ja se toimii.",
@@ -154,19 +223,23 @@
       ]
     },
     "agents": {
-      "title": "Kolme agenttia. Ne eivät hairahda, eivät nuku, eivät luovuta.",
+      "title": "Tässä on, mitä agenttisi tekivät nukkuessasi.",
+      "lead": "Ei nopeampi hakupalkki, jota sinun on silti itse ohjattava. Tiimi agentteja, joka työstää koko hankinnan — löytää, valmistelee, voittaa — yön aikana, niin että heräät jo mukana kisassa.",
       "items": [
         {
-          "title": "Löydä",
-          "body": "Ne kampaavat kaikki 27 maata joka päivä ja nostavat esiin vain hankinnat, jotka ovat aikasi arvoisia — räätälöitynä siihen, mitä todella teet."
+          "time": "02:14",
+          "title": "Se löysi sen, joka sopii sinulle",
+          "body": "Markkinoiden nukkuessa agentit kampasivat kaikki 27 maata ja nostivat esiin ainoan hankinnan, joka on aikasi arvoinen — räätälöitynä siihen, mitä todella teet, ei kasa hakusanoja."
         },
         {
-          "title": "Valmistele",
-          "body": "Vaatimukset, sertifikaatit, ESPD, määräajat: poimittu, ristiintarkistettu, koottu. Paperityö, joka mursi sinut, hoidettu."
+          "time": "05:30",
+          "title": "Se kokosi paperityöt",
+          "body": "Vaatimukset luettu, todistukset kohdistettu, ESPD koottu, jokainen määräaika kirjattu. Byrokratia, joka ennen poltti viikonloppusi — valmiina ennen kahvia."
         },
         {
-          "title": "Voita",
-          "body": "Ne muuttavat tarjouspyynnön voittavaksi strategiaksi, niin että astut sisään samalla tulivoimalla kuin jättiläiset."
+          "time": "07:00",
+          "title": "Heräsit jo mukana kisassa",
+          "body": "Ei tyhjää sivua. Tarjouspyynnöstä tuli voittava tarjousstrategia, valmiina päätöstäsi varten — sama tulivoima, josta jättiläiset maksavat kokonaisen toimiston, odottaa työpöydälläsi."
         }
       ]
     },
@@ -242,8 +315,8 @@
     },
     "cta": {
       "title": "Agenttisi ovat valmiina. Vain sinä puutut.",
-      "body": "Sytytämme EU:n markkina kerrallaan. Liity odotuslistalle — sillä hetkellä kun maasi syttyy, agenttisi lähtevät metsästämään.",
-      "button": "Varaa paikkasi"
+      "body": "Luo tili ja pane agentit markkinoillesi — löytää, valmistella, voittaa, ilman omaa tarjoustiimiä.",
+      "button": "Luo tili"
     },
     "tenderCard": {
       "value": "Arvo",
@@ -302,12 +375,82 @@
       "cancelled": "Peruttu",
       "closed": "Päättynyt",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Maa",
+      "anyCountry": "Kaikki maat",
+      "sector": "Toimiala",
+      "anySector": "Kaikki toimialat",
+      "sectors": {
+        "construction": "Rakentaminen",
+        "it": "IT ja ohjelmistot",
+        "health": "Terveydenhuolto",
+        "energy": "Energia",
+        "transport": "Liikenne",
+        "education": "Koulutus",
+        "environment": "Ympäristö",
+        "business": "Yrityspalvelut"
+      },
+      "status": "Tila",
+      "anyStatus": "Kaikki tilat",
+      "deadline": "Määräaika",
+      "anyDeadline": "Milloin tahansa",
+      "deadline7": "Seuraavat 7 päivää",
+      "deadline30": "Seuraavat 30 päivää",
+      "deadline90": "Seuraavat 90 päivää",
+      "clear": "Tyhjennä kaikki"
+    },
+    "detail": {
+      "overview": "Yleiskatsaus",
+      "buyer": "Hankintayksikkö",
+      "value": "Arvioitu arvo",
+      "published": "Julkaistu",
+      "deadline": "Määräaika",
+      "status": "Tila",
+      "procedure": "Menettely",
+      "cpv": "CPV",
+      "cpvSecondary": "Lisä-CPV",
+      "region": "Alue (NUTS)",
+      "language": "Kieli",
+      "documents": "Asiakirjat",
+      "officialNotice": "Virallinen ilmoitus (PDF)",
+      "viewSource": "Näytä lähteessä",
+      "lots": "Osat",
+      "lotsNone": "Tällä hankinnalla ei ole erillisiä osia.",
+      "related": "Vastaavat hankinnat",
+      "relatedNone": "Vastaavia hankintoja ei löytynyt.",
+      "notFound": "Tätä hankintaa ei löytynyt.",
+      "backToSearch": "Takaisin hakuun",
+      "searchPlaceholder": "Hae hankintoja…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Hankinnan tiedot, määräaika, hankintayksikkö ja vastaavat mahdollisuudet kohteelle \"{{title}}\"."
+      }
+    },
+    "threshold": {
+      "belowEu": "Alle EU:n kynnysarvon",
+      "aboveEu": "Yli EU:n kynnysarvon"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Vahva osuma",
+        "possible": "Mahdollinen osuma",
+        "longShot": "Pieni mahdollisuus"
+      },
+      "reasonSector": "Vastaa toimialaasi",
+      "reasonCountry": "Kohdemaassasi",
+      "reasonValueInBand": "Arvoalueellasi",
+      "reasonValueBelow": "Arvoalueesi alapuolella",
+      "reasonValueAbove": "Arvoalueesi yläpuolella",
+      "reasonRegion": "Alueellasi",
+      "reasonProcedure": "Vastaa menettelytyyppiäsi"
     }
   },
   "today": {
     "recommended": {
-      "title": "Suositeltu sinulle",
-      "seeAll": "Kaikki Tutustu-osiossa →"
+      "seeAll": "Kaikki Tutustu-osiossa →",
+      "clientCount_one": "{{count}} sopiva hankinta valmiina asiakkaalle {{client}}",
+      "clientCount_other": "{{count}} sopivaa hankintaa valmiina asiakkaalle {{client}}"
     },
     "greeting": {
       "morning": "Hyvää huomenta.",
@@ -340,6 +483,7 @@
     },
     "nav": {
       "general": "Yleiset",
+      "profile": "Asiakasprofiili",
       "overview": "Yleiskatsaus",
       "members": "Jäsenet",
       "roles": "Roolit",
@@ -451,6 +595,16 @@
       "settings": "Workspace-asetukset",
       "label": "Työtilat",
       "manage": "Kaikki työtilat"
+    },
+    "firstRun": {
+      "title": "Lisää asiakkaan tarjousprofiili",
+      "subtitle": "Kerro, mihin tämä asiakas yleensä tarjoaa, jotta suositukset osuvat oikeaan heti alusta. Voit viimeistellä tämän myöhemmin Asetuksista.",
+      "skip": "Ohita toistaiseksi"
+    },
+    "clientProfile": {
+      "title": "Asiakkaan tarjousprofiili",
+      "subtitle": "Se, mihin tämä asiakas tarjoaa — toimialat, maat ja arvoalue — ohjaa jokaista suositusta.",
+      "saved": "Profiili tallennettu."
     }
   },
   "workbench": {
@@ -545,9 +699,51 @@
       "deleteHint": "Poista tämä työpöytä ja kaikki sen tiedot pysyvästi.",
       "delete": "Poista työpöytä",
       "leaveHint": "Poistu tästä työpöydästä. Ylläpitäjä voi lisätä sinut uudelleen.",
-      "leave": "Poistu työpöydästä",
-      "confirmDelete": "Poistetaanko tämä työpöytä?",
-      "confirmLeave": "Poistutaanko tästä työpöydästä?"
+      "leave": "Poistu työpöydästä"
+    },
+    "overview": {
+      "emptyTitle": "Työpöytäsi on valmis",
+      "emptyDescription": "Aloita etsimällä hankintoja, luomalla asiakasprofiili tai kutsumalla tiimisi. Kaikki tekemäsi täällä jaetaan työpöydän jäsenten kanssa.",
+      "emptyExplore": "Avaa Tutustu"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Älä kysy uudelleen",
+    "deleteWorkspace": {
+      "title": "Poistetaanko työtila?",
+      "description": "Tämä poistaa pysyvästi tämän työtilan ja kaikki sen tiedot. Toimintoa ei voi perua."
+    },
+    "leaveWorkspace": {
+      "title": "Poistutaanko työtilasta?",
+      "description": "Menetät pääsyn tähän työtilaan. Voit liittyä uudelleen uudella kutsulla."
+    },
+    "removeMember": {
+      "title": "Poistetaanko jäsen?",
+      "description": "Tämä henkilö menettää pääsyn työtilaan välittömästi."
+    },
+    "deleteRole": {
+      "title": "Poistetaanko rooli?",
+      "description": "Tämän roolin jäsenet menettävät sen oikeudet."
+    },
+    "revokeInvite": {
+      "title": "Peruutetaanko kutsu?",
+      "description": "Tätä sähköpostikutsua ei voi enää käyttää."
+    },
+    "revokeLink": {
+      "title": "Peruutetaanko linkki?",
+      "description": "Tämä kutsulinkki lakkaa toimimasta välittömästi."
+    },
+    "deleteWorkbench": {
+      "title": "Poistetaanko työpöytä?",
+      "description": "Tämä poistaa pysyvästi tämän työpöydän ja kaikki sen tiedot. Toimintoa ei voi perua."
+    },
+    "leaveWorkbench": {
+      "title": "Poistutaanko työpöydästä?",
+      "description": "Menetät pääsyn tähän työpöytään. Ylläpitäjä voi lisätä sinut uudelleen."
+    },
+    "removeWorkbenchMember": {
+      "title": "Poistetaanko jäsen?",
+      "description": "Tämä henkilö menettää pääsyn työpöytään välittömästi."
     }
   }
 }

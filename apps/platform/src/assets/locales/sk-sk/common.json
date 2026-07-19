@@ -69,10 +69,15 @@
       "displayName": "Meno",
       "email": "E-mail",
       "password": "Heslo",
-      "submitting": "Vytváranie…",
       "submit": "Vytvoriť účet",
       "login": "Máte už účet?",
-      "signIn": "Prihlásiť sa"
+      "signIn": "Prihlásiť sa",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Skontrolujte svoj e-mail",
@@ -104,6 +109,36 @@
       "loading": "Moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektory",
+      "countries": "Krajiny",
+      "valueMin": "Minimálna hodnota",
+      "valueMax": "Maximálna hodnota",
+      "notes": "Poznámky",
+      "notesPlaceholder": "Na čo tento klient zvyčajne predkladá ponuky?",
+      "save": "Uložiť profil",
+      "invalidBand": "Minimálna hodnota nesmie prevýšiť maximálnu hodnotu.",
+      "error": "Profil sa nepodarilo uložiť — skúste to znova.",
+      "procedureTypesLabel": "Typy postupov",
+      "procedureTypes": {
+        "open": "Verejná súťaž",
+        "restricted": "Užšia súťaž",
+        "negotiated": "Rokovacie konanie",
+        "competitive_dialogue": "Súťažný dialóg",
+        "innovation_partnership": "Inovatívne partnerstvo",
+        "other": "Iné"
+      },
+      "regions": "Regióny (NUTS)",
+      "regionsPlaceholder": "napr. ITC, DE3",
+      "regionsHint": "Predpony NUTS oddelené čiarkami. Ponechajte prázdne pre zahrnutie ľubovoľného regiónu."
+    },
+    "shortlist": {
+      "title": "Najlepšia zhoda pre tohto klienta",
+      "emptyTitle": "Zatiaľ žiadne vhodné zákazky",
+      "emptyDescription": "Skúste manuálne vyhľadávanie nižšie, alebo rozšírte profil tohto klienta."
+    }
+  },
   "landing": {
     "header": {
       "login": "Prihlásiť sa",
@@ -116,8 +151,23 @@
         "Rekonštrukcia verejných škôl",
         "IT modernizácia nemocníc",
         "Výstavba solárnych parkov",
-        "Flotily elektrobusov"
-      ]
+        "Flotily elektrobusov",
+        "Železničné práce, Miláno",
+        "Cloudové služby, Varšava",
+        "Energetická obnova, Viedeň",
+        "Údržba parkov, Atény"
+      ],
+      "filters": {
+        "country": "Krajina",
+        "sector": "Sektor",
+        "deadline": "Termín",
+        "value": "Hodnota"
+      },
+      "loading": "Vyhľadávanie…",
+      "empty": "Nenašli sa žiadne zákazky",
+      "error": "Vyhľadávanie je momentálne nedostupné — skúste to o chvíľu znova.",
+      "results_one": "{{count}} zákazka",
+      "results_other": "{{count}} zákaziek"
     },
     "meta": {
       "title": "tendersbay — Verejné obstarávanie v Európe s vašimi AI agentmi",
@@ -134,7 +184,30 @@
       "subtitle": "Dnes v noci sa uzatvára zákazka s vaším menom. Veľkí hráči na nej už majú tím. Vy máte otvorené tri karty v Exceli. Tu to končí — AI agenti, ktorí ju nájdu, rozcupujú papierovačky a postavia vás do ponuky. Kým spíte.",
       "ctaPrimary": "Pošlite svojich agentov do práce",
       "ctaSecondary": "Pozrite si víziu",
-      "trust": ["27 krajín, jedno hľadanie", "Agenti, ktorí nikdy nespia", "Papierovačky: vybavené"]
+      "trust": [
+        "27 krajín, jedno hľadanie",
+        "Agenti, ktorí nikdy nespia",
+        "Papierovačky: vybavené"
+      ],
+      "deckLabel": "Ukážkové výsledky"
+    },
+    "proof": {
+      "lead": "Každý rok sa v Európe minie vyše dva bilióny eur verejných peňazí. Väčšina prejde cez verejné obstarávanie, ktoré nikdy nevidíte.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "verejných výdavkov ročne v EÚ"
+        },
+        {
+          "value": "250,000+",
+          "label": "verejných obstarávateľov vypisujúcich zákazky"
+        },
+        {
+          "value": "~800,000",
+          "label": "zákaziek ročne — žiadny tím ich neprečíta všetky"
+        }
+      ],
+      "source": "Európska komisia · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Hra je nastavená tak, aby vás držala vonku. A funguje to.",
@@ -154,19 +227,23 @@
       ]
     },
     "agents": {
-      "title": "Traja agenti. Neminú, nespia, nevzdávajú sa.",
+      "title": "Toto urobili vaši agenti, kým ste spali.",
+      "lead": "Nie rýchlejšie vyhľadávacie pole, ktoré aj tak musíte riadiť vy. Tím agentov, ktorý spracuje celú zákazku — nájde, pripraví, vyhrá — cez noc, aby ste sa zobudili už v hre.",
       "items": [
         {
-          "title": "Nájdite",
-          "body": "Každý deň prečešú všetkých 27 krajín a vytiahnu len zákazky, ktoré stoja za váš čas — na mieru tomu, čo naozaj robíte."
+          "time": "02:14",
+          "title": "Našiel tú, ktorá vám sadne",
+          "body": "Kým trh spal, agenti prečesali všetkých 27 krajín a vytiahli jedinú zákazku, ktorá stojí za váš čas — na mieru tomu, čo naozaj robíte, nie kopu kľúčových slov."
         },
         {
-          "title": "Pripravte",
-          "body": "Požiadavky, certifikáty, JED, termíny: extrahované, skontrolované, zostavené. Papierovačky, ktoré vás lámali, vybavené."
+          "time": "05:30",
+          "title": "Zostavil papierovačky",
+          "body": "Požiadavky prečítané, certifikáty spárované, JED zostavený, každý termín zaznamenaný. Byrokracia, ktorá vám spaľovala víkend — hotová pred kávou."
         },
         {
-          "title": "Vyhrajte",
-          "body": "Premenia súťažné podklady na víťaznú stratégiu, aby ste vstúpili s rovnakou palebnou silou ako giganti."
+          "time": "07:00",
+          "title": "Zobudili ste sa už v hre",
+          "body": "Žiadna prázdna stránka. Zo súťažných podkladov sa stala víťazná stratégia ponuky, pripravená na vaše rozhodnutie — tá istá palebná sila, za ktorú giganti platia celú kanceláriu, čaká na vašom stole."
         }
       ]
     },
@@ -242,8 +319,8 @@
     },
     "cta": {
       "title": "Vaši agenti sú pripravení. Chýbate už len vy.",
-      "body": "Zapíname EÚ trh po trhu. Zaregistrujte sa na čakaciu listinu — vo chvíli, keď sa vaša krajina rozsvieti, vyrazia vaši agenti na lov.",
-      "button": "Zaistite si svoje miesto"
+      "body": "Vytvorte si účet a pustite agentov na svoj trh — nájsť, pripraviť, vyhrať, bez vlastného oddelenia pre zákazky.",
+      "button": "Vytvoriť účet"
     },
     "tenderCard": {
       "value": "Hodnota",
@@ -304,12 +381,83 @@
       "cancelled": "Zrušená",
       "closed": "Uzavretá",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Krajina",
+      "anyCountry": "Všetky krajiny",
+      "sector": "Sektor",
+      "anySector": "Všetky sektory",
+      "sectors": {
+        "construction": "Stavebníctvo",
+        "it": "IT a softvér",
+        "health": "Zdravotníctvo",
+        "energy": "Energetika",
+        "transport": "Doprava",
+        "education": "Vzdelávanie",
+        "environment": "Životné prostredie",
+        "business": "Podnikové služby"
+      },
+      "status": "Stav",
+      "anyStatus": "Všetky stavy",
+      "deadline": "Termín",
+      "anyDeadline": "Kedykoľvek",
+      "deadline7": "Najbližších 7 dní",
+      "deadline30": "Najbližších 30 dní",
+      "deadline90": "Najbližších 90 dní",
+      "clear": "Vymazať všetko"
+    },
+    "detail": {
+      "overview": "Prehľad",
+      "buyer": "Obstarávateľ",
+      "value": "Predpokladaná hodnota",
+      "published": "Zverejnené",
+      "deadline": "Termín",
+      "status": "Stav",
+      "procedure": "Postup",
+      "cpv": "CPV",
+      "cpvSecondary": "Doplnkový CPV",
+      "region": "Región (NUTS)",
+      "language": "Jazyk",
+      "documents": "Dokumenty",
+      "officialNotice": "Úradné oznámenie (PDF)",
+      "viewSource": "Zobraziť zdroj",
+      "lots": "Časti",
+      "lotsNone": "Táto zákazka nemá samostatné časti.",
+      "related": "Súvisiace zákazky",
+      "relatedNone": "Neboli nájdené žiadne súvisiace zákazky.",
+      "notFound": "Táto zákazka sa nenašla.",
+      "backToSearch": "Späť na vyhľadávanie",
+      "searchPlaceholder": "Hľadať zákazky…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Podrobnosti o zákazke, termín, obstarávateľ a súvisiace príležitosti pre „{{title}}“."
+      }
+    },
+    "threshold": {
+      "belowEu": "Pod prahom EÚ",
+      "aboveEu": "Nad prahom EÚ"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Silná zhoda",
+        "possible": "Možná zhoda",
+        "longShot": "Malá šanca"
+      },
+      "reasonSector": "Zodpovedá vášmu sektoru",
+      "reasonCountry": "Vo vašej cieľovej krajine",
+      "reasonValueInBand": "Vo vašom hodnotovom rozpätí",
+      "reasonValueBelow": "Pod vaším hodnotovým rozpätím",
+      "reasonValueAbove": "Nad vaším hodnotovým rozpätím",
+      "reasonRegion": "Vo vašom regióne",
+      "reasonProcedure": "Zodpovedá vášmu typu postupu"
     }
   },
   "today": {
     "recommended": {
-      "title": "Odporúčané pre vás",
-      "seeAll": "Všetko v sekcii Preskúmať →"
+      "seeAll": "Všetko v sekcii Preskúmať →",
+      "clientCount_one": "{{count}} vhodná zákazka pripravená pre {{client}}",
+      "clientCount_few": "{{count}} vhodné zákazky pripravené pre {{client}}",
+      "clientCount_other": "{{count}} vhodných zákaziek pripravených pre {{client}}"
     },
     "greeting": {
       "morning": "Dobré ráno.",
@@ -342,6 +490,7 @@
     },
     "nav": {
       "general": "Všeobecné",
+      "profile": "Profil klienta",
       "overview": "Prehľad",
       "members": "Členovia",
       "roles": "Roly",
@@ -453,6 +602,16 @@
       "settings": "Nastavenia workspace",
       "label": "Pracovné priestory",
       "manage": "Všetky pracovné priestory"
+    },
+    "firstRun": {
+      "title": "Pridať profil ponúk klienta",
+      "subtitle": "Povedzte nám, na čo tento klient predkladá ponuky, aby boli odporúčania od začiatku presné. Dokončiť to môžete neskôr v Nastaveniach.",
+      "skip": "Zatiaľ preskočiť"
+    },
+    "clientProfile": {
+      "title": "Profil ponúk klienta",
+      "subtitle": "To, na čo tento klient predkladá ponuky — sektory, krajiny a hodnotové rozpätie — určuje každé odporúčanie.",
+      "saved": "Profil uložený."
     }
   },
   "workbench": {
@@ -547,9 +706,51 @@
       "deleteHint": "Natrvalo odstrániť túto pracovnú plochu a všetky jej údaje.",
       "delete": "Odstrániť pracovnú plochu",
       "leaveHint": "Opustiť túto pracovnú plochu. Správca vás môže znova pridať.",
-      "leave": "Opustiť pracovnú plochu",
-      "confirmDelete": "Odstrániť túto pracovnú plochu?",
-      "confirmLeave": "Opustiť túto pracovnú plochu?"
+      "leave": "Opustiť pracovnú plochu"
+    },
+    "overview": {
+      "emptyTitle": "Vaša pracovná plocha je pripravená",
+      "emptyDescription": "Začnite vyhľadávaním zákaziek, vytvorením profilu klienta alebo pozvaním svojho tímu. Všetko, čo tu urobíte, sa zdieľa s členmi pracovnej plochy.",
+      "emptyExplore": "Otvorte Preskúmať"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Nabudúce sa nepýtať",
+    "deleteWorkspace": {
+      "title": "Odstrániť pracovný priestor?",
+      "description": "Týmto natrvalo odstránite tento pracovný priestor a všetky jeho údaje. Túto akciu nemožno vrátiť späť."
+    },
+    "leaveWorkspace": {
+      "title": "Opustiť pracovný priestor?",
+      "description": "Stratíte prístup k tomuto pracovnému priestoru. Môžete sa znova pripojiť s novou pozvánkou."
+    },
+    "removeMember": {
+      "title": "Odstrániť člena?",
+      "description": "Táto osoba okamžite stratí prístup k pracovnému priestoru."
+    },
+    "deleteRole": {
+      "title": "Odstrániť rolu?",
+      "description": "Členovia s touto rolou stratia jej oprávnenia."
+    },
+    "revokeInvite": {
+      "title": "Zrušiť pozvánku?",
+      "description": "Túto e-mailovú pozvánku už nebude možné použiť."
+    },
+    "revokeLink": {
+      "title": "Zrušiť odkaz?",
+      "description": "Tento pozývací odkaz okamžite prestane fungovať."
+    },
+    "deleteWorkbench": {
+      "title": "Odstrániť pracovnú plochu?",
+      "description": "Týmto natrvalo odstránite túto pracovnú plochu a všetky jej údaje. Túto akciu nemožno vrátiť späť."
+    },
+    "leaveWorkbench": {
+      "title": "Opustiť pracovnú plochu?",
+      "description": "Stratíte prístup k tejto pracovnej ploche. Správca vás môže znova pridať."
+    },
+    "removeWorkbenchMember": {
+      "title": "Odstrániť člena?",
+      "description": "Táto osoba okamžite stratí prístup k pracovnej ploche."
     }
   }
 }

@@ -20,6 +20,11 @@ service WorkspaceService {
   rpc TransferOwnership(TransferOwnershipRequest) returns (TransferOwnershipResponse);
   rpc LeaveWorkspace(LeaveWorkspaceRequest) returns (LeaveWorkspaceResponse);
 
+  // Client profile (per-client bid-qualification agent, v1.0) — the
+  // workspace IS the client; one profile per workspace.
+  rpc GetClientProfile(GetClientProfileRequest) returns (GetClientProfileResponse);
+  rpc UpdateClientProfile(UpdateClientProfileRequest) returns (UpdateClientProfileResponse);
+
   // Members
   rpc ListMembers(ListMembersRequest) returns (ListMembersResponse);
   rpc ChangeMemberRole(ChangeMemberRoleRequest) returns (ChangeMemberRoleResponse);
@@ -238,3 +243,39 @@ message PreviewInviteLinkResponse {
 
 message JoinViaInviteLinkRequest { string code = 1; }
 message JoinViaInviteLinkResponse { Workspace workspace = 1; }
+
+// ── Client profile ──────────────────────────────────────────────────────────
+
+message ClientProfile {
+  string workspace_id = 1;
+  repeated string sectors = 2;          // CPV prefixes, e.g. "45", "72"
+  repeated string countries = 3;        // alpha-2, e.g. "IT", "DE"
+  int64 value_min = 4;                  // meaningful only if value_min_set
+  bool value_min_set = 5;
+  int64 value_max = 6;                  // meaningful only if value_max_set
+  bool value_max_set = 7;
+  string notes = 8;
+  string updated_at = 9;                // RFC3339, empty if never set
+  repeated string regions = 10;         // NUTS prefixes, e.g. "ITC", "DE3"; empty = any region
+  repeated string procedure_types = 11; // open/restricted/negotiated/competitive_dialogue/innovation_partnership/other; empty = any
+}
+
+message GetClientProfileRequest { string workspace_id = 1; }
+message GetClientProfileResponse {
+  ClientProfile profile = 1;
+  bool exists = 2; // false = no profile yet; profile's fields are zero-valued
+}
+
+message UpdateClientProfileRequest {
+  string workspace_id = 1;
+  repeated string sectors = 2;
+  repeated string countries = 3;        // alpha-2
+  int64 value_min = 4;
+  bool value_min_set = 5;
+  int64 value_max = 6;
+  bool value_max_set = 7;
+  string notes = 8;
+  repeated string regions = 9;
+  repeated string procedure_types = 10;
+}
+message UpdateClientProfileResponse { ClientProfile profile = 1; }

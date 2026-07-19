@@ -4,10 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 
 	"github.com/buildwithgo/berrygem/providers"
 	"github.com/buildwithgo/berrygem/tools"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 )
 
@@ -27,6 +29,13 @@ type ChoicePrompt struct {
 	Question    string
 	Options     []ChoiceOption
 	AllowCustom bool
+}
+
+// TenderResults is a batch of live search_tenders results the agent should
+// show the user as structured cards, not prose — pushed to the client via
+// SendTenderResults the moment search_tenders returns at least one result.
+type TenderResults struct {
+	Tenders []tender.ScoredTender
 }
 
 // newAskChoiceTool builds the generic "ask the user a closed-ended
@@ -151,4 +160,176 @@ func newCreateWorkbenchTool(createWorkbench func(name, description string, visib
 			return string(result), nil
 		},
 	)
+}
+
+// searchTendersToolLimit caps how many results the model sees per call —
+// enough to reason about, small enough to stay cheap in the model's context.
+const searchTendersToolLimit = 5
+
+// searchTendersEmptyStreakLimit is how many consecutive zero-result
+// search_tenders calls within one turn trigger the broaden-the-search
+// notice below.
+const searchTendersEmptyStreakLimit = 5
+
+// searchTendersEmptyStreakNotice is appended to the tool's JSON result once
+// searchTendersEmptyStreakLimit consecutive empty searches have happened in
+// this turn. This relies on prompt-based control (the same accepted pattern
+// already used to enforce ask_choice before create_workbench — see
+// newCreateWorkbenchTool's doc comment) rather than a hard code-level stop:
+// berrygem gives this tool no way to end the turn itself the way
+// ask_choice's callback does.
+const searchTendersEmptyStreakNotice = "You have searched 5 times with zero results. STOP calling " +
+	"search_tenders. Call ask_choice now, offering 3-4 broader alternative search terms or CPV " +
+	"categories as clickable options, and briefly explain that no exact matches were found."
+
+// newSearchTendersTool builds the "search live EU tenders" tool — a plain,
+// client-agnostic search on model-provided terms (v1.0 does not auto-scope
+// this to a ClientProfile; see the design spec's architecture section for
+// why). Same callback-reads-current-turnState shape as
+// newCreateWorkbenchTool — see that function's doc comment for the full
+// stale-closure rationale.
+//
+// The consecutive-empty-search streak is tracked on ts (turnState), NOT a
+// closure-local variable: Registry.GetOrCreateChat discards the freshly-built
+// agent/tools on every runTurn call after a session's first turn, so
+// berrygem only ever invokes turn 1's original closure for the session's
+// whole lifetime. A closure-local counter would therefore count empty
+// searches across the ENTIRE session instead of resetting every turn.
+// turnState.recordSearchResult (service.go) is reset at the start of every
+// runTurn call, so reading the streak through ts gives each turn a fresh
+// count regardless of which turn's closure berrygem actually calls.
+func newSearchTendersTool(ts *turnState, search func(query, country, cpv, status string) ([]tender.ScoredTender, error)) tools.Tool {
+	return tools.NewFunc(
+		"search_tenders",
+		"Search live EU public tenders by free-text query and optional filters. Use this whenever "+
+			"the user asks about tenders, procurement opportunities, or a specific sector/country. Only "+
+			"report tenders this tool actually returns — never invent tender details.",
+		map[string]providers.Property{
+			"query": {
+				Type:        "string",
+				Description: "Free-text search query, e.g. 'road construction Milan'.",
+			},
+			"country": {
+				Type:        "string",
+				Description: "Optional alpha-2 country filter, e.g. 'IT'.",
+			},
+			"cpv": {
+				Type:        "string",
+				Description: "Optional CPV code prefix filter, e.g. '45' for construction.",
+			},
+			"status": {
+				Type:        "string",
+				Description: "Optional status filter.",
+				Enum:        []string{"open", "awarded", "cancelled", "closed"},
+			},
+		},
+		[]string{"query"},
+		func(_ context.Context, args string) (string, error) {
+			var parsed struct {
+				Query   string `json:"query"`
+				Country string `json:"country"`
+				CPV     string `json:"cpv"`
+				Status  string `json:"status"`
+			}
+			if err := json.Unmarshal([]byte(args), &parsed); err != nil {
+				return "", fmt.Errorf("search_tenders: invalid arguments: %w", err)
+			}
+			if parsed.Query == "" {
+				return "", fmt.Errorf("search_tenders: query is required")
+			}
+			results, err := search(parsed.Query, parsed.Country, parsed.CPV, parsed.Status)
+			if err != nil {
+				return "", fmt.Errorf("search_tenders: %w", err)
+			}
+			streak := ts.recordSearchResult(len(results) == 0)
+			notice := ""
+			if streak >= searchTendersEmptyStreakLimit {
+				notice = searchTendersEmptyStreakNotice
+			}
+			return marshalSearchTendersResult(results, notice)
+		},
+	)
+}
+
+// searchTendersResultItem is the compact JSON shape the model sees per
+// result — raw fields only, no fit tier or reason (that's the deterministic
+// RecommendTendersForClient RPC's job, not this tool's).
+type searchTendersResultItem struct {
+	ID             string  `json:"id"`
+	Title          string  `json:"title"`
+	BuyerName      string  `json:"buyer_name"`
+	Country        string  `json:"country"`
+	CPV            string  `json:"cpv"`
+	Value          *int64  `json:"value,omitempty"`
+	Deadline       string  `json:"deadline,omitempty"`
+	RelevanceScore float64 `json:"relevance_score"`
+}
+
+// searchTendersResult is the tool's full JSON payload — Notice is only set
+// once searchTendersEmptyStreakLimit consecutive empty searches have
+// happened in this turn (see newSearchTendersTool).
+type searchTendersResult struct {
+	Results []searchTendersResultItem `json:"results"`
+	Notice  string                    `json:"notice,omitempty"`
+}
+
+func marshalSearchTendersResult(results []tender.ScoredTender, notice string) (string, error) {
+	items := make([]searchTendersResultItem, len(results))
+	for i, r := range results {
+		var deadline string
+		if r.Deadline != nil {
+			deadline = r.Deadline.Format(time.RFC3339)
+		}
+		items[i] = searchTendersResultItem{
+			ID: r.ID, Title: r.Title, BuyerName: r.BuyerName, Country: r.Country, CPV: r.CPV,
+			Value: r.Value, Deadline: deadline, RelevanceScore: r.RelevanceScore,
+		}
+	}
+	b, err := json.Marshal(searchTendersResult{Results: items, Notice: notice})
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
+}
+
+// tenderResultsCardItem is the JSON shape persisted in chat_messages.tenders
+// for a "tender_results" row — camelCase to match the frontend's TenderResult
+// consumption directly (contrast searchTendersResultItem's snake_case, which
+// is for the LLM's tool-result JSON, a different consumer with different
+// conventions).
+type tenderResultsCardItem struct {
+	ID        string `json:"id"`
+	Title     string `json:"title"`
+	BuyerName string `json:"buyerName"`
+	Status    string `json:"status"`
+	Country   string `json:"country"`
+	CPV       string `json:"cpv"`
+	Value     int64  `json:"value"`
+	Currency  string `json:"currency"`
+	Deadline  string `json:"deadline,omitempty"`
+	Source    string `json:"source"`
+}
+
+func marshalTenderResultsForHistory(results []tender.ScoredTender) (json.RawMessage, error) {
+	items := make([]tenderResultsCardItem, len(results))
+	for i, r := range results {
+		var value int64
+		if r.Value != nil {
+			value = *r.Value
+		}
+		var deadline string
+		if r.Deadline != nil {
+			deadline = r.Deadline.Format(time.RFC3339)
+		}
+		items[i] = tenderResultsCardItem{
+			ID: r.ID, Title: r.Title, BuyerName: r.BuyerName, Status: r.Status,
+			Country: r.Country, CPV: r.CPV, Value: value, Currency: r.Currency,
+			Deadline: deadline, Source: r.Source,
+		}
+	}
+	b, err := json.Marshal(items)
+	if err != nil {
+		return nil, err
+	}
+	return json.RawMessage(b), nil
 }

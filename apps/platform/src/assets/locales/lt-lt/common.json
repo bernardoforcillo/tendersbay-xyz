@@ -69,10 +69,15 @@
       "displayName": "Vardas",
       "email": "El. paštas",
       "password": "Slaptažodis",
-      "submitting": "Kuriama…",
       "submit": "Sukurti paskyrą",
       "login": "Jau turite paskyrą?",
-      "signIn": "Prisijungti"
+      "signIn": "Prisijungti",
+      "passwordHint": "At least 8 characters",
+      "validation": {
+        "nameMin": "Name must be at least 2 characters",
+        "emailInvalid": "Enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
     },
     "forgot": {
       "checkEmail": "Patikrinkite savo el. paštą",
@@ -104,6 +109,36 @@
       "loading": "Palaukite akimirką."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektoriai",
+      "countries": "Šalys",
+      "valueMin": "Mažiausia vertė",
+      "valueMax": "Didžiausia vertė",
+      "notes": "Pastabos",
+      "notesPlaceholder": "Kokiuose pirkimuose šis klientas paprastai dalyvauja?",
+      "save": "Išsaugoti profilį",
+      "invalidBand": "Mažiausia vertė negali viršyti didžiausios vertės.",
+      "error": "Nepavyko išsaugoti profilio — bandykite dar kartą.",
+      "procedureTypesLabel": "Procedūrų tipai",
+      "procedureTypes": {
+        "open": "Atviras konkursas",
+        "restricted": "Ribotas konkursas",
+        "negotiated": "Derybų procedūra",
+        "competitive_dialogue": "Konkurencinis dialogas",
+        "innovation_partnership": "Inovacijų partnerystė",
+        "other": "Kita"
+      },
+      "regions": "Regionai (NUTS)",
+      "regionsPlaceholder": "pvz., ITC, DE3",
+      "regionsHint": "Kableliais atskirti NUTS prefiksai. Palikite tuščią, kad atitiktų bet kurį regioną."
+    },
+    "shortlist": {
+      "title": "Geriausias atitikimas šiam klientui",
+      "emptyTitle": "Kol kas nėra tinkamų pirkimų",
+      "emptyDescription": "Išbandykite rankinę paiešką žemiau arba išplėskite šio kliento profilį."
+    }
+  },
   "landing": {
     "header": {
       "login": "Prisijungti",
@@ -116,8 +151,23 @@
         "Viešųjų mokyklų renovacija",
         "Ligoninių IT modernizavimas",
         "Saulės parkų statyba",
-        "Elektrinių autobusų parkai"
-      ]
+        "Elektrinių autobusų parkai",
+        "Geležinkelio darbai, Milanas",
+        "Debesijos paslaugos, Varšuva",
+        "Energijos vartojimo efektyvumas, Viena",
+        "Parkų priežiūra, Atėnai"
+      ],
+      "filters": {
+        "country": "Šalis",
+        "sector": "Sektorius",
+        "deadline": "Terminas",
+        "value": "Vertė"
+      },
+      "loading": "Ieškoma…",
+      "empty": "Pirkimų nerasta",
+      "error": "Paieška šiuo metu nepasiekiama — pabandykite dar kartą po akimirkos.",
+      "results_one": "{{count}} pirkimas",
+      "results_other": "{{count}} pirkimų"
     },
     "meta": {
       "title": "tendersbay — Europos viešieji pirkimai su jūsų DI agentais",
@@ -138,7 +188,26 @@
         "27 šalys, viena paieška",
         "Agentai, kurie niekada nemiega",
         "Biurokratija: sutvarkyta"
-      ]
+      ],
+      "deckLabel": "Pavyzdiniai rezultatai"
+    },
+    "proof": {
+      "lead": "Kasmet Europoje išleidžiama daugiau nei du trilijonai eurų viešųjų pinigų. Didžioji dalis keliauja per viešuosius pirkimus, kurių niekada nematote.",
+      "items": [
+        {
+          "value": "€2 trillion+",
+          "label": "viešųjų išlaidų per metus ES"
+        },
+        {
+          "value": "250,000+",
+          "label": "viešieji pirkėjai, skelbiantys pirkimus"
+        },
+        {
+          "value": "~800,000",
+          "label": "viešieji pirkimai per metus — nė viena komanda jų visų neperskaito"
+        }
+      ],
+      "source": "Europos Komisija · TED (Tenders Electronic Daily)"
     },
     "problem": {
       "title": "Žaidimas sukurptas taip, kad jus laikytų lauke. Ir tai veikia.",
@@ -158,19 +227,23 @@
       ]
     },
     "agents": {
-      "title": "Trys agentai. Jie neprašauna, nemiega, nepasiduoda.",
+      "title": "Štai ką jūsų agentai nuveikė, kol miegojote.",
+      "lead": "Ne greitesnė paieškos juosta, kurią vis tiek turite valdyti patys. Agentų komanda, dirbanti visą pirkimą — randa, parengia, laimi — per naktį, kad pabustumėte jau lenktynėse.",
       "items": [
         {
-          "title": "Raskite",
-          "body": "Kiekvieną dieną iššukuoja visas 27 šalis ir iškelia tik tuos pirkimus, kurie verti jūsų laiko — pritaikytus tam, ką iš tikrųjų darote."
+          "time": "02:14",
+          "title": "Rado tą, kuris jums tinka",
+          "body": "Rinkai miegant, agentai iššukavo visas 27 šalis ir ištraukė vienintelį pirkimą, vertą jūsų laiko — pritaikytą tam, ką iš tikrųjų darote, o ne raktažodžių krūvą."
         },
         {
-          "title": "Paruoškite",
-          "body": "Reikalavimai, sertifikatai, EBVPD, terminai: ištraukti, sutikrinti, sudėti. Biurokratija, kuri jus laužė, sutvarkyta."
+          "time": "05:30",
+          "title": "Sudėliojo dokumentus",
+          "body": "Reikalavimai perskaityti, sertifikatai suderinti, EBVPD sudėtas, kiekvienas terminas užfiksuotas. Biurokratija, kuri degindavo jūsų savaitgalį — paruošta prieš kavą."
         },
         {
-          "title": "Laimėkite",
-          "body": "Jie paverčia pirkimo dokumentus laiminčia strategija, kad įžengtumėte su tokia pat ugnies galia kaip milžinai."
+          "time": "07:00",
+          "title": "Pabudote jau lenktynėse",
+          "body": "Jokio tuščio lapo. Pirkimo dokumentai virto laiminčia pasiūlymo strategija, paruošta jūsų sprendimui — ta pati ugnies galia, už kurią milžinai moka už visą biurą, laukia ant jūsų stalo."
         }
       ]
     },
@@ -246,8 +319,8 @@
     },
     "cta": {
       "title": "Jūsų agentai pasiruošę. Trūksta tik jūsų.",
-      "body": "Įjungiame ES rinka po rinkos. Užsiregistruokite laukiančiųjų sąraše — tą akimirką, kai jūsų šalis užsidega, jūsų agentai išeina į medžioklę.",
-      "button": "Užsitikrinkite savo vietą"
+      "body": "Susikurkite paskyrą ir paleiskite agentus į savo rinką — rasti, parengti, laimėti, be nuosavo pirkimų skyriaus.",
+      "button": "Susikurti paskyrą"
     },
     "tenderCard": {
       "value": "Vertė",
@@ -308,12 +381,83 @@
       "cancelled": "Atšauktas",
       "closed": "Uždarytas",
       "unknown": "—"
+    },
+    "filters": {
+      "country": "Šalis",
+      "anyCountry": "Visos šalys",
+      "sector": "Sektorius",
+      "anySector": "Visi sektoriai",
+      "sectors": {
+        "construction": "Statyba",
+        "it": "IT ir programinė įranga",
+        "health": "Sveikata",
+        "energy": "Energetika",
+        "transport": "Transportas",
+        "education": "Švietimas",
+        "environment": "Aplinka",
+        "business": "Verslo paslaugos"
+      },
+      "status": "Būsena",
+      "anyStatus": "Visos būsenos",
+      "deadline": "Terminas",
+      "anyDeadline": "Bet kada",
+      "deadline7": "Artimiausios 7 dienos",
+      "deadline30": "Artimiausios 30 dienų",
+      "deadline90": "Artimiausios 90 dienų",
+      "clear": "Išvalyti viską"
+    },
+    "detail": {
+      "overview": "Apžvalga",
+      "buyer": "Perkančioji organizacija",
+      "value": "Numatoma vertė",
+      "published": "Paskelbta",
+      "deadline": "Terminas",
+      "status": "Būsena",
+      "procedure": "Procedūra",
+      "cpv": "CPV",
+      "cpvSecondary": "Papildomas CPV",
+      "region": "Regionas (NUTS)",
+      "language": "Kalba",
+      "documents": "Dokumentai",
+      "officialNotice": "Oficialus skelbimas (PDF)",
+      "viewSource": "Žiūrėti šaltinį",
+      "lots": "Pirkimo dalys",
+      "lotsNone": "Šis pirkimas neturi atskirų dalių.",
+      "related": "Susiję pirkimai",
+      "relatedNone": "Susijusių pirkimų nerasta.",
+      "notFound": "Šis pirkimas nerastas.",
+      "backToSearch": "Grįžti į paiešką",
+      "searchPlaceholder": "Ieškoti pirkimų…",
+      "meta": {
+        "title": "{{title}} — tendersbay",
+        "description": "Pirkimo informacija, terminas, perkančioji organizacija ir susijusios galimybės „{{title}}“."
+      }
+    },
+    "threshold": {
+      "belowEu": "Žemiau ES ribos",
+      "aboveEu": "Virš ES ribos"
+    },
+    "fit": {
+      "tier": {
+        "strong": "Stiprus atitikimas",
+        "possible": "Galimas atitikimas",
+        "longShot": "Maža tikimybė"
+      },
+      "reasonSector": "Atitinka jūsų sektorių",
+      "reasonCountry": "Jūsų tikslinėje šalyje",
+      "reasonValueInBand": "Jūsų vertės ribose",
+      "reasonValueBelow": "Žemiau jūsų vertės ribų",
+      "reasonValueAbove": "Aukščiau jūsų vertės ribų",
+      "reasonRegion": "Jūsų regione",
+      "reasonProcedure": "Atitinka jūsų procedūros tipą"
     }
   },
   "today": {
     "recommended": {
-      "title": "Rekomenduojama jums",
-      "seeAll": "Visi skiltyje Naršyti →"
+      "seeAll": "Visi skiltyje Naršyti →",
+      "clientCount_one": "{{count}} tinkamas pirkimas paruoštas {{client}}",
+      "clientCount_few": "{{count}} tinkami pirkimai paruošti {{client}}",
+      "clientCount_other": "{{count}} tinkamų pirkimų paruošta {{client}}"
     },
     "greeting": {
       "morning": "Labas rytas.",
@@ -346,6 +490,7 @@
     },
     "nav": {
       "general": "Bendra",
+      "profile": "Kliento profilis",
       "overview": "Apžvalga",
       "members": "Nariai",
       "roles": "Vaidmenys",
@@ -457,6 +602,16 @@
       "settings": "Workspace nustatymai",
       "label": "Darbo sritys",
       "manage": "Visos darbo sritys"
+    },
+    "firstRun": {
+      "title": "Pridėti kliento pasiūlymų profilį",
+      "subtitle": "Pasakykite mums, kokiuose pirkimuose šis klientas paprastai dalyvauja, kad rekomendacijos nuo pat pradžių būtų tikslios. Tai galėsite užbaigti vėliau Nustatymuose.",
+      "skip": "Kol kas praleisti"
+    },
+    "clientProfile": {
+      "title": "Kliento pasiūlymų profilis",
+      "subtitle": "Tai, kokiuose pirkimuose šis klientas dalyvauja — sektoriai, šalys ir vertės ribos — lemia kiekvieną rekomendaciją.",
+      "saved": "Profilis išsaugotas."
     }
   },
   "workbench": {
@@ -551,9 +706,51 @@
       "deleteHint": "Visam laikui ištrinti šią darbastalę ir visus jos duomenis.",
       "delete": "Ištrinti darbastalę",
       "leaveHint": "Palikti šią darbastalę. Valdytojas gali jus pridėti iš naujo.",
-      "leave": "Palikti darbastalę",
-      "confirmDelete": "Ištrinti šią darbastalę?",
-      "confirmLeave": "Palikti šią darbastalę?"
+      "leave": "Palikti darbastalę"
+    },
+    "overview": {
+      "emptyTitle": "Jūsų darbastalė paruošta",
+      "emptyDescription": "Pradėkite ieškodami pirkimų, sukurdami kliento profilį arba pakviesdami savo komandą. Viskas, ką čia darote, bendrinama su darbastalės nariais.",
+      "emptyExplore": "Atidarykite Naršyti"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Daugiau neklausti",
+    "deleteWorkspace": {
+      "title": "Ištrinti darbo sritį?",
+      "description": "Tai visam laikui ištrins šią darbo sritį ir visus jos duomenis. Šio veiksmo anuliuoti negalima."
+    },
+    "leaveWorkspace": {
+      "title": "Palikti darbo sritį?",
+      "description": "Prarasite prieigą prie šios darbo srities. Galėsite vėl prisijungti su nauju kvietimu."
+    },
+    "removeMember": {
+      "title": "Pašalinti narį?",
+      "description": "Šis asmuo nedelsiant praras prieigą prie darbo srities."
+    },
+    "deleteRole": {
+      "title": "Ištrinti vaidmenį?",
+      "description": "Nariai, turintys šį vaidmenį, praras jo teises."
+    },
+    "revokeInvite": {
+      "title": "Atšaukti kvietimą?",
+      "description": "Šio el. pašto kvietimo daugiau nebus galima naudoti."
+    },
+    "revokeLink": {
+      "title": "Atšaukti nuorodą?",
+      "description": "Ši kvietimo nuoroda nedelsiant nustos veikti."
+    },
+    "deleteWorkbench": {
+      "title": "Ištrinti darbastalę?",
+      "description": "Tai visam laikui ištrins šią darbastalę ir visus jos duomenis. Šio veiksmo anuliuoti negalima."
+    },
+    "leaveWorkbench": {
+      "title": "Palikti darbastalę?",
+      "description": "Prarasite prieigą prie šios darbastalės. Valdytojas gali jus pridėti iš naujo."
+    },
+    "removeWorkbenchMember": {
+      "title": "Pašalinti narį?",
+      "description": "Šis asmuo nedelsiant praras prieigą prie darbastalės."
     }
   }
 }
