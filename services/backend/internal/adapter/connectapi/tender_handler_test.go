@@ -15,10 +15,16 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
 
-type fakeRepo struct{ results []tender.Tender }
+type fakeRepo struct {
+	results   []tender.Tender
+	countries []string
+}
 
 func (f *fakeRepo) SearchTenders(context.Context, tender.Filters, int, int) ([]tender.Tender, error) {
 	return f.results, nil
+}
+func (f *fakeRepo) DistinctCountries(context.Context) ([]string, error) {
+	return f.countries, nil
 }
 func (f *fakeRepo) EnrichTenders(context.Context, []string, tender.Filters) ([]tender.Tender, error) {
 	return nil, nil
@@ -296,6 +302,30 @@ func TestRecommendTendersForClient_ReturnsNeedsProfileWhenNoneStored(t *testing.
 	}
 	if len(resp.Msg.Results) != 0 {
 		t.Fatalf("len(Results) = %d, want 0", len(resp.Msg.Results))
+	}
+}
+
+// TestGetCoverage_ReturnsCountriesAnonymously proves GetCoverage needs no
+// auth (like SearchTenders) and passes the service's countries through.
+func TestGetCoverage_ReturnsCountriesAnonymously(t *testing.T) {
+	repo := &fakeRepo{countries: []string{"IT", "PL"}}
+	cfg := tender.Config{
+		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
+		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+	}
+	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSource{}, cfg)
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+
+	// No UserIDFromContext value — an anonymous request must still succeed.
+	resp, err := h.GetCoverage(context.Background(), connect.NewRequest(&tenderv1.GetCoverageRequest{}))
+	if err != nil {
+		t.Fatalf("GetCoverage: %v", err)
+	}
+	if len(resp.Msg.Countries) != 2 {
+		t.Fatalf("countries = %v, want [IT PL]", resp.Msg.Countries)
+	}
+	if resp.Msg.Countries[0] != "IT" || resp.Msg.Countries[1] != "PL" {
+		t.Fatalf("countries = %v, want [IT PL]", resp.Msg.Countries)
 	}
 }
 

@@ -138,6 +138,17 @@ func (h *TenderHandler) RecommendTendersForClient(ctx context.Context, req *conn
 	return connect.NewResponse(&tenderv1.RecommendTendersForClientResponse{Results: out}), nil
 }
 
+// GetCoverage is anonymous-safe like SearchTenders — no auth, no membership.
+// It reports which countries we currently hold tenders for so the landing
+// coverage marquee can light real flags.
+func (h *TenderHandler) GetCoverage(ctx context.Context, _ *connect.Request[tenderv1.GetCoverageRequest]) (*connect.Response[tenderv1.GetCoverageResponse], error) {
+	countries, err := h.svc.Coverage(ctx)
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&tenderv1.GetCoverageResponse{Countries: countries}), nil
+}
+
 func filtersFromProto(f *tenderv1.TenderFilters) (tender.Filters, error) {
 	if f == nil {
 		return tender.Filters{}, nil
