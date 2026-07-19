@@ -47,7 +47,12 @@ vi.mock('~/features/account/components/organisms', async (importOriginal) => {
 });
 
 vi.mock('~/features/tenders', () => ({
-  useTenderLink: () => (_id: string, children: ReactNode) => children,
+  useTenderLink:
+    () => (id: string, children: ReactNode, _className?: string, onClick?: () => void) => (
+      <a href={`/tenders/${id}`} onClick={onClick}>
+        {children}
+      </a>
+    ),
 }));
 
 import { AccountExplorePage } from './index';

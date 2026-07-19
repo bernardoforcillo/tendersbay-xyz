@@ -223,18 +223,22 @@ export function AccountExplorePage() {
                       </p>
                       <div className="space-y-3">
                         {shortlist.results.map((r) => (
-                          <TenderResultCard
-                            key={r.tender?.id}
-                            tender={r.tender as NonNullable<typeof r.tender>}
-                            fitTier={r.fitTier as 'strong' | 'possible' | 'long_shot'}
-                            reason={r.reason as NonNullable<typeof r.reason>}
-                            onOpen={() =>
-                              posthog?.capture('shortlist_match_opened', {
-                                location: 'explore_shortlist',
-                                fit_tier: r.fitTier,
-                              })
-                            }
-                          />
+                          <div key={r.tender?.id}>
+                            {tenderLink(
+                              r.tender?.id ?? '',
+                              <TenderResultCard
+                                tender={r.tender as NonNullable<typeof r.tender>}
+                                fitTier={r.fitTier as 'strong' | 'possible' | 'long_shot'}
+                                reason={r.reason as NonNullable<typeof r.reason>}
+                              />,
+                              'block rounded-2xl no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand-600',
+                              () =>
+                                posthog?.capture('shortlist_match_opened', {
+                                  location: 'explore_shortlist',
+                                  fit_tier: r.fitTier,
+                                }),
+                            )}
+                          </div>
                         ))}
                       </div>
                     </>

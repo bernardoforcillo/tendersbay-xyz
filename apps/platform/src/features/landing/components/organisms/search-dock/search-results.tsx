@@ -11,6 +11,7 @@ import {
   formatTenderValue,
   tenderTitle,
 } from '~/features/account/components/organisms/tender-feed';
+import { useTenderLink } from '~/features/tenders';
 import type { LandingSearchState } from './use-landing-search';
 
 /** Shared warm-card chrome for every non-idle state (result, loading, empty, error). */
@@ -28,6 +29,7 @@ function ResultCard({
 }) {
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
+  const tenderLink = useTenderLink();
 
   const Flag = tender.country ? countryFlag(tender.country) : null;
   const originName = tender.country ? countryName(tender.country, locale) : null;
@@ -50,27 +52,41 @@ function ResultCard({
       transition={
         reduce ? { duration: 0 } : { duration: 0.3, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }
       }
-      className={cn(CARD_CLASS, 'px-4 py-3')}
     >
-      <div className="flex items-center gap-2">
-        {Flag && (
-          <span className="block w-5 shrink-0 overflow-hidden rounded ring-1 ring-ink-900/10">
-            <Flag aria-hidden="true" className="block h-auto w-full" />
-          </span>
-        )}
-        {originName && (
-          <span className="min-w-0 truncate text-xs font-medium text-ink-500">{originName}</span>
-        )}
-        {deadline && (
-          <Pill tone={deadline.tone} className="ml-auto shrink-0">
-            {deadlineLabel}
-          </Pill>
-        )}
-      </div>
+      {tenderLink(
+        tender.id,
+        <>
+          <div className="flex items-center gap-2">
+            {Flag && (
+              <span className="block w-5 shrink-0 overflow-hidden rounded ring-1 ring-ink-900/10">
+                <Flag aria-hidden="true" className="block h-auto w-full" />
+              </span>
+            )}
+            {originName && (
+              <span className="min-w-0 truncate text-xs font-medium text-ink-500">
+                {originName}
+              </span>
+            )}
+            {deadline && (
+              <Pill tone={deadline.tone} className="ml-auto shrink-0">
+                {deadlineLabel}
+              </Pill>
+            )}
+          </div>
 
-      <p className="mt-1.5 line-clamp-2 text-sm font-medium leading-snug text-ink-900">{title}</p>
-      {value && (
-        <p className="mt-1 font-mono text-xs font-medium tabular-nums text-brand-700">{value}</p>
+          <p className="mt-1.5 line-clamp-2 text-sm font-medium leading-snug text-ink-900">
+            {title}
+          </p>
+          {value && (
+            <p className="mt-1 font-mono text-xs font-medium tabular-nums text-brand-700">
+              {value}
+            </p>
+          )}
+        </>,
+        cn(
+          CARD_CLASS,
+          'block px-4 py-3 no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand-600',
+        ),
       )}
     </motion.li>
   );

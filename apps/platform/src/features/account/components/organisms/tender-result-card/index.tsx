@@ -19,8 +19,6 @@ export type TenderResultCardProps = {
   /** Set only on a per-client shortlist result (RecommendTendersForClient) — a plain search result carries neither. */
   fitTier?: FitTier;
   reason?: ReasonSignals;
-  /** Fired when the card's source link is actually clicked (not on every render) — the shortlist uses this to capture `shortlist_match_opened`; a plain search result passes nothing. */
-  onOpen?: () => void;
   className?: string;
 };
 
@@ -48,20 +46,18 @@ const REASON_DEFAULT: Record<string, string> = {
 /**
  * Presentational result card for a single tender in a search feed. When `fitTier` is set (the
  * per-client shortlist), it also renders a qualitative fit Pill and a reason line built from
- * `reason` — never a numeric match %. The card becomes a real link to the source notice
- * whenever the backend returns one (`tender.sourceUrl`); otherwise it stays inert, as before.
+ * `reason` — never a numeric match %.
+ *
+ * Purely presentational — every call site wraps it in a `Link` to the tender's detail page
+ * (see `useTenderLink`). It must never render its own `<a>`: nesting one inside that outer
+ * `Link` would make the browser navigate to the inner anchor on click, silently breaking the
+ * outer navigation. The source-notice URL is surfaced on the detail page instead (`TenderDocuments`).
  *
  * The header is a provenance rail: a country flag (the tender's origin) and a source stamp (the
  * portal it was published on, e.g. TED), with the deadline pill trailing. Title leads the body;
  * value, status and CPV close the card.
  */
-export function TenderResultCard({
-  tender,
-  fitTier,
-  reason,
-  onOpen,
-  className,
-}: TenderResultCardProps) {
+export function TenderResultCard({ tender, fitTier, reason, className }: TenderResultCardProps) {
   const { t, i18n } = useTranslation();
 
   const Flag = tender.country ? countryFlag(tender.country) : null;
@@ -89,7 +85,7 @@ export function TenderResultCard({
         .join(' · ')
     : '';
 
-  const cardBody = (
+  return (
     <Card
       padding="none"
       className={cn('p-4 transition-shadow duration-200 hover:shadow-soft-md', className)}
@@ -155,19 +151,5 @@ export function TenderResultCard({
         )}
       </div>
     </Card>
-  );
-
-  if (!tender.sourceUrl) return cardBody;
-
-  return (
-    <a
-      href={tender.sourceUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={onOpen}
-      className="block no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 rounded-xl"
-    >
-      {cardBody}
-    </a>
   );
 }
