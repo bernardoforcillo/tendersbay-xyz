@@ -1,3 +1,4 @@
+import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { animate } from 'motion';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -81,6 +82,49 @@ export function ChatWindow() {
                 role: 'choice_response',
                 content: m.content,
                 createdAt: m.createdAt,
+              });
+              lastChoicePrompt = null;
+            } else if (m.role === 'tender_results') {
+              const items = m.tenders.length
+                ? (JSON.parse(new TextDecoder().decode(m.tenders)) as {
+                    id: string;
+                    title: string;
+                    buyerName: string;
+                    status: string;
+                    country: string;
+                    cpv: string;
+                    value: number;
+                    currency: string;
+                    deadline: string;
+                    source: string;
+                  }[])
+                : [];
+              nextMessages.push({
+                id: m.id,
+                role: 'tender_results',
+                content: '',
+                createdAt: m.createdAt,
+                tenders: items.map(
+                  (item) =>
+                    ({
+                      $typeName: 'tender.v1.TenderResult',
+                      id: item.id,
+                      title: item.title,
+                      buyerName: item.buyerName,
+                      status: item.status,
+                      procedureType: '',
+                      country: item.country,
+                      cpv: item.cpv,
+                      value: BigInt(item.value),
+                      currency: item.currency,
+                      publishedAt: '',
+                      deadline: item.deadline,
+                      relevanceScore: 0,
+                      source: item.source,
+                      sourceRef: '',
+                      sourceUrl: '',
+                    }) as TenderResult,
+                ),
               });
               lastChoicePrompt = null;
             }
