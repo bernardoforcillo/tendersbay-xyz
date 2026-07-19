@@ -285,12 +285,32 @@ type turnState struct {
 	sendTenderResults SendTenderResults
 	cancel            context.CancelFunc
 	pending           *pendingChoice
+	emptyStreak       int
 }
 
 func (t *turnState) snapshot() (userID, workspaceID string, ctx context.Context, sendChoice SendChoice, sendTenderResults SendTenderResults, cancel context.CancelFunc, pending *pendingChoice) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	return t.userID, t.workspaceID, t.ctx, t.sendChoice, t.sendTenderResults, t.cancel, t.pending
+}
+
+// recordSearchResult updates this turn's consecutive-empty-search streak —
+// incrementing on an empty result, resetting on a non-empty one — and
+// returns the streak's new value. This must live on turnState (not a
+// closure-local variable in newSearchTendersTool) for the same reason
+// sendTenderResults does (see the "Why turnState exists" note above
+// runTurn): Registry.GetOrCreateChat reuses turn 1's tool closures for a
+// session's whole lifetime, so a closure-local counter would count empty
+// searches across the ENTIRE session instead of resetting every turn.
+func (t *turnState) recordSearchResult(empty bool) int {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	if empty {
+		t.emptyStreak++
+	} else {
+		t.emptyStreak = 0
+	}
+	return t.emptyStreak
 }
 
 // turnStateFor returns sessionID's turnState, creating it on first use.
@@ -355,6 +375,7 @@ func (s *Service) runTurn(
 	ts := s.turnStateFor(sessionID)
 	ts.mu.Lock()
 	ts.userID, ts.workspaceID, ts.ctx, ts.sendChoice, ts.sendTenderResults, ts.cancel, ts.pending = userID, workspaceID, streamCtx, sendChoice, sendTenderResults, cancelForChoice, pending
+	ts.emptyStreak = 0
 	ts.mu.Unlock()
 
 	askChoice := func(question string, options []ChoiceOption, allowCustom bool) error {
@@ -408,7 +429,7 @@ func (s *Service) runTurn(
 		bagent.WithTools(
 			newAskChoiceTool(askChoice),
 			newCreateWorkbenchTool(createWorkbench),
-			newSearchTendersTool(searchTenders),
+			newSearchTendersTool(ts, searchTenders),
 		),
 	)
 	if err != nil {

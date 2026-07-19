@@ -189,11 +189,16 @@ const searchTendersEmptyStreakNotice = "You have searched 5 times with zero resu
 // newCreateWorkbenchTool — see that function's doc comment for the full
 // stale-closure rationale.
 //
-// emptyStreak is captured by the closure below, not passed in: newSearchTendersTool
-// is called once per Service.runTurn (service.go), so it naturally resets to 0 every
-// turn and persists correctly across that turn's repeated tool calls.
-func newSearchTendersTool(search func(query, country, cpv, status string) ([]tender.ScoredTender, error)) tools.Tool {
-	emptyStreak := 0
+// The consecutive-empty-search streak is tracked on ts (turnState), NOT a
+// closure-local variable: Registry.GetOrCreateChat discards the freshly-built
+// agent/tools on every runTurn call after a session's first turn, so
+// berrygem only ever invokes turn 1's original closure for the session's
+// whole lifetime. A closure-local counter would therefore count empty
+// searches across the ENTIRE session instead of resetting every turn.
+// turnState.recordSearchResult (service.go) is reset at the start of every
+// runTurn call, so reading the streak through ts gives each turn a fresh
+// count regardless of which turn's closure berrygem actually calls.
+func newSearchTendersTool(ts *turnState, search func(query, country, cpv, status string) ([]tender.ScoredTender, error)) tools.Tool {
 	return tools.NewFunc(
 		"search_tenders",
 		"Search live EU public tenders by free-text query and optional filters. Use this whenever "+
@@ -236,13 +241,9 @@ func newSearchTendersTool(search func(query, country, cpv, status string) ([]ten
 			if err != nil {
 				return "", fmt.Errorf("search_tenders: %w", err)
 			}
-			if len(results) == 0 {
-				emptyStreak++
-			} else {
-				emptyStreak = 0
-			}
+			streak := ts.recordSearchResult(len(results) == 0)
 			notice := ""
-			if emptyStreak >= searchTendersEmptyStreakLimit {
+			if streak >= searchTendersEmptyStreakLimit {
 				notice = searchTendersEmptyStreakNotice
 			}
 			return marshalSearchTendersResult(results, notice)

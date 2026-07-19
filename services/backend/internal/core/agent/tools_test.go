@@ -152,7 +152,7 @@ func TestCreateWorkbenchTool_RejectsMissingName(t *testing.T) {
 
 func TestSearchTendersTool_CallsCallbackWithParsedArgs(t *testing.T) {
 	var gotQuery, gotCountry, gotCPV, gotStatus string
-	tool := newSearchTendersTool(func(query, country, cpv, status string) ([]tender.ScoredTender, error) {
+	tool := newSearchTendersTool(&turnState{}, func(query, country, cpv, status string) ([]tender.ScoredTender, error) {
 		gotQuery, gotCountry, gotCPV, gotStatus = query, country, cpv, status
 		return []tender.ScoredTender{{Tender: tender.Tender{ID: "1", Title: "Lavori stradali"}, RelevanceScore: 0.9}}, nil
 	})
@@ -173,7 +173,7 @@ func TestSearchTendersTool_CallsCallbackWithParsedArgs(t *testing.T) {
 }
 
 func TestSearchTendersTool_RejectsMissingQuery(t *testing.T) {
-	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+	tool := newSearchTendersTool(&turnState{}, func(string, string, string, string) ([]tender.ScoredTender, error) {
 		t.Fatal("callback should not run without a query")
 		return nil, nil
 	})
@@ -184,7 +184,7 @@ func TestSearchTendersTool_RejectsMissingQuery(t *testing.T) {
 }
 
 func TestSearchTendersTool_PropagatesSearchError(t *testing.T) {
-	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+	tool := newSearchTendersTool(&turnState{}, func(string, string, string, string) ([]tender.ScoredTender, error) {
 		return nil, errors.New("boom")
 	})
 	args, _ := json.Marshal(map[string]any{"query": "x"})
@@ -194,7 +194,8 @@ func TestSearchTendersTool_PropagatesSearchError(t *testing.T) {
 }
 
 func TestSearchTendersTool_AddsNoticeAfterFiveConsecutiveEmptyResults(t *testing.T) {
-	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+	ts := &turnState{}
+	tool := newSearchTendersTool(ts, func(string, string, string, string) ([]tender.ScoredTender, error) {
 		return nil, nil
 	})
 	args, _ := json.Marshal(map[string]any{"query": "cestini intelligenti"})
@@ -217,7 +218,8 @@ func TestSearchTendersTool_AddsNoticeAfterFiveConsecutiveEmptyResults(t *testing
 
 func TestSearchTendersTool_NonEmptyResultResetsEmptyStreak(t *testing.T) {
 	empty := true
-	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+	ts := &turnState{}
+	tool := newSearchTendersTool(ts, func(string, string, string, string) ([]tender.ScoredTender, error) {
 		if empty {
 			return nil, nil
 		}
@@ -248,7 +250,8 @@ func TestSearchTendersTool_NonEmptyResultResetsEmptyStreak(t *testing.T) {
 
 func TestSearchTendersTool_SearchErrorDoesNotAffectEmptyStreak(t *testing.T) {
 	callCount := 0
-	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
+	ts := &turnState{}
+	tool := newSearchTendersTool(ts, func(string, string, string, string) ([]tender.ScoredTender, error) {
 		callCount++
 		if callCount == 3 {
 			return nil, errors.New("boom")
