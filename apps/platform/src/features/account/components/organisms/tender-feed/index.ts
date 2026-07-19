@@ -6,6 +6,7 @@ export { deadlineInfo } from './deadline';
 export type { FitTier, ReasonFragment, ReasonSignals } from './fit';
 export { fitReasonFragments, fitTierPillClassName, fitTierPillTone } from './fit';
 export { formatTenderValue } from './format';
+export { thresholdBadge } from './threshold';
 export { tenderTitle } from './title';
 export type { TenderFilterValues } from './use-tender-search';
 export { useTenderSearch } from './use-tender-search';

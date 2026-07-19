@@ -12,6 +12,7 @@ import {
   formatTenderValue,
   type ReasonSignals,
   tenderTitle,
+  thresholdBadge,
 } from '../tender-feed';
 
 export type TenderResultCardProps = {
@@ -43,6 +44,13 @@ const REASON_DEFAULT: Record<string, string> = {
   'tenders.fit.reasonValueAbove': 'Above your value band',
   'tenders.fit.reasonRegion': 'In your region',
   'tenders.fit.reasonProcedure': 'Matches your procedure type',
+};
+
+// English fallback for the EU-threshold badge labels — same defaultValue convention as the
+// fit/deadline labels above, so the badge reads correctly even before a locale carries the key.
+const EU_THRESHOLD_DEFAULT: Record<'below' | 'above', string> = {
+  below: 'Below EU threshold',
+  above: 'Above EU threshold',
 };
 
 /**
@@ -82,6 +90,10 @@ export function TenderResultCard({
   const value = formatTenderValue(tender.value, tender.currency, i18n.language);
   const statusLabel = t(`tenders.status.${tender.status}`, { defaultValue: tender.status });
   const { title, category } = tenderTitle(tender.title, tender.country);
+
+  // Honest EU-threshold band (a NEW axis, not the fit tier's value_fit): brand-emphasised when
+  // below (SME-winnable), muted when above, and rendered NOT AT ALL when unknown/ambiguous.
+  const euBadge = thresholdBadge(tender.euThreshold ?? '');
 
   const reasonLine = reason
     ? fitReasonFragments(reason)
@@ -140,14 +152,25 @@ export function TenderResultCard({
         </p>
       )}
 
-      <div className="mt-3 flex items-baseline justify-between gap-3 border-t border-cream-200 pt-2.5">
-        <p className="min-w-0 truncate text-xs text-ink-500">
-          <span className="font-mono font-medium tabular-nums text-brand-700">
-            {value ?? t('tenders.value.unknown', { defaultValue: 'Value undisclosed' })}
-          </span>
-          <span className="mx-1.5 text-cream-400">·</span>
-          <span>{statusLabel}</span>
-        </p>
+      <div className="mt-3 flex items-center justify-between gap-3 border-t border-cream-200 pt-2.5">
+        <div className="flex min-w-0 items-center gap-2">
+          <p className="min-w-0 truncate text-xs text-ink-500">
+            <span className="font-mono font-medium tabular-nums text-brand-700">
+              {value ?? t('tenders.value.unknown', { defaultValue: 'Value undisclosed' })}
+            </span>
+            <span className="mx-1.5 text-cream-400">·</span>
+            <span>{statusLabel}</span>
+          </p>
+          {euBadge && (
+            <Pill
+              data-testid="tender-eu-threshold"
+              tone={euBadge.tone === 'below' ? 'match' : 'neutral'}
+              className={cn('shrink-0', euBadge.tone === 'above' && 'grayscale')}
+            >
+              {t(euBadge.labelKey, { defaultValue: EU_THRESHOLD_DEFAULT[euBadge.tone] })}
+            </Pill>
+          )}
+        </div>
         {tender.cpv && (
           <span className="shrink-0 font-mono text-[10px] uppercase tracking-wide text-ink-400">
             {tender.cpv}
