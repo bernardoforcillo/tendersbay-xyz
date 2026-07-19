@@ -31,7 +31,7 @@
     "changePassword": {
       "successTitle": "Focal faire nuashonraithe",
       "title": "Athraigh focal faire",
-      "successBody": "Athraíodh d'fhocal faire. Sínigh isteach arís ar ghléasanna eile.",
+      "successBody": "Athraíodh d'fhocal faire. Sínigh isteach arís ar gléasanna eile.",
       "description": "Caithfidh an focal faire nua a bheith 12 charachtar ar a laghad.",
       "successHint": "Fanann seisiúin ghníomhacha eile bailí go dtí go rachaidh siad in éag.",
       "current": "Focal faire reatha",
@@ -71,7 +71,7 @@
       "password": "Focal faire",
       "submitting": "Ag cruthú…",
       "submit": "Cruthaigh cuntas",
-      "login": "Cuntas agat cheana féin?",
+      "login": "An bhfuil cuntas agat cheana féin?",
       "signIn": "Sínigh isteach"
     },
     "forgot": {
@@ -146,8 +146,8 @@
         "Athchóiriú scoileanna poiblí",
         "Nuachóiriú TF ospidéal",
         "Tógáil feirmeacha gréine",
-        "Flíteanna bus leictreach",
-        "Oibreacha iarnróid, Milano",
+        "Flíteanna busanna leictreacha",
+        "Oibreacha iarnróid, Milán",
         "Seirbhísí scamaill, Vársá",
         "Uasghrádú fuinnimh, Vín",
         "Cothabháil páirceanna, An Aithin"
@@ -217,7 +217,7 @@
         },
         {
           "title": "Gan foireann tairisceana, gan seans",
-          "body": "Tá foireann ag na fathaigh dó seo. Tá oícheanta, deirí seachtaine agus scarbhileog agat. Buille faoi thuairim cé a bhuann."
+          "body": "Tá foireann ag na fathaigh dó seo. Tá oícheanta, deirí seachtaine agus scarbhileog agat. Tomhais cé a bhuann."
         }
       ]
     },
@@ -255,7 +255,7 @@
         },
         {
           "title": "Méadaíonn tú do chliaint",
-          "body": "Is domhan ann féin gach cliant, agus is cliant breise gach uair an chloig a shábhálann tú, ar féidir leat glacadh leis. Spásanna oibre ar leithligh, sonraí glana in aghaidh an chliaint, do chorrlach."
+          "body": "Is domhan ann féin gach cliant, agus is cliant breise gach uair an chloig a shábhálann tú, is féidir leat glacadh leis. Spásanna oibre ar leithligh, sonraí glana in aghaidh an chliaint, do chorrlach."
         }
       ]
     },
@@ -263,8 +263,8 @@
       "title": "Cuir na ceisteanna a mharaíonn an margadh de ghnáth.",
       "items": [
         {
-          "title": "„An dtraenálann mo chuid sonraí do AI?“",
-          "body": "Ní dhéanann. Fanann do cháipéisí, do liostaí praghsanna, do thairiscintí mar do chuid féin. Ní chuirtear isteach i samhail aon duine riamh iad."
+          "title": "„An dtraenálann mo chuid sonraí d'AI?“",
+          "body": "Ní thraenálann. Fanann do cháipéisí, do liostaí praghsanna, do thairiscintí mar do chuid féin. Ní chuirtear isteach i samhail aon duine riamh iad."
         },
         {
           "title": "„An ndéanann sé rudaí a chumadh?“",
@@ -272,7 +272,7 @@
         },
         {
           "title": "„An bhfuil sonraí gach cliaint scartha i ndáiríre?“",
-          "body": "Spásanna oibre faoi bhalla in aghaidh an chliaint. An rud is leo, fanann sé leo. Ní sceitheann aon rud idir chuntais."
+          "body": "Spásanna oibre faoi bhalla in aghaidh an chliaint. An rud is leo, fanann sé leo. Ní sceitheann aon rud idir cuntais."
         },
         {
           "title": "„An n-oireann sé don rud a úsáidim cheana?“",
@@ -314,7 +314,7 @@
     },
     "cta": {
       "title": "Tá do ghníomhairí réidh. Níl in easnamh ach tusa.",
-      "body": "Cruthaigh do chuntas agus cuir na gníomhairí ar do mhargadh — aimsiú, ullmhú, buachan, gan oifig tairisceana de do chuid féin.",
+      "body": "Cruthaigh do chuntas agus cuir na gníomhairí ar do mhargadh — aimsiú, ullmhú, buachan, gan foireann tairisceana de do chuid féin.",
       "button": "Cruthaigh do chuntas"
     },
     "tenderCard": {
@@ -350,7 +350,7 @@
     }
   },
   "tenders": {
-    "results_one": "{{count}} thairiscint",
+    "results_one": "{{count}} tairiscint",
     "results_two": "{{count}} thairiscint",
     "results_few": "{{count}} thairiscint",
     "results_many": "{{count}} dtairiscint",
@@ -400,9 +400,9 @@
       "anyStatus": "Gach stádas",
       "deadline": "Spriocdháta",
       "anyDeadline": "Am ar bith",
-      "deadline7": "Chéad 7 lá eile",
-      "deadline30": "Chéad 30 lá eile",
-      "deadline90": "Chéad 90 lá eile",
+      "deadline7": "An chéad 7 lá eile",
+      "deadline30": "An chéad 30 lá eile",
+      "deadline90": "An chéad 90 lá eile",
       "clear": "Glan gach rud"
     },
     "detail": {
@@ -410,18 +410,18 @@
       "buyer": "Ceannaitheoir",
       "value": "Luach measta",
       "published": "Foilsithe",
-      "deadline": "Sprioc-am",
+      "deadline": "Spriocdháta",
       "status": "Stádas",
       "procedure": "Nós imeachta",
       "cpv": "CPV",
-      "cpvSecondary": "CPV Breise",
+      "cpvSecondary": "CPV breise",
       "region": "Réigiún (NUTS)",
       "language": "Teanga",
       "documents": "Doiciméid",
       "officialNotice": "Fógra oifigiúil (PDF)",
       "viewSource": "Féach ar an bhfoinse",
-      "lots": "Loit",
-      "lotsNone": "Níl loit ar leith ag an tairiscint seo.",
+      "lots": "Lotanna",
+      "lotsNone": "Níl lotanna ar leith ag an tairiscint seo.",
       "related": "Tairiscintí gaolmhara",
       "relatedNone": "Níor aimsíodh aon tairiscintí gaolmhara.",
       "notFound": "Níorbh fhéidir an tairiscint seo a aimsiú.",
@@ -429,17 +429,17 @@
       "searchPlaceholder": "Cuardaigh tairiscintí…",
       "meta": {
         "title": "{{title}} — tendersbay",
-        "description": "Sonraí na tairisceana, sprioc-am, ceannaitheoir agus deiseanna gaolmhara le haghaidh \"{{title}}\"."
+        "description": "Sonraí na tairisceana, spriocdháta, ceannaitheoir agus deiseanna gaolmhara le haghaidh \"{{title}}\"."
       }
     },
     "fit": {
       "tier": {
-        "strong": "Meaitseáil láidir",
-        "possible": "Meaitseáil fhéideartha",
+        "strong": "Oiriúnú láidir",
+        "possible": "Oiriúnú féideartha",
         "longShot": "Seans beag"
       },
       "reasonSector": "Ag teacht le d'earnáil",
-      "reasonCountry": "I do thír sprioctha",
+      "reasonCountry": "I do spriocthír",
       "reasonValueInBand": "I do raon luacha",
       "reasonValueBelow": "Faoi bhun do raoin luacha",
       "reasonValueAbove": "Os cionn do raoin luacha",
@@ -450,7 +450,7 @@
   "today": {
     "recommended": {
       "seeAll": "Gach rud in Iniúchadh →",
-      "clientCount_one": "{{count}} thairiscint oiriúnach réidh do {{client}}",
+      "clientCount_one": "{{count}} tairiscint oiriúnach réidh do {{client}}",
       "clientCount_two": "{{count}} thairiscint oiriúnach réidh do {{client}}",
       "clientCount_few": "{{count}} thairiscint oiriúnach réidh do {{client}}",
       "clientCount_many": "{{count}} dtairiscint oiriúnach réidh do {{client}}",
@@ -469,7 +469,7 @@
       "untitled": "Comhrá gan teideal"
     },
     "explore": {
-      "title": "Aimsigh an chéad tairiscint eile agat",
+      "title": "Aimsigh do chéad tairiscint eile",
       "description": "Fiafraigh den ghníomhaire faoi mhargaí, riachtanais, nó tairiscint ar leith — beidh moltaí pearsantaithe le feiceáil anseo de réir mar a fhorbraíonn do phróifílí cuardaigh.",
       "action": "Oscail Iniúchadh"
     }

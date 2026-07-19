@@ -122,7 +122,7 @@
         "negotiated": "Proċedura nnegozjata",
         "competitive_dialogue": "Djalogu kompetittiv",
         "innovation_partnership": "Sħubija għall-innovazzjoni",
-        "other": "Ieħor"
+        "other": "Oħra"
       },
       "regions": "Reġjuni (NUTS)",
       "regionsPlaceholder": "eż. ITC, DE3",
@@ -130,7 +130,7 @@
     },
     "shortlist": {
       "title": "L-aħjar tqabbil għal dan il-klijent",
-      "emptyTitle": "Għadu ma hemm ebda offerta adattata",
+      "emptyTitle": "Għadu ma hemm ebda sejħa adattata",
       "emptyDescription": "Ipprova tfittxija manwali hawn taħt, jew wessa' l-profil ta' dan il-klijent."
     }
   },
@@ -159,14 +159,14 @@
         "value": "Valur"
       },
       "loading": "Qed infittxu…",
-      "empty": "L-ebda offerta ma nstabet",
+      "empty": "L-ebda sejħa ma nstabet",
       "error": "It-tfittxija mhix disponibbli bħalissa — erġa' pprova fi ftit ħin.",
-      "results_one": "{{count}} offerta",
-      "results_other": "{{count}} offerta"
+      "results_one": "{{count}} sejħa",
+      "results_other": "{{count}} sejħiet"
     },
     "meta": {
       "title": "tendersbay — Sejħiet għall-offerti, mogħtija mill-aġenti AI",
-      "description": "Aġenti AI li jsibu s-sejħiet għall-offerti u l-offerti pubbliċi Ewropej it-tajbin, ifarrku l-burokrazija u jieħdu l-SME tiegħek sal-għoti tal-kuntratt."
+      "description": "Aġenti AI li jfittxu l-aħjar sejħiet għall-offerti pubbliċi madwar l-Ewropa, ifarrku l-burokrazija, u jwasslu lill-SME tiegħek mill-ewwel sejħa sal-għoti tal-kuntratt."
     },
     "nav": {
       "problem": "L-Ispiża",
@@ -174,9 +174,9 @@
       "vision": "Viżjoni"
     },
     "hero": {
-      "titleLead": "L-offerta li diġà qisuha tagħhom?",
+      "titleLead": "Is-sejħa li diġà qisuha tagħhom?",
       "titleHighlight": "Mogħtija.",
-      "subtitle": "Illejla tagħlaq offerta b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
+      "subtitle": "Illejla tagħlaq sejħa b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
       "ctaPrimary": "Poġġi l-aġenti tiegħek jaħdmu",
       "ctaSecondary": "Ara l-viżjoni",
       "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"],
@@ -191,7 +191,7 @@
         },
         {
           "value": "250,000+",
-          "label": "xerrejja pubbliċi li joħorġu xogħol għall-offerti"
+          "label": "xerrejja pubbliċi li joħorġu sejħiet għall-offerti"
         },
         {
           "value": "~800,000",
@@ -201,11 +201,11 @@
       "source": "Il-Kummissjoni Ewropea · TED (Tenders Electronic Daily)"
     },
     "problem": {
-      "title": "Il-logħba hija mqassma biex iżżommok barra. U qed taħdem.",
+      "title": "Il-logħba kienet iffissata biex iżżommok barra. U qed taħdem.",
       "items": [
         {
           "title": "Midfuna fi 27 pajjiż",
-          "body": "L-offerti li jaqblu miegħek huma mxerrda fuq għexieren ta' portali nazzjonali, f'lingwi li ma titkellimx, f'formati li jirreżistu."
+          "body": "Is-sejħiet li jaqblu miegħek huma mxerrda fuq għexieren ta' portali nazzjonali, f'lingwi li ma titkellimx, f'formati li jirreżistu."
         },
         {
           "title": "Tegħreq fil-karti",
@@ -219,12 +219,12 @@
     },
     "agents": {
       "title": "Dan hu li għamlu l-aġenti tiegħek waqt li kont rieqed.",
-      "lead": "Mhux search bar aktar mgħaġġla li xorta trid tħaddem int. Tim ta’ aġenti li jaħdem l-offerta kollha — isib, iħejji, jirbaħ — matul il-lejl, biex tqum diġà fit-tellieqa.",
+      "lead": "Mhux search bar aktar mgħaġġla li xorta trid tħaddem int. Tim ta’ aġenti li jaħdem is-sejħa kollha — isib, iħejji, jirbaħ — matul il-lejl, biex tqum diġà fit-tellieqa.",
       "items": [
         {
           "time": "02:14",
           "title": "Sab dik li tgħodd għalik",
-          "body": "Waqt li s-suq kien rieqed, l-aġenti fittxew sew il-27 pajjiż kollha u ħarġu l-unika offerta li jistħoqqilha l-ħin tiegħek — imfassla għal dak li tagħmel tabilħaqq, mhux gozz kliem ta’ tiftix."
+          "body": "Waqt li s-suq kien rieqed, l-aġenti fittxew sew il-27 pajjiż kollha u ħarġu l-unika sejħa li jistħoqqilha l-ħin tiegħek — imfassla għal dak li tagħmel tabilħaqq, mhux gozz kliem ta’ tiftix."
         },
         {
           "time": "05:30",
@@ -234,7 +234,7 @@
         {
           "time": "07:00",
           "title": "Qomt diġà fit-tellieqa",
-          "body": "L-ebda paġna vojta. Id-dokument tal-offerta sar strateġija rebbieħa tal-offerta, lesta għad-deċiżjoni tiegħek — l-istess saħħa li l-ġganti jħallsu uffiċċju sħiħ għaliha, tistennik fuq l-iskrivanija."
+          "body": "L-ebda paġna vojta. L-ispeċifikazzjoni saret strateġija rebbieħa għall-offerta, lesta għad-deċiżjoni tiegħek — l-istess saħħa li l-ġganti jħallsu uffiċċju sħiħ għaliha, tistennik fuq l-iskrivanija."
         }
       ]
     },
@@ -264,7 +264,7 @@
         },
         {
           "title": "„Taqbad tivvinta l-affarijiet?“",
-          "body": "Taqra l-offerta vera u tikkwota l-paġna. Kull rekwiżit imur lura għad-dokument — ebda speċifikazzjoni vvintata."
+          "body": "Taqra s-sejħa vera u tikkwota l-paġna. Kull rekwiżit imur lura għad-dokument — ebda speċifikazzjoni vvintata."
         },
         {
           "title": "„Id-data ta' kull klijent hija tabilħaqq separata?“",
@@ -346,23 +346,21 @@
     }
   },
   "tenders": {
-    "results_one": "{{count}} offerta",
-    "results_two": "{{count}} offerti",
-    "results_few": "{{count}} offerti",
-    "results_many": "{{count}} offerta",
-    "results_other": "{{count}} offerta",
+    "results_one": "{{count}} sejħa",
+    "results_few": "{{count}} sejħiet",
+    "results_many": "{{count}}-il sejħa",
+    "results_other": "{{count}} sejħa",
     "searching": "Qed infittxu…",
     "empty": {
-      "title": "L-ebda offerta ma nstabet",
+      "title": "L-ebda sejħa ma nstabet",
       "description": "Ipprova tfittxija usa' jew inqas filtri."
     },
     "error": "It-tfittxija mhix disponibbli bħalissa — erġa' pprova fi ftit ħin.",
     "loadMore": "Tella' aktar",
     "deadline": {
       "days_one": "{{count}} jum fadal",
-      "days_two": "{{count}} jiem fadal",
       "days_few": "{{count}} jiem fadal",
-      "days_many": "{{count}} jum fadal",
+      "days_many": "{{count}}-il jum fadal",
       "days_other": "{{count}} jum fadal",
       "today": "Tagħlaq illum",
       "expired": "Magħluqa"
@@ -396,7 +394,7 @@
       "anyStatus": "L-istatusi kollha",
       "deadline": "Skadenza",
       "anyDeadline": "Fi kwalunkwe ħin",
-      "deadline7": "Li jmiss 7 ijiem",
+      "deadline7": "Li jmiss 7 jiem",
       "deadline30": "Li jmiss 30 jum",
       "deadline90": "Li jmiss 90 jum",
       "clear": "Ħassar kollox"
@@ -446,11 +444,10 @@
   "today": {
     "recommended": {
       "seeAll": "Kollox f'Esplora →",
-      "clientCount_one": "{{count}} offerta adattata lesta għal {{client}}",
-      "clientCount_two": "{{count}} offerti adattati lesti għal {{client}}",
-      "clientCount_few": "{{count}} offerti adattati lesti għal {{client}}",
-      "clientCount_many": "{{count}} offerta adattata lesta għal {{client}}",
-      "clientCount_other": "{{count}} offerta adattata lesta għal {{client}}"
+      "clientCount_one": "{{count}} sejħa adattata lesta għal {{client}}",
+      "clientCount_few": "{{count}} sejħiet adattati lesti għal {{client}}",
+      "clientCount_many": "{{count}}-il sejħa adattata lesta għal {{client}}",
+      "clientCount_other": "{{count}} sejħa adattata lesta għal {{client}}"
     },
     "greeting": {
       "morning": "L-għodwa t-tajba.",
@@ -466,7 +463,7 @@
     },
     "explore": {
       "title": "Sib l-offerta li jmiss tiegħek",
-      "description": "Staqsi lill-aġent dwar swieq, rekwiżiti, jew offerta speċifika — rakkomandazzjonijiet personalizzati jidhru hawn hekk kif jieħdu forma l-profili tat-tiftix tiegħek.",
+      "description": "Staqsi lill-aġent dwar swieq, rekwiżiti, jew sejħa speċifika — rakkomandazzjonijiet personalizzati jidhru hawn hekk kif jieħdu forma l-profili tat-tiftix tiegħek.",
       "action": "Iftaħ Esplora"
     }
   },

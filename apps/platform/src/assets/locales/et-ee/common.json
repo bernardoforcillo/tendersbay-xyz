@@ -53,34 +53,34 @@
       "description": "Tere tulemast tagasi tendersbaysse.",
       "email": "E-post",
       "password": "Parool",
-      "forgotPassword": "Unustasid parooli?",
+      "forgotPassword": "Unustasite parooli?",
       "submitting": "Sisselogimine…",
       "submit": "Logi sisse",
-      "noAccount": "Kas sul pole kontot?",
+      "noAccount": "Kas teil pole kontot?",
       "signUp": "Registreeru"
     },
     "signup": {
-      "checkEmail": "Kontrolli oma e-posti",
-      "verifyPrompt": "Saatsime sulle kinnituslingi. Klõpsa sellel, et konto aktiveerida.",
-      "checkEmailHint": "Link aegub 24 tunni pärast. Kontrolli rämpspostikausta, kui sa seda ei näe.",
+      "checkEmail": "Kontrollige oma e-posti",
+      "verifyPrompt": "Saatsime teile kinnituslingi. Klõpsake sellel, et konto aktiveerida.",
+      "checkEmailHint": "Link aegub 24 tunni pärast. Kontrollige rämpspostikausta, kui te seda ei näe.",
       "backToLogin": "Tagasi sisselogimise juurde",
       "title": "Loo konto",
-      "description": "Hakka võitma ELi hankeid tehisintellekti agentidega.",
+      "description": "Hakake võitma ELi hankeid tehisintellekti agentidega.",
       "displayName": "Nimi",
       "email": "E-post",
       "password": "Parool",
       "submitting": "Loomine…",
       "submit": "Loo konto",
-      "login": "Kas sul on juba konto?",
+      "login": "Kas teil on juba konto?",
       "signIn": "Logi sisse"
     },
     "forgot": {
-      "checkEmail": "Kontrolli oma e-posti",
-      "checkEmailBody": "Kui selle aadressiga konto on olemas, saad peagi lähtestamislingi.",
-      "checkEmailHint": "Link aegub 1 tunni pärast. Kontrolli rämpspostikausta, kui sa seda ei näe.",
+      "checkEmail": "Kontrollige oma e-posti",
+      "checkEmailBody": "Kui selle aadressiga konto on olemas, saate peagi lähtestamislingi.",
+      "checkEmailHint": "Link aegub 1 tunni pärast. Kontrollige rämpspostikausta, kui te seda ei näe.",
       "backToLogin": "Tagasi sisselogimise juurde",
       "title": "Lähtesta parool",
-      "description": "Sisesta oma e-post ja saadame sulle lähtestamislingi.",
+      "description": "Sisestage oma e-post ja saadame teile lähtestamislingi.",
       "email": "E-post",
       "submitting": "Saatmine…",
       "submit": "Saada lähtestamislink"
@@ -90,17 +90,17 @@
       "invalid": "See lähtestamislink puudub või on aegunud.",
       "requestNew": "Küsi uus link",
       "title": "Määra uus parool",
-      "description": "Vali tugev parool, mis on vähemalt 12 tähemärki pikk.",
+      "description": "Valige tugev parool, mis on vähemalt 12 tähemärki pikk.",
       "password": "Uus parool",
       "submitting": "Salvestamine…",
       "submit": "Määra parool"
     },
     "verify": {
       "errorTitle": "Link on aegunud",
-      "error": "See link on vigane või aegunud. Küsi uus.",
+      "error": "See link on vigane või aegunud. Küsige uus.",
       "successTitle": "E-post kinnitatud",
-      "success": "Kõik on valmis. Sind suunatakse nüüd ümber…",
-      "loadingTitle": "Sinu e-posti kinnitamine…",
+      "success": "Kõik on valmis. Teid suunatakse nüüd ümber…",
+      "loadingTitle": "Teie e-posti kinnitamine…",
       "loading": "Hetk veel."
     }
   },
@@ -166,17 +166,17 @@
     },
     "meta": {
       "title": "tendersbay — Euroopa riigihanked, lepinguni teie AI-agentide abil",
-      "description": "Tehisintellekti agendid, kes jälitavad õigeid Euroopa riigihankeid ja hanketeateid, purustavad paberimajanduse ja viivad teie VKE hankelepingu sõlmimiseni."
+      "description": "Tehisintellekti agendid, kes jälitavad õigeid riigihankeid üle Euroopa, purustavad paberimajanduse ja viivad teie VKE esimesest hankevõimalusest kuni hankelepingu sõlmimiseni."
     },
     "nav": {
-      "problem": "Hind",
+      "problem": "Kulu",
       "agents": "Agendid",
       "vision": "Visioon"
     },
     "hero": {
       "titleLead": "Hange, mille nad juba enda omaks lugesid?",
-      "titleHighlight": "Omistatud.",
-      "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja panevad teid pakkumisse. Sel ajal kui magate.",
+      "titleHighlight": "Sõlmitud.",
+      "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja viivad teid pakkumiseni. Sel ajal kui magate.",
       "ctaPrimary": "Pange oma agendid tööle",
       "ctaSecondary": "Vaadake visiooni",
       "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"],
@@ -204,7 +204,7 @@
       "title": "Mäng on seatud teid välja jätma. Ja see töötab.",
       "items": [
         {
-          "title": "Maetud 27 riiki",
+          "title": "Maetud 27 riigis",
           "body": "Teile sobivad hanked on laiali kümnetes riiklikes portaalides, keeltes, mida te ei räägi, vormingutes, mis panevad vastu."
         },
         {
@@ -219,7 +219,7 @@
     },
     "agents": {
       "title": "Vaadake, mida teie agendid tegid, kui te magasite.",
-      "lead": "Mitte kiirem otsinguriba, mida peate ikkagi ise juhtima. Tiim agente, kes töötab läbi kogu hanke — leiab, valmistab ette, võidab — öö jooksul, nii et ärkate juba mängus.",
+      "lead": "Mitte kiirem otsinguriba, mida peate ikkagi ise juhtima. Agentide meeskond, kes töötab läbi kogu hanke — leiab, valmistab ette, võidab — öö jooksul, nii et ärkate juba mängus.",
       "items": [
         {
           "time": "02:14",
@@ -243,7 +243,7 @@
       "items": [
         {
           "title": "Teie koostate pakkumised",
-          "body": "Kesköö, järjekordne ESPD käsitsi. Andke dokumendid agentidele. Kulutage oma tunnid pakkumisele, mis tegelikult võidab."
+          "body": "Kesköö, järjekordne ESPD käsitsi. Andke dokumendid agentidele. Kulutage oma tunde pakkumisele, mis tegelikult võidab."
         },
         {
           "title": "Teie vastutate numbri eest",
@@ -260,7 +260,7 @@
       "items": [
         {
           "title": "„Kas mu andmed treenivad teie tehisintellekti?“",
-          "body": "Ei. Teie hankedokumendid, hinnakirjad, pakkumised jäävad teie omaks. Kunagi ei söödeta kellegi mudelisse."
+          "body": "Ei. Teie spetsifikatsioonid, hinnakirjad, pakkumised jäävad teie omaks. Kunagi ei söödeta kellegi mudelisse."
         },
         {
           "title": "„Kas see lihtsalt mõtleb asju välja?“",
@@ -272,7 +272,7 @@
         },
         {
           "title": "„Kas see sobib sellega, mida ma juba kasutan?“",
-          "body": "See sobitub teie stäkki. See ei palu teil midagi ära visata."
+          "body": "See sobitub teie stacki. See ei palu teil midagi ära visata."
         }
       ]
     },
@@ -283,7 +283,7 @@
     },
     "coverage": {
       "title": "27 riiki. Võtame need ükshaaval.",
-      "body": "Laieneme üle kogu Euroopa Liidu, turg turu haaval. Iga lipp süttib päeval, mil teie riik käivitub.",
+      "body": "Laieneme üle kogu Euroopa Liidu, turgude kaupa. Iga lipp süttib päeval, mil teie riik käivitub.",
       "statusAvailable": "Aktiivne",
       "statusComingSoon": "Tulekul",
       "note": "Kaetus jõuab kõigisse 27 EL-i riiki."
@@ -397,11 +397,11 @@
     },
     "detail": {
       "overview": "Ülevaade",
-      "buyer": "Ostja",
+      "buyer": "Hankija",
       "value": "Eeldatav maksumus",
       "published": "Avaldatud",
       "deadline": "Tähtaeg",
-      "status": "Staatus",
+      "status": "Olek",
       "procedure": "Menetlus",
       "cpv": "CPV",
       "cpvSecondary": "Täiendav CPV",
@@ -419,7 +419,7 @@
       "searchPlaceholder": "Otsi hankeid…",
       "meta": {
         "title": "{{title}} — tendersbay",
-        "description": "Hanke üksikasjad, tähtaeg, ostja ja seotud võimalused hankele \"{{title}}\"."
+        "description": "Hanke üksikasjad, tähtaeg, hankija ja seotud võimalused hankele \"{{title}}\"."
       }
     },
     "fit": {
@@ -491,12 +491,12 @@
       "nameLabel": "Tööruumi nimi",
       "namePlaceholder": "Acme Procurement",
       "create": "Loo tööruum",
-      "empty": "Sa ei kuulu veel ühessegi tööruumi.",
+      "empty": "Te ei kuulu veel ühessegi tööruumi.",
       "createFirst": "Loo oma esimene tööruum"
     },
     "overview": {
       "welcome": "Tere tulemast",
-      "workbenchSoon": "Peagi valmib ühine töölaud, kus su meeskond saab hankeid koos menetleda. Praegu halda liikmeid, rolle ja kutseid ülalolevatelt vahekaartidelt."
+      "workbenchSoon": "Peagi valmib ühine töölaud, kus teie meeskond saab hankeid koos menetleda. Praegu hallake liikmeid, rolle ja kutseid ülalolevatelt vahekaartidelt."
     },
     "members": {
       "title": "Liikmed",
@@ -546,7 +546,7 @@
       "copied": "Kopeeritud",
       "usesLimited": "{{used}} / {{max}} kasutuskorda",
       "usesUnlimited": "{{used}} kasutuskorda",
-      "noPermission": "Sul pole õigust kutseid hallata."
+      "noPermission": "Teil pole õigust kutseid hallata."
     },
     "settings": {
       "detailsTitle": "Tööruumi andmed",
@@ -559,14 +559,14 @@
       "dangerTitle": "Ohutsoon",
       "deleteHint": "Kustuta see tööruum ja kõik selle andmed jäädavalt.",
       "delete": "Kustuta tööruum",
-      "leaveHint": "Lahku sellest tööruumist. Saad uue kutsega uuesti liituda.",
+      "leaveHint": "Lahkuge sellest tööruumist. Saate uue kutsega uuesti liituda.",
       "leave": "Lahku tööruumist"
     },
     "accept": {
       "loading": "Kutse kontrollimine…",
       "invalidTitle": "Kutse pole saadaval",
       "invalidBody": "See kutse on kehtetu või aegunud.",
-      "title": "Sind on kutsutud",
+      "title": "Teid on kutsutud",
       "body": "Liitu tööruumiga {{workspace}} rollis {{role}}.",
       "accept": "Võta kutse vastu",
       "accepting": "Liitumine…",
@@ -689,7 +689,7 @@
       "dangerTitle": "Ohutsoon",
       "deleteHint": "Kustuta see töölaud ja kõik selle andmed jäädavalt.",
       "delete": "Kustuta töölaud",
-      "leaveHint": "Lahku sellest töölauast. Haldur saab sind uuesti lisada.",
+      "leaveHint": "Lahkuge sellest töölauast. Haldur saab teid uuesti lisada.",
       "leave": "Lahku töölauast",
       "confirmDelete": "Kustutada see töölaud?",
       "confirmLeave": "Lahkuda sellest töölauast?"

@@ -22,7 +22,7 @@
       "title": "Mainīt e-pastu",
       "prompt": "Mēs nosūtījām apstiprinājuma saiti uz jūsu jauno adresi. Noklikšķiniet uz tās, lai apstiprinātu izmaiņas.",
       "description": "Mēs nosūtīsim apstiprinājuma saiti uz jauno adresi.",
-      "hint": "Jūsu pašreizējais e-pasts paliek aktīvs, līdz apstiprināt jauno.",
+      "hint": "Jūsu pašreizējais e-pasts paliek aktīvs, kamēr neapstiprināsiet jauno.",
       "newEmail": "Jauns e-pasts",
       "password": "Pašreizējā parole",
       "submitting": "Notiek saglabāšana…",
@@ -32,7 +32,7 @@
       "successTitle": "Parole atjaunināta",
       "title": "Mainīt paroli",
       "successBody": "Jūsu parole ir mainīta. Citās ierīcēs piesakieties atkārtoti.",
-      "description": "Jaunajai parolei jābūt vismaz 12 rakstzīmēm.",
+      "description": "Jaunajai parolei jābūt vismaz 12 rakstzīmju garai.",
       "successHint": "Citas aktīvās sesijas paliek derīgas līdz to termiņa beigām.",
       "current": "Pašreizējā parole",
       "new": "Jaunā parole",
@@ -50,7 +50,7 @@
   "auth": {
     "login": {
       "title": "Pieteikties",
-      "description": "Laipni lūdzam atpakaļ tendersbay.",
+      "description": "Laipni lūdzam atpakaļ tendersbay platformā.",
       "email": "E-pasts",
       "password": "Parole",
       "forgotPassword": "Aizmirsāt paroli?",
@@ -111,11 +111,11 @@
       "valueMin": "Minimālā vērtība",
       "valueMax": "Maksimālā vērtība",
       "notes": "Piezīmes",
-      "notesPlaceholder": "Par ko šis klients parasti piedalās iepirkumos?",
+      "notesPlaceholder": "Kādos iepirkumos šis klients parasti piedalās?",
       "save": "Saglabāt profilu",
       "invalidBand": "Minimālā vērtība nedrīkst pārsniegt maksimālo vērtību.",
       "error": "Neizdevās saglabāt profilu — mēģiniet vēlreiz.",
-      "procedureTypesLabel": "Procedūru veidi",
+      "procedureTypesLabel": "Iepirkuma procedūras veidi",
       "procedureTypes": {
         "open": "Atklāta procedūra",
         "restricted": "Slēgta procedūra",
@@ -141,7 +141,7 @@
     },
     "search": {
       "label": "Meklēt",
-      "hint": "AI meklēšana — drīzumā",
+      "hint": "MI meklēšana — drīzumā",
       "examples": [
         "Publisko skolu renovācija",
         "Slimnīcu IT modernizācija",
@@ -165,8 +165,8 @@
       "results_other": "{{count}} iepirkumi"
     },
     "meta": {
-      "title": "tendersbay — Publiskie iepirkumi Eiropā ar jūsu MI aģentiem",
-      "description": "MI aģenti, kas izseko pareizos publiskos iepirkumus un iepirkumu konkursus Eiropā, sasmalcina birokrātiju un aizved jūsu MVU līdz iepirkuma piešķiršanai."
+      "title": "tendersbay — ES publiskie iepirkumi, kurus izcīna jūsu MI aģenti",
+      "description": "MI aģenti, kas visā Eiropā izmedī īstos publiskos iepirkumus, sasmalcina dokumentāciju un pavada jūsu MVU no pirmās iepirkuma iespējas līdz pat piešķiršanai."
     },
     "nav": {
       "problem": "Izmaksas",
@@ -176,7 +176,7 @@
     "hero": {
       "titleLead": "Iepirkums, ko viņi jau uzskatīja par savu?",
       "titleHighlight": "Piešķirts.",
-      "subtitle": "Šonakt noslēdzas iepirkums ar jūsu vārdu. Lielajiem spēlētājiem tam jau ir komanda. Jums ir atvērtas trīs cilnes programmā Excel. Te tas beidzas — MI aģenti, kas to atrod, saplosa birokrātiju un ieliek jūs piedāvājumā. Kamēr jūs guļat.",
+      "subtitle": "Šonakt noslēdzas iepirkums ar jūsu vārdu. Lielajiem spēlētājiem tam jau ir komanda. Jums ir atvērtas trīs cilnes Excel. Te tas beidzas — MI aģenti, kas to atrod, saplosa birokrātiju un ieliek jūs piedāvājumā. Kamēr jūs guļat.",
       "ctaPrimary": "Lieciet saviem aģentiem strādāt",
       "ctaSecondary": "Skatiet vīziju",
       "trust": ["27 valstis, viena meklēšana", "Aģenti, kas nekad neguļ", "Birokrātija: nokārtota"],
@@ -187,11 +187,11 @@
       "items": [
         {
           "value": "€2 trillion+",
-          "label": "publisko izdevumu gadā ES"
+          "label": "ES publisko izdevumu gadā"
         },
         {
           "value": "250,000+",
-          "label": "publiskie pircēji, kas izsludina iepirkumus"
+          "label": "publiskie pasūtītāji, kas izsludina iepirkumus"
         },
         {
           "value": "~800,000",
@@ -201,10 +201,10 @@
       "source": "Eiropas Komisija · TED (Tenders Electronic Daily)"
     },
     "problem": {
-      "title": "Spēle ir sarežģēta tā, lai turētu jūs ārā. Un tā darbojas.",
+      "title": "Spēle bija iepriekš izlemta, lai jūs turētu ārā. Un tā darbojas.",
       "items": [
         {
-          "title": "Apglabāti 27 valstīs",
+          "title": "Aprakti 27 valstīs",
           "body": "Iepirkumi, kas jums der, ir izkaisīti pa desmitiem nacionālo portālu, valodās, kuras nerunājat, formātos, kas pretojas."
         },
         {
@@ -234,7 +234,7 @@
         {
           "time": "07:00",
           "title": "Pamodāties jau sacensībā",
-          "body": "Nekādas tukšas lapas. No iepirkuma dokumentācijas tapa uzvaras piedāvājuma stratēģija, gatava jūsu lēmumam — tas pats uguns spēks, par kuru giganti maksā veselu biroju, gaida uz jūsu galda."
+          "body": "Nekādas tukšas lapas. No iepirkuma dokumentācijas tapa uzvarošā piedāvājuma stratēģija, gatava jūsu lēmumam — tas pats uguns spēks, par kuru giganti maksā veselu biroju, gaida uz jūsu galda."
         }
       ]
     },
@@ -251,7 +251,7 @@
         },
         {
           "title": "Jūs reizināt klientus",
-          "body": "Katrs klients ir atsevišķa pasaule, un katra ietaupītā stunda ir vēl viens klients, ko varat uzņemt. Atsevišķas darba telpas, tīri dati katram klientam, jūsu peļņa."
+          "body": "Katrs klients ir atsevišķa pasaule, un katra ietaupītā stunda ir vēl viens klients, ko varat uzņemt. Atsevišķas darbvietas, tīri dati katram klientam, jūsu peļņa."
         }
       ]
     },
@@ -268,7 +268,7 @@
         },
         {
           "title": "„Vai katra klienta dati patiešām ir atdalīti?“",
-          "body": "Norobežotas darba telpas katram klientam. Kas ir viņu, paliek viņu. Nekas nenoplūst starp kontiem."
+          "body": "Norobežotas darbvietas katram klientam. Kas ir viņu, paliek viņu. Nekas nenoplūst starp kontiem."
         },
         {
           "title": "„Vai tas iederas tajā, ko jau izmantoju?“",
@@ -277,8 +277,8 @@
       ]
     },
     "vision": {
-      "title": "Publiskā nauda atrodas aiz samta auklas. Mēs to pārgriežam.",
-      "body": "Katru gadu simtiem miljardu plūst caur Eiropas publiskajiem iepirkumiem — un paliek nesasniedzami visiem bez laika, valodām vai piedāvājumu komandas. MI aģenti maina aprēķinu. Katrs MVU saņem īstu iespēju.",
+      "title": "Publiskā nauda atrodas aiz samta virves. Mēs to pārgriežam.",
+      "body": "Katru gadu simtiem miljardu plūst caur Eiropas publiskajiem iepirkumiem — un paliek nesasniedzami visiem bez laika, valodu vai piedāvājumu komandas. MI aģenti maina aprēķinu. Katrs MVU saņem īstu iespēju.",
       "note": "Mēs veidojam. Jūsu valsts ir nākamā."
     },
     "coverage": {
@@ -286,7 +286,7 @@
       "body": "Mēs paplašināmies visā Eiropas Savienībā, tirgu pēc tirgus. Katrs karogs iedegas dienā, kad jūsu valsts sāk darboties.",
       "statusAvailable": "Aktīvs",
       "statusComingSoon": "Drīzumā",
-      "note": "Pārklājums tuvojas visām 27 ES valstīm."
+      "note": "Pārklājums paplašinās visās 27 ES valstīs."
     },
     "footer": {
       "tagline": "Eiropas iepirkumi. Jūsu.",
@@ -309,8 +309,8 @@
       ]
     },
     "cta": {
-      "title": "Jūsu aģenti ir gatavi. Trūkst tikai jūs.",
-      "body": "Izveidojiet kontu un palaidiet aģentus savā tirgū — atrast, sagatavot, uzvarēt, bez sava iepirkumu departamenta.",
+      "title": "Jūsu aģenti ir gatavi. Trūkst tikai jūsu.",
+      "body": "Izveidojiet kontu un palaidiet aģentus savā tirgū — atrast, sagatavot, uzvarēt, bez savas piedāvājumu komandas.",
       "button": "Izveidot kontu"
     },
     "tenderCard": {
@@ -399,7 +399,7 @@
     },
     "detail": {
       "overview": "Pārskats",
-      "buyer": "Pircējs",
+      "buyer": "Pasūtītājs",
       "value": "Paredzamā vērtība",
       "published": "Publicēts",
       "deadline": "Termiņš",
@@ -421,7 +421,7 @@
       "searchPlaceholder": "Meklēt iepirkumus…",
       "meta": {
         "title": "{{title}} — tendersbay",
-        "description": "Iepirkuma dati, termiņš, pircējs un saistītās iespējas iepirkumam \"{{title}}\"."
+        "description": "Iepirkuma dati, termiņš, pasūtītājs un saistītās iespējas iepirkumam \"{{title}}\"."
       }
     },
     "fit": {
@@ -442,9 +442,9 @@
   "today": {
     "recommended": {
       "seeAll": "Viss sadaļā Pārlūkot →",
-      "clientCount_zero": "{{count}} piemērotu iepirkumu sagatavots {{client}}",
-      "clientCount_one": "{{count}} piemērots iepirkums sagatavots {{client}}",
-      "clientCount_other": "{{count}} piemēroti iepirkumi sagatavoti {{client}}"
+      "clientCount_zero": "{{count}} piemērotu iepirkumu sagatavoti klientam {{client}}",
+      "clientCount_one": "{{count}} piemērots iepirkums sagatavots klientam {{client}}",
+      "clientCount_other": "{{count}} piemēroti iepirkumi sagatavoti klientam {{client}}"
     },
     "greeting": {
       "morning": "Labrīt.",
@@ -499,7 +499,7 @@
     },
     "overview": {
       "welcome": "Laipni lūdzam",
-      "workbenchSoon": "Drīzumā būs pieejama kopīga darba vide, kurā jūsu komanda varēs kopīgi strādāt ar iepirkumiem. Pagaidām pārvaldiet dalībniekus, lomas un ielūgumus no iepriekš esošajām cilnēm."
+      "workbenchSoon": "Drīzumā būs pieejams kopīgs darbagalds, kurā jūsu komanda varēs kopīgi strādāt ar iepirkumiem. Pagaidām pārvaldiet dalībniekus, lomas un ielūgumus cilnēs augstāk."
     },
     "members": {
       "title": "Dalībnieki",
@@ -543,7 +543,7 @@
       "send": "Nosūtīt ielūgumu",
       "revoke": "Atsaukt",
       "linkTitle": "Kopīgojamās saites",
-      "maxUses": "Maks. izmantošanas reižu (0 = neierobežoti)",
+      "maxUses": "Maks. izmantošanas reizes (0 = neierobežoti)",
       "createLink": "Izveidot saiti",
       "copy": "Kopēt",
       "copied": "Nokopēts",
@@ -592,12 +592,12 @@
     },
     "firstRun": {
       "title": "Pievienot klienta piedāvājuma profilu",
-      "subtitle": "Pastāstiet mums, par ko šis klients parasti piedalās iepirkumos, lai ieteikumi jau no sākuma būtu precīzi. To varat pabeigt vēlāk sadaļā Iestatījumi.",
+      "subtitle": "Pastāstiet mums, kādos iepirkumos šis klients parasti piedalās, lai ieteikumi jau no sākuma būtu precīzi. To varat pabeigt vēlāk sadaļā Iestatījumi.",
       "skip": "Pagaidām izlaist"
     },
     "clientProfile": {
       "title": "Klienta piedāvājuma profils",
-      "subtitle": "Tas, par ko šis klients piedalās iepirkumos — nozares, valstis un vērtību diapazons — nosaka katru ieteikumu.",
+      "subtitle": "Tas, kādos iepirkumos šis klients piedalās — nozares, valstis un vērtību diapazons — nosaka katru ieteikumu.",
       "saved": "Profils saglabāts."
     }
   },
