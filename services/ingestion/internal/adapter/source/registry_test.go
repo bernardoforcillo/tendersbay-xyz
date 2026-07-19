@@ -6,12 +6,19 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/source"
 )
 
-func TestNewRegistryRegistersTED(t *testing.T) {
+func TestNewRegistryRegistersAllSources(t *testing.T) {
 	got := source.NewRegistry()
-	if len(got) != 1 {
-		t.Fatalf("NewRegistry() = %d providers, want 1", len(got))
+	names := make([]string, len(got))
+	for i, s := range got {
+		names[i] = s.Name()
 	}
-	if got[0].Name() != "ted" {
-		t.Errorf("provider[0].Name() = %q, want %q", got[0].Name(), "ted")
+	want := []string{"ted", "pl-bzp", "fr-boamp", "es-placsp"}
+	if len(got) != len(want) {
+		t.Fatalf("registry has %d sources, want %d (%v)", len(got), len(want), names)
+	}
+	for i := range want {
+		if names[i] != want[i] {
+			t.Fatalf("names = %v, want %v", names, want)
+		}
 	}
 }
