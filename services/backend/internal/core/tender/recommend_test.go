@@ -232,7 +232,12 @@ func (f *fakeProfileSource) Get(_ context.Context, _, _ string) (clientprofile.P
 }
 
 type recommendFakeRepo struct {
-	results []Tender
+	results   []Tender
+	countries []string
+}
+
+func (f *recommendFakeRepo) DistinctCountries(context.Context) ([]string, error) {
+	return f.countries, nil
 }
 
 func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, limit, _ int) ([]Tender, error) {

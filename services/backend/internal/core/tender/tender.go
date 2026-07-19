@@ -83,6 +83,7 @@ type Repo interface {
 	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)
 	LotsByTenderID(ctx context.Context, id int64) ([]Lot, error)
 	RecentTenderRefs(ctx context.Context, limit int) ([]TenderRef, error)
+	DistinctCountries(ctx context.Context) ([]string, error)
 }
 
 // ScoredChunk is the minimal shape Search needs from a semantic search

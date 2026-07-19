@@ -67,6 +67,9 @@ func (f *fakeRepo) LotsByTenderID(context.Context, int64) ([]tender.Lot, error) 
 func (f *fakeRepo) RecentTenderRefs(context.Context, int) ([]tender.TenderRef, error) {
 	return f.refs, nil
 }
+func (f *fakeRepo) DistinctCountries(context.Context) ([]string, error) {
+	return nil, nil
+}
 
 type fakeKnowledgeBase struct {
 	results    []tender.ScoredChunk
