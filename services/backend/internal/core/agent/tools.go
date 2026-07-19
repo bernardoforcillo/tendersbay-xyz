@@ -31,6 +31,13 @@ type ChoicePrompt struct {
 	AllowCustom bool
 }
 
+// TenderResults is a batch of live search_tenders results the agent should
+// show the user as structured cards, not prose — pushed to the client via
+// SendTenderResults the moment search_tenders returns at least one result.
+type TenderResults struct {
+	Tenders []tender.ScoredTender
+}
+
 // newAskChoiceTool builds the generic "ask the user a closed-ended
 // question" tool. berrygem's providers.Property has no array/object
 // nesting, so `options` is declared as a JSON-encoded string parameter —
@@ -282,4 +289,46 @@ func marshalSearchTendersResult(results []tender.ScoredTender, notice string) (s
 		return "", err
 	}
 	return string(b), nil
+}
+
+// tenderResultsCardItem is the JSON shape persisted in chat_messages.tenders
+// for a "tender_results" row — camelCase to match the frontend's TenderResult
+// consumption directly (contrast searchTendersResultItem's snake_case, which
+// is for the LLM's tool-result JSON, a different consumer with different
+// conventions).
+type tenderResultsCardItem struct {
+	ID        string `json:"id"`
+	Title     string `json:"title"`
+	BuyerName string `json:"buyerName"`
+	Status    string `json:"status"`
+	Country   string `json:"country"`
+	CPV       string `json:"cpv"`
+	Value     int64  `json:"value"`
+	Currency  string `json:"currency"`
+	Deadline  string `json:"deadline,omitempty"`
+	Source    string `json:"source"`
+}
+
+func marshalTenderResultsForHistory(results []tender.ScoredTender) (json.RawMessage, error) {
+	items := make([]tenderResultsCardItem, len(results))
+	for i, r := range results {
+		var value int64
+		if r.Value != nil {
+			value = *r.Value
+		}
+		var deadline string
+		if r.Deadline != nil {
+			deadline = r.Deadline.Format(time.RFC3339)
+		}
+		items[i] = tenderResultsCardItem{
+			ID: r.ID, Title: r.Title, BuyerName: r.BuyerName, Status: r.Status,
+			Country: r.Country, CPV: r.CPV, Value: value, Currency: r.Currency,
+			Deadline: deadline, Source: r.Source,
+		}
+	}
+	b, err := json.Marshal(items)
+	if err != nil {
+		return nil, err
+	}
+	return json.RawMessage(b), nil
 }

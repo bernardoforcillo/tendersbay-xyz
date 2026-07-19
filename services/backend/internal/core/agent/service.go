@@ -32,7 +32,7 @@ type ChatRepository interface {
 	ListSessionsByWorkspace(ctx context.Context, workspaceID string) ([]postgres.DBChatSession, error)
 	UpdateSession(ctx context.Context, id, title, workbenchID string) (postgres.DBChatSession, error)
 	DeleteSession(ctx context.Context, id string) error
-	InsertMessage(ctx context.Context, sessionID, role, content string, choices, metadata json.RawMessage) (postgres.DBChatMessage, error)
+	InsertMessage(ctx context.Context, sessionID, role, content string, choices, metadata, tenders json.RawMessage) (postgres.DBChatMessage, error)
 	ListMessagesBySession(ctx context.Context, sessionID string) ([]postgres.DBChatMessage, error)
 	FindMessageByID(ctx context.Context, id string) (postgres.DBChatMessage, error)
 }
@@ -59,6 +59,12 @@ type TenderSearcher interface {
 // SendChoice is called when the agent asks a closed-ended question — the
 // ConnectRPC handler wires it to stream.Send, mirroring StreamToken.
 type SendChoice func(ChoicePrompt) error
+
+// SendTenderResults is called whenever search_tenders returns at least one
+// result — the ConnectRPC handler wires it to stream.Send, mirroring
+// SendChoice/StreamToken. Unlike SendChoice, sending this does NOT end the
+// turn: token streaming continues afterward.
+type SendTenderResults func(TenderResults) error
 
 // pendingChoice is set by the ask_choice tool, synchronously, before it
 // cancels the turn's context — runTurn reads it afterward to tell a
@@ -209,6 +215,7 @@ func (s *Service) SubmitChoice(
 	userID, choiceID, selectedKey, customValue string,
 	sendToken StreamToken,
 	sendChoice SendChoice,
+	sendTenderResults SendTenderResults,
 	usageCh chan<- credits.Usage,
 ) error {
 	promptMsg, err := s.chatRepo.FindMessageByID(ctx, choiceID)
@@ -219,10 +226,10 @@ func (s *Service) SubmitChoice(
 	if err != nil {
 		return err
 	}
-	if _, err := s.chatRepo.InsertMessage(ctx, session.ID, "choice_response", answerText, nil, nil); err != nil {
+	if _, err := s.chatRepo.InsertMessage(ctx, session.ID, "choice_response", answerText, nil, nil, nil); err != nil {
 		return err
 	}
-	return s.runTurn(ctx, session.ID, userID, session.WorkspaceID, session.AgentType, answerText, sendToken, sendChoice, usageCh)
+	return s.runTurn(ctx, session.ID, userID, session.WorkspaceID, session.AgentType, answerText, sendToken, sendChoice, sendTenderResults, usageCh)
 }
 
 func (s *Service) UpdateChat(ctx context.Context, userID, chatID, title, workbenchID string) (postgres.DBChatSession, error) {
@@ -332,6 +339,7 @@ func (s *Service) runTurn(
 	sessionID, userID, workspaceID, agentType, turnMessage string,
 	sendToken StreamToken,
 	sendChoice SendChoice,
+	sendTenderResults SendTenderResults,
 	usageCh chan<- credits.Usage,
 ) error {
 	cfg, ok := s.registry.GetConfig(AgentType(agentType))
@@ -354,7 +362,7 @@ func (s *Service) runTurn(
 		if err != nil {
 			return err
 		}
-		msg, err := s.chatRepo.InsertMessage(curCtx, sessionID, "choice_prompt", question, choicesJSON, nil)
+		msg, err := s.chatRepo.InsertMessage(curCtx, sessionID, "choice_prompt", question, choicesJSON, nil, nil)
 		if err != nil {
 			return err
 		}
@@ -386,6 +394,11 @@ func (s *Service) runTurn(
 		})
 		if err != nil {
 			return nil, err
+		}
+		if len(out.Results) > 0 {
+			if err := s.persistAndNotifyTenderResults(curCtx, sessionID, out.Results, sendTenderResults); err != nil {
+				return nil, err
+			}
 		}
 		return out.Results, nil
 	}
@@ -439,11 +452,29 @@ func (s *Service) runTurn(
 		return err
 	}
 
-	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "assistant", fullContent, nil, nil); err != nil {
+	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "assistant", fullContent, nil, nil, nil); err != nil {
 		return err
 	}
 	s.sendUsage(usageCh, sessionID, agentType, cfg.Model, turnMessage, fullContent, done)
 	return nil
+}
+
+// persistAndNotifyTenderResults is called by the search_tenders closure
+// whenever a search returns at least one result: it persists a
+// "tender_results" row (so a page reload reconstructs the cards, mirroring
+// how askChoice persists "choice_prompt") and pushes the live
+// SendTenderResults event.
+func (s *Service) persistAndNotifyTenderResults(
+	ctx context.Context, sessionID string, results []tender.ScoredTender, sendTenderResults SendTenderResults,
+) error {
+	tendersJSON, err := marshalTenderResultsForHistory(results)
+	if err != nil {
+		return err
+	}
+	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "tender_results", "", nil, nil, tendersJSON); err != nil {
+		return err
+	}
+	return sendTenderResults(TenderResults{Tenders: results})
 }
 
 // sendUsage reports usage for a turn. When real is nil (a paused turn) or
@@ -487,12 +518,13 @@ func (s *Service) ChatStream(
 	sessionID, userID, workspaceID, message, agentType string,
 	sendToken StreamToken,
 	sendChoice SendChoice,
+	sendTenderResults SendTenderResults,
 	usageCh chan<- credits.Usage,
 ) error {
-	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "user", message, nil, nil); err != nil {
+	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "user", message, nil, nil, nil); err != nil {
 		return err
 	}
-	return s.runTurn(ctx, sessionID, userID, workspaceID, agentType, message, sendToken, sendChoice, usageCh)
+	return s.runTurn(ctx, sessionID, userID, workspaceID, agentType, message, sendToken, sendChoice, sendTenderResults, usageCh)
 }
 
 // estimateTokens roughly approximates a token count from text length for the
