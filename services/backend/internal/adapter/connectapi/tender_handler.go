@@ -75,7 +75,7 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 
 	results := make([]*tenderv1.TenderResult, len(out.Results))
 	for i, t := range out.Results {
-		results[i] = h.tenderResultToProto(t)
+		results[i] = h.tenderResultToProtoWithThreshold(t)
 	}
 
 	// workspace_id == "" is today's anonymous-safe behavior, left
@@ -171,11 +171,14 @@ func filtersFromProto(f *tenderv1.TenderFilters) (tender.Filters, error) {
 	return out, nil
 }
 
-// tenderResultToProto is a method so it can reach h.svc for the eu_threshold
-// band — every result path (SearchTenders, GetRelatedTenders, and
-// RecommendTendersForClient via recommendedTenderToProto) routes through it,
-// so the coarse below/above-EU-threshold band is stamped on all of them.
-func (h *TenderHandler) tenderResultToProto(t tender.ScoredTender) *tenderv1.TenderResult {
+// tenderResultToProto converts the shared, EU-threshold-independent result
+// fields — reused by every caller in this package that needs a
+// *tenderv1.TenderResult, including agent_handler.go's chat tender_results
+// event (which has no *tender.Service to compute a threshold band from, and
+// doesn't need one — TenderResultCard already renders no badge at all when
+// EuThreshold is empty). Callers that DO have the band (every TenderHandler
+// method) stamp it via tenderResultToProtoWithThreshold instead.
+func tenderResultToProto(t tender.ScoredTender) *tenderv1.TenderResult {
 	var value int64
 	if t.Value != nil {
 		value = *t.Value
@@ -192,9 +195,19 @@ func (h *TenderHandler) tenderResultToProto(t tender.ScoredTender) *tenderv1.Ten
 		ProcedureType: t.ProcedureType, Country: t.Country, Cpv: t.CPV,
 		Value: value, Currency: t.Currency, PublishedAt: publishedAt, Deadline: deadline,
 		RelevanceScore: t.RelevanceScore, Source: t.Source, SourceRef: t.SourceRef,
-		SourceUrl:   t.SourceURL,
-		EuThreshold: h.svc.EUThresholdBand(t.Value, t.CPV),
+		SourceUrl: t.SourceURL,
 	}
+}
+
+// tenderResultToProtoWithThreshold is a method so it can reach h.svc for the
+// eu_threshold band — every TenderHandler result path (SearchTenders,
+// GetRelatedTenders, and RecommendTendersForClient via
+// recommendedTenderToProto) routes through it, so the coarse below/above-EU-
+// threshold band is stamped on all of them.
+func (h *TenderHandler) tenderResultToProtoWithThreshold(t tender.ScoredTender) *tenderv1.TenderResult {
+	p := tenderResultToProto(t)
+	p.EuThreshold = h.svc.EUThresholdBand(t.Value, t.CPV)
+	return p
 }
 
 // reasonSignalsToProto maps tender.ReasonSignals onto the wire type. Only
@@ -226,7 +239,7 @@ func reasonSignalsToProto(r tender.ReasonSignals) *tenderv1.ReasonSignals {
 // two independently-maintained copies of the same mapping.
 func (h *TenderHandler) recommendedTenderToProto(r tender.RecommendedTender) *tenderv1.RecommendedTenderResult {
 	return &tenderv1.RecommendedTenderResult{
-		Tender:  h.tenderResultToProto(r.ScoredTender),
+		Tender:  h.tenderResultToProtoWithThreshold(r.ScoredTender),
 		FitTier: string(r.Tier),
 		Reason:  reasonSignalsToProto(r.Reason),
 	}
@@ -257,7 +270,7 @@ func (h *TenderHandler) GetRelatedTenders(ctx context.Context, req *connect.Requ
 	}
 	results := make([]*tenderv1.TenderResult, len(out))
 	for i, t := range out {
-		results[i] = h.tenderResultToProto(t)
+		results[i] = h.tenderResultToProtoWithThreshold(t)
 	}
 	return connect.NewResponse(&tenderv1.GetRelatedTendersResponse{Results: results}), nil
 }
