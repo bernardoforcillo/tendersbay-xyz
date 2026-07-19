@@ -64,7 +64,7 @@ export declare const SearchTendersRequestSchema: GenMessage<SearchTendersRequest
  */
 export declare type TenderFilters = Message<"tender.v1.TenderFilters"> & {
   /**
-   * alpha-3, matches the TED connector's convention
+   * alpha-2, e.g. "IT", "DE"
    *
    * @generated from field: string country = 1;
    */

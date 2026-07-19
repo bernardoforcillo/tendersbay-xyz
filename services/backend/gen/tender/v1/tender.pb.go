@@ -101,7 +101,7 @@ func (x *SearchTendersRequest) GetWorkspaceId() string {
 
 type TenderFilters struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Country       string                 `protobuf:"bytes,1,opt,name=country,proto3" json:"country,omitempty"`                               // alpha-3, matches the TED connector's convention
+	Country       string                 `protobuf:"bytes,1,opt,name=country,proto3" json:"country,omitempty"`                               // alpha-2, e.g. "IT", "DE"
 	Cpv           string                 `protobuf:"bytes,2,opt,name=cpv,proto3" json:"cpv,omitempty"`                                       // prefix match
 	Status        string                 `protobuf:"bytes,3,opt,name=status,proto3" json:"status,omitempty"`                                 // open/awarded/cancelled/closed/unknown
 	DeadlineFrom  string                 `protobuf:"bytes,4,opt,name=deadline_from,json=deadlineFrom,proto3" json:"deadline_from,omitempty"` // RFC3339
