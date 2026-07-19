@@ -277,19 +277,20 @@ type StreamToken func(string) error
 // its mutex) at the start of every turn, including a GetOrCreateChat cache
 // hit where the freshly-built agent/tools are otherwise discarded.
 type turnState struct {
-	mu          sync.Mutex
-	userID      string
-	workspaceID string
-	ctx         context.Context
-	sendChoice  SendChoice
-	cancel      context.CancelFunc
-	pending     *pendingChoice
+	mu                sync.Mutex
+	userID            string
+	workspaceID       string
+	ctx               context.Context
+	sendChoice        SendChoice
+	sendTenderResults SendTenderResults
+	cancel            context.CancelFunc
+	pending           *pendingChoice
 }
 
-func (t *turnState) snapshot() (userID, workspaceID string, ctx context.Context, sendChoice SendChoice, cancel context.CancelFunc, pending *pendingChoice) {
+func (t *turnState) snapshot() (userID, workspaceID string, ctx context.Context, sendChoice SendChoice, sendTenderResults SendTenderResults, cancel context.CancelFunc, pending *pendingChoice) {
 	t.mu.Lock()
 	defer t.mu.Unlock()
-	return t.userID, t.workspaceID, t.ctx, t.sendChoice, t.cancel, t.pending
+	return t.userID, t.workspaceID, t.ctx, t.sendChoice, t.sendTenderResults, t.cancel, t.pending
 }
 
 // turnStateFor returns sessionID's turnState, creating it on first use.
@@ -353,11 +354,11 @@ func (s *Service) runTurn(
 
 	ts := s.turnStateFor(sessionID)
 	ts.mu.Lock()
-	ts.userID, ts.workspaceID, ts.ctx, ts.sendChoice, ts.cancel, ts.pending = userID, workspaceID, streamCtx, sendChoice, cancelForChoice, pending
+	ts.userID, ts.workspaceID, ts.ctx, ts.sendChoice, ts.sendTenderResults, ts.cancel, ts.pending = userID, workspaceID, streamCtx, sendChoice, sendTenderResults, cancelForChoice, pending
 	ts.mu.Unlock()
 
 	askChoice := func(question string, options []ChoiceOption, allowCustom bool) error {
-		_, _, curCtx, curSendChoice, curCancel, curPending := ts.snapshot()
+		_, _, curCtx, curSendChoice, _, curCancel, curPending := ts.snapshot()
 		choicesJSON, err := json.Marshal(options)
 		if err != nil {
 			return err
@@ -379,12 +380,12 @@ func (s *Service) runTurn(
 	}
 
 	createWorkbench := func(name, description string, visibility workbench.Visibility) (workbench.Workbench, error) {
-		curUserID, curWorkspaceID, curCtx, _, _, _ := ts.snapshot()
+		curUserID, curWorkspaceID, curCtx, _, _, _, _ := ts.snapshot()
 		return s.workbenches.CreateWorkbench(curCtx, curUserID, curWorkspaceID, name, description, visibility)
 	}
 
 	searchTenders := func(query, country, cpv, status string) ([]tender.ScoredTender, error) {
-		curUserID, _, curCtx, _, _, _ := ts.snapshot()
+		curUserID, _, curCtx, _, curSendTenderResults, _, _ := ts.snapshot()
 		out, err := s.tenders.Search(curCtx, tender.SearchParams{
 			Query:         query,
 			Filters:       tender.Filters{Country: country, CPV: cpv, Status: status},
@@ -396,7 +397,7 @@ func (s *Service) runTurn(
 			return nil, err
 		}
 		if len(out.Results) > 0 {
-			if err := s.persistAndNotifyTenderResults(curCtx, sessionID, out.Results, sendTenderResults); err != nil {
+			if err := s.persistAndNotifyTenderResults(curCtx, sessionID, out.Results, curSendTenderResults); err != nil {
 				return nil, err
 			}
 		}
