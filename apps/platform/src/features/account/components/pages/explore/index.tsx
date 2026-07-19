@@ -70,7 +70,7 @@ export function AccountExplorePage() {
     const trimmed = query.trim();
     if (!trimmed && !hasActiveFilters(selections)) return;
     setSearched(true);
-    void search(trimmed, toFilterValues(selections, new Date()));
+    void search(trimmed, toFilterValues(selections, new Date()), currentWorkspaceId ?? undefined);
   };
 
   function handleSearch() {
@@ -149,7 +149,16 @@ export function AccountExplorePage() {
                     </p>
                     <div className="space-y-3">
                       {results.map((tender) => (
-                        <TenderResultCard key={tender.id} tender={tender} />
+                        <TenderResultCard
+                          key={tender.id}
+                          tender={tender}
+                          fitTier={
+                            tender.fitTier
+                              ? (tender.fitTier as 'strong' | 'possible' | 'long_shot')
+                              : undefined
+                          }
+                          reason={tender.fitTier ? tender.reason : undefined}
+                        />
                       ))}
                     </div>
                     {hasMore && (

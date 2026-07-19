@@ -138,7 +138,7 @@ describe('AccountExplorePage — search mode', () => {
     const user = userEvent.setup();
     renderWithI18n(<AccountExplorePage />);
     await submit(user, '  roads  ');
-    expect(searchMock).toHaveBeenCalledWith('roads', {});
+    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1');
   });
 
   it('is a no-op on an empty (whitespace-only) submit', async () => {
@@ -166,6 +166,53 @@ describe('AccountExplorePage — search mode', () => {
     expect(loadMoreBtn).toBeEnabled();
     await user.click(loadMoreBtn);
     expect(loadMoreMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('runs a manual search scoped to the current workspace', async () => {
+    const user = userEvent.setup();
+    renderWithI18n(<AccountExplorePage />);
+    await submit(user, 'roads');
+    // The `~/store/workspace` mock at module scope fixes currentWorkspaceId to 'ws-1'.
+    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1');
+  });
+
+  it('renders the fit-tier pill on a manual search result when the backend annotated it', async () => {
+    mockHook({
+      results: [
+        fixture({
+          id: 't-fit',
+          fitTier: 'strong',
+          reason: {
+            $typeName: 'tender.v1.ReasonSignals',
+            sectorMatch: true,
+            countryMatch: true,
+            valueFit: 'in_band',
+            deadlineDays: 10,
+            hasDeadline: true,
+            regionMatch: false,
+            procedureMatch: false,
+          },
+        }),
+      ],
+      hasMore: false,
+    });
+    const user = userEvent.setup();
+    renderWithI18n(<AccountExplorePage />);
+    await submit(user, 'roads');
+
+    expect(screen.getByText('Strong fit')).toBeInTheDocument();
+  });
+
+  it('renders a manual search result with no pill when fitTier is empty (annotation did not apply)', async () => {
+    // Never fabricate a signal: an unset/empty fitTier must render the card exactly as before.
+    mockHook({ results: [fixture({ id: 't-no-fit' })], hasMore: false });
+    const user = userEvent.setup();
+    renderWithI18n(<AccountExplorePage />);
+    await submit(user, 'roads');
+
+    expect(screen.queryByText('Strong fit')).not.toBeInTheDocument();
+    expect(screen.queryByText('Possible fit')).not.toBeInTheDocument();
+    expect(screen.queryByText('Long shot')).not.toBeInTheDocument();
   });
 
   it('disables Load more while a request is in flight', async () => {
@@ -214,14 +261,14 @@ describe('AccountExplorePage — search mode', () => {
     const user = userEvent.setup();
     renderWithI18n(<AccountExplorePage />);
     await user.selectOptions(screen.getByLabelText('Country'), 'IT');
-    expect(searchMock).toHaveBeenCalledWith('', { country: 'IT' });
+    expect(searchMock).toHaveBeenCalledWith('', { country: 'IT' }, 'ws-1');
   });
 
   it('maps the sector selection to a CPV prefix', async () => {
     const user = userEvent.setup();
     renderWithI18n(<AccountExplorePage />);
     await user.selectOptions(screen.getByLabelText('Sector'), 'construction');
-    expect(searchMock).toHaveBeenCalledWith('', { cpv: '45' });
+    expect(searchMock).toHaveBeenCalledWith('', { cpv: '45' }, 'ws-1');
   });
 
   it('includes the active filters when searching with a query', async () => {
@@ -229,7 +276,7 @@ describe('AccountExplorePage — search mode', () => {
     renderWithI18n(<AccountExplorePage />);
     await user.type(screen.getByRole('textbox', { name: 'Search' }), 'roads');
     await user.selectOptions(screen.getByLabelText('Status'), 'open');
-    expect(searchMock).toHaveBeenLastCalledWith('roads', { status: 'open' });
+    expect(searchMock).toHaveBeenLastCalledWith('roads', { status: 'open' }, 'ws-1');
   });
 
   it('maps a deadline preset to an RFC3339 from/to window', async () => {
@@ -254,7 +301,7 @@ describe('AccountExplorePage — search mode', () => {
     await user.selectOptions(screen.getByLabelText('Country'), 'IT');
     searchMock.mockClear();
     await user.click(screen.getByRole('button', { name: 'Clear all' }));
-    expect(searchMock).toHaveBeenCalledWith('roads', {});
+    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1');
     expect(screen.getByLabelText('Country')).toHaveValue('');
   });
 });
