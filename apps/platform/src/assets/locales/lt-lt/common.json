@@ -428,6 +428,10 @@
         "description": "Pirkimo informacija, terminas, perkančioji organizacija ir susijusios galimybės „{{title}}“."
       }
     },
+    "threshold": {
+      "belowEu": "Žemiau ES ribos",
+      "aboveEu": "Virš ES ribos"
+    },
     "fit": {
       "tier": {
         "strong": "Stiprus atitikimas",

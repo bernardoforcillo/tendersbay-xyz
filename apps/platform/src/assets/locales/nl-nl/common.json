@@ -422,6 +422,10 @@
         "description": "Details, termijn, aanbestedende dienst en vergelijkbare kansen voor \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Onder EU-drempel",
+      "aboveEu": "Boven EU-drempel"
+    },
     "fit": {
       "tier": {
         "strong": "Sterke match",

@@ -424,6 +424,10 @@
         "description": "Detalii licitație, termen limită, autoritate contractantă și oportunități conexe pentru „{{title}}”."
       }
     },
+    "threshold": {
+      "belowEu": "Sub pragul UE",
+      "aboveEu": "Peste pragul UE"
+    },
     "fit": {
       "tier": {
         "strong": "Potrivire puternică",

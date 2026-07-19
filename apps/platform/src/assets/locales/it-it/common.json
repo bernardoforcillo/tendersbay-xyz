@@ -422,6 +422,10 @@
         "description": "Dettagli del bando, scadenza, ente appaltante e opportunità correlate per \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Sotto la soglia UE",
+      "aboveEu": "Sopra la soglia UE"
+    },
     "fit": {
       "tier": {
         "strong": "Ottima corrispondenza",

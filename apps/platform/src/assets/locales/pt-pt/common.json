@@ -422,6 +422,10 @@
         "description": "Detalhes do concurso, prazo, comprador e oportunidades relacionadas para \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Abaixo do limiar da UE",
+      "aboveEu": "Acima do limiar da UE"
+    },
     "fit": {
       "tier": {
         "strong": "Correspondência forte",

@@ -428,6 +428,10 @@
         "description": "Detalji natječaja, rok, naručitelj i slične prilike za \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Ispod praga EU-a",
+      "aboveEu": "Iznad praga EU-a"
+    },
     "fit": {
       "tier": {
         "strong": "Snažno podudaranje",

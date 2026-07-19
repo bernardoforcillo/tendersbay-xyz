@@ -422,6 +422,10 @@
         "description": "Upphandlingsdetaljer, sista anbudsdag, upphandlande myndighet och relaterade möjligheter för \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Under EU:s tröskelvärde",
+      "aboveEu": "Över EU:s tröskelvärde"
+    },
     "fit": {
       "tier": {
         "strong": "Stark matchning",

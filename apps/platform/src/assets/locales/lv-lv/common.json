@@ -424,6 +424,10 @@
         "description": "Iepirkuma dati, termiņš, pasūtītājs un saistītās iespējas iepirkumam \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Zem ES sliekšņa",
+      "aboveEu": "Virs ES sliekšņa"
+    },
     "fit": {
       "tier": {
         "strong": "Spēcīga atbilstība",

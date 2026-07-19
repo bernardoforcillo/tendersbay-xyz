@@ -432,6 +432,10 @@
         "description": "Sonraí na tairisceana, spriocdháta, ceannaitheoir agus deiseanna gaolmhara le haghaidh \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Faoi bhun tairseach an AE",
+      "aboveEu": "Os cionn tairseach an AE"
+    },
     "fit": {
       "tier": {
         "strong": "Oiriúnú láidir",

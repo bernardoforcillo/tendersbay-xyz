@@ -430,6 +430,10 @@
         "description": "Szczegóły postępowania, termin składania ofert, zamawiający i powiązane zamówienia dla „{{title}}”."
       }
     },
+    "threshold": {
+      "belowEu": "Poniżej progu UE",
+      "aboveEu": "Powyżej progu UE"
+    },
     "fit": {
       "tier": {
         "strong": "Silne dopasowanie",

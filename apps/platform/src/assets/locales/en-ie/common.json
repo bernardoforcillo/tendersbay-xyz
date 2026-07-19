@@ -422,6 +422,10 @@
         "description": "Tender details, deadline, buyer and related opportunities for \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Below EU threshold",
+      "aboveEu": "Above EU threshold"
+    },
     "fit": {
       "tier": {
         "strong": "Strong fit",

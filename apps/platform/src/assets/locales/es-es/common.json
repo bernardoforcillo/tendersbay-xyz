@@ -422,6 +422,10 @@
         "description": "Detalles de la licitación, plazo, comprador y oportunidades relacionadas para \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Por debajo del umbral de la UE",
+      "aboveEu": "Por encima del umbral de la UE"
+    },
     "fit": {
       "tier": {
         "strong": "Coincidencia fuerte",

@@ -422,6 +422,10 @@
         "description": "Détails de l'appel d'offres, date limite, acheteur et opportunités similaires pour « {{title}} »."
       }
     },
+    "threshold": {
+      "belowEu": "Sous le seuil de l'UE",
+      "aboveEu": "Au-dessus du seuil de l'UE"
+    },
     "fit": {
       "tier": {
         "strong": "Forte correspondance",
