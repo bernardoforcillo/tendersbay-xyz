@@ -14,16 +14,22 @@ export function useTenderLink(): (
   id: string,
   children: ReactNode,
   className?: string,
+  onClick?: () => void,
 ) => ReactNode {
   const authed = useAuthStore((s) => s.isAuthenticated);
   const { i18n } = useTranslation();
-  return (id, children, className) =>
+  return (id, children, className, onClick) =>
     authed ? (
-      <Link to="/explore/tenders/$id" params={{ id }} className={className}>
+      <Link to="/explore/tenders/$id" params={{ id }} className={className} onClick={onClick}>
         {children}
       </Link>
     ) : (
-      <Link to="/$locale/tenders/$id" params={{ locale: i18n.language, id }} className={className}>
+      <Link
+        to="/$locale/tenders/$id"
+        params={{ locale: i18n.language, id }}
+        className={className}
+        onClick={onClick}
+      >
         {children}
       </Link>
     );

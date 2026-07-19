@@ -1,5 +1,5 @@
 import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithI18n } from '~/test/utils';
 import { TenderResultCard } from './index';
@@ -29,31 +29,14 @@ function fixture(overrides: Partial<TenderResult> = {}): TenderResult {
 }
 
 describe('TenderResultCard', () => {
-  it("renders with no fit tier and no link when sourceUrl is empty (today's inert card, unchanged)", () => {
+  it('never renders its own link, regardless of sourceUrl — every call site wraps it in an outer Link to the detail page, and a nested anchor would hijack that navigation', () => {
     renderWithI18n(<TenderResultCard tender={fixture()} />);
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
-  });
 
-  it('renders a link to the source notice when sourceUrl is set', () => {
     renderWithI18n(
       <TenderResultCard tender={fixture({ sourceUrl: 'https://ted.europa.eu/example/notice' })} />,
     );
-    const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', 'https://ted.europa.eu/example/notice');
-    expect(link).toHaveAttribute('target', '_blank');
-    expect(link).toHaveAttribute('rel', expect.stringContaining('noopener'));
-  });
-
-  it('calls onOpen when the source link is clicked', () => {
-    const onOpen = vi.fn();
-    renderWithI18n(
-      <TenderResultCard
-        tender={fixture({ sourceUrl: 'https://ted.europa.eu/example/notice' })}
-        onOpen={onOpen}
-      />,
-    );
-    fireEvent.click(screen.getByRole('link'));
-    expect(onOpen).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
 
   it('renders the strong fit tier pill and a reason line built from ReasonSignals', () => {
