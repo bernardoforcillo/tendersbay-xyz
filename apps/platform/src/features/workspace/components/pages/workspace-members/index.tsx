@@ -1,10 +1,11 @@
-import { Banner, Button, Card, Pill, Select } from '@tendersbay/components/core';
+import { Banner, Button, Card, ConfirmDialog, Pill, Select } from '@tendersbay/components/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWorkspaceContext } from '~/features/workspace/context';
 import { useMembers, useRoles } from '~/features/workspace/hooks';
 import { can, Permission } from '~/features/workspace/permissions';
 import { workspaceClient } from '~/lib/api/client';
+import { usePreferencesStore } from '~/store/preferences';
 
 export function WorkspaceMembersPage() {
   const { t } = useTranslation();
@@ -14,6 +15,8 @@ export function WorkspaceMembersPage() {
   const canManage = can(myPermissions, Permission.ManageMembers);
   const [busy, setBusy] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const shouldSkipRemove = usePreferencesStore((s) => s.shouldSkip('workspace-remove-member'));
+  const setSkip = usePreferencesStore((s) => s.setSkipConfirmation);
 
   async function changeRole(userId: string, roleId: string) {
     setBusy(userId);
@@ -86,13 +89,22 @@ export function WorkspaceMembersPage() {
                     <span className="text-sm text-ink-600">{m.roleName}</span>
                   )}
                   {canManage && !isOwner && (
-                    <Button
-                      variant="danger"
-                      isDisabled={busy === m.userId}
-                      onPress={() => remove(m.userId)}
-                    >
-                      {t('workspace.members.remove', 'Remove')}
-                    </Button>
+                    <ConfirmDialog
+                      title={t('confirm.removeMember.title', 'Remove member?')}
+                      description={t(
+                        'confirm.removeMember.description',
+                        'This person will lose access to the workspace immediately.',
+                      )}
+                      confirmLabel={t('workspace.members.remove', 'Remove')}
+                      onConfirm={() => remove(m.userId)}
+                      skipConfirmation={shouldSkipRemove}
+                      onSkipChange={(skip) => setSkip('workspace-remove-member', skip)}
+                      trigger={
+                        <Button variant="danger" isDisabled={busy === m.userId}>
+                          {t('workspace.members.remove', 'Remove')}
+                        </Button>
+                      }
+                    />
                   )}
                 </div>
               </Card>

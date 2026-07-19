@@ -1,4 +1,4 @@
-import { Banner, Button, Card, Pill, Select } from '@tendersbay/components/core';
+import { Banner, Button, Card, ConfirmDialog, Pill, Select } from '@tendersbay/components/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MemberAdd } from '~/features/workbench/components/organisms/member-add';
@@ -6,6 +6,7 @@ import { useWorkbenchContext } from '~/features/workbench/context';
 import { useWorkbenchMembers, useWorkbenchRoles } from '~/features/workbench/hooks';
 import { can, Permission } from '~/features/workbench/permissions';
 import { workbenchClient } from '~/lib/api/client';
+import { usePreferencesStore } from '~/store/preferences';
 
 export function WorkbenchMembersPage() {
   const { t } = useTranslation();
@@ -15,6 +16,8 @@ export function WorkbenchMembersPage() {
   const canManage = can(myPermissions, Permission.ManageMembers);
   const [busy, setBusy] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const shouldSkipRemove = usePreferencesStore((s) => s.shouldSkip('workbench-remove-member'));
+  const setSkip = usePreferencesStore((s) => s.setSkipConfirmation);
 
   const defaultRoleId = roles?.find((r) => r.isDefault)?.id ?? roles?.[0]?.id ?? '';
 
@@ -104,13 +107,22 @@ export function WorkbenchMembersPage() {
                     <span className="text-sm text-ink-600">{m.roleName}</span>
                   )}
                   {canManage && !isOwner && (
-                    <Button
-                      variant="danger"
-                      isDisabled={busy === m.userId}
-                      onPress={() => remove(m.userId)}
-                    >
-                      {t('workbench.members.remove', 'Remove')}
-                    </Button>
+                    <ConfirmDialog
+                      title={t('confirm.removeWorkbenchMember.title', 'Remove member?')}
+                      description={t(
+                        'confirm.removeWorkbenchMember.description',
+                        'This person will lose access to the workbench immediately.',
+                      )}
+                      confirmLabel={t('workbench.members.remove', 'Remove')}
+                      onConfirm={() => remove(m.userId)}
+                      skipConfirmation={shouldSkipRemove}
+                      onSkipChange={(skip) => setSkip('workbench-remove-member', skip)}
+                      trigger={
+                        <Button variant="danger" isDisabled={busy === m.userId}>
+                          {t('workbench.members.remove', 'Remove')}
+                        </Button>
+                      }
+                    />
                   )}
                 </div>
               </Card>

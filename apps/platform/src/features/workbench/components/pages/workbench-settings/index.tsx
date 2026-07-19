@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from '@tanstack/react-router';
-import { Banner, Button, Card, Field, Select } from '@tendersbay/components/core';
+import { Banner, Button, Card, ConfirmDialog, Field, Select } from '@tendersbay/components/core';
 import { ArrowLeftRight, Eye, SquarePen, TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
 import { Form } from 'react-aria-components';
@@ -9,6 +9,7 @@ import { useWorkbenchMembers } from '~/features/workbench/hooks';
 import { can, Permission } from '~/features/workbench/permissions';
 import { workbenchClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
+import { usePreferencesStore } from '~/store/preferences';
 
 export function WorkbenchSettingsPage() {
   const { t } = useTranslation();
@@ -29,7 +30,9 @@ export function WorkbenchSettingsPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
-  const [confirming, setConfirming] = useState<'delete' | 'leave' | null>(null);
+  const shouldSkipDelete = usePreferencesStore((s) => s.shouldSkip('workbench-delete'));
+  const shouldSkipLeave = usePreferencesStore((s) => s.shouldSkip('workbench-leave'));
+  const setSkip = usePreferencesStore((s) => s.setSkipConfirmation);
 
   const otherMembers = (members ?? []).filter((m) => m.userId !== workbench.ownerId);
 
@@ -209,23 +212,22 @@ export function WorkbenchSettingsPage() {
                   'Permanently delete this workbench and all its data.',
                 )}
               </p>
-              {confirming === 'delete' ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-red-700">
-                    {t('workbench.settings.confirmDelete', 'Delete this workbench?')}
-                  </span>
-                  <Button variant="danger" isDisabled={busy} onPress={destroy}>
-                    {t('workbench.common.confirm', 'Confirm')}
+              <ConfirmDialog
+                title={t('confirm.deleteWorkbench.title', 'Delete workbench?')}
+                description={t(
+                  'confirm.deleteWorkbench.description',
+                  'This will permanently delete this workbench and all its data. This action cannot be undone.',
+                )}
+                confirmLabel={t('workbench.settings.delete', 'Delete workbench')}
+                onConfirm={destroy}
+                skipConfirmation={shouldSkipDelete}
+                onSkipChange={(skip) => setSkip('workbench-delete', skip)}
+                trigger={
+                  <Button variant="danger" isDisabled={busy}>
+                    {t('workbench.settings.delete', 'Delete workbench')}
                   </Button>
-                  <Button variant="ghost" isDisabled={busy} onPress={() => setConfirming(null)}>
-                    {t('workbench.common.cancel', 'Cancel')}
-                  </Button>
-                </div>
-              ) : (
-                <Button variant="danger" isDisabled={busy} onPress={() => setConfirming('delete')}>
-                  {t('workbench.settings.delete', 'Delete workbench')}
-                </Button>
-              )}
+                }
+              />
             </div>
           ) : (
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -235,23 +237,22 @@ export function WorkbenchSettingsPage() {
                   'Leave this workbench. You can be re-added by a manager.',
                 )}
               </p>
-              {confirming === 'leave' ? (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-red-700">
-                    {t('workbench.settings.confirmLeave', 'Leave this workbench?')}
-                  </span>
-                  <Button variant="danger" isDisabled={busy} onPress={leave}>
-                    {t('workbench.common.confirm', 'Confirm')}
+              <ConfirmDialog
+                title={t('confirm.leaveWorkbench.title', 'Leave workbench?')}
+                description={t(
+                  'confirm.leaveWorkbench.description',
+                  'You will lose access to this workbench. A manager can re-add you.',
+                )}
+                confirmLabel={t('workbench.settings.leave', 'Leave workbench')}
+                onConfirm={leave}
+                skipConfirmation={shouldSkipLeave}
+                onSkipChange={(skip) => setSkip('workbench-leave', skip)}
+                trigger={
+                  <Button variant="danger" isDisabled={busy}>
+                    {t('workbench.settings.leave', 'Leave workbench')}
                   </Button>
-                  <Button variant="ghost" isDisabled={busy} onPress={() => setConfirming(null)}>
-                    {t('workbench.common.cancel', 'Cancel')}
-                  </Button>
-                </div>
-              ) : (
-                <Button variant="danger" isDisabled={busy} onPress={() => setConfirming('leave')}>
-                  {t('workbench.settings.leave', 'Leave workbench')}
-                </Button>
-              )}
+                }
+              />
             </div>
           )}
         </Card>
