@@ -26,9 +26,13 @@ const REQUIRED_KEYS = [
   'today.explore.title',
   'today.explore.description',
   'today.explore.action',
-  'today.recommended.title',
   'today.recommended.seeAll',
 ] as const;
+
+// Plural key stems: every locale must define at least `_one` and `_other`;
+// CLDR languages that need extra categories (few/many/two/zero) carry them
+// too, but the completeness test only demands the two universal suffixes.
+const PLURAL_STEMS = ['today.recommended.clientCount'] as const;
 
 describe('today locale keys', () => {
   it('covers all 24 locales', () => {
@@ -48,6 +52,24 @@ describe('today locale keys', () => {
       'today.greeting.eveningNamed',
     ]) {
       expect(get(mod.default, key), key).toContain('{{name}}');
+    }
+  });
+
+  it.each(entries)('%s defines the required plural forms with both placeholders', (_path, mod) => {
+    for (const stem of PLURAL_STEMS) {
+      for (const suffix of ['one', 'other'] as const) {
+        const form = get(mod.default, `${stem}_${suffix}`);
+        expect(form, `${stem}_${suffix}`).toBeTruthy();
+        expect(form, `${stem}_${suffix}`).toContain('{{count}}');
+        expect(form, `${stem}_${suffix}`).toContain('{{client}}');
+      }
+      for (const suffix of ['two', 'few', 'many', 'zero'] as const) {
+        const form = get(mod.default, `${stem}_${suffix}`);
+        if (form !== undefined) {
+          expect(form, `${stem}_${suffix}`).toContain('{{count}}');
+          expect(form, `${stem}_${suffix}`).toContain('{{client}}');
+        }
+      }
     }
   });
 });

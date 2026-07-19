@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
+import { GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, RecommendTendersForClientRequest, RecommendTendersForClientResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -52,6 +52,20 @@ export declare const TenderService: {
       readonly name: "ListTenderSitemap",
       readonly I: typeof ListTenderSitemapRequest,
       readonly O: typeof ListTenderSitemapResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * Deterministic, membership-checked, unmetered per-client best-fit
+     * shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+     * SearchTenders this requires authentication: it is scoped to one client
+     * (workspace) and reads that client's ClientProfile.
+     *
+     * @generated from rpc tender.v1.TenderService.RecommendTendersForClient
+     */
+    readonly recommendTendersForClient: {
+      readonly name: "RecommendTendersForClient",
+      readonly I: typeof RecommendTendersForClientRequest,
+      readonly O: typeof RecommendTendersForClientResponse,
       readonly kind: MethodKind.Unary,
     },
   }

@@ -104,6 +104,36 @@
       "loading": "Einen Moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektoren",
+      "countries": "Länder",
+      "valueMin": "Mindestwert",
+      "valueMax": "Höchstwert",
+      "notes": "Notizen",
+      "notesPlaceholder": "Worauf bietet dieser Kunde typischerweise?",
+      "save": "Profil speichern",
+      "invalidBand": "Der Mindestwert darf den Höchstwert nicht überschreiten.",
+      "error": "Das Profil konnte nicht gespeichert werden — versuchen Sie es erneut.",
+      "procedureTypesLabel": "Verfahrensarten",
+      "procedureTypes": {
+        "open": "Offenes Verfahren",
+        "restricted": "Nicht offenes Verfahren",
+        "negotiated": "Verhandlungsverfahren",
+        "competitive_dialogue": "Wettbewerblicher Dialog",
+        "innovation_partnership": "Innovationspartnerschaft",
+        "other": "Sonstige"
+      },
+      "regions": "Regionen (NUTS)",
+      "regionsPlaceholder": "z. B. ITC, DE3",
+      "regionsHint": "Durch Kommas getrennte NUTS-Präfixe. Leer lassen, um jede Region einzuschließen."
+    },
+    "shortlist": {
+      "title": "Beste Treffer für diesen Kunden",
+      "emptyTitle": "Noch keine passenden Ausschreibungen",
+      "emptyDescription": "Versuchen Sie unten eine manuelle Suche, oder erweitern Sie das Profil dieses Kunden."
+    }
+  },
   "landing": {
     "header": {
       "login": "Anmelden",
@@ -391,12 +421,27 @@
         "title": "{{title}} — tendersbay",
         "description": "Details zur Ausschreibung, Frist, Auftraggeber und ähnliche Gelegenheiten für „{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Starke Übereinstimmung",
+        "possible": "Mögliche Übereinstimmung",
+        "longShot": "Unwahrscheinlich"
+      },
+      "reasonSector": "Entspricht Ihrem Sektor",
+      "reasonCountry": "In Ihrem Zielland",
+      "reasonValueInBand": "In Ihrer Wertspanne",
+      "reasonValueBelow": "Unter Ihrer Wertspanne",
+      "reasonValueAbove": "Über Ihrer Wertspanne",
+      "reasonRegion": "In Ihrer Region",
+      "reasonProcedure": "Entspricht Ihrer Verfahrensart"
     }
   },
   "today": {
     "recommended": {
-      "title": "Für Sie empfohlen",
-      "seeAll": "Alles in Entdecken →"
+      "seeAll": "Alles in Entdecken →",
+      "clientCount_one": "{{count}} passende Ausschreibung bereit für {{client}}",
+      "clientCount_other": "{{count}} passende Ausschreibungen bereit für {{client}}"
     },
     "greeting": {
       "morning": "Guten Morgen.",
@@ -429,6 +474,7 @@
     },
     "nav": {
       "general": "Allgemein",
+      "profile": "Kundenprofil",
       "overview": "Übersicht",
       "members": "Mitglieder",
       "roles": "Rollen",
@@ -540,6 +586,16 @@
       "settings": "Workspace-Einstellungen",
       "label": "Workspaces",
       "manage": "Alle Workspaces"
+    },
+    "firstRun": {
+      "title": "Kunden-Angebotsprofil hinzufügen",
+      "subtitle": "Sagen Sie uns, worauf dieser Kunde bietet, damit die Empfehlungen von Anfang an treffsicher sind. Sie können dies später in den Einstellungen abschließen.",
+      "skip": "Vorerst überspringen"
+    },
+    "clientProfile": {
+      "title": "Kunden-Angebotsprofil",
+      "subtitle": "Worauf dieser Kunde bietet — Sektoren, Länder und Wertspanne — bestimmt jede Empfehlung.",
+      "saved": "Profil gespeichert."
     }
   },
   "workbench": {

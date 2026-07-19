@@ -104,6 +104,36 @@
       "loading": "Un momento."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sectores",
+      "countries": "Países",
+      "valueMin": "Valor mínimo",
+      "valueMax": "Valor máximo",
+      "notes": "Notas",
+      "notesPlaceholder": "¿A qué suele presentarse este cliente?",
+      "save": "Guardar perfil",
+      "invalidBand": "El valor mínimo no debe superar el valor máximo.",
+      "error": "No se pudo guardar el perfil — inténtalo de nuevo.",
+      "procedureTypesLabel": "Tipos de procedimiento",
+      "procedureTypes": {
+        "open": "Procedimiento abierto",
+        "restricted": "Procedimiento restringido",
+        "negotiated": "Procedimiento negociado",
+        "competitive_dialogue": "Diálogo competitivo",
+        "innovation_partnership": "Asociación para la innovación",
+        "other": "Otro"
+      },
+      "regions": "Regiones (NUTS)",
+      "regionsPlaceholder": "p. ej. ITC, DE3",
+      "regionsHint": "Prefijos NUTS separados por comas. Déjalo en blanco para incluir cualquier región."
+    },
+    "shortlist": {
+      "title": "Mejor opción para este cliente",
+      "emptyTitle": "Aún no hay licitaciones afines",
+      "emptyDescription": "Prueba una búsqueda manual abajo, o amplía el perfil de este cliente."
+    }
+  },
   "landing": {
     "header": {
       "login": "Iniciar sesión",
@@ -391,12 +421,27 @@
         "title": "{{title}} — tendersbay",
         "description": "Detalles de la licitación, plazo, comprador y oportunidades relacionadas para \"{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Coincidencia fuerte",
+        "possible": "Coincidencia posible",
+        "longShot": "Poco probable"
+      },
+      "reasonSector": "Coincide con tu sector",
+      "reasonCountry": "En tu país objetivo",
+      "reasonValueInBand": "Dentro de tu rango de valor",
+      "reasonValueBelow": "Por debajo de tu rango de valor",
+      "reasonValueAbove": "Por encima de tu rango de valor",
+      "reasonRegion": "En tu región",
+      "reasonProcedure": "Coincide con tu tipo de procedimiento"
     }
   },
   "today": {
     "recommended": {
-      "title": "Recomendadas para ti",
-      "seeAll": "Todo en Explorar →"
+      "seeAll": "Todo en Explorar →",
+      "clientCount_one": "{{count}} licitación afín lista para {{client}}",
+      "clientCount_other": "{{count}} licitaciones afines listas para {{client}}"
     },
     "greeting": {
       "morning": "Buenos días.",
@@ -429,6 +474,7 @@
     },
     "nav": {
       "general": "General",
+      "profile": "Perfil del cliente",
       "overview": "Resumen",
       "members": "Miembros",
       "roles": "Roles",
@@ -540,6 +586,16 @@
       "settings": "Ajustes del workspace",
       "label": "Espacios de trabajo",
       "manage": "Todos los espacios de trabajo"
+    },
+    "firstRun": {
+      "title": "Añadir un perfil de licitación del cliente",
+      "subtitle": "Cuéntanos a qué se presenta este cliente para que las recomendaciones sean precisas desde el principio. Puedes terminarlo más tarde desde Ajustes.",
+      "skip": "Omitir por ahora"
+    },
+    "clientProfile": {
+      "title": "Perfil de licitación del cliente",
+      "subtitle": "Aquello a lo que se presenta este cliente — sectores, países y rango de valor — guía cada recomendación.",
+      "saved": "Perfil guardado."
     }
   },
   "workbench": {

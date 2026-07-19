@@ -104,6 +104,36 @@
       "loading": "Un momento."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Settori",
+      "countries": "Paesi",
+      "valueMin": "Valore minimo",
+      "valueMax": "Valore massimo",
+      "notes": "Note",
+      "notesPlaceholder": "Su cosa fa offerte di solito questo cliente?",
+      "save": "Salva profilo",
+      "invalidBand": "Il valore minimo non può superare il valore massimo.",
+      "error": "Impossibile salvare il profilo — riprova.",
+      "procedureTypesLabel": "Tipo di procedura",
+      "procedureTypes": {
+        "open": "Procedura aperta",
+        "restricted": "Procedura ristretta",
+        "negotiated": "Procedura negoziata",
+        "competitive_dialogue": "Dialogo competitivo",
+        "innovation_partnership": "Partenariato per l'innovazione",
+        "other": "Altro"
+      },
+      "regions": "Regioni (NUTS)",
+      "regionsPlaceholder": "es. ITC, DE3",
+      "regionsHint": "Prefissi NUTS separati da virgola. Lascia vuoto per includere qualsiasi regione."
+    },
+    "shortlist": {
+      "title": "Il migliore per questo cliente",
+      "emptyTitle": "Nessun bando adatto per ora",
+      "emptyDescription": "Prova una ricerca manuale qui sotto, oppure amplia il profilo di questo cliente."
+    }
+  },
   "landing": {
     "header": {
       "login": "Accedi",
@@ -391,12 +421,27 @@
         "title": "{{title}} — tendersbay",
         "description": "Dettagli del bando, scadenza, ente appaltante e opportunità correlate per \"{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Ottima corrispondenza",
+        "possible": "Possibile corrispondenza",
+        "longShot": "Improbabile"
+      },
+      "reasonSector": "Corrisponde al tuo settore",
+      "reasonCountry": "Nel paese target",
+      "reasonValueInBand": "Nella tua fascia di valore",
+      "reasonValueBelow": "Sotto la tua fascia di valore",
+      "reasonValueAbove": "Sopra la tua fascia di valore",
+      "reasonRegion": "Nella tua regione",
+      "reasonProcedure": "Corrisponde al tuo tipo di procedura"
     }
   },
   "today": {
     "recommended": {
-      "title": "Consigliate per te",
-      "seeAll": "Tutto in Esplora →"
+      "seeAll": "Tutto in Esplora →",
+      "clientCount_one": "{{count}} bando ideale pronto per {{client}}",
+      "clientCount_other": "{{count}} bandi ideali pronti per {{client}}"
     },
     "greeting": {
       "morning": "Buongiorno.",
@@ -429,6 +474,7 @@
     },
     "nav": {
       "general": "Generale",
+      "profile": "Profilo cliente",
       "overview": "Panoramica",
       "members": "Membri",
       "roles": "Ruoli",
@@ -540,6 +586,16 @@
       "settings": "Impostazioni workspace",
       "label": "Spazi di lavoro",
       "manage": "Tutti gli spazi di lavoro"
+    },
+    "firstRun": {
+      "title": "Aggiungi un profilo cliente",
+      "subtitle": "Raccontaci su cosa fa offerte questo cliente per affinare subito i suggerimenti. Puoi completarlo più tardi dalle Impostazioni.",
+      "skip": "Salta per ora"
+    },
+    "clientProfile": {
+      "title": "Profilo di offerta del cliente",
+      "subtitle": "Su cosa fa offerte questo cliente — settori, paesi e fascia di valore — guida ogni suggerimento.",
+      "saved": "Profilo salvato."
     }
   },
   "workbench": {

@@ -1150,6 +1150,204 @@ export declare type JoinViaInviteLinkResponse = Message<"workspace.v1.JoinViaInv
 export declare const JoinViaInviteLinkResponseSchema: GenMessage<JoinViaInviteLinkResponse>;
 
 /**
+ * @generated from message workspace.v1.ClientProfile
+ */
+export declare type ClientProfile = Message<"workspace.v1.ClientProfile"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * CPV prefixes, e.g. "45", "72"
+   *
+   * @generated from field: repeated string sectors = 2;
+   */
+  sectors: string[];
+
+  /**
+   * alpha-2, e.g. "IT", "DE"
+   *
+   * @generated from field: repeated string countries = 3;
+   */
+  countries: string[];
+
+  /**
+   * meaningful only if value_min_set
+   *
+   * @generated from field: int64 value_min = 4;
+   */
+  valueMin: bigint;
+
+  /**
+   * @generated from field: bool value_min_set = 5;
+   */
+  valueMinSet: boolean;
+
+  /**
+   * meaningful only if value_max_set
+   *
+   * @generated from field: int64 value_max = 6;
+   */
+  valueMax: bigint;
+
+  /**
+   * @generated from field: bool value_max_set = 7;
+   */
+  valueMaxSet: boolean;
+
+  /**
+   * @generated from field: string notes = 8;
+   */
+  notes: string;
+
+  /**
+   * RFC3339, empty if never set
+   *
+   * @generated from field: string updated_at = 9;
+   */
+  updatedAt: string;
+
+  /**
+   * NUTS prefixes, e.g. "ITC", "DE3"; empty = any region
+   *
+   * @generated from field: repeated string regions = 10;
+   */
+  regions: string[];
+
+  /**
+   * open/restricted/negotiated/competitive_dialogue/innovation_partnership/other; empty = any
+   *
+   * @generated from field: repeated string procedure_types = 11;
+   */
+  procedureTypes: string[];
+};
+
+/**
+ * Describes the message workspace.v1.ClientProfile.
+ * Use `create(ClientProfileSchema)` to create a new message.
+ */
+export declare const ClientProfileSchema: GenMessage<ClientProfile>;
+
+/**
+ * @generated from message workspace.v1.GetClientProfileRequest
+ */
+export declare type GetClientProfileRequest = Message<"workspace.v1.GetClientProfileRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+};
+
+/**
+ * Describes the message workspace.v1.GetClientProfileRequest.
+ * Use `create(GetClientProfileRequestSchema)` to create a new message.
+ */
+export declare const GetClientProfileRequestSchema: GenMessage<GetClientProfileRequest>;
+
+/**
+ * @generated from message workspace.v1.GetClientProfileResponse
+ */
+export declare type GetClientProfileResponse = Message<"workspace.v1.GetClientProfileResponse"> & {
+  /**
+   * @generated from field: workspace.v1.ClientProfile profile = 1;
+   */
+  profile?: ClientProfile | undefined;
+
+  /**
+   * false = no profile yet; profile's fields are zero-valued
+   *
+   * @generated from field: bool exists = 2;
+   */
+  exists: boolean;
+};
+
+/**
+ * Describes the message workspace.v1.GetClientProfileResponse.
+ * Use `create(GetClientProfileResponseSchema)` to create a new message.
+ */
+export declare const GetClientProfileResponseSchema: GenMessage<GetClientProfileResponse>;
+
+/**
+ * @generated from message workspace.v1.UpdateClientProfileRequest
+ */
+export declare type UpdateClientProfileRequest = Message<"workspace.v1.UpdateClientProfileRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: repeated string sectors = 2;
+   */
+  sectors: string[];
+
+  /**
+   * alpha-2
+   *
+   * @generated from field: repeated string countries = 3;
+   */
+  countries: string[];
+
+  /**
+   * @generated from field: int64 value_min = 4;
+   */
+  valueMin: bigint;
+
+  /**
+   * @generated from field: bool value_min_set = 5;
+   */
+  valueMinSet: boolean;
+
+  /**
+   * @generated from field: int64 value_max = 6;
+   */
+  valueMax: bigint;
+
+  /**
+   * @generated from field: bool value_max_set = 7;
+   */
+  valueMaxSet: boolean;
+
+  /**
+   * @generated from field: string notes = 8;
+   */
+  notes: string;
+
+  /**
+   * @generated from field: repeated string regions = 9;
+   */
+  regions: string[];
+
+  /**
+   * @generated from field: repeated string procedure_types = 10;
+   */
+  procedureTypes: string[];
+};
+
+/**
+ * Describes the message workspace.v1.UpdateClientProfileRequest.
+ * Use `create(UpdateClientProfileRequestSchema)` to create a new message.
+ */
+export declare const UpdateClientProfileRequestSchema: GenMessage<UpdateClientProfileRequest>;
+
+/**
+ * @generated from message workspace.v1.UpdateClientProfileResponse
+ */
+export declare type UpdateClientProfileResponse = Message<"workspace.v1.UpdateClientProfileResponse"> & {
+  /**
+   * @generated from field: workspace.v1.ClientProfile profile = 1;
+   */
+  profile?: ClientProfile | undefined;
+};
+
+/**
+ * Describes the message workspace.v1.UpdateClientProfileResponse.
+ * Use `create(UpdateClientProfileResponseSchema)` to create a new message.
+ */
+export declare const UpdateClientProfileResponseSchema: GenMessage<UpdateClientProfileResponse>;
+
+/**
  * WorkspaceService manages multi-user workspaces with bitwise RBAC, membership,
  * and invitations. Every workspace-scoped request carries `workspace_id` as its
  * first field; the server resolves the caller's membership + role and enforces
@@ -1216,6 +1414,25 @@ export declare const WorkspaceService: GenService<{
     methodKind: "unary";
     input: typeof LeaveWorkspaceRequestSchema;
     output: typeof LeaveWorkspaceResponseSchema;
+  },
+  /**
+   * Client profile (per-client bid-qualification agent, v1.0) — the
+   * workspace IS the client; one profile per workspace.
+   *
+   * @generated from rpc workspace.v1.WorkspaceService.GetClientProfile
+   */
+  getClientProfile: {
+    methodKind: "unary";
+    input: typeof GetClientProfileRequestSchema;
+    output: typeof GetClientProfileResponseSchema;
+  },
+  /**
+   * @generated from rpc workspace.v1.WorkspaceService.UpdateClientProfile
+   */
+  updateClientProfile: {
+    methodKind: "unary";
+    input: typeof UpdateClientProfileRequestSchema;
+    output: typeof UpdateClientProfileResponseSchema;
   },
   /**
    * Members

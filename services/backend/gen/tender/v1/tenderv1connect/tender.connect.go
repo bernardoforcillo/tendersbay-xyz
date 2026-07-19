@@ -44,6 +44,9 @@ const (
 	// TenderServiceListTenderSitemapProcedure is the fully-qualified name of the TenderService's
 	// ListTenderSitemap RPC.
 	TenderServiceListTenderSitemapProcedure = "/tender.v1.TenderService/ListTenderSitemap"
+	// TenderServiceRecommendTendersForClientProcedure is the fully-qualified name of the
+	// TenderService's RecommendTendersForClient RPC.
+	TenderServiceRecommendTendersForClientProcedure = "/tender.v1.TenderService/RecommendTendersForClient"
 )
 
 // TenderServiceClient is a client for the tender.v1.TenderService service.
@@ -52,6 +55,11 @@ type TenderServiceClient interface {
 	GetTender(context.Context, *connect.Request[v1.GetTenderRequest]) (*connect.Response[v1.GetTenderResponse], error)
 	GetRelatedTenders(context.Context, *connect.Request[v1.GetRelatedTendersRequest]) (*connect.Response[v1.GetRelatedTendersResponse], error)
 	ListTenderSitemap(context.Context, *connect.Request[v1.ListTenderSitemapRequest]) (*connect.Response[v1.ListTenderSitemapResponse], error)
+	// Deterministic, membership-checked, unmetered per-client best-fit
+	// shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+	// SearchTenders this requires authentication: it is scoped to one client
+	// (workspace) and reads that client's ClientProfile.
+	RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error)
 }
 
 // NewTenderServiceClient constructs a client for the tender.v1.TenderService service. By default,
@@ -89,15 +97,22 @@ func NewTenderServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(tenderServiceMethods.ByName("ListTenderSitemap")),
 			connect.WithClientOptions(opts...),
 		),
+		recommendTendersForClient: connect.NewClient[v1.RecommendTendersForClientRequest, v1.RecommendTendersForClientResponse](
+			httpClient,
+			baseURL+TenderServiceRecommendTendersForClientProcedure,
+			connect.WithSchema(tenderServiceMethods.ByName("RecommendTendersForClient")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // tenderServiceClient implements TenderServiceClient.
 type tenderServiceClient struct {
-	searchTenders     *connect.Client[v1.SearchTendersRequest, v1.SearchTendersResponse]
-	getTender         *connect.Client[v1.GetTenderRequest, v1.GetTenderResponse]
-	getRelatedTenders *connect.Client[v1.GetRelatedTendersRequest, v1.GetRelatedTendersResponse]
-	listTenderSitemap *connect.Client[v1.ListTenderSitemapRequest, v1.ListTenderSitemapResponse]
+	searchTenders             *connect.Client[v1.SearchTendersRequest, v1.SearchTendersResponse]
+	getTender                 *connect.Client[v1.GetTenderRequest, v1.GetTenderResponse]
+	getRelatedTenders         *connect.Client[v1.GetRelatedTendersRequest, v1.GetRelatedTendersResponse]
+	listTenderSitemap         *connect.Client[v1.ListTenderSitemapRequest, v1.ListTenderSitemapResponse]
+	recommendTendersForClient *connect.Client[v1.RecommendTendersForClientRequest, v1.RecommendTendersForClientResponse]
 }
 
 // SearchTenders calls tender.v1.TenderService.SearchTenders.
@@ -120,12 +135,22 @@ func (c *tenderServiceClient) ListTenderSitemap(ctx context.Context, req *connec
 	return c.listTenderSitemap.CallUnary(ctx, req)
 }
 
+// RecommendTendersForClient calls tender.v1.TenderService.RecommendTendersForClient.
+func (c *tenderServiceClient) RecommendTendersForClient(ctx context.Context, req *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error) {
+	return c.recommendTendersForClient.CallUnary(ctx, req)
+}
+
 // TenderServiceHandler is an implementation of the tender.v1.TenderService service.
 type TenderServiceHandler interface {
 	SearchTenders(context.Context, *connect.Request[v1.SearchTendersRequest]) (*connect.Response[v1.SearchTendersResponse], error)
 	GetTender(context.Context, *connect.Request[v1.GetTenderRequest]) (*connect.Response[v1.GetTenderResponse], error)
 	GetRelatedTenders(context.Context, *connect.Request[v1.GetRelatedTendersRequest]) (*connect.Response[v1.GetRelatedTendersResponse], error)
 	ListTenderSitemap(context.Context, *connect.Request[v1.ListTenderSitemapRequest]) (*connect.Response[v1.ListTenderSitemapResponse], error)
+	// Deterministic, membership-checked, unmetered per-client best-fit
+	// shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+	// SearchTenders this requires authentication: it is scoped to one client
+	// (workspace) and reads that client's ClientProfile.
+	RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error)
 }
 
 // NewTenderServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -159,6 +184,12 @@ func NewTenderServiceHandler(svc TenderServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(tenderServiceMethods.ByName("ListTenderSitemap")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenderServiceRecommendTendersForClientHandler := connect.NewUnaryHandler(
+		TenderServiceRecommendTendersForClientProcedure,
+		svc.RecommendTendersForClient,
+		connect.WithSchema(tenderServiceMethods.ByName("RecommendTendersForClient")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/tender.v1.TenderService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenderServiceSearchTendersProcedure:
@@ -169,6 +200,8 @@ func NewTenderServiceHandler(svc TenderServiceHandler, opts ...connect.HandlerOp
 			tenderServiceGetRelatedTendersHandler.ServeHTTP(w, r)
 		case TenderServiceListTenderSitemapProcedure:
 			tenderServiceListTenderSitemapHandler.ServeHTTP(w, r)
+		case TenderServiceRecommendTendersForClientProcedure:
+			tenderServiceRecommendTendersForClientHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -192,4 +225,8 @@ func (UnimplementedTenderServiceHandler) GetRelatedTenders(context.Context, *con
 
 func (UnimplementedTenderServiceHandler) ListTenderSitemap(context.Context, *connect.Request[v1.ListTenderSitemapRequest]) (*connect.Response[v1.ListTenderSitemapResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.ListTenderSitemap is not implemented"))
+}
+
+func (UnimplementedTenderServiceHandler) RecommendTendersForClient(context.Context, *connect.Request[v1.RecommendTendersForClientRequest]) (*connect.Response[v1.RecommendTendersForClientResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.RecommendTendersForClient is not implemented"))
 }

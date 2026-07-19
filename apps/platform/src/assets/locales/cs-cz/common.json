@@ -104,6 +104,36 @@
       "loading": "Okamžik."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektory",
+      "countries": "Země",
+      "valueMin": "Minimální hodnota",
+      "valueMax": "Maximální hodnota",
+      "notes": "Poznámky",
+      "notesPlaceholder": "Na co tento klient obvykle podává nabídky?",
+      "save": "Uložit profil",
+      "invalidBand": "Minimální hodnota nesmí přesáhnout maximální hodnotu.",
+      "error": "Profil se nepodařilo uložit — zkuste to znovu.",
+      "procedureTypesLabel": "Typy řízení",
+      "procedureTypes": {
+        "open": "Otevřené řízení",
+        "restricted": "Užší řízení",
+        "negotiated": "Jednací řízení",
+        "competitive_dialogue": "Soutěžní dialog",
+        "innovation_partnership": "Inovační partnerství",
+        "other": "Jiné"
+      },
+      "regions": "Regiony (NUTS)",
+      "regionsPlaceholder": "např. ITC, DE3",
+      "regionsHint": "Předpony NUTS oddělené čárkami. Ponechte prázdné pro zahrnutí libovolného regionu."
+    },
+    "shortlist": {
+      "title": "Nejlepší shoda pro tohoto klienta",
+      "emptyTitle": "Zatím žádné vhodné zakázky",
+      "emptyDescription": "Vyzkoušejte ruční vyhledávání níže, nebo rozšiřte profil tohoto klienta."
+    }
+  },
   "landing": {
     "header": {
       "login": "Přihlásit se",
@@ -393,12 +423,28 @@
         "title": "{{title}} — tendersbay",
         "description": "Podrobnosti o zakázce, lhůta, zadavatel a související příležitosti pro „{{title}}“."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Silná shoda",
+        "possible": "Možná shoda",
+        "longShot": "Malá šance"
+      },
+      "reasonSector": "Odpovídá vašemu sektoru",
+      "reasonCountry": "Ve vaší cílové zemi",
+      "reasonValueInBand": "Ve vašem hodnotovém rozpětí",
+      "reasonValueBelow": "Pod vaším hodnotovým rozpětím",
+      "reasonValueAbove": "Nad vaším hodnotovým rozpětím",
+      "reasonRegion": "Ve vašem regionu",
+      "reasonProcedure": "Odpovídá vašemu typu řízení"
     }
   },
   "today": {
     "recommended": {
-      "title": "Doporučeno pro vás",
-      "seeAll": "Vše v sekci Prozkoumat →"
+      "seeAll": "Vše v sekci Prozkoumat →",
+      "clientCount_one": "{{count}} vhodná zakázka připravena pro {{client}}",
+      "clientCount_few": "{{count}} vhodné zakázky připraveny pro {{client}}",
+      "clientCount_other": "{{count}} vhodných zakázek připraveno pro {{client}}"
     },
     "greeting": {
       "morning": "Dobré ráno.",
@@ -431,6 +477,7 @@
     },
     "nav": {
       "general": "Obecné",
+      "profile": "Profil klienta",
       "overview": "Přehled",
       "members": "Členové",
       "roles": "Role",
@@ -542,6 +589,16 @@
       "settings": "Nastavení workspace",
       "label": "Pracovní prostory",
       "manage": "Všechny pracovní prostory"
+    },
+    "firstRun": {
+      "title": "Přidat profil nabídek klienta",
+      "subtitle": "Řekněte nám, na co tento klient obvykle podává nabídky, aby byla doporučení od začátku přesná. Dokončit to můžete později v Nastavení.",
+      "skip": "Zatím přeskočit"
+    },
+    "clientProfile": {
+      "title": "Profil nabídek klienta",
+      "subtitle": "To, na co tento klient podává nabídky — sektory, země a hodnotové rozpětí — určuje každé doporučení.",
+      "saved": "Profil uložen."
     }
   },
   "workbench": {

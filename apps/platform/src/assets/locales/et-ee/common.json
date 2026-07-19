@@ -104,6 +104,36 @@
       "loading": "Hetk veel."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektorid",
+      "countries": "Riigid",
+      "valueMin": "Minimaalne väärtus",
+      "valueMax": "Maksimaalne väärtus",
+      "notes": "Märkmed",
+      "notesPlaceholder": "Millele see klient tavaliselt pakkumusi teeb?",
+      "save": "Salvesta profiil",
+      "invalidBand": "Minimaalne väärtus ei tohi ületada maksimaalset väärtust.",
+      "error": "Profiili salvestamine ebaõnnestus — proovige uuesti.",
+      "procedureTypesLabel": "Menetlusliigid",
+      "procedureTypes": {
+        "open": "Avatud hankemenetlus",
+        "restricted": "Piiratud hankemenetlus",
+        "negotiated": "Väljakuulutamisega läbirääkimistega hankemenetlus",
+        "competitive_dialogue": "Võistlev dialoog",
+        "innovation_partnership": "Innovatsioonipartnerlus",
+        "other": "Muu"
+      },
+      "regions": "Piirkonnad (NUTS)",
+      "regionsPlaceholder": "nt ITC, DE3",
+      "regionsHint": "Komadega eraldatud NUTS-eesliited. Jätke tühjaks, et hõlmata mis tahes piirkonda."
+    },
+    "shortlist": {
+      "title": "Parim sobivus sellele kliendile",
+      "emptyTitle": "Sobivaid hankeid pole veel",
+      "emptyDescription": "Proovige allpool käsitsi otsingut või laiendage selle kliendi profiili."
+    }
+  },
   "landing": {
     "header": {
       "login": "Logi sisse",
@@ -391,12 +421,27 @@
         "title": "{{title}} — tendersbay",
         "description": "Hanke üksikasjad, tähtaeg, ostja ja seotud võimalused hankele \"{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Tugev sobivus",
+        "possible": "Võimalik sobivus",
+        "longShot": "Väike tõenäosus"
+      },
+      "reasonSector": "Vastab teie sektorile",
+      "reasonCountry": "Teie sihtriigis",
+      "reasonValueInBand": "Teie väärtusvahemikus",
+      "reasonValueBelow": "Alla teie väärtusvahemiku",
+      "reasonValueAbove": "Üle teie väärtusvahemiku",
+      "reasonRegion": "Teie piirkonnas",
+      "reasonProcedure": "Vastab teie menetlusliigile"
     }
   },
   "today": {
     "recommended": {
-      "title": "Teile soovitatud",
-      "seeAll": "Kõik jaotises Avasta →"
+      "seeAll": "Kõik jaotises Avasta →",
+      "clientCount_one": "{{count}} sobiv hange valmis kliendile {{client}}",
+      "clientCount_other": "{{count}} sobivat hanget valmis kliendile {{client}}"
     },
     "greeting": {
       "morning": "Tere hommikust.",
@@ -429,6 +474,7 @@
     },
     "nav": {
       "general": "Üldine",
+      "profile": "Kliendi profiil",
       "overview": "Ülevaade",
       "members": "Liikmed",
       "roles": "Rollid",
@@ -540,6 +586,16 @@
       "settings": "Workspace'i seaded",
       "label": "Tööruumid",
       "manage": "Kõik tööruumid"
+    },
+    "firstRun": {
+      "title": "Lisa kliendi pakkumisprofiil",
+      "subtitle": "Öelge meile, millele see klient tavaliselt pakkumusi teeb, et soovitused oleksid algusest peale täpsed. Saate selle hiljem lõpetada seadetes.",
+      "skip": "Jäta praegu vahele"
+    },
+    "clientProfile": {
+      "title": "Kliendi pakkumisprofiil",
+      "subtitle": "See, millele see klient pakkumusi teeb — sektorid, riigid ja väärtusvahemik — mõjutab iga soovitust.",
+      "saved": "Profiil salvestatud."
     }
   },
   "workbench": {

@@ -13,6 +13,11 @@ service TenderService {
   rpc GetTender(GetTenderRequest) returns (GetTenderResponse);
   rpc GetRelatedTenders(GetRelatedTendersRequest) returns (GetRelatedTendersResponse);
   rpc ListTenderSitemap(ListTenderSitemapRequest) returns (ListTenderSitemapResponse);
+  // Deterministic, membership-checked, unmetered per-client best-fit
+  // shortlist — see tender.Service.RecommendForClient in the backend. Unlike
+  // SearchTenders this requires authentication: it is scoped to one client
+  // (workspace) and reads that client's ClientProfile.
+  rpc RecommendTendersForClient(RecommendTendersForClientRequest) returns (RecommendTendersForClientResponse);
 }
 
 message SearchTendersRequest {
@@ -22,6 +27,7 @@ message SearchTendersRequest {
   int32 offset = 4;          // optional, default 0; for semantic (non-empty query) searches,
                               // paging is bounded by the candidate window (~250 results) —
                               // very deep pages may return empty even with more matches server-side
+  string workspace_id = 5;   // optional; empty = today's anonymous-safe behavior
 }
 
 message TenderFilters {
@@ -44,7 +50,7 @@ message TenderResult {
   string buyer_name = 3;
   string status = 4;
   string procedure_type = 5;
-  string country = 6;
+  string country = 6;           // alpha-2, e.g. "IT", "DE"
   string cpv = 7;
   int64 value = 8;
   string currency = 9;
@@ -53,6 +59,39 @@ message TenderResult {
   double relevance_score = 12;  // meaningful only when query was non-empty; 0 for filters-only
   string source = 13;
   string source_ref = 14;
+  string source_url = 15;       // the notice's document URL, empty if none is ingested
+  string nuts = 16;             // NUTS region code, empty if unset
+  string fit_tier = 17;         // "strong" | "possible" | "long_shot"; empty unless annotated
+  ReasonSignals reason = 18;    // nil unless annotated
+}
+
+message RecommendTendersForClientRequest {
+  string workspace_id = 1;
+  int32 limit = 2; // optional, server-defaulted
+}
+
+// ReasonSignals are the localizable FACTS behind a fit tier — never a
+// prebuilt sentence. The frontend renders the sentence from these booleans/
+// enums so every locale controls its own phrasing.
+message ReasonSignals {
+  bool sector_match = 1;
+  bool country_match = 2;
+  string value_fit = 3;    // "in_band" | "below" | "above" | "unknown"
+  int32 deadline_days = 4; // meaningful only when has_deadline is true
+  bool has_deadline = 5;
+  bool region_match = 6;
+  bool procedure_match = 7;
+}
+
+message RecommendedTenderResult {
+  TenderResult tender = 1;
+  string fit_tier = 2; // "strong" | "possible" | "long_shot"
+  ReasonSignals reason = 3;
+}
+
+message RecommendTendersForClientResponse {
+  repeated RecommendedTenderResult results = 1;
+  bool needs_profile = 2; // true = no ClientProfile yet; results is empty
 }
 
 message GetTenderRequest { string id = 1; }

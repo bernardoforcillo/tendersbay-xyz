@@ -12,6 +12,7 @@ import (
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
@@ -49,6 +50,12 @@ type WorkbenchCreator interface {
 	CreateWorkbench(ctx context.Context, userID, workspaceID, name, description string, visibility workbench.Visibility) (workbench.Workbench, error)
 }
 
+// TenderSearcher is the narrow port the search_tenders tool needs —
+// satisfied by *tender.Service unchanged.
+type TenderSearcher interface {
+	Search(ctx context.Context, p tender.SearchParams) (tender.SearchOutput, error)
+}
+
 // SendChoice is called when the agent asks a closed-ended question — the
 // ConnectRPC handler wires it to stream.Send, mirroring StreamToken.
 type SendChoice func(ChoicePrompt) error
@@ -80,17 +87,19 @@ type Service struct {
 	creditSvc    *credits.Service
 	members      MemberRepository
 	workbenches  WorkbenchCreator
+	tenders      TenderSearcher
 	turnStates   map[string]*turnState
 	turnStatesMu sync.Mutex
 }
 
-func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches WorkbenchCreator) *Service {
+func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches WorkbenchCreator, tenders TenderSearcher) *Service {
 	return &Service{
 		registry:    registry,
 		chatRepo:    chatRepo,
 		creditSvc:   creditSvc,
 		members:     members,
 		workbenches: workbenches,
+		tenders:     tenders,
 		turnStates:  make(map[string]*turnState),
 	}
 }
@@ -366,10 +375,26 @@ func (s *Service) runTurn(
 		return s.workbenches.CreateWorkbench(curCtx, curUserID, curWorkspaceID, name, description, visibility)
 	}
 
+	searchTenders := func(query, country, cpv, status string) ([]tender.ScoredTender, error) {
+		curUserID, _, curCtx, _, _, _ := ts.snapshot()
+		out, err := s.tenders.Search(curCtx, tender.SearchParams{
+			Query:         query,
+			Filters:       tender.Filters{Country: country, CPV: cpv, Status: status},
+			Limit:         searchTendersToolLimit,
+			Authenticated: true,
+			RateLimitKey:  curUserID,
+		})
+		if err != nil {
+			return nil, err
+		}
+		return out.Results, nil
+	}
+
 	ag, err := s.registry.BuildAgent(cfg,
 		bagent.WithTools(
 			newAskChoiceTool(askChoice),
 			newCreateWorkbenchTool(createWorkbench),
+			newSearchTendersTool(searchTenders),
 		),
 	)
 	if err != nil {

@@ -42,11 +42,11 @@ func insertTestTender(t *testing.T, sqlDB *sql.DB, sourceRef string, opts ...fun
 	var id int64
 	err := sqlDB.QueryRow(
 		`INSERT INTO tenders.ingested_tenders
-		 (source, source_ref, title, buyer_name, status, procedure_type, country, cpv, value, currency, published_at, deadline)
-		 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+		 (source, source_ref, title, buyer_name, status, procedure_type, country, cpv, value, currency, published_at, deadline, nuts)
+		 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
 		 RETURNING id`,
 		row.source, row.sourceRef, row.title, row.buyerName, row.status, row.procedureType,
-		row.country, row.cpv, row.value, row.currency, row.publishedAt, row.deadline,
+		row.country, row.cpv, row.value, row.currency, row.publishedAt, row.deadline, row.nuts,
 	).Scan(&id)
 	if err != nil {
 		t.Fatalf("insertTestTender: %v", err)
@@ -58,9 +58,9 @@ func insertTestTender(t *testing.T, sqlDB *sql.DB, sourceRef string, opts ...fun
 }
 
 type testTenderRow struct {
-	source, sourceRef, title, buyerName, status, procedureType, country, cpv, currency string
-	value                                                                              *int64
-	publishedAt, deadline                                                              *time.Time
+	source, sourceRef, title, buyerName, status, procedureType, country, cpv, currency, nuts string
+	value                                                                                    *int64
+	publishedAt, deadline                                                                    *time.Time
 }
 
 func withCountry(c string) func(*testTenderRow) { return func(r *testTenderRow) { r.country = c } }
@@ -68,6 +68,7 @@ func withStatus(s string) func(*testTenderRow)  { return func(r *testTenderRow) 
 func withPublishedAt(ts time.Time) func(*testTenderRow) {
 	return func(r *testTenderRow) { r.publishedAt = &ts }
 }
+func withNUTS(n string) func(*testTenderRow) { return func(r *testTenderRow) { r.nuts = n } }
 
 func TestSearchByFilters_FiltersByCountryAndOrdersByPublishedAtDesc(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
@@ -157,6 +158,78 @@ func TestSearchTenders_RoundTripsStringIDs(t *testing.T) {
 	}
 	if _, err := strconv.ParseInt(rows[0].ID, 10, 64); err != nil {
 		t.Errorf("rows[0].ID = %q, want a valid decimal string", rows[0].ID)
+	}
+}
+
+func TestSearchByFilters_ReturnsNUTS(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	id := insertTestTender(t, sqlDB, "nuts-row", withCountry("ITA"), withNUTS("ITC4"))
+	rows, err := repo.SearchByFilters(context.Background(), postgres.TenderFilters{Country: "ITA"}, 10, 0)
+	if err != nil {
+		t.Fatalf("SearchByFilters: %v", err)
+	}
+	var got *postgres.TenderResultRow
+	for i := range rows {
+		if rows[i].ID == id {
+			got = &rows[i]
+		}
+	}
+	if got == nil {
+		t.Fatal("seeded row not returned")
+	}
+	if got.NUTS != "ITC4" {
+		t.Fatalf("NUTS = %q, want ITC4", got.NUTS)
+	}
+}
+
+// insertTestDocument writes a row into tenders.ingested_tender_documents for
+// tenderID, mirroring insertTestTender's direct-INSERT bypass pattern.
+func insertTestDocument(t *testing.T, sqlDB *sql.DB, tenderID int64, docType, url string) {
+	t.Helper()
+	var id int64
+	err := sqlDB.QueryRow(
+		`INSERT INTO tenders.ingested_tender_documents (tender_id, url, type) VALUES ($1, $2, $3) RETURNING id`,
+		tenderID, url, docType,
+	).Scan(&id)
+	if err != nil {
+		t.Fatalf("insertTestDocument: %v", err)
+	}
+	t.Cleanup(func() {
+		_, _ = sqlDB.Exec(`DELETE FROM tenders.ingested_tender_documents WHERE id = $1`, id)
+	})
+}
+
+func TestSearchByFilters_JoinsNoticeDocumentURL(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+
+	withDoc := insertTestTender(t, sqlDB, "doc-with-notice", withCountry("ITA"))
+	insertTestDocument(t, sqlDB, withDoc, "notice", "https://ted.europa.eu/example/notice")
+	insertTestDocument(t, sqlDB, withDoc, "spec", "https://ted.europa.eu/example/spec") // must NOT be picked
+	withoutDoc := insertTestTender(t, sqlDB, "doc-without-notice", withCountry("ITA"))
+
+	rows, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "ITA"}, 10, 0)
+	if err != nil {
+		t.Fatalf("SearchByFilters: %v", err)
+	}
+
+	var gotWith, gotWithout *postgres.TenderResultRow
+	for i := range rows {
+		switch rows[i].ID {
+		case withDoc:
+			gotWith = &rows[i]
+		case withoutDoc:
+			gotWithout = &rows[i]
+		}
+	}
+	if gotWith == nil || gotWithout == nil {
+		t.Fatalf("expected both seeded rows in results, got %d rows", len(rows))
+	}
+	if gotWith.SourceURL == nil || *gotWith.SourceURL != "https://ted.europa.eu/example/notice" {
+		t.Fatalf("gotWith.SourceURL = %v, want the notice-type URL (not the spec one)", gotWith.SourceURL)
+	}
+	if gotWithout.SourceURL != nil {
+		t.Fatalf("gotWithout.SourceURL = %v, want nil (no document ingested)", *gotWithout.SourceURL)
 	}
 }
 

@@ -31,5 +31,6 @@ func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 	m.Add(migrateWorkbenches())
 	m.Add(migrateAgent())
 	m.Add(migrateAgentCreditsBackfill())
+	m.Add(migrateClientProfiles())
 	return db, sqlDB, m.Up(ctx)
 }

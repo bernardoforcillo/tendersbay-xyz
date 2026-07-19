@@ -15,6 +15,8 @@ import (
 	"fmt"
 	"sort"
 	"time"
+
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 )
 
 // ── Sentinel errors ──
@@ -53,6 +55,8 @@ type Tender struct {
 	Deadline      *time.Time
 	Source        string
 	SourceRef     string
+	NUTS          string
+	SourceURL     string // the notice document's URL; "" if none is ingested
 }
 
 // Filters narrows a search. Zero-value fields are unset.
@@ -108,24 +112,48 @@ type Tier struct {
 	RateWindow time.Duration
 }
 
-// Config holds the tiers' limits.
+// FitThresholds tunes RecommendForClient's tier classification (see
+// recommend.go). These are an initial, uncalibrated guess — there is no
+// conversion data pre-launch (see the design spec's Risks section) — safe to
+// retune here without touching the classification logic itself.
+type FitThresholds struct {
+	RelevanceHigh      float64 // relevance_score at/above which a result can be "strong"
+	RelevanceLow       float64 // relevance_score below which a result is always "long_shot"
+	MinDeadlineDays    int     // fewer days than this blocks "strong" (too tight to call it a sure thing)
+	UrgentDeadlineDays int     // fewer days than this forces "long_shot" regardless of relevance
+}
+
+// Config holds the search tiers' limits, the GetTender tier's limits, and
+// the fit-tier thresholds.
 type Config struct {
 	AnonTier      Tier
 	AuthedTier    Tier
 	GetTenderTier Tier // generous; GetTender is cheap and called server-side per crawl
+	Fit           FitThresholds
+}
+
+// ProfileSource is the subset of clientprofile.Service this package needs to
+// scope a recommendation to one client (workspace) — defined here, the
+// consumer, mirroring the KnowledgeBase port above. Its Get is already
+// membership-checked (clientprofile.Service.Get requires membership before
+// touching its repo), so RecommendForClient does not re-check membership
+// itself — see recommend.go.
+type ProfileSource interface {
+	Get(ctx context.Context, userID, workspaceID string) (clientprofile.Profile, error)
 }
 
 // Service runs tender searches.
 type Service struct {
-	repo Repo
-	kb   KnowledgeBase
-	rl   RateLimiter
-	cfg  Config
+	repo     Repo
+	kb       KnowledgeBase
+	rl       RateLimiter
+	profiles ProfileSource
+	cfg      Config
 }
 
 // NewService returns a Service.
-func NewService(repo Repo, kb KnowledgeBase, rl RateLimiter, cfg Config) *Service {
-	return &Service{repo: repo, kb: kb, rl: rl, cfg: cfg}
+func NewService(repo Repo, kb KnowledgeBase, rl RateLimiter, profiles ProfileSource, cfg Config) *Service {
+	return &Service{repo: repo, kb: kb, rl: rl, profiles: profiles, cfg: cfg}
 }
 
 // SearchParams is Search's input. RateLimitKey is the client IP for

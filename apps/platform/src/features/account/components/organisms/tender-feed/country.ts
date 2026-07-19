@@ -78,9 +78,12 @@ const FLAGS: Record<string, FlagComponent> = {
 };
 
 /**
- * ISO 3166-1 alpha-3 → alpha-2 for the countries we carry a flag for. The
- * backend stores the tender country as alpha-3 (the TED connector's
- * convention, e.g. "ITA", "PRT"), so this is the primary lookup path.
+ * ISO 3166-1 alpha-3 → alpha-2 for the countries we carry a flag for. Tender
+ * data and `ClientProfile.Countries` are both alpha-2 in storage — TED/eforms'
+ * source data is alpha-3, but the ingestion pipeline converts it to alpha-2
+ * before storage. This map exists for defensive display-side resolution
+ * (`countryAlpha2`/`countryFlag`/`countryName` accept either form), not as the
+ * wire format — see `TENDER_COUNTRY_CODES` below for that.
  */
 const ALPHA3_TO_ALPHA2: Record<string, string> = {
   AUT: 'AT',
@@ -124,11 +127,15 @@ const ALPHA3_TO_ALPHA2: Record<string, string> = {
 const ALIASES: Record<string, string> = { EL: 'GR', UK: 'GB', EUU: 'EU' };
 
 /**
- * The alpha-3 country codes we can name and flag — the EU-27 plus the EEA/adjacent
- * states that also appear on TED — offered as the explore "country" filter. Sort by
- * localised name at the call site with `countryName`.
+ * The alpha-2 country codes we can name and flag — the EU-27 plus the EEA/adjacent
+ * states that also appear on TED — offered as the explore "country" filter and the
+ * client-profile country picker. Both consumers send these values verbatim over the
+ * wire (the search filter's `country`, `ClientProfile.Countries`), and the backend
+ * validates/stores alpha-2 only (`clientprofile.go`'s `countryRe`,
+ * `ingested_tenders.country`), so this must stay alpha-2 — not the alpha-3 keys of
+ * `ALPHA3_TO_ALPHA2` above. Sort by localised name at the call site with `countryName`.
  */
-export const TENDER_COUNTRY_CODES: readonly string[] = Object.keys(ALPHA3_TO_ALPHA2);
+export const TENDER_COUNTRY_CODES: readonly string[] = Object.values(ALPHA3_TO_ALPHA2);
 
 /**
  * Resolves a raw tender country code (alpha-3, alpha-2, or an EU quirk code) to

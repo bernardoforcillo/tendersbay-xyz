@@ -54,6 +54,12 @@ const (
 	// WorkspaceServiceLeaveWorkspaceProcedure is the fully-qualified name of the WorkspaceService's
 	// LeaveWorkspace RPC.
 	WorkspaceServiceLeaveWorkspaceProcedure = "/workspace.v1.WorkspaceService/LeaveWorkspace"
+	// WorkspaceServiceGetClientProfileProcedure is the fully-qualified name of the WorkspaceService's
+	// GetClientProfile RPC.
+	WorkspaceServiceGetClientProfileProcedure = "/workspace.v1.WorkspaceService/GetClientProfile"
+	// WorkspaceServiceUpdateClientProfileProcedure is the fully-qualified name of the
+	// WorkspaceService's UpdateClientProfile RPC.
+	WorkspaceServiceUpdateClientProfileProcedure = "/workspace.v1.WorkspaceService/UpdateClientProfile"
 	// WorkspaceServiceListMembersProcedure is the fully-qualified name of the WorkspaceService's
 	// ListMembers RPC.
 	WorkspaceServiceListMembersProcedure = "/workspace.v1.WorkspaceService/ListMembers"
@@ -117,6 +123,10 @@ type WorkspaceServiceClient interface {
 	DeleteWorkspace(context.Context, *connect.Request[v1.DeleteWorkspaceRequest]) (*connect.Response[v1.DeleteWorkspaceResponse], error)
 	TransferOwnership(context.Context, *connect.Request[v1.TransferOwnershipRequest]) (*connect.Response[v1.TransferOwnershipResponse], error)
 	LeaveWorkspace(context.Context, *connect.Request[v1.LeaveWorkspaceRequest]) (*connect.Response[v1.LeaveWorkspaceResponse], error)
+	// Client profile (per-client bid-qualification agent, v1.0) — the
+	// workspace IS the client; one profile per workspace.
+	GetClientProfile(context.Context, *connect.Request[v1.GetClientProfileRequest]) (*connect.Response[v1.GetClientProfileResponse], error)
+	UpdateClientProfile(context.Context, *connect.Request[v1.UpdateClientProfileRequest]) (*connect.Response[v1.UpdateClientProfileResponse], error)
 	// Members
 	ListMembers(context.Context, *connect.Request[v1.ListMembersRequest]) (*connect.Response[v1.ListMembersResponse], error)
 	ChangeMemberRole(context.Context, *connect.Request[v1.ChangeMemberRoleRequest]) (*connect.Response[v1.ChangeMemberRoleResponse], error)
@@ -191,6 +201,18 @@ func NewWorkspaceServiceClient(httpClient connect.HTTPClient, baseURL string, op
 			httpClient,
 			baseURL+WorkspaceServiceLeaveWorkspaceProcedure,
 			connect.WithSchema(workspaceServiceMethods.ByName("LeaveWorkspace")),
+			connect.WithClientOptions(opts...),
+		),
+		getClientProfile: connect.NewClient[v1.GetClientProfileRequest, v1.GetClientProfileResponse](
+			httpClient,
+			baseURL+WorkspaceServiceGetClientProfileProcedure,
+			connect.WithSchema(workspaceServiceMethods.ByName("GetClientProfile")),
+			connect.WithClientOptions(opts...),
+		),
+		updateClientProfile: connect.NewClient[v1.UpdateClientProfileRequest, v1.UpdateClientProfileResponse](
+			httpClient,
+			baseURL+WorkspaceServiceUpdateClientProfileProcedure,
+			connect.WithSchema(workspaceServiceMethods.ByName("UpdateClientProfile")),
 			connect.WithClientOptions(opts...),
 		),
 		listMembers: connect.NewClient[v1.ListMembersRequest, v1.ListMembersResponse](
@@ -307,6 +329,8 @@ type workspaceServiceClient struct {
 	deleteWorkspace       *connect.Client[v1.DeleteWorkspaceRequest, v1.DeleteWorkspaceResponse]
 	transferOwnership     *connect.Client[v1.TransferOwnershipRequest, v1.TransferOwnershipResponse]
 	leaveWorkspace        *connect.Client[v1.LeaveWorkspaceRequest, v1.LeaveWorkspaceResponse]
+	getClientProfile      *connect.Client[v1.GetClientProfileRequest, v1.GetClientProfileResponse]
+	updateClientProfile   *connect.Client[v1.UpdateClientProfileRequest, v1.UpdateClientProfileResponse]
 	listMembers           *connect.Client[v1.ListMembersRequest, v1.ListMembersResponse]
 	changeMemberRole      *connect.Client[v1.ChangeMemberRoleRequest, v1.ChangeMemberRoleResponse]
 	removeMember          *connect.Client[v1.RemoveMemberRequest, v1.RemoveMemberResponse]
@@ -359,6 +383,16 @@ func (c *workspaceServiceClient) TransferOwnership(ctx context.Context, req *con
 // LeaveWorkspace calls workspace.v1.WorkspaceService.LeaveWorkspace.
 func (c *workspaceServiceClient) LeaveWorkspace(ctx context.Context, req *connect.Request[v1.LeaveWorkspaceRequest]) (*connect.Response[v1.LeaveWorkspaceResponse], error) {
 	return c.leaveWorkspace.CallUnary(ctx, req)
+}
+
+// GetClientProfile calls workspace.v1.WorkspaceService.GetClientProfile.
+func (c *workspaceServiceClient) GetClientProfile(ctx context.Context, req *connect.Request[v1.GetClientProfileRequest]) (*connect.Response[v1.GetClientProfileResponse], error) {
+	return c.getClientProfile.CallUnary(ctx, req)
+}
+
+// UpdateClientProfile calls workspace.v1.WorkspaceService.UpdateClientProfile.
+func (c *workspaceServiceClient) UpdateClientProfile(ctx context.Context, req *connect.Request[v1.UpdateClientProfileRequest]) (*connect.Response[v1.UpdateClientProfileResponse], error) {
+	return c.updateClientProfile.CallUnary(ctx, req)
 }
 
 // ListMembers calls workspace.v1.WorkspaceService.ListMembers.
@@ -456,6 +490,10 @@ type WorkspaceServiceHandler interface {
 	DeleteWorkspace(context.Context, *connect.Request[v1.DeleteWorkspaceRequest]) (*connect.Response[v1.DeleteWorkspaceResponse], error)
 	TransferOwnership(context.Context, *connect.Request[v1.TransferOwnershipRequest]) (*connect.Response[v1.TransferOwnershipResponse], error)
 	LeaveWorkspace(context.Context, *connect.Request[v1.LeaveWorkspaceRequest]) (*connect.Response[v1.LeaveWorkspaceResponse], error)
+	// Client profile (per-client bid-qualification agent, v1.0) — the
+	// workspace IS the client; one profile per workspace.
+	GetClientProfile(context.Context, *connect.Request[v1.GetClientProfileRequest]) (*connect.Response[v1.GetClientProfileResponse], error)
+	UpdateClientProfile(context.Context, *connect.Request[v1.UpdateClientProfileRequest]) (*connect.Response[v1.UpdateClientProfileResponse], error)
 	// Members
 	ListMembers(context.Context, *connect.Request[v1.ListMembersRequest]) (*connect.Response[v1.ListMembersResponse], error)
 	ChangeMemberRole(context.Context, *connect.Request[v1.ChangeMemberRoleRequest]) (*connect.Response[v1.ChangeMemberRoleResponse], error)
@@ -526,6 +564,18 @@ func NewWorkspaceServiceHandler(svc WorkspaceServiceHandler, opts ...connect.Han
 		WorkspaceServiceLeaveWorkspaceProcedure,
 		svc.LeaveWorkspace,
 		connect.WithSchema(workspaceServiceMethods.ByName("LeaveWorkspace")),
+		connect.WithHandlerOptions(opts...),
+	)
+	workspaceServiceGetClientProfileHandler := connect.NewUnaryHandler(
+		WorkspaceServiceGetClientProfileProcedure,
+		svc.GetClientProfile,
+		connect.WithSchema(workspaceServiceMethods.ByName("GetClientProfile")),
+		connect.WithHandlerOptions(opts...),
+	)
+	workspaceServiceUpdateClientProfileHandler := connect.NewUnaryHandler(
+		WorkspaceServiceUpdateClientProfileProcedure,
+		svc.UpdateClientProfile,
+		connect.WithSchema(workspaceServiceMethods.ByName("UpdateClientProfile")),
 		connect.WithHandlerOptions(opts...),
 	)
 	workspaceServiceListMembersHandler := connect.NewUnaryHandler(
@@ -646,6 +696,10 @@ func NewWorkspaceServiceHandler(svc WorkspaceServiceHandler, opts ...connect.Han
 			workspaceServiceTransferOwnershipHandler.ServeHTTP(w, r)
 		case WorkspaceServiceLeaveWorkspaceProcedure:
 			workspaceServiceLeaveWorkspaceHandler.ServeHTTP(w, r)
+		case WorkspaceServiceGetClientProfileProcedure:
+			workspaceServiceGetClientProfileHandler.ServeHTTP(w, r)
+		case WorkspaceServiceUpdateClientProfileProcedure:
+			workspaceServiceUpdateClientProfileHandler.ServeHTTP(w, r)
 		case WorkspaceServiceListMembersProcedure:
 			workspaceServiceListMembersHandler.ServeHTTP(w, r)
 		case WorkspaceServiceChangeMemberRoleProcedure:
@@ -715,6 +769,14 @@ func (UnimplementedWorkspaceServiceHandler) TransferOwnership(context.Context, *
 
 func (UnimplementedWorkspaceServiceHandler) LeaveWorkspace(context.Context, *connect.Request[v1.LeaveWorkspaceRequest]) (*connect.Response[v1.LeaveWorkspaceResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("workspace.v1.WorkspaceService.LeaveWorkspace is not implemented"))
+}
+
+func (UnimplementedWorkspaceServiceHandler) GetClientProfile(context.Context, *connect.Request[v1.GetClientProfileRequest]) (*connect.Response[v1.GetClientProfileResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("workspace.v1.WorkspaceService.GetClientProfile is not implemented"))
+}
+
+func (UnimplementedWorkspaceServiceHandler) UpdateClientProfile(context.Context, *connect.Request[v1.UpdateClientProfileRequest]) (*connect.Response[v1.UpdateClientProfileResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("workspace.v1.WorkspaceService.UpdateClientProfile is not implemented"))
 }
 
 func (UnimplementedWorkspaceServiceHandler) ListMembers(context.Context, *connect.Request[v1.ListMembersRequest]) (*connect.Response[v1.ListMembersResponse], error) {

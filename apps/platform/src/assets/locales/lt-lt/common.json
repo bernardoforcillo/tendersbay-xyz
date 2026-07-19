@@ -104,6 +104,36 @@
       "loading": "Palaukite akimirką."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektoriai",
+      "countries": "Šalys",
+      "valueMin": "Mažiausia vertė",
+      "valueMax": "Didžiausia vertė",
+      "notes": "Pastabos",
+      "notesPlaceholder": "Kokiuose pirkimuose šis klientas paprastai dalyvauja?",
+      "save": "Išsaugoti profilį",
+      "invalidBand": "Mažiausia vertė negali viršyti didžiausios vertės.",
+      "error": "Nepavyko išsaugoti profilio — bandykite dar kartą.",
+      "procedureTypesLabel": "Procedūrų tipai",
+      "procedureTypes": {
+        "open": "Atviras konkursas",
+        "restricted": "Ribotas konkursas",
+        "negotiated": "Derybų procedūra",
+        "competitive_dialogue": "Konkurencinis dialogas",
+        "innovation_partnership": "Inovacijų partnerystė",
+        "other": "Kita"
+      },
+      "regions": "Regionai (NUTS)",
+      "regionsPlaceholder": "pvz., ITC, DE3",
+      "regionsHint": "Kableliais atskirti NUTS prefiksai. Palikite tuščią, kad atitiktų bet kurį regioną."
+    },
+    "shortlist": {
+      "title": "Geriausias atitikimas šiam klientui",
+      "emptyTitle": "Kol kas nėra tinkamų pirkimų",
+      "emptyDescription": "Išbandykite rankinę paiešką žemiau arba išplėskite šio kliento profilį."
+    }
+  },
   "landing": {
     "header": {
       "login": "Prisijungti",
@@ -397,12 +427,28 @@
         "title": "{{title}} — tendersbay",
         "description": "Pirkimo informacija, terminas, perkančioji organizacija ir susijusios galimybės „{{title}}“."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Stiprus atitikimas",
+        "possible": "Galimas atitikimas",
+        "longShot": "Maža tikimybė"
+      },
+      "reasonSector": "Atitinka jūsų sektorių",
+      "reasonCountry": "Jūsų tikslinėje šalyje",
+      "reasonValueInBand": "Jūsų vertės ribose",
+      "reasonValueBelow": "Žemiau jūsų vertės ribų",
+      "reasonValueAbove": "Aukščiau jūsų vertės ribų",
+      "reasonRegion": "Jūsų regione",
+      "reasonProcedure": "Atitinka jūsų procedūros tipą"
     }
   },
   "today": {
     "recommended": {
-      "title": "Rekomenduojama jums",
-      "seeAll": "Visi skiltyje Naršyti →"
+      "seeAll": "Visi skiltyje Naršyti →",
+      "clientCount_one": "{{count}} tinkamas pirkimas paruoštas {{client}}",
+      "clientCount_few": "{{count}} tinkami pirkimai paruošti {{client}}",
+      "clientCount_other": "{{count}} tinkamų pirkimų paruošta {{client}}"
     },
     "greeting": {
       "morning": "Labas rytas.",
@@ -435,6 +481,7 @@
     },
     "nav": {
       "general": "Bendra",
+      "profile": "Kliento profilis",
       "overview": "Apžvalga",
       "members": "Nariai",
       "roles": "Vaidmenys",
@@ -546,6 +593,16 @@
       "settings": "Workspace nustatymai",
       "label": "Darbo sritys",
       "manage": "Visos darbo sritys"
+    },
+    "firstRun": {
+      "title": "Pridėti kliento pasiūlymų profilį",
+      "subtitle": "Pasakykite mums, kokiuose pirkimuose šis klientas paprastai dalyvauja, kad rekomendacijos nuo pat pradžių būtų tikslios. Tai galėsite užbaigti vėliau Nustatymuose.",
+      "skip": "Kol kas praleisti"
+    },
+    "clientProfile": {
+      "title": "Kliento pasiūlymų profilis",
+      "subtitle": "Tai, kokiuose pirkimuose šis klientas dalyvauja — sektoriai, šalys ir vertės ribos — lemia kiekvieną rekomendaciją.",
+      "saved": "Profilis išsaugotas."
     }
   },
   "workbench": {

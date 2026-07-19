@@ -2754,6 +2754,386 @@ func (x *JoinViaInviteLinkResponse) GetWorkspace() *Workspace {
 	return nil
 }
 
+type ClientProfile struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId    string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	Sectors        []string               `protobuf:"bytes,2,rep,name=sectors,proto3" json:"sectors,omitempty"`                    // CPV prefixes, e.g. "45", "72"
+	Countries      []string               `protobuf:"bytes,3,rep,name=countries,proto3" json:"countries,omitempty"`                // alpha-2, e.g. "IT", "DE"
+	ValueMin       int64                  `protobuf:"varint,4,opt,name=value_min,json=valueMin,proto3" json:"value_min,omitempty"` // meaningful only if value_min_set
+	ValueMinSet    bool                   `protobuf:"varint,5,opt,name=value_min_set,json=valueMinSet,proto3" json:"value_min_set,omitempty"`
+	ValueMax       int64                  `protobuf:"varint,6,opt,name=value_max,json=valueMax,proto3" json:"value_max,omitempty"` // meaningful only if value_max_set
+	ValueMaxSet    bool                   `protobuf:"varint,7,opt,name=value_max_set,json=valueMaxSet,proto3" json:"value_max_set,omitempty"`
+	Notes          string                 `protobuf:"bytes,8,opt,name=notes,proto3" json:"notes,omitempty"`
+	UpdatedAt      string                 `protobuf:"bytes,9,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`                 // RFC3339, empty if never set
+	Regions        []string               `protobuf:"bytes,10,rep,name=regions,proto3" json:"regions,omitempty"`                                     // NUTS prefixes, e.g. "ITC", "DE3"; empty = any region
+	ProcedureTypes []string               `protobuf:"bytes,11,rep,name=procedure_types,json=procedureTypes,proto3" json:"procedure_types,omitempty"` // open/restricted/negotiated/competitive_dialogue/innovation_partnership/other; empty = any
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ClientProfile) Reset() {
+	*x = ClientProfile{}
+	mi := &file_workspace_v1_workspace_proto_msgTypes[53]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ClientProfile) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ClientProfile) ProtoMessage() {}
+
+func (x *ClientProfile) ProtoReflect() protoreflect.Message {
+	mi := &file_workspace_v1_workspace_proto_msgTypes[53]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ClientProfile.ProtoReflect.Descriptor instead.
+func (*ClientProfile) Descriptor() ([]byte, []int) {
+	return file_workspace_v1_workspace_proto_rawDescGZIP(), []int{53}
+}
+
+func (x *ClientProfile) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+func (x *ClientProfile) GetSectors() []string {
+	if x != nil {
+		return x.Sectors
+	}
+	return nil
+}
+
+func (x *ClientProfile) GetCountries() []string {
+	if x != nil {
+		return x.Countries
+	}
+	return nil
+}
+
+func (x *ClientProfile) GetValueMin() int64 {
+	if x != nil {
+		return x.ValueMin
+	}
+	return 0
+}
+
+func (x *ClientProfile) GetValueMinSet() bool {
+	if x != nil {
+		return x.ValueMinSet
+	}
+	return false
+}
+
+func (x *ClientProfile) GetValueMax() int64 {
+	if x != nil {
+		return x.ValueMax
+	}
+	return 0
+}
+
+func (x *ClientProfile) GetValueMaxSet() bool {
+	if x != nil {
+		return x.ValueMaxSet
+	}
+	return false
+}
+
+func (x *ClientProfile) GetNotes() string {
+	if x != nil {
+		return x.Notes
+	}
+	return ""
+}
+
+func (x *ClientProfile) GetUpdatedAt() string {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return ""
+}
+
+func (x *ClientProfile) GetRegions() []string {
+	if x != nil {
+		return x.Regions
+	}
+	return nil
+}
+
+func (x *ClientProfile) GetProcedureTypes() []string {
+	if x != nil {
+		return x.ProcedureTypes
+	}
+	return nil
+}
+
+type GetClientProfileRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId   string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetClientProfileRequest) Reset() {
+	*x = GetClientProfileRequest{}
+	mi := &file_workspace_v1_workspace_proto_msgTypes[54]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetClientProfileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetClientProfileRequest) ProtoMessage() {}
+
+func (x *GetClientProfileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_workspace_v1_workspace_proto_msgTypes[54]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetClientProfileRequest.ProtoReflect.Descriptor instead.
+func (*GetClientProfileRequest) Descriptor() ([]byte, []int) {
+	return file_workspace_v1_workspace_proto_rawDescGZIP(), []int{54}
+}
+
+func (x *GetClientProfileRequest) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+type GetClientProfileResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Profile       *ClientProfile         `protobuf:"bytes,1,opt,name=profile,proto3" json:"profile,omitempty"`
+	Exists        bool                   `protobuf:"varint,2,opt,name=exists,proto3" json:"exists,omitempty"` // false = no profile yet; profile's fields are zero-valued
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetClientProfileResponse) Reset() {
+	*x = GetClientProfileResponse{}
+	mi := &file_workspace_v1_workspace_proto_msgTypes[55]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetClientProfileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetClientProfileResponse) ProtoMessage() {}
+
+func (x *GetClientProfileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_workspace_v1_workspace_proto_msgTypes[55]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetClientProfileResponse.ProtoReflect.Descriptor instead.
+func (*GetClientProfileResponse) Descriptor() ([]byte, []int) {
+	return file_workspace_v1_workspace_proto_rawDescGZIP(), []int{55}
+}
+
+func (x *GetClientProfileResponse) GetProfile() *ClientProfile {
+	if x != nil {
+		return x.Profile
+	}
+	return nil
+}
+
+func (x *GetClientProfileResponse) GetExists() bool {
+	if x != nil {
+		return x.Exists
+	}
+	return false
+}
+
+type UpdateClientProfileRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId    string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	Sectors        []string               `protobuf:"bytes,2,rep,name=sectors,proto3" json:"sectors,omitempty"`
+	Countries      []string               `protobuf:"bytes,3,rep,name=countries,proto3" json:"countries,omitempty"` // alpha-2
+	ValueMin       int64                  `protobuf:"varint,4,opt,name=value_min,json=valueMin,proto3" json:"value_min,omitempty"`
+	ValueMinSet    bool                   `protobuf:"varint,5,opt,name=value_min_set,json=valueMinSet,proto3" json:"value_min_set,omitempty"`
+	ValueMax       int64                  `protobuf:"varint,6,opt,name=value_max,json=valueMax,proto3" json:"value_max,omitempty"`
+	ValueMaxSet    bool                   `protobuf:"varint,7,opt,name=value_max_set,json=valueMaxSet,proto3" json:"value_max_set,omitempty"`
+	Notes          string                 `protobuf:"bytes,8,opt,name=notes,proto3" json:"notes,omitempty"`
+	Regions        []string               `protobuf:"bytes,9,rep,name=regions,proto3" json:"regions,omitempty"`
+	ProcedureTypes []string               `protobuf:"bytes,10,rep,name=procedure_types,json=procedureTypes,proto3" json:"procedure_types,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *UpdateClientProfileRequest) Reset() {
+	*x = UpdateClientProfileRequest{}
+	mi := &file_workspace_v1_workspace_proto_msgTypes[56]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateClientProfileRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateClientProfileRequest) ProtoMessage() {}
+
+func (x *UpdateClientProfileRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_workspace_v1_workspace_proto_msgTypes[56]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateClientProfileRequest.ProtoReflect.Descriptor instead.
+func (*UpdateClientProfileRequest) Descriptor() ([]byte, []int) {
+	return file_workspace_v1_workspace_proto_rawDescGZIP(), []int{56}
+}
+
+func (x *UpdateClientProfileRequest) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+func (x *UpdateClientProfileRequest) GetSectors() []string {
+	if x != nil {
+		return x.Sectors
+	}
+	return nil
+}
+
+func (x *UpdateClientProfileRequest) GetCountries() []string {
+	if x != nil {
+		return x.Countries
+	}
+	return nil
+}
+
+func (x *UpdateClientProfileRequest) GetValueMin() int64 {
+	if x != nil {
+		return x.ValueMin
+	}
+	return 0
+}
+
+func (x *UpdateClientProfileRequest) GetValueMinSet() bool {
+	if x != nil {
+		return x.ValueMinSet
+	}
+	return false
+}
+
+func (x *UpdateClientProfileRequest) GetValueMax() int64 {
+	if x != nil {
+		return x.ValueMax
+	}
+	return 0
+}
+
+func (x *UpdateClientProfileRequest) GetValueMaxSet() bool {
+	if x != nil {
+		return x.ValueMaxSet
+	}
+	return false
+}
+
+func (x *UpdateClientProfileRequest) GetNotes() string {
+	if x != nil {
+		return x.Notes
+	}
+	return ""
+}
+
+func (x *UpdateClientProfileRequest) GetRegions() []string {
+	if x != nil {
+		return x.Regions
+	}
+	return nil
+}
+
+func (x *UpdateClientProfileRequest) GetProcedureTypes() []string {
+	if x != nil {
+		return x.ProcedureTypes
+	}
+	return nil
+}
+
+type UpdateClientProfileResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Profile       *ClientProfile         `protobuf:"bytes,1,opt,name=profile,proto3" json:"profile,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UpdateClientProfileResponse) Reset() {
+	*x = UpdateClientProfileResponse{}
+	mi := &file_workspace_v1_workspace_proto_msgTypes[57]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdateClientProfileResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateClientProfileResponse) ProtoMessage() {}
+
+func (x *UpdateClientProfileResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_workspace_v1_workspace_proto_msgTypes[57]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateClientProfileResponse.ProtoReflect.Descriptor instead.
+func (*UpdateClientProfileResponse) Descriptor() ([]byte, []int) {
+	return file_workspace_v1_workspace_proto_rawDescGZIP(), []int{57}
+}
+
+func (x *UpdateClientProfileResponse) GetProfile() *ClientProfile {
+	if x != nil {
+		return x.Profile
+	}
+	return nil
+}
+
 var File_workspace_v1_workspace_proto protoreflect.FileDescriptor
 
 const file_workspace_v1_workspace_proto_rawDesc = "" +
@@ -2931,7 +3311,40 @@ const file_workspace_v1_workspace_proto_rawDesc = "" +
 	"\x18JoinViaInviteLinkRequest\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\"R\n" +
 	"\x19JoinViaInviteLinkResponse\x125\n" +
-	"\tworkspace\x18\x01 \x01(\v2\x17.workspace.v1.WorkspaceR\tworkspace2\xfa\x11\n" +
+	"\tworkspace\x18\x01 \x01(\v2\x17.workspace.v1.WorkspaceR\tworkspace\"\xe4\x02\n" +
+	"\rClientProfile\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x18\n" +
+	"\asectors\x18\x02 \x03(\tR\asectors\x12\x1c\n" +
+	"\tcountries\x18\x03 \x03(\tR\tcountries\x12\x1b\n" +
+	"\tvalue_min\x18\x04 \x01(\x03R\bvalueMin\x12\"\n" +
+	"\rvalue_min_set\x18\x05 \x01(\bR\vvalueMinSet\x12\x1b\n" +
+	"\tvalue_max\x18\x06 \x01(\x03R\bvalueMax\x12\"\n" +
+	"\rvalue_max_set\x18\a \x01(\bR\vvalueMaxSet\x12\x14\n" +
+	"\x05notes\x18\b \x01(\tR\x05notes\x12\x1d\n" +
+	"\n" +
+	"updated_at\x18\t \x01(\tR\tupdatedAt\x12\x18\n" +
+	"\aregions\x18\n" +
+	" \x03(\tR\aregions\x12'\n" +
+	"\x0fprocedure_types\x18\v \x03(\tR\x0eprocedureTypes\"<\n" +
+	"\x17GetClientProfileRequest\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\"i\n" +
+	"\x18GetClientProfileResponse\x125\n" +
+	"\aprofile\x18\x01 \x01(\v2\x1b.workspace.v1.ClientProfileR\aprofile\x12\x16\n" +
+	"\x06exists\x18\x02 \x01(\bR\x06exists\"\xd2\x02\n" +
+	"\x1aUpdateClientProfileRequest\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x18\n" +
+	"\asectors\x18\x02 \x03(\tR\asectors\x12\x1c\n" +
+	"\tcountries\x18\x03 \x03(\tR\tcountries\x12\x1b\n" +
+	"\tvalue_min\x18\x04 \x01(\x03R\bvalueMin\x12\"\n" +
+	"\rvalue_min_set\x18\x05 \x01(\bR\vvalueMinSet\x12\x1b\n" +
+	"\tvalue_max\x18\x06 \x01(\x03R\bvalueMax\x12\"\n" +
+	"\rvalue_max_set\x18\a \x01(\bR\vvalueMaxSet\x12\x14\n" +
+	"\x05notes\x18\b \x01(\tR\x05notes\x12\x18\n" +
+	"\aregions\x18\t \x03(\tR\aregions\x12'\n" +
+	"\x0fprocedure_types\x18\n" +
+	" \x03(\tR\x0eprocedureTypes\"T\n" +
+	"\x1bUpdateClientProfileResponse\x125\n" +
+	"\aprofile\x18\x01 \x01(\v2\x1b.workspace.v1.ClientProfileR\aprofile2\xc9\x13\n" +
 	"\x10WorkspaceService\x12^\n" +
 	"\x0fCreateWorkspace\x12$.workspace.v1.CreateWorkspaceRequest\x1a%.workspace.v1.CreateWorkspaceResponse\x12a\n" +
 	"\x10ListMyWorkspaces\x12%.workspace.v1.ListMyWorkspacesRequest\x1a&.workspace.v1.ListMyWorkspacesResponse\x12U\n" +
@@ -2939,7 +3352,9 @@ const file_workspace_v1_workspace_proto_rawDesc = "" +
 	"\x0fUpdateWorkspace\x12$.workspace.v1.UpdateWorkspaceRequest\x1a%.workspace.v1.UpdateWorkspaceResponse\x12^\n" +
 	"\x0fDeleteWorkspace\x12$.workspace.v1.DeleteWorkspaceRequest\x1a%.workspace.v1.DeleteWorkspaceResponse\x12d\n" +
 	"\x11TransferOwnership\x12&.workspace.v1.TransferOwnershipRequest\x1a'.workspace.v1.TransferOwnershipResponse\x12[\n" +
-	"\x0eLeaveWorkspace\x12#.workspace.v1.LeaveWorkspaceRequest\x1a$.workspace.v1.LeaveWorkspaceResponse\x12R\n" +
+	"\x0eLeaveWorkspace\x12#.workspace.v1.LeaveWorkspaceRequest\x1a$.workspace.v1.LeaveWorkspaceResponse\x12a\n" +
+	"\x10GetClientProfile\x12%.workspace.v1.GetClientProfileRequest\x1a&.workspace.v1.GetClientProfileResponse\x12j\n" +
+	"\x13UpdateClientProfile\x12(.workspace.v1.UpdateClientProfileRequest\x1a).workspace.v1.UpdateClientProfileResponse\x12R\n" +
 	"\vListMembers\x12 .workspace.v1.ListMembersRequest\x1a!.workspace.v1.ListMembersResponse\x12a\n" +
 	"\x10ChangeMemberRole\x12%.workspace.v1.ChangeMemberRoleRequest\x1a&.workspace.v1.ChangeMemberRoleResponse\x12U\n" +
 	"\fRemoveMember\x12!.workspace.v1.RemoveMemberRequest\x1a\".workspace.v1.RemoveMemberResponse\x12L\n" +
@@ -2973,7 +3388,7 @@ func file_workspace_v1_workspace_proto_rawDescGZIP() []byte {
 	return file_workspace_v1_workspace_proto_rawDescData
 }
 
-var file_workspace_v1_workspace_proto_msgTypes = make([]protoimpl.MessageInfo, 53)
+var file_workspace_v1_workspace_proto_msgTypes = make([]protoimpl.MessageInfo, 58)
 var file_workspace_v1_workspace_proto_goTypes = []any{
 	(*Workspace)(nil),                     // 0: workspace.v1.Workspace
 	(*Role)(nil),                          // 1: workspace.v1.Role
@@ -3028,10 +3443,15 @@ var file_workspace_v1_workspace_proto_goTypes = []any{
 	(*PreviewInviteLinkResponse)(nil),     // 50: workspace.v1.PreviewInviteLinkResponse
 	(*JoinViaInviteLinkRequest)(nil),      // 51: workspace.v1.JoinViaInviteLinkRequest
 	(*JoinViaInviteLinkResponse)(nil),     // 52: workspace.v1.JoinViaInviteLinkResponse
-	(*v1.UserInfo)(nil),                   // 53: auth.v1.UserInfo
+	(*ClientProfile)(nil),                 // 53: workspace.v1.ClientProfile
+	(*GetClientProfileRequest)(nil),       // 54: workspace.v1.GetClientProfileRequest
+	(*GetClientProfileResponse)(nil),      // 55: workspace.v1.GetClientProfileResponse
+	(*UpdateClientProfileRequest)(nil),    // 56: workspace.v1.UpdateClientProfileRequest
+	(*UpdateClientProfileResponse)(nil),   // 57: workspace.v1.UpdateClientProfileResponse
+	(*v1.UserInfo)(nil),                   // 58: auth.v1.UserInfo
 }
 var file_workspace_v1_workspace_proto_depIdxs = []int32{
-	53, // 0: workspace.v1.Member.user:type_name -> auth.v1.UserInfo
+	58, // 0: workspace.v1.Member.user:type_name -> auth.v1.UserInfo
 	0,  // 1: workspace.v1.CreateWorkspaceResponse.workspace:type_name -> workspace.v1.Workspace
 	0,  // 2: workspace.v1.ListMyWorkspacesResponse.workspaces:type_name -> workspace.v1.Workspace
 	0,  // 3: workspace.v1.GetWorkspaceResponse.workspace:type_name -> workspace.v1.Workspace
@@ -3047,59 +3467,65 @@ var file_workspace_v1_workspace_proto_depIdxs = []int32{
 	4,  // 13: workspace.v1.CreateInviteLinkResponse.link:type_name -> workspace.v1.InviteLink
 	4,  // 14: workspace.v1.ListInviteLinksResponse.links:type_name -> workspace.v1.InviteLink
 	0,  // 15: workspace.v1.JoinViaInviteLinkResponse.workspace:type_name -> workspace.v1.Workspace
-	5,  // 16: workspace.v1.WorkspaceService.CreateWorkspace:input_type -> workspace.v1.CreateWorkspaceRequest
-	7,  // 17: workspace.v1.WorkspaceService.ListMyWorkspaces:input_type -> workspace.v1.ListMyWorkspacesRequest
-	9,  // 18: workspace.v1.WorkspaceService.GetWorkspace:input_type -> workspace.v1.GetWorkspaceRequest
-	11, // 19: workspace.v1.WorkspaceService.UpdateWorkspace:input_type -> workspace.v1.UpdateWorkspaceRequest
-	13, // 20: workspace.v1.WorkspaceService.DeleteWorkspace:input_type -> workspace.v1.DeleteWorkspaceRequest
-	15, // 21: workspace.v1.WorkspaceService.TransferOwnership:input_type -> workspace.v1.TransferOwnershipRequest
-	17, // 22: workspace.v1.WorkspaceService.LeaveWorkspace:input_type -> workspace.v1.LeaveWorkspaceRequest
-	19, // 23: workspace.v1.WorkspaceService.ListMembers:input_type -> workspace.v1.ListMembersRequest
-	21, // 24: workspace.v1.WorkspaceService.ChangeMemberRole:input_type -> workspace.v1.ChangeMemberRoleRequest
-	23, // 25: workspace.v1.WorkspaceService.RemoveMember:input_type -> workspace.v1.RemoveMemberRequest
-	25, // 26: workspace.v1.WorkspaceService.ListRoles:input_type -> workspace.v1.ListRolesRequest
-	27, // 27: workspace.v1.WorkspaceService.CreateRole:input_type -> workspace.v1.CreateRoleRequest
-	29, // 28: workspace.v1.WorkspaceService.UpdateRole:input_type -> workspace.v1.UpdateRoleRequest
-	31, // 29: workspace.v1.WorkspaceService.DeleteRole:input_type -> workspace.v1.DeleteRoleRequest
-	33, // 30: workspace.v1.WorkspaceService.InviteByEmail:input_type -> workspace.v1.InviteByEmailRequest
-	35, // 31: workspace.v1.WorkspaceService.ListEmailInvitations:input_type -> workspace.v1.ListEmailInvitationsRequest
-	37, // 32: workspace.v1.WorkspaceService.RevokeEmailInvitation:input_type -> workspace.v1.RevokeEmailInvitationRequest
-	39, // 33: workspace.v1.WorkspaceService.AcceptEmailInvite:input_type -> workspace.v1.AcceptEmailInviteRequest
-	41, // 34: workspace.v1.WorkspaceService.PreviewEmailInvite:input_type -> workspace.v1.PreviewEmailInviteRequest
-	43, // 35: workspace.v1.WorkspaceService.CreateInviteLink:input_type -> workspace.v1.CreateInviteLinkRequest
-	45, // 36: workspace.v1.WorkspaceService.ListInviteLinks:input_type -> workspace.v1.ListInviteLinksRequest
-	47, // 37: workspace.v1.WorkspaceService.RevokeInviteLink:input_type -> workspace.v1.RevokeInviteLinkRequest
-	49, // 38: workspace.v1.WorkspaceService.PreviewInviteLink:input_type -> workspace.v1.PreviewInviteLinkRequest
-	51, // 39: workspace.v1.WorkspaceService.JoinViaInviteLink:input_type -> workspace.v1.JoinViaInviteLinkRequest
-	6,  // 40: workspace.v1.WorkspaceService.CreateWorkspace:output_type -> workspace.v1.CreateWorkspaceResponse
-	8,  // 41: workspace.v1.WorkspaceService.ListMyWorkspaces:output_type -> workspace.v1.ListMyWorkspacesResponse
-	10, // 42: workspace.v1.WorkspaceService.GetWorkspace:output_type -> workspace.v1.GetWorkspaceResponse
-	12, // 43: workspace.v1.WorkspaceService.UpdateWorkspace:output_type -> workspace.v1.UpdateWorkspaceResponse
-	14, // 44: workspace.v1.WorkspaceService.DeleteWorkspace:output_type -> workspace.v1.DeleteWorkspaceResponse
-	16, // 45: workspace.v1.WorkspaceService.TransferOwnership:output_type -> workspace.v1.TransferOwnershipResponse
-	18, // 46: workspace.v1.WorkspaceService.LeaveWorkspace:output_type -> workspace.v1.LeaveWorkspaceResponse
-	20, // 47: workspace.v1.WorkspaceService.ListMembers:output_type -> workspace.v1.ListMembersResponse
-	22, // 48: workspace.v1.WorkspaceService.ChangeMemberRole:output_type -> workspace.v1.ChangeMemberRoleResponse
-	24, // 49: workspace.v1.WorkspaceService.RemoveMember:output_type -> workspace.v1.RemoveMemberResponse
-	26, // 50: workspace.v1.WorkspaceService.ListRoles:output_type -> workspace.v1.ListRolesResponse
-	28, // 51: workspace.v1.WorkspaceService.CreateRole:output_type -> workspace.v1.CreateRoleResponse
-	30, // 52: workspace.v1.WorkspaceService.UpdateRole:output_type -> workspace.v1.UpdateRoleResponse
-	32, // 53: workspace.v1.WorkspaceService.DeleteRole:output_type -> workspace.v1.DeleteRoleResponse
-	34, // 54: workspace.v1.WorkspaceService.InviteByEmail:output_type -> workspace.v1.InviteByEmailResponse
-	36, // 55: workspace.v1.WorkspaceService.ListEmailInvitations:output_type -> workspace.v1.ListEmailInvitationsResponse
-	38, // 56: workspace.v1.WorkspaceService.RevokeEmailInvitation:output_type -> workspace.v1.RevokeEmailInvitationResponse
-	40, // 57: workspace.v1.WorkspaceService.AcceptEmailInvite:output_type -> workspace.v1.AcceptEmailInviteResponse
-	42, // 58: workspace.v1.WorkspaceService.PreviewEmailInvite:output_type -> workspace.v1.PreviewEmailInviteResponse
-	44, // 59: workspace.v1.WorkspaceService.CreateInviteLink:output_type -> workspace.v1.CreateInviteLinkResponse
-	46, // 60: workspace.v1.WorkspaceService.ListInviteLinks:output_type -> workspace.v1.ListInviteLinksResponse
-	48, // 61: workspace.v1.WorkspaceService.RevokeInviteLink:output_type -> workspace.v1.RevokeInviteLinkResponse
-	50, // 62: workspace.v1.WorkspaceService.PreviewInviteLink:output_type -> workspace.v1.PreviewInviteLinkResponse
-	52, // 63: workspace.v1.WorkspaceService.JoinViaInviteLink:output_type -> workspace.v1.JoinViaInviteLinkResponse
-	40, // [40:64] is the sub-list for method output_type
-	16, // [16:40] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	53, // 16: workspace.v1.GetClientProfileResponse.profile:type_name -> workspace.v1.ClientProfile
+	53, // 17: workspace.v1.UpdateClientProfileResponse.profile:type_name -> workspace.v1.ClientProfile
+	5,  // 18: workspace.v1.WorkspaceService.CreateWorkspace:input_type -> workspace.v1.CreateWorkspaceRequest
+	7,  // 19: workspace.v1.WorkspaceService.ListMyWorkspaces:input_type -> workspace.v1.ListMyWorkspacesRequest
+	9,  // 20: workspace.v1.WorkspaceService.GetWorkspace:input_type -> workspace.v1.GetWorkspaceRequest
+	11, // 21: workspace.v1.WorkspaceService.UpdateWorkspace:input_type -> workspace.v1.UpdateWorkspaceRequest
+	13, // 22: workspace.v1.WorkspaceService.DeleteWorkspace:input_type -> workspace.v1.DeleteWorkspaceRequest
+	15, // 23: workspace.v1.WorkspaceService.TransferOwnership:input_type -> workspace.v1.TransferOwnershipRequest
+	17, // 24: workspace.v1.WorkspaceService.LeaveWorkspace:input_type -> workspace.v1.LeaveWorkspaceRequest
+	54, // 25: workspace.v1.WorkspaceService.GetClientProfile:input_type -> workspace.v1.GetClientProfileRequest
+	56, // 26: workspace.v1.WorkspaceService.UpdateClientProfile:input_type -> workspace.v1.UpdateClientProfileRequest
+	19, // 27: workspace.v1.WorkspaceService.ListMembers:input_type -> workspace.v1.ListMembersRequest
+	21, // 28: workspace.v1.WorkspaceService.ChangeMemberRole:input_type -> workspace.v1.ChangeMemberRoleRequest
+	23, // 29: workspace.v1.WorkspaceService.RemoveMember:input_type -> workspace.v1.RemoveMemberRequest
+	25, // 30: workspace.v1.WorkspaceService.ListRoles:input_type -> workspace.v1.ListRolesRequest
+	27, // 31: workspace.v1.WorkspaceService.CreateRole:input_type -> workspace.v1.CreateRoleRequest
+	29, // 32: workspace.v1.WorkspaceService.UpdateRole:input_type -> workspace.v1.UpdateRoleRequest
+	31, // 33: workspace.v1.WorkspaceService.DeleteRole:input_type -> workspace.v1.DeleteRoleRequest
+	33, // 34: workspace.v1.WorkspaceService.InviteByEmail:input_type -> workspace.v1.InviteByEmailRequest
+	35, // 35: workspace.v1.WorkspaceService.ListEmailInvitations:input_type -> workspace.v1.ListEmailInvitationsRequest
+	37, // 36: workspace.v1.WorkspaceService.RevokeEmailInvitation:input_type -> workspace.v1.RevokeEmailInvitationRequest
+	39, // 37: workspace.v1.WorkspaceService.AcceptEmailInvite:input_type -> workspace.v1.AcceptEmailInviteRequest
+	41, // 38: workspace.v1.WorkspaceService.PreviewEmailInvite:input_type -> workspace.v1.PreviewEmailInviteRequest
+	43, // 39: workspace.v1.WorkspaceService.CreateInviteLink:input_type -> workspace.v1.CreateInviteLinkRequest
+	45, // 40: workspace.v1.WorkspaceService.ListInviteLinks:input_type -> workspace.v1.ListInviteLinksRequest
+	47, // 41: workspace.v1.WorkspaceService.RevokeInviteLink:input_type -> workspace.v1.RevokeInviteLinkRequest
+	49, // 42: workspace.v1.WorkspaceService.PreviewInviteLink:input_type -> workspace.v1.PreviewInviteLinkRequest
+	51, // 43: workspace.v1.WorkspaceService.JoinViaInviteLink:input_type -> workspace.v1.JoinViaInviteLinkRequest
+	6,  // 44: workspace.v1.WorkspaceService.CreateWorkspace:output_type -> workspace.v1.CreateWorkspaceResponse
+	8,  // 45: workspace.v1.WorkspaceService.ListMyWorkspaces:output_type -> workspace.v1.ListMyWorkspacesResponse
+	10, // 46: workspace.v1.WorkspaceService.GetWorkspace:output_type -> workspace.v1.GetWorkspaceResponse
+	12, // 47: workspace.v1.WorkspaceService.UpdateWorkspace:output_type -> workspace.v1.UpdateWorkspaceResponse
+	14, // 48: workspace.v1.WorkspaceService.DeleteWorkspace:output_type -> workspace.v1.DeleteWorkspaceResponse
+	16, // 49: workspace.v1.WorkspaceService.TransferOwnership:output_type -> workspace.v1.TransferOwnershipResponse
+	18, // 50: workspace.v1.WorkspaceService.LeaveWorkspace:output_type -> workspace.v1.LeaveWorkspaceResponse
+	55, // 51: workspace.v1.WorkspaceService.GetClientProfile:output_type -> workspace.v1.GetClientProfileResponse
+	57, // 52: workspace.v1.WorkspaceService.UpdateClientProfile:output_type -> workspace.v1.UpdateClientProfileResponse
+	20, // 53: workspace.v1.WorkspaceService.ListMembers:output_type -> workspace.v1.ListMembersResponse
+	22, // 54: workspace.v1.WorkspaceService.ChangeMemberRole:output_type -> workspace.v1.ChangeMemberRoleResponse
+	24, // 55: workspace.v1.WorkspaceService.RemoveMember:output_type -> workspace.v1.RemoveMemberResponse
+	26, // 56: workspace.v1.WorkspaceService.ListRoles:output_type -> workspace.v1.ListRolesResponse
+	28, // 57: workspace.v1.WorkspaceService.CreateRole:output_type -> workspace.v1.CreateRoleResponse
+	30, // 58: workspace.v1.WorkspaceService.UpdateRole:output_type -> workspace.v1.UpdateRoleResponse
+	32, // 59: workspace.v1.WorkspaceService.DeleteRole:output_type -> workspace.v1.DeleteRoleResponse
+	34, // 60: workspace.v1.WorkspaceService.InviteByEmail:output_type -> workspace.v1.InviteByEmailResponse
+	36, // 61: workspace.v1.WorkspaceService.ListEmailInvitations:output_type -> workspace.v1.ListEmailInvitationsResponse
+	38, // 62: workspace.v1.WorkspaceService.RevokeEmailInvitation:output_type -> workspace.v1.RevokeEmailInvitationResponse
+	40, // 63: workspace.v1.WorkspaceService.AcceptEmailInvite:output_type -> workspace.v1.AcceptEmailInviteResponse
+	42, // 64: workspace.v1.WorkspaceService.PreviewEmailInvite:output_type -> workspace.v1.PreviewEmailInviteResponse
+	44, // 65: workspace.v1.WorkspaceService.CreateInviteLink:output_type -> workspace.v1.CreateInviteLinkResponse
+	46, // 66: workspace.v1.WorkspaceService.ListInviteLinks:output_type -> workspace.v1.ListInviteLinksResponse
+	48, // 67: workspace.v1.WorkspaceService.RevokeInviteLink:output_type -> workspace.v1.RevokeInviteLinkResponse
+	50, // 68: workspace.v1.WorkspaceService.PreviewInviteLink:output_type -> workspace.v1.PreviewInviteLinkResponse
+	52, // 69: workspace.v1.WorkspaceService.JoinViaInviteLink:output_type -> workspace.v1.JoinViaInviteLinkResponse
+	44, // [44:70] is the sub-list for method output_type
+	18, // [18:44] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_workspace_v1_workspace_proto_init() }
@@ -3113,7 +3539,7 @@ func file_workspace_v1_workspace_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_workspace_v1_workspace_proto_rawDesc), len(file_workspace_v1_workspace_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   53,
+			NumMessages:   58,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

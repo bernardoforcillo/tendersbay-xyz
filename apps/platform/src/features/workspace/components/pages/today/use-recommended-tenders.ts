@@ -1,21 +1,20 @@
-import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { useEffect, useState } from 'react';
 import { tenderClient } from '~/lib/api/client';
 
 /**
- * The top open tenders, fetched once on mount to seed the "Consigliati per te"
- * block on Oggi. This is a recommendation garnish, not a primary flow: any
- * failure degrades to an empty list (no throw, no error surface) so the page
- * simply falls back to the Explore teaser instead of stranding the user on a
- * spinner or an error. A filters-only search (empty query, status=open) leans
- * on the backend to order and cap the results.
+ * The client's best-fit tender COUNT, for the thin "N best-fit ready" nudge on Today — a
+ * habit-loop entry point that deep-links into Explore, not the interaction home (see the
+ * design spec §2). Any failure degrades to a zero count (no throw, no error surface) so the
+ * page simply falls back to the Explore teaser instead of stranding the user on a spinner.
  */
-export function useRecommendedTenders(): {
-  tenders: TenderResult[];
+export function useRecommendedTenders(workspaceId: string): {
+  count: number;
+  needsProfile: boolean;
   loading: boolean;
   error: string | null;
 } {
-  const [tenders, setTenders] = useState<TenderResult[]>([]);
+  const [count, setCount] = useState(0);
+  const [needsProfile, setNeedsProfile] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,14 +23,16 @@ export function useRecommendedTenders(): {
     setLoading(true);
     setError(null);
     tenderClient
-      .searchTenders({ query: '', filters: { status: 'open' }, limit: 4 })
+      .recommendTendersForClient({ workspaceId, limit: 4 })
       .then((res) => {
-        if (active) setTenders(res.results);
+        if (!active) return;
+        setCount(res.results.length);
+        setNeedsProfile(res.needsProfile);
       })
       .catch((e: unknown) => {
         if (!active) return;
         setError(e instanceof Error ? e.message : 'Something went wrong');
-        setTenders([]);
+        setCount(0);
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -39,7 +40,7 @@ export function useRecommendedTenders(): {
     return () => {
       active = false;
     };
-  }, []);
+  }, [workspaceId]);
 
-  return { tenders, loading, error };
+  return { count, needsProfile, loading, error };
 }

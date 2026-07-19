@@ -104,6 +104,36 @@
       "loading": "Ett ögonblick."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektorer",
+      "countries": "Länder",
+      "valueMin": "Minimivärde",
+      "valueMax": "Maxvärde",
+      "notes": "Anteckningar",
+      "notesPlaceholder": "Vad brukar den här kunden lämna anbud på?",
+      "save": "Spara profil",
+      "invalidBand": "Minimivärdet får inte överstiga maxvärdet.",
+      "error": "Det gick inte att spara profilen — försök igen.",
+      "procedureTypesLabel": "Förfarandetyper",
+      "procedureTypes": {
+        "open": "Öppet förfarande",
+        "restricted": "Selektivt förfarande",
+        "negotiated": "Förhandlat förfarande",
+        "competitive_dialogue": "Konkurrenspräglad dialog",
+        "innovation_partnership": "Innovationspartnerskap",
+        "other": "Övrigt"
+      },
+      "regions": "Regioner (NUTS)",
+      "regionsPlaceholder": "t.ex. ITC, DE3",
+      "regionsHint": "Kommaseparerade NUTS-prefix. Lämna tomt för att inkludera alla regioner."
+    },
+    "shortlist": {
+      "title": "Bästa matchning för den här kunden",
+      "emptyTitle": "Inga matchande upphandlingar än",
+      "emptyDescription": "Prova en manuell sökning nedan, eller utöka den här kundens profil."
+    }
+  },
   "landing": {
     "header": {
       "login": "Logga in",
@@ -391,12 +421,27 @@
         "title": "{{title}} — tendersbay",
         "description": "Upphandlingsdetaljer, sista anbudsdag, upphandlande myndighet och relaterade möjligheter för \"{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Stark matchning",
+        "possible": "Möjlig matchning",
+        "longShot": "Liten chans"
+      },
+      "reasonSector": "Matchar din sektor",
+      "reasonCountry": "I ditt målland",
+      "reasonValueInBand": "Inom ditt värdeintervall",
+      "reasonValueBelow": "Under ditt värdeintervall",
+      "reasonValueAbove": "Över ditt värdeintervall",
+      "reasonRegion": "I din region",
+      "reasonProcedure": "Matchar din förfarandetyp"
     }
   },
   "today": {
     "recommended": {
-      "title": "Rekommenderat för dig",
-      "seeAll": "Allt i Utforska →"
+      "seeAll": "Allt i Utforska →",
+      "clientCount_one": "{{count}} matchande upphandling redo för {{client}}",
+      "clientCount_other": "{{count}} matchande upphandlingar redo för {{client}}"
     },
     "greeting": {
       "morning": "God morgon.",
@@ -429,6 +474,7 @@
     },
     "nav": {
       "general": "Allmänt",
+      "profile": "Kundprofil",
       "overview": "Översikt",
       "members": "Medlemmar",
       "roles": "Roller",
@@ -540,6 +586,16 @@
       "settings": "Workspace-inställningar",
       "label": "Arbetsytor",
       "manage": "Alla arbetsytor"
+    },
+    "firstRun": {
+      "title": "Lägg till en kunds anbudsprofil",
+      "subtitle": "Berätta vad den här kunden brukar lämna anbud på så att rekommendationerna blir träffsäkra från start. Du kan slutföra det senare under Inställningar.",
+      "skip": "Hoppa över för nu"
+    },
+    "clientProfile": {
+      "title": "Kundens anbudsprofil",
+      "subtitle": "Det den här kunden lämnar anbud på — sektorer, länder och värdeintervall — styr varje rekommendation.",
+      "saved": "Profil sparad."
     }
   },
   "workbench": {

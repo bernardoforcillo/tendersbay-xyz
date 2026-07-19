@@ -27,6 +27,15 @@ export function WorkspaceSettingsLayout() {
               {t('workspace.nav.general', 'General')}
             </Link>
           )}
+          {keys.includes('profile') && (
+            <Link
+              to="/workspaces/$workspaceId/settings/profile"
+              params={{ workspaceId }}
+              className={tabClass}
+            >
+              {t('workspace.nav.profile', 'Client profile')}
+            </Link>
+          )}
           {keys.includes('members') && (
             <Link
               to="/workspaces/$workspaceId/settings/members"

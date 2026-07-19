@@ -104,6 +104,36 @@
       "loading": "Vēl mirklis."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Nozares",
+      "countries": "Valstis",
+      "valueMin": "Minimālā vērtība",
+      "valueMax": "Maksimālā vērtība",
+      "notes": "Piezīmes",
+      "notesPlaceholder": "Par ko šis klients parasti piedalās iepirkumos?",
+      "save": "Saglabāt profilu",
+      "invalidBand": "Minimālā vērtība nedrīkst pārsniegt maksimālo vērtību.",
+      "error": "Neizdevās saglabāt profilu — mēģiniet vēlreiz.",
+      "procedureTypesLabel": "Procedūru veidi",
+      "procedureTypes": {
+        "open": "Atklāta procedūra",
+        "restricted": "Slēgta procedūra",
+        "negotiated": "Sarunu procedūra",
+        "competitive_dialogue": "Konkursa dialogs",
+        "innovation_partnership": "Inovācijas partnerība",
+        "other": "Cits"
+      },
+      "regions": "Reģioni (NUTS)",
+      "regionsPlaceholder": "piem., ITC, DE3",
+      "regionsHint": "Ar komatu atdalīti NUTS prefiksi. Atstājiet tukšu, lai iekļautu jebkuru reģionu."
+    },
+    "shortlist": {
+      "title": "Vislabākā atbilstība šim klientam",
+      "emptyTitle": "Vēl nav piemērotu iepirkumu",
+      "emptyDescription": "Izmēģiniet manuālu meklēšanu zemāk vai paplašiniet šī klienta profilu."
+    }
+  },
   "landing": {
     "header": {
       "login": "Pieteikties",
@@ -393,12 +423,28 @@
         "title": "{{title}} — tendersbay",
         "description": "Iepirkuma dati, termiņš, pircējs un saistītās iespējas iepirkumam \"{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Spēcīga atbilstība",
+        "possible": "Iespējama atbilstība",
+        "longShot": "Maza iespējamība"
+      },
+      "reasonSector": "Atbilst jūsu nozarei",
+      "reasonCountry": "Jūsu mērķa valstī",
+      "reasonValueInBand": "Jūsu vērtību diapazonā",
+      "reasonValueBelow": "Zem jūsu vērtību diapazona",
+      "reasonValueAbove": "Virs jūsu vērtību diapazona",
+      "reasonRegion": "Jūsu reģionā",
+      "reasonProcedure": "Atbilst jūsu procedūras veidam"
     }
   },
   "today": {
     "recommended": {
-      "title": "Ieteikts jums",
-      "seeAll": "Viss sadaļā Pārlūkot →"
+      "seeAll": "Viss sadaļā Pārlūkot →",
+      "clientCount_zero": "{{count}} piemērotu iepirkumu sagatavots {{client}}",
+      "clientCount_one": "{{count}} piemērots iepirkums sagatavots {{client}}",
+      "clientCount_other": "{{count}} piemēroti iepirkumi sagatavoti {{client}}"
     },
     "greeting": {
       "morning": "Labrīt.",
@@ -431,6 +477,7 @@
     },
     "nav": {
       "general": "Vispārīgi",
+      "profile": "Klienta profils",
       "overview": "Pārskats",
       "members": "Dalībnieki",
       "roles": "Lomas",
@@ -542,6 +589,16 @@
       "settings": "Workspace iestatījumi",
       "label": "Darbvietas",
       "manage": "Visas darbvietas"
+    },
+    "firstRun": {
+      "title": "Pievienot klienta piedāvājuma profilu",
+      "subtitle": "Pastāstiet mums, par ko šis klients parasti piedalās iepirkumos, lai ieteikumi jau no sākuma būtu precīzi. To varat pabeigt vēlāk sadaļā Iestatījumi.",
+      "skip": "Pagaidām izlaist"
+    },
+    "clientProfile": {
+      "title": "Klienta piedāvājuma profils",
+      "subtitle": "Tas, par ko šis klients piedalās iepirkumos — nozares, valstis un vērtību diapazons — nosaka katru ieteikumu.",
+      "saved": "Profils saglabāts."
     }
   },
   "workbench": {

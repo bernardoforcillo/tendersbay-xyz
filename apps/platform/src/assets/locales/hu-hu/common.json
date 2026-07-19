@@ -104,6 +104,36 @@
       "loading": "Egy pillanat."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Szektorok",
+      "countries": "Országok",
+      "valueMin": "Minimális érték",
+      "valueMax": "Maximális érték",
+      "notes": "Megjegyzések",
+      "notesPlaceholder": "Mire pályázik jellemzően ez az ügyfél?",
+      "save": "Profil mentése",
+      "invalidBand": "A minimális érték nem haladhatja meg a maximális értéket.",
+      "error": "A profil mentése nem sikerült — próbálja újra.",
+      "procedureTypesLabel": "Eljárástípusok",
+      "procedureTypes": {
+        "open": "Nyílt eljárás",
+        "restricted": "Meghívásos eljárás",
+        "negotiated": "Tárgyalásos eljárás",
+        "competitive_dialogue": "Versenypárbeszéd",
+        "innovation_partnership": "Innovációs partnerség",
+        "other": "Egyéb"
+      },
+      "regions": "Régiók (NUTS)",
+      "regionsPlaceholder": "pl. ITC, DE3",
+      "regionsHint": "Vesszővel elválasztott NUTS-előtagok. Hagyja üresen, hogy bármely régió megfeleljen."
+    },
+    "shortlist": {
+      "title": "Legjobb találat ehhez az ügyfélhez",
+      "emptyTitle": "Még nincs megfelelő pályázat",
+      "emptyDescription": "Próbáljon manuális keresést lent, vagy bővítse ki az ügyfél profilját."
+    }
+  },
   "landing": {
     "header": {
       "login": "Bejelentkezés",
@@ -395,12 +425,27 @@
         "title": "{{title}} — tendersbay",
         "description": "Közbeszerzési részletek, határidő, ajánlatkérő és kapcsolódó lehetőségek a(z) „{{title}}” tenderhez."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Erős egyezés",
+        "possible": "Lehetséges egyezés",
+        "longShot": "Kis esély"
+      },
+      "reasonSector": "Megfelel az Ön szektorának",
+      "reasonCountry": "A célországában",
+      "reasonValueInBand": "Az Ön értéksávjában",
+      "reasonValueBelow": "Az Ön értéksávja alatt",
+      "reasonValueAbove": "Az Ön értéksávja felett",
+      "reasonRegion": "Az Ön régiójában",
+      "reasonProcedure": "Megfelel az Ön eljárástípusának"
     }
   },
   "today": {
     "recommended": {
-      "title": "Önnek ajánlott",
-      "seeAll": "Minden a Felfedezésben →"
+      "seeAll": "Minden a Felfedezésben →",
+      "clientCount_one": "{{count}} megfelelő pályázat készen áll {{client}} számára",
+      "clientCount_other": "{{count}} megfelelő pályázat készen áll {{client}} számára"
     },
     "greeting": {
       "morning": "Jó reggelt.",
@@ -433,6 +478,7 @@
     },
     "nav": {
       "general": "Általános",
+      "profile": "Ügyfélprofil",
       "overview": "Áttekintés",
       "members": "Tagok",
       "roles": "Szerepkörök",
@@ -544,6 +590,16 @@
       "settings": "Workspace-beállítások",
       "label": "Munkaterületek",
       "manage": "Összes munkaterület"
+    },
+    "firstRun": {
+      "title": "Ügyfél-ajánlati profil hozzáadása",
+      "subtitle": "Mondja el, mire pályázik ez az ügyfél, hogy az ajánlások már az elejétől pontosak legyenek. Ezt később a Beállításokban fejezheti be.",
+      "skip": "Kihagyás egyelőre"
+    },
+    "clientProfile": {
+      "title": "Ügyfél ajánlati profilja",
+      "subtitle": "Amire ez az ügyfél pályázik — szektorok, országok és értéktartomány — minden ajánlást meghatároz.",
+      "saved": "Profil mentve."
     }
   },
   "workbench": {

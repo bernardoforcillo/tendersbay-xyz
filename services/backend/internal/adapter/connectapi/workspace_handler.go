@@ -2,12 +2,14 @@ package connectapi
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"time"
 
 	"connectrpc.com/connect"
 	workspacev1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1/workspacev1connect"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
 
@@ -17,13 +19,22 @@ type CreditSeeder interface {
 	Seed(ctx context.Context, workspaceID string) error
 }
 
-type WorkspaceHandler struct {
-	svc     *workspace.Service
-	credits CreditSeeder
+// ClientProfiles is the narrow port this handler needs — satisfied by
+// *clientprofile.Service unchanged, following the same narrow-interface-
+// owned-by-the-consumer pattern as CreditSeeder above.
+type ClientProfiles interface {
+	Get(ctx context.Context, userID, workspaceID string) (clientprofile.Profile, error)
+	Update(ctx context.Context, userID string, p clientprofile.Profile) (clientprofile.Profile, error)
 }
 
-func NewWorkspaceHandler(svc *workspace.Service, credits CreditSeeder) *WorkspaceHandler {
-	return &WorkspaceHandler{svc: svc, credits: credits}
+type WorkspaceHandler struct {
+	svc            *workspace.Service
+	credits        CreditSeeder
+	clientProfiles ClientProfiles
+}
+
+func NewWorkspaceHandler(svc *workspace.Service, credits CreditSeeder, clientProfiles ClientProfiles) *WorkspaceHandler {
+	return &WorkspaceHandler{svc: svc, credits: credits, clientProfiles: clientProfiles}
 }
 
 var _ workspacev1connect.WorkspaceServiceHandler = (*WorkspaceHandler)(nil)
@@ -130,6 +141,54 @@ func (h *WorkspaceHandler) LeaveWorkspace(ctx context.Context, req *connect.Requ
 		return nil, toConnectError(err)
 	}
 	return connect.NewResponse(&workspacev1.LeaveWorkspaceResponse{}), nil
+}
+
+// ── Client profile ──────────────────────────────────────────────────────────
+
+func (h *WorkspaceHandler) GetClientProfile(ctx context.Context, req *connect.Request[workspacev1.GetClientProfileRequest]) (*connect.Response[workspacev1.GetClientProfileResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	p, err := h.clientProfiles.Get(ctx, uid, req.Msg.WorkspaceId)
+	if errors.Is(err, clientprofile.ErrProfileNotFound) {
+		return connect.NewResponse(&workspacev1.GetClientProfileResponse{Exists: false}), nil
+	}
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&workspacev1.GetClientProfileResponse{
+		Profile: toProtoClientProfile(p),
+		Exists:  true,
+	}), nil
+}
+
+func (h *WorkspaceHandler) UpdateClientProfile(ctx context.Context, req *connect.Request[workspacev1.UpdateClientProfileRequest]) (*connect.Response[workspacev1.UpdateClientProfileResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	p := clientprofile.Profile{
+		WorkspaceID:    req.Msg.WorkspaceId,
+		Sectors:        req.Msg.Sectors,
+		Countries:      req.Msg.Countries,
+		Regions:        req.Msg.Regions,
+		ProcedureTypes: req.Msg.ProcedureTypes,
+		Notes:          req.Msg.Notes,
+	}
+	if req.Msg.ValueMinSet {
+		v := req.Msg.ValueMin
+		p.ValueMin = &v
+	}
+	if req.Msg.ValueMaxSet {
+		v := req.Msg.ValueMax
+		p.ValueMax = &v
+	}
+	updated, err := h.clientProfiles.Update(ctx, uid, p)
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&workspacev1.UpdateClientProfileResponse{Profile: toProtoClientProfile(updated)}), nil
 }
 
 // ── Members ─────────────────────────────────────────────────────────────────
@@ -411,6 +470,29 @@ func toProtoEmailInvitation(inv workspace.EmailInvitation) *workspacev1.EmailInv
 		ExpiresAt:   inv.ExpiresAt.Format(time.RFC3339),
 		CreatedAt:   inv.CreatedAt.Format(time.RFC3339),
 	}
+}
+
+func toProtoClientProfile(p clientprofile.Profile) *workspacev1.ClientProfile {
+	out := &workspacev1.ClientProfile{
+		WorkspaceId:    p.WorkspaceID,
+		Sectors:        p.Sectors,
+		Countries:      p.Countries,
+		Regions:        p.Regions,
+		ProcedureTypes: p.ProcedureTypes,
+		Notes:          p.Notes,
+	}
+	if !p.UpdatedAt.IsZero() {
+		out.UpdatedAt = p.UpdatedAt.Format(time.RFC3339)
+	}
+	if p.ValueMin != nil {
+		out.ValueMin = *p.ValueMin
+		out.ValueMinSet = true
+	}
+	if p.ValueMax != nil {
+		out.ValueMax = *p.ValueMax
+		out.ValueMaxSet = true
+	}
+	return out
 }
 
 func toProtoInviteLink(l workspace.InviteLink) *workspacev1.InviteLink {

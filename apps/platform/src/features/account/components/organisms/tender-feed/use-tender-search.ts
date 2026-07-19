@@ -29,7 +29,7 @@ export function useTenderSearch(): {
   hasMore: boolean;
   loading: boolean;
   error: string | null;
-  search: (query: string, filters?: TenderFilterValues) => Promise<void>;
+  search: (query: string, filters?: TenderFilterValues, workspaceId?: string) => Promise<void>;
   loadMore: () => Promise<void>;
 } {
   const [results, setResults] = useState<TenderResult[]>([]);
@@ -39,38 +39,49 @@ export function useTenderSearch(): {
 
   const queryRef = useRef('');
   const filtersRef = useRef<TenderFilterValues | undefined>(undefined);
+  const workspaceIdRef = useRef<string | undefined>(undefined);
   const offsetRef = useRef(0);
   const requestIdRef = useRef(0);
   const inFlightRef = useRef(false);
 
-  const search = useCallback(async (query: string, filters?: TenderFilterValues) => {
-    const requestId = ++requestIdRef.current;
-    inFlightRef.current = true;
-    queryRef.current = query;
-    filtersRef.current = filters;
-    offsetRef.current = 0;
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await tenderClient.searchTenders({ query, filters, limit: PAGE_SIZE, offset: 0 });
-      if (requestIdRef.current !== requestId) return;
-      // Page by rows actually received, not by PAGE_SIZE: the server clamps
-      // `limit` to the caller's auth tier (anon < 20), so a page can be short.
-      offsetRef.current = res.results.length;
-      setResults(res.results);
-      setHasMore(res.hasMore);
+  const search = useCallback(
+    async (query: string, filters?: TenderFilterValues, workspaceId?: string) => {
+      const requestId = ++requestIdRef.current;
+      inFlightRef.current = true;
+      queryRef.current = query;
+      filtersRef.current = filters;
+      workspaceIdRef.current = workspaceId;
+      offsetRef.current = 0;
+      setLoading(true);
       setError(null);
-    } catch (e: unknown) {
-      if (requestIdRef.current !== requestId) return;
-      setError(errorMessage(e));
-    } finally {
-      if (requestIdRef.current === requestId) {
-        inFlightRef.current = false;
-        setLoading(false);
+
+      try {
+        const res = await tenderClient.searchTenders({
+          query,
+          filters,
+          limit: PAGE_SIZE,
+          offset: 0,
+          workspaceId: workspaceId ?? '',
+        });
+        if (requestIdRef.current !== requestId) return;
+        // Page by rows actually received, not by PAGE_SIZE: the server clamps
+        // `limit` to the caller's auth tier (anon < 20), so a page can be short.
+        offsetRef.current = res.results.length;
+        setResults(res.results);
+        setHasMore(res.hasMore);
+        setError(null);
+      } catch (e: unknown) {
+        if (requestIdRef.current !== requestId) return;
+        setError(errorMessage(e));
+      } finally {
+        if (requestIdRef.current === requestId) {
+          inFlightRef.current = false;
+          setLoading(false);
+        }
       }
-    }
-  }, []);
+    },
+    [],
+  );
 
   const loadMore = useCallback(async () => {
     // A loadMore racing an in-flight request would page from a stale offset
@@ -91,6 +102,7 @@ export function useTenderSearch(): {
         filters: filtersRef.current,
         limit: PAGE_SIZE,
         offset: nextOffset,
+        workspaceId: workspaceIdRef.current ?? '',
       });
       if (requestIdRef.current !== requestId) return;
       offsetRef.current = nextOffset + res.results.length;

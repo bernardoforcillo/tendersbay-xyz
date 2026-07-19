@@ -104,6 +104,36 @@
       "loading": "Et øjeblik."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sektorer",
+      "countries": "Lande",
+      "valueMin": "Minimumsværdi",
+      "valueMax": "Maksimumsværdi",
+      "notes": "Noter",
+      "notesPlaceholder": "Hvad byder denne kunde typisk på?",
+      "save": "Gem profil",
+      "invalidBand": "Minimumsværdien må ikke overstige maksimumsværdien.",
+      "error": "Kunne ikke gemme profilen — prøv igen.",
+      "procedureTypesLabel": "Udbudsformer",
+      "procedureTypes": {
+        "open": "Offentligt udbud",
+        "restricted": "Begrænset udbud",
+        "negotiated": "Udbud med forhandling",
+        "competitive_dialogue": "Konkurrencepræget dialog",
+        "innovation_partnership": "Innovationspartnerskab",
+        "other": "Andet"
+      },
+      "regions": "Regioner (NUTS)",
+      "regionsPlaceholder": "f.eks. ITC, DE3",
+      "regionsHint": "Kommaseparerede NUTS-præfikser. Lad stå tomt for at inkludere alle regioner."
+    },
+    "shortlist": {
+      "title": "Bedste match til denne kunde",
+      "emptyTitle": "Ingen velegnede udbud endnu",
+      "emptyDescription": "Prøv en manuel søgning nedenfor, eller udvid denne kundes profil."
+    }
+  },
   "landing": {
     "header": {
       "login": "Log ind",
@@ -391,12 +421,27 @@
         "title": "{{title}} — tendersbay",
         "description": "Udbudsdetaljer, frist, ordregiver og relaterede muligheder for \"{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Stærkt match",
+        "possible": "Muligt match",
+        "longShot": "Lille chance"
+      },
+      "reasonSector": "Matcher din sektor",
+      "reasonCountry": "I dit målland",
+      "reasonValueInBand": "Inden for dit værdiinterval",
+      "reasonValueBelow": "Under dit værdiinterval",
+      "reasonValueAbove": "Over dit værdiinterval",
+      "reasonRegion": "I din region",
+      "reasonProcedure": "Matcher din udbudsform"
     }
   },
   "today": {
     "recommended": {
-      "title": "Anbefalet til dig",
-      "seeAll": "Alt i Udforsk →"
+      "seeAll": "Alt i Udforsk →",
+      "clientCount_one": "{{count}} velegnet udbud klar til {{client}}",
+      "clientCount_other": "{{count}} velegnede udbud klar til {{client}}"
     },
     "greeting": {
       "morning": "Godmorgen.",
@@ -429,6 +474,7 @@
     },
     "nav": {
       "general": "Generelt",
+      "profile": "Kundeprofil",
       "overview": "Oversigt",
       "members": "Medlemmer",
       "roles": "Roller",
@@ -540,6 +586,16 @@
       "settings": "Workspace-indstillinger",
       "label": "Arbejdsområder",
       "manage": "Alle arbejdsområder"
+    },
+    "firstRun": {
+      "title": "Tilføj en kundes budprofil",
+      "subtitle": "Fortæl os, hvad denne kunde typisk byder på, så anbefalingerne rammer plet fra start. Du kan færdiggøre det senere under Indstillinger.",
+      "skip": "Spring over for nu"
+    },
+    "clientProfile": {
+      "title": "Kundens budprofil",
+      "subtitle": "Det, denne kunde byder på — sektorer, lande og værdiinterval — styrer hver anbefaling.",
+      "saved": "Profil gemt."
     }
   },
   "workbench": {

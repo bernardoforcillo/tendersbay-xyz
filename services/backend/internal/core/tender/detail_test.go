@@ -18,7 +18,7 @@ func detailConfig() tender.Config {
 func TestGetTender_ReturnsDetailAndResolvesSourceURL(t *testing.T) {
 	repo := &fakeRepo{detail: &tender.TenderDetail{ID: "5", Title: "Road works", Source: "ted", SourceRef: "PROC-1"}}
 	kb := &fakeKnowledgeBase{}
-	svc := tender.NewService(repo, kb, &fakeRateLimiter{allow: true}, detailConfig())
+	svc := tender.NewService(repo, kb, &fakeRateLimiter{allow: true}, &fakeProfiles{}, detailConfig())
 
 	got, err := svc.GetTender(context.Background(), tender.GetTenderParams{ID: "5", RateLimitKey: "1.2.3.4"})
 	if err != nil {
@@ -31,7 +31,7 @@ func TestGetTender_ReturnsDetailAndResolvesSourceURL(t *testing.T) {
 
 func TestGetTender_NotFoundPropagates(t *testing.T) {
 	repo := &fakeRepo{detailErr: tender.ErrTenderNotFound}
-	svc := tender.NewService(repo, &fakeKnowledgeBase{}, &fakeRateLimiter{allow: true}, detailConfig())
+	svc := tender.NewService(repo, &fakeKnowledgeBase{}, &fakeRateLimiter{allow: true}, &fakeProfiles{}, detailConfig())
 	_, err := svc.GetTender(context.Background(), tender.GetTenderParams{ID: "9", RateLimitKey: "k"})
 	if !errors.Is(err, tender.ErrTenderNotFound) {
 		t.Errorf("err = %v, want ErrTenderNotFound", err)
@@ -39,7 +39,7 @@ func TestGetTender_NotFoundPropagates(t *testing.T) {
 }
 
 func TestGetTender_RejectsNonNumericID(t *testing.T) {
-	svc := tender.NewService(&fakeRepo{}, &fakeKnowledgeBase{}, &fakeRateLimiter{allow: true}, detailConfig())
+	svc := tender.NewService(&fakeRepo{}, &fakeKnowledgeBase{}, &fakeRateLimiter{allow: true}, &fakeProfiles{}, detailConfig())
 	_, err := svc.GetTender(context.Background(), tender.GetTenderParams{ID: "abc", RateLimitKey: "k"})
 	if !errors.Is(err, tender.ErrTenderNotFound) {
 		t.Errorf("err = %v, want ErrTenderNotFound for a non-numeric id", err)
@@ -48,7 +48,7 @@ func TestGetTender_RejectsNonNumericID(t *testing.T) {
 
 func TestGetTender_RejectsOverRateLimit(t *testing.T) {
 	repo := &fakeRepo{detail: &tender.TenderDetail{ID: "5"}}
-	svc := tender.NewService(repo, &fakeKnowledgeBase{}, &fakeRateLimiter{allow: false}, detailConfig())
+	svc := tender.NewService(repo, &fakeKnowledgeBase{}, &fakeRateLimiter{allow: false}, &fakeProfiles{}, detailConfig())
 	_, err := svc.GetTender(context.Background(), tender.GetTenderParams{ID: "5", RateLimitKey: "k"})
 	if !errors.Is(err, tender.ErrRateLimited) {
 		t.Errorf("err = %v, want ErrRateLimited", err)
@@ -58,7 +58,7 @@ func TestGetTender_RejectsOverRateLimit(t *testing.T) {
 func TestGetRelatedTenders_OrdersByScore(t *testing.T) {
 	repo := &fakeRepo{byIDs: map[string]tender.Tender{"7": {ID: "7", Title: "A"}, "9": {ID: "9", Title: "B"}}}
 	kb := &fakeKnowledgeBase{related: []tender.ScoredChunk{{DocID: "9", Score: 0.6}, {DocID: "7", Score: 0.9}}}
-	svc := tender.NewService(repo, kb, &fakeRateLimiter{allow: true}, detailConfig())
+	svc := tender.NewService(repo, kb, &fakeRateLimiter{allow: true}, &fakeProfiles{}, detailConfig())
 
 	out, err := svc.GetRelatedTenders(context.Background(), tender.RelatedParams{ID: "5", Limit: 10, RateLimitKey: "k"})
 	if err != nil {
@@ -72,7 +72,7 @@ func TestGetRelatedTenders_OrdersByScore(t *testing.T) {
 func TestGetRelatedTenders_DegradesOnKBError(t *testing.T) {
 	repo := &fakeRepo{byIDs: map[string]tender.Tender{"7": {ID: "7"}}}
 	kb := &fakeKnowledgeBase{relatedErr: errors.New("qdrant down")}
-	svc := tender.NewService(repo, kb, &fakeRateLimiter{allow: true}, detailConfig())
+	svc := tender.NewService(repo, kb, &fakeRateLimiter{allow: true}, &fakeProfiles{}, detailConfig())
 
 	out, err := svc.GetRelatedTenders(context.Background(), tender.RelatedParams{ID: "5", Limit: 10, RateLimitKey: "k"})
 	if err != nil {

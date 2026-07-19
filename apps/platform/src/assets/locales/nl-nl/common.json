@@ -104,6 +104,36 @@
       "loading": "Een moment."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Sectoren",
+      "countries": "Landen",
+      "valueMin": "Minimumwaarde",
+      "valueMax": "Maximumwaarde",
+      "notes": "Notities",
+      "notesPlaceholder": "Waar biedt deze klant meestal op?",
+      "save": "Profiel opslaan",
+      "invalidBand": "De minimumwaarde mag niet hoger zijn dan de maximumwaarde.",
+      "error": "Het profiel kon niet worden opgeslagen — probeer het opnieuw.",
+      "procedureTypesLabel": "Soorten procedure",
+      "procedureTypes": {
+        "open": "Openbare procedure",
+        "restricted": "Niet-openbare procedure",
+        "negotiated": "Onderhandelingsprocedure",
+        "competitive_dialogue": "Concurrentiegerichte dialoog",
+        "innovation_partnership": "Innovatiepartnerschap",
+        "other": "Overig"
+      },
+      "regions": "Regio's (NUTS)",
+      "regionsPlaceholder": "bijv. ITC, DE3",
+      "regionsHint": "Kommagescheiden NUTS-voorvoegsels. Laat leeg om elke regio mee te nemen."
+    },
+    "shortlist": {
+      "title": "Beste match voor deze klant",
+      "emptyTitle": "Nog geen passende aanbestedingen",
+      "emptyDescription": "Probeer hieronder een handmatige zoekopdracht, of verbreed het profiel van deze klant."
+    }
+  },
   "landing": {
     "header": {
       "login": "Inloggen",
@@ -391,12 +421,27 @@
         "title": "{{title}} — tendersbay",
         "description": "Details, termijn, aanbestedende dienst en vergelijkbare kansen voor \"{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Sterke match",
+        "possible": "Mogelijke match",
+        "longShot": "Kleine kans"
+      },
+      "reasonSector": "Komt overeen met jouw sector",
+      "reasonCountry": "In jouw doelland",
+      "reasonValueInBand": "Binnen jouw waardebereik",
+      "reasonValueBelow": "Onder jouw waardebereik",
+      "reasonValueAbove": "Boven jouw waardebereik",
+      "reasonRegion": "In jouw regio",
+      "reasonProcedure": "Komt overeen met jouw procedure type"
     }
   },
   "today": {
     "recommended": {
-      "title": "Aanbevolen voor jou",
-      "seeAll": "Alles in Ontdekken →"
+      "seeAll": "Alles in Ontdekken →",
+      "clientCount_one": "{{count}} passende aanbesteding klaar voor {{client}}",
+      "clientCount_other": "{{count}} passende aanbestedingen klaar voor {{client}}"
     },
     "greeting": {
       "morning": "Goedemorgen.",
@@ -429,6 +474,7 @@
     },
     "nav": {
       "general": "Algemeen",
+      "profile": "Klantprofiel",
       "overview": "Overzicht",
       "members": "Leden",
       "roles": "Rollen",
@@ -540,6 +586,16 @@
       "settings": "Workspace-instellingen",
       "label": "Werkruimtes",
       "manage": "Alle werkruimtes"
+    },
+    "firstRun": {
+      "title": "Voeg een biedprofiel van de klant toe",
+      "subtitle": "Vertel ons waar deze klant meestal op biedt, zodat de aanbevelingen vanaf het begin raak zijn. Je kunt dit later afronden via Instellingen.",
+      "skip": "Voorlopig overslaan"
+    },
+    "clientProfile": {
+      "title": "Biedprofiel van de klant",
+      "subtitle": "Waar deze klant op biedt — sectoren, landen en waardebereik — stuurt elke aanbeveling.",
+      "saved": "Profiel opgeslagen."
     }
   },
   "workbench": {

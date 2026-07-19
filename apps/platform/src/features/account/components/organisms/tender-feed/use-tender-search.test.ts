@@ -37,7 +37,12 @@ describe('useTenderSearch', () => {
       await result.current.search('roads');
     });
 
-    expect(searchTenders).toHaveBeenCalledWith({ query: 'roads', limit: 20, offset: 0 });
+    expect(searchTenders).toHaveBeenCalledWith({
+      query: 'roads',
+      limit: 20,
+      offset: 0,
+      workspaceId: '',
+    });
     expect(result.current.results).toEqual([fakeResult('1'), fakeResult('2')]);
     expect(result.current.hasMore).toBe(true);
     expect(result.current.loading).toBe(false);
@@ -60,7 +65,12 @@ describe('useTenderSearch', () => {
       await result.current.loadMore();
     });
 
-    expect(searchTenders).toHaveBeenLastCalledWith({ query: 'roads', limit: 20, offset: 20 });
+    expect(searchTenders).toHaveBeenLastCalledWith({
+      query: 'roads',
+      limit: 20,
+      offset: 20,
+      workspaceId: '',
+    });
     expect(result.current.results).toHaveLength(21);
     expect(result.current.hasMore).toBe(false);
   });
@@ -82,7 +92,12 @@ describe('useTenderSearch', () => {
       await result.current.loadMore();
     });
 
-    expect(searchTenders).toHaveBeenLastCalledWith({ query: 'roads', limit: 20, offset: 10 });
+    expect(searchTenders).toHaveBeenLastCalledWith({
+      query: 'roads',
+      limit: 20,
+      offset: 10,
+      workspaceId: '',
+    });
     expect(result.current.results).toHaveLength(11);
   });
 
@@ -104,7 +119,12 @@ describe('useTenderSearch', () => {
       await result.current.search('bridges');
     });
 
-    expect(searchTenders).toHaveBeenLastCalledWith({ query: 'bridges', limit: 20, offset: 0 });
+    expect(searchTenders).toHaveBeenLastCalledWith({
+      query: 'bridges',
+      limit: 20,
+      offset: 0,
+      workspaceId: '',
+    });
     expect(result.current.results).toEqual([fakeResult('9')]);
   });
 
@@ -220,6 +240,7 @@ describe('useTenderSearch', () => {
       filters: { country: 'ITA', cpv: '45' },
       limit: 20,
       offset: 0,
+      workspaceId: '',
     });
 
     searchTenders.mockResolvedValueOnce({ results: [fakeResult('2')], hasMore: false });
@@ -231,6 +252,34 @@ describe('useTenderSearch', () => {
       filters: { country: 'ITA', cpv: '45' },
       limit: 20,
       offset: 1,
+      workspaceId: '',
+    });
+  });
+
+  it('threads workspaceId into searchTenders and reuses it on loadMore', async () => {
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('1')], hasMore: true });
+    const { result } = renderHook(() => useTenderSearch());
+    await act(async () => {
+      await result.current.search('roads', { country: 'ITA' }, 'ws-1');
+    });
+    expect(searchTenders).toHaveBeenCalledWith({
+      query: 'roads',
+      filters: { country: 'ITA' },
+      limit: 20,
+      offset: 0,
+      workspaceId: 'ws-1',
+    });
+
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('2')], hasMore: false });
+    await act(async () => {
+      await result.current.loadMore();
+    });
+    expect(searchTenders).toHaveBeenLastCalledWith({
+      query: 'roads',
+      filters: { country: 'ITA' },
+      limit: 20,
+      offset: 1,
+      workspaceId: 'ws-1',
     });
   });
 
@@ -245,6 +294,7 @@ describe('useTenderSearch', () => {
       filters: { status: 'open' },
       limit: 20,
       offset: 0,
+      workspaceId: '',
     });
     expect(result.current.results).toEqual([fakeResult('1')]);
   });

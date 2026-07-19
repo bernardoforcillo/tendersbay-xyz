@@ -104,6 +104,36 @@
       "loading": "Mument."
     }
   },
+  "explore": {
+    "clientProfile": {
+      "sectors": "Setturi",
+      "countries": "Pajjiżi",
+      "valueMin": "Valur minimu",
+      "valueMax": "Valur massimu",
+      "notes": "Noti",
+      "notesPlaceholder": "Fuq xiex normalment joffri dan il-klijent?",
+      "save": "Issejvja l-profil",
+      "invalidBand": "Il-valur minimu ma jistax jaqbeż il-valur massimu.",
+      "error": "Ma stajniex insejvjaw il-profil — erġa' pprova.",
+      "procedureTypesLabel": "Tipi ta' proċedura",
+      "procedureTypes": {
+        "open": "Proċedura miftuħa",
+        "restricted": "Proċedura ristretta",
+        "negotiated": "Proċedura nnegozjata",
+        "competitive_dialogue": "Djalogu kompetittiv",
+        "innovation_partnership": "Sħubija għall-innovazzjoni",
+        "other": "Ieħor"
+      },
+      "regions": "Reġjuni (NUTS)",
+      "regionsPlaceholder": "eż. ITC, DE3",
+      "regionsHint": "Prefissi NUTS separati b'virgola. Ħalli vojt biex tinkludi kwalunkwe reġjun."
+    },
+    "shortlist": {
+      "title": "L-aħjar tqabbil għal dan il-klijent",
+      "emptyTitle": "Għadu ma hemm ebda offerta adattata",
+      "emptyDescription": "Ipprova tfittxija manwali hawn taħt, jew wessa' l-profil ta' dan il-klijent."
+    }
+  },
   "landing": {
     "header": {
       "login": "Idħol",
@@ -397,12 +427,30 @@
         "title": "{{title}} — tendersbay",
         "description": "Dettalji tas-sejħa, skadenza, xerrej u opportunitajiet relatati għal \"{{title}}\"."
       }
+    },
+    "fit": {
+      "tier": {
+        "strong": "Tqabbil qawwi",
+        "possible": "Tqabbil possibbli",
+        "longShot": "Ċans żgħir"
+      },
+      "reasonSector": "Jaqbel mas-settur tiegħek",
+      "reasonCountry": "Fil-pajjiż fil-mira tiegħek",
+      "reasonValueInBand": "Fil-firxa ta' valur tiegħek",
+      "reasonValueBelow": "Taħt il-firxa ta' valur tiegħek",
+      "reasonValueAbove": "Fuq il-firxa ta' valur tiegħek",
+      "reasonRegion": "Fir-reġjun tiegħek",
+      "reasonProcedure": "Jaqbel mat-tip ta' proċedura tiegħek"
     }
   },
   "today": {
     "recommended": {
-      "title": "Rakkomandati għalik",
-      "seeAll": "Kollox f'Esplora →"
+      "seeAll": "Kollox f'Esplora →",
+      "clientCount_one": "{{count}} offerta adattata lesta għal {{client}}",
+      "clientCount_two": "{{count}} offerti adattati lesti għal {{client}}",
+      "clientCount_few": "{{count}} offerti adattati lesti għal {{client}}",
+      "clientCount_many": "{{count}} offerta adattata lesta għal {{client}}",
+      "clientCount_other": "{{count}} offerta adattata lesta għal {{client}}"
     },
     "greeting": {
       "morning": "L-għodwa t-tajba.",
@@ -435,6 +483,7 @@
     },
     "nav": {
       "general": "Ġenerali",
+      "profile": "Profil tal-klijent",
       "overview": "Ħarsa ġenerali",
       "members": "Membri",
       "roles": "Rwoli",
@@ -546,6 +595,16 @@
       "settings": "Settings tal-workspace",
       "label": "Spazji tax-xogħol",
       "manage": "L-ispazji tax-xogħol kollha"
+    },
+    "firstRun": {
+      "title": "Żid profil ta' offerta tal-klijent",
+      "subtitle": "Għidilna fuq xiex normalment joffri dan il-klijent biex ir-rakkomandazzjonijiet ikunu preċiżi mill-ewwel. Tista' tlesti dan aktar tard mis-Settings.",
+      "skip": "Aqbeż għalissa"
+    },
+    "clientProfile": {
+      "title": "Profil ta' offerta tal-klijent",
+      "subtitle": "Fuq xiex joffri dan il-klijent — setturi, pajjiżi, u firxa ta’ valur — jiggwida kull rakkomandazzjoni.",
+      "saved": "Profil issejvjat."
     }
   },
   "workbench": {
