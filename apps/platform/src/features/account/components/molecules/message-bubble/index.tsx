@@ -1,5 +1,6 @@
 import { ChoicePromptCard } from '~/features/account/components/molecules/choice-prompt-card';
 import { TenderResultCard } from '~/features/account/components/organisms/tender-result-card';
+import { useTenderLink } from '~/features/tenders';
 import type { ChatMessage } from '~/store/chat';
 
 type MessageBubbleProps = {
@@ -9,6 +10,8 @@ type MessageBubbleProps = {
 };
 
 export function MessageBubble({ message, isPendingChoice, onSubmitChoice }: MessageBubbleProps) {
+  const tenderLink = useTenderLink();
+
   if (message.role === 'choice_prompt') {
     return (
       <ChoicePromptCard
@@ -26,7 +29,13 @@ export function MessageBubble({ message, isPendingChoice, onSubmitChoice }: Mess
       <div className="flex justify-start">
         <div className="w-full max-w-[80%] space-y-2.5">
           {(message.tenders ?? []).map((tender) => (
-            <TenderResultCard key={tender.id} tender={tender} />
+            <div key={tender.id}>
+              {tenderLink(
+                tender.id,
+                <TenderResultCard tender={tender} />,
+                'block rounded-2xl no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand-600',
+              )}
+            </div>
           ))}
         </div>
       </div>
