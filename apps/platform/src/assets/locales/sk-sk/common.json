@@ -428,6 +428,10 @@
         "description": "Podrobnosti o zákazke, termín, obstarávateľ a súvisiace príležitosti pre „{{title}}“."
       }
     },
+    "threshold": {
+      "belowEu": "Pod prahom EÚ",
+      "aboveEu": "Nad prahom EÚ"
+    },
     "fit": {
       "tier": {
         "strong": "Silná zhoda",

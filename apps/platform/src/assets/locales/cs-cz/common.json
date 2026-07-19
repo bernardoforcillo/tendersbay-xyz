@@ -424,6 +424,10 @@
         "description": "Podrobnosti o zakázce, lhůta, zadavatel a související příležitosti pro „{{title}}“."
       }
     },
+    "threshold": {
+      "belowEu": "Pod prahem EU",
+      "aboveEu": "Nad prahem EU"
+    },
     "fit": {
       "tier": {
         "strong": "Silná shoda",

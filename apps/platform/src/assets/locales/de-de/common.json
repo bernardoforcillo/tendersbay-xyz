@@ -422,6 +422,10 @@
         "description": "Details zur Ausschreibung, Frist, Auftraggeber und ähnliche Gelegenheiten für „{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Unter EU-Schwellenwert",
+      "aboveEu": "Über EU-Schwellenwert"
+    },
     "fit": {
       "tier": {
         "strong": "Starke Übereinstimmung",

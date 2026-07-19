@@ -239,6 +239,13 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
    * @generated from field: tender.v1.ReasonSignals reason = 18;
    */
   reason?: ReasonSignals | undefined;
+
+  /**
+   * "below_eu" | "above_eu" | "" — coarse, buyer-agnostic
+   *
+   * @generated from field: string eu_threshold = 19;
+   */
+  euThreshold: string;
 };
 
 /**
@@ -374,6 +381,36 @@ export declare type RecommendTendersForClientResponse = Message<"tender.v1.Recom
  * Use `create(RecommendTendersForClientResponseSchema)` to create a new message.
  */
 export declare const RecommendTendersForClientResponseSchema: GenMessage<RecommendTendersForClientResponse>;
+
+/**
+ * @generated from message tender.v1.GetCoverageRequest
+ */
+export declare type GetCoverageRequest = Message<"tender.v1.GetCoverageRequest"> & {
+};
+
+/**
+ * Describes the message tender.v1.GetCoverageRequest.
+ * Use `create(GetCoverageRequestSchema)` to create a new message.
+ */
+export declare const GetCoverageRequestSchema: GenMessage<GetCoverageRequest>;
+
+/**
+ * @generated from message tender.v1.GetCoverageResponse
+ */
+export declare type GetCoverageResponse = Message<"tender.v1.GetCoverageResponse"> & {
+  /**
+   * alpha-2, uppercase; countries with >=1 ingested tender
+   *
+   * @generated from field: repeated string countries = 1;
+   */
+  countries: string[];
+};
+
+/**
+ * Describes the message tender.v1.GetCoverageResponse.
+ * Use `create(GetCoverageResponseSchema)` to create a new message.
+ */
+export declare const GetCoverageResponseSchema: GenMessage<GetCoverageResponse>;
 
 /**
  * @generated from message tender.v1.GetTenderRequest
@@ -736,6 +773,19 @@ export declare const TenderService: GenService<{
     methodKind: "unary";
     input: typeof RecommendTendersForClientRequestSchema;
     output: typeof RecommendTendersForClientResponseSchema;
+  },
+  /**
+   * Which countries we currently hold tenders for (DISTINCT country over
+   * ingested_tenders). Anonymous-safe like SearchTenders — the landing
+   * coverage marquee reads it. "available" = we have >=1 tender for that
+   * country (TED-inclusive), not a below-threshold-only claim.
+   *
+   * @generated from rpc tender.v1.TenderService.GetCoverage
+   */
+  getCoverage: {
+    methodKind: "unary";
+    input: typeof GetCoverageRequestSchema;
+    output: typeof GetCoverageResponseSchema;
   },
 }>;
 

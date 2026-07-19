@@ -168,6 +168,26 @@ func (r *TenderRepo) EnrichTenders(ctx context.Context, ids []string, filters te
 	return rowsToTenders(rows), nil
 }
 
+// DistinctCountries returns each distinct non-empty alpha-2 country with at
+// least one ingested tender. Cheap and cacheable; the landing coverage
+// marquee is the only caller.
+func (r *TenderRepo) DistinctCountries(ctx context.Context) ([]string, error) {
+	var rows []struct {
+		Country string `drop:"country"`
+	}
+	if err := r.db.Select(TenderCountry).From(Tenders).
+		GroupBy(TenderCountry).All(ctx, &rows); err != nil {
+		return nil, fmt.Errorf("postgres: distinct countries: %w", err)
+	}
+	out := make([]string, 0, len(rows))
+	for _, row := range rows {
+		if row.Country != "" {
+			out = append(out, row.Country)
+		}
+	}
+	return out, nil
+}
+
 func toTenderFilters(f tender.Filters) TenderFilters {
 	return TenderFilters{
 		Country: f.Country, CPV: f.CPV, Status: f.Status,

@@ -426,6 +426,10 @@
         "description": "Dettalji tas-sejħa, skadenza, xerrej u opportunitajiet relatati għal \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Taħt il-limitu tal-UE",
+      "aboveEu": "'Il fuq mil-limitu tal-UE"
+    },
     "fit": {
       "tier": {
         "strong": "Tqabbil qawwi",

@@ -426,6 +426,10 @@
         "description": "Közbeszerzési részletek, határidő, ajánlatkérő és kapcsolódó lehetőségek a(z) „{{title}}” tenderhez."
       }
     },
+    "threshold": {
+      "belowEu": "Az uniós értékhatár alatt",
+      "aboveEu": "Az uniós értékhatár felett"
+    },
     "fit": {
       "tier": {
         "strong": "Erős egyezés",

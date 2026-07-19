@@ -422,6 +422,10 @@
         "description": "Hankinnan tiedot, määräaika, hankintayksikkö ja vastaavat mahdollisuudet kohteelle \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Alle EU:n kynnysarvon",
+      "aboveEu": "Yli EU:n kynnysarvon"
+    },
     "fit": {
       "tier": {
         "strong": "Vahva osuma",

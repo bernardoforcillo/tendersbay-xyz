@@ -422,6 +422,10 @@
         "description": "Hanke üksikasjad, tähtaeg, hankija ja seotud võimalused hankele \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Alla ELi piirmäära",
+      "aboveEu": "Üle ELi piirmäära"
+    },
     "fit": {
       "tier": {
         "strong": "Tugev sobivus",

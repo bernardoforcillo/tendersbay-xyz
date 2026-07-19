@@ -422,6 +422,10 @@
         "description": "Udbudsdetaljer, frist, ordregiver og relaterede muligheder for \"{{title}}\"."
       }
     },
+    "threshold": {
+      "belowEu": "Under EU-tærsklen",
+      "aboveEu": "Over EU-tærsklen"
+    },
     "fit": {
       "tier": {
         "strong": "Stærkt match",
