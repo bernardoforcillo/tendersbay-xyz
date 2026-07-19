@@ -251,44 +251,41 @@ func TestSearchTendersTool_SearchErrorDoesNotAffectEmptyStreak(t *testing.T) {
 	tool := newSearchTendersTool(func(string, string, string, string) ([]tender.ScoredTender, error) {
 		callCount++
 		if callCount == 3 {
-			return nil, errors.New("search failed")
+			return nil, errors.New("boom")
 		}
-		if callCount < 5 {
-			return nil, nil
-		}
-		return []tender.ScoredTender{{Tender: tender.Tender{ID: "1", Title: "Found one"}}}, nil
+		return nil, nil
 	})
 	args, _ := json.Marshal(map[string]any{"query": "x"})
 
-	// First 2 calls: empty results, streak = 2
-	for i := 0; i < 2; i++ {
-		if _, err := tool.Execute(context.Background(), string(args)); err != nil {
-			t.Fatalf("Execute call %d: %v", i+1, err)
+	// Calls 1, 2: empty (streak -> 2). Call 3: errors — the streak must stay
+	// untouched at 2, neither incremented to 3 nor reset to 0. Calls 4, 5: empty
+	// (streak -> 3, 4 if the error correctly left it at 2 after call 2; only 4 by
+	// call 5, one short of searchTendersEmptyStreakLimit=5, so no notice yet).
+	// Call 6 must be the one that finally reaches 5 and triggers the notice —
+	// proving the errored call (call 3) contributed nothing to the count either
+	// way. If the error had instead reset the streak, call 6 would only reach a
+	// streak of 3 (calls 4,5,6), and the notice would NOT appear — this test
+	// would then fail, which is the point.
+	for i := 0; i < 5; i++ {
+		result, err := tool.Execute(context.Background(), string(args))
+		if i == 2 {
+			if err == nil {
+				t.Fatalf("call %d: want the search error propagated, got nil", i+1)
+			}
+			continue
+		}
+		if err != nil {
+			t.Fatalf("call %d: %v", i+1, err)
+		}
+		if strings.Contains(result, "STOP calling search_tenders") {
+			t.Fatalf("call %d: notice appeared too early: %q", i+1, result)
 		}
 	}
-
-	// 3rd call: error, streak should NOT increment
-	if _, err := tool.Execute(context.Background(), string(args)); err == nil {
-		t.Fatal("Execute call 3: want error, got nil")
-	}
-
-	// 4th call: empty result, streak should still be 2, not 3
-	// So after this call streak = 3, not 4
-	if _, err := tool.Execute(context.Background(), string(args)); err != nil {
-		t.Fatalf("Execute call 4: %v", err)
-	}
-
-	// 5th call: non-empty result, resets streak to 0
-	if _, err := tool.Execute(context.Background(), string(args)); err != nil {
-		t.Fatalf("Execute call 5: %v", err)
-	}
-
-	// 6th call: empty result after reset
 	result, err := tool.Execute(context.Background(), string(args))
 	if err != nil {
-		t.Fatalf("Execute call 6: %v", err)
+		t.Fatalf("call 6: %v", err)
 	}
-	if strings.Contains(result, "STOP calling search_tenders") {
-		t.Fatalf("post-reset call: notice appeared too early after reset: %q", result)
+	if !strings.Contains(result, "STOP calling search_tenders") {
+		t.Fatalf("call 6 result = %q, want the notice (5 empty calls: 1,2,4,5,6 — call 3 errored and must not have contributed)", result)
 	}
 }
