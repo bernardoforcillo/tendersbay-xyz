@@ -705,9 +705,51 @@
       "deleteHint": "Trajno izbriši ta delovni pult in vse njegove podatke.",
       "delete": "Izbriši delovni pult",
       "leaveHint": "Zapusti ta delovni pult. Upravitelj vas lahko znova doda.",
-      "leave": "Zapusti delovni pult",
-      "confirmDelete": "Izbrisati ta delovni pult?",
-      "confirmLeave": "Zapustiti ta delovni pult?"
+      "leave": "Zapusti delovni pult"
+    },
+    "overview": {
+      "emptyTitle": "Vaš delovni pult je pripravljen",
+      "emptyDescription": "Začnite z iskanjem razpisov, ustvarjanjem profila stranke ali povabilom svoje ekipe. Vse, kar tukaj počnete, je deljeno s člani delovnega pulta.",
+      "emptyExplore": "Odprite Razišči"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ne sprašujte več",
+    "deleteWorkspace": {
+      "title": "Izbrisati delovni prostor?",
+      "description": "S tem boste trajno izbrisali ta delovni prostor in vse njegove podatke. Tega dejanja ni mogoče razveljaviti."
+    },
+    "leaveWorkspace": {
+      "title": "Zapustiti delovni prostor?",
+      "description": "Izgubili boste dostop do tega delovnega prostora. Znova se lahko pridružite z novim vabilom."
+    },
+    "removeMember": {
+      "title": "Odstraniti člana?",
+      "description": "Ta oseba bo takoj izgubila dostop do delovnega prostora."
+    },
+    "deleteRole": {
+      "title": "Izbrisati vlogo?",
+      "description": "Člani s to vlogo bodo izgubili njene pravice."
+    },
+    "revokeInvite": {
+      "title": "Preklicati vabilo?",
+      "description": "To vabilo po e-pošti ne bo več uporabno."
+    },
+    "revokeLink": {
+      "title": "Preklicati povezavo?",
+      "description": "Ta povezava za vabilo bo takoj prenehala delovati."
+    },
+    "deleteWorkbench": {
+      "title": "Izbrisati delovni pult?",
+      "description": "S tem boste trajno izbrisali ta delovni pult in vse njegove podatke. Tega dejanja ni mogoče razveljaviti."
+    },
+    "leaveWorkbench": {
+      "title": "Zapustiti delovni pult?",
+      "description": "Izgubili boste dostop do tega delovnega pulta. Upravitelj vas lahko znova doda."
+    },
+    "removeWorkbenchMember": {
+      "title": "Odstraniti člana?",
+      "description": "Ta oseba bo takoj izgubila dostop do delovnega pulta."
     }
   }
 }

@@ -699,9 +699,51 @@
       "deleteHint": "Supprimer définitivement cet espace collaboratif et toutes ses données.",
       "delete": "Supprimer l'espace collaboratif",
       "leaveHint": "Quitter cet espace collaboratif. Un gestionnaire pourra vous y réajouter.",
-      "leave": "Quitter l'espace collaboratif",
-      "confirmDelete": "Supprimer cet espace collaboratif ?",
-      "confirmLeave": "Quitter cet espace collaboratif ?"
+      "leave": "Quitter l'espace collaboratif"
+    },
+    "overview": {
+      "emptyTitle": "Votre espace collaboratif est prêt",
+      "emptyDescription": "Commencez par rechercher des marchés, créer un profil client ou inviter votre équipe. Tout ce que vous faites ici est partagé avec les membres de l'espace collaboratif.",
+      "emptyExplore": "Ouvrez Explorer"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ne plus demander",
+    "deleteWorkspace": {
+      "title": "Supprimer l'espace de travail ?",
+      "description": "Cela supprimera définitivement cet espace de travail et toutes ses données. Cette action est irréversible."
+    },
+    "leaveWorkspace": {
+      "title": "Quitter l'espace de travail ?",
+      "description": "Vous perdrez l'accès à cet espace de travail. Vous pourrez le rejoindre avec une nouvelle invitation."
+    },
+    "removeMember": {
+      "title": "Retirer le membre ?",
+      "description": "Cette personne perdra immédiatement l'accès à l'espace de travail."
+    },
+    "deleteRole": {
+      "title": "Supprimer le rôle ?",
+      "description": "Les membres ayant ce rôle perdront ses autorisations."
+    },
+    "revokeInvite": {
+      "title": "Révoquer l'invitation ?",
+      "description": "Cette invitation par e-mail ne pourra plus être utilisée."
+    },
+    "revokeLink": {
+      "title": "Révoquer le lien ?",
+      "description": "Ce lien d'invitation cessera immédiatement de fonctionner."
+    },
+    "deleteWorkbench": {
+      "title": "Supprimer l'espace collaboratif ?",
+      "description": "Cela supprimera définitivement cet espace collaboratif et toutes ses données. Cette action est irréversible."
+    },
+    "leaveWorkbench": {
+      "title": "Quitter l'espace collaboratif ?",
+      "description": "Vous perdrez l'accès à cet espace collaboratif. Un gestionnaire pourra vous y réajouter."
+    },
+    "removeWorkbenchMember": {
+      "title": "Retirer le membre ?",
+      "description": "Cette personne perdra immédiatement l'accès à l'espace collaboratif."
     }
   }
 }

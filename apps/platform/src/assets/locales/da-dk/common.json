@@ -699,9 +699,51 @@
       "deleteHint": "Slet dette arbejdsbord og alle dets data permanent.",
       "delete": "Slet arbejdsbord",
       "leaveHint": "Forlad dette arbejdsbord. En administrator kan tilføje dig igen.",
-      "leave": "Forlad arbejdsbord",
-      "confirmDelete": "Slet dette arbejdsbord?",
-      "confirmLeave": "Forlad dette arbejdsbord?"
+      "leave": "Forlad arbejdsbord"
+    },
+    "overview": {
+      "emptyTitle": "Dit arbejdsbord er klar",
+      "emptyDescription": "Start med at søge efter udbud, oprette en kundeprofil eller invitere dit team. Alt, hvad du gør her, deles med arbejdsbordets medlemmer.",
+      "emptyExplore": "Åbn Udforsk"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Spørg ikke igen",
+    "deleteWorkspace": {
+      "title": "Slet arbejdsområde?",
+      "description": "Dette sletter dette arbejdsområde og alle dets data permanent. Denne handling kan ikke fortrydes."
+    },
+    "leaveWorkspace": {
+      "title": "Forlad arbejdsområde?",
+      "description": "Du mister adgang til dette arbejdsområde. Du kan deltage igen med en ny invitation."
+    },
+    "removeMember": {
+      "title": "Fjern medlem?",
+      "description": "Denne person mister øjeblikkeligt adgang til arbejdsområdet."
+    },
+    "deleteRole": {
+      "title": "Slet rolle?",
+      "description": "Medlemmer med denne rolle mister dens tilladelser."
+    },
+    "revokeInvite": {
+      "title": "Tilbagekald invitation?",
+      "description": "Denne e-mailinvitation kan ikke længere bruges."
+    },
+    "revokeLink": {
+      "title": "Tilbagekald link?",
+      "description": "Dette invitationslink holder øjeblikkeligt op med at virke."
+    },
+    "deleteWorkbench": {
+      "title": "Slet arbejdsbord?",
+      "description": "Dette sletter dette arbejdsbord og alle dets data permanent. Denne handling kan ikke fortrydes."
+    },
+    "leaveWorkbench": {
+      "title": "Forlad arbejdsbord?",
+      "description": "Du mister adgang til dette arbejdsbord. En administrator kan tilføje dig igen."
+    },
+    "removeWorkbenchMember": {
+      "title": "Fjern medlem?",
+      "description": "Denne person mister øjeblikkeligt adgang til arbejdsbordet."
     }
   }
 }

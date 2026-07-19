@@ -702,9 +702,51 @@
       "deleteHint": "Neatgriezeniski dzēst šo darbagaldu un visus tā datus.",
       "delete": "Dzēst darbagaldu",
       "leaveHint": "Pamest šo darbagaldu. Pārvaldnieks var jūs pievienot atkārtoti.",
-      "leave": "Pamest darbagaldu",
-      "confirmDelete": "Dzēst šo darbagaldu?",
-      "confirmLeave": "Pamest šo darbagaldu?"
+      "leave": "Pamest darbagaldu"
+    },
+    "overview": {
+      "emptyTitle": "Jūsu darbagalds ir gatavs",
+      "emptyDescription": "Sāciet, meklējot iepirkumus, izveidojot klienta profilu vai uzaicinot savu komandu. Viss, ko darāt šeit, tiek koplietots ar darbagalda dalībniekiem.",
+      "emptyExplore": "Atveriet Pārlūkot"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Vairs nejautāt",
+    "deleteWorkspace": {
+      "title": "Dzēst darbvietu?",
+      "description": "Tas neatgriezeniski dzēsīs šo darbvietu un visus tās datus. Šo darbību nevar atsaukt."
+    },
+    "leaveWorkspace": {
+      "title": "Pamest darbvietu?",
+      "description": "Jūs zaudēsiet piekļuvi šai darbvietai. Jūs varat atkārtoti pievienoties ar jaunu ielūgumu."
+    },
+    "removeMember": {
+      "title": "Noņemt dalībnieku?",
+      "description": "Šī persona nekavējoties zaudēs piekļuvi darbvietai."
+    },
+    "deleteRole": {
+      "title": "Dzēst lomu?",
+      "description": "Dalībnieki ar šo lomu zaudēs tās atļaujas."
+    },
+    "revokeInvite": {
+      "title": "Atsaukt ielūgumu?",
+      "description": "Šo e-pasta ielūgumu vairs nevarēs izmantot."
+    },
+    "revokeLink": {
+      "title": "Atsaukt saiti?",
+      "description": "Šī ielūguma saite nekavējoties pārstās darboties."
+    },
+    "deleteWorkbench": {
+      "title": "Dzēst darbagaldu?",
+      "description": "Tas neatgriezeniski dzēsīs šo darbagaldu un visus tā datus. Šo darbību nevar atsaukt."
+    },
+    "leaveWorkbench": {
+      "title": "Pamest darbagaldu?",
+      "description": "Jūs zaudēsiet piekļuvi šim darbagaldam. Pārvaldnieks var jūs pievienot atkārtoti."
+    },
+    "removeWorkbenchMember": {
+      "title": "Noņemt dalībnieku?",
+      "description": "Šī persona nekavējoties zaudēs piekļuvi darbagaldam."
     }
   }
 }

@@ -706,9 +706,51 @@
       "deleteHint": "Natrvalo odstrániť túto pracovnú plochu a všetky jej údaje.",
       "delete": "Odstrániť pracovnú plochu",
       "leaveHint": "Opustiť túto pracovnú plochu. Správca vás môže znova pridať.",
-      "leave": "Opustiť pracovnú plochu",
-      "confirmDelete": "Odstrániť túto pracovnú plochu?",
-      "confirmLeave": "Opustiť túto pracovnú plochu?"
+      "leave": "Opustiť pracovnú plochu"
+    },
+    "overview": {
+      "emptyTitle": "Vaša pracovná plocha je pripravená",
+      "emptyDescription": "Začnite vyhľadávaním zákaziek, vytvorením profilu klienta alebo pozvaním svojho tímu. Všetko, čo tu urobíte, sa zdieľa s členmi pracovnej plochy.",
+      "emptyExplore": "Otvorte Preskúmať"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Nabudúce sa nepýtať",
+    "deleteWorkspace": {
+      "title": "Odstrániť pracovný priestor?",
+      "description": "Týmto natrvalo odstránite tento pracovný priestor a všetky jeho údaje. Túto akciu nemožno vrátiť späť."
+    },
+    "leaveWorkspace": {
+      "title": "Opustiť pracovný priestor?",
+      "description": "Stratíte prístup k tomuto pracovnému priestoru. Môžete sa znova pripojiť s novou pozvánkou."
+    },
+    "removeMember": {
+      "title": "Odstrániť člena?",
+      "description": "Táto osoba okamžite stratí prístup k pracovnému priestoru."
+    },
+    "deleteRole": {
+      "title": "Odstrániť rolu?",
+      "description": "Členovia s touto rolou stratia jej oprávnenia."
+    },
+    "revokeInvite": {
+      "title": "Zrušiť pozvánku?",
+      "description": "Túto e-mailovú pozvánku už nebude možné použiť."
+    },
+    "revokeLink": {
+      "title": "Zrušiť odkaz?",
+      "description": "Tento pozývací odkaz okamžite prestane fungovať."
+    },
+    "deleteWorkbench": {
+      "title": "Odstrániť pracovnú plochu?",
+      "description": "Týmto natrvalo odstránite túto pracovnú plochu a všetky jej údaje. Túto akciu nemožno vrátiť späť."
+    },
+    "leaveWorkbench": {
+      "title": "Opustiť pracovnú plochu?",
+      "description": "Stratíte prístup k tejto pracovnej ploche. Správca vás môže znova pridať."
+    },
+    "removeWorkbenchMember": {
+      "title": "Odstrániť člena?",
+      "description": "Táto osoba okamžite stratí prístup k pracovnej ploche."
     }
   }
 }

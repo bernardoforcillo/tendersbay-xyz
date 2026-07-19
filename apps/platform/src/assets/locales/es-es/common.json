@@ -699,9 +699,51 @@
       "deleteHint": "Eliminar de forma permanente este workbench y todos sus datos.",
       "delete": "Eliminar workbench",
       "leaveHint": "Abandonar este workbench. Un gestor podrá volver a añadirte.",
-      "leave": "Abandonar workbench",
-      "confirmDelete": "¿Eliminar este workbench?",
-      "confirmLeave": "¿Abandonar este workbench?"
+      "leave": "Abandonar workbench"
+    },
+    "overview": {
+      "emptyTitle": "Tu workbench está listo",
+      "emptyDescription": "Empieza buscando licitaciones, creando un perfil de cliente o invitando a tu equipo. Todo lo que hagas aquí se comparte con los miembros del workbench.",
+      "emptyExplore": "Abre Explorar"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "No volver a preguntar",
+    "deleteWorkspace": {
+      "title": "¿Eliminar espacio de trabajo?",
+      "description": "Esto eliminará permanentemente este espacio de trabajo y todos sus datos. Esta acción no se puede deshacer."
+    },
+    "leaveWorkspace": {
+      "title": "¿Abandonar espacio de trabajo?",
+      "description": "Perderás el acceso a este espacio de trabajo. Podrás volver a unirte con una nueva invitación."
+    },
+    "removeMember": {
+      "title": "¿Eliminar miembro?",
+      "description": "Esta persona perderá el acceso al espacio de trabajo de inmediato."
+    },
+    "deleteRole": {
+      "title": "¿Eliminar rol?",
+      "description": "Los miembros con este rol perderán sus permisos."
+    },
+    "revokeInvite": {
+      "title": "¿Revocar invitación?",
+      "description": "Esta invitación por correo electrónico dejará de ser utilizable."
+    },
+    "revokeLink": {
+      "title": "¿Revocar enlace?",
+      "description": "Este enlace de invitación dejará de funcionar de inmediato."
+    },
+    "deleteWorkbench": {
+      "title": "¿Eliminar workbench?",
+      "description": "Esto eliminará permanentemente este workbench y todos sus datos. Esta acción no se puede deshacer."
+    },
+    "leaveWorkbench": {
+      "title": "¿Abandonar workbench?",
+      "description": "Perderás el acceso a este workbench. Un gestor podrá volver a añadirte."
+    },
+    "removeWorkbenchMember": {
+      "title": "¿Eliminar miembro?",
+      "description": "Esta persona perderá el acceso al workbench de inmediato."
     }
   }
 }

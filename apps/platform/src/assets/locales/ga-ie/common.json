@@ -712,9 +712,51 @@
       "deleteHint": "Scrios an binse oibre seo agus a shonraí go léir go buan.",
       "delete": "Scrios an binse oibre",
       "leaveHint": "Fág an binse oibre seo. Is féidir le bainisteoir tú a chur leis arís.",
-      "leave": "Fág an binse oibre",
-      "confirmDelete": "An binse oibre seo a scriosadh?",
-      "confirmLeave": "An binse oibre seo a fhágáil?"
+      "leave": "Fág an binse oibre"
+    },
+    "overview": {
+      "emptyTitle": "Tá do bhinse oibre réidh",
+      "emptyDescription": "Tosaigh trí thairiscintí a chuardach, próifíl chliaint a chruthú, nó cuireadh a thabhairt do d'fhoireann. Roinntear gach rud a dhéanann tú anseo le baill an bhinse oibre.",
+      "emptyExplore": "Oscail Iniúchadh"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ná fiafraigh arís",
+    "deleteWorkspace": {
+      "title": "An spás oibre a scriosadh?",
+      "description": "Scriosfaidh sé seo an spás oibre seo agus a shonraí go léir go buan. Ní féidir an gníomh seo a chur ar ceal."
+    },
+    "leaveWorkspace": {
+      "title": "An spás oibre a fhágáil?",
+      "description": "Caillfidh tú rochtain ar an spás oibre seo. Is féidir leat filleadh le cuireadh nua."
+    },
+    "removeMember": {
+      "title": "An ball a bhaint?",
+      "description": "Caillfidh an duine seo rochtain ar an spás oibre láithreach."
+    },
+    "deleteRole": {
+      "title": "An ról a scriosadh?",
+      "description": "Caillfidh baill a bhfuil an ról seo acu a chuid ceadanna."
+    },
+    "revokeInvite": {
+      "title": "An cuireadh a chúlghairm?",
+      "description": "Ní bheidh an cuireadh ríomhphoist seo inúsáidte a thuilleadh."
+    },
+    "revokeLink": {
+      "title": "An nasc a chúlghairm?",
+      "description": "Stopfaidh an nasc cuiridh seo ag obair láithreach."
+    },
+    "deleteWorkbench": {
+      "title": "An binse oibre a scriosadh?",
+      "description": "Scriosfaidh sé seo an binse oibre seo agus a shonraí go léir go buan. Ní féidir an gníomh seo a chur ar ceal."
+    },
+    "leaveWorkbench": {
+      "title": "An binse oibre a fhágáil?",
+      "description": "Caillfidh tú rochtain ar an mbinse oibre seo. Is féidir le bainisteoir tú a chur leis arís."
+    },
+    "removeWorkbenchMember": {
+      "title": "An ball a bhaint?",
+      "description": "Caillfidh an duine seo rochtain ar an mbinse oibre láithreach."
     }
   }
 }

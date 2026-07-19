@@ -702,9 +702,51 @@
       "deleteHint": "Șterge definitiv acest spațiu colaborativ și toate datele sale.",
       "delete": "Șterge spațiul colaborativ",
       "leaveHint": "Părăsește acest spațiu colaborativ. Un manager te poate readăuga.",
-      "leave": "Părăsește spațiul colaborativ",
-      "confirmDelete": "Ștergi acest spațiu colaborativ?",
-      "confirmLeave": "Părăsești acest spațiu colaborativ?"
+      "leave": "Părăsește spațiul colaborativ"
+    },
+    "overview": {
+      "emptyTitle": "Spațiul tău colaborativ este pregătit",
+      "emptyDescription": "Începe căutând licitații, creând un profil de client sau invitându-ți echipa. Tot ce faci aici este partajat cu membrii spațiului colaborativ.",
+      "emptyExplore": "Deschideți Explorează"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Nu mai întreba",
+    "deleteWorkspace": {
+      "title": "Ștergi spațiul de lucru?",
+      "description": "Această acțiune va șterge definitiv acest spațiu de lucru și toate datele sale. Nu poate fi anulată."
+    },
+    "leaveWorkspace": {
+      "title": "Părăsești spațiul de lucru?",
+      "description": "Vei pierde accesul la acest spațiu de lucru. Poți reveni cu o invitație nouă."
+    },
+    "removeMember": {
+      "title": "Elimini membrul?",
+      "description": "Această persoană va pierde imediat accesul la spațiul de lucru."
+    },
+    "deleteRole": {
+      "title": "Ștergi rolul?",
+      "description": "Membrii cu acest rol vor pierde permisiunile sale."
+    },
+    "revokeInvite": {
+      "title": "Revoci invitația?",
+      "description": "Această invitație prin e-mail nu va mai putea fi folosită."
+    },
+    "revokeLink": {
+      "title": "Revoci linkul?",
+      "description": "Acest link de invitație va înceta imediat să funcționeze."
+    },
+    "deleteWorkbench": {
+      "title": "Ștergi spațiul colaborativ?",
+      "description": "Această acțiune va șterge definitiv acest spațiu colaborativ și toate datele sale. Nu poate fi anulată."
+    },
+    "leaveWorkbench": {
+      "title": "Părăsești spațiul colaborativ?",
+      "description": "Vei pierde accesul la acest spațiu colaborativ. Un manager te poate readăuga."
+    },
+    "removeWorkbenchMember": {
+      "title": "Elimini membrul?",
+      "description": "Această persoană va pierde imediat accesul la spațiul colaborativ."
     }
   }
 }

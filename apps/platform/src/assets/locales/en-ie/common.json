@@ -685,6 +685,11 @@
       "manageRoles": "Create, edit and delete roles",
       "administrator": "Full access — bypasses every permission check"
     },
+    "overview": {
+      "emptyTitle": "Your workbench is ready",
+      "emptyDescription": "Start by searching for tenders, creating a client profile, or inviting your team. Everything you do here is shared with workbench members.",
+      "emptyExplore": "Open Explore"
+    },
     "settings": {
       "detailsTitle": "Workbench details",
       "name": "Name",
@@ -699,9 +704,46 @@
       "deleteHint": "Permanently delete this workbench and all its data.",
       "delete": "Delete workbench",
       "leaveHint": "Leave this workbench. You can be re-added by a manager.",
-      "leave": "Leave workbench",
-      "confirmDelete": "Delete this workbench?",
-      "confirmLeave": "Leave this workbench?"
+      "leave": "Leave workbench"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Don't ask again",
+    "deleteWorkspace": {
+      "title": "Delete workspace?",
+      "description": "This will permanently delete this workspace and all its data. This action cannot be undone."
+    },
+    "leaveWorkspace": {
+      "title": "Leave workspace?",
+      "description": "You will lose access to this workspace. You can rejoin with a new invite."
+    },
+    "removeMember": {
+      "title": "Remove member?",
+      "description": "This person will lose access to the workspace immediately."
+    },
+    "deleteRole": {
+      "title": "Delete role?",
+      "description": "Members with this role will lose its permissions."
+    },
+    "revokeInvite": {
+      "title": "Revoke invitation?",
+      "description": "This email invitation will no longer be usable."
+    },
+    "revokeLink": {
+      "title": "Revoke link?",
+      "description": "This invite link will stop working immediately."
+    },
+    "deleteWorkbench": {
+      "title": "Delete workbench?",
+      "description": "This will permanently delete this workbench and all its data. This action cannot be undone."
+    },
+    "leaveWorkbench": {
+      "title": "Leave workbench?",
+      "description": "You will lose access to this workbench. A manager can re-add you."
+    },
+    "removeWorkbenchMember": {
+      "title": "Remove member?",
+      "description": "This person will lose access to the workbench immediately."
     }
   }
 }

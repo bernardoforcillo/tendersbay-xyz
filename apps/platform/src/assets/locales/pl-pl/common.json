@@ -709,9 +709,51 @@
       "deleteHint": "Trwale usuń ten panel roboczy i wszystkie jego dane.",
       "delete": "Usuń panel roboczy",
       "leaveHint": "Opuść ten panel roboczy. Menedżer może dodać Cię ponownie.",
-      "leave": "Opuść panel roboczy",
-      "confirmDelete": "Usunąć ten panel roboczy?",
-      "confirmLeave": "Opuścić ten panel roboczy?"
+      "leave": "Opuść panel roboczy"
+    },
+    "overview": {
+      "emptyTitle": "Twój panel roboczy jest gotowy",
+      "emptyDescription": "Zacznij od wyszukiwania przetargów, utworzenia profilu klienta lub zaproszenia zespołu. Wszystko, co tu robisz, jest udostępniane członkom panelu roboczego.",
+      "emptyExplore": "Otwórz Odkrywaj"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Nie pytaj ponownie",
+    "deleteWorkspace": {
+      "title": "Usunąć przestrzeń roboczą?",
+      "description": "Spowoduje to trwałe usunięcie tej przestrzeni roboczej i wszystkich jej danych. Tej czynności nie można cofnąć."
+    },
+    "leaveWorkspace": {
+      "title": "Opuścić przestrzeń roboczą?",
+      "description": "Utracisz dostęp do tej przestrzeni roboczej. Możesz do niej dołączyć ponownie z nowym zaproszeniem."
+    },
+    "removeMember": {
+      "title": "Usunąć członka?",
+      "description": "Ta osoba natychmiast utraci dostęp do przestrzeni roboczej."
+    },
+    "deleteRole": {
+      "title": "Usunąć rolę?",
+      "description": "Członkowie z tą rolą utracą jej uprawnienia."
+    },
+    "revokeInvite": {
+      "title": "Unieważnić zaproszenie?",
+      "description": "Tego zaproszenia e-mail nie będzie już można użyć."
+    },
+    "revokeLink": {
+      "title": "Unieważnić link?",
+      "description": "Ten link zaproszenia natychmiast przestanie działać."
+    },
+    "deleteWorkbench": {
+      "title": "Usunąć panel roboczy?",
+      "description": "Spowoduje to trwałe usunięcie tego panelu roboczego i wszystkich jego danych. Tej czynności nie można cofnąć."
+    },
+    "leaveWorkbench": {
+      "title": "Opuścić panel roboczy?",
+      "description": "Utracisz dostęp do tego panelu roboczego. Menedżer może dodać Cię ponownie."
+    },
+    "removeWorkbenchMember": {
+      "title": "Usunąć członka?",
+      "description": "Ta osoba natychmiast utraci dostęp do panelu roboczego."
     }
   }
 }

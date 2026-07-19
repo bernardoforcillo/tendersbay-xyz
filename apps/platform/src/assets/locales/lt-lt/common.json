@@ -706,9 +706,51 @@
       "deleteHint": "Visam laikui ištrinti šią darbastalę ir visus jos duomenis.",
       "delete": "Ištrinti darbastalę",
       "leaveHint": "Palikti šią darbastalę. Valdytojas gali jus pridėti iš naujo.",
-      "leave": "Palikti darbastalę",
-      "confirmDelete": "Ištrinti šią darbastalę?",
-      "confirmLeave": "Palikti šią darbastalę?"
+      "leave": "Palikti darbastalę"
+    },
+    "overview": {
+      "emptyTitle": "Jūsų darbastalė paruošta",
+      "emptyDescription": "Pradėkite ieškodami pirkimų, sukurdami kliento profilį arba pakviesdami savo komandą. Viskas, ką čia darote, bendrinama su darbastalės nariais.",
+      "emptyExplore": "Atidarykite Naršyti"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Daugiau neklausti",
+    "deleteWorkspace": {
+      "title": "Ištrinti darbo sritį?",
+      "description": "Tai visam laikui ištrins šią darbo sritį ir visus jos duomenis. Šio veiksmo anuliuoti negalima."
+    },
+    "leaveWorkspace": {
+      "title": "Palikti darbo sritį?",
+      "description": "Prarasite prieigą prie šios darbo srities. Galėsite vėl prisijungti su nauju kvietimu."
+    },
+    "removeMember": {
+      "title": "Pašalinti narį?",
+      "description": "Šis asmuo nedelsiant praras prieigą prie darbo srities."
+    },
+    "deleteRole": {
+      "title": "Ištrinti vaidmenį?",
+      "description": "Nariai, turintys šį vaidmenį, praras jo teises."
+    },
+    "revokeInvite": {
+      "title": "Atšaukti kvietimą?",
+      "description": "Šio el. pašto kvietimo daugiau nebus galima naudoti."
+    },
+    "revokeLink": {
+      "title": "Atšaukti nuorodą?",
+      "description": "Ši kvietimo nuoroda nedelsiant nustos veikti."
+    },
+    "deleteWorkbench": {
+      "title": "Ištrinti darbastalę?",
+      "description": "Tai visam laikui ištrins šią darbastalę ir visus jos duomenis. Šio veiksmo anuliuoti negalima."
+    },
+    "leaveWorkbench": {
+      "title": "Palikti darbastalę?",
+      "description": "Prarasite prieigą prie šios darbastalės. Valdytojas gali jus pridėti iš naujo."
+    },
+    "removeWorkbenchMember": {
+      "title": "Pašalinti narį?",
+      "description": "Šis asmuo nedelsiant praras prieigą prie darbastalės."
     }
   }
 }

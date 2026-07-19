@@ -706,9 +706,51 @@
       "deleteHint": "Trajno izbriši ovaj radni stol i sve njegove podatke.",
       "delete": "Izbriši radni stol",
       "leaveHint": "Napusti ovaj radni stol. Voditelj vas može ponovno dodati.",
-      "leave": "Napusti radni stol",
-      "confirmDelete": "Izbrisati ovaj radni stol?",
-      "confirmLeave": "Napustiti ovaj radni stol?"
+      "leave": "Napusti radni stol"
+    },
+    "overview": {
+      "emptyTitle": "Vaš radni stol je spreman",
+      "emptyDescription": "Započnite pretraživanjem natječaja, izradom profila klijenta ili pozivanjem svog tima. Sve što ovdje radite dijeli se s članovima radnog stola.",
+      "emptyExplore": "Otvorite Istraži"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Ne pitajte ponovno",
+    "deleteWorkspace": {
+      "title": "Izbrisati radni prostor?",
+      "description": "Time ćete trajno izbrisati ovaj radni prostor i sve njegove podatke. Ova se radnja ne može poništiti."
+    },
+    "leaveWorkspace": {
+      "title": "Napustiti radni prostor?",
+      "description": "Izgubit ćete pristup ovom radnom prostoru. Možete se ponovno pridružiti novom pozivnicom."
+    },
+    "removeMember": {
+      "title": "Ukloniti člana?",
+      "description": "Ova osoba odmah će izgubiti pristup radnom prostoru."
+    },
+    "deleteRole": {
+      "title": "Izbrisati ulogu?",
+      "description": "Članovi s ovom ulogom izgubit će njezine ovlasti."
+    },
+    "revokeInvite": {
+      "title": "Opozvati pozivnicu?",
+      "description": "Ova pozivnica putem e-pošte više se neće moći koristiti."
+    },
+    "revokeLink": {
+      "title": "Opozvati poveznicu?",
+      "description": "Ova poveznica za pozivnicu odmah će prestati raditi."
+    },
+    "deleteWorkbench": {
+      "title": "Izbrisati radni stol?",
+      "description": "Time ćete trajno izbrisati ovaj radni stol i sve njegove podatke. Ova se radnja ne može poništiti."
+    },
+    "leaveWorkbench": {
+      "title": "Napustiti radni stol?",
+      "description": "Izgubit ćete pristup ovom radnom stolu. Voditelj vas može ponovno dodati."
+    },
+    "removeWorkbenchMember": {
+      "title": "Ukloniti člana?",
+      "description": "Ova osoba odmah će izgubiti pristup radnom stolu."
     }
   }
 }

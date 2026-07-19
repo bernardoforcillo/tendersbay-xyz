@@ -699,9 +699,51 @@
       "deleteHint": "Diese Workbench und alle zugehörigen Daten dauerhaft löschen.",
       "delete": "Workbench löschen",
       "leaveHint": "Diese Workbench verlassen. Ein Manager kann Sie erneut hinzufügen.",
-      "leave": "Workbench verlassen",
-      "confirmDelete": "Diese Workbench löschen?",
-      "confirmLeave": "Diese Workbench verlassen?"
+      "leave": "Workbench verlassen"
+    },
+    "overview": {
+      "emptyTitle": "Ihre Workbench ist bereit",
+      "emptyDescription": "Beginnen Sie, indem Sie nach Ausschreibungen suchen, ein Kundenprofil erstellen oder Ihr Team einladen. Alles, was Sie hier tun, wird mit den Workbench-Mitgliedern geteilt.",
+      "emptyExplore": "Öffnen Sie Entdecken"
+    }
+  },
+  "confirm": {
+    "dontAskAgain": "Nicht erneut fragen",
+    "deleteWorkspace": {
+      "title": "Workspace löschen?",
+      "description": "Dadurch werden dieser Workspace und alle zugehörigen Daten dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "leaveWorkspace": {
+      "title": "Workspace verlassen?",
+      "description": "Sie verlieren den Zugriff auf diesen Workspace. Sie können mit einer neuen Einladung wieder beitreten."
+    },
+    "removeMember": {
+      "title": "Mitglied entfernen?",
+      "description": "Diese Person verliert sofort den Zugriff auf den Workspace."
+    },
+    "deleteRole": {
+      "title": "Rolle löschen?",
+      "description": "Mitglieder mit dieser Rolle verlieren deren Berechtigungen."
+    },
+    "revokeInvite": {
+      "title": "Einladung widerrufen?",
+      "description": "Diese E-Mail-Einladung kann danach nicht mehr verwendet werden."
+    },
+    "revokeLink": {
+      "title": "Link widerrufen?",
+      "description": "Dieser Einladungslink funktioniert danach sofort nicht mehr."
+    },
+    "deleteWorkbench": {
+      "title": "Workbench löschen?",
+      "description": "Dadurch werden diese Workbench und alle zugehörigen Daten dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+    "leaveWorkbench": {
+      "title": "Workbench verlassen?",
+      "description": "Sie verlieren den Zugriff auf diese Workbench. Ein Manager kann Sie erneut hinzufügen."
+    },
+    "removeWorkbenchMember": {
+      "title": "Mitglied entfernen?",
+      "description": "Diese Person verliert sofort den Zugriff auf die Workbench."
     }
   }
 }
