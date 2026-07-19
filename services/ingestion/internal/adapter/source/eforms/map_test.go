@@ -24,7 +24,7 @@ func loadNotice(t *testing.T, path string) eforms.Notice {
 
 func TestMap_CNStandard_SingleLot(t *testing.T) {
 	n := loadNotice(t, "testdata/cn_standard.json")
-	got := eforms.Map(n)
+	got := eforms.Map(n, "ted")
 
 	if got.Source != "ted" {
 		t.Errorf("Source = %q, want %q", got.Source, "ted")
@@ -74,7 +74,7 @@ func TestMap_CNStandard_SingleLot(t *testing.T) {
 
 func TestMap_CANStandard_MissingOptionalFields(t *testing.T) {
 	n := loadNotice(t, "testdata/can_standard.json")
-	got := eforms.Map(n)
+	got := eforms.Map(n, "ted")
 
 	if got.Status != tender.StatusAwarded {
 		t.Errorf("Status = %q, want %q (can-* prefix)", got.Status, tender.StatusAwarded)
@@ -95,7 +95,7 @@ func TestMap_CANStandard_MissingOptionalFields(t *testing.T) {
 
 func TestMap_MultiLot_PopulatesLotsWithRefAndTitleOnly(t *testing.T) {
 	n := loadNotice(t, "testdata/can_standard_multilot.json")
-	got := eforms.Map(n)
+	got := eforms.Map(n, "ted")
 
 	if len(got.Lots) != 3 {
 		t.Fatalf("len(Lots) = %d, want 3", len(got.Lots))
@@ -118,7 +118,7 @@ func TestMap_MultiLot_PopulatesLotsWithRefAndTitleOnly(t *testing.T) {
 
 func TestMap_StatusUnknown_ForUnrecognizedNoticeType(t *testing.T) {
 	n := eforms.Notice{NoticeType: "pin-standard", ProcedureIdentifier: "proc-x"}
-	got := eforms.Map(n)
+	got := eforms.Map(n, "ted")
 	if got.Status != tender.StatusUnknown {
 		t.Errorf("Status = %q, want %q for an unmapped notice-type prefix", got.Status, tender.StatusUnknown)
 	}
@@ -126,8 +126,18 @@ func TestMap_StatusUnknown_ForUnrecognizedNoticeType(t *testing.T) {
 
 func TestMap_RawPreservesOriginalBytes(t *testing.T) {
 	n := loadNotice(t, "testdata/cn_standard.json")
-	got := eforms.Map(n)
+	got := eforms.Map(n, "ted")
 	if len(got.Raw) == 0 {
 		t.Error("Raw is empty, want the original notice bytes")
+	}
+}
+
+func TestMap_SetsSourceFromParameter(t *testing.T) {
+	n := eforms.Notice{NoticeType: "cn-standard"}
+	if got := eforms.Map(n, "ted"); got.Source != "ted" {
+		t.Fatalf("Source = %q, want ted", got.Source)
+	}
+	if got := eforms.Map(n, "pl-bzp"); got.Source != "pl-bzp" {
+		t.Fatalf("Source = %q, want pl-bzp", got.Source)
 	}
 }

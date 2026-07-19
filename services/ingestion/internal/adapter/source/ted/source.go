@@ -44,7 +44,7 @@ func (s *Source) Fetch(ctx context.Context) ([]tender.Tender, error) {
 	}
 	tenders := make([]tender.Tender, len(notices))
 	for i, n := range notices {
-		tenders[i] = eforms.Map(n)
+		tenders[i] = eforms.Map(n, s.Name())
 	}
 	return tenders, nil
 }

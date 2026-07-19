@@ -14,7 +14,7 @@ import (
 // using it as SourceRef is what makes the CN→CAN status transition land as
 // an update to the same row instead of two unrelated ones (see the design
 // doc's "Why SourceRef = procedure-identifier" section).
-func Map(n Notice) tender.Tender {
+func Map(n Notice, source string) tender.Tender {
 	officialLang := first(n.OfficialLanguage) // e.g. "RON" — uppercase, as TED returns it
 	langKey := strings.ToLower(officialLang)  // lowercase key into NoticeTitle/BuyerName/TitleLot
 
@@ -37,7 +37,7 @@ func Map(n Notice) tender.Tender {
 	}
 
 	return tender.Tender{
-		Source:        "ted",
+		Source:        source,
 		SourceRef:     n.ProcedureIdentifier,
 		Title:         pickText(n.NoticeTitle, langKey),
 		Buyer:         tender.Buyer{Name: first(pickTextArray(n.BuyerName, langKey)), ID: first(n.OrganisationIdentifierBuyer)},
