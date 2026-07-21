@@ -34,9 +34,10 @@ metadata:
   namespace: tendersbay-xyz
 type: Opaque
 stringData:
-  DATABASE_URL: ""     # CNPG DSN — postgresql://app:<pw>@postgres-cluster-rw.postgres:5432/tendersbay-xyz
-  JWT_SECRET: ""       # random, per-channel — e.g. `openssl rand -base64 48`
-  RESEND_API_KEY: ""   # Resend API key (re_…); leave empty until email is wired
+  DATABASE_URL: ""       # CNPG DSN — postgresql://app:<pw>@postgres-cluster-rw.postgres:5432/tendersbay-xyz
+  JWT_SECRET: ""         # random, per-channel — e.g. `openssl rand -base64 48`
+  RESEND_API_KEY: ""     # Resend API key (re_…); leave empty until email is wired
+  FIREWORKS_API_KEY: ""  # Fireworks AI key (fw_…) for the agent chat feature; shared across channels
 ```
 
 `DATABASE_URL` points at the CloudNativePG cluster `postgres-cluster` in the
