@@ -135,6 +135,14 @@ function SidebarContent({ showClose, onClose }: SidebarContentProps) {
               </Link>
             </li>
           )}
+          {keys.includes('tenders') && (
+            <li>
+              <Link to="/tenders" className={navItemClass}>
+                <Search size={16} aria-hidden="true" className="shrink-0" />
+                {t('shell.nav.tenders', 'Tenders')}
+              </Link>
+            </li>
+          )}
           {keys.includes('explore') && (
             <li>
               <Link to="/explore" className={navItemClass}>

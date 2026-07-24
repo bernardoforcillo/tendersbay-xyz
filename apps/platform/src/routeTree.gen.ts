@@ -15,8 +15,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LocaleIndexRouteImport } from './routes/$locale/index'
 import { Route as JoinCodeRouteImport } from './routes/join/$code'
 import { Route as AuthenticatedWorkspacesIndexRouteImport } from './routes/_authenticated/workspaces/index'
+import { Route as AuthenticatedTendersIndexRouteImport } from './routes/_authenticated/tenders/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedExploreIndexRouteImport } from './routes/_authenticated/explore/index'
+import { Route as LocaleTendersIndexRouteImport } from './routes/$locale/tenders/index'
+import { Route as AuthenticatedTendersIdRouteImport } from './routes/_authenticated/tenders/$id'
 import { Route as AuthenticatedSettingsProfileRouteImport } from './routes/_authenticated/settings/profile'
 import { Route as AuthenticatedSettingsDeleteRouteImport } from './routes/_authenticated/settings/delete'
 import { Route as AuthenticatedSettingsChangePasswordRouteImport } from './routes/_authenticated/settings/change-password'
@@ -35,7 +38,6 @@ import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchesRouteImport } fro
 import { Route as AuthenticatedWorkspacesWorkspaceIdRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/roles'
 import { Route as AuthenticatedWorkspacesWorkspaceIdMembersRouteImport } from './routes/_authenticated/workspaces/$workspaceId/members'
 import { Route as AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/invites'
-import { Route as AuthenticatedExploreTendersIdRouteImport } from './routes/_authenticated/explore/tenders/$id'
 import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/route'
 import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsIndexRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/index'
 import { Route as AuthenticatedWorkspacesWorkspaceIdSettingsRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/settings/roles'
@@ -79,6 +81,12 @@ const AuthenticatedWorkspacesIndexRoute =
     path: '/workspaces/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedTendersIndexRoute =
+  AuthenticatedTendersIndexRouteImport.update({
+    id: '/tenders/',
+    path: '/tenders/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/settings/',
@@ -91,6 +99,16 @@ const AuthenticatedExploreIndexRoute =
     path: '/explore/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const LocaleTendersIndexRoute = LocaleTendersIndexRouteImport.update({
+  id: '/tenders/',
+  path: '/tenders/',
+  getParentRoute: () => LocaleRouteRoute,
+} as any)
+const AuthenticatedTendersIdRoute = AuthenticatedTendersIdRouteImport.update({
+  id: '/tenders/$id',
+  path: '/tenders/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedSettingsProfileRoute =
   AuthenticatedSettingsProfileRouteImport.update({
     id: '/settings/profile',
@@ -193,12 +211,6 @@ const AuthenticatedWorkspacesWorkspaceIdInvitesRoute =
     id: '/invites',
     path: '/invites',
     getParentRoute: () => AuthenticatedWorkspacesWorkspaceIdRouteRoute,
-  } as any)
-const AuthenticatedExploreTendersIdRoute =
-  AuthenticatedExploreTendersIdRouteImport.update({
-    id: '/explore/tenders/$id',
-    path: '/explore/tenders/$id',
-    getParentRoute: () => AuthenticatedRoute,
   } as any)
 const AuthenticatedWorkspacesWorkspaceIdSettingsRouteRoute =
   AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteImport.update({
@@ -308,11 +320,13 @@ export interface FileRoutesByFullPath {
   '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/settings/delete': typeof AuthenticatedSettingsDeleteRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/tenders/$id': typeof AuthenticatedTendersIdRoute
+  '/$locale/tenders/': typeof LocaleTendersIndexRoute
   '/explore/': typeof AuthenticatedExploreIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/tenders/': typeof AuthenticatedTendersIndexRoute
   '/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
   '/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren
-  '/explore/tenders/$id': typeof AuthenticatedExploreTendersIdRoute
   '/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
   '/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
   '/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
@@ -346,10 +360,12 @@ export interface FileRoutesByTo {
   '/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/settings/delete': typeof AuthenticatedSettingsDeleteRoute
   '/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/tenders/$id': typeof AuthenticatedTendersIdRoute
+  '/$locale/tenders': typeof LocaleTendersIndexRoute
   '/explore': typeof AuthenticatedExploreIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/tenders': typeof AuthenticatedTendersIndexRoute
   '/workspaces': typeof AuthenticatedWorkspacesIndexRoute
-  '/explore/tenders/$id': typeof AuthenticatedExploreTendersIdRoute
   '/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
   '/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
   '/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
@@ -385,11 +401,13 @@ export interface FileRoutesById {
   '/_authenticated/settings/change-password': typeof AuthenticatedSettingsChangePasswordRoute
   '/_authenticated/settings/delete': typeof AuthenticatedSettingsDeleteRoute
   '/_authenticated/settings/profile': typeof AuthenticatedSettingsProfileRoute
+  '/_authenticated/tenders/$id': typeof AuthenticatedTendersIdRoute
+  '/$locale/tenders/': typeof LocaleTendersIndexRoute
   '/_authenticated/explore/': typeof AuthenticatedExploreIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/tenders/': typeof AuthenticatedTendersIndexRoute
   '/_authenticated/workspaces/': typeof AuthenticatedWorkspacesIndexRoute
   '/_authenticated/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRouteRouteWithChildren
-  '/_authenticated/explore/tenders/$id': typeof AuthenticatedExploreTendersIdRoute
   '/_authenticated/workspaces/$workspaceId/invites': typeof AuthenticatedWorkspacesWorkspaceIdInvitesRoute
   '/_authenticated/workspaces/$workspaceId/members': typeof AuthenticatedWorkspacesWorkspaceIdMembersRoute
   '/_authenticated/workspaces/$workspaceId/roles': typeof AuthenticatedWorkspacesWorkspaceIdRolesRoute
@@ -427,11 +445,13 @@ export interface FileRouteTypes {
     | '/settings/change-password'
     | '/settings/delete'
     | '/settings/profile'
+    | '/tenders/$id'
+    | '/$locale/tenders/'
     | '/explore/'
     | '/settings/'
+    | '/tenders/'
     | '/workspaces/'
     | '/workspaces/$workspaceId/settings'
-    | '/explore/tenders/$id'
     | '/workspaces/$workspaceId/invites'
     | '/workspaces/$workspaceId/members'
     | '/workspaces/$workspaceId/roles'
@@ -465,10 +485,12 @@ export interface FileRouteTypes {
     | '/settings/change-password'
     | '/settings/delete'
     | '/settings/profile'
+    | '/tenders/$id'
+    | '/$locale/tenders'
     | '/explore'
     | '/settings'
+    | '/tenders'
     | '/workspaces'
-    | '/explore/tenders/$id'
     | '/workspaces/$workspaceId/invites'
     | '/workspaces/$workspaceId/members'
     | '/workspaces/$workspaceId/roles'
@@ -503,11 +525,13 @@ export interface FileRouteTypes {
     | '/_authenticated/settings/change-password'
     | '/_authenticated/settings/delete'
     | '/_authenticated/settings/profile'
+    | '/_authenticated/tenders/$id'
+    | '/$locale/tenders/'
     | '/_authenticated/explore/'
     | '/_authenticated/settings/'
+    | '/_authenticated/tenders/'
     | '/_authenticated/workspaces/'
     | '/_authenticated/workspaces/$workspaceId/settings'
-    | '/_authenticated/explore/tenders/$id'
     | '/_authenticated/workspaces/$workspaceId/invites'
     | '/_authenticated/workspaces/$workspaceId/members'
     | '/_authenticated/workspaces/$workspaceId/roles'
@@ -577,6 +601,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspacesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/tenders/': {
+      id: '/_authenticated/tenders/'
+      path: '/tenders'
+      fullPath: '/tenders/'
+      preLoaderRoute: typeof AuthenticatedTendersIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/settings'
@@ -589,6 +620,20 @@ declare module '@tanstack/react-router' {
       path: '/explore'
       fullPath: '/explore/'
       preLoaderRoute: typeof AuthenticatedExploreIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/$locale/tenders/': {
+      id: '/$locale/tenders/'
+      path: '/tenders'
+      fullPath: '/$locale/tenders/'
+      preLoaderRoute: typeof LocaleTendersIndexRouteImport
+      parentRoute: typeof LocaleRouteRoute
+    }
+    '/_authenticated/tenders/$id': {
+      id: '/_authenticated/tenders/$id'
+      path: '/tenders/$id'
+      fullPath: '/tenders/$id'
+      preLoaderRoute: typeof AuthenticatedTendersIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/settings/profile': {
@@ -717,13 +762,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdInvitesRouteImport
       parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdRouteRoute
     }
-    '/_authenticated/explore/tenders/$id': {
-      id: '/_authenticated/explore/tenders/$id'
-      path: '/explore/tenders/$id'
-      fullPath: '/explore/tenders/$id'
-      preLoaderRoute: typeof AuthenticatedExploreTendersIdRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
     '/_authenticated/workspaces/$workspaceId/settings': {
       id: '/_authenticated/workspaces/$workspaceId/settings'
       path: '/settings'
@@ -820,6 +858,7 @@ interface LocaleRouteRouteChildren {
   LocaleAuthVerifyEmailRoute: typeof LocaleAuthVerifyEmailRoute
   LocaleTendersIdRoute: typeof LocaleTendersIdRoute
   LocaleWorkspaceAcceptInviteRoute: typeof LocaleWorkspaceAcceptInviteRoute
+  LocaleTendersIndexRoute: typeof LocaleTendersIndexRoute
 }
 
 const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
@@ -831,6 +870,7 @@ const LocaleRouteRouteChildren: LocaleRouteRouteChildren = {
   LocaleAuthVerifyEmailRoute: LocaleAuthVerifyEmailRoute,
   LocaleTendersIdRoute: LocaleTendersIdRoute,
   LocaleWorkspaceAcceptInviteRoute: LocaleWorkspaceAcceptInviteRoute,
+  LocaleTendersIndexRoute: LocaleTendersIndexRoute,
 }
 
 const LocaleRouteRouteWithChildren = LocaleRouteRoute._addFileChildren(
@@ -943,10 +983,11 @@ interface AuthenticatedRouteChildren {
   AuthenticatedSettingsChangePasswordRoute: typeof AuthenticatedSettingsChangePasswordRoute
   AuthenticatedSettingsDeleteRoute: typeof AuthenticatedSettingsDeleteRoute
   AuthenticatedSettingsProfileRoute: typeof AuthenticatedSettingsProfileRoute
+  AuthenticatedTendersIdRoute: typeof AuthenticatedTendersIdRoute
   AuthenticatedExploreIndexRoute: typeof AuthenticatedExploreIndexRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+  AuthenticatedTendersIndexRoute: typeof AuthenticatedTendersIndexRoute
   AuthenticatedWorkspacesIndexRoute: typeof AuthenticatedWorkspacesIndexRoute
-  AuthenticatedExploreTendersIdRoute: typeof AuthenticatedExploreTendersIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -958,10 +999,11 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
     AuthenticatedSettingsChangePasswordRoute,
   AuthenticatedSettingsDeleteRoute: AuthenticatedSettingsDeleteRoute,
   AuthenticatedSettingsProfileRoute: AuthenticatedSettingsProfileRoute,
+  AuthenticatedTendersIdRoute: AuthenticatedTendersIdRoute,
   AuthenticatedExploreIndexRoute: AuthenticatedExploreIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+  AuthenticatedTendersIndexRoute: AuthenticatedTendersIndexRoute,
   AuthenticatedWorkspacesIndexRoute: AuthenticatedWorkspacesIndexRoute,
-  AuthenticatedExploreTendersIdRoute: AuthenticatedExploreTendersIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

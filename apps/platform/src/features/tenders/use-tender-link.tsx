@@ -5,7 +5,7 @@ import { useAuthStore } from '~/store/auth';
 
 /**
  * Returns a function that wraps `children` in a link to a tender's detail page,
- * choosing the authenticated (`/explore/tenders/$id`) or public
+ * choosing the authenticated (`/tenders/$id`) or public
  * (`/$locale/tenders/$id`) route by auth state — so the same call site links
  * correctly for logged-in and anonymous users, and an anon user never lands on
  * the auth-guarded route.
@@ -20,7 +20,7 @@ export function useTenderLink(): (
   const { i18n } = useTranslation();
   return (id, children, className, onClick) =>
     authed ? (
-      <Link to="/explore/tenders/$id" params={{ id }} className={className} onClick={onClick}>
+      <Link to="/tenders/$id" params={{ id }} className={className} onClick={onClick}>
         {children}
       </Link>
     ) : (

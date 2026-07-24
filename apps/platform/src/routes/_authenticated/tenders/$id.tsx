@@ -10,7 +10,7 @@ import {
   useTenderHead,
 } from '~/features/tenders';
 
-export const Route = createFileRoute('/_authenticated/explore/tenders/$id')({
+export const Route = createFileRoute('/_authenticated/tenders/$id')({
   loader: ({ params }) => loadTenderDetail(params.id),
   errorComponent: AuthedTenderNotFound,
   component: AccountTenderDetail,
@@ -25,7 +25,7 @@ function AccountTenderDetail() {
   function runSearch() {
     const q = query.trim();
     if (!q) return;
-    void navigate({ to: '/explore', search: { q } });
+    void navigate({ to: '/tenders', search: { q } });
   }
 
   return (
@@ -37,7 +37,7 @@ function AccountTenderDetail() {
           related={related}
           renderRelated={(tr) => (
             <Link
-              to="/explore/tenders/$id"
+              to="/tenders/$id"
               params={{ id: tr.id }}
               className="block rounded-2xl no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand-600"
             >
@@ -66,7 +66,7 @@ function AuthedTenderNotFound({ error }: { error: unknown }) {
       <PageHeader />
       <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
         <p className="text-lg text-ink-900">{t('tenders.detail.notFound')}</p>
-        <Link to="/explore" className="text-brand-700 underline">
+        <Link to="/tenders" className="text-brand-700 underline">
           {t('tenders.detail.backToSearch')}
         </Link>
       </div>
