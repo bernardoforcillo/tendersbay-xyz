@@ -5,12 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
 	"sync"
 
 	bagent "github.com/buildwithgo/berrygem/agent"
 	"github.com/buildwithgo/berrygem/providers"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
@@ -64,6 +66,17 @@ type TenderSearcher interface {
 	Search(ctx context.Context, p tender.SearchParams) (tender.SearchOutput, error)
 }
 
+// ProfileSource is the subset of clientprofile.Service the agent needs to
+// enrich the model's context with the client's bid profile — defined here,
+// the consumer, mirroring tender.Service's own ProfileSource. Satisfied by
+// *clientprofile.Service unchanged. Get is membership-checked, but the agent
+// has already authorized the workspace at GetChat time, so an
+// ErrProfileNotFound (or any error) is treated as a silent no-op: the turn
+// proceeds with the base instructions.
+type ProfileSource interface {
+	Get(ctx context.Context, userID, workspaceID string) (clientprofile.Profile, error)
+}
+
 // SendChoice is called when the agent asks a closed-ended question — the
 // ConnectRPC handler wires it to stream.Send, mirroring StreamToken.
 type SendChoice func(ChoicePrompt) error
@@ -102,11 +115,12 @@ type Service struct {
 	members      MemberRepository
 	workbenches  Workbenches
 	tenders      TenderSearcher
+	profiles     ProfileSource
 	turnStates   map[string]*turnState
 	turnStatesMu sync.Mutex
 }
 
-func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches Workbenches, tenders TenderSearcher) *Service {
+func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches Workbenches, tenders TenderSearcher, profiles ProfileSource) *Service {
 	return &Service{
 		registry:    registry,
 		chatRepo:    chatRepo,
@@ -114,6 +128,7 @@ func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.
 		members:     members,
 		workbenches: workbenches,
 		tenders:     tenders,
+		profiles:    profiles,
 		turnStates:  make(map[string]*turnState),
 	}
 }
@@ -423,6 +438,17 @@ func (s *Service) runTurn(
 		cfg = s.registry.configs[AgentTypeBaseChat]
 	}
 
+	// Fold the client's bid profile into this build's instructions (context,
+	// not filter injection). Only turn 1's build is consumed by berrygem via
+	// GetOrCreateChat; the profile is workspace-stable so that is correct for
+	// the session. ErrProfileNotFound (the common case) and any error fall
+	// through to the base instructions unchanged.
+	if prof, err := s.profiles.Get(ctx, userID, workspaceID); err == nil {
+		if block := buildProfileContext(prof); block != "" {
+			cfg.Instructions = cfg.Instructions + "\n\n" + block
+		}
+	}
+
 	streamCtx, cancelForChoice := context.WithCancel(ctx)
 	defer cancelForChoice()
 	pending := &pendingChoice{}
@@ -614,6 +640,48 @@ func estimateTokens(s string) int32 {
 		return 1
 	}
 	return n
+}
+
+// buildProfileContext renders the client's bid profile into a compact Italian
+// instruction block appended to the agent's base instructions, so the model
+// knows the client's criteria when it chooses search_tenders arguments. Only
+// present fields produce a line; an all-empty profile yields "". This never
+// forces filter values — search_tenders stays client-agnostic (the model, and
+// the user's explicit request, still decide the actual arguments).
+func buildProfileContext(p clientprofile.Profile) string {
+	var lines []string
+	if len(p.Sectors) > 0 {
+		lines = append(lines, "- Settori (CPV): "+strings.Join(p.Sectors, ", "))
+	}
+	if len(p.Countries) > 0 {
+		lines = append(lines, "- Paesi: "+strings.Join(p.Countries, ", "))
+	}
+	if len(p.Regions) > 0 {
+		lines = append(lines, "- Regioni (NUTS): "+strings.Join(p.Regions, ", "))
+	}
+	if len(p.ProcedureTypes) > 0 {
+		lines = append(lines, "- Tipi di procedura: "+strings.Join(p.ProcedureTypes, ", "))
+	}
+	if p.ValueMin != nil || p.ValueMax != nil {
+		var v string
+		switch {
+		case p.ValueMin != nil && p.ValueMax != nil:
+			v = fmt.Sprintf("da %d a %d EUR", *p.ValueMin, *p.ValueMax)
+		case p.ValueMin != nil:
+			v = fmt.Sprintf("da %d EUR", *p.ValueMin)
+		default:
+			v = fmt.Sprintf("fino a %d EUR", *p.ValueMax)
+		}
+		lines = append(lines, "- Valore stimato: "+v)
+	}
+	if strings.TrimSpace(p.Notes) != "" {
+		lines = append(lines, "- Note: "+p.Notes)
+	}
+	if len(lines) == 0 {
+		return ""
+	}
+	return "Profilo del cliente (usa questi criteri quando cerchi bandi, ma rispetta " +
+		"sempre eventuali richieste esplicite dell'utente):\n" + strings.Join(lines, "\n")
 }
 
 // dbMessagesToProviderMessages converts persisted chat history into the

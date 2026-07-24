@@ -9,6 +9,7 @@ import (
 
 	"github.com/bernardoforcillo/drops/pg"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
@@ -185,9 +186,18 @@ func (fakeTenderSearcher) Search(context.Context, tender.SearchParams) (tender.S
 	return tender.SearchOutput{}, nil
 }
 
+type fakeProfileSource struct {
+	profile clientprofile.Profile
+	err     error
+}
+
+func (f fakeProfileSource) Get(context.Context, string, string) (clientprofile.Profile, error) {
+	return f.profile, f.err
+}
+
 func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches Workbenches) *Service {
 	registry := NewRegistry("")
-	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenderSearcher{})
+	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenderSearcher{}, fakeProfileSource{err: clientprofile.ErrProfileNotFound})
 }
 
 func TestListChats_RejectsNonMember(t *testing.T) {
@@ -497,6 +507,31 @@ func TestPersistAndNotifyTenderResults_PersistsAndSendsResults(t *testing.T) {
 	}
 	if !strings.Contains(string(*msgs[0].Tenders), `"id":"t-1"`) {
 		t.Fatalf("persisted tenders JSON = %s, want it to contain the tender id", string(*msgs[0].Tenders))
+	}
+}
+
+func TestBuildProfileContext_OnlyPresentFields(t *testing.T) {
+	min := int64(50000)
+	ctx := buildProfileContext(clientprofile.Profile{
+		Sectors:   []string{"45", "72"},
+		Countries: []string{"IT", "DE"},
+		ValueMin:  &min,
+		Notes:     "Solo appalti verdi",
+	})
+	for _, want := range []string{"45, 72", "IT, DE", "50000", "Solo appalti verdi"} {
+		if !strings.Contains(ctx, want) {
+			t.Fatalf("context %q missing %q", ctx, want)
+		}
+	}
+	// Absent fields produce no line.
+	if strings.Contains(ctx, "NUTS") || strings.Contains(ctx, "procedura") {
+		t.Fatalf("context mentions an absent field: %q", ctx)
+	}
+}
+
+func TestBuildProfileContext_EmptyProfileIsEmptyString(t *testing.T) {
+	if got := buildProfileContext(clientprofile.Profile{}); got != "" {
+		t.Fatalf("buildProfileContext(empty) = %q, want empty string", got)
 	}
 }
 
