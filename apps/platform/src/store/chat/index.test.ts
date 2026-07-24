@@ -77,7 +77,10 @@ describe('chat store — ephemeral streaming/session state', () => {
     s.clearActiveTools();
     expect(useChatStore.getState().activeTools).toEqual([]);
     expect(useChatStore.getState().toolCallsTotal).toBe(1);
+    // Re-populate activeTools to verify reset() actually clears it, not just clearActiveTools()
+    s.setActiveTools('search_tenders', 'running');
     useChatStore.getState().reset();
+    expect(useChatStore.getState().activeTools).toEqual([]);
     expect(useChatStore.getState().toolCallsTotal).toBe(0);
     expect(useChatStore.getState().tendersOpened).toBe(0);
   });
@@ -90,5 +93,7 @@ describe('chat store — ephemeral streaming/session state', () => {
     expect(persisted).not.toHaveProperty('toolCallsTotal');
     expect(persisted).not.toHaveProperty('tendersOpened');
     expect(persisted).not.toHaveProperty('streaming');
+    // Assert the complete persisted shape to guard against accidental additions
+    expect(persisted).toEqual({ currentChatId: null, messages: [] });
   });
 });
