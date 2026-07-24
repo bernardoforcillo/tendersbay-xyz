@@ -51,3 +51,44 @@ describe('useChatStore.addMessage', () => {
     expect(useChatStore.getState().messages.map((m) => m.id)).toEqual(['msg-1', 'msg-2']);
   });
 });
+
+describe('chat store — ephemeral streaming/session state', () => {
+  beforeEach(() => useChatStore.getState().reset());
+
+  it('upserts activeTools by name (running → done on the same entry)', () => {
+    const s = useChatStore.getState();
+    s.setActiveTools('search_tenders', 'running');
+    expect(useChatStore.getState().activeTools).toEqual([
+      { name: 'search_tenders', status: 'running' },
+    ]);
+    s.setActiveTools('search_tenders', 'done');
+    expect(useChatStore.getState().activeTools).toEqual([
+      { name: 'search_tenders', status: 'done' },
+    ]);
+    s.setActiveTools('create_workbench', 'running');
+    expect(useChatStore.getState().activeTools).toHaveLength(2);
+  });
+
+  it('clearActiveTools and reset() empty the ephemeral state and counters', () => {
+    const s = useChatStore.getState();
+    s.setActiveTools('search_tenders', 'running');
+    s.incToolCalls();
+    s.incTendersOpened();
+    s.clearActiveTools();
+    expect(useChatStore.getState().activeTools).toEqual([]);
+    expect(useChatStore.getState().toolCallsTotal).toBe(1);
+    useChatStore.getState().reset();
+    expect(useChatStore.getState().toolCallsTotal).toBe(0);
+    expect(useChatStore.getState().tendersOpened).toBe(0);
+  });
+
+  it('excludes ephemeral fields from persistence (partialize)', () => {
+    const persisted = (useChatStore.persist.getOptions().partialize as (s: unknown) => object)(
+      useChatStore.getState(),
+    );
+    expect(persisted).not.toHaveProperty('activeTools');
+    expect(persisted).not.toHaveProperty('toolCallsTotal');
+    expect(persisted).not.toHaveProperty('tendersOpened');
+    expect(persisted).not.toHaveProperty('streaming');
+  });
+});
