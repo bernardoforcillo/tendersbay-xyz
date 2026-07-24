@@ -6,12 +6,34 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"time"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/password"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 )
+
+// Rate-limit budgets for the unauthenticated auth endpoints, keyed by client
+// IP. These are generous enough not to trip a real user while making online
+// password guessing / signup or reset flooding infeasible. Login is keyed by
+// IP only (never by email) so an attacker can't lock a victim out of their own
+// account by exhausting an email bucket.
+const (
+	loginRateMax     = 20
+	loginRateWindow  = 15 * time.Minute
+	signupRateMax    = 10
+	signupRateWindow = time.Hour
+	forgotRateMax    = 5
+	forgotRateWindow = time.Hour
+)
+
+// NormalizeEmail canonicalizes an address for storage and lookup: trimmed and
+// lowercased. Applied on every read and write so a case or whitespace variant
+// can't create a duplicate account or slip past a uniqueness check.
+func NormalizeEmail(email string) string {
+	return strings.ToLower(strings.TrimSpace(email))
+}
 
 // Domain types
 
@@ -59,6 +81,7 @@ var (
 	ErrTokenInvalid     = errors.New("token expired or invalid")
 	ErrWeakPassword     = errors.New("password does not meet requirements")
 	ErrNotFound         = errors.New("not found")
+	ErrRateLimited      = errors.New("too many attempts; try again later")
 )
 
 // Repository interfaces
@@ -99,6 +122,17 @@ type EmailSender interface {
 	SendVerification(ctx context.Context, to, displayName, link string) error
 	SendPasswordReset(ctx context.Context, to, displayName, link string) error
 	SendEmailChangeVerification(ctx context.Context, to, displayName, link string) error
+	// SendAccountExists notifies an address that a signup was attempted for it
+	// while an account already exists — the enumeration-safe alternative to
+	// returning an "email already registered" error to the caller.
+	SendAccountExists(ctx context.Context, to, displayName string) error
+}
+
+// RateLimiter is the narrow slice of the rate limiter the auth service needs.
+// Satisfied by *redis.RateLimiter unchanged. Allow reports whether one more
+// request under key is permitted within window given a per-window maximum.
+type RateLimiter interface {
+	Allow(ctx context.Context, key string, limit int64, window time.Duration) (bool, error)
 }
 
 // Service config and result types
@@ -124,6 +158,7 @@ type Service struct {
 	evs      EmailVerificationRepository
 	prs      PasswordResetRepository
 	email    EmailSender
+	rl       RateLimiter
 	cfg      Config
 }
 
@@ -133,17 +168,45 @@ func NewService(
 	evs EmailVerificationRepository,
 	prs PasswordResetRepository,
 	email EmailSender,
+	rl RateLimiter,
 	cfg Config,
 ) *Service {
-	return &Service{users: users, sessions: sessions, evs: evs, prs: prs, email: email, cfg: cfg}
+	return &Service{users: users, sessions: sessions, evs: evs, prs: prs, email: email, rl: rl, cfg: cfg}
 }
 
-func (s *Service) SignUp(ctx context.Context, email, plainPassword, displayName, locale string) error {
+// allow consults the rate limiter for key. It fails OPEN — a nil limiter (tests
+// / no Redis configured) or a limiter error (e.g. Redis unreachable) both
+// permit the request — so a limiter outage degrades brute-force protection
+// rather than locking every user out of a working auth service.
+func (s *Service) allow(ctx context.Context, key string, max int64, window time.Duration) bool {
+	if s.rl == nil {
+		return true
+	}
+	ok, err := s.rl.Allow(ctx, key, max, window)
+	if err != nil {
+		slog.WarnContext(ctx, "auth rate limiter unavailable; allowing request", "error", err)
+		return true
+	}
+	return ok
+}
+
+func (s *Service) SignUp(ctx context.Context, email, plainPassword, displayName, locale, clientIP string) error {
+	email = NormalizeEmail(email)
+	if clientIP != "" && !s.allow(ctx, "signup:ip:"+clientIP, signupRateMax, signupRateWindow) {
+		return ErrRateLimited
+	}
 	if fails := password.Validate(plainPassword); len(fails) > 0 {
 		return fmt.Errorf("%w: %s", ErrWeakPassword, strings.Join(fails, ", "))
 	}
-	if _, err := s.users.FindByEmail(ctx, email); err == nil {
-		return ErrEmailExists
+	// Enumeration-safe duplicate handling: never disclose to the caller whether
+	// the address is already registered. If it is, notify the existing account
+	// by email and return success — the response is byte-identical to a genuine
+	// new signup, so the endpoint can't be used to probe which emails exist.
+	if existing, err := s.users.FindByEmail(ctx, email); err == nil {
+		_ = s.email.SendAccountExists(ctx, existing.Email, existing.DisplayName)
+		return nil
+	} else if !errors.Is(err, ErrNotFound) {
+		return err
 	}
 	hash, err := password.Hash(plainPassword)
 	if err != nil {
@@ -169,9 +232,16 @@ func (s *Service) SignUp(ctx context.Context, email, plainPassword, displayName,
 	return s.email.SendVerification(ctx, email, displayName, link)
 }
 
-func (s *Service) Login(ctx context.Context, email, plainPassword string) (*LoginResult, error) {
+func (s *Service) Login(ctx context.Context, email, plainPassword, clientIP string) (*LoginResult, error) {
+	email = NormalizeEmail(email)
+	if clientIP != "" && !s.allow(ctx, "login:ip:"+clientIP, loginRateMax, loginRateWindow) {
+		return nil, ErrRateLimited
+	}
 	user, err := s.users.FindByEmail(ctx, email)
 	if err != nil {
+		// Spend the same ~bcrypt time a real check would, so the response
+		// latency can't reveal whether this email is registered.
+		password.VerifyDummy(plainPassword)
 		return nil, ErrInvalidCreds
 	}
 	if !password.Verify(plainPassword, user.PasswordHash) {
@@ -212,7 +282,12 @@ func (s *Service) Logout(ctx context.Context, refreshPlain string) error {
 func (s *Service) RefreshToken(ctx context.Context, refreshPlain string) (*LoginResult, error) {
 	hash := hashOpaque(refreshPlain)
 	session, err := s.sessions.FindByTokenHash(ctx, hash)
-	if err != nil || session.ExpiresAt.Before(time.Now()) {
+	if err != nil {
+		return nil, ErrTokenInvalid
+	}
+	if session.ExpiresAt.Before(time.Now()) {
+		// Delete the dead row rather than leave expired sessions to accumulate.
+		_ = s.sessions.Delete(ctx, session.ID)
 		return nil, ErrTokenInvalid
 	}
 	user, err := s.users.FindByID(ctx, session.UserID)
@@ -242,7 +317,17 @@ func (s *Service) RefreshToken(ctx context.Context, refreshPlain string) (*Login
 	return &LoginResult{User: user, AccessToken: accessToken, RefreshPlain: newPlain}, nil
 }
 
-func (s *Service) ForgotPassword(ctx context.Context, email, locale string) error {
+func (s *Service) ForgotPassword(ctx context.Context, email, locale, clientIP string) error {
+	email = NormalizeEmail(email)
+	if clientIP != "" && !s.allow(ctx, "forgot:ip:"+clientIP, forgotRateMax, forgotRateWindow) {
+		return ErrRateLimited
+	}
+	// Cap reset emails per address to stop inbox flooding. Return nil (not
+	// ErrRateLimited) so the response stays identical whether the address
+	// exists or not — the per-email limit must not become an existence oracle.
+	if !s.allow(ctx, "forgot:email:"+email, forgotRateMax, forgotRateWindow) {
+		return nil
+	}
 	user, err := s.users.FindByEmail(ctx, email)
 	if err != nil {
 		return nil // don't reveal whether email exists

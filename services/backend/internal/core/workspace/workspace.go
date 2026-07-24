@@ -550,6 +550,7 @@ func (s *Service) DeleteRole(ctx context.Context, userID, workspaceID, roleID st
 // ── Email invitations ───────────────────────────────────────────────────────
 
 func (s *Service) InviteByEmail(ctx context.Context, userID, workspaceID, email, roleID, locale string) (EmailInvitation, error) {
+	email = auth.NormalizeEmail(email)
 	a, err := s.authorize(ctx, workspaceID, userID, PermCreateInvite)
 	if err != nil {
 		return EmailInvitation{}, err

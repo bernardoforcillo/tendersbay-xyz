@@ -1,16 +1,10 @@
 import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { screen } from '@testing-library/react';
-import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithI18n } from '~/test/utils';
 
-vi.mock('~/features/tenders', () => ({
-  useTenderLink:
-    () => (id: string, children: ReactNode, _className?: string, onClick?: () => void) => (
-      <a href={`/tenders/${id}`} onClick={onClick}>
-        {children}
-      </a>
-    ),
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => vi.fn(),
 }));
 
 import { MessageBubble } from './index';
@@ -38,7 +32,7 @@ function tenderFixture(overrides: Partial<TenderResult> = {}): TenderResult {
 }
 
 describe('MessageBubble', () => {
-  it('renders one TenderResultCard per tender for a tender_results message', () => {
+  it('renders a TenderResultsTable with each tender title for a tender_results message', () => {
     renderWithI18n(
       <MessageBubble
         message={{

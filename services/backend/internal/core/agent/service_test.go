@@ -142,10 +142,41 @@ func (f *fakeMemberRepo) LoadMembership(_ context.Context, workspaceID, userID s
 	return workspace.Membership{}, workspace.ErrNotMember
 }
 
-type fakeWorkbenchCreator struct{}
+type fakeWorkbenches struct {
+	// access["workbenchID|userID"] = true → the user may view that workbench.
+	access map[string]bool
+	// workspace[workbenchID] = workspaceID, for AccessibleWorkbenchIDs.
+	workspace map[string]string
+}
 
-func (fakeWorkbenchCreator) CreateWorkbench(context.Context, string, string, string, string, workbench.Visibility) (workbench.Workbench, error) {
+func newFakeWorkbenches() *fakeWorkbenches {
+	return &fakeWorkbenches{access: map[string]bool{}, workspace: map[string]string{}}
+}
+
+func (f *fakeWorkbenches) allow(workbenchID, workspaceID, userID string) {
+	f.access[workbenchID+"|"+userID] = true
+	f.workspace[workbenchID] = workspaceID
+}
+
+func (f *fakeWorkbenches) CreateWorkbench(context.Context, string, string, string, string, workbench.Visibility) (workbench.Workbench, error) {
 	return workbench.Workbench{}, nil
+}
+
+func (f *fakeWorkbenches) CanAccessWorkbench(_ context.Context, userID, workbenchID string) error {
+	if f.access[workbenchID+"|"+userID] {
+		return nil
+	}
+	return workbench.ErrWorkbenchNotFound
+}
+
+func (f *fakeWorkbenches) AccessibleWorkbenchIDs(_ context.Context, userID, workspaceID string) (map[string]struct{}, error) {
+	out := map[string]struct{}{}
+	for wb, ws := range f.workspace {
+		if ws == workspaceID && f.access[wb+"|"+userID] {
+			out[wb] = struct{}{}
+		}
+	}
+	return out, nil
 }
 
 type fakeTenderSearcher struct{}
@@ -154,7 +185,7 @@ func (fakeTenderSearcher) Search(context.Context, tender.SearchParams) (tender.S
 	return tender.SearchOutput{}, nil
 }
 
-func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches WorkbenchCreator) *Service {
+func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches Workbenches) *Service {
 	registry := NewRegistry("")
 	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenderSearcher{})
 }
@@ -162,7 +193,7 @@ func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches
 func TestListChats_RejectsNonMember(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
-	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
+	svc := newTestService(chatRepo, members, newFakeWorkbenches())
 
 	_, err := svc.ListChats(context.Background(), "user-1", "workspace-1")
 	if !errors.Is(err, workspace.ErrNotMember) {
@@ -174,7 +205,7 @@ func TestListChats_AllowsMember(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
 	members.allow("workspace-1", "user-1")
-	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
+	svc := newTestService(chatRepo, members, newFakeWorkbenches())
 
 	if _, err := chatRepo.CreateSession(context.Background(), "user-1", "workspace-1", "", "base-chat", "Test"); err != nil {
 		t.Fatalf("seed CreateSession: %v", err)
@@ -190,7 +221,7 @@ func TestListChats_AllowsMember(t *testing.T) {
 }
 
 func TestCreateChat_RejectsNonMember(t *testing.T) {
-	svc := newTestService(newFakeChatRepo(), newFakeMemberRepo(), fakeWorkbenchCreator{})
+	svc := newTestService(newFakeChatRepo(), newFakeMemberRepo(), newFakeWorkbenches())
 	_, err := svc.CreateChat(context.Background(), "user-1", "workspace-1", "", "base-chat", "Test")
 	if !errors.Is(err, workspace.ErrNotMember) {
 		t.Fatalf("err = %v, want workspace.ErrNotMember", err)
@@ -201,7 +232,7 @@ func TestGetChat_RejectsNonMemberOfChatsWorkspace(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
 	members.allow("workspace-1", "owner")
-	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
+	svc := newTestService(chatRepo, members, newFakeWorkbenches())
 
 	session, err := chatRepo.CreateSession(context.Background(), "owner", "workspace-1", "", "base-chat", "Test")
 	if err != nil {
@@ -221,9 +252,86 @@ func TestGetChat_RejectsNonMemberOfChatsWorkspace(t *testing.T) {
 }
 
 func TestGetChat_UnknownChatReturnsNoRows(t *testing.T) {
-	svc := newTestService(newFakeChatRepo(), newFakeMemberRepo(), fakeWorkbenchCreator{})
+	svc := newTestService(newFakeChatRepo(), newFakeMemberRepo(), newFakeWorkbenches())
 	if _, err := svc.GetChat(context.Background(), "user-1", "does-not-exist"); !errors.Is(err, pg.ErrNoRows) {
 		t.Fatalf("err = %v, want pg.ErrNoRows", err)
+	}
+}
+
+// A chat bound to a workbench is hidden from a workspace member who can't access
+// that workbench — workspace membership alone is no longer enough.
+func TestGetChat_WorkbenchScoped_HiddenFromNonWorkbenchMember(t *testing.T) {
+	chatRepo := newFakeChatRepo()
+	members := newFakeMemberRepo()
+	members.allow("workspace-1", "teammate") // workspace member, not a workbench member
+	wbs := newFakeWorkbenches()
+	svc := newTestService(chatRepo, members, wbs)
+
+	session, err := chatRepo.CreateSession(context.Background(), "owner", "workspace-1", "wb-1", "base-chat", "WB chat")
+	if err != nil {
+		t.Fatalf("seed: %v", err)
+	}
+	if _, err := svc.GetChat(context.Background(), "teammate", session.ID); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+		t.Fatalf("err = %v, want workbench.ErrWorkbenchNotFound", err)
+	}
+}
+
+func TestGetChat_WorkbenchScoped_VisibleToWorkbenchMember(t *testing.T) {
+	chatRepo := newFakeChatRepo()
+	wbs := newFakeWorkbenches()
+	wbs.allow("wb-1", "workspace-1", "wb-member")
+	svc := newTestService(chatRepo, newFakeMemberRepo(), wbs)
+
+	session, _ := chatRepo.CreateSession(context.Background(), "owner", "workspace-1", "wb-1", "base-chat", "WB chat")
+	if _, err := svc.GetChat(context.Background(), "wb-member", session.ID); err != nil {
+		t.Fatalf("GetChat as workbench member: %v", err)
+	}
+}
+
+// CreateChat pinned to a workbench requires access to that workbench.
+func TestCreateChat_WorkbenchScoped_RejectsNoAccess(t *testing.T) {
+	members := newFakeMemberRepo()
+	members.allow("workspace-1", "user-1") // workspace member, no workbench access
+	svc := newTestService(newFakeChatRepo(), members, newFakeWorkbenches())
+
+	if _, err := svc.CreateChat(context.Background(), "user-1", "workspace-1", "wb-1", "base-chat", "x"); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+		t.Fatalf("err = %v, want workbench.ErrWorkbenchNotFound", err)
+	}
+}
+
+// ListChats returns every workspace-level chat but only the workbench-scoped
+// chats whose workbench the caller can access.
+func TestListChats_FiltersWorkbenchChatsByAccess(t *testing.T) {
+	chatRepo := newFakeChatRepo()
+	members := newFakeMemberRepo()
+	members.allow("workspace-1", "teammate")
+	wbs := newFakeWorkbenches()
+	svc := newTestService(chatRepo, members, wbs)
+
+	if _, err := chatRepo.CreateSession(context.Background(), "owner", "workspace-1", "", "base-chat", "WS chat"); err != nil {
+		t.Fatalf("seed ws chat: %v", err)
+	}
+	if _, err := chatRepo.CreateSession(context.Background(), "owner", "workspace-1", "wb-1", "base-chat", "WB chat"); err != nil {
+		t.Fatalf("seed wb chat: %v", err)
+	}
+
+	got, err := svc.ListChats(context.Background(), "teammate", "workspace-1")
+	if err != nil {
+		t.Fatalf("ListChats: %v", err)
+	}
+	if len(got) != 1 || got[0].WorkbenchID != nil {
+		t.Fatalf("teammate should see only the workspace-level chat, got %+v", got)
+	}
+
+	// A member who can access the workbench sees both.
+	members.allow("workspace-1", "wb-member")
+	wbs.allow("wb-1", "workspace-1", "wb-member")
+	got, err = svc.ListChats(context.Background(), "wb-member", "workspace-1")
+	if err != nil {
+		t.Fatalf("ListChats: %v", err)
+	}
+	if len(got) != 2 {
+		t.Fatalf("wb-member should see both chats, got %d", len(got))
 	}
 }
 
@@ -231,7 +339,7 @@ func TestDeleteChat_RejectsNonMemberAndEvictsRegistryOnSuccess(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
 	members.allow("workspace-1", "owner")
-	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
+	svc := newTestService(chatRepo, members, newFakeWorkbenches())
 
 	session, err := chatRepo.CreateSession(context.Background(), "owner", "workspace-1", "", "base-chat", "Test")
 	if err != nil {
@@ -273,7 +381,7 @@ func TestGetChatForChoice_RejectsAlreadyAnswered(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
 	members.allow("ws-1", "user-1")
-	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
+	svc := newTestService(chatRepo, members, newFakeWorkbenches())
 
 	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
 	prompt, _ := chatRepo.InsertMessage(context.Background(), session.ID, "choice_prompt", "Q?", json.RawMessage(`[{"key":"A","label":"Yes"}]`), nil, nil)
@@ -291,7 +399,7 @@ func TestGetChatForChoice_AllowsStillPending(t *testing.T) {
 	chatRepo := newFakeChatRepo()
 	members := newFakeMemberRepo()
 	members.allow("ws-1", "user-1")
-	svc := newTestService(chatRepo, members, fakeWorkbenchCreator{})
+	svc := newTestService(chatRepo, members, newFakeWorkbenches())
 
 	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
 	prompt, _ := chatRepo.InsertMessage(context.Background(), session.ID, "choice_prompt", "Q?", json.RawMessage(`[{"key":"A","label":"Yes"}]`), nil, nil)
@@ -361,7 +469,7 @@ func TestEstimateTokens(t *testing.T) {
 
 func TestPersistAndNotifyTenderResults_PersistsAndSendsResults(t *testing.T) {
 	chatRepo := newFakeChatRepo()
-	svc := newTestService(chatRepo, newFakeMemberRepo(), fakeWorkbenchCreator{})
+	svc := newTestService(chatRepo, newFakeMemberRepo(), newFakeWorkbenches())
 	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
 
 	value := int64(500000)
@@ -394,7 +502,7 @@ func TestPersistAndNotifyTenderResults_PersistsAndSendsResults(t *testing.T) {
 
 func TestPersistAndNotifyTenderResults_PropagatesSendError(t *testing.T) {
 	chatRepo := newFakeChatRepo()
-	svc := newTestService(chatRepo, newFakeMemberRepo(), fakeWorkbenchCreator{})
+	svc := newTestService(chatRepo, newFakeMemberRepo(), newFakeWorkbenches())
 	session, _ := chatRepo.CreateSession(context.Background(), "user-1", "ws-1", "", "base-chat", "Test")
 
 	sendErr := errors.New("client disconnected")

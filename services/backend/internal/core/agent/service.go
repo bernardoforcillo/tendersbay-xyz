@@ -44,10 +44,18 @@ type MemberRepository interface {
 	LoadMembership(ctx context.Context, workspaceID, userID string) (workspace.Membership, error)
 }
 
-// WorkbenchCreator is the narrow port the create_workbench tool needs —
-// satisfied by *workbench.Service unchanged.
-type WorkbenchCreator interface {
+// Workbenches is the narrow port the agent service needs from the workbench
+// domain — satisfied by *workbench.Service unchanged. The create_workbench tool
+// creates one; chat-access scoping asks whether a caller may see a chat bound
+// to a workbench, so a private workbench's chats stay private to its members.
+type Workbenches interface {
 	CreateWorkbench(ctx context.Context, userID, workspaceID, name, description string, visibility workbench.Visibility) (workbench.Workbench, error)
+	// CanAccessWorkbench returns nil if userID may view workbenchID — used to
+	// gate a chat bound to that workbench.
+	CanAccessWorkbench(ctx context.Context, userID, workbenchID string) error
+	// AccessibleWorkbenchIDs returns the workbench IDs in workspaceID the user
+	// may view — used to filter workbench-tied chats in a workspace listing.
+	AccessibleWorkbenchIDs(ctx context.Context, userID, workspaceID string) (map[string]struct{}, error)
 }
 
 // TenderSearcher is the narrow port the search_tenders tool needs —
@@ -92,13 +100,13 @@ type Service struct {
 	chatRepo     ChatRepository
 	creditSvc    *credits.Service
 	members      MemberRepository
-	workbenches  WorkbenchCreator
+	workbenches  Workbenches
 	tenders      TenderSearcher
 	turnStates   map[string]*turnState
 	turnStatesMu sync.Mutex
 }
 
-func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches WorkbenchCreator, tenders TenderSearcher) *Service {
+func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches Workbenches, tenders TenderSearcher) *Service {
 	return &Service{
 		registry:    registry,
 		chatRepo:    chatRepo,
@@ -119,9 +127,29 @@ func (s *Service) requireMember(ctx context.Context, workspaceID, userID string)
 	return err
 }
 
+// canAccessChat authorizes a caller for one chat session. A workspace-level
+// chat (no workbench) is visible to every workspace member; a chat bound to a
+// workbench is visible only to callers who may access that workbench, so a
+// private workbench's chats stay private to its members. CanAccessWorkbench
+// already implies workspace membership, so no separate member check is needed
+// on that branch.
+func (s *Service) canAccessChat(ctx context.Context, session postgres.DBChatSession, userID string) error {
+	if session.WorkbenchID == nil || *session.WorkbenchID == "" {
+		return s.requireMember(ctx, session.WorkspaceID, userID)
+	}
+	return s.workbenches.CanAccessWorkbench(ctx, userID, *session.WorkbenchID)
+}
+
 func (s *Service) CreateChat(ctx context.Context, userID, workspaceID, workbenchID, agentType, title string) (postgres.DBChatSession, error) {
 	if err := s.requireMember(ctx, workspaceID, userID); err != nil {
 		return postgres.DBChatSession{}, err
+	}
+	// A chat pinned to a workbench requires access to that workbench, so a
+	// caller can't seed a private workbench with a chat they couldn't read back.
+	if workbenchID != "" {
+		if err := s.workbenches.CanAccessWorkbench(ctx, userID, workbenchID); err != nil {
+			return postgres.DBChatSession{}, err
+		}
 	}
 	if title == "" {
 		title = "Nuova chat"
@@ -133,7 +161,27 @@ func (s *Service) ListChats(ctx context.Context, userID, workspaceID string) ([]
 	if err := s.requireMember(ctx, workspaceID, userID); err != nil {
 		return nil, err
 	}
-	return s.chatRepo.ListSessionsByWorkspace(ctx, workspaceID)
+	all, err := s.chatRepo.ListSessionsByWorkspace(ctx, workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	accessible, err := s.workbenches.AccessibleWorkbenchIDs(ctx, userID, workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]postgres.DBChatSession, 0, len(all))
+	for _, sess := range all {
+		// Workspace-level chats stay visible to every member; a workbench-
+		// scoped chat only appears if the caller can see its workbench.
+		if sess.WorkbenchID == nil || *sess.WorkbenchID == "" {
+			out = append(out, sess)
+			continue
+		}
+		if _, ok := accessible[*sess.WorkbenchID]; ok {
+			out = append(out, sess)
+		}
+	}
+	return out, nil
 }
 
 func (s *Service) GetChat(ctx context.Context, userID, chatID string) (postgres.DBChatSession, error) {
@@ -141,7 +189,7 @@ func (s *Service) GetChat(ctx context.Context, userID, chatID string) (postgres.
 	if err != nil {
 		return postgres.DBChatSession{}, err
 	}
-	if err := s.requireMember(ctx, session.WorkspaceID, userID); err != nil {
+	if err := s.canAccessChat(ctx, session, userID); err != nil {
 		return postgres.DBChatSession{}, err
 	}
 	return session, nil
@@ -172,7 +220,7 @@ func (s *Service) GetChatForChoice(ctx context.Context, userID, choiceID string)
 	if err != nil {
 		return postgres.DBChatSession{}, err
 	}
-	if err := s.requireMember(ctx, session.WorkspaceID, userID); err != nil {
+	if err := s.canAccessChat(ctx, session, userID); err != nil {
 		return postgres.DBChatSession{}, err
 	}
 	return session, nil
@@ -237,8 +285,15 @@ func (s *Service) UpdateChat(ctx context.Context, userID, chatID, title, workben
 	if err != nil {
 		return postgres.DBChatSession{}, err
 	}
-	if err := s.requireMember(ctx, session.WorkspaceID, userID); err != nil {
+	if err := s.canAccessChat(ctx, session, userID); err != nil {
 		return postgres.DBChatSession{}, err
+	}
+	// Moving a chat into a workbench requires access to the destination too, so
+	// a caller can't push a chat into a workbench they can't see.
+	if workbenchID != "" {
+		if err := s.workbenches.CanAccessWorkbench(ctx, userID, workbenchID); err != nil {
+			return postgres.DBChatSession{}, err
+		}
 	}
 	return s.chatRepo.UpdateSession(ctx, chatID, title, workbenchID)
 }
@@ -248,7 +303,7 @@ func (s *Service) DeleteChat(ctx context.Context, userID, chatID string) error {
 	if err != nil {
 		return err
 	}
-	if err := s.requireMember(ctx, session.WorkspaceID, userID); err != nil {
+	if err := s.canAccessChat(ctx, session, userID); err != nil {
 		return err
 	}
 	s.evictChat(chatID)
@@ -260,7 +315,7 @@ func (s *Service) GetMessages(ctx context.Context, userID, sessionID string) ([]
 	if err != nil {
 		return nil, err
 	}
-	if err := s.requireMember(ctx, session.WorkspaceID, userID); err != nil {
+	if err := s.canAccessChat(ctx, session, userID); err != nil {
 		return nil, err
 	}
 	return s.chatRepo.ListMessagesBySession(ctx, sessionID)

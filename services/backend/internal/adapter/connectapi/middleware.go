@@ -147,6 +147,8 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeInvalidArgument, err)
 	case errors.Is(err, auth.ErrNotFound):
 		return connect.NewError(connect.CodeNotFound, err)
+	case errors.Is(err, auth.ErrRateLimited):
+		return connect.NewError(connect.CodeResourceExhausted, err)
 
 	// Workspace domain
 	case errors.Is(err, workspace.ErrForbidden),

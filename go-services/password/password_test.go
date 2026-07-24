@@ -34,6 +34,14 @@ func TestValidate(t *testing.T) {
 	}
 }
 
+func TestVerifyDummy(t *testing.T) {
+	// VerifyDummy exists only to burn ~bcrypt time on a not-found path; it has
+	// no observable result. Assert it runs against a real bcrypt hash without
+	// panicking (a malformed dummyHash would make CompareHashAndPassword error,
+	// which is fine — the call must simply not crash).
+	password.VerifyDummy("any-input")
+}
+
 func TestHashVerify(t *testing.T) {
 	plain := "Secure!Pass123"
 	hash, err := password.Hash(plain)
