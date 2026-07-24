@@ -38,6 +38,29 @@ type TenderResults struct {
 	Tenders []tender.ScoredTender
 }
 
+// ToolCall is a breadcrumb the agent emits when it starts ("running") or
+// finishes ("done") a tool — pushed to the client via SendToolCall so the UI
+// can show a "proof of work" chip. Emitted from the tool's own Execute, not
+// inferred from model output.
+type ToolCall struct {
+	Name   string
+	Status string // "running" | "done"
+}
+
+// SendToolCall is wired by the ConnectRPC handler to stream.Send, mirroring
+// SendTenderResults. Sending it never ends the turn.
+type SendToolCall func(ToolCall) error
+
+// emitToolCall best-effort pushes a breadcrumb using the CURRENT turn's
+// sendToolCall (read from turnState at call time, not closed over — the tool
+// closures outlive turn 1; see the turnState note in service.go). Nil-safe and
+// error-swallowing: a dropped breadcrumb must never fail a turn.
+func emitToolCall(ts *turnState, name, status string) {
+	if send := ts.currentSendToolCall(); send != nil {
+		_ = send(ToolCall{Name: name, Status: status})
+	}
+}
+
 // newAskChoiceTool builds the generic "ask the user a closed-ended
 // question" tool. berrygem's providers.Property has no array/object
 // nesting, so `options` is declared as a JSON-encoded string parameter —
@@ -109,7 +132,7 @@ func newAskChoiceTool(askChoice func(question string, options []ChoiceOption, al
 // service.go's turnState doc comment (added in this task's Step 4) for the
 // full explanation. This mirrors ask_choice's existing callback shape
 // exactly (Task 2) — same reasoning, same fix.
-func newCreateWorkbenchTool(createWorkbench func(name, description string, visibility workbench.Visibility) (workbench.Workbench, error)) tools.Tool {
+func newCreateWorkbenchTool(ts *turnState, createWorkbench func(name, description string, visibility workbench.Visibility) (workbench.Workbench, error)) tools.Tool {
 	return tools.NewFunc(
 		"create_workbench",
 		"Create a new workbench in the user's current workspace. Always confirm the name and visibility "+
@@ -147,6 +170,8 @@ func newCreateWorkbenchTool(createWorkbench func(name, description string, visib
 			if parsed.Visibility == string(workbench.VisibilityShared) {
 				visibility = workbench.VisibilityShared
 			}
+			emitToolCall(ts, "create_workbench", "running")
+			defer emitToolCall(ts, "create_workbench", "done")
 			wb, err := createWorkbench(parsed.Name, parsed.Description, visibility)
 			if err != nil {
 				return "", fmt.Errorf("create_workbench: %w", err)
@@ -237,6 +262,8 @@ func newSearchTendersTool(ts *turnState, search func(query, country, cpv, status
 			if parsed.Query == "" {
 				return "", fmt.Errorf("search_tenders: query is required")
 			}
+			emitToolCall(ts, "search_tenders", "running")
+			defer emitToolCall(ts, "search_tenders", "done")
 			results, err := search(parsed.Query, parsed.Country, parsed.CPV, parsed.Status)
 			if err != nil {
 				return "", fmt.Errorf("search_tenders: %w", err)

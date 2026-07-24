@@ -279,6 +279,7 @@ func (s *Service) SubmitChoice(
 	sendToken StreamToken,
 	sendChoice SendChoice,
 	sendTenderResults SendTenderResults,
+	sendToolCall SendToolCall,
 	usageCh chan<- credits.Usage,
 ) error {
 	promptMsg, err := s.chatRepo.FindMessageByID(ctx, choiceID)
@@ -292,7 +293,7 @@ func (s *Service) SubmitChoice(
 	if _, err := s.chatRepo.InsertMessage(ctx, session.ID, "choice_response", answerText, nil, nil, nil); err != nil {
 		return err
 	}
-	return s.runTurn(ctx, session.ID, userID, session.WorkspaceID, session.AgentType, answerText, sendToken, sendChoice, sendTenderResults, usageCh)
+	return s.runTurn(ctx, session.ID, userID, session.WorkspaceID, session.AgentType, answerText, sendToken, sendChoice, sendTenderResults, sendToolCall, usageCh)
 }
 
 func (s *Service) UpdateChat(ctx context.Context, userID, chatID, title, workbenchID string) (postgres.DBChatSession, error) {
@@ -353,6 +354,7 @@ type turnState struct {
 	ctx               context.Context
 	sendChoice        SendChoice
 	sendTenderResults SendTenderResults
+	sendToolCall      SendToolCall
 	cancel            context.CancelFunc
 	pending           *pendingChoice
 	emptyStreak       int
@@ -362,6 +364,15 @@ func (t *turnState) snapshot() (userID, workspaceID string, ctx context.Context,
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	return t.userID, t.workspaceID, t.ctx, t.sendChoice, t.sendTenderResults, t.cancel, t.pending
+}
+
+// currentSendToolCall returns this turn's sendToolCall under the mutex — read
+// by emitToolCall so the tool closures (built on turn 1, reused for the
+// session) always use the most recent turn's callback.
+func (t *turnState) currentSendToolCall() SendToolCall {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	return t.sendToolCall
 }
 
 // recordSearchResult updates this turn's consecutive-empty-search streak —
@@ -431,6 +442,7 @@ func (s *Service) runTurn(
 	sendToken StreamToken,
 	sendChoice SendChoice,
 	sendTenderResults SendTenderResults,
+	sendToolCall SendToolCall,
 	usageCh chan<- credits.Usage,
 ) error {
 	cfg, ok := s.registry.GetConfig(AgentType(agentType))
@@ -455,7 +467,7 @@ func (s *Service) runTurn(
 
 	ts := s.turnStateFor(sessionID)
 	ts.mu.Lock()
-	ts.userID, ts.workspaceID, ts.ctx, ts.sendChoice, ts.sendTenderResults, ts.cancel, ts.pending = userID, workspaceID, streamCtx, sendChoice, sendTenderResults, cancelForChoice, pending
+	ts.userID, ts.workspaceID, ts.ctx, ts.sendChoice, ts.sendTenderResults, ts.sendToolCall, ts.cancel, ts.pending = userID, workspaceID, streamCtx, sendChoice, sendTenderResults, sendToolCall, cancelForChoice, pending
 	ts.emptyStreak = 0
 	ts.mu.Unlock()
 
@@ -509,7 +521,7 @@ func (s *Service) runTurn(
 	ag, err := s.registry.BuildAgent(cfg,
 		bagent.WithTools(
 			newAskChoiceTool(askChoice),
-			newCreateWorkbenchTool(createWorkbench),
+			newCreateWorkbenchTool(ts, createWorkbench),
 			newSearchTendersTool(ts, searchTenders),
 		),
 	)
@@ -622,12 +634,13 @@ func (s *Service) ChatStream(
 	sendToken StreamToken,
 	sendChoice SendChoice,
 	sendTenderResults SendTenderResults,
+	sendToolCall SendToolCall,
 	usageCh chan<- credits.Usage,
 ) error {
 	if _, err := s.chatRepo.InsertMessage(ctx, sessionID, "user", message, nil, nil, nil); err != nil {
 		return err
 	}
-	return s.runTurn(ctx, sessionID, userID, workspaceID, agentType, message, sendToken, sendChoice, sendTenderResults, usageCh)
+	return s.runTurn(ctx, sessionID, userID, workspaceID, agentType, message, sendToken, sendChoice, sendTenderResults, sendToolCall, usageCh)
 }
 
 // estimateTokens roughly approximates a token count from text length for the
