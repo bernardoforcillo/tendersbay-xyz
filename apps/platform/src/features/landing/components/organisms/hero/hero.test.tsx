@@ -16,13 +16,13 @@ describe('Hero', () => {
     // findBy flushes the sample-tender loader microtask inside act.
     await screen.findByRole('heading', { level: 1 });
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'The tender they already counted as theirs?',
+      'Every public tender in 27 countries',
     );
     expect(screen.getByRole('link', { name: /put your agents to work/i })).toHaveAttribute(
       'href',
       '#agents',
     );
-    expect(screen.getByRole('link', { name: /see the vision/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /see how it works/i })).toHaveAttribute(
       'href',
       '#vision',
     );
