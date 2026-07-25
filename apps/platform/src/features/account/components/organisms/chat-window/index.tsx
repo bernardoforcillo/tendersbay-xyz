@@ -1,5 +1,6 @@
 import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { animate } from 'motion';
+import { usePostHog } from 'posthog-js/react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ToolChip } from '~/features/account/components/atoms/tool-chip';
@@ -7,12 +8,13 @@ import { ChatInput } from '~/features/account/components/molecules/chat-input';
 import { CreditDisplay } from '~/features/account/components/molecules/credit-display';
 import { MessageBubble } from '~/features/account/components/molecules/message-bubble';
 import { useChatStream } from '~/features/account/hooks/use-chat-stream';
-import { agentClient } from '~/lib/api/client';
+import { agentClient, workspaceClient } from '~/lib/api/client';
 import { type ChatMessage, useChatStore } from '~/store/chat';
 import { useWorkspaceStore } from '~/store/workspace';
 
 export function ChatWindow() {
   const { t } = useTranslation();
+  const posthog = usePostHog();
   const bottomRef = useRef<HTMLDivElement>(null);
   const messages = useChatStore((s) => s.messages);
   const streaming = useChatStore((s) => s.streaming);
@@ -29,6 +31,7 @@ export function ChatWindow() {
   const [creating, setCreating] = useState(false);
   const [historyReady, setHistoryReady] = useState(false);
   const loadedChatIdRef = useRef<string | null>(null);
+  const sessionStartedRef = useRef(false);
 
   useEffect(() => {
     const parent = bottomRef.current?.parentElement;
@@ -50,6 +53,25 @@ export function ChatWindow() {
       s.setStreamingContent('');
       s.clearActiveTools();
     }
+  }, []);
+
+  // Fire the session-completed rollup on unmount (navigation away / chat
+  // switch), then reset the session-scoped counters for the next chat.
+  // posthog is a stable client instance for the component's life; this effect
+  // intentionally runs its cleanup exactly once, on unmount.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: unmount-only rollup
+  useEffect(() => {
+    return () => {
+      const s = useChatStore.getState();
+      posthog?.capture('chat_session_completed', {
+        location: 'explore',
+        message_count: s.messages.length,
+        tool_calls_total: s.toolCallsTotal,
+        tenders_opened: s.tendersOpened,
+      });
+      s.resetSessionCounters();
+      sessionStartedRef.current = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -228,6 +250,36 @@ export function ChatWindow() {
     }
 
     if (!chatId) return;
+
+    if (!sessionStartedRef.current) {
+      sessionStartedRef.current = true;
+      void workspaceClient
+        .getClientProfile({ workspaceId: workspaceId ?? '' })
+        .then((res) => {
+          const p = res.profile;
+          const hasProfile = res.exists;
+          posthog?.capture('chat_session_started', {
+            location: 'explore',
+            has_workspace: Boolean(workspaceId),
+            has_client_profile: hasProfile,
+          });
+          if (hasProfile && p) {
+            posthog?.capture('client_profile_injected', {
+              location: 'explore_chat',
+              has_sectors: (p.sectors?.length ?? 0) > 0,
+              has_countries: (p.countries?.length ?? 0) > 0,
+              value_range_set: p.valueMin !== 0n || p.valueMax !== 0n,
+            });
+          }
+        })
+        .catch(() => {
+          posthog?.capture('chat_session_started', {
+            location: 'explore',
+            has_workspace: Boolean(workspaceId),
+            has_client_profile: false,
+          });
+        });
+    }
 
     await sendMessage(chatId, message);
 
