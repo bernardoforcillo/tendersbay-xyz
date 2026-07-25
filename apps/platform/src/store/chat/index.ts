@@ -28,6 +28,7 @@ interface ChatStore {
     options: { key: string; label: string; description: string }[];
     allowCustom: boolean;
   } | null;
+  activeTools: { name: string; status: 'running' | 'done' }[];
   setCurrentChat: (id: string | null) => void;
   addMessage: (msg: ChatMessage) => void;
   setMessages: (messages: ChatMessage[]) => void;
@@ -36,6 +37,13 @@ interface ChatStore {
   setStreamingContent: (content: string) => void;
   setCredits: (credits: ChatStore['credits']) => void;
   setPendingChoice: (choice: ChatStore['pendingChoice']) => void;
+  setActiveTools: (name: string, status: 'running' | 'done') => void;
+  clearActiveTools: () => void;
+  toolCallsTotal: number;
+  tendersOpened: number;
+  incToolCalls: () => void;
+  incTendersOpened: () => void;
+  resetSessionCounters: () => void;
   reset: () => void;
   /** One-shot message handed off from the ⌘K palette; consumed by ChatWindow on mount. */
   draft: string | null;
@@ -51,6 +59,9 @@ export const useChatStore = create<ChatStore>()(
       streamingContent: '',
       credits: null,
       pendingChoice: null,
+      activeTools: [],
+      toolCallsTotal: 0,
+      tendersOpened: 0,
       setCurrentChat: (id) => set({ currentChatId: id }),
       addMessage: (msg) =>
         set((s) =>
@@ -62,6 +73,18 @@ export const useChatStore = create<ChatStore>()(
       setStreamingContent: (content) => set({ streamingContent: content }),
       setCredits: (credits) => set({ credits }),
       setPendingChoice: (pendingChoice) => set({ pendingChoice }),
+      setActiveTools: (name, status) =>
+        set((s) => {
+          const idx = s.activeTools.findIndex((t) => t.name === name);
+          if (idx === -1) return { activeTools: [...s.activeTools, { name, status }] };
+          const next = s.activeTools.slice();
+          next[idx] = { name, status };
+          return { activeTools: next };
+        }),
+      clearActiveTools: () => set({ activeTools: [] }),
+      incToolCalls: () => set((s) => ({ toolCallsTotal: s.toolCallsTotal + 1 })),
+      incTendersOpened: () => set((s) => ({ tendersOpened: s.tendersOpened + 1 })),
+      resetSessionCounters: () => set({ toolCallsTotal: 0, tendersOpened: 0 }),
       reset: () =>
         set({
           messages: [],
@@ -69,6 +92,9 @@ export const useChatStore = create<ChatStore>()(
           streamingContent: '',
           currentChatId: null,
           pendingChoice: null,
+          activeTools: [],
+          toolCallsTotal: 0,
+          tendersOpened: 0,
         }),
       draft: null,
       setDraft: (draft) => set({ draft }),

@@ -17,14 +17,14 @@ export function WorkbenchOverviewPage() {
             'Start by searching for tenders, creating a client profile, or inviting your team. Everything you do here is shared with workbench members.',
           )}
           action={
-            <Button onPress={() => void navigate({ to: '/explore' })}>
+            <Button onPress={() => void navigate({ to: '/tenders' })}>
               {t('workbench.overview.emptyExplore', 'Open Explore')}
             </Button>
           }
         />
       </div>
       <div className="flex justify-center px-4 pb-6 pt-4">
-        <SearchDock onPress={() => void navigate({ to: '/explore' })} />
+        <SearchDock onPress={() => void navigate({ to: '/tenders' })} />
       </div>
     </div>
   );

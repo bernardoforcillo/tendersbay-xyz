@@ -91,7 +91,7 @@ export function WorkspaceTodayPage() {
           {count > 0 ? (
             <section>
               <RACButton
-                onPress={() => void navigate({ to: '/explore' })}
+                onPress={() => void navigate({ to: '/tenders' })}
                 className="flex w-full items-center justify-between gap-3 rounded-xl border border-cream-200 bg-white p-4 text-left outline-none transition-colors duration-150 data-[hovered]:border-cream-300 data-[focus-visible]:ring-2 data-[focus-visible]:ring-brand-600"
               >
                 <span className="text-sm text-ink-700">
@@ -118,7 +118,7 @@ export function WorkspaceTodayPage() {
                 'Ask the agent about markets, requirements, or a specific call — personalised recommendations will appear here as your search profiles take shape.',
               )}
               action={
-                <Button variant="ghost" onPress={() => void navigate({ to: '/explore' })}>
+                <Button variant="ghost" onPress={() => void navigate({ to: '/tenders' })}>
                   {t('today.explore.action', 'Open Explore')}
                 </Button>
               }
@@ -126,7 +126,7 @@ export function WorkspaceTodayPage() {
           )}
         </div>
         <div className="mt-auto flex justify-center px-4 pb-6 pt-4">
-          <SearchDock onPress={() => void navigate({ to: '/explore' })} />
+          <SearchDock onPress={() => void navigate({ to: '/tenders' })} />
         </div>
       </FirstRunProfile>
     </div>

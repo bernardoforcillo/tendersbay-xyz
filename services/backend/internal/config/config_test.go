@@ -57,6 +57,28 @@ func TestFromEnv_TenderSearchDefaults(t *testing.T) {
 	}
 }
 
+func TestValidate(t *testing.T) {
+	const goodSecret = "a-sufficiently-long-jwt-secret!!" // 32 chars
+	tests := []struct {
+		name    string
+		cfg     Config
+		wantErr bool
+	}{
+		{"valid", Config{DatabaseURL: "postgres://x", JWTSecret: goodSecret}, false},
+		{"missing database url", Config{JWTSecret: goodSecret}, true},
+		{"missing jwt secret", Config{DatabaseURL: "postgres://x"}, true},
+		{"short jwt secret", Config{DatabaseURL: "postgres://x", JWTSecret: "too-short"}, true},
+		{"jwt secret exactly 32", Config{DatabaseURL: "postgres://x", JWTSecret: goodSecret}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if err := tt.cfg.Validate(); (err != nil) != tt.wantErr {
+				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
 func TestFromEnv_TenderSearchOverrides(t *testing.T) {
 	t.Setenv("QDRANT_URL", "http://qdrant.internal:6333")
 	t.Setenv("OLLAMA_BASE_URL", "http://ollama.internal:11434")

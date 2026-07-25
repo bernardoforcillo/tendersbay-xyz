@@ -11,6 +11,9 @@ vi.mock('~/lib/api/client', () => ({
   },
 }));
 
+const captureMock = vi.fn();
+vi.mock('posthog-js/react', () => ({ usePostHog: () => ({ capture: captureMock }) }));
+
 async function* toAsyncIterable<T>(items: T[]) {
   for (const item of items) yield item;
 }
@@ -19,6 +22,7 @@ describe('useChatStream', () => {
   beforeEach(() => {
     useChatStore.getState().reset();
     vi.clearAllMocks();
+    captureMock.mockClear();
   });
 
   it('stores a pendingChoice and stops streaming when a choice event arrives', async () => {
@@ -154,6 +158,33 @@ describe('useChatStream', () => {
     expect(tenderMessage?.tenders?.[0]?.id).toBe('t-1');
     expect(state.messages).toContainEqual(
       expect.objectContaining({ role: 'assistant', content: 'Ho trovato un risultato.' }),
+    );
+  });
+
+  it('updates activeTools on toolCall events without ending the stream, and fires breadcrumb telemetry', async () => {
+    vi.mocked(agentClient.chatStream).mockReturnValue(
+      toAsyncIterable([
+        { event: { case: 'toolCall', value: { name: 'search_tenders', status: 'running' } } },
+        { event: { case: 'token', value: 'Cerco…' } },
+        { event: { case: 'toolCall', value: { name: 'search_tenders', status: 'done' } } },
+        {
+          event: {
+            case: 'done',
+            value: { usage: undefined, creditsRemaining: 100n, creditsMonthlyMax: 200n },
+          },
+        },
+      ]) as never,
+    );
+
+    const { result } = renderHook(() => useChatStream());
+    await result.current.sendMessage('chat-1', 'cerca bandi');
+
+    // The stream ran to completion (done handled), and a breadcrumb fired.
+    expect(useChatStore.getState().streaming).toBe(false);
+    expect(useChatStore.getState().toolCallsTotal).toBe(1);
+    expect(captureMock).toHaveBeenCalledWith(
+      'tool_call_breadcrumb_rendered',
+      expect.objectContaining({ location: 'explore_chat', tool_name: 'search_tenders' }),
     );
   });
 });

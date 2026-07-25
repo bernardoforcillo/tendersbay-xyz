@@ -1,7 +1,7 @@
+import { usePostHog } from 'posthog-js/react';
 import { ChoicePromptCard } from '~/features/account/components/molecules/choice-prompt-card';
-import { TenderResultCard } from '~/features/account/components/organisms/tender-result-card';
-import { useTenderLink } from '~/features/tenders';
-import type { ChatMessage } from '~/store/chat';
+import { TenderResultsTable } from '~/features/account/components/organisms/tender-results-table';
+import { type ChatMessage, useChatStore } from '~/store/chat';
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -10,7 +10,7 @@ type MessageBubbleProps = {
 };
 
 export function MessageBubble({ message, isPendingChoice, onSubmitChoice }: MessageBubbleProps) {
-  const tenderLink = useTenderLink();
+  const posthog = usePostHog();
 
   if (message.role === 'choice_prompt') {
     return (
@@ -27,16 +27,18 @@ export function MessageBubble({ message, isPendingChoice, onSubmitChoice }: Mess
   if (message.role === 'tender_results') {
     return (
       <div className="flex justify-start">
-        <div className="w-full max-w-[80%] space-y-2.5">
-          {(message.tenders ?? []).map((tender) => (
-            <div key={tender.id}>
-              {tenderLink(
-                tender.id,
-                <TenderResultCard tender={tender} />,
-                'block rounded-2xl no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand-600',
-              )}
-            </div>
-          ))}
+        <div className="w-full">
+          <TenderResultsTable
+            tenders={message.tenders ?? []}
+            onOpen={(tender) => {
+              useChatStore.getState().incTendersOpened();
+              posthog?.capture('chat_tender_card_opened', {
+                location: 'explore_chat',
+                // Chat search is client-agnostic, so a card carries no fit tier.
+                fit_tier: tender.fitTier || 'none',
+              });
+            }}
+          />
         </div>
       </div>
     );

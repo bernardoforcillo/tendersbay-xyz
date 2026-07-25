@@ -119,7 +119,7 @@ func (h *AgentHandler) GetMessages(ctx context.Context, req *connect.Request[age
 	return connect.NewResponse(&agentv1.GetMessagesResponse{Messages: out}), nil
 }
 
-func newStreamCallbacks(stream *connect.ServerStream[agentv1.ChatStreamResponse]) (agent.StreamToken, agent.SendChoice, agent.SendTenderResults) {
+func newStreamCallbacks(stream *connect.ServerStream[agentv1.ChatStreamResponse]) (agent.StreamToken, agent.SendChoice, agent.SendTenderResults, agent.SendToolCall) {
 	sendToken := func(token string) error {
 		return stream.Send(&agentv1.ChatStreamResponse{
 			Event: &agentv1.ChatStreamResponse_Token{Token: token},
@@ -135,7 +135,16 @@ func newStreamCallbacks(stream *connect.ServerStream[agentv1.ChatStreamResponse]
 			Event: &agentv1.ChatStreamResponse_TenderResults{TenderResults: toProtoTenderResults(tr)},
 		})
 	}
-	return sendToken, sendChoice, sendTenderResults
+	sendToolCall := func(tc agent.ToolCall) error {
+		return stream.Send(&agentv1.ChatStreamResponse{
+			Event: &agentv1.ChatStreamResponse_ToolCall{ToolCall: toProtoToolCall(tc)},
+		})
+	}
+	return sendToken, sendChoice, sendTenderResults, sendToolCall
+}
+
+func toProtoToolCall(tc agent.ToolCall) *agentv1.ToolCall {
+	return &agentv1.ToolCall{Name: tc.Name, Status: tc.Status}
 }
 
 func toProtoTenderResults(tr agent.TenderResults) *agentv1.TenderResults {
@@ -201,10 +210,10 @@ func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agen
 		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
 	}
 
-	sendToken, sendChoice, sendTenderResults := newStreamCallbacks(stream)
+	sendToken, sendChoice, sendTenderResults, sendToolCall := newStreamCallbacks(stream)
 
 	return h.runAndFinish(ctx, uid, session.WorkspaceID, check.Allowance, stream, func(usageCh chan<- credits.Usage) error {
-		return h.svc.ChatStream(ctx, session.ID, uid, session.WorkspaceID, req.Msg.Message, session.AgentType, sendToken, sendChoice, sendTenderResults, usageCh)
+		return h.svc.ChatStream(ctx, session.ID, uid, session.WorkspaceID, req.Msg.Message, session.AgentType, sendToken, sendChoice, sendTenderResults, sendToolCall, usageCh)
 	})
 }
 
@@ -227,10 +236,10 @@ func (h *AgentHandler) SubmitChoice(ctx context.Context, req *connect.Request[ag
 		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
 	}
 
-	sendToken, sendChoice, sendTenderResults := newStreamCallbacks(stream)
+	sendToken, sendChoice, sendTenderResults, sendToolCall := newStreamCallbacks(stream)
 
 	return h.runAndFinish(ctx, uid, session.WorkspaceID, check.Allowance, stream, func(usageCh chan<- credits.Usage) error {
-		return h.svc.SubmitChoice(ctx, session, uid, req.Msg.ChoiceId, req.Msg.SelectedKey, req.Msg.CustomValue, sendToken, sendChoice, sendTenderResults, usageCh)
+		return h.svc.SubmitChoice(ctx, session, uid, req.Msg.ChoiceId, req.Msg.SelectedKey, req.Msg.CustomValue, sendToken, sendChoice, sendTenderResults, sendToolCall, usageCh)
 	})
 }
 

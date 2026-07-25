@@ -21,14 +21,14 @@ func NewAuthHandler(svc *auth.Service, refreshTTL int) *AuthHandler {
 var _ authv1connect.AuthServiceHandler = (*AuthHandler)(nil)
 
 func (h *AuthHandler) SignUp(ctx context.Context, req *connect.Request[authv1.SignUpRequest]) (*connect.Response[authv1.SignUpResponse], error) {
-	if err := h.svc.SignUp(ctx, req.Msg.Email, req.Msg.Password, req.Msg.DisplayName, req.Msg.Locale); err != nil {
+	if err := h.svc.SignUp(ctx, req.Msg.Email, req.Msg.Password, req.Msg.DisplayName, req.Msg.Locale, ClientIPFromContext(ctx)); err != nil {
 		return nil, toConnectError(err)
 	}
 	return connect.NewResponse(&authv1.SignUpResponse{}), nil
 }
 
 func (h *AuthHandler) Login(ctx context.Context, req *connect.Request[authv1.LoginRequest]) (*connect.Response[authv1.LoginResponse], error) {
-	result, err := h.svc.Login(ctx, req.Msg.Email, req.Msg.Password)
+	result, err := h.svc.Login(ctx, req.Msg.Email, req.Msg.Password, ClientIPFromContext(ctx))
 	if err != nil {
 		return nil, toConnectError(err)
 	}
@@ -65,7 +65,7 @@ func (h *AuthHandler) RefreshToken(ctx context.Context, req *connect.Request[aut
 }
 
 func (h *AuthHandler) ForgotPassword(ctx context.Context, req *connect.Request[authv1.ForgotPasswordRequest]) (*connect.Response[authv1.ForgotPasswordResponse], error) {
-	if err := h.svc.ForgotPassword(ctx, req.Msg.Email, req.Msg.Locale); err != nil {
+	if err := h.svc.ForgotPassword(ctx, req.Msg.Email, req.Msg.Locale, ClientIPFromContext(ctx)); err != nil {
 		return nil, toConnectError(err)
 	}
 	return connect.NewResponse(&authv1.ForgotPasswordResponse{}), nil

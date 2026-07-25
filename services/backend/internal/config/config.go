@@ -2,10 +2,17 @@
 package config
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"strings"
 	"time"
 )
+
+// minJWTSecretLen is the shortest JWT_SECRET the service will start with. HS256
+// signing security depends entirely on the secret's entropy, so a too-short
+// (guessable) key is treated as a misconfiguration, not a warning.
+const minJWTSecretLen = 32
 
 const (
 	defaultPort           = "8080"
@@ -84,6 +91,23 @@ func FromEnv() Config {
 	cfg.WorkspaceInviteExpiry, _ = time.ParseDuration(inviteExpiry)
 
 	return cfg
+}
+
+// Validate reports a fatal misconfiguration in the required secrets. It fails
+// closed on a missing or weak JWT_SECRET: with an empty secret the HS256 signer
+// would happily sign and verify tokens with an empty key, letting anyone forge
+// an access token for any user. Call this before starting the server.
+func (c Config) Validate() error {
+	if c.DatabaseURL == "" {
+		return errors.New("DATABASE_URL is required")
+	}
+	if c.JWTSecret == "" {
+		return errors.New("JWT_SECRET is required")
+	}
+	if len(c.JWTSecret) < minJWTSecretLen {
+		return fmt.Errorf("JWT_SECRET must be at least %d characters", minJWTSecretLen)
+	}
+	return nil
 }
 
 func getenv(key, fallback string) string {

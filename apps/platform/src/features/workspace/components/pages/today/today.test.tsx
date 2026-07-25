@@ -89,12 +89,12 @@ describe('WorkspaceTodayPage', () => {
     expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
   });
 
-  it('pressing the search dock navigates to Explore', async () => {
+  it('pressing the search dock navigates to Tenders', async () => {
     const { default: userEvent } = await import('@testing-library/user-event');
     const user = userEvent.setup();
     render(<WorkspaceTodayPage />);
     await user.click(screen.getByTestId('search-dock'));
-    expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
+    expect(navigateMock).toHaveBeenCalledWith({ to: '/tenders' });
   });
 
   it('shows the best-fit count nudge and the see-all link, hiding the Explore teaser', () => {
@@ -112,12 +112,12 @@ describe('WorkspaceTodayPage', () => {
     expect(screen.queryByText('All in Explore →')).not.toBeInTheDocument();
   });
 
-  it('pressing see-all navigates to Explore', async () => {
+  it('pressing see-all navigates to Tenders', async () => {
     recommendedMock.mockReturnValue({ count: 1, needsProfile: false, loading: false, error: null });
     const { default: userEvent } = await import('@testing-library/user-event');
     const user = userEvent.setup();
     render(<WorkspaceTodayPage />);
     await user.click(screen.getByText('All in Explore →'));
-    expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
+    expect(navigateMock).toHaveBeenCalledWith({ to: '/tenders' });
   });
 });

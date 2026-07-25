@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { agentClient } from '~/lib/api/client';
+import { agentClient, workspaceClient } from '~/lib/api/client';
 import { useChatStore } from '~/store/chat';
 import { useWorkspaceStore } from '~/store/workspace';
 
@@ -14,7 +14,10 @@ vi.mock('~/lib/api/client', () => ({
     getCredits: vi.fn(),
     chatStream: vi.fn(),
   },
+  workspaceClient: { getClientProfile: vi.fn() },
 }));
+const captureMock = vi.fn();
+vi.mock('posthog-js/react', () => ({ usePostHog: () => ({ capture: captureMock }) }));
 vi.mock('~/features/account/hooks/use-chat-stream', () => ({
   useChatStream: () => ({ sendMessage: sendMessageMock, submitChoice: vi.fn(), cancel: vi.fn() }),
 }));
@@ -51,6 +54,7 @@ function createDeferred<T>() {
 describe('ChatWindow', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    captureMock.mockClear();
     useChatStore.getState().reset();
     useChatStore.setState({ draft: null, credits: null });
     useWorkspaceStore.setState({ currentWorkspaceId: 'ws-1' });
@@ -59,6 +63,10 @@ describe('ChatWindow', () => {
       monthlyMax: 200,
       used: 100,
       resetDate: '',
+    } as never);
+    vi.mocked(workspaceClient.getClientProfile).mockResolvedValue({
+      exists: true,
+      profile: { sectors: ['45'], countries: ['IT'], valueMin: 0n, valueMax: 0n },
     } as never);
   });
 
@@ -118,5 +126,65 @@ describe('ChatWindow', () => {
     await waitFor(() => {
       expect(screen.getByText('Cestini intelligenti IoT')).toBeInTheDocument();
     });
+  });
+
+  it('renders a tool-chip while streaming for each active tool', async () => {
+    vi.mocked(agentClient.getMessages).mockResolvedValue({ messages: [] } as never);
+    useChatStore.setState({ currentChatId: 'chat-1' });
+
+    render(<ChatWindow />);
+
+    // Set the streaming/activeTools state *after* mount: the mount-only
+    // stale-streaming-state guard only fires once, on the initial mount, so
+    // updating the store post-render doesn't get wiped by it.
+    useChatStore.setState({
+      streaming: true,
+      activeTools: [{ name: 'search_tenders', status: 'running' }],
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Cerco bandi…')).toBeInTheDocument();
+    });
+  });
+
+  it('clears stale streaming state on mount', async () => {
+    vi.mocked(agentClient.getMessages).mockResolvedValue({ messages: [] } as never);
+    // Simulate state rehydrated as mid-stream from a prior tab / network drop.
+    useChatStore.setState({
+      currentChatId: 'chat-1',
+      streaming: true,
+      streamingContent: 'half a sentence',
+      activeTools: [{ name: 'search_tenders', status: 'running' }],
+    });
+
+    render(<ChatWindow />);
+
+    await waitFor(() => {
+      expect(useChatStore.getState().streaming).toBe(false);
+    });
+    expect(useChatStore.getState().streamingContent).toBe('');
+    expect(useChatStore.getState().activeTools).toEqual([]);
+  });
+
+  it('fires chat_session_started and client_profile_injected on the first send', async () => {
+    vi.mocked(agentClient.getMessages).mockResolvedValue({ messages: [] } as never);
+    useChatStore.setState({ currentChatId: 'chat-1', draft: 'Ciao' });
+
+    render(<ChatWindow />);
+
+    await waitFor(() => {
+      expect(captureMock).toHaveBeenCalledWith(
+        'chat_session_started',
+        expect.objectContaining({
+          location: 'explore',
+          has_workspace: true,
+          has_client_profile: true,
+        }),
+      );
+    });
+    expect(captureMock).toHaveBeenCalledWith(
+      'client_profile_injected',
+      expect.objectContaining({ location: 'explore_chat', has_sectors: true, has_countries: true }),
+    );
   });
 });
