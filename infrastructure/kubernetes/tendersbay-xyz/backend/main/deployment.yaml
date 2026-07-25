@@ -27,7 +27,7 @@ spec:
         - name: backend
           # Image published by .github/workflows/ci-backend.yml; tag rewritten by
           # Flux image automation (see update.yaml).
-          image: bernardoforcillo/tendersbay-backend:20260719202949-dcc50bc1486195a0ee6f266381491d11751b6758@sha256:5de65431cce64b247112b4ed3e6ca45933f3c4a714ded38b960bf9d9b83c5d63 # {"$imagepolicy": "tendersbay-xyz:tendersbay-backend-image-policy"}
+          image: bernardoforcillo/tendersbay-backend:20260725124441-487d36b366a02322bb9d58387a9cbd015bdf4730@sha256:bfcafca7b903d3c022e2f6fff17485bbb32a78fd64cb6777a6ad745e7a29801f # {"$imagepolicy": "tendersbay-xyz:tendersbay-backend-image-policy"}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
