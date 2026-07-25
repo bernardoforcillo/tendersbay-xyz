@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 maata. Otamme ne yksi kerrallaan.",
-      "body": "Laajenemme koko Euroopan unioniin, markkina kerrallaan. Jokainen lippu syttyy sinä päivänä, kun maasi avautuu.",
+      "body": "Jokainen TED:n — EU:n laajuisen Tenders Electronic Dailyn — tarjouspyyntö katetaan natiivisti ensimmäisestä päivästä lähtien kaikissa 27 maassa. Syttyvät liput ovat kansallisia portaaleja, joihin liitymme suoraan, markkina kerrallaan.",
       "statusAvailable": "Aktiivinen",
-      "statusComingSoon": "Tulossa pian",
+      "statusComingSoon": "Käyttöönotossa",
+      "statusMapped": "Kartoitetut markkinat",
+      "tedNative": "TED · tuettu natiivisti",
+      "nationalPortals": "Kansalliset portaalit",
       "note": "Kattavuus laajenee kaikkiin 27 EU-maahan."
     },
     "footer": {

@@ -293,9 +293,12 @@
     },
     "coverage": {
       "title": "27 tír. Glacaimid iad ceann ar cheann.",
-      "body": "Táimid ag leathnú ar fud an Aontais Eorpaigh, margadh ar mhargadh. Lasann gach bratach an lá a théann do thír beo.",
+      "body": "Tá gach tairiscint ar TED — an Tenders Electronic Daily uile-AE — clúdaithe go dúchasach, ón gcéad lá, sna 27 tír go léir. Is iad na bratacha a lasann na tairseacha náisiúnta a nascaimid leo go díreach, margadh ar mhargadh.",
       "statusAvailable": "Beo",
-      "statusComingSoon": "Ag teacht go luath",
+      "statusComingSoon": "Á chur i bhfeidhm",
+      "statusMapped": "Margaí mapáilte",
+      "tedNative": "TED · tacaithe go dúchasach",
+      "nationalPortals": "Tairseacha náisiúnta",
       "note": "Tá an clúdach ag teacht chuig na 27 tír AE go léir."
     },
     "footer": {

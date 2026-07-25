@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 länder. Vi tar dem ett i taget.",
-      "body": "Vi expanderar i hela Europeiska unionen, marknad för marknad. Varje flagga tänds den dag ditt land går live.",
+      "body": "Varje upphandling på TED — det EU-omfattande Tenders Electronic Daily — täcks nativt, från dag ett, i alla 27 länder. Flaggorna som tänds är de nationella portaler vi kopplar oss direkt till, marknad för marknad.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Kommer snart",
+      "statusComingSoon": "Under utrullning",
+      "statusMapped": "Kartlagda marknader",
+      "tedNative": "TED · stöds nativt",
+      "nationalPortals": "Nationella portaler",
       "note": "Täckningen är på väg till alla 27 EU-länder."
     },
     "footer": {

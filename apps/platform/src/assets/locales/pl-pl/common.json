@@ -293,9 +293,12 @@
     },
     "coverage": {
       "title": "27 krajów. Zdobywamy je jeden po drugim.",
-      "body": "Rozszerzamy działalność na całą Unię Europejską, rynek po rynku. Każda flaga rozświetla się w dniu, gdy twój kraj rusza.",
+      "body": "Każdy przetarg w TED — ogólnounijnym Tenders Electronic Daily — jest natywnie objęty zasięgiem od pierwszego dnia, we wszystkich 27 krajach. Flagi, które się zapalają, to krajowe portale, z którymi łączymy się bezpośrednio, rynek po rynku.",
       "statusAvailable": "Aktywne",
-      "statusComingSoon": "Wkrótce",
+      "statusComingSoon": "We wdrażaniu",
+      "statusMapped": "Zmapowane rynki",
+      "tedNative": "TED · obsługiwane natywnie",
+      "nationalPortals": "Portale krajowe",
       "note": "Zasięg pojawia się we wszystkich 27 krajach UE."
     },
     "footer": {

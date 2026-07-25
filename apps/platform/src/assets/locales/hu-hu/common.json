@@ -293,9 +293,12 @@
     },
     "coverage": {
       "title": "27 ország. Egyenként vesszük be őket.",
-      "body": "Az egész Európai Unióban terjeszkedünk, piacról piacra. Minden zászló kigyullad azon a napon, amikor az Ön országa élesben indul.",
+      "body": "Minden TED-en — az uniós szintű Tenders Electronic Dailyn — meghirdetett pályázat natívan lefedett, az első naptól kezdve, mind a 27 országban. A kigyulladó zászlók azok a nemzeti portálok, amelyekhez közvetlenül csatlakozunk, piacról piacra.",
       "statusAvailable": "Aktív",
-      "statusComingSoon": "Hamarosan",
+      "statusComingSoon": "Bevezetés alatt",
+      "statusMapped": "Feltérképezett piacok",
+      "tedNative": "TED · natívan támogatott",
+      "nationalPortals": "Nemzeti portálok",
       "note": "A lefedettség mind a 27 EU-országba megérkezik."
     },
     "footer": {

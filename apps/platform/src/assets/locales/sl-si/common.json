@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 držav. Osvajamo jih eno za drugo.",
-      "body": "Širimo se po vsej Evropski uniji, trg za trgom. Vsaka zastava zasveti na dan, ko vaša država zaživi.",
+      "body": "Vsak razpis na TED-u — vseevropskem Tenders Electronic Daily — je nativno pokrit, od prvega dne, v vseh 27 državah. Zastave, ki zasvetijo, so nacionalni portali, s katerimi se povezujemo neposredno, trg za trgom.",
       "statusAvailable": "Aktivno",
-      "statusComingSoon": "Kmalu",
+      "statusComingSoon": "V uvajanju",
+      "statusMapped": "Kartirani trgi",
+      "tedNative": "TED · podprto nativno",
+      "nationalPortals": "Nacionalni portali",
       "note": "Pokritost prihaja v vseh 27 držav EU."
     },
     "footer": {

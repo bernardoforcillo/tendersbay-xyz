@@ -59,7 +59,7 @@ describe('CoverageSection', () => {
     // Italy flips to "Live" once GetCoverage resolves with ['IT'].
     expect(await screen.findByRole('button', { name: /Italy.*Live/i })).toBeInTheDocument();
     // A country not in the coverage set stays coming-soon.
-    expect(screen.getByRole('button', { name: /Poland.*Coming soon/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Poland.*In rollout/i })).toBeInTheDocument();
   });
 
   it('localizes country names via Intl.DisplayNames', async () => {

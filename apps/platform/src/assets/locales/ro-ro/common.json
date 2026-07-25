@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 de țări. Le luăm una câte una.",
-      "body": "Ne extindem în întreaga Uniune Europeană, piață cu piață. Fiecare steag se aprinde în ziua în care țara dvs. intră în funcțiune.",
+      "body": "Fiecare licitație de pe TED — Tenders Electronic Daily la nivelul întregii UE — este acoperită nativ, din prima zi, în toate cele 27 de țări. Steagurile care se aprind sunt portalurile naționale la care ne conectăm direct, piață cu piață.",
       "statusAvailable": "Activ",
-      "statusComingSoon": "În curând",
+      "statusComingSoon": "În curs de implementare",
+      "statusMapped": "Piețe mapate",
+      "tedNative": "TED · susținut nativ",
+      "nationalPortals": "Portaluri naționale",
       "note": "Acoperirea ajunge în toate cele 27 de țări UE."
     },
     "footer": {

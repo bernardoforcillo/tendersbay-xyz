@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 valstis. Ieņemam tās vienu pēc otras.",
-      "body": "Mēs paplašināmies visā Eiropas Savienībā, tirgu pēc tirgus. Katrs karogs iedegas dienā, kad jūsu valsts sāk darboties.",
+      "body": "Katrs iepirkums TED — Eiropas Savienības mēroga Tenders Electronic Daily — ir natīvi pārklāts jau no pirmās dienas visās 27 valstīs. Karogi, kas iedegas, ir nacionālie portāli, kuriem pievienojamies tieši, tirgu pēc tirgus.",
       "statusAvailable": "Aktīvs",
-      "statusComingSoon": "Drīzumā",
+      "statusComingSoon": "Ieviešanas procesā",
+      "statusMapped": "Kartētie tirgi",
+      "tedNative": "TED · atbalstīts natīvi",
+      "nationalPortals": "Nacionālie portāli",
       "note": "Pārklājums paplašinās visās 27 ES valstīs."
     },
     "footer": {

@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 Länder. Wir holen sie uns, eins nach dem anderen.",
-      "body": "Wir expandieren in der gesamten Europäischen Union, Markt für Markt. Jede Flagge leuchtet an dem Tag auf, an dem Ihr Land live geht.",
+      "body": "Jede Ausschreibung auf TED — dem EU-weiten Tenders Electronic Daily — ist von Tag eins an nativ abgedeckt, in allen 27 Ländern. Die Flaggen, die aufleuchten, sind die nationalen Portale, an die wir direkt angebunden sind, Markt für Markt.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Demnächst",
+      "statusComingSoon": "Im Rollout",
+      "statusMapped": "Erfasste Märkte",
+      "tedNative": "TED · nativ unterstützt",
+      "nationalPortals": "Nationale Portale",
       "note": "Die Abdeckung kommt in alle 27 EU-Länder."
     },
     "footer": {

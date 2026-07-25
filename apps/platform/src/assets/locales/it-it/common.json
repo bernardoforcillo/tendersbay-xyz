@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 paesi. Li conquistiamo uno a uno.",
-      "body": "Ci espandiamo in tutta l'Unione Europea, un mercato alla volta. Ogni bandiera si accende il giorno in cui il tuo paese va live.",
+      "body": "Ogni gara su TED — il Tenders Electronic Daily europeo — è coperta nativamente, dal primo giorno, in tutti e 27 i paesi. Le bandiere che si accendono sono i portali nazionali che integriamo direttamente, mercato per mercato.",
       "statusAvailable": "Attivo",
-      "statusComingSoon": "In arrivo",
+      "statusComingSoon": "In attivazione",
+      "statusMapped": "Mercati mappati",
+      "tedNative": "TED · supportato nativamente",
+      "nationalPortals": "Portali nazionali",
       "note": "La copertura sta arrivando in tutti i 27 paesi UE."
     },
     "footer": {

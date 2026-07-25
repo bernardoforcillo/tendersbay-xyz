@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 countries. We're taking them one by one.",
-      "body": "We're rolling out across the European Union, market by market. Every flag lights up the day your country goes live.",
+      "body": "Every tender on TED — the EU-wide Tenders Electronic Daily — is covered natively, day one, across all 27 countries. The flags that light up are the national portals we plug into directly, market by market.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Coming soon",
+      "statusComingSoon": "In rollout",
+      "statusMapped": "Markets mapped",
+      "tedNative": "TED · supported natively",
+      "nationalPortals": "National portals",
       "note": "Coverage is rolling out across all 27 EU countries."
     },
     "footer": {

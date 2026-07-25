@@ -293,9 +293,12 @@
     },
     "coverage": {
       "title": "27 zemalja. Osvajamo ih jednu po jednu.",
-      "body": "Širimo se diljem Europske unije, tržište po tržište. Svaka se zastava upali na dan kada vaša zemlja krene.",
+      "body": "Svaki natječaj na TED-u — paneuropskom Tenders Electronic Dailyju — pokriven je nativno, od prvog dana, u svih 27 zemalja. Zastave koje se pale predstavljaju nacionalne portale na koje se izravno povezujemo, tržište po tržište.",
       "statusAvailable": "Aktivno",
-      "statusComingSoon": "Uskoro",
+      "statusComingSoon": "U uvođenju",
+      "statusMapped": "Mapirana tržišta",
+      "tedNative": "TED · podržano nativno",
+      "nationalPortals": "Nacionalni portali",
       "note": "Pokrivenost stiže u svih 27 zemalja EU-a."
     },
     "footer": {

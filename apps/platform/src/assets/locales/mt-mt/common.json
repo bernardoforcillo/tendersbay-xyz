@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 pajjiż. Qed neħduhom wieħed wieħed.",
-      "body": "Qed nespandu mal-Unjoni Ewropea kollha, suq wara suq. Kull bandiera tixgħel fil-jum li pajjiżek jibda jaħdem.",
+      "body": "Kull sejħa għal offerti fuq TED — it-Tenders Electronic Daily madwar l-UE kollha — hija koperta b'mod nattiv, mill-ewwel jum, fis-27 pajjiż kollha. Il-bnadar li jixegħlu huma l-portali nazzjonali li magħhom nikkollegaw direttament, suq wara suq.",
       "statusAvailable": "Attiv",
-      "statusComingSoon": "Dalwaqt",
+      "statusComingSoon": "Qed jiġi implimentat",
+      "statusMapped": "Swieq immappjati",
+      "tedNative": "TED · appoġġjat b'mod nattiv",
+      "nationalPortals": "Portali nazzjonali",
       "note": "Il-kopertura qed tasal fis-27 pajjiż kollha tal-UE."
     },
     "footer": {

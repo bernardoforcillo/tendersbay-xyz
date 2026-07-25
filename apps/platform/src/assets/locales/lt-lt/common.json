@@ -293,9 +293,12 @@
     },
     "coverage": {
       "title": "27 šalys. Imame jas po vieną.",
-      "body": "Plečiamės visoje Europos Sąjungoje, rinka po rinkos. Kiekviena vėliava užsidega tą dieną, kai jūsų šalis pradeda veikti.",
+      "body": "Kiekvienas pirkimas TED sistemoje — visos ES Tenders Electronic Daily platformoje — yra natūraliai aprėptas nuo pirmos dienos visose 27 šalyse. Įsižiebiančios vėliavos žymi nacionalinius portalus, prie kurių jungiamės tiesiogiai, rinka po rinkos.",
       "statusAvailable": "Aktyvu",
-      "statusComingSoon": "Netrukus",
+      "statusComingSoon": "Diegiama",
+      "statusMapped": "Sužymėtos rinkos",
+      "tedNative": "TED · palaikoma natūraliai",
+      "nationalPortals": "Nacionaliniai portalai",
       "note": "Aprėptis pasiekia visas 27 ES šalis."
     },
     "footer": {

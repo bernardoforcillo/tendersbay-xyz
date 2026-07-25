@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 pays. On les prend un par un.",
-      "body": "Nous nous déployons dans toute l'Union européenne, marché après marché. Chaque drapeau s'illumine le jour où votre pays passe en ligne.",
+      "body": "Chaque appel d'offres sur TED — le Tenders Electronic Daily à l'échelle de l'UE — est couvert nativement, dès le premier jour, dans les 27 pays. Les drapeaux qui s'allument sont les portails nationaux auxquels nous nous connectons directement, marché par marché.",
       "statusAvailable": "En ligne",
-      "statusComingSoon": "Bientôt",
+      "statusComingSoon": "En déploiement",
+      "statusMapped": "Marchés cartographiés",
+      "tedNative": "TED · pris en charge nativement",
+      "nationalPortals": "Portails nationaux",
       "note": "La couverture arrive dans les 27 pays de l'UE."
     },
     "footer": {

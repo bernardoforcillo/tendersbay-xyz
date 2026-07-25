@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 lande. Vi tager dem ét ad gangen.",
-      "body": "Vi udvider i hele Den Europæiske Union, marked for marked. Hvert flag lyser op den dag, dit land går live.",
+      "body": "Hvert udbud på TED — det EU-dækkende Tenders Electronic Daily — er dækket nativt, fra dag ét, i alle 27 lande. De flag, der lyser op, er de nationale portaler, vi kobler os direkte til, marked for marked.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Kommer snart",
+      "statusComingSoon": "Under udrulning",
+      "statusMapped": "Kortlagte markeder",
+      "tedNative": "TED · understøttet nativt",
+      "nationalPortals": "Nationale portaler",
       "note": "Dækningen er på vej til alle 27 EU-lande."
     },
     "footer": {

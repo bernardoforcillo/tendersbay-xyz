@@ -293,9 +293,12 @@
     },
     "coverage": {
       "title": "27 krajín. Berieme ich jednu po druhej.",
-      "body": "Rozširujeme sa po celej Európskej únii, trh za trhom. Každá vlajka sa rozsvieti v deň, keď vaša krajina nabehne.",
+      "body": "Každá zákazka na TED — celoúnijnom Tenders Electronic Daily — je pokrytá natívne, od prvého dňa, vo všetkých 27 krajinách. Vlajky, ktoré sa rozsvietia, sú národné portály, na ktoré sa napájame priamo, trh po trhu.",
       "statusAvailable": "Aktívne",
-      "statusComingSoon": "Čoskoro",
+      "statusComingSoon": "Prebieha zavádzanie",
+      "statusMapped": "Zmapované trhy",
+      "tedNative": "TED · podporované natívne",
+      "nationalPortals": "Národné portály",
       "note": "Pokrytie prichádza do všetkých 27 krajín EÚ."
     },
     "footer": {

@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 riiki. Võtame need ükshaaval.",
-      "body": "Laieneme üle kogu Euroopa Liidu, turgude kaupa. Iga lipp süttib päeval, mil teie riik käivitub.",
+      "body": "Iga hange TED-is — üle-euroopalises Tenders Electronic Daily platvormis — on kaetud algupäraselt, esimesest päevast, kõigis 27 riigis. Süttivad lipud tähistavad riiklikke portaale, millega ühendume otse, turg turu haaval.",
       "statusAvailable": "Aktiivne",
-      "statusComingSoon": "Tulekul",
+      "statusComingSoon": "Kasutuselevõtul",
+      "statusMapped": "Turud kaardistatud",
+      "tedNative": "TED · toetatud algupäraselt",
+      "nationalPortals": "Riiklikud portaalid",
       "note": "Kaetus jõuab kõigisse 27 EL-i riiki."
     },
     "footer": {

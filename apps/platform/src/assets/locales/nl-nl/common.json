@@ -289,9 +289,12 @@
     },
     "coverage": {
       "title": "27 landen. We nemen ze één voor één in.",
-      "body": "We breiden uit over de hele Europese Unie, markt voor markt. Elke vlag licht op op de dag dat uw land live gaat.",
+      "body": "Elke aanbesteding op TED — het EU-brede Tenders Electronic Daily — wordt vanaf dag één native gedekt, in alle 27 landen. De vlaggen die oplichten zijn de nationale portalen waarmee we rechtstreeks zijn verbonden, markt voor markt.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Binnenkort",
+      "statusComingSoon": "Wordt uitgerold",
+      "statusMapped": "Markten in kaart gebracht",
+      "tedNative": "TED · native ondersteund",
+      "nationalPortals": "Nationale portalen",
       "note": "De dekking komt naar alle 27 EU-landen."
     },
     "footer": {
