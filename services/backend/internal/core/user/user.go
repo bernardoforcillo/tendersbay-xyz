@@ -41,6 +41,7 @@ func (s *Service) UpdateProfile(ctx context.Context, userID, displayName string)
 }
 
 func (s *Service) ChangeEmail(ctx context.Context, userID, newEmail, plainPassword, locale string) error {
+	newEmail = auth.NormalizeEmail(newEmail)
 	user, err := s.users.FindByID(ctx, userID)
 	if err != nil {
 		return auth.ErrNotFound

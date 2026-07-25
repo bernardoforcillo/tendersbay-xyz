@@ -103,7 +103,7 @@ func TestTurnStateFor_ReturnsSamePointerAcrossCalls(t *testing.T) {
 func TestCreateWorkbenchTool_CallsCallbackWithParsedArgs(t *testing.T) {
 	var gotName, gotDescription string
 	var gotVisibility workbench.Visibility
-	tool := newCreateWorkbenchTool(func(name, description string, visibility workbench.Visibility) (workbench.Workbench, error) {
+	tool := newCreateWorkbenchTool(&turnState{}, func(name, description string, visibility workbench.Visibility) (workbench.Workbench, error) {
 		gotName, gotDescription, gotVisibility = name, description, visibility
 		return workbench.Workbench{ID: "wb-1", Name: name, Visibility: visibility}, nil
 	})
@@ -125,7 +125,7 @@ func TestCreateWorkbenchTool_CallsCallbackWithParsedArgs(t *testing.T) {
 
 func TestCreateWorkbenchTool_DefaultsUnknownVisibilityToPrivate(t *testing.T) {
 	var gotVisibility workbench.Visibility
-	tool := newCreateWorkbenchTool(func(_, _ string, visibility workbench.Visibility) (workbench.Workbench, error) {
+	tool := newCreateWorkbenchTool(&turnState{}, func(_, _ string, visibility workbench.Visibility) (workbench.Workbench, error) {
 		gotVisibility = visibility
 		return workbench.Workbench{}, nil
 	})
@@ -140,7 +140,7 @@ func TestCreateWorkbenchTool_DefaultsUnknownVisibilityToPrivate(t *testing.T) {
 }
 
 func TestCreateWorkbenchTool_RejectsMissingName(t *testing.T) {
-	tool := newCreateWorkbenchTool(func(string, string, workbench.Visibility) (workbench.Workbench, error) {
+	tool := newCreateWorkbenchTool(&turnState{}, func(string, string, workbench.Visibility) (workbench.Workbench, error) {
 		t.Fatal("callback should not run without a name")
 		return workbench.Workbench{}, nil
 	})
@@ -290,5 +290,58 @@ func TestSearchTendersTool_SearchErrorDoesNotAffectEmptyStreak(t *testing.T) {
 	}
 	if !strings.Contains(result, "STOP calling search_tenders") {
 		t.Fatalf("call 6 result = %q, want the notice (5 empty calls: 1,2,4,5,6 — call 3 errored and must not have contributed)", result)
+	}
+}
+
+func TestSearchTendersTool_EmitsRunningThenDoneBreadcrumbs(t *testing.T) {
+	ts := &turnState{}
+	var got []ToolCall
+	ts.sendToolCall = func(tc ToolCall) error { got = append(got, tc); return nil }
+
+	tool := newSearchTendersTool(ts, func(string, string, string, string) ([]tender.ScoredTender, error) {
+		return []tender.ScoredTender{{Tender: tender.Tender{ID: "1"}}}, nil
+	})
+	args, _ := json.Marshal(map[string]any{"query": "x"})
+	if _, err := tool.Execute(context.Background(), string(args)); err != nil {
+		t.Fatalf("Execute: %v", err)
+	}
+	want := []ToolCall{{Name: "search_tenders", Status: "running"}, {Name: "search_tenders", Status: "done"}}
+	if len(got) != 2 || got[0] != want[0] || got[1] != want[1] {
+		t.Fatalf("breadcrumbs = %+v, want %+v", got, want)
+	}
+}
+
+func TestSearchTendersTool_EmitsDoneEvenOnSearchError(t *testing.T) {
+	ts := &turnState{}
+	var got []ToolCall
+	ts.sendToolCall = func(tc ToolCall) error { got = append(got, tc); return nil }
+
+	tool := newSearchTendersTool(ts, func(string, string, string, string) ([]tender.ScoredTender, error) {
+		return nil, errors.New("boom")
+	})
+	args, _ := json.Marshal(map[string]any{"query": "x"})
+	if _, err := tool.Execute(context.Background(), string(args)); err == nil {
+		t.Fatal("Execute: want the search error propagated")
+	}
+	if len(got) != 2 || got[1].Status != "done" {
+		t.Fatalf("breadcrumbs = %+v, want a trailing done even on error", got)
+	}
+}
+
+func TestCreateWorkbenchTool_EmitsRunningThenDoneBreadcrumbs(t *testing.T) {
+	ts := &turnState{}
+	var got []ToolCall
+	ts.sendToolCall = func(tc ToolCall) error { got = append(got, tc); return nil }
+
+	tool := newCreateWorkbenchTool(ts, func(name, _ string, v workbench.Visibility) (workbench.Workbench, error) {
+		return workbench.Workbench{ID: "wb-1", Name: name, Visibility: v}, nil
+	})
+	args, _ := json.Marshal(map[string]any{"name": "X", "visibility": "private"})
+	if _, err := tool.Execute(context.Background(), string(args)); err != nil {
+		t.Fatalf("Execute: %v", err)
+	}
+	want := []ToolCall{{Name: "create_workbench", Status: "running"}, {Name: "create_workbench", Status: "done"}}
+	if len(got) != 2 || got[0] != want[0] || got[1] != want[1] {
+		t.Fatalf("breadcrumbs = %+v, want %+v", got, want)
 	}
 }

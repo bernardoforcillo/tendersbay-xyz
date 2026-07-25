@@ -54,3 +54,15 @@ func Hash(plain string) (string, error) {
 func Verify(plain, hash string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(plain)) == nil
 }
+
+// dummyHash is a valid bcrypt hash (of a throwaway value) computed once at
+// startup. VerifyDummy compares against it so a caller whose user lookup
+// missed still spends the same ~bcrypt time a real Verify would — closing the
+// timing side channel that otherwise reveals whether an email is registered.
+var dummyHash, _ = bcrypt.GenerateFromPassword([]byte("timing-equalizer"), bcrypt.DefaultCost)
+
+// VerifyDummy runs a bcrypt comparison against a throwaway hash purely to
+// equalize timing on a not-found path. It ignores its result.
+func VerifyDummy(plain string) {
+	_ = bcrypt.CompareHashAndPassword(dummyHash, []byte(plain))
+}

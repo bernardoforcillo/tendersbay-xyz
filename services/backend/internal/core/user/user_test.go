@@ -44,7 +44,7 @@ func (n *nopSessions) Create(_ context.Context, s auth.Session) (auth.Session, e
 func (n *nopSessions) FindByTokenHash(_ context.Context, _ string) (auth.Session, error) {
 	return auth.Session{}, auth.ErrNotFound
 }
-func (n *nopSessions) Delete(_ context.Context, _ string) error        { return nil }
+func (n *nopSessions) Delete(_ context.Context, _ string) error         { return nil }
 func (n *nopSessions) DeleteByUserID(_ context.Context, _ string) error { return nil }
 
 type nopEVs struct{}
@@ -55,7 +55,7 @@ func (n *nopEVs) Create(_ context.Context, ev auth.EmailVerification) (auth.Emai
 func (n *nopEVs) FindByTokenHash(_ context.Context, _ string) (auth.EmailVerification, error) {
 	return auth.EmailVerification{}, auth.ErrNotFound
 }
-func (n *nopEVs) Delete(_ context.Context, _ string) error        { return nil }
+func (n *nopEVs) Delete(_ context.Context, _ string) error         { return nil }
 func (n *nopEVs) DeleteByUserID(_ context.Context, _ string) error { return nil }
 
 type nopEmail struct{}
@@ -63,6 +63,7 @@ type nopEmail struct{}
 func (n *nopEmail) SendVerification(_ context.Context, _, _, _ string) error            { return nil }
 func (n *nopEmail) SendPasswordReset(_ context.Context, _, _, _ string) error           { return nil }
 func (n *nopEmail) SendEmailChangeVerification(_ context.Context, _, _, _ string) error { return nil }
+func (n *nopEmail) SendAccountExists(_ context.Context, _, _ string) error              { return nil }
 
 func TestChangePassword_WrongCurrent(t *testing.T) {
 	hash, _ := password.Hash("Secure!Pass123")

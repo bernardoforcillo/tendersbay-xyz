@@ -60,8 +60,11 @@ func main() {
 	}
 	defer func() { _ = shutdown(context.Background()) }()
 
-	if cfg.DatabaseURL == "" {
-		slog.Error("DATABASE_URL is required")
+	// Fail closed on a missing/weak required secret (DATABASE_URL, JWT_SECRET)
+	// before doing any work — an empty JWT_SECRET would otherwise let the HS256
+	// signer verify forged tokens signed with an empty key.
+	if err := cfg.Validate(); err != nil {
+		slog.Error("invalid configuration", "error", err)
 		os.Exit(1)
 	}
 
@@ -93,6 +96,7 @@ func main() {
 		SendVerification(ctx context.Context, to, displayName, link string) error
 		SendPasswordReset(ctx context.Context, to, displayName, link string) error
 		SendEmailChangeVerification(ctx context.Context, to, displayName, link string) error
+		SendAccountExists(ctx context.Context, to, displayName string) error
 		SendWorkspaceInvite(ctx context.Context, to, workspaceName, inviterName, link string) error
 	}
 	if cfg.ResendAPIKey == "" {
@@ -102,6 +106,26 @@ func main() {
 		mailer = email.NewResend(cfg.ResendAPIKey, "noreply@tendersbay.xyz")
 	}
 
+	// Redis-backed rate limiter, shared by the auth service (login/signup/
+	// forgot-password brute-force protection) and tender search. A Redis
+	// failure is logged, not fatal: tender search fails its rate-limit CHECK
+	// closed (unavailableRateLimiter denies), while the auth service fails its
+	// checks OPEN (see auth.Service.allow) so an outage can't lock everyone out.
+	var rl tender.RateLimiter
+	rateLimiter, rlErr := redis.NewRateLimiter(cfg.RedisURL)
+	if rlErr != nil {
+		slog.Warn("failed to connect to redis, search will be rate-limited to zero", "error", rlErr)
+		rl = unavailableRateLimiter{err: rlErr}
+	} else {
+		rl = rateLimiter
+		if pingErr := rateLimiter.Ping(ctx); pingErr != nil {
+			slog.Warn("redis ping failed at startup, rate limiting may be degraded", "error", pingErr)
+		}
+	}
+	if rateLimiter != nil {
+		defer rateLimiter.Close()
+	}
+
 	authCfg := auth.Config{
 		JWTSecret:     cfg.JWTSecret,
 		JWTExpiry:     cfg.JWTExpiry,
@@ -109,7 +133,7 @@ func main() {
 		AppBaseURL:    cfg.AppBaseURL,
 	}
 
-	authSvc := auth.NewService(userRepo, sessionRepo, evRepo, prRepo, mailer, authCfg)
+	authSvc := auth.NewService(userRepo, sessionRepo, evRepo, prRepo, mailer, rl, authCfg)
 	userSvc := user.NewService(userRepo, sessionRepo, evRepo, mailer, authCfg)
 	workspaceSvc := workspace.NewService(
 		workspaceRepo, roleRepo, memberRepo, emailInviteRepo, inviteLinkRepo,
@@ -138,21 +162,6 @@ func main() {
 	kb, kbErr := knowledge.NewKnowledgeBase(ctx, cfg.QdrantURL, cfg.OllamaBaseURL, cfg.EmbeddingModel)
 	if kbErr != nil {
 		slog.Warn("failed to connect to knowledge base, semantic search will be degraded", "error", kbErr)
-	}
-
-	var rl tender.RateLimiter
-	rateLimiter, rlErr := redis.NewRateLimiter(cfg.RedisURL)
-	if rlErr != nil {
-		slog.Warn("failed to connect to redis, search will be rate-limited to zero", "error", rlErr)
-		rl = unavailableRateLimiter{err: rlErr}
-	} else {
-		rl = rateLimiter
-		if pingErr := rateLimiter.Ping(ctx); pingErr != nil {
-			slog.Warn("redis ping failed at startup, rate limiting may be degraded", "error", pingErr)
-		}
-	}
-	if rateLimiter != nil {
-		defer rateLimiter.Close()
 	}
 
 	tenderRepo := postgres.NewTenderRepo(db)
@@ -189,7 +198,7 @@ func main() {
 	agentRegistry.RegisterDefaults()
 
 	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
-	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, clientProfileSvc)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)

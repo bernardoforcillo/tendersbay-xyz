@@ -199,6 +199,33 @@ func (s *Service) ListWorkbenches(ctx context.Context, userID, workspaceID strin
 	return out, nil
 }
 
+// CanAccessWorkbench returns nil when userID may view workbenchID (its owner,
+// an explicit member, a workspace owner/admin/manage-workbenches, or a shared
+// workbench viewable by a workspace member with VIEW_WORKBENCHES), and
+// ErrWorkbenchNotFound / ErrForbidden otherwise. It reuses the exact same
+// authorize path GetWorkbench uses, so an external caller (e.g. the agent chat
+// service gating access to a workbench-scoped chat) gets an identical decision.
+func (s *Service) CanAccessWorkbench(ctx context.Context, userID, workbenchID string) error {
+	_, err := s.authorize(ctx, workbenchID, userID, PermViewWorkbench)
+	return err
+}
+
+// AccessibleWorkbenchIDs returns the set of workbench IDs in workspaceID that
+// userID may view — the same visibility ListWorkbenches applies, indexed for an
+// O(1) membership test. Used to filter workbench-scoped chats in a workspace
+// listing without a per-row authorize round trip.
+func (s *Service) AccessibleWorkbenchIDs(ctx context.Context, userID, workspaceID string) (map[string]struct{}, error) {
+	wbs, err := s.ListWorkbenches(ctx, userID, workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	ids := make(map[string]struct{}, len(wbs))
+	for _, wb := range wbs {
+		ids[wb.ID] = struct{}{}
+	}
+	return ids, nil
+}
+
 // GetWorkbench returns the workbench, the caller's effective permissions, and
 // the parent workspace name (for the breadcrumb).
 func (s *Service) GetWorkbench(ctx context.Context, userID, workbenchID string) (Workbench, Permission, string, error) {

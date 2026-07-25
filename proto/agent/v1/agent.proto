@@ -119,6 +119,7 @@ message ChatStreamResponse {
     StreamError error = 3;      // non-recoverable error, stream ends
     StreamDone done = 4;        // stream completed successfully
     TenderResults tender_results = 5;  // search_tenders returned ≥1 result
+    ToolCall tool_call = 6;     // agent invoked a tool (breadcrumb)
   }
 }
 
@@ -131,6 +132,14 @@ message ChoicePrompt {
 
 message TenderResults {
   repeated tender.v1.TenderResult tenders = 1;
+}
+
+// ToolCall is a breadcrumb: the agent started ("running") or finished
+// ("done") invoking a named tool. Emitted proactively by the tool's own
+// code — it does NOT depend on the model surfacing tool-call delimiters.
+message ToolCall {
+  string name = 1;    // "search_tenders" | "create_workbench"
+  string status = 2;  // "running" | "done"
 }
 
 message StreamError {

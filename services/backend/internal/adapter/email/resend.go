@@ -42,6 +42,9 @@ var (
 	workspaceInviteTmpl = template.Must(template.New("").Parse(
 		`<p>Hi,</p><p>{{.Inviter}} invited you to join the <strong>{{.Workspace}}</strong> workspace on Tendersbay.</p><p><a href="{{.Link}}">Accept invitation</a></p>`,
 	))
+	accountExistsTmpl = template.Must(template.New("").Parse(
+		`<p>Hi {{.Name}},</p><p>Someone just tried to create a Tendersbay account with this email address, but you already have one. If this was you, simply sign in — you can reset your password if you've forgotten it. If it wasn't you, no action is needed.</p>`,
+	))
 )
 
 func renderEmail(tmpl *template.Template, name, link string) (string, error) {
@@ -72,6 +75,14 @@ func (r *ResendSender) SendEmailChangeVerification(ctx context.Context, to, disp
 		return fmt.Errorf("render email change email: %w", err)
 	}
 	return r.send(ctx, to, "Confirm your new email — Tendersbay", body)
+}
+
+func (r *ResendSender) SendAccountExists(ctx context.Context, to, displayName string) error {
+	var buf bytes.Buffer
+	if err := accountExistsTmpl.Execute(&buf, struct{ Name string }{displayName}); err != nil {
+		return fmt.Errorf("render account exists email: %w", err)
+	}
+	return r.send(ctx, to, "You already have a Tendersbay account", buf.String())
 }
 
 func (r *ResendSender) SendWorkspaceInvite(ctx context.Context, to, workspaceName, inviterName, link string) error {
