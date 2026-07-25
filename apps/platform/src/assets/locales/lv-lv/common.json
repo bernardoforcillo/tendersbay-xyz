@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Aģenti, nevis vēl viens meklēšanas lodziņš",
       "title": "Lūk, ko jūsu aģenti paveica, kamēr jūs gulējāt.",
       "lead": "Nevis ātrāka meklēšanas josla, kas jums joprojām jāvada pašam. Aģentu komanda, kas apstrādā visu iepirkumu — atrod, sagatavo, uzvar — nakts laikā, lai jūs pamostos jau sacensībā.",
       "items": [

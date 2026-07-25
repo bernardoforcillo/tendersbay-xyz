@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenti, non l'ennesima casella di ricerca",
       "title": "Ecco cosa hanno fatto i tuoi agenti mentre dormivi.",
       "lead": "Non una barra di ricerca più veloce che devi comunque guidare tu. Una squadra di agenti che lavora l’intera gara — scova, prepara, vince — nella notte, così ti svegli già in corsa.",
       "items": [

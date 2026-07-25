@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentit, ei toinen hakulaatikko",
       "title": "Tässä on, mitä agenttisi tekivät nukkuessasi.",
       "lead": "Ei nopeampi hakupalkki, jota sinun on silti itse ohjattava. Tiimi agentteja, joka työstää koko hankinnan — löytää, valmistelee, voittaa — yön aikana, niin että heräät jo mukana kisassa.",
       "items": [

@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenci, nie kolejna wyszukiwarka",
       "title": "Oto co zrobili twoi agenci, gdy spałeś.",
       "lead": "Nie szybsza wyszukiwarka, którą i tak musisz sterować sam. Zespół agentów, który obrabia cały przetarg — znajduje, przygotowuje, wygrywa — przez noc, żebyś obudził się już w grze.",
       "items": [

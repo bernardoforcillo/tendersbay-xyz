@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenter, ikke endnu en søgeboks",
       "title": "Her er, hvad dine agenter lavede, mens du sov.",
       "lead": "Ikke en hurtigere søgefelt, som du stadig selv skal styre. Et team af agenter, der arbejder med hele udbuddet — finder, forbereder, vinder — om natten, så du vågner allerede med i kampen.",
       "items": [

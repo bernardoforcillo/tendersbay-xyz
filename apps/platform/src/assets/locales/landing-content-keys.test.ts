@@ -5,7 +5,7 @@ type AgentItem = { time?: string; title?: string; body?: string };
 type Stat = { value?: string; label?: string };
 type Landing = {
   proof?: { lead?: string; items?: Stat[]; source?: string };
-  agents?: { lead?: string; title?: string; items?: AgentItem[] };
+  agents?: { eyebrow?: string; lead?: string; title?: string; items?: AgentItem[] };
   audience?: { title?: string; items?: Card[] };
   assurance?: { eyebrow?: string; title?: string; items?: Card[] };
   cta?: { title?: string; body?: string; button?: string };
@@ -65,6 +65,7 @@ describe('landing proof-strip + agents-lead locale keys', () => {
     expect(typeof agents?.lead, 'agents.lead is a string').toBe('string');
     expect(agents?.lead, 'agents.lead non-empty').toBeTruthy();
     expect(agents?.title, 'agents.title non-empty').toBeTruthy();
+    expect(agents?.eyebrow, 'agents.eyebrow non-empty').toBeTruthy();
     const items = agents?.items;
     expect(Array.isArray(items) && items.length === 3, 'agents.items has 3 cards').toBe(true);
     expect(

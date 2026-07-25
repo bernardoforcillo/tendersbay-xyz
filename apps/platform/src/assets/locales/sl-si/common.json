@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenti, ne še eno iskalno polje",
       "title": "Tole so vaši agenti postorili, medtem ko ste spali.",
       "lead": "Ne hitrejša iskalna vrstica, ki jo morate vseeno upravljati sami. Ekipa agentov, ki obdela celotno naročilo — poišče, pripravi, zmaga — čez noč, da se zbudite že v tekmi.",
       "items": [

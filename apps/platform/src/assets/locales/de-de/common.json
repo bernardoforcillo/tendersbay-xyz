@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenten, nicht noch ein Suchfeld",
       "title": "Das haben Ihre Agenten getan, während Sie schliefen.",
       "lead": "Keine schnellere Suchleiste, die Sie trotzdem selbst bedienen müssen. Ein Team von Agenten, das die ganze Ausschreibung bearbeitet — finden, vorbereiten, gewinnen — über Nacht, sodass Sie schon im Rennen aufwachen.",
       "items": [

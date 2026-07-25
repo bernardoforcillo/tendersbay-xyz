@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Gníomhairí, ní bosca cuardaigh eile",
       "title": "Seo a rinne do chuid gníomhairí agus tú i do chodladh.",
       "lead": "Ní barra cuardaigh níos tapúla a chaithfidh tú a stiúradh fós. Foireann gníomhairí a oibríonn an tairiscint iomlán — aimsiú, ullmhú, buachan — thar oíche, ionas go músclaíonn tú agus tú san iomaíocht cheana.",
       "items": [

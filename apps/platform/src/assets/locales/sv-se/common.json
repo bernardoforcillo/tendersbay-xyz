@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenter, inte ännu en sökruta",
       "title": "Det här gjorde dina agenter medan du sov.",
       "lead": "Inte en snabbare sökruta som du ändå måste styra själv. Ett team av agenter som arbetar med hela upphandlingen — hittar, förbereder, vinner — under natten, så att du vaknar redan med i loppet.",
       "items": [

@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Aġenti, mhux search box ieħor",
       "title": "Dan hu li għamlu l-aġenti tiegħek waqt li kont rieqed.",
       "lead": "Mhux search bar aktar mgħaġġla li xorta trid tħaddem int. Tim ta’ aġenti li jaħdem is-sejħa kollha — isib, iħejji, jirbaħ — matul il-lejl, biex tqum diġà fit-tellieqa.",
       "items": [

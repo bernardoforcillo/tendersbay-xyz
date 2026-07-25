@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentai, ne dar vienas paieškos langelis",
       "title": "Štai ką jūsų agentai nuveikė, kol miegojote.",
       "lead": "Ne greitesnė paieškos juosta, kurią vis tiek turite valdyti patys. Agentų komanda, dirbanti visą pirkimą — randa, parengia, laimi — per naktį, kad pabustumėte jau lenktynėse.",
       "items": [

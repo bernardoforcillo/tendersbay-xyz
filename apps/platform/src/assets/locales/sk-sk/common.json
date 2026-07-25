@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenti, nie ďalšie vyhľadávacie políčko",
       "title": "Toto urobili vaši agenti, kým ste spali.",
       "lead": "Nie rýchlejšie vyhľadávacie pole, ktoré aj tak musíte riadiť vy. Tím agentov, ktorý spracuje celú zákazku — nájde, pripraví, vyhrá — cez noc, aby ste sa zobudili už v hre.",
       "items": [

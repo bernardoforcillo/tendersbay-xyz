@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Des agents, pas une énième boîte de recherche",
       "title": "Voici ce que vos agents ont fait pendant votre sommeil.",
       "lead": "Pas une barre de recherche plus rapide que vous devez quand même piloter. Une équipe d’agents qui traite l’appel d’offres de bout en bout — trouver, préparer, remporter — pendant la nuit, pour que vous vous réveilliez déjà dans la course.",
       "items": [

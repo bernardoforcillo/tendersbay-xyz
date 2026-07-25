@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agendid, mitte veel üks otsingukast",
       "title": "Vaadake, mida teie agendid tegid, kui te magasite.",
       "lead": "Mitte kiirem otsinguriba, mida peate ikkagi ise juhtima. Agentide meeskond, kes töötab läbi kogu hanke — leiab, valmistab ette, võidab — öö jooksul, nii et ärkate juba mängus.",
       "items": [

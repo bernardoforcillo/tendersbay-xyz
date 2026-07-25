@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentes, no otro cuadro de búsqueda",
       "title": "Esto es lo que hicieron tus agentes mientras dormías.",
       "lead": "No una barra de búsqueda más rápida que aun así tienes que pilotar tú. Un equipo de agentes que trabaja la licitación entera — encontrar, preparar, ganar — durante la noche, para que despiertes ya en la carrera.",
       "items": [

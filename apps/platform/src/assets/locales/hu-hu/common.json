@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Ügynökök, nem még egy keresőmező",
       "title": "Íme, mit végeztek az ügynökei, amíg Ön aludt.",
       "lead": "Nem egy gyorsabb keresősáv, amit még mindig Önnek kell vezérelnie. Egy ügynökcsapat, amely a teljes pályázatot végigviszi — megtalál, előkészít, nyer — éjszaka, hogy már versenyben ébredjen.",
       "items": [
