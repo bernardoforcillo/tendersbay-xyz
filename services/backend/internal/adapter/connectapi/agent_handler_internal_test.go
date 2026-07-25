@@ -26,3 +26,10 @@ func TestToProtoTenderResults_ConvertsEachTenderWithoutEuThreshold(t *testing.T)
 		t.Fatalf("EuThreshold = %q, want empty (this path has no *tender.Service to compute a band from)", tr0.EuThreshold)
 	}
 }
+
+func TestToProtoToolCall_MapsNameAndStatus(t *testing.T) {
+	got := toProtoToolCall(agent.ToolCall{Name: "search_tenders", Status: "running"})
+	if got.Name != "search_tenders" || got.Status != "running" {
+		t.Fatalf("got = %+v, want {search_tenders running}", got)
+	}
+}
