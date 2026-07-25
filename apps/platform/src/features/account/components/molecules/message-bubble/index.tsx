@@ -1,6 +1,7 @@
+import { usePostHog } from 'posthog-js/react';
 import { ChoicePromptCard } from '~/features/account/components/molecules/choice-prompt-card';
 import { TenderResultsTable } from '~/features/account/components/organisms/tender-results-table';
-import type { ChatMessage } from '~/store/chat';
+import { type ChatMessage, useChatStore } from '~/store/chat';
 
 type MessageBubbleProps = {
   message: ChatMessage;
@@ -9,6 +10,8 @@ type MessageBubbleProps = {
 };
 
 export function MessageBubble({ message, isPendingChoice, onSubmitChoice }: MessageBubbleProps) {
+  const posthog = usePostHog();
+
   if (message.role === 'choice_prompt') {
     return (
       <ChoicePromptCard
@@ -25,7 +28,17 @@ export function MessageBubble({ message, isPendingChoice, onSubmitChoice }: Mess
     return (
       <div className="flex justify-start">
         <div className="w-full">
-          <TenderResultsTable tenders={message.tenders ?? []} />
+          <TenderResultsTable
+            tenders={message.tenders ?? []}
+            onOpen={(tender) => {
+              useChatStore.getState().incTendersOpened();
+              posthog?.capture('chat_tender_card_opened', {
+                location: 'explore_chat',
+                // Chat search is client-agnostic, so a card carries no fit tier.
+                fit_tier: tender.fitTier || 'none',
+              });
+            }}
+          />
         </div>
       </div>
     );

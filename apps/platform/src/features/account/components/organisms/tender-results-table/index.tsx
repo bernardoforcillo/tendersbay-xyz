@@ -28,6 +28,7 @@ const FIT_LABEL: Record<FitTier, { key: string; defaultValue: string }> = {
 
 export type TenderResultsTableProps = {
   tenders: TenderResult[];
+  onOpen?: (tender: TenderResult) => void;
 };
 
 function sortIcon(active: boolean, dir: SortDir) {
@@ -35,7 +36,7 @@ function sortIcon(active: boolean, dir: SortDir) {
   return dir === 'asc' ? <ArrowUp size={11} /> : <ArrowDown size={11} />;
 }
 
-export function TenderResultsTable({ tenders }: TenderResultsTableProps) {
+export function TenderResultsTable({ tenders, onOpen }: TenderResultsTableProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDir }>({ key: 'fitTier', dir: 'asc' });
@@ -145,10 +146,15 @@ export function TenderResultsTable({ tenders }: TenderResultsTableProps) {
               <tr
                 key={tender.id}
                 tabIndex={0}
-                onClick={() => void navigate({ to: '/tenders/$id', params: { id: tender.id } })}
+                onClick={() => {
+                  onOpen?.(tender);
+                  void navigate({ to: '/tenders/$id', params: { id: tender.id } });
+                }}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ')
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    onOpen?.(tender);
                     void navigate({ to: '/tenders/$id', params: { id: tender.id } });
+                  }
                 }}
                 className={cn(
                   'group cursor-pointer transition-colors hover:bg-cream-50 focus-visible:bg-cream-50 focus-visible:outline-none',

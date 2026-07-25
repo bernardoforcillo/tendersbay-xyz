@@ -1,11 +1,15 @@
 import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { renderWithI18n } from '~/test/utils';
 
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => vi.fn(),
 }));
+
+const captureMock = vi.fn();
+vi.mock('posthog-js/react', () => ({ usePostHog: () => ({ capture: captureMock }) }));
 
 import { MessageBubble } from './index';
 
@@ -64,5 +68,29 @@ describe('MessageBubble', () => {
       />,
     );
     expect(screen.getByText('Ciao, come posso aiutarti?')).toBeInTheDocument();
+  });
+
+  it('fires chat_tender_card_opened when a tender row is activated', async () => {
+    const user = userEvent.setup();
+    renderWithI18n(
+      <MessageBubble
+        message={{
+          id: 'm-1',
+          role: 'tender_results',
+          content: '',
+          createdAt: '',
+          tenders: [tenderFixture({ title: 'Cestini intelligenti' })],
+        }}
+        isPendingChoice={false}
+        onSubmitChoice={vi.fn()}
+      />,
+    );
+
+    await user.click(screen.getByText('Cestini intelligenti'));
+
+    expect(captureMock).toHaveBeenCalledWith(
+      'chat_tender_card_opened',
+      expect.objectContaining({ location: 'explore_chat', fit_tier: 'none' }),
+    );
   });
 });
