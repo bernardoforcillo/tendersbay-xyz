@@ -170,8 +170,8 @@
       "results_other": "{{count}} sejħiet"
     },
     "meta": {
-      "title": "tendersbay — Sejħiet għall-offerti, mogħtija mill-aġenti AI",
-      "description": "Aġenti AI li jfittxu l-aħjar sejħiet għall-offerti pubbliċi madwar l-Ewropa, ifarrku l-burokrazija, u jwasslu lill-SME tiegħek mill-ewwel sejħa sal-għoti tal-kuntratt."
+      "title": "tendersbay — Sejħiet għall-offerti tal-UE, misjuba u mogħtija mill-aġenti AI",
+      "description": "Aġenti AI li jfittxu s-sejħiet pubbliċi t-tajba fis-27 pajjiż kollha tal-UE, ifarrku l-burokrazija, u jwasslu lill-SME tiegħek mill-opportunità sal-għoti tal-kuntratt."
     },
     "nav": {
       "problem": "L-Ispiża",
@@ -179,11 +179,11 @@
       "vision": "Viżjoni"
     },
     "hero": {
-      "titleLead": "Is-sejħa li diġà qisuha tagħhom?",
-      "titleHighlight": "Mogħtija.",
-      "subtitle": "Illejla tagħlaq sejħa b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
+      "titleLead": "Kull sejħa pubblika għall-offerti fi 27 pajjiż — misjuba, ippreparata,",
+      "titleHighlight": "mogħtija.",
+      "subtitle": "Is-SME tiegħek ma għandhiex uffiċċju tal-offerti. Lanqas ma teħtieġ wieħed. Tim ta' aġenti AI ifittex is-sejħiet it-tajba madwar l-UE kollha, jieħu ħsieb il-burokrazija, u jibni l-offerta tiegħek matul il-lejl — waqt li t-tim tal-kbar ikun rieqed.",
       "ctaPrimary": "Poġġi l-aġenti tiegħek jaħdmu",
-      "ctaSecondary": "Ara l-viżjoni",
+      "ctaSecondary": "Ara kif taħdem",
       "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"],
       "deckLabel": "Riżultati ta' eżempju"
     },

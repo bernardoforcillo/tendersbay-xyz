@@ -170,8 +170,8 @@
       "results_other": "{{count}} hanget"
     },
     "meta": {
-      "title": "tendersbay — Euroopa riigihanked, lepinguni teie AI-agentide abil",
-      "description": "Tehisintellekti agendid, kes jälitavad õigeid riigihankeid üle Euroopa, purustavad paberimajanduse ja viivad teie VKE esimesest hankevõimalusest kuni hankelepingu sõlmimiseni."
+      "title": "tendersbay — ELi riigihanked, mille leiavad ja sõlmivad teie AI-agendid",
+      "description": "Tehisintellekti agendid, kes jälitavad õigeid riigihankeid kõigis 27 ELi riigis, purustavad paberimajanduse ja viivad teie VKE võimalusest kuni hankelepingu sõlmimiseni."
     },
     "nav": {
       "problem": "Kulu",
@@ -179,11 +179,11 @@
       "vision": "Visioon"
     },
     "hero": {
-      "titleLead": "Hange, mille nad juba enda omaks lugesid?",
-      "titleHighlight": "Sõlmitud.",
-      "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja viivad teid pakkumiseni. Sel ajal kui magate.",
+      "titleLead": "Iga riigihange kõigis 27 riigis — leitud, ette valmistatud,",
+      "titleHighlight": "sõlmitud.",
+      "subtitle": "Teie VKE-l ei ole pakkumiste osakonda. Ja ei olegi vaja. Tehisintellekti agentide meeskond otsib üles õiged hanked kogu ELis, korraldab paberimajanduse ja koostab teie pakkumise ööga — samal ajal kui suurte mängijate meeskond magab.",
       "ctaPrimary": "Pange oma agendid tööle",
-      "ctaSecondary": "Vaadake visiooni",
+      "ctaSecondary": "Vaadake, kuidas see töötab",
       "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"],
       "deckLabel": "Näidistulemused"
     },

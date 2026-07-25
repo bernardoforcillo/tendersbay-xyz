@@ -170,8 +170,8 @@
       "results_other": "{{count}} zákaziek"
     },
     "meta": {
-      "title": "tendersbay — Verejné obstarávanie v Európe s vašimi AI agentmi",
-      "description": "AI agenti, ktorí vyhľadajú správne verejné obstarávania a verejné zákazky v Európe, rozdrvia papierovačky a dovedú vašu firmu až k udeleniu zákazky."
+      "title": "tendersbay — Verejné obstarávanie v EÚ, nájdené a udelené AI agentmi",
+      "description": "AI agenti, ktorí vyhľadajú správne verejné obstarávania a zákazky vo všetkých 27 krajinách EÚ, rozdrvia papierovačky a dovedú vašu firmu od príležitosti až k udeleniu zákazky."
     },
     "nav": {
       "problem": "Náklady",
@@ -179,11 +179,11 @@
       "vision": "Vízia"
     },
     "hero": {
-      "titleLead": "Zákazka, ktorú už rátali za svoju?",
-      "titleHighlight": "Udelená.",
-      "subtitle": "Dnes v noci sa uzatvára zákazka s vaším menom. Veľkí hráči na nej už majú tím. Vy máte otvorené tri karty v Exceli. Tu to končí — AI agenti, ktorí ju nájdu, rozcupujú papierovačky a postavia vás do ponuky. Kým spíte.",
+      "titleLead": "Každá verejná zákazka v 27 krajinách — nájdená, pripravená,",
+      "titleHighlight": "udelená.",
+      "subtitle": "Vaša firma nemá oddelenie pre verejné obstarávanie. A ani ho nepotrebuje. Tím AI agentov vyhľadá správne zákazky v celej EÚ, vybaví papierovačky a pripraví vašu ponuku cez noc — kým tím veľkých hráčov spí.",
       "ctaPrimary": "Pošlite svojich agentov do práce",
-      "ctaSecondary": "Pozrite si víziu",
+      "ctaSecondary": "Pozrite si, ako to funguje",
       "trust": [
         "27 krajín, jedno hľadanie",
         "Agenti, ktorí nikdy nespia",

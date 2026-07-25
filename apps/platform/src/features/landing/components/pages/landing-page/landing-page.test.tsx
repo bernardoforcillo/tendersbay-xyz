@@ -29,11 +29,11 @@ describe('LandingPage', () => {
   it('renders the landing template and sets the document title', async () => {
     renderWithI18n(<LandingPage />, 'en-ie');
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'The tender they already counted as theirs?',
+      'Every public tender in 27 countries',
     );
     expect(screen.getByRole('heading', { name: /taking them one by one/i })).toBeInTheDocument();
     await waitFor(() => {
-      expect(document.title).toBe('tendersbay — EU public tenders, awarded by your AI agents');
+      expect(document.title).toBe('tendersbay — EU public tenders, found & awarded by AI agents');
     });
   }, 20000);
 
@@ -50,8 +50,8 @@ describe('LandingPage', () => {
     renderWithI18n(<LandingPage />, 'en-ie');
 
     const description =
-      'AI agents that hunt down the right public tenders across Europe, demolish the paperwork, and walk your SME from the first tender opportunity all the way to the award.';
-    const title = 'tendersbay — EU public tenders, awarded by your AI agents';
+      'AI agents that hunt the right public tenders across all 27 EU countries, demolish the paperwork, and take your SME from opportunity to award.';
+    const title = 'tendersbay — EU public tenders, found & awarded by AI agents';
     await waitFor(() => {
       expect(document.head.querySelector('meta[name="description"]')).toHaveAttribute(
         'content',

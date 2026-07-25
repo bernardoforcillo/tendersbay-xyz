@@ -170,8 +170,8 @@
       "results_other": "{{count}} upphandlingar"
     },
     "meta": {
-      "title": "tendersbay — Offentliga upphandlingar, tilldelade av AI-agenter",
-      "description": "AI-agenter som spårar upp rätt offentliga upphandlingar i hela Europa, krossar pappersarbetet och tar ditt SMF hela vägen till tilldelningen."
+      "title": "tendersbay — Offentliga upphandlingar i EU, hittade & tilldelade av AI-agenter",
+      "description": "AI-agenter som jagar rätt offentliga upphandlingar i alla 27 EU-länder, krossar pappersarbetet och tar ditt SMF från möjlighet till tilldelning."
     },
     "nav": {
       "problem": "Kostnaden",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "Upphandlingen de redan räknat som sin?",
-      "titleHighlight": "Tilldelad.",
-      "subtitle": "Ikväll stänger en upphandling med ditt namn på. De stora aktörerna har redan ett team på den. Du har tre flikar öppna i Excel. Det slutar här — AI-agenter som hittar den, sliter sönder pappersarbetet och placerar dig i anbudet. Medan du sover.",
+      "titleLead": "Varje offentlig upphandling i 27 länder — hittad, förberedd,",
+      "titleHighlight": "tilldelad.",
+      "subtitle": "Ditt SMF har ingen anbudsavdelning. Det behöver det inte heller. Ett team av AI-agenter jagar rätt upphandlingar i hela EU, sköter pappersarbetet och bygger ditt anbud under natten — medan de stora aktörernas team sover.",
       "ctaPrimary": "Sätt dina agenter i arbete",
-      "ctaSecondary": "Se visionen",
+      "ctaSecondary": "Se hur det fungerar",
       "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"],
       "deckLabel": "Exempelresultat"
     },

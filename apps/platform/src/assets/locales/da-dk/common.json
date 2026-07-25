@@ -170,8 +170,8 @@
       "results_other": "{{count}} udbud"
     },
     "meta": {
-      "title": "tendersbay — Offentlige udbud, tildelt af dine AI-agenter",
-      "description": "AI-agenter, der opsporer de rigtige offentlige udbud og EU-udbud i hele Europa, knuser papirarbejdet og fører din SMV hele vejen til tildelingen."
+      "title": "tendersbay — Offentlige EU-udbud, fundet & tildelt af AI-agenter",
+      "description": "AI-agenter, der opsporer de rigtige offentlige udbud i alle 27 EU-lande, knuser papirarbejdet og fører din SMV fra mulighed til tildeling."
     },
     "nav": {
       "problem": "Omkostningen",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "Udbuddet de allerede regnede for deres?",
-      "titleHighlight": "Tildelt.",
-      "subtitle": "I aften lukker et udbud med dit navn på. De store spillere har allerede et team på det. Du har tre faner åbne i Excel. Det slutter her — AI-agenter, der finder det, flår papirarbejdet fra hinanden og sætter dig på buddet. Mens du sover.",
+      "titleLead": "Hvert offentligt udbud i 27 lande — fundet, forberedt,",
+      "titleHighlight": "tildelt.",
+      "subtitle": "Din SMV har ikke en udbudsafdeling. Og den har ikke brug for en. Et hold af AI-agenter opsporer de rigtige udbud i hele EU, klarer papirarbejdet og bygger dit bud natten over — mens de store spilleres hold sover.",
       "ctaPrimary": "Sæt dine agenter i gang",
-      "ctaSecondary": "Se visionen",
+      "ctaSecondary": "Se, hvordan det virker",
       "trust": ["27 lande, én søgning", "Agenter der aldrig sover", "Papirarbejde: klaret"],
       "deckLabel": "Eksempelresultater"
     },

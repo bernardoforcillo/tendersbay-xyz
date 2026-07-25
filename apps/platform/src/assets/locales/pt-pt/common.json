@@ -170,8 +170,8 @@
       "results_other": "{{count}} concursos"
     },
     "meta": {
-      "title": "tendersbay — Concursos públicos, adjudicados por agentes de IA",
-      "description": "Agentes de IA que caçam os concursos públicos e contratos públicos europeus certos, arrasam a burocracia e levam a sua PME até à adjudicação."
+      "title": "tendersbay — Concursos públicos da UE, encontrados e adjudicados por agentes de IA",
+      "description": "Agentes de IA que caçam os concursos públicos certos nos 27 países da UE, arrasam a burocracia e levam a sua PME da oportunidade à adjudicação."
     },
     "nav": {
       "problem": "O custo",
@@ -179,11 +179,11 @@
       "vision": "Visão"
     },
     "hero": {
-      "titleLead": "O concurso que já davam como deles?",
-      "titleHighlight": "Adjudicado.",
-      "subtitle": "Esta noite fecha um concurso com o seu nome. Os grandes já têm uma equipa nele. Você tem três separadores abertos no Excel. Acaba aqui — agentes de IA que o encontram, despedaçam a burocracia e põem-no na proposta. Enquanto dorme.",
+      "titleLead": "Cada concurso público em 27 países — encontrado, preparado,",
+      "titleHighlight": "adjudicado.",
+      "subtitle": "A sua PME não tem um gabinete de concursos. E não precisa de ter. Uma equipa de agentes de IA procura os concursos certos em toda a UE, trata da burocracia e prepara a sua proposta durante a noite — enquanto a equipa dos grandes dorme.",
       "ctaPrimary": "Ponha os seus agentes a trabalhar",
-      "ctaSecondary": "Veja a visão",
+      "ctaSecondary": "Veja como funciona",
       "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"],
       "deckLabel": "Resultados de exemplo"
     },

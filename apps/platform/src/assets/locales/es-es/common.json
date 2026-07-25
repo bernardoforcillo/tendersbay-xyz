@@ -170,8 +170,8 @@
       "results_other": "{{count}} licitaciones"
     },
     "meta": {
-      "title": "tendersbay — Licitaciones públicas, adjudicadas por agentes de IA",
-      "description": "Agentes de IA que cazan las licitaciones públicas y los concursos públicos europeos adecuados, arrasan con el papeleo y llevan a tu pyme hasta la adjudicación."
+      "title": "tendersbay — Licitaciones públicas de la UE, encontradas y adjudicadas por agentes de IA",
+      "description": "Agentes de IA que rastrean las licitaciones públicas adecuadas en los 27 países de la UE, arrasan con el papeleo y llevan a tu pyme de la oportunidad a la adjudicación."
     },
     "nav": {
       "problem": "El coste",
@@ -179,11 +179,11 @@
       "vision": "Visión"
     },
     "hero": {
-      "titleLead": "¿La licitación que ya daban por suya?",
-      "titleHighlight": "Adjudicada.",
-      "subtitle": "Esta noche se cierra una licitación con tu nombre. Los grandes ya tienen un equipo en ella. Tú tienes tres pestañas abiertas en Excel. Aquí se acaba — agentes de IA que la encuentran, destrozan el papeleo y te ponen en la oferta. Mientras duermes.",
+      "titleLead": "Cada licitación pública en 27 países — encontrada, preparada,",
+      "titleHighlight": "adjudicada.",
+      "subtitle": "Tu pyme no tiene una oficina de licitaciones. No la necesita. Un equipo de agentes de IA rastrea las licitaciones adecuadas en toda la UE, se encarga del papeleo y prepara tu oferta durante la noche — mientras el equipo de los grandes duerme.",
       "ctaPrimary": "Pon a trabajar a tus agentes",
-      "ctaSecondary": "Ver la visión",
+      "ctaSecondary": "Ve cómo funciona",
       "trust": ["27 países, una búsqueda", "Agentes que nunca duermen", "Papeleo: resuelto"],
       "deckLabel": "Resultados de ejemplo"
     },

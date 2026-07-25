@@ -170,8 +170,8 @@
       "results_other": "{{count}} przetargu"
     },
     "meta": {
-      "title": "tendersbay — Przetargi w Europie, rozstrzygnięte z agentami AI",
-      "description": "Agenci AI, którzy wytropią właściwe przetargi i zamówienia publiczne w Europie, zmiażdżą papierkową robotę i doprowadzą twoje MŚP aż do udzielenia zamówienia."
+      "title": "tendersbay — Przetargi publiczne UE, znalezione i wygrane dzięki agentom AI",
+      "description": "Agenci AI, którzy namierzają właściwe przetargi publiczne we wszystkich 27 krajach UE, miażdżą papierkową robotę i prowadzą twoje MŚP od okazji aż do udzielenia zamówienia."
     },
     "nav": {
       "problem": "Koszt",
@@ -179,11 +179,11 @@
       "vision": "Wizja"
     },
     "hero": {
-      "titleLead": "Przetarg, który już liczyli jako swój?",
-      "titleHighlight": "Udzielony.",
-      "subtitle": "Dziś w nocy zamyka się przetarg z twoim nazwiskiem. Duzi gracze mają już na nim zespół. Ty masz trzy karty otwarte w Excelu. To koniec — agenci AI, którzy go znajdą, rozszarpią papierkową robotę i wstawią cię do oferty. Gdy śpisz.",
+      "titleLead": "Każdy przetarg publiczny w 27 krajach — znaleziony, przygotowany,",
+      "titleHighlight": "udzielony.",
+      "subtitle": "Twoje MŚP nie ma działu przetargów. I nie musi go mieć. Zespół agentów AI namierza właściwe przetargi w całej UE, ogarnia papierkową robotę i przygotowuje twoją ofertę przez noc — podczas gdy zespół dużych graczy śpi.",
       "ctaPrimary": "Zaprzęgnij swoich agentów do pracy",
-      "ctaSecondary": "Zobacz wizję",
+      "ctaSecondary": "Zobacz, jak to działa",
       "trust": [
         "27 krajów, jedno wyszukiwanie",
         "Agenci, którzy nigdy nie śpią",

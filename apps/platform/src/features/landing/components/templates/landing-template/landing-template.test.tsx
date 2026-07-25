@@ -17,7 +17,7 @@ describe('LandingTemplate', () => {
     expect(screen.getByRole('main')).toBeInTheDocument();
     expect(screen.getByRole('contentinfo')).toBeInTheDocument();
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'The tender they already counted as theirs?',
+      'Every public tender in 27 countries',
     );
     for (const id of ['problem', 'agents', 'vision']) {
       expect(container.querySelector(`#${id}`), id).not.toBeNull();

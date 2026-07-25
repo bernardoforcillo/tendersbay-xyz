@@ -170,8 +170,8 @@
       "results_other": "{{count}} tairiscint"
     },
     "meta": {
-      "title": "tendersbay — Tairiscintí poiblí, bronnta ag do ghníomhairí AI",
-      "description": "Gníomhairí AI a aimsíonn na tairiscintí poiblí Eorpacha cearta, a réabann an obair pháipéir, agus a thugann do FBM an bealach ar fad go dtí an bronnadh."
+      "title": "tendersbay — Tairiscintí poiblí an AE, aimsithe agus bronnta ag gníomhairí AI",
+      "description": "Gníomhairí AI a aimsíonn na tairiscintí poiblí cearta i ngach ceann de na 27 tír san AE, a réabann an obair pháipéir, agus a thugann d'FBM ón deis go dtí an bronnadh."
     },
     "nav": {
       "problem": "An Costas",
@@ -179,11 +179,11 @@
       "vision": "Fís"
     },
     "hero": {
-      "titleLead": "An tairiscint a mheas siad cheana mar a gcuid féin?",
-      "titleHighlight": "Bronnta.",
-      "subtitle": "Anocht dúnann tairiscint le d'ainm uirthi. Tá foireann ag na himreoirí móra uirthi cheana. Tá trí chluaisín oscailte agat in Excel. Críochnaíonn sé anseo — gníomhairí AI a aimsíonn í, a stróiceann an obair pháipéir, agus a chuireann thú sa tairiscint. Agus tú i do chodladh.",
+      "titleLead": "Gach tairiscint phoiblí i 27 tír — aimsithe, ullmhaithe,",
+      "titleHighlight": "bronnta.",
+      "subtitle": "Níl oifig tairiscintí ag d'FBM. Níl gá léi ach oiread. Foireann gníomhairí AI a aimsíonn na tairiscintí cearta ar fud an AE, a dhéanann an obair pháipéir, agus a thógann do thairiscint thar oíche — fad is atá foireann na n-imreoirí móra ina gcodladh.",
       "ctaPrimary": "Cuir do ghníomhairí ag obair",
-      "ctaSecondary": "Féach ar an bhfís",
+      "ctaSecondary": "Féach conas a oibríonn sé",
       "trust": [
         "27 tír, aon chuardach amháin",
         "Gníomhairí nach gcodlaíonn riamh",
