@@ -119,4 +119,42 @@ describe('ChatWindow', () => {
       expect(screen.getByText('Cestini intelligenti IoT')).toBeInTheDocument();
     });
   });
+
+  it('renders a tool-chip while streaming for each active tool', async () => {
+    vi.mocked(agentClient.getMessages).mockResolvedValue({ messages: [] } as never);
+    useChatStore.setState({ currentChatId: 'chat-1' });
+
+    render(<ChatWindow />);
+
+    // Set the streaming/activeTools state *after* mount: the mount-only
+    // stale-streaming-state guard only fires once, on the initial mount, so
+    // updating the store post-render doesn't get wiped by it.
+    useChatStore.setState({
+      streaming: true,
+      activeTools: [{ name: 'search_tenders', status: 'running' }],
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Cerco bandi…')).toBeInTheDocument();
+    });
+  });
+
+  it('clears stale streaming state on mount', async () => {
+    vi.mocked(agentClient.getMessages).mockResolvedValue({ messages: [] } as never);
+    // Simulate state rehydrated as mid-stream from a prior tab / network drop.
+    useChatStore.setState({
+      currentChatId: 'chat-1',
+      streaming: true,
+      streamingContent: 'half a sentence',
+      activeTools: [{ name: 'search_tenders', status: 'running' }],
+    });
+
+    render(<ChatWindow />);
+
+    await waitFor(() => {
+      expect(useChatStore.getState().streaming).toBe(false);
+    });
+    expect(useChatStore.getState().streamingContent).toBe('');
+    expect(useChatStore.getState().activeTools).toEqual([]);
+  });
 });

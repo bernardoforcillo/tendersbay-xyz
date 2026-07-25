@@ -2,6 +2,7 @@ import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { animate } from 'motion';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ToolChip } from '~/features/account/components/atoms/tool-chip';
 import { ChatInput } from '~/features/account/components/molecules/chat-input';
 import { CreditDisplay } from '~/features/account/components/molecules/credit-display';
 import { MessageBubble } from '~/features/account/components/molecules/message-bubble';
@@ -16,6 +17,7 @@ export function ChatWindow() {
   const messages = useChatStore((s) => s.messages);
   const streaming = useChatStore((s) => s.streaming);
   const streamingContent = useChatStore((s) => s.streamingContent);
+  const activeTools = useChatStore((s) => s.activeTools);
   const currentChatId = useChatStore((s) => s.currentChatId);
   const credits = useChatStore((s) => s.credits);
   const pendingChoice = useChatStore((s) => s.pendingChoice);
@@ -34,6 +36,21 @@ export function ChatWindow() {
       animate(parent, { scrollTop: parent.scrollHeight }, { duration: 0.3, ease: 'easeOut' });
     }
   });
+
+  // A prior tab or a dropped connection can leave `streaming` truthy in memory
+  // with no live stream behind it. Clear the ephemeral streaming state once on
+  // mount so the input is never wedged disabled and no orphan chips linger.
+  const didGuardRef = useRef(false);
+  useEffect(() => {
+    if (didGuardRef.current) return;
+    didGuardRef.current = true;
+    const s = useChatStore.getState();
+    if (s.streaming) {
+      s.setStreaming(false);
+      s.setStreamingContent('');
+      s.clearActiveTools();
+    }
+  }, []);
 
   useEffect(() => {
     if (currentChatId && workspaceId && loadedChatIdRef.current !== currentChatId) {
@@ -258,6 +275,13 @@ export function ChatWindow() {
               onSubmitChoice={handleSubmitChoice}
             />
           ))}
+          {streaming && activeTools.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {activeTools.map((tool) => (
+                <ToolChip key={tool.name} name={tool.name} status={tool.status} />
+              ))}
+            </div>
+          )}
           {streaming && streamingContent && (
             <div className="flex justify-start">
               <div className="max-w-[80%] rounded-2xl bg-cream-200 px-4 py-2.5 text-sm leading-relaxed text-ink-900">
