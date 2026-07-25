@@ -1,3 +1,4 @@
+import { usePostHog } from 'posthog-js/react';
 import { useCallback, useEffect, useRef } from 'react';
 import type { CreditsData } from '~/features/account/components/molecules/credit-display';
 import { agentClient } from '~/lib/api/client';
@@ -5,6 +6,7 @@ import { useChatStore } from '~/store/chat';
 
 export function useChatStream() {
   const abortRef = useRef<AbortController | null>(null);
+  const posthog = usePostHog();
 
   useEffect(() => {
     return () => {
@@ -17,6 +19,9 @@ export function useChatStream() {
     useChatStore.getState().setStreaming(false);
   }, []);
 
+  // posthog is a stable client instance for the component's life (its own
+  // provider memoizes it); omitting it from the deps below matches usage elsewhere.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable
   const sendMessage = useCallback(
     async (chatId: string, message: string): Promise<CreditsData | null> => {
       abortRef.current?.abort();
@@ -32,6 +37,7 @@ export function useChatStream() {
       });
       store.setStreaming(true);
       store.setStreamingContent('');
+      store.clearActiveTools();
 
       try {
         const stream = agentClient.chatStream({ chatId, message }, { signal: abort.signal });
@@ -44,6 +50,19 @@ export function useChatStream() {
           if (event.case === 'token') {
             fullContent += event.value;
             useChatStore.getState().appendStreamToken(event.value);
+          } else if (event.case === 'toolCall') {
+            const { name, status } = event.value;
+            useChatStore.getState().setActiveTools(name, status);
+            if (status === 'running') {
+              useChatStore.getState().incToolCalls();
+              posthog?.capture('tool_call_breadcrumb_rendered', {
+                location: 'explore_chat',
+                tool_name: name,
+              });
+            }
+            if (name === 'create_workbench' && status === 'done') {
+              posthog?.capture('workbench_created_from_chat', { location: 'explore_chat' });
+            }
           } else if (event.case === 'tenderResults') {
             useChatStore.getState().addMessage({
               id: crypto.randomUUID(),
@@ -124,6 +143,7 @@ export function useChatStream() {
     [],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable
   const submitChoice = useCallback(
     async (
       choiceId: string,
@@ -138,6 +158,7 @@ export function useChatStream() {
       store.setPendingChoice(null);
       store.setStreaming(true);
       store.setStreamingContent('');
+      store.clearActiveTools();
 
       try {
         const stream = agentClient.submitChoice(
@@ -153,6 +174,19 @@ export function useChatStream() {
           if (event.case === 'token') {
             fullContent += event.value;
             useChatStore.getState().appendStreamToken(event.value);
+          } else if (event.case === 'toolCall') {
+            const { name, status } = event.value;
+            useChatStore.getState().setActiveTools(name, status);
+            if (status === 'running') {
+              useChatStore.getState().incToolCalls();
+              posthog?.capture('tool_call_breadcrumb_rendered', {
+                location: 'explore_chat',
+                tool_name: name,
+              });
+            }
+            if (name === 'create_workbench' && status === 'done') {
+              posthog?.capture('workbench_created_from_chat', { location: 'explore_chat' });
+            }
           } else if (event.case === 'tenderResults') {
             useChatStore.getState().addMessage({
               id: crypto.randomUUID(),
