@@ -1,4 +1,4 @@
-import { Card, EmptyState, Pill } from '@tendersbay/components/core';
+import { Banner, Card, EmptyState, Pill } from '@tendersbay/components/core';
 import { Lock, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useWorkbenches } from '~/features/workbench/hooks';
@@ -14,13 +14,14 @@ export function WorkbenchPicker({
   busyId?: string | null;
 }) {
   const { t } = useTranslation();
-  const { data: workbenches, loading } = useWorkbenches(workspaceId);
+  const { data: workbenches, loading, error } = useWorkbenches(workspaceId);
   const recentIds = useRecentWorkbenchesStore((s) => s.items)
     .filter((i) => i.workspaceId === workspaceId)
     .map((i) => i.workbenchId);
 
   if (loading)
     return <p className="text-sm text-ink-500">{t('workbench.common.loading', 'Loading…')}</p>;
+  if (error) return <Banner tone="error">{error}</Banner>;
   if (!workbenches || workbenches.length === 0)
     return <EmptyState title={t('bid.picker.empty', 'No workbenches yet — create one first.')} />;
 
