@@ -146,6 +146,57 @@ func computeFitTier(relevance float64, r ReasonSignals, cfg FitThresholds) FitTi
 	return FitPossible
 }
 
+// TenderFitResult is one tender's fresh fit against a client profile, for the
+// workbench (see the design spec §5). Unlike the search shortlist, the tier
+// here is relevance-free: it means "profile fit vs declared preferences", not
+// "win probability". Tier is "" when the workspace has no profile
+// (HasProfile=false); Available is false when the tender row no longer
+// resolves (a dangling bid whose tender ingestion deleted).
+type TenderFitResult struct {
+	Tier       FitTier
+	Reason     ReasonSignals
+	HasProfile bool
+	Available  bool
+}
+
+// TenderSummary is the batch tender-card shape the workbench portfolio needs
+// per bid. Deadline is RFC3339 (or "" when the tender has none); Value is nil
+// when unknown.
+type TenderSummary struct {
+	ID        int64
+	Title     string
+	BuyerName string
+	Country   string
+	CPV       string
+	Currency  string
+	Deadline  string
+	Status    string
+	Value     *int64
+}
+
+// computeFitTierFromSignals is the relevance-free sibling of computeFitTier,
+// reusing the same FitThresholds so search and workbench stay consistent. The
+// primary alignment is SectorMatch && CountryMatch (what the client does +
+// where), never a search-relevance score. RegionMatch/ProcedureMatch are
+// deliberately not read — enrichment only, per the honesty guardrail.
+//
+//	long_shot if neither sector nor country match, OR value is below/above the
+//	          band, OR the deadline is inside UrgentDeadlineDays
+//	strong    if sector AND country match AND (no deadline OR deadline >= MinDeadlineDays)
+//	possible  otherwise
+func computeFitTierFromSignals(r ReasonSignals, cfg FitThresholds) FitTier {
+	badValue := r.ValueFit == "below" || r.ValueFit == "above"
+	urgent := r.DeadlineDays != nil && *r.DeadlineDays < cfg.UrgentDeadlineDays
+	if (!r.SectorMatch && !r.CountryMatch) || badValue || urgent {
+		return FitLongShot
+	}
+	tooSoonForStrong := r.DeadlineDays != nil && *r.DeadlineDays < cfg.MinDeadlineDays
+	if r.SectorMatch && r.CountryMatch && !tooSoonForStrong {
+		return FitStrong
+	}
+	return FitPossible
+}
+
 // RecommendedTender is one shortlist entry: the scored search result plus
 // its deterministic fit classification.
 type RecommendedTender struct {
