@@ -611,6 +611,92 @@
       "saved": "Profiel opgeslagen."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Geselecteerd",
+      "preparing": "In voorbereiding",
+      "submitted": "Ingediend"
+    },
+    "goNoGo": { "undecided": "Onbeslist", "go": "We doen mee", "noGo": "We doen niet mee" },
+    "outcome": {
+      "open": "Open",
+      "won": "Gewonnen",
+      "lost": "Verloren",
+      "withdrawn": "Ingetrokken"
+    },
+    "bands": {
+      "needsYouNow": "Vraagt nu aandacht",
+      "active": "In voorbereiding",
+      "submitted": "Ingediend",
+      "closed": "Afgerond"
+    },
+    "actions": {
+      "prepare": "Voorbereiden in workbench",
+      "advance": "Fase vooruit zetten",
+      "markGo": "We doen mee",
+      "markNoGo": "We doen niet mee"
+    },
+    "empty": {
+      "title": "Nog geen aanbestedingen gevolgd",
+      "description": "Voeg een aanbesteding toe aan dit workbench om de voorbereiding te starten.",
+      "seedTitle": "Best passende aanbestedingen om voor te bereiden",
+      "needsProfileTitle": "Maak een klantprofiel aan om de match te zien",
+      "needsProfileCta": "Klantprofiel aanmaken"
+    },
+    "fit": { "needsProfile": "Maak een klantprofiel aan om de match te zien" },
+    "tombstone": {
+      "title": "Deze aanbesteding is niet meer beschikbaar",
+      "description": "Het bronportaal heeft deze aankondiging verwijderd. Je checklist en notities blijven bewaard."
+    },
+    "checklist": {
+      "title": "ESPD / UEA-checklist",
+      "progress": "{{done}} van {{total}} voltooid",
+      "statusLabel": "Status",
+      "noteLabel": "Notitie",
+      "required": "Verplicht",
+      "notePlaceholder": "Notitie toevoegen…",
+      "status": { "pending": "In behandeling", "done": "Voltooid", "na": "N.v.t." },
+      "sections": {
+        "part_ii": "Deel II — Gegevens over de ondernemer",
+        "part_iii": "Deel III — Uitsluitingsgronden",
+        "part_iv": "Deel IV — Selectiecriteria",
+        "conclusion": "Slotverklaringen"
+      },
+      "items": {
+        "identification": "Identificatie en registratie van de ondernemer",
+        "sme_status": "Verklaring mkb-status",
+        "representation": "Gemachtigde vertegenwoordiger",
+        "criminal_convictions": "Geen strafrechtelijke veroordelingen",
+        "tax_payments": "Belastingen betaald",
+        "social_security": "Socialezekerheidspremies betaald",
+        "insolvency": "Geen faillissement of insolventie",
+        "misconduct": "Geen ernstige beroepsfout",
+        "conflict_interest": "Geen belangenconflict",
+        "suitability": "Geschiktheid om de activiteit uit te oefenen",
+        "economic_standing": "Economische en financiële draagkracht",
+        "technical_ability": "Technische en beroepsbekwaamheid",
+        "quality_assurance": "Kwaliteitsborgingssystemen",
+        "espd_signed": "ESPD/UEA ingevuld en ondertekend"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Beslissing",
+      "stageTitle": "Fase",
+      "outcomeTitle": "Uitkomst",
+      "backToPortfolio": "Terug naar portfolio"
+    },
+    "picker": {
+      "title": "Kies een workbench",
+      "recent": "Recent",
+      "all": "Alle workbenches",
+      "empty": "Nog geen workbenches — maak er eerst een aan."
+    },
+    "errors": {
+      "duplicate": "Deze aanbesteding staat al in dat workbench.",
+      "unavailable": "Deze aanbesteding is niet meer beschikbaar.",
+      "generic": "Er is iets misgegaan. Probeer het opnieuw."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Laden…",

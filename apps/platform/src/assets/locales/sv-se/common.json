@@ -611,6 +611,83 @@
       "saved": "Profil sparad."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Utvald", "preparing": "Förbereds", "submitted": "Inlämnad" },
+    "goNoGo": { "undecided": "Ej beslutat", "go": "Vi deltar", "noGo": "Vi deltar inte" },
+    "outcome": { "open": "Öppen", "won": "Vunnen", "lost": "Förlorad", "withdrawn": "Återkallad" },
+    "bands": {
+      "needsYouNow": "Behöver uppmärksamhet nu",
+      "active": "Förbereds",
+      "submitted": "Inlämnade",
+      "closed": "Avslutade"
+    },
+    "actions": {
+      "prepare": "Förbered i workbench",
+      "advance": "Gå vidare till nästa steg",
+      "markGo": "Vi deltar",
+      "markNoGo": "Vi deltar inte"
+    },
+    "empty": {
+      "title": "Inga upphandlingar bevakas ännu",
+      "description": "Lägg till en upphandling i detta workbench för att börja förbereda den.",
+      "seedTitle": "Bäst matchande upphandlingar att förbereda",
+      "needsProfileTitle": "Skapa en kundprofil för att se matchning",
+      "needsProfileCta": "Skapa kundprofil"
+    },
+    "fit": { "needsProfile": "Skapa en kundprofil för att se matchning" },
+    "tombstone": {
+      "title": "Denna upphandling är inte längre tillgänglig",
+      "description": "Källportalen har tagit bort annonsen. Din checklista och dina anteckningar finns kvar."
+    },
+    "checklist": {
+      "title": "ESPD-checklista",
+      "progress": "{{done}} av {{total}} klara",
+      "statusLabel": "Status",
+      "noteLabel": "Anteckning",
+      "required": "Obligatoriskt",
+      "notePlaceholder": "Lägg till en anteckning…",
+      "status": { "pending": "Väntar", "done": "Klar", "na": "Ej tillämpligt" },
+      "sections": {
+        "part_ii": "Del II — Uppgifter om den ekonomiska aktören",
+        "part_iii": "Del III — Uteslutningsgrunder",
+        "part_iv": "Del IV — Urvalskriterier",
+        "conclusion": "Avslutande försäkringar"
+      },
+      "items": {
+        "identification": "Identifiering och registrering av den ekonomiska aktören",
+        "sme_status": "Deklaration av SME-status",
+        "representation": "Auktoriserad företrädare",
+        "criminal_convictions": "Inga brottmålsdomar",
+        "tax_payments": "Skatter betalda",
+        "social_security": "Sociala avgifter betalda",
+        "insolvency": "Ingen konkurs eller insolvens",
+        "misconduct": "Inget allvarligt yrkesfel",
+        "conflict_interest": "Ingen intressekonflikt",
+        "suitability": "Lämplighet att utöva yrkesverksamheten",
+        "economic_standing": "Ekonomisk och finansiell ställning",
+        "technical_ability": "Teknisk och yrkesmässig kapacitet",
+        "quality_assurance": "System för kvalitetssäkring",
+        "espd_signed": "ESPD ifylld och undertecknad"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Beslut",
+      "stageTitle": "Steg",
+      "outcomeTitle": "Utfall",
+      "backToPortfolio": "Tillbaka till portföljen"
+    },
+    "picker": {
+      "title": "Välj ett workbench",
+      "recent": "Senaste",
+      "all": "Alla workbenches",
+      "empty": "Inga workbenches ännu — skapa ett först."
+    },
+    "errors": {
+      "duplicate": "Denna upphandling finns redan i det workbenchet.",
+      "unavailable": "Denna upphandling är inte längre tillgänglig.",
+      "generic": "Något gick fel. Försök igen."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Läser in…",

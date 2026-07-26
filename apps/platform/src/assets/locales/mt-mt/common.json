@@ -617,6 +617,91 @@
       "saved": "Profil issejvjat."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Magħżula",
+      "preparing": "Qed titħejja",
+      "submitted": "Ippreżentata"
+    },
+    "goNoGo": {
+      "undecided": "Mhux deċiż",
+      "go": "Ser nipparteċipaw",
+      "noGo": "Mhux ser nipparteċipaw"
+    },
+    "outcome": { "open": "Miftuħa", "won": "Rebħet", "lost": "Tilfet", "withdrawn": "Irtirata" },
+    "bands": {
+      "needsYouNow": "Teħtieġ attenzjoni issa",
+      "active": "Qed titħejja",
+      "submitted": "Ippreżentati",
+      "closed": "Magħluqa"
+    },
+    "actions": {
+      "prepare": "Ħejji fil-workbench",
+      "advance": "Avvanza l-istadju",
+      "markGo": "Ser nipparteċipaw",
+      "markNoGo": "Mhux ser nipparteċipaw"
+    },
+    "empty": {
+      "title": "L-ebda sejħa segwita s'issa",
+      "description": "Żid sejħa f'dan il-workbench biex tibda tħejjiha.",
+      "seedTitle": "L-aħjar sejħiet li jaqblu għat-tħejjija",
+      "needsProfileTitle": "Waqqaf profil tal-klijent biex tara l-adegwatezza",
+      "needsProfileCta": "Waqqaf profil tal-klijent"
+    },
+    "fit": { "needsProfile": "Waqqaf profil tal-klijent biex tara l-adegwatezza" },
+    "tombstone": {
+      "title": "Din is-sejħa m'għadhiex disponibbli",
+      "description": "Il-portal sors neħħa dan l-avviż. Il-lista ta' kontroll u n-noti tiegħek baqgħu salvati."
+    },
+    "checklist": {
+      "title": "Lista ta' kontroll ESPD",
+      "progress": "{{done}} minn {{total}} lesti",
+      "statusLabel": "Status",
+      "noteLabel": "Nota",
+      "required": "Meħtieġ",
+      "notePlaceholder": "Żid nota…",
+      "status": { "pending": "Pendenti", "done": "Lest", "na": "N/A" },
+      "sections": {
+        "part_ii": "Parti II — Informazzjoni dwar l-operatur",
+        "part_iii": "Parti III — Raġunijiet ta' esklużjoni",
+        "part_iv": "Parti IV — Kriterji ta' għażla",
+        "conclusion": "Dikjarazzjonijiet konklużivi"
+      },
+      "items": {
+        "identification": "Identifikazzjoni u reġistrazzjoni tal-operatur",
+        "sme_status": "Dikjarazzjoni tal-istatus SME",
+        "representation": "Rappreżentant awtorizzat",
+        "criminal_convictions": "L-ebda kundanna kriminali",
+        "tax_payments": "Taxxi mħallsa",
+        "social_security": "Kontribuzzjonijiet tas-sigurtà soċjali mħallsa",
+        "insolvency": "Mhux fallut jew f'insolvenza",
+        "misconduct": "L-ebda mġiba professjonali ħażina serja",
+        "conflict_interest": "L-ebda kunflitt ta' interess",
+        "suitability": "Idoneità biex titwettaq l-attività",
+        "economic_standing": "Pożizzjoni ekonomika u finanzjarja",
+        "technical_ability": "Kapaċità teknika u professjonali",
+        "quality_assurance": "Skemi ta' assigurazzjoni tal-kwalità",
+        "espd_signed": "ESPD mimli u ffirmat"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Deċiżjoni",
+      "stageTitle": "Stadju",
+      "outcomeTitle": "Riżultat",
+      "backToPortfolio": "Lura għall-portafoll"
+    },
+    "picker": {
+      "title": "Agħżel workbench",
+      "recent": "Reċenti",
+      "all": "Il-workbenches kollha",
+      "empty": "L-ebda workbench s'issa — oħloq wieħed l-ewwel."
+    },
+    "errors": {
+      "duplicate": "Din is-sejħa diġà tinsab f'dak il-workbench.",
+      "unavailable": "Din is-sejħa m'għadhiex disponibbli.",
+      "generic": "Xi ħaġa marret ħażin. Jekk jogħġbok erġa' pprova."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Qed jitgħabba…",

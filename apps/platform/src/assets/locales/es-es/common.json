@@ -611,6 +611,87 @@
       "saved": "Perfil guardado."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Preseleccionada",
+      "preparing": "En preparación",
+      "submitted": "Presentada"
+    },
+    "goNoGo": { "undecided": "Sin decidir", "go": "Participamos", "noGo": "No participamos" },
+    "outcome": { "open": "Abierta", "won": "Ganada", "lost": "Perdida", "withdrawn": "Retirada" },
+    "bands": {
+      "needsYouNow": "Necesita atención ahora",
+      "active": "En preparación",
+      "submitted": "Presentadas",
+      "closed": "Cerradas"
+    },
+    "actions": {
+      "prepare": "Preparar en el workbench",
+      "advance": "Avanzar de fase",
+      "markGo": "Participamos",
+      "markNoGo": "No participamos"
+    },
+    "empty": {
+      "title": "Aún no hay licitaciones en seguimiento",
+      "description": "Añade una licitación a este workbench para empezar a prepararla.",
+      "seedTitle": "Licitaciones más afines para preparar",
+      "needsProfileTitle": "Crea un perfil de cliente para ver la afinidad",
+      "needsProfileCta": "Crear perfil de cliente"
+    },
+    "fit": { "needsProfile": "Crea un perfil de cliente para ver la afinidad" },
+    "tombstone": {
+      "title": "Esta licitación ya no está disponible",
+      "description": "El portal de origen ha eliminado este anuncio. Tu checklist y tus notas se conservan."
+    },
+    "checklist": {
+      "title": "Checklist DEUC",
+      "progress": "{{done}} de {{total}} completados",
+      "statusLabel": "Estado",
+      "noteLabel": "Nota",
+      "required": "Obligatorio",
+      "notePlaceholder": "Añadir una nota…",
+      "status": { "pending": "Pendiente", "done": "Hecho", "na": "N/D" },
+      "sections": {
+        "part_ii": "Parte II — Información sobre el operador económico",
+        "part_iii": "Parte III — Motivos de exclusión",
+        "part_iv": "Parte IV — Criterios de selección",
+        "conclusion": "Declaraciones finales"
+      },
+      "items": {
+        "identification": "Identificación e inscripción del operador económico",
+        "sme_status": "Declaración de condición de PYME",
+        "representation": "Representante autorizado",
+        "criminal_convictions": "Ausencia de condenas penales",
+        "tax_payments": "Impuestos al corriente de pago",
+        "social_security": "Cotizaciones a la seguridad social al corriente",
+        "insolvency": "Ausencia de quiebra o insolvencia",
+        "misconduct": "Ausencia de falta profesional grave",
+        "conflict_interest": "Ausencia de conflicto de intereses",
+        "suitability": "Aptitud para ejercer la actividad profesional",
+        "economic_standing": "Solvencia económica y financiera",
+        "technical_ability": "Capacidad técnica y profesional",
+        "quality_assurance": "Sistemas de aseguramiento de la calidad",
+        "espd_signed": "DEUC cumplimentado y firmado"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Decisión",
+      "stageTitle": "Fase",
+      "outcomeTitle": "Resultado",
+      "backToPortfolio": "Volver al portfolio"
+    },
+    "picker": {
+      "title": "Elige un workbench",
+      "recent": "Recientes",
+      "all": "Todos los workbenches",
+      "empty": "Aún no hay workbenches — crea uno primero."
+    },
+    "errors": {
+      "duplicate": "Esta licitación ya está en ese workbench.",
+      "unavailable": "Esta licitación ya no está disponible.",
+      "generic": "Algo ha salido mal. Inténtalo de nuevo."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Cargando…",

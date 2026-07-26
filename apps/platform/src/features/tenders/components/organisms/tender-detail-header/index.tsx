@@ -1,5 +1,6 @@
 import { cn, Pill } from '@tendersbay/components/core';
 import type { TenderDetail } from '@tendersbay/proto/tender/v1/tender_pb';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   countryFlag,
@@ -7,7 +8,13 @@ import {
   deadlineInfo,
 } from '~/features/account/components/organisms/tender-feed';
 
-export function TenderDetailHeader({ tender }: { tender: TenderDetail }) {
+export function TenderDetailHeader({
+  tender,
+  actions,
+}: {
+  tender: TenderDetail;
+  actions?: ReactNode;
+}) {
   const { t, i18n } = useTranslation();
   const Flag = tender.country ? countryFlag(tender.country) : null;
   const originName = tender.country ? countryName(tender.country, i18n.language) : null;
@@ -45,6 +52,7 @@ export function TenderDetailHeader({ tender }: { tender: TenderDetail }) {
         {tender.title}
       </h1>
       {tender.buyerName && <p className="text-sm text-ink-500">{tender.buyerName}</p>}
+      {actions && <div className="pt-1">{actions}</div>}
     </header>
   );
 }

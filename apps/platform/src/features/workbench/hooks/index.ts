@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { workbenchClient } from '~/lib/api/client';
+import { useWorkbenchContext } from '~/features/workbench/context';
+import { bidClient, workbenchClient } from '~/lib/api/client';
 
 export function useAsync<T>(fn: () => Promise<T>) {
   const [data, setData] = useState<T | null>(null);
@@ -64,6 +65,32 @@ export function useWorkbenchRoles(workbenchId: string) {
   const fn = useCallback(
     () => workbenchClient.listWorkbenchRoles({ workbenchId }).then((r) => r.roles),
     [workbenchId],
+  );
+  return useAsync(fn);
+}
+
+export function useBids(workbenchId: string) {
+  const fn = useCallback(
+    () => bidClient.listBids({ workbenchId }).then((r) => r.bids),
+    [workbenchId],
+  );
+  return useAsync(fn);
+}
+
+export function useBid(bidId: string) {
+  const { workbenchId } = useWorkbenchContext();
+  const fn = useCallback(
+    () => bidClient.getBid({ workbenchId, bidId }).then((r) => r.bid),
+    [workbenchId, bidId],
+  );
+  return useAsync(fn);
+}
+
+export function useChecklist(bidId: string) {
+  const { workbenchId } = useWorkbenchContext();
+  const fn = useCallback(
+    () => bidClient.listChecklistItems({ workbenchId, bidId }).then((r) => r.items),
+    [workbenchId, bidId],
   );
   return useAsync(fn);
 }

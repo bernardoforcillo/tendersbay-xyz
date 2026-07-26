@@ -614,6 +614,88 @@
       "saved": "Profil salvat."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Preselectată", "preparing": "În pregătire", "submitted": "Depusă" },
+    "goNoGo": { "undecided": "Nedecis", "go": "Participăm", "noGo": "Nu participăm" },
+    "outcome": {
+      "open": "Deschisă",
+      "won": "Câștigată",
+      "lost": "Pierdută",
+      "withdrawn": "Retrasă"
+    },
+    "bands": {
+      "needsYouNow": "Necesită atenție acum",
+      "active": "În pregătire",
+      "submitted": "Depuse",
+      "closed": "Închise"
+    },
+    "actions": {
+      "prepare": "Pregătește în workbench",
+      "advance": "Avansează etapa",
+      "markGo": "Participăm",
+      "markNoGo": "Nu participăm"
+    },
+    "empty": {
+      "title": "Încă nu urmăriți nicio licitație",
+      "description": "Adăugați o licitație în acest workbench pentru a începe pregătirea ei.",
+      "seedTitle": "Cele mai potrivite licitații de pregătit",
+      "needsProfileTitle": "Configurați un profil de client pentru a vedea potrivirea",
+      "needsProfileCta": "Configurați profil de client"
+    },
+    "fit": { "needsProfile": "Configurați un profil de client pentru a vedea potrivirea" },
+    "tombstone": {
+      "title": "Această licitație nu mai este disponibilă",
+      "description": "Portalul sursă a eliminat acest anunț. Lista de verificare și notițele dumneavoastră sunt păstrate."
+    },
+    "checklist": {
+      "title": "Listă de verificare ESPD / DUAE",
+      "progress": "{{done}} din {{total}} finalizate",
+      "statusLabel": "Stare",
+      "noteLabel": "Notă",
+      "required": "Obligatoriu",
+      "notePlaceholder": "Adăugați o notă…",
+      "status": { "pending": "În așteptare", "done": "Finalizat", "na": "N/A" },
+      "sections": {
+        "part_ii": "Partea II — Informații privind operatorul economic",
+        "part_iii": "Partea III — Motive de excludere",
+        "part_iv": "Partea IV — Criterii de selecție",
+        "conclusion": "Declarații finale"
+      },
+      "items": {
+        "identification": "Identificarea și înregistrarea operatorului economic",
+        "sme_status": "Declarație privind statutul de IMM",
+        "representation": "Reprezentant autorizat",
+        "criminal_convictions": "Absența condamnărilor penale",
+        "tax_payments": "Taxe și impozite achitate",
+        "social_security": "Contribuții de asigurări sociale achitate",
+        "insolvency": "Fără faliment sau insolvență",
+        "misconduct": "Fără abatere profesională gravă",
+        "conflict_interest": "Fără conflict de interese",
+        "suitability": "Capacitatea de a exercita activitatea profesională",
+        "economic_standing": "Capacitatea economică și financiară",
+        "technical_ability": "Capacitatea tehnică și profesională",
+        "quality_assurance": "Sisteme de asigurare a calității",
+        "espd_signed": "ESPD/DUAE completat și semnat"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Decizie",
+      "stageTitle": "Etapă",
+      "outcomeTitle": "Rezultat",
+      "backToPortfolio": "Înapoi la portofoliu"
+    },
+    "picker": {
+      "title": "Alegeți un workbench",
+      "recent": "Recente",
+      "all": "Toate workbench-urile",
+      "empty": "Încă niciun workbench — creați unul mai întâi."
+    },
+    "errors": {
+      "duplicate": "Această licitație este deja în acel workbench.",
+      "unavailable": "Această licitație nu mai este disponibilă.",
+      "generic": "Ceva nu a funcționat. Încercați din nou."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Se încarcă…",

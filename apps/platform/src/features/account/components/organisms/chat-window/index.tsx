@@ -12,7 +12,14 @@ import { agentClient, workspaceClient } from '~/lib/api/client';
 import { type ChatMessage, useChatStore } from '~/store/chat';
 import { useWorkspaceStore } from '~/store/workspace';
 
-export function ChatWindow() {
+interface ChatWindowProps {
+  /** Analytics surface — 'explore' (default) or 'workbench'. */
+  location?: 'explore' | 'workbench';
+  /** When set, a freshly created chat is bound to this workbench. */
+  workbenchId?: string;
+}
+
+export function ChatWindow({ location = 'explore', workbenchId }: ChatWindowProps) {
   const { t } = useTranslation();
   const posthog = usePostHog();
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -26,7 +33,7 @@ export function ChatWindow() {
   const setCurrentChat = useChatStore((s) => s.setCurrentChat);
   const setCredits = useChatStore((s) => s.setCredits);
   const workspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
-  const { sendMessage, submitChoice } = useChatStream();
+  const { sendMessage, submitChoice } = useChatStream(location);
   const draft = useChatStore((s) => s.draft);
   const [creating, setCreating] = useState(false);
   const [historyReady, setHistoryReady] = useState(false);
@@ -64,7 +71,7 @@ export function ChatWindow() {
     return () => {
       const s = useChatStore.getState();
       posthog?.capture('chat_session_completed', {
-        location: 'explore',
+        location,
         message_count: s.messages.length,
         tool_calls_total: s.toolCallsTotal,
         tenders_opened: s.tendersOpened,
@@ -229,6 +236,7 @@ export function ChatWindow() {
       try {
         const res = await agentClient.createChat({
           workspaceId,
+          workbenchId,
           agentType: 'base-chat',
         });
         chatId = res.chat?.id ?? null;
@@ -259,7 +267,7 @@ export function ChatWindow() {
           const p = res.profile;
           const hasProfile = res.exists;
           posthog?.capture('chat_session_started', {
-            location: 'explore',
+            location,
             has_workspace: Boolean(workspaceId),
             has_client_profile: hasProfile,
           });
@@ -274,7 +282,7 @@ export function ChatWindow() {
         })
         .catch(() => {
           posthog?.capture('chat_session_started', {
-            location: 'explore',
+            location,
             has_workspace: Boolean(workspaceId),
             has_client_profile: false,
           });

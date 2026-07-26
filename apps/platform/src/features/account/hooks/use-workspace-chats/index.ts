@@ -4,10 +4,12 @@ import { agentClient } from '~/lib/api/client';
 import { useAuthStore } from '~/store/auth';
 
 /**
- * The current user's chat sessions in the workspace, newest first. Backs the
+ * The current user's workspace-level chat sessions, newest first. Backs the
  * "riprendi" brief card on Oggi; ListChats is workspace-scoped (no workbench
- * filter exists) and returns every member's chats, so we filter to the
- * authenticated user client-side.
+ * filter exists) and returns every member's chats, so we filter client-side
+ * to the authenticated user and exclude workbench-scoped chats (promotion
+ * into a workbench is one-way — a promoted chat should only resume there,
+ * not leak back into the /explore resume list).
  */
 export function useWorkspaceChats(workspaceId: string) {
   const userId = useAuthStore((s) => s.user?.id);
@@ -27,7 +29,7 @@ export function useWorkspaceChats(workspaceId: string) {
       .listChats({ workspaceId })
       .then((res) => {
         if (!active) return;
-        const mine = res.chats.filter((c) => c.userId === userId);
+        const mine = res.chats.filter((c) => c.userId === userId && c.workbenchId === '');
         const sorted = [...mine].sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
         setData(sorted);
       })

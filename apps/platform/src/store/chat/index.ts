@@ -13,6 +13,7 @@ export interface ChatMessage {
 
 interface ChatStore {
   currentChatId: string | null;
+  currentWorkbenchId: string | null;
   messages: ChatMessage[];
   streaming: boolean;
   streamingContent: string;
@@ -30,6 +31,7 @@ interface ChatStore {
   } | null;
   activeTools: { name: string; status: 'running' | 'done' }[];
   setCurrentChat: (id: string | null) => void;
+  setCurrentWorkbench: (id: string | null) => void;
   addMessage: (msg: ChatMessage) => void;
   setMessages: (messages: ChatMessage[]) => void;
   setStreaming: (v: boolean) => void;
@@ -54,6 +56,7 @@ export const useChatStore = create<ChatStore>()(
   persist(
     (set) => ({
       currentChatId: null,
+      currentWorkbenchId: null,
       messages: [],
       streaming: false,
       streamingContent: '',
@@ -63,6 +66,7 @@ export const useChatStore = create<ChatStore>()(
       toolCallsTotal: 0,
       tendersOpened: 0,
       setCurrentChat: (id) => set({ currentChatId: id }),
+      setCurrentWorkbench: (id) => set({ currentWorkbenchId: id }),
       addMessage: (msg) =>
         set((s) =>
           s.messages.some((m) => m.id === msg.id) ? s : { messages: [...s.messages, msg] },
@@ -91,6 +95,7 @@ export const useChatStore = create<ChatStore>()(
           streaming: false,
           streamingContent: '',
           currentChatId: null,
+          currentWorkbenchId: null,
           pendingChoice: null,
           activeTools: [],
           toolCallsTotal: 0,
@@ -116,6 +121,7 @@ export const useChatStore = create<ChatStore>()(
       }),
       partialize: (s) => ({
         currentChatId: s.currentChatId,
+        currentWorkbenchId: s.currentWorkbenchId,
         messages: s.messages,
       }),
     },

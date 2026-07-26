@@ -614,6 +614,83 @@
       "saved": "Profil uložen."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Vybráno", "preparing": "Připravuje se", "submitted": "Podáno" },
+    "goNoGo": { "undecided": "Nerozhodnuto", "go": "Účastníme se", "noGo": "Neúčastníme se" },
+    "outcome": { "open": "Otevřeno", "won": "Vyhráno", "lost": "Prohráno", "withdrawn": "Staženo" },
+    "bands": {
+      "needsYouNow": "Vyžaduje pozornost",
+      "active": "V přípravě",
+      "submitted": "Podané",
+      "closed": "Uzavřené"
+    },
+    "actions": {
+      "prepare": "Připravit ve workbenchi",
+      "advance": "Posunout fázi",
+      "markGo": "Účastníme se",
+      "markNoGo": "Neúčastníme se"
+    },
+    "empty": {
+      "title": "Zatím nesledujete žádné zakázky",
+      "description": "Přidejte zakázku do tohoto workbenche a začněte ji připravovat.",
+      "seedTitle": "Nejvhodnější zakázky k přípravě",
+      "needsProfileTitle": "Vytvořte profil klienta, abyste viděli shodu",
+      "needsProfileCta": "Vytvořit profil klienta"
+    },
+    "fit": { "needsProfile": "Vytvořte profil klienta, abyste viděli shodu" },
+    "tombstone": {
+      "title": "Tato zakázka již není dostupná",
+      "description": "Zdrojový portál odstranil toto oznámení. Váš kontrolní seznam a poznámky zůstávají zachovány."
+    },
+    "checklist": {
+      "title": "Kontrolní seznam JED",
+      "progress": "{{done}} z {{total}} dokončeno",
+      "statusLabel": "Stav",
+      "noteLabel": "Poznámka",
+      "required": "Povinné",
+      "notePlaceholder": "Přidat poznámku…",
+      "status": { "pending": "Čeká", "done": "Hotovo", "na": "Nevztahuje se" },
+      "sections": {
+        "part_ii": "Část II — Údaje o hospodářském subjektu",
+        "part_iii": "Část III — Důvody pro vyloučení",
+        "part_iv": "Část IV — Kritéria pro výběr",
+        "conclusion": "Závěrečná prohlášení"
+      },
+      "items": {
+        "identification": "Identifikace a registrace hospodářského subjektu",
+        "sme_status": "Prohlášení o statusu MSP",
+        "representation": "Oprávněný zástupce",
+        "criminal_convictions": "Bez trestní odpovědnosti",
+        "tax_payments": "Daně uhrazeny",
+        "social_security": "Sociální pojištění uhrazeno",
+        "insolvency": "Bez úpadku nebo insolvence",
+        "misconduct": "Bez závažného profesního pochybení",
+        "conflict_interest": "Bez střetu zájmů",
+        "suitability": "Způsobilost k výkonu činnosti",
+        "economic_standing": "Ekonomická a finanční způsobilost",
+        "technical_ability": "Technická a odborná způsobilost",
+        "quality_assurance": "Systémy zajištění kvality",
+        "espd_signed": "JED vyplněn a podepsán"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Rozhodnutí",
+      "stageTitle": "Fáze",
+      "outcomeTitle": "Výsledek",
+      "backToPortfolio": "Zpět na portfolio"
+    },
+    "picker": {
+      "title": "Vyberte workbench",
+      "recent": "Nedávné",
+      "all": "Všechny workbenche",
+      "empty": "Zatím žádné workbenche — nejprve nějaký vytvořte."
+    },
+    "errors": {
+      "duplicate": "Tato zakázka je již v tomto workbenchi.",
+      "unavailable": "Tato zakázka již není dostupná.",
+      "generic": "Něco se pokazilo. Zkuste to prosím znovu."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Načítání…",

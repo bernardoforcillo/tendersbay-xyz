@@ -621,6 +621,88 @@
       "saved": "Profil zapisany."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Wybrane", "preparing": "W przygotowaniu", "submitted": "Złożone" },
+    "goNoGo": { "undecided": "Nierozstrzygnięte", "go": "Startujemy", "noGo": "Nie startujemy" },
+    "outcome": {
+      "open": "Otwarte",
+      "won": "Wygrane",
+      "lost": "Przegrane",
+      "withdrawn": "Wycofane"
+    },
+    "bands": {
+      "needsYouNow": "Wymaga uwagi teraz",
+      "active": "W przygotowaniu",
+      "submitted": "Złożone",
+      "closed": "Zamknięte"
+    },
+    "actions": {
+      "prepare": "Przygotuj w workbenchu",
+      "advance": "Przejdź do kolejnego etapu",
+      "markGo": "Startujemy",
+      "markNoGo": "Nie startujemy"
+    },
+    "empty": {
+      "title": "Brak śledzonych przetargów",
+      "description": "Dodaj przetarg do tego workbencha, aby rozpocząć jego przygotowanie.",
+      "seedTitle": "Najlepiej dopasowane przetargi do przygotowania",
+      "needsProfileTitle": "Utwórz profil klienta, aby zobaczyć dopasowanie",
+      "needsProfileCta": "Utwórz profil klienta"
+    },
+    "fit": { "needsProfile": "Utwórz profil klienta, aby zobaczyć dopasowanie" },
+    "tombstone": {
+      "title": "Ten przetarg nie jest już dostępny",
+      "description": "Portal źródłowy usunął to ogłoszenie. Twoja checklista i notatki zostały zachowane."
+    },
+    "checklist": {
+      "title": "Checklista ESPD / JEDZ",
+      "progress": "{{done}} z {{total}} ukończonych",
+      "statusLabel": "Status",
+      "noteLabel": "Notatka",
+      "required": "Wymagane",
+      "notePlaceholder": "Dodaj notatkę…",
+      "status": { "pending": "Oczekujące", "done": "Gotowe", "na": "Nie dotyczy" },
+      "sections": {
+        "part_ii": "Część II — Informacje o wykonawcy",
+        "part_iii": "Część III — Podstawy wykluczenia",
+        "part_iv": "Część IV — Kryteria kwalifikacji",
+        "conclusion": "Oświadczenia końcowe"
+      },
+      "items": {
+        "identification": "Identyfikacja i rejestracja wykonawcy",
+        "sme_status": "Oświadczenie o statusie MŚP",
+        "representation": "Upoważniony przedstawiciel",
+        "criminal_convictions": "Brak wyroków skazujących",
+        "tax_payments": "Podatki uregulowane",
+        "social_security": "Składki na ubezpieczenie społeczne opłacone",
+        "insolvency": "Brak upadłości lub niewypłacalności",
+        "misconduct": "Brak poważnego wykroczenia zawodowego",
+        "conflict_interest": "Brak konfliktu interesów",
+        "suitability": "Zdolność do wykonywania działalności",
+        "economic_standing": "Sytuacja ekonomiczna i finansowa",
+        "technical_ability": "Zdolność techniczna i zawodowa",
+        "quality_assurance": "Systemy zapewnienia jakości",
+        "espd_signed": "ESPD/JEDZ wypełniony i podpisany"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Decyzja",
+      "stageTitle": "Etap",
+      "outcomeTitle": "Wynik",
+      "backToPortfolio": "Powrót do portfolio"
+    },
+    "picker": {
+      "title": "Wybierz workbench",
+      "recent": "Ostatnie",
+      "all": "Wszystkie workbenchy",
+      "empty": "Brak workbenchy — najpierw utwórz jeden."
+    },
+    "errors": {
+      "duplicate": "Ten przetarg jest już w tym workbenchu.",
+      "unavailable": "Ten przetarg nie jest już dostępny.",
+      "generic": "Coś poszło nie tak. Spróbuj ponownie."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Ładowanie…",

@@ -611,6 +611,92 @@
       "saved": "Profil gespeichert."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Vorgemerkt",
+      "preparing": "In Vorbereitung",
+      "submitted": "Eingereicht"
+    },
+    "goNoGo": { "undecided": "Unentschieden", "go": "Teilnahme", "noGo": "Keine Teilnahme" },
+    "outcome": {
+      "open": "Offen",
+      "won": "Gewonnen",
+      "lost": "Verloren",
+      "withdrawn": "Zurückgezogen"
+    },
+    "bands": {
+      "needsYouNow": "Braucht jetzt Ihre Aufmerksamkeit",
+      "active": "In Vorbereitung",
+      "submitted": "Eingereicht",
+      "closed": "Abgeschlossen"
+    },
+    "actions": {
+      "prepare": "Im Workbench vorbereiten",
+      "advance": "Phase weiterschalten",
+      "markGo": "Teilnahme",
+      "markNoGo": "Keine Teilnahme"
+    },
+    "empty": {
+      "title": "Noch keine Ausschreibungen verfolgt",
+      "description": "Nehmen Sie eine Ausschreibung in dieses Workbench auf, um mit der Vorbereitung zu beginnen.",
+      "seedTitle": "Am besten passende Ausschreibungen zur Vorbereitung",
+      "needsProfileTitle": "Richten Sie ein Kundenprofil ein, um die Eignung zu sehen",
+      "needsProfileCta": "Kundenprofil einrichten"
+    },
+    "fit": { "needsProfile": "Richten Sie ein Kundenprofil ein, um die Eignung zu sehen" },
+    "tombstone": {
+      "title": "Diese Ausschreibung ist nicht mehr verfügbar",
+      "description": "Das Quellportal hat diese Bekanntmachung entfernt. Ihre Checkliste und Notizen bleiben erhalten."
+    },
+    "checklist": {
+      "title": "ESPD / EEE-Checkliste",
+      "progress": "{{done}} von {{total}} erledigt",
+      "statusLabel": "Status",
+      "noteLabel": "Notiz",
+      "required": "Erforderlich",
+      "notePlaceholder": "Notiz hinzufügen…",
+      "status": { "pending": "Ausstehend", "done": "Erledigt", "na": "Nicht zutreffend" },
+      "sections": {
+        "part_ii": "Teil II — Angaben zum Wirtschaftsteilnehmer",
+        "part_iii": "Teil III — Ausschlussgründe",
+        "part_iv": "Teil IV — Eignungskriterien",
+        "conclusion": "Abschließende Erklärungen"
+      },
+      "items": {
+        "identification": "Identifizierung und Registrierung des Wirtschaftsteilnehmers",
+        "sme_status": "Erklärung zum KMU-Status",
+        "representation": "Bevollmächtigter Vertreter",
+        "criminal_convictions": "Keine strafrechtlichen Verurteilungen",
+        "tax_payments": "Steuern beglichen",
+        "social_security": "Sozialversicherungsbeiträge entrichtet",
+        "insolvency": "Kein Konkurs oder Insolvenzverfahren",
+        "misconduct": "Keine schwere berufliche Verfehlung",
+        "conflict_interest": "Kein Interessenkonflikt",
+        "suitability": "Befähigung zur Berufsausübung",
+        "economic_standing": "Wirtschaftliche und finanzielle Leistungsfähigkeit",
+        "technical_ability": "Technische und berufliche Leistungsfähigkeit",
+        "quality_assurance": "Qualitätssicherungssysteme",
+        "espd_signed": "ESPD/EEE ausgefüllt und unterzeichnet"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Entscheidung",
+      "stageTitle": "Phase",
+      "outcomeTitle": "Ergebnis",
+      "backToPortfolio": "Zurück zum Portfolio"
+    },
+    "picker": {
+      "title": "Workbench auswählen",
+      "recent": "Zuletzt verwendet",
+      "all": "Alle Workbenches",
+      "empty": "Noch keine Workbenches — erstellen Sie zuerst eine."
+    },
+    "errors": {
+      "duplicate": "Diese Ausschreibung befindet sich bereits in diesem Workbench.",
+      "unavailable": "Diese Ausschreibung ist nicht mehr verfügbar.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Wird geladen…",

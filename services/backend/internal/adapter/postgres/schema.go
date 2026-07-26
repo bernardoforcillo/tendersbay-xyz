@@ -520,3 +520,59 @@ type DBTenderLot struct {
 	Currency string     `drop:"currency"`
 	Deadline *time.Time `drop:"deadline"`
 }
+
+// ── Bid tables (workbench bando hub) ────────────────────────────────────────
+// Mirrors the workbench tables above: full DDL constraints on the drops handles
+// so the 0009 migration generates CREATE TABLE from the same columns the repo
+// queries with. The composite uniques ((workbench_id, tender_id) so a tender is
+// taken into a workbench at most once, and (bid_id, item_code) which backs the
+// checklist upsert) are added as raw ALTER TABLE in migrate_bids.go — drops does
+// not emit them inline. tender_id is a plain BigInt with NO .References:
+// tenders.ingested_tenders is owned and migrated by services/ingestion.
+var (
+	Bids           = pg.NewTable("bids")
+	BidID          = pg.Add(Bids, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	BidWorkbenchID = pg.Add(Bids, pg.UUID("workbench_id").NotNull().References(WBID, pg.OnDelete("CASCADE")))
+	BidTenderID    = pg.Add(Bids, pg.BigInt("tender_id").NotNull())
+	BidGoNoGo      = pg.Add(Bids, pg.Text("go_no_go").NotNull().Default("'undecided'"))
+	BidStage       = pg.Add(Bids, pg.Text("stage").NotNull().Default("'shortlisted'"))
+	BidOutcome     = pg.Add(Bids, pg.Text("outcome")) // nullable: NULL = open
+	BidCreatedBy   = pg.Add(Bids, pg.UUID("created_by").NotNull())
+	BidCreatedAt   = pg.Add(Bids, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	BidUpdatedAt   = pg.Add(Bids, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	BidChecklistItems = pg.NewTable("bid_checklist_items")
+	BCIID             = pg.Add(BidChecklistItems, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	BCIBidID          = pg.Add(BidChecklistItems, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	BCISectionCode    = pg.Add(BidChecklistItems, pg.Text("section_code").NotNull())
+	BCIItemCode       = pg.Add(BidChecklistItems, pg.Text("item_code").NotNull())
+	BCIStatus         = pg.Add(BidChecklistItems, pg.Text("status").NotNull().Default("'pending'"))
+	BCINote           = pg.Add(BidChecklistItems, pg.Text("note").NotNull().Default("''"))
+	BCIRequired       = pg.Add(BidChecklistItems, pg.Boolean("required").NotNull().Default("true"))
+	BCIPosition       = pg.Add(BidChecklistItems, pg.BigInt("position").NotNull().Default("0"))
+	BCIUpdatedAt      = pg.Add(BidChecklistItems, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+)
+
+type DBBid struct {
+	ID          string    `drop:"id"`
+	WorkbenchID string    `drop:"workbench_id"`
+	TenderID    int64     `drop:"tender_id"`
+	GoNoGo      string    `drop:"go_no_go"`
+	Stage       string    `drop:"stage"`
+	Outcome     *string   `drop:"outcome"` // nullable: nil = open
+	CreatedBy   string    `drop:"created_by"`
+	CreatedAt   time.Time `drop:"created_at"`
+	UpdatedAt   time.Time `drop:"updated_at"`
+}
+
+type DBChecklistItem struct {
+	ID          string    `drop:"id"`
+	BidID       string    `drop:"bid_id"`
+	SectionCode string    `drop:"section_code"`
+	ItemCode    string    `drop:"item_code"`
+	Status      string    `drop:"status"`
+	Note        string    `drop:"note"`
+	Required    bool      `drop:"required"`
+	Position    int64     `drop:"position"`
+	UpdatedAt   time.Time `drop:"updated_at"`
+}

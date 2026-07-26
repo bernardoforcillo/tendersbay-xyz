@@ -617,6 +617,88 @@
       "saved": "Profil shranjen."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Izbrano", "preparing": "V pripravi", "submitted": "Oddano" },
+    "goNoGo": { "undecided": "Neodločeno", "go": "Sodelujemo", "noGo": "Ne sodelujemo" },
+    "outcome": {
+      "open": "Odprto",
+      "won": "Dobljeno",
+      "lost": "Izgubljeno",
+      "withdrawn": "Umaknjeno"
+    },
+    "bands": {
+      "needsYouNow": "Zahteva pozornost zdaj",
+      "active": "V pripravi",
+      "submitted": "Oddano",
+      "closed": "Zaključeno"
+    },
+    "actions": {
+      "prepare": "Pripravi v workbenchu",
+      "advance": "Napreduj v naslednjo fazo",
+      "markGo": "Sodelujemo",
+      "markNoGo": "Ne sodelujemo"
+    },
+    "empty": {
+      "title": "Trenutno ni spremljanih razpisov",
+      "description": "Dodajte razpis v ta workbench, da začnete pripravo.",
+      "seedTitle": "Najbolj ustrezni razpisi za pripravo",
+      "needsProfileTitle": "Ustvarite profil stranke, da vidite ustreznost",
+      "needsProfileCta": "Ustvari profil stranke"
+    },
+    "fit": { "needsProfile": "Ustvarite profil stranke, da vidite ustreznost" },
+    "tombstone": {
+      "title": "Ta razpis ni več na voljo",
+      "description": "Izvorni portal je odstranil to obvestilo. Vaš kontrolni seznam in opombe so ohranjeni."
+    },
+    "checklist": {
+      "title": "Kontrolni seznam ESPD",
+      "progress": "{{done}} od {{total}} dokončano",
+      "statusLabel": "Stanje",
+      "noteLabel": "Opomba",
+      "required": "Obvezno",
+      "notePlaceholder": "Dodaj opombo…",
+      "status": { "pending": "V teku", "done": "Končano", "na": "Ni relevantno" },
+      "sections": {
+        "part_ii": "II. del — Podatki o gospodarskem subjektu",
+        "part_iii": "III. del — Razlogi za izključitev",
+        "part_iv": "IV. del — Pogoji za sodelovanje",
+        "conclusion": "Zaključne izjave"
+      },
+      "items": {
+        "identification": "Identifikacija in registracija gospodarskega subjekta",
+        "sme_status": "Izjava o statusu MSP",
+        "representation": "Pooblaščeni zastopnik",
+        "criminal_convictions": "Brez kazenskih obsodb",
+        "tax_payments": "Plačani davki",
+        "social_security": "Plačani prispevki za socialno varnost",
+        "insolvency": "Brez stečaja ali insolventnosti",
+        "misconduct": "Brez hujše poklicne kršitve",
+        "conflict_interest": "Brez nasprotja interesov",
+        "suitability": "Sposobnost za opravljanje dejavnosti",
+        "economic_standing": "Ekonomski in finančni položaj",
+        "technical_ability": "Tehnična in strokovna sposobnost",
+        "quality_assurance": "Sistemi zagotavljanja kakovosti",
+        "espd_signed": "ESPD izpolnjen in podpisan"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Odločitev",
+      "stageTitle": "Faza",
+      "outcomeTitle": "Izid",
+      "backToPortfolio": "Nazaj na portfelj"
+    },
+    "picker": {
+      "title": "Izberite workbench",
+      "recent": "Nedavni",
+      "all": "Vsi workbenchi",
+      "empty": "Trenutno ni workbenchov — najprej ustvarite enega."
+    },
+    "errors": {
+      "duplicate": "Ta razpis je že v tem workbenchu.",
+      "unavailable": "Ta razpis ni več na voljo.",
+      "generic": "Nekaj je šlo narobe. Poskusite znova."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Nalaganje…",

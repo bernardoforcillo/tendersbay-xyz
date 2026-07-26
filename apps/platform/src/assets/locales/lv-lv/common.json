@@ -614,6 +614,83 @@
       "saved": "Profils saglabāts."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Atlasīts", "preparing": "Tiek gatavots", "submitted": "Iesniegts" },
+    "goNoGo": { "undecided": "Nav izlemts", "go": "Piedalāmies", "noGo": "Nepiedalāmies" },
+    "outcome": { "open": "Atvērts", "won": "Uzvarēts", "lost": "Zaudēts", "withdrawn": "Atsaukts" },
+    "bands": {
+      "needsYouNow": "Nepieciešama uzmanība tagad",
+      "active": "Tiek gatavots",
+      "submitted": "Iesniegti",
+      "closed": "Pabeigti"
+    },
+    "actions": {
+      "prepare": "Sagatavot workbench",
+      "advance": "Virzīt uz nākamo posmu",
+      "markGo": "Piedalāmies",
+      "markNoGo": "Nepiedalāmies"
+    },
+    "empty": {
+      "title": "Vēl nav neviena sekota iepirkuma",
+      "description": "Pievienojiet iepirkumu šim workbench, lai sāktu tā sagatavošanu.",
+      "seedTitle": "Vispiemērotākie iepirkumi sagatavošanai",
+      "needsProfileTitle": "Izveidojiet klienta profilu, lai redzētu atbilstību",
+      "needsProfileCta": "Izveidot klienta profilu"
+    },
+    "fit": { "needsProfile": "Izveidojiet klienta profilu, lai redzētu atbilstību" },
+    "tombstone": {
+      "title": "Šis iepirkums vairs nav pieejams",
+      "description": "Avota portāls ir noņēmis šo paziņojumu. Jūsu kontrolsaraksts un piezīmes ir saglabāti."
+    },
+    "checklist": {
+      "title": "ESPD kontrolsaraksts",
+      "progress": "{{done}} no {{total}} pabeigti",
+      "statusLabel": "Statuss",
+      "noteLabel": "Piezīme",
+      "required": "Obligāts",
+      "notePlaceholder": "Pievienot piezīmi…",
+      "status": { "pending": "Gaida", "done": "Pabeigts", "na": "Neattiecas" },
+      "sections": {
+        "part_ii": "II daļa — Informācija par uzņēmēju",
+        "part_iii": "III daļa — Izslēgšanas iemesli",
+        "part_iv": "IV daļa — Atlases kritēriji",
+        "conclusion": "Noslēguma paziņojumi"
+      },
+      "items": {
+        "identification": "Uzņēmēja identifikācija un reģistrācija",
+        "sme_status": "MVU statusa deklarācija",
+        "representation": "Pilnvarots pārstāvis",
+        "criminal_convictions": "Nav sodāmības",
+        "tax_payments": "Nodokļi samaksāti",
+        "social_security": "Sociālās apdrošināšanas iemaksas samaksātas",
+        "insolvency": "Nav bankrota vai maksātnespējas",
+        "misconduct": "Nav smaga profesionālā pārkāpuma",
+        "conflict_interest": "Nav interešu konflikta",
+        "suitability": "Piemērotība darbības veikšanai",
+        "economic_standing": "Saimnieciskais un finansiālais stāvoklis",
+        "technical_ability": "Tehniskās un profesionālās spējas",
+        "quality_assurance": "Kvalitātes nodrošināšanas sistēmas",
+        "espd_signed": "ESPD aizpildīts un parakstīts"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Lēmums",
+      "stageTitle": "Posms",
+      "outcomeTitle": "Rezultāts",
+      "backToPortfolio": "Atpakaļ uz portfeli"
+    },
+    "picker": {
+      "title": "Izvēlieties workbench",
+      "recent": "Nesenie",
+      "all": "Visi workbench",
+      "empty": "Vēl nav neviena workbench — vispirms izveidojiet."
+    },
+    "errors": {
+      "duplicate": "Šis iepirkums jau ir šajā workbench.",
+      "unavailable": "Šis iepirkums vairs nav pieejams.",
+      "generic": "Kaut kas nogāja greizi. Lūdzu, mēģiniet vēlreiz."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Notiek ielāde…",

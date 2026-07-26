@@ -9,6 +9,7 @@ import {
   TenderNotFoundError,
   useTenderHead,
 } from '~/features/tenders';
+import { PrepareInWorkbench } from '~/features/workbench';
 
 export const Route = createFileRoute('/_authenticated/tenders/$id')({
   loader: ({ params }) => loadTenderDetail(params.id),
@@ -35,6 +36,7 @@ function AccountTenderDetail() {
         <TenderDetailView
           tender={tender}
           related={related}
+          actions={<PrepareInWorkbench tenderId={tender.id} deadline={tender.deadline} />}
           renderRelated={(tr) => (
             <Link
               to="/tenders/$id"

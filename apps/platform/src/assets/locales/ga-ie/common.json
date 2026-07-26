@@ -624,6 +624,96 @@
       "saved": "Próifíl sábháilte."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Roghnaithe",
+      "preparing": "Á ullmhú",
+      "submitted": "Curtha isteach"
+    },
+    "goNoGo": {
+      "undecided": "Gan chinneadh",
+      "go": "Glacaimid páirt",
+      "noGo": "Ní ghlacaimid páirt"
+    },
+    "outcome": {
+      "open": "Oscailte",
+      "won": "Bhuamar",
+      "lost": "Chailleamar",
+      "withdrawn": "Tarraingthe siar"
+    },
+    "bands": {
+      "needsYouNow": "Teastaíonn aird anois",
+      "active": "Á ullmhú",
+      "submitted": "Curtha isteach",
+      "closed": "Dúnta"
+    },
+    "actions": {
+      "prepare": "Ullmhaigh sa workbench",
+      "advance": "Céim a chur chun cinn",
+      "markGo": "Glacaimid páirt",
+      "markNoGo": "Ní ghlacaimid páirt"
+    },
+    "empty": {
+      "title": "Níl aon tairiscint á rianú fós",
+      "description": "Cuir tairiscint isteach sa workbench seo chun tosú ar í a ullmhú.",
+      "seedTitle": "Na tairiscintí is fearr a oireann le hullmhú",
+      "needsProfileTitle": "Cruthaigh próifíl cliaint chun feiliúnacht a fheiceáil",
+      "needsProfileCta": "Cruthaigh próifíl cliaint"
+    },
+    "fit": { "needsProfile": "Cruthaigh próifíl cliaint chun feiliúnacht a fheiceáil" },
+    "tombstone": {
+      "title": "Níl an tairiscint seo ar fáil a thuilleadh",
+      "description": "Bhain an tairseach fhoinseach an fógra seo. Tá do liosta seiceála agus do nótaí sábháilte fós."
+    },
+    "checklist": {
+      "title": "Liosta seiceála ESPD",
+      "progress": "{{done}} as {{total}} déanta",
+      "statusLabel": "Stádas",
+      "noteLabel": "Nóta",
+      "required": "Riachtanach",
+      "notePlaceholder": "Cuir nóta leis…",
+      "status": { "pending": "Ar feitheamh", "done": "Déanta", "na": "N/B" },
+      "sections": {
+        "part_ii": "Cuid II — Faisnéis faoin oibreoir",
+        "part_iii": "Cuid III — Forais eisiaimh",
+        "part_iv": "Cuid IV — Critéir roghnúcháin",
+        "conclusion": "Ráitis chríochnaitheacha"
+      },
+      "items": {
+        "identification": "Sainaithint agus clárú an oibreora",
+        "sme_status": "Dearbhú stádais FBM",
+        "representation": "Ionadaí údaraithe",
+        "criminal_convictions": "Gan chiontuithe coiriúla",
+        "tax_payments": "Cánacha íoctha",
+        "social_security": "Ranníocaíochtaí slándála sóisialta íoctha",
+        "insolvency": "Gan féimheacht ná dócmhainneacht",
+        "misconduct": "Gan mí-iompar tromchúiseach gairmiúil",
+        "conflict_interest": "Gan coinbhleacht leasa",
+        "suitability": "Oiriúnacht chun an ghníomhaíocht a shaothrú",
+        "economic_standing": "Seasamh eacnamaíoch agus airgeadais",
+        "technical_ability": "Cumas teicniúil agus gairmiúil",
+        "quality_assurance": "Scéimeanna cinntithe cáilíochta",
+        "espd_signed": "ESPD líonta agus sínithe"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Cinneadh",
+      "stageTitle": "Céim",
+      "outcomeTitle": "Toradh",
+      "backToPortfolio": "Ar ais go dtí an punann"
+    },
+    "picker": {
+      "title": "Roghnaigh workbench",
+      "recent": "Le déanaí",
+      "all": "Gach workbench",
+      "empty": "Níl aon workbench ann fós — cruthaigh ceann ar dtús."
+    },
+    "errors": {
+      "duplicate": "Tá an tairiscint seo sa workbench sin cheana.",
+      "unavailable": "Níl an tairiscint seo ar fáil a thuilleadh.",
+      "generic": "Tharla earráid. Bain triail eile as le do thoil."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Á lódáil…",
