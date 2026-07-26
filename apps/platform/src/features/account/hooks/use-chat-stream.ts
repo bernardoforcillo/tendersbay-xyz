@@ -52,7 +52,7 @@ export function useChatStream(location: 'explore' | 'workbench' = 'explore') {
             useChatStore.getState().appendStreamToken(event.value);
           } else if (event.case === 'toolCall') {
             const { name, status } = event.value;
-            useChatStore.getState().setActiveTools(name, status);
+            useChatStore.getState().setActiveTools(name, status as 'running' | 'done');
             if (status === 'running') {
               useChatStore.getState().incToolCalls();
               posthog?.capture('tool_call_breadcrumb_rendered', {
@@ -176,7 +176,7 @@ export function useChatStream(location: 'explore' | 'workbench' = 'explore') {
             useChatStore.getState().appendStreamToken(event.value);
           } else if (event.case === 'toolCall') {
             const { name, status } = event.value;
-            useChatStore.getState().setActiveTools(name, status);
+            useChatStore.getState().setActiveTools(name, status as 'running' | 'done');
             if (status === 'running') {
               useChatStore.getState().incToolCalls();
               posthog?.capture('tool_call_breadcrumb_rendered', {
