@@ -16,6 +16,7 @@ import (
 
 	agentv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
+	bidv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1/bidv1connect"
 	tenderv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
@@ -29,6 +30,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/config"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
@@ -188,6 +190,11 @@ func main() {
 	)
 	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo)
 
+	// Bid lifecycle (workbench-bando-hub) — consumes workbenchSvc for access
+	// checks and tenderSvc for fresh fit + tender summaries.
+	bidRepo := postgres.NewBidRepo(db)
+	bidSvc := bid.NewService(bidRepo, workbenchSvc, tenderSvc)
+
 	// Agent / chat service
 	chatRepo := postgres.NewChatRepo(db)
 	creditRepo := postgres.NewWorkspaceCreditRepo(db)
@@ -205,6 +212,7 @@ func main() {
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc, clientProfileSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
 	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, memberRepo)
+	bidHandler := connectapi.NewBidHandler(bidSvc)
 
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
@@ -212,6 +220,7 @@ func main() {
 	workbenchPath, workbenchRPC := workbenchv1connect.NewWorkbenchServiceHandler(workbenchHandler)
 	agentPath, agentRPC := agentv1connect.NewAgentServiceHandler(agentHandler)
 	tenderPath, tenderRPC := tenderv1connect.NewTenderServiceHandler(tenderHandler)
+	bidPath, bidRPC := bidv1connect.NewBidServiceHandler(bidHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
@@ -222,6 +231,7 @@ func main() {
 	mux.Handle(workbenchPath, workbenchRPC)
 	mux.Handle(agentPath, agentRPC)
 	mux.Handle(tenderPath, tenderRPC)
+	mux.Handle(bidPath, bidRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
 	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(connectapi.ClientIPMiddleware(mux)))
