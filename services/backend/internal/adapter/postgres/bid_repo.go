@@ -13,6 +13,8 @@ type BidRepo struct{ db *pg.DB }
 
 func NewBidRepo(db *pg.DB) *BidRepo { return &BidRepo{db: db} }
 
+var _ bid.Repository = (*BidRepo)(nil)
+
 func (r *BidRepo) CreateBid(ctx context.Context, b bid.Bid) (bid.Bid, error) {
 	var row DBBid
 	err := r.db.Insert(Bids).
@@ -143,6 +145,84 @@ func dbBidToDomain(row DBBid) bid.Bid {
 		Outcome:     bid.Outcome(outcome),
 		CreatedBy:   row.CreatedBy,
 		CreatedAt:   row.CreatedAt,
+		UpdatedAt:   row.UpdatedAt,
+	}
+}
+
+func (r *BidRepo) SeedChecklist(ctx context.Context, bidID string, seeds []bid.ChecklistItemSeed) error {
+	if len(seeds) == 0 {
+		return nil
+	}
+	rows := make([][]pg.ColumnValue, 0, len(seeds))
+	for _, s := range seeds {
+		rows = append(rows, []pg.ColumnValue{
+			BCIBidID.Val(bidID),
+			BCISectionCode.Val(s.SectionCode),
+			BCIItemCode.Val(s.ItemCode),
+			BCIRequired.Val(s.Required),
+			BCIPosition.Val(int64(s.Position)),
+		})
+	}
+	// status ('pending'), note (''), id (gen_random_uuid()) and updated_at
+	// (now()) fall to their column defaults.
+	_, err := r.db.Insert(BidChecklistItems).Rows(rows...).Exec(ctx)
+	return err
+}
+
+func (r *BidRepo) ListChecklistItems(ctx context.Context, bidID string) ([]bid.ChecklistItem, error) {
+	var rows []DBChecklistItem
+	err := r.db.Select().From(BidChecklistItems).
+		Where(BCIBidID.Eq(bidID)).
+		OrderBy(BCIPosition.Asc()).
+		All(ctx, &rows)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]bid.ChecklistItem, len(rows))
+	for i, row := range rows {
+		out[i] = dbChecklistToDomain(row)
+	}
+	return out, nil
+}
+
+func (r *BidRepo) UpsertChecklistItem(ctx context.Context, bidID, itemCode, status, note string) (bid.ChecklistItem, error) {
+	now := time.Now()
+	var row DBChecklistItem
+	// The (bid_id, item_code) unique arbiters the upsert. section_code is
+	// NOT NULL with no column default, so the INSERT branch binds "" to stay
+	// valid; the conflict (UPDATE) branch — the real path, since AddBid always
+	// seeds the item — leaves section_code/required/position untouched and
+	// RETURNING reflects the seeded values.
+	err := r.db.Insert(BidChecklistItems).
+		Row(
+			BCIBidID.Val(bidID),
+			BCIItemCode.Val(itemCode),
+			BCISectionCode.Val(""),
+			BCIStatus.Val(status),
+			BCINote.Val(note),
+			BCIUpdatedAt.Val(now),
+		).
+		OnConflictUpdate(BCIBidID, BCIItemCode).
+		Set(BCIStatus.Val(status), BCINote.Val(note), BCIUpdatedAt.Val(now)).
+		Done().
+		Returning(BCIID, BCIBidID, BCISectionCode, BCIItemCode, BCIStatus, BCINote, BCIRequired, BCIPosition, BCIUpdatedAt).
+		One(ctx, &row)
+	if err != nil {
+		return bid.ChecklistItem{}, err
+	}
+	return dbChecklistToDomain(row), nil
+}
+
+func dbChecklistToDomain(row DBChecklistItem) bid.ChecklistItem {
+	return bid.ChecklistItem{
+		ID:          row.ID,
+		BidID:       row.BidID,
+		SectionCode: row.SectionCode,
+		ItemCode:    row.ItemCode,
+		Status:      row.Status,
+		Note:        row.Note,
+		Required:    row.Required,
+		Position:    int(row.Position),
 		UpdatedAt:   row.UpdatedAt,
 	}
 }
