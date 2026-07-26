@@ -187,4 +187,26 @@ describe('ChatWindow', () => {
       expect.objectContaining({ location: 'explore_chat', has_sectors: true, has_countries: true }),
     );
   });
+
+  it('workbench mode: binds createChat to the workbench and emits location:workbench', async () => {
+    vi.mocked(agentClient.getMessages).mockResolvedValue({ messages: [] } as never);
+    vi.mocked(agentClient.createChat).mockResolvedValue({ chat: { id: 'wb-chat-1' } } as never);
+    useChatStore.setState({ currentChatId: null, draft: 'Ciao' });
+
+    render(<ChatWindow location="workbench" workbenchId="wb-1" />);
+
+    await waitFor(() => {
+      expect(agentClient.createChat).toHaveBeenCalledWith({
+        workspaceId: 'ws-1',
+        workbenchId: 'wb-1',
+        agentType: 'base-chat',
+      });
+    });
+    await waitFor(() => {
+      expect(captureMock).toHaveBeenCalledWith(
+        'chat_session_started',
+        expect.objectContaining({ location: 'workbench' }),
+      );
+    });
+  });
 });
