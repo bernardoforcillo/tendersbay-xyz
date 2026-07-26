@@ -8,6 +8,7 @@ import (
 	"connectrpc.com/connect"
 
 	bidv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1/bidv1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 )
 
@@ -116,4 +117,81 @@ func (h *BidHandler) ListChecklistItems(ctx context.Context, req *connect.Reques
 		out[i] = toProtoChecklistItem(it)
 	}
 	return connect.NewResponse(&bidv1.ListChecklistItemsResponse{Items: out}), nil
+}
+
+var _ bidv1connect.BidServiceHandler = (*BidHandler)(nil)
+
+func (h *BidHandler) AddBid(ctx context.Context, req *connect.Request[bidv1.AddBidRequest]) (*connect.Response[bidv1.AddBidResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	tenderID, err := strconv.ParseInt(req.Msg.TenderId, 10, 64)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument, err)
+	}
+	b, err := h.svc.AddBid(ctx, uid, req.Msg.WorkbenchId, tenderID)
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&bidv1.AddBidResponse{Bid: toProtoBidEntity(b)}), nil
+}
+
+func (h *BidHandler) SetGoNoGo(ctx context.Context, req *connect.Request[bidv1.SetGoNoGoRequest]) (*connect.Response[bidv1.SetGoNoGoResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	b, err := h.svc.SetGoNoGo(ctx, uid, req.Msg.WorkbenchId, req.Msg.BidId, bid.GoNoGo(req.Msg.GoNoGo))
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&bidv1.SetGoNoGoResponse{Bid: toProtoBidEntity(b)}), nil
+}
+
+func (h *BidHandler) AdvanceStage(ctx context.Context, req *connect.Request[bidv1.AdvanceStageRequest]) (*connect.Response[bidv1.AdvanceStageResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	b, err := h.svc.AdvanceStage(ctx, uid, req.Msg.WorkbenchId, req.Msg.BidId)
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&bidv1.AdvanceStageResponse{Bid: toProtoBidEntity(b)}), nil
+}
+
+func (h *BidHandler) RecordOutcome(ctx context.Context, req *connect.Request[bidv1.RecordOutcomeRequest]) (*connect.Response[bidv1.RecordOutcomeResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	b, err := h.svc.RecordOutcome(ctx, uid, req.Msg.WorkbenchId, req.Msg.BidId, bid.Outcome(req.Msg.Outcome))
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&bidv1.RecordOutcomeResponse{Bid: toProtoBidEntity(b)}), nil
+}
+
+func (h *BidHandler) UpsertChecklistAnswer(ctx context.Context, req *connect.Request[bidv1.UpsertChecklistAnswerRequest]) (*connect.Response[bidv1.UpsertChecklistAnswerResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	item, err := h.svc.UpsertChecklistAnswer(ctx, uid, req.Msg.WorkbenchId, req.Msg.BidId, req.Msg.ItemCode, req.Msg.Status, req.Msg.Note)
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&bidv1.UpsertChecklistAnswerResponse{Item: toProtoChecklistItem(item)}), nil
+}
+
+func (h *BidHandler) RemoveBid(ctx context.Context, req *connect.Request[bidv1.RemoveBidRequest]) (*connect.Response[bidv1.RemoveBidResponse], error) {
+	uid, err := requireUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if err := h.svc.RemoveBid(ctx, uid, req.Msg.WorkbenchId, req.Msg.BidId); err != nil {
+		return nil, toConnectError(err)
+	}
+	return connect.NewResponse(&bidv1.RemoveBidResponse{}), nil
 }
