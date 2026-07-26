@@ -62,3 +62,28 @@ func (s *Service) SetGoNoGo(ctx context.Context, userID, workbenchID, bidID stri
 	}
 	return s.repo.UpdateGoNoGo(ctx, bidID, d)
 }
+
+// AdvanceStage moves the bid one step forward (shortlisted->preparing->submitted).
+// A no_go bid cannot advance; there is no step past submitted.
+func (s *Service) AdvanceStage(ctx context.Context, userID, workbenchID, bidID string) (Bid, error) {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return Bid{}, err
+	}
+	current, err := s.repo.FindBidByID(ctx, workbenchID, bidID)
+	if err != nil {
+		return Bid{}, err
+	}
+	if current.GoNoGo == GoNoGoNoGo {
+		return Bid{}, ErrBidNotGo
+	}
+	var next Stage
+	switch current.Stage {
+	case StageShortlisted:
+		next = StagePreparing
+	case StagePreparing:
+		next = StageSubmitted
+	default:
+		return Bid{}, ErrInvalidTransition
+	}
+	return s.repo.UpdateStage(ctx, bidID, next)
+}

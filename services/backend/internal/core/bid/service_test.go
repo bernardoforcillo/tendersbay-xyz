@@ -301,3 +301,32 @@ func TestSetGoNoGo_WrongWorkbench(t *testing.T) {
 		t.Fatalf("want ErrBidNotFound, got %v", err)
 	}
 }
+
+func TestAdvanceStage_Forward(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1", GoNoGo: GoNoGoGo, Stage: StageShortlisted}
+	b, err := svc.AdvanceStage(context.Background(), "u1", "wb1", "b1")
+	if err != nil || b.Stage != StagePreparing {
+		t.Fatalf("shortlisted->preparing: stage=%q err=%v", b.Stage, err)
+	}
+	b, err = svc.AdvanceStage(context.Background(), "u1", "wb1", "b1")
+	if err != nil || b.Stage != StageSubmitted {
+		t.Fatalf("preparing->submitted: stage=%q err=%v", b.Stage, err)
+	}
+}
+
+func TestAdvanceStage_PastSubmitted(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1", GoNoGo: GoNoGoGo, Stage: StageSubmitted}
+	if _, err := svc.AdvanceStage(context.Background(), "u1", "wb1", "b1"); !errors.Is(err, ErrInvalidTransition) {
+		t.Fatalf("want ErrInvalidTransition, got %v", err)
+	}
+}
+
+func TestAdvanceStage_BlockedOnNoGo(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1", GoNoGo: GoNoGoNoGo, Stage: StageShortlisted}
+	if _, err := svc.AdvanceStage(context.Background(), "u1", "wb1", "b1"); !errors.Is(err, ErrBidNotGo) {
+		t.Fatalf("want ErrBidNotGo, got %v", err)
+	}
+}
