@@ -105,7 +105,7 @@ describe('TenderResultsTable — navigation', () => {
     );
     // Tab to the row (it has tabIndex=0) and press Enter
     const rows = screen.getAllByRole('row');
-    const dataRow = rows[1];
+    const dataRow = rows[1]!;
     dataRow.focus();
     await user.keyboard('{Enter}');
     expect(navigateMock).toHaveBeenCalledWith({
@@ -129,9 +129,9 @@ describe('TenderResultsTable — sorting', () => {
   it('defaults to fitTier asc — strong row appears first', () => {
     renderWithI18n(<TenderResultsTable tenders={tenders} />);
     const rows = getDataRows();
-    expect(within(rows[0]).getByText('Bridge reinforcement')).toBeInTheDocument();
-    expect(within(rows[1]).getByText('Aqueduct repairs')).toBeInTheDocument();
-    expect(within(rows[2]).getByText('Coastal erosion study')).toBeInTheDocument();
+    expect(within(rows[0]!).getByText('Bridge reinforcement')).toBeInTheDocument();
+    expect(within(rows[1]!).getByText('Aqueduct repairs')).toBeInTheDocument();
+    expect(within(rows[2]!).getByText('Coastal erosion study')).toBeInTheDocument();
   });
 
   it('clicking Fit toggles to desc — no-tier row appears first', async () => {
@@ -139,8 +139,8 @@ describe('TenderResultsTable — sorting', () => {
     renderWithI18n(<TenderResultsTable tenders={tenders} />);
     await user.click(screen.getByRole('button', { name: /fit/i }));
     const rows = getDataRows();
-    expect(within(rows[0]).getByText('Coastal erosion study')).toBeInTheDocument();
-    expect(within(rows[2]).getByText('Bridge reinforcement')).toBeInTheDocument();
+    expect(within(rows[0]!).getByText('Coastal erosion study')).toBeInTheDocument();
+    expect(within(rows[2]!).getByText('Bridge reinforcement')).toBeInTheDocument();
   });
 
   it('clicking Value sorts ascending by value', async () => {
@@ -148,9 +148,9 @@ describe('TenderResultsTable — sorting', () => {
     renderWithI18n(<TenderResultsTable tenders={tenders} />);
     await user.click(screen.getByRole('button', { name: /value/i }));
     const rows = getDataRows();
-    expect(within(rows[0]).getByText('Aqueduct repairs')).toBeInTheDocument();
-    expect(within(rows[1]).getByText('Coastal erosion study')).toBeInTheDocument();
-    expect(within(rows[2]).getByText('Bridge reinforcement')).toBeInTheDocument();
+    expect(within(rows[0]!).getByText('Aqueduct repairs')).toBeInTheDocument();
+    expect(within(rows[1]!).getByText('Coastal erosion study')).toBeInTheDocument();
+    expect(within(rows[2]!).getByText('Bridge reinforcement')).toBeInTheDocument();
   });
 
   it('clicking Value twice sorts descending', async () => {
@@ -159,7 +159,7 @@ describe('TenderResultsTable — sorting', () => {
     await user.click(screen.getByRole('button', { name: /value/i }));
     await user.click(screen.getByRole('button', { name: /value/i }));
     const rows = getDataRows();
-    expect(within(rows[0]).getByText('Bridge reinforcement')).toBeInTheDocument();
+    expect(within(rows[0]!).getByText('Bridge reinforcement')).toBeInTheDocument();
   });
 
   it('pushes tenders with unknown value (0n) to end regardless of sort direction', async () => {
@@ -171,12 +171,12 @@ describe('TenderResultsTable — sorting', () => {
     renderWithI18n(<TenderResultsTable tenders={withUnknown} />);
     await user.click(screen.getByRole('button', { name: /value/i })); // asc
     const rowsAsc = getDataRows();
-    expect(within(rowsAsc[0]).getByText('Tender Y')).toBeInTheDocument();
-    expect(within(rowsAsc[1]).getByText('Tender X')).toBeInTheDocument();
+    expect(within(rowsAsc[0]!).getByText('Tender Y')).toBeInTheDocument();
+    expect(within(rowsAsc[1]!).getByText('Tender X')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /value/i })); // desc
     const rowsDesc = getDataRows();
-    expect(within(rowsDesc[0]).getByText('Tender Y')).toBeInTheDocument();
-    expect(within(rowsDesc[1]).getByText('Tender X')).toBeInTheDocument();
+    expect(within(rowsDesc[0]!).getByText('Tender Y')).toBeInTheDocument();
+    expect(within(rowsDesc[1]!).getByText('Tender X')).toBeInTheDocument();
   });
 });
