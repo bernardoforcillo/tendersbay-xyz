@@ -87,3 +87,22 @@ func (s *Service) AdvanceStage(ctx context.Context, userID, workbenchID, bidID s
 	}
 	return s.repo.UpdateStage(ctx, bidID, next)
 }
+
+// RecordOutcome closes a pursued bid with a terminal result. Requires a prior
+// "go" decision; the outcome is kept (non-destructive) for win-rate history.
+func (s *Service) RecordOutcome(ctx context.Context, userID, workbenchID, bidID string, o Outcome) (Bid, error) {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return Bid{}, err
+	}
+	if o != OutcomeWon && o != OutcomeLost && o != OutcomeWithdrawn {
+		return Bid{}, ErrInvalidArgument
+	}
+	current, err := s.repo.FindBidByID(ctx, workbenchID, bidID)
+	if err != nil {
+		return Bid{}, err
+	}
+	if current.GoNoGo != GoNoGoGo {
+		return Bid{}, ErrBidNotGo
+	}
+	return s.repo.UpdateOutcome(ctx, bidID, o)
+}

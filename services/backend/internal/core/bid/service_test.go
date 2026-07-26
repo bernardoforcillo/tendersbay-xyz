@@ -330,3 +330,33 @@ func TestAdvanceStage_BlockedOnNoGo(t *testing.T) {
 		t.Fatalf("want ErrBidNotGo, got %v", err)
 	}
 }
+
+func TestRecordOutcome_Sets(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1", GoNoGo: GoNoGoGo, Stage: StageSubmitted}
+	b, err := svc.RecordOutcome(context.Background(), "u1", "wb1", "b1", OutcomeWon)
+	if err != nil || b.Outcome != OutcomeWon {
+		t.Fatalf("record won: outcome=%q err=%v", b.Outcome, err)
+	}
+}
+
+func TestRecordOutcome_RequiresGo(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["undecided"] = Bid{ID: "undecided", WorkbenchID: "wb1", GoNoGo: GoNoGoUndecided}
+	repo.bids["nogo"] = Bid{ID: "nogo", WorkbenchID: "wb1", GoNoGo: GoNoGoNoGo}
+	for _, id := range []string{"undecided", "nogo"} {
+		if _, err := svc.RecordOutcome(context.Background(), "u1", "wb1", id, OutcomeWon); !errors.Is(err, ErrBidNotGo) {
+			t.Fatalf("bid %q: want ErrBidNotGo, got %v", id, err)
+		}
+	}
+}
+
+func TestRecordOutcome_InvalidValue(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1", GoNoGo: GoNoGoGo}
+	for _, o := range []Outcome{"", "banana"} {
+		if _, err := svc.RecordOutcome(context.Background(), "u1", "wb1", "b1", o); !errors.Is(err, ErrInvalidArgument) {
+			t.Fatalf("outcome %q: want ErrInvalidArgument, got %v", o, err)
+		}
+	}
+}
