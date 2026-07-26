@@ -6,13 +6,19 @@ import { Link } from 'react-aria-components';
 
 type Variant = 'primary' | 'ghost' | 'invert' | 'text';
 
-type CommonProps = { variant?: Variant; children: ReactNode; className?: string };
+type CommonProps = {
+  variant?: Variant;
+  children: ReactNode;
+  className?: string;
+  onPress?: () => void;
+};
 // External / in-page anchor (react-aria Link) — hash links, mailto, etc.
 type AnchorProps = CommonProps & { href: string; to?: undefined; params?: undefined };
 // Internal route (TanStack Router Link) — client-side navigation to an app route.
 type RouteProps = CommonProps & {
   to: string;
   params?: Record<string, string>;
+  search?: Record<string, unknown>;
   href?: undefined;
 };
 type ButtonProps = AnchorProps | RouteProps;
@@ -52,14 +58,16 @@ const MotionLink = motion.create(Link);
 type RouterLinkLikeProps = {
   to: string;
   params?: Record<string, string>;
+  search?: Record<string, unknown>;
   className?: string;
   children?: ReactNode;
+  onClick?: () => void;
 };
 const RouterLinkLike = RouterLink as unknown as ComponentType<RouterLinkLikeProps>;
 const MotionRouterLink = motion.create(RouterLinkLike);
 
 export function Button(props: ButtonProps) {
-  const { variant = 'primary', children, className } = props;
+  const { variant = 'primary', children, className, onPress } = props;
   const lifts = variant === 'primary' || variant === 'invert';
 
   // Internal app route → TanStack Router Link (client-side navigation).
@@ -70,7 +78,9 @@ export function Button(props: ButtonProps) {
         <MotionRouterLink
           to={props.to}
           params={props.params}
+          search={props.search}
           className={classes}
+          onClick={onPress}
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
         >
@@ -79,7 +89,13 @@ export function Button(props: ButtonProps) {
       );
     }
     return (
-      <RouterLinkLike to={props.to} params={props.params} className={classes}>
+      <RouterLinkLike
+        to={props.to}
+        params={props.params}
+        search={props.search}
+        className={classes}
+        onClick={onPress}
+      >
         {children}
       </RouterLinkLike>
     );
@@ -92,6 +108,7 @@ export function Button(props: ButtonProps) {
       <MotionLink
         href={props.href}
         className={classes}
+        onPress={onPress}
         whileHover={{ y: -2 }}
         whileTap={{ scale: 0.98 }}
       >
@@ -100,7 +117,7 @@ export function Button(props: ButtonProps) {
     );
   }
   return (
-    <Link href={props.href} className={classes}>
+    <Link href={props.href} className={classes} onPress={onPress}>
       {children}
     </Link>
   );
