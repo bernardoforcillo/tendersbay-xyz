@@ -25,4 +25,16 @@ describe('LandingTemplate', () => {
     expect(screen.getByPlaceholderText('Public school renovations')).toBeInTheDocument();
     expect(container.querySelector('#site-footer'), 'site-footer').not.toBeNull();
   });
+
+  it('places the coverage section before the assurance section', () => {
+    const { container } = renderWithI18n(<LandingTemplate />, 'en-ie');
+    const coverage = container.querySelector('#coverage');
+    const assurance = container.querySelector('#assurance');
+    expect(coverage, 'coverage section').not.toBeNull();
+    expect(assurance, 'assurance section').not.toBeNull();
+    // Coverage must come first: assurance follows it in document order.
+    expect(
+      coverage!.compareDocumentPosition(assurance!) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
 });
