@@ -50,6 +50,7 @@ import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettings
 import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/index'
 import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
 import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
+import { Route as AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRouteImport } from './routes/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -301,6 +302,15 @@ const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute
         AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute,
     } as any,
   )
+const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRoute =
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRouteImport.update(
+    {
+      id: '/bids/$bidId',
+      path: '/bids/$bidId',
+      getParentRoute: () =>
+        AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute,
+    } as any,
+  )
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -340,6 +350,7 @@ export interface FileRoutesByFullPath {
   '/workspaces/$workspaceId/settings/': typeof AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute
   '/workspaces/$workspaceId/workbench/$workbenchId/settings': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren
   '/workspaces/$workspaceId/workbench/$workbenchId/': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRoute
   '/workspaces/$workspaceId/workbench/$workbenchId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute
   '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute
   '/workspaces/$workspaceId/workbench/$workbenchId/settings/': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute
@@ -377,6 +388,7 @@ export interface FileRoutesByTo {
   '/workspaces/$workspaceId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdSettingsRolesRoute
   '/workspaces/$workspaceId/settings': typeof AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute
   '/workspaces/$workspaceId/workbench/$workbenchId': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute
+  '/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRoute
   '/workspaces/$workspaceId/workbench/$workbenchId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute
   '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute
   '/workspaces/$workspaceId/workbench/$workbenchId/settings': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute
@@ -421,6 +433,7 @@ export interface FileRoutesById {
   '/_authenticated/workspaces/$workspaceId/settings/': typeof AuthenticatedWorkspacesWorkspaceIdSettingsIndexRoute
   '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren
   '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute
+  '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRoute
   '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/members': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRoute
   '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/roles': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRolesRoute
   '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/': typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsIndexRoute
@@ -465,6 +478,7 @@ export interface FileRouteTypes {
     | '/workspaces/$workspaceId/settings/'
     | '/workspaces/$workspaceId/workbench/$workbenchId/settings'
     | '/workspaces/$workspaceId/workbench/$workbenchId/'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId'
     | '/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
     | '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
     | '/workspaces/$workspaceId/workbench/$workbenchId/settings/'
@@ -502,6 +516,7 @@ export interface FileRouteTypes {
     | '/workspaces/$workspaceId/settings/roles'
     | '/workspaces/$workspaceId/settings'
     | '/workspaces/$workspaceId/workbench/$workbenchId'
+    | '/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId'
     | '/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
     | '/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
     | '/workspaces/$workspaceId/workbench/$workbenchId/settings'
@@ -545,6 +560,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workspaces/$workspaceId/settings/'
     | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings'
     | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/'
+    | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId'
     | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/members'
     | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/roles'
     | '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/settings/'
@@ -846,6 +862,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsMembersRouteImport
       parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute
     }
+    '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId': {
+      id: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId'
+      path: '/bids/$bidId'
+      fullPath: '/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId'
+      preLoaderRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRouteImport
+      parentRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRoute
+    }
   }
 }
 
@@ -928,6 +951,7 @@ const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWi
 interface AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteChildren {
   AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren
   AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute
+  AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRoute: typeof AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRoute
 }
 
 const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteChildren: AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteChildren =
@@ -936,6 +960,8 @@ const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteChildren: 
       AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdSettingsRouteRouteWithChildren,
     AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute:
       AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdIndexRoute,
+    AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRoute:
+      AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdBidsBidIdRoute,
   }
 
 const AuthenticatedWorkspacesWorkspaceIdWorkbenchWorkbenchIdRouteRouteWithChildren =
