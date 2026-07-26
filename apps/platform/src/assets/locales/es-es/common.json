@@ -170,8 +170,8 @@
       "results_other": "{{count}} licitaciones"
     },
     "meta": {
-      "title": "tendersbay — Licitaciones públicas, adjudicadas por agentes de IA",
-      "description": "Agentes de IA que cazan las licitaciones públicas y los concursos públicos europeos adecuados, arrasan con el papeleo y llevan a tu pyme hasta la adjudicación."
+      "title": "tendersbay — Licitaciones públicas de la UE, encontradas y adjudicadas por agentes de IA",
+      "description": "Agentes de IA que rastrean las licitaciones públicas adecuadas en los 27 países de la UE, arrasan con el papeleo y llevan a tu pyme de la oportunidad a la adjudicación."
     },
     "nav": {
       "problem": "El coste",
@@ -179,11 +179,11 @@
       "vision": "Visión"
     },
     "hero": {
-      "titleLead": "¿La licitación que ya daban por suya?",
-      "titleHighlight": "Adjudicada.",
-      "subtitle": "Esta noche se cierra una licitación con tu nombre. Los grandes ya tienen un equipo en ella. Tú tienes tres pestañas abiertas en Excel. Aquí se acaba — agentes de IA que la encuentran, destrozan el papeleo y te ponen en la oferta. Mientras duermes.",
+      "titleLead": "Cada licitación pública en 27 países — encontrada, preparada,",
+      "titleHighlight": "adjudicada.",
+      "subtitle": "Tu pyme no tiene una oficina de licitaciones. No la necesita. Un equipo de agentes de IA rastrea las licitaciones adecuadas en toda la UE, se encarga del papeleo y prepara tu oferta durante la noche — mientras el equipo de los grandes duerme.",
       "ctaPrimary": "Pon a trabajar a tus agentes",
-      "ctaSecondary": "Ver la visión",
+      "ctaSecondary": "Ve cómo funciona",
       "trust": ["27 países, una búsqueda", "Agentes que nunca duermen", "Papeleo: resuelto"],
       "deckLabel": "Resultados de ejemplo"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentes, no otro cuadro de búsqueda",
       "title": "Esto es lo que hicieron tus agentes mientras dormías.",
       "lead": "No una barra de búsqueda más rápida que aun así tienes que pilotar tú. Un equipo de agentes que trabaja la licitación entera — encontrar, preparar, ganar — durante la noche, para que despiertes ya en la carrera.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 países. Los vamos conquistando uno a uno.",
-      "body": "Nos expandimos por toda la Unión Europea, mercado a mercado. Cada bandera se enciende el día en que tu país entra en marcha.",
+      "body": "Cada licitación en TED — el Tenders Electronic Daily de toda la UE — está cubierta de forma nativa, desde el primer día, en los 27 países. Las banderas que se encienden son los portales nacionales a los que nos conectamos directamente, mercado a mercado.",
       "statusAvailable": "Activo",
-      "statusComingSoon": "Próximamente",
+      "statusComingSoon": "En despliegue",
+      "statusMapped": "Mercados mapeados",
+      "tedNative": "TED · compatible de forma nativa",
+      "nationalPortals": "Portales nacionales",
       "note": "La cobertura está llegando a los 27 países de la UE."
     },
     "footer": {

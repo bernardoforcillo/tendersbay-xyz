@@ -170,8 +170,8 @@
       "results_other": "{{count}} de licitații"
     },
     "meta": {
-      "title": "tendersbay — Licitații publice, atribuite de agenții dvs. AI",
-      "description": "Agenți AI care depistează licitațiile publice și achizițiile publice europene potrivite, fac praf birocrația și vă duc IMM-ul până la atribuire."
+      "title": "tendersbay — Licitații publice UE, găsite și atribuite de agenți AI",
+      "description": "Agenți AI care depistează licitațiile publice potrivite în toate cele 27 de țări UE, fac praf birocrația și vă duc IMM-ul de la oportunitate până la atribuire."
     },
     "nav": {
       "problem": "Costul",
@@ -179,11 +179,11 @@
       "vision": "Viziune"
     },
     "hero": {
-      "titleLead": "Licitația pe care o socoteau deja a lor?",
-      "titleHighlight": "Atribuită.",
-      "subtitle": "În seara asta se închide o licitație cu numele dvs. Marii jucători au deja o echipă pe ea. Dvs. aveți trei file deschise în Excel. Aici se termină — agenți AI care o găsesc, sfâșie birocrația și vă pun pe ofertă. În timp ce dormiți.",
+      "titleLead": "Fiecare licitație publică din 27 de țări — găsită, pregătită,",
+      "titleHighlight": "atribuită.",
+      "subtitle": "IMM-ul dvs. nu are un departament de licitații. Și nici nu are nevoie de unul. O echipă de agenți AI urmărește licitațiile potrivite în toată UE, se ocupă de birocrație și vă pregătește oferta peste noapte — în timp ce echipa marilor jucători doarme.",
       "ctaPrimary": "Puneți-vă agenții la treabă",
-      "ctaSecondary": "Vedeți viziunea",
+      "ctaSecondary": "Vedeți cum funcționează",
       "trust": ["27 de țări, o căutare", "Agenți care nu dorm niciodată", "Birocrație: rezolvată"],
       "deckLabel": "Rezultate exemplu"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenți, nu încă o casetă de căutare",
       "title": "Iată ce au făcut agenții dvs. cât ați dormit.",
       "lead": "Nu o bară de căutare mai rapidă pe care tot dvs. trebuie să o conduceți. O echipă de agenți care lucrează întreaga licitație — găsește, pregătește, câștigă — peste noapte, ca să vă treziți deja în cursă.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 de țări. Le luăm una câte una.",
-      "body": "Ne extindem în întreaga Uniune Europeană, piață cu piață. Fiecare steag se aprinde în ziua în care țara dvs. intră în funcțiune.",
+      "body": "Fiecare licitație de pe TED — Tenders Electronic Daily la nivelul întregii UE — este acoperită nativ, din prima zi, în toate cele 27 de țări. Steagurile care se aprind sunt portalurile naționale la care ne conectăm direct, piață cu piață.",
       "statusAvailable": "Activ",
-      "statusComingSoon": "În curând",
+      "statusComingSoon": "În curs de implementare",
+      "statusMapped": "Piețe mapate",
+      "tedNative": "TED · susținut nativ",
+      "nationalPortals": "Portaluri naționale",
       "note": "Acoperirea ajunge în toate cele 27 de țări UE."
     },
     "footer": {

@@ -170,8 +170,8 @@
       "results_other": "{{count}} tairiscint"
     },
     "meta": {
-      "title": "tendersbay — Tairiscintí poiblí, bronnta ag do ghníomhairí AI",
-      "description": "Gníomhairí AI a aimsíonn na tairiscintí poiblí Eorpacha cearta, a réabann an obair pháipéir, agus a thugann do FBM an bealach ar fad go dtí an bronnadh."
+      "title": "tendersbay — Tairiscintí poiblí an AE, aimsithe agus bronnta ag gníomhairí AI",
+      "description": "Gníomhairí AI a aimsíonn na tairiscintí poiblí cearta i ngach ceann de na 27 tír san AE, a réabann an obair pháipéir, agus a thugann d'FBM ón deis go dtí an bronnadh."
     },
     "nav": {
       "problem": "An Costas",
@@ -179,11 +179,11 @@
       "vision": "Fís"
     },
     "hero": {
-      "titleLead": "An tairiscint a mheas siad cheana mar a gcuid féin?",
-      "titleHighlight": "Bronnta.",
-      "subtitle": "Anocht dúnann tairiscint le d'ainm uirthi. Tá foireann ag na himreoirí móra uirthi cheana. Tá trí chluaisín oscailte agat in Excel. Críochnaíonn sé anseo — gníomhairí AI a aimsíonn í, a stróiceann an obair pháipéir, agus a chuireann thú sa tairiscint. Agus tú i do chodladh.",
+      "titleLead": "Gach tairiscint phoiblí i 27 tír — aimsithe, ullmhaithe,",
+      "titleHighlight": "bronnta.",
+      "subtitle": "Níl oifig tairiscintí ag d'FBM. Níl gá léi ach oiread. Foireann gníomhairí AI a aimsíonn na tairiscintí cearta ar fud an AE, a dhéanann an obair pháipéir, agus a thógann do thairiscint thar oíche — fad is atá foireann na n-imreoirí móra ina gcodladh.",
       "ctaPrimary": "Cuir do ghníomhairí ag obair",
-      "ctaSecondary": "Féach ar an bhfís",
+      "ctaSecondary": "Féach conas a oibríonn sé",
       "trust": [
         "27 tír, aon chuardach amháin",
         "Gníomhairí nach gcodlaíonn riamh",
@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Gníomhairí, ní bosca cuardaigh eile",
       "title": "Seo a rinne do chuid gníomhairí agus tú i do chodladh.",
       "lead": "Ní barra cuardaigh níos tapúla a chaithfidh tú a stiúradh fós. Foireann gníomhairí a oibríonn an tairiscint iomlán — aimsiú, ullmhú, buachan — thar oíche, ionas go músclaíonn tú agus tú san iomaíocht cheana.",
       "items": [
@@ -292,9 +293,12 @@
     },
     "coverage": {
       "title": "27 tír. Glacaimid iad ceann ar cheann.",
-      "body": "Táimid ag leathnú ar fud an Aontais Eorpaigh, margadh ar mhargadh. Lasann gach bratach an lá a théann do thír beo.",
+      "body": "Tá gach tairiscint ar TED — an Tenders Electronic Daily uile-AE — clúdaithe go dúchasach, ón gcéad lá, sna 27 tír go léir. Is iad na bratacha a lasann na tairseacha náisiúnta a nascaimid leo go díreach, margadh ar mhargadh.",
       "statusAvailable": "Beo",
-      "statusComingSoon": "Ag teacht go luath",
+      "statusComingSoon": "Á chur i bhfeidhm",
+      "statusMapped": "Margaí mapáilte",
+      "tedNative": "TED · tacaithe go dúchasach",
+      "nationalPortals": "Tairseacha náisiúnta",
       "note": "Tá an clúdach ag teacht chuig na 27 tír AE go léir."
     },
     "footer": {

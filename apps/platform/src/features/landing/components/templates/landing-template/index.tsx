@@ -23,8 +23,8 @@ export function LandingTemplate() {
         <ProblemSection />
         <AgentsSection />
         <AudienceSection />
-        <AssuranceSection />
         <CoverageSection />
+        <AssuranceSection />
         <VisionSection />
       </main>
       <CtaBand />

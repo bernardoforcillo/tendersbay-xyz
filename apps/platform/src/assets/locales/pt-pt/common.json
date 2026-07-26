@@ -170,8 +170,8 @@
       "results_other": "{{count}} concursos"
     },
     "meta": {
-      "title": "tendersbay — Concursos públicos, adjudicados por agentes de IA",
-      "description": "Agentes de IA que caçam os concursos públicos e contratos públicos europeus certos, arrasam a burocracia e levam a sua PME até à adjudicação."
+      "title": "tendersbay — Concursos públicos da UE, encontrados e adjudicados por agentes de IA",
+      "description": "Agentes de IA que caçam os concursos públicos certos nos 27 países da UE, arrasam a burocracia e levam a sua PME da oportunidade à adjudicação."
     },
     "nav": {
       "problem": "O custo",
@@ -179,11 +179,11 @@
       "vision": "Visão"
     },
     "hero": {
-      "titleLead": "O concurso que já davam como deles?",
-      "titleHighlight": "Adjudicado.",
-      "subtitle": "Esta noite fecha um concurso com o seu nome. Os grandes já têm uma equipa nele. Você tem três separadores abertos no Excel. Acaba aqui — agentes de IA que o encontram, despedaçam a burocracia e põem-no na proposta. Enquanto dorme.",
+      "titleLead": "Cada concurso público em 27 países — encontrado, preparado,",
+      "titleHighlight": "adjudicado.",
+      "subtitle": "A sua PME não tem um gabinete de concursos. E não precisa de ter. Uma equipa de agentes de IA procura os concursos certos em toda a UE, trata da burocracia e prepara a sua proposta durante a noite — enquanto a equipa dos grandes dorme.",
       "ctaPrimary": "Ponha os seus agentes a trabalhar",
-      "ctaSecondary": "Veja a visão",
+      "ctaSecondary": "Veja como funciona",
       "trust": ["27 países, uma pesquisa", "Agentes que nunca dormem", "Burocracia: tratada"],
       "deckLabel": "Resultados de exemplo"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentes, não mais uma caixa de pesquisa",
       "title": "Eis o que os seus agentes fizeram enquanto dormia.",
       "lead": "Não uma barra de pesquisa mais rápida que ainda tem de conduzir. Uma equipa de agentes que trata o concurso inteiro — encontrar, preparar, vencer — durante a noite, para que acorde já na corrida.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 países. Vamos conquistá-los um a um.",
-      "body": "Estamos a expandir por toda a União Europeia, mercado a mercado. Cada bandeira acende no dia em que o seu país fica ativo.",
+      "body": "Cada concurso no TED — o Tenders Electronic Daily à escala da UE — está coberto de forma nativa, desde o primeiro dia, nos 27 países. As bandeiras que se acendem são os portais nacionais aos quais nos ligamos diretamente, mercado a mercado.",
       "statusAvailable": "Ativo",
-      "statusComingSoon": "Em breve",
+      "statusComingSoon": "Em implementação",
+      "statusMapped": "Mercados mapeados",
+      "tedNative": "TED · suportado de forma nativa",
+      "nationalPortals": "Portais nacionais",
       "note": "A cobertura está a chegar a todos os 27 países da UE."
     },
     "footer": {

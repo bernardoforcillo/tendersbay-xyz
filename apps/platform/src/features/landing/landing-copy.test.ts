@@ -4,12 +4,16 @@ import { i18n } from '~/i18n';
 describe('landing copy', () => {
   it('resolves the hero headline in en-ie', async () => {
     await i18n.changeLanguage('en-ie');
-    expect(i18n.t('landing.hero.titleLead')).toBe('The tender they already counted as theirs?');
+    expect(i18n.t('landing.hero.titleLead')).toBe(
+      'Every public tender in 27 countries — found, prepared,',
+    );
   });
 
   it('resolves the hero headline in it-it', async () => {
     await i18n.changeLanguage('it-it');
-    expect(i18n.t('landing.hero.titleLead')).toBe('La gara che davano già per loro?');
+    expect(i18n.t('landing.hero.titleLead')).toBe(
+      'Ogni gara pubblica in 27 paesi — trovata, preparata,',
+    );
   });
 
   it('exposes problem items as an array of three', async () => {

@@ -170,8 +170,8 @@
       "results_other": "{{count}} razpisov"
     },
     "meta": {
-      "title": "tendersbay — Javna naročila v Evropi, dodeljena z agenti UI",
-      "description": "Agenti UI, ki izsledijo prava javna naročila in javne razpise po Evropi, zdrobijo birokracijo in popeljejo vaš MSP vse do dodelitve naročila."
+      "title": "tendersbay — Javna naročila EU, ki jih najdejo in dodelijo agenti UI",
+      "description": "Agenti UI, ki izsledijo prava javna naročila v vseh 27 državah EU, zdrobijo birokracijo in popeljejo vaš MSP od priložnosti do dodelitve."
     },
     "nav": {
       "problem": "Strošek",
@@ -179,11 +179,11 @@
       "vision": "Vizija"
     },
     "hero": {
-      "titleLead": "Razpis, ki so ga že šteli za svojega?",
-      "titleHighlight": "Dodeljen.",
-      "subtitle": "Nocoj se zapre razpis z vašim imenom. Veliki igralci že imajo ekipo na njem. Vi imate odprte tri zavihke v Excelu. Tu je konec — agenti UI, ki ga najdejo, raztrgajo birokracijo in vas postavijo v ponudbo. Medtem ko spite.",
+      "titleLead": "Vsak javni razpis v 27 državah — najden, pripravljen,",
+      "titleHighlight": "dodeljen.",
+      "subtitle": "Vaše MSP nima oddelka za razpise. In ga tudi ne potrebuje. Ekipa agentov UI poišče prave razpise po vsej EU, uredi birokracijo in čez noč pripravi vašo ponudbo — medtem ko ekipa velikih igralcev spi.",
       "ctaPrimary": "Pošljite svoje agente na delo",
-      "ctaSecondary": "Oglejte si vizijo",
+      "ctaSecondary": "Oglejte si, kako deluje",
       "trust": ["27 držav, eno iskanje", "Agenti, ki nikoli ne spijo", "Birokracija: urejena"],
       "deckLabel": "Vzorčni rezultati"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenti, ne še eno iskalno polje",
       "title": "Tole so vaši agenti postorili, medtem ko ste spali.",
       "lead": "Ne hitrejša iskalna vrstica, ki jo morate vseeno upravljati sami. Ekipa agentov, ki obdela celotno naročilo — poišče, pripravi, zmaga — čez noč, da se zbudite že v tekmi.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 držav. Osvajamo jih eno za drugo.",
-      "body": "Širimo se po vsej Evropski uniji, trg za trgom. Vsaka zastava zasveti na dan, ko vaša država zaživi.",
+      "body": "Vsak razpis na TED-u — vseevropskem Tenders Electronic Daily — je nativno pokrit, od prvega dne, v vseh 27 državah. Zastave, ki zasvetijo, so nacionalni portali, s katerimi se povezujemo neposredno, trg za trgom.",
       "statusAvailable": "Aktivno",
-      "statusComingSoon": "Kmalu",
+      "statusComingSoon": "V uvajanju",
+      "statusMapped": "Kartirani trgi",
+      "tedNative": "TED · podprto nativno",
+      "nationalPortals": "Nacionalni portali",
       "note": "Pokritost prihaja v vseh 27 držav EU."
     },
     "footer": {

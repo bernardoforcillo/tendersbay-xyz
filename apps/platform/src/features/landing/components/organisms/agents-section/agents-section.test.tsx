@@ -43,4 +43,9 @@ describe('AgentsSection', () => {
     expect(captureMock).toHaveBeenCalledTimes(1);
     expect(captureMock).toHaveBeenCalledWith('agents_section_viewed', { location: 'agents' });
   });
+
+  it('renders the wedge eyebrow above the title', () => {
+    renderWithI18n(<AgentsSection />, 'en-ie');
+    expect(screen.getByText('Agents, not another search box')).toBeInTheDocument();
+  });
 });

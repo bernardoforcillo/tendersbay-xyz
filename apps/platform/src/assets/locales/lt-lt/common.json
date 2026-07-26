@@ -170,8 +170,8 @@
       "results_other": "{{count}} pirkimų"
     },
     "meta": {
-      "title": "tendersbay — Europos viešieji pirkimai su jūsų DI agentais",
-      "description": "DI agentai, kurie suranda tinkamus viešuosius pirkimus ir pirkimų skelbimus Europoje, sutriuškina biurokratiją ir nuveda jūsų MVĮ iki sutarties sudarymo."
+      "title": "tendersbay — ES viešieji pirkimai, kuriuos randa ir laimi DI agentai",
+      "description": "DI agentai, kurie suranda tinkamus viešuosius pirkimus visose 27 ES šalyse, sutriuškina biurokratiją ir nuveda jūsų MVĮ nuo galimybės iki sutarties suteikimo."
     },
     "nav": {
       "problem": "Kaina",
@@ -179,11 +179,11 @@
       "vision": "Vizija"
     },
     "hero": {
-      "titleLead": "Pirkimas, kurį jie jau laikė savu?",
-      "titleHighlight": "Suteiktas.",
-      "subtitle": "Šįnakt baigiasi pirkimas su jūsų vardu. Didieji žaidėjai jau turi jam komandą. Jūs turite tris atidarytus skirtukus „Excel“. Čia tai baigiasi — DI agentai, kurie jį suranda, sudrasko biurokratiją ir įstato jus į pasiūlymą. Kol miegate.",
+      "titleLead": "Kiekvienas viešasis pirkimas 27 šalyse — rastas, paruoštas,",
+      "titleHighlight": "suteiktas.",
+      "subtitle": "Jūsų MVĮ neturi pasiūlymų skyriaus. Ir jai jo nereikia. DI agentų komanda susiranda tinkamus pirkimus visoje ES, sutvarko biurokratiją ir per naktį paruošia jūsų pasiūlymą — kol didžiųjų žaidėjų komanda miega.",
       "ctaPrimary": "Paleiskite savo agentus į darbą",
-      "ctaSecondary": "Žiūrėkite viziją",
+      "ctaSecondary": "Pažiūrėkite, kaip tai veikia",
       "trust": [
         "27 šalys, viena paieška",
         "Agentai, kurie niekada nemiega",
@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentai, ne dar vienas paieškos langelis",
       "title": "Štai ką jūsų agentai nuveikė, kol miegojote.",
       "lead": "Ne greitesnė paieškos juosta, kurią vis tiek turite valdyti patys. Agentų komanda, dirbanti visą pirkimą — randa, parengia, laimi — per naktį, kad pabustumėte jau lenktynėse.",
       "items": [
@@ -292,9 +293,12 @@
     },
     "coverage": {
       "title": "27 šalys. Imame jas po vieną.",
-      "body": "Plečiamės visoje Europos Sąjungoje, rinka po rinkos. Kiekviena vėliava užsidega tą dieną, kai jūsų šalis pradeda veikti.",
+      "body": "Kiekvienas pirkimas TED sistemoje — visos ES Tenders Electronic Daily platformoje — yra natūraliai aprėptas nuo pirmos dienos visose 27 šalyse. Įsižiebiančios vėliavos žymi nacionalinius portalus, prie kurių jungiamės tiesiogiai, rinka po rinkos.",
       "statusAvailable": "Aktyvu",
-      "statusComingSoon": "Netrukus",
+      "statusComingSoon": "Diegiama",
+      "statusMapped": "Sužymėtos rinkos",
+      "tedNative": "TED · palaikoma natūraliai",
+      "nationalPortals": "Nacionaliniai portalai",
       "note": "Aprėptis pasiekia visas 27 ES šalis."
     },
     "footer": {

@@ -1,3 +1,6 @@
+import { useInView } from 'motion/react';
+import { usePostHog } from 'posthog-js/react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Reveal } from '~/features/landing/components/atoms';
 
@@ -13,8 +16,18 @@ export function ProofStrip() {
   const { t } = useTranslation();
   const items = t('landing.proof.items', { returnObjects: true }) as ProofItem[];
 
+  const posthog = usePostHog();
+  const sectionRef = useRef<HTMLElement>(null);
+  const inView = useInView(sectionRef, { once: true, amount: 0.4 });
+  useEffect(() => {
+    if (inView) {
+      posthog?.capture('proof_strip_viewed', { location: 'proof' });
+    }
+  }, [inView, posthog]);
+
   return (
     <section
+      ref={sectionRef}
       id="proof"
       aria-labelledby="proof-lead"
       className="scroll-mt-24 bg-cream-100 pb-20 md:pb-28"

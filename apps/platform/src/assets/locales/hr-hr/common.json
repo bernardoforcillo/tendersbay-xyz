@@ -170,8 +170,8 @@
       "results_other": "{{count}} natječaja"
     },
     "meta": {
-      "title": "tendersbay — Javni natječaji, dodijeljeni uz vaše AI agente",
-      "description": "AI agenti koji pronalaze prave javne natječaje i nadmetanja u javnoj nabavi diljem Europe, drobe papirologiju i vode vaš MSP sve do dodjele ugovora."
+      "title": "tendersbay — Javni natječaji u EU, pronađeni i dodijeljeni uz AI agente",
+      "description": "AI agenti koji pronalaze prave javne natječaje u svih 27 zemalja EU-a, drobe papirologiju i vode vaš MSP od prilike do dodjele ugovora."
     },
     "nav": {
       "problem": "Trošak",
@@ -179,11 +179,11 @@
       "vision": "Vizija"
     },
     "hero": {
-      "titleLead": "Natječaj koji su već smatrali svojim?",
-      "titleHighlight": "Dodijeljen.",
-      "subtitle": "Večeras se zatvara natječaj s vašim imenom. Veliki igrači već imaju tim na njemu. Vi imate tri otvorene kartice u Excelu. Tu je kraj — AI agenti koji ga pronađu, razderu papirologiju i postave vas u ponudu. Dok spavate.",
+      "titleLead": "Svaki javni natječaj u 27 zemalja — pronađen, pripremljen,",
+      "titleHighlight": "dodijeljen.",
+      "subtitle": "Vaš MSP nema ured za natječaje. I ne treba mu. Tim AI agenata pronalazi prave natječaje diljem EU-a, obavlja papirologiju i izrađuje vašu ponudu preko noći — dok tim velikih igrača spava.",
       "ctaPrimary": "Pošaljite svoje agente na posao",
-      "ctaSecondary": "Pogledajte viziju",
+      "ctaSecondary": "Pogledajte kako to funkcionira",
       "trust": [
         "27 zemalja, jedno pretraživanje",
         "Agenti koji nikada ne spavaju",
@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenti, ne još jedna tražilica",
       "title": "Evo što su vaši agenti napravili dok ste spavali.",
       "lead": "Ne brža tražilica koju svejedno morate voziti sami. Tim agenata koji obrađuje cijeli natječaj — pronalazi, priprema, pobjeđuje — preko noći, da se probudite već u utrci.",
       "items": [
@@ -292,9 +293,12 @@
     },
     "coverage": {
       "title": "27 zemalja. Osvajamo ih jednu po jednu.",
-      "body": "Širimo se diljem Europske unije, tržište po tržište. Svaka se zastava upali na dan kada vaša zemlja krene.",
+      "body": "Svaki natječaj na TED-u — paneuropskom Tenders Electronic Dailyju — pokriven je nativno, od prvog dana, u svih 27 zemalja. Zastave koje se pale predstavljaju nacionalne portale na koje se izravno povezujemo, tržište po tržište.",
       "statusAvailable": "Aktivno",
-      "statusComingSoon": "Uskoro",
+      "statusComingSoon": "U uvođenju",
+      "statusMapped": "Mapirana tržišta",
+      "tedNative": "TED · podržano nativno",
+      "nationalPortals": "Nacionalni portali",
       "note": "Pokrivenost stiže u svih 27 zemalja EU-a."
     },
     "footer": {

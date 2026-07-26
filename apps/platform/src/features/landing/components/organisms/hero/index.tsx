@@ -15,7 +15,7 @@ const DECK_SIZE = 6;
 let deckSeenCaptured = false;
 
 export function Hero() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const posthog = usePostHog();
   const reduce = useReducedMotion();
   const trust = t('landing.hero.trust', { returnObjects: true }) as string[];
@@ -95,11 +95,17 @@ export function Hero() {
             {t('landing.hero.subtitle')}
           </motion.p>
           <motion.div {...item} className="mt-9 flex flex-wrap items-center gap-5">
-            <Button href="#agents" variant="primary">
+            <Button
+              to="/$locale/auth/signup"
+              params={{ locale: i18n.language }}
+              search={{ entry: 'hero' }}
+              variant="primary"
+              onPress={() => posthog?.capture('landing_cta_clicked', { location: 'hero' })}
+            >
               {t('landing.hero.ctaPrimary')}
               <Icon name="arrow-right" className="text-[18px]" />
             </Button>
-            <Button href="#vision" variant="text">
+            <Button href="#agents" variant="text">
               {t('landing.hero.ctaSecondary')}
             </Button>
           </motion.div>

@@ -170,8 +170,8 @@
       "results_other": "{{count}} marchés"
     },
     "meta": {
-      "title": "tendersbay — Appels d'offres publics, attribués par vos agents IA",
-      "description": "Des agents IA qui débusquent les bons appels d'offres et marchés publics en Europe, écrasent la paperasse et mènent votre PME jusqu'à l'attribution."
+      "title": "tendersbay — Appels d'offres publics UE, trouvés et attribués par des agents IA",
+      "description": "Des agents IA qui traquent les bons appels d'offres publics dans les 27 pays de l'UE, écrasent la paperasse et mènent votre PME de l'opportunité à l'attribution."
     },
     "nav": {
       "problem": "Le coût",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "Le marché qu'ils croyaient déjà à eux ?",
-      "titleHighlight": "Attribué.",
-      "subtitle": "Un marché à votre nom se clôt ce soir. Les gros ont déjà une équipe dessus. Vous avez trois onglets ouverts dans Excel. Ça s'arrête ici — des agents IA qui le trouvent, étripent la paperasse et vous placent sur l'offre. Pendant que vous dormez.",
+      "titleLead": "Chaque marché public dans 27 pays — trouvé, préparé,",
+      "titleHighlight": "attribué.",
+      "subtitle": "Votre PME n'a pas de service dédié aux appels d'offres. Elle n'en a pas besoin. Une équipe d'agents IA traque les bons marchés dans toute l'UE, gère la paperasse et prépare votre offre pendant la nuit — pendant que l'équipe des grands groupes dort.",
       "ctaPrimary": "Mettez vos agents au travail",
-      "ctaSecondary": "Voir la vision",
+      "ctaSecondary": "Découvrez comment ça marche",
       "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"],
       "deckLabel": "Exemples de résultats"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Des agents, pas une énième boîte de recherche",
       "title": "Voici ce que vos agents ont fait pendant votre sommeil.",
       "lead": "Pas une barre de recherche plus rapide que vous devez quand même piloter. Une équipe d’agents qui traite l’appel d’offres de bout en bout — trouver, préparer, remporter — pendant la nuit, pour que vous vous réveilliez déjà dans la course.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 pays. On les prend un par un.",
-      "body": "Nous nous déployons dans toute l'Union européenne, marché après marché. Chaque drapeau s'illumine le jour où votre pays passe en ligne.",
+      "body": "Chaque appel d'offres sur TED — le Tenders Electronic Daily à l'échelle de l'UE — est couvert nativement, dès le premier jour, dans les 27 pays. Les drapeaux qui s'allument sont les portails nationaux auxquels nous nous connectons directement, marché par marché.",
       "statusAvailable": "En ligne",
-      "statusComingSoon": "Bientôt",
+      "statusComingSoon": "En déploiement",
+      "statusMapped": "Marchés cartographiés",
+      "tedNative": "TED · pris en charge nativement",
+      "nationalPortals": "Portails nationaux",
       "note": "La couverture arrive dans les 27 pays de l'UE."
     },
     "footer": {

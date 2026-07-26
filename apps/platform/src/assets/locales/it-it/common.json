@@ -170,8 +170,8 @@
       "results_other": "{{count}} gare"
     },
     "meta": {
-      "title": "tendersbay — Bandi di gara, aggiudicati dai tuoi agenti AI",
-      "description": "Agenti AI che scovano i bandi di gara giusti in tutta Europa, distruggono la burocrazia degli appalti pubblici e portano la tua PMI fino all'aggiudicazione."
+      "title": "tendersbay — gare pubbliche europee, trovate e aggiudicate dagli agenti AI",
+      "description": "Agenti AI che scovano le gare pubbliche giuste in tutti e 27 i paesi UE, demoliscono la burocrazia e portano la tua PMI dall'opportunità all'aggiudicazione."
     },
     "nav": {
       "problem": "Il costo",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "La gara che davano già per loro?",
-      "titleHighlight": "Aggiudicata.",
-      "subtitle": "Stanotte scade una gara col tuo nome sopra. I grandi ci hanno messo una squadra. Tu hai tre schede aperte in Excel. Finisce qui — agenti AI che la trovano, sbranano la burocrazia e ti mettono in gara. Mentre dormi.",
+      "titleLead": "Ogni gara pubblica in 27 paesi — trovata, preparata,",
+      "titleHighlight": "aggiudicata.",
+      "subtitle": "La tua PMI non ha un ufficio gare. Non le serve. Una squadra di agenti AI cerca le gare giuste in tutta l'UE, sbriga la burocrazia e costruisce la tua offerta durante la notte — mentre la squadra dei grandi dorme.",
       "ctaPrimary": "Metti al lavoro i tuoi agenti",
-      "ctaSecondary": "Guarda la vision",
+      "ctaSecondary": "Guarda come funziona",
       "trust": ["27 paesi, una ricerca", "Agenti che non dormono mai", "Burocrazia: risolta"],
       "deckLabel": "Risultati di esempio"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenti, non l'ennesima casella di ricerca",
       "title": "Ecco cosa hanno fatto i tuoi agenti mentre dormivi.",
       "lead": "Non una barra di ricerca più veloce che devi comunque guidare tu. Una squadra di agenti che lavora l’intera gara — scova, prepara, vince — nella notte, così ti svegli già in corsa.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 paesi. Li conquistiamo uno a uno.",
-      "body": "Ci espandiamo in tutta l'Unione Europea, un mercato alla volta. Ogni bandiera si accende il giorno in cui il tuo paese va live.",
+      "body": "Ogni gara su TED — il Tenders Electronic Daily europeo — è coperta nativamente, dal primo giorno, in tutti e 27 i paesi. Le bandiere che si accendono sono i portali nazionali che integriamo direttamente, mercato per mercato.",
       "statusAvailable": "Attivo",
-      "statusComingSoon": "In arrivo",
+      "statusComingSoon": "In attivazione",
+      "statusMapped": "Mercati mappati",
+      "tedNative": "TED · supportato nativamente",
+      "nationalPortals": "Portali nazionali",
       "note": "La copertura sta arrivando in tutti i 27 paesi UE."
     },
     "footer": {
