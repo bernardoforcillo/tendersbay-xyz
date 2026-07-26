@@ -22,6 +22,7 @@ export function CoverageSection() {
   const AVAILABLE = useCoverage();
   const availableLabel = t('landing.coverage.statusAvailable');
   const comingSoonLabel = t('landing.coverage.statusComingSoon');
+  const mappedLabel = t('landing.coverage.statusMapped');
   const total = EU_COUNTRIES.length;
 
   // A flag reveal (hover/focus) is a market-interest signal. Categorical props
@@ -72,9 +73,9 @@ export function CoverageSection() {
             <div className="flex items-center justify-between gap-8">
               <dt className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-100">
                 <span className="h-2 w-2 rounded-full bg-brand-400" />
-                {availableLabel}
+                {mappedLabel}
               </dt>
-              <dd className="font-mono text-sm tabular-nums text-white">{availableCount}</dd>
+              <dd className="font-mono text-sm tabular-nums text-white">{total}</dd>
             </div>
             <div className="h-px bg-white/10" />
             <div className="flex items-center justify-between gap-8">
@@ -84,11 +85,33 @@ export function CoverageSection() {
               </dt>
               <dd className="font-mono text-sm tabular-nums text-ink-400">{comingCount}</dd>
             </div>
+            {availableCount > 0 && (
+              <>
+                <div className="h-px bg-white/10" />
+                <div className="flex items-center justify-between gap-8">
+                  <dt className="flex items-center gap-2 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-100">
+                    <span className="h-2 w-2 rounded-full bg-brand-400" />
+                    {availableLabel}
+                  </dt>
+                  <dd className="font-mono text-sm tabular-nums text-white">{availableCount}</dd>
+                </div>
+              </>
+            )}
           </dl>
         </div>
 
+        <div className="mt-12 flex flex-wrap items-center gap-3">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-400/40 bg-brand-400/10 px-3 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-brand-200">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
+            {t('landing.coverage.tedNative')}
+          </span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-400">
+            {t('landing.coverage.nationalPortals')}
+          </span>
+        </div>
+
         {reduce ? (
-          <ul className="mt-12 grid grid-cols-3 gap-3 sm:grid-cols-6 lg:grid-cols-9">
+          <ul className="mt-6 grid grid-cols-3 gap-3 sm:grid-cols-6 lg:grid-cols-9">
             {flags.map((f) => (
               <li key={f.code}>
                 <CountryFlag
@@ -104,7 +127,7 @@ export function CoverageSection() {
             ))}
           </ul>
         ) : (
-          <div className="-mx-6 mt-12 flex flex-col gap-3 px-6 [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent)]">
+          <div className="-mx-6 mt-6 flex flex-col gap-3 px-6 [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent)]">
             {rows.map((row, i) => (
               <Marquee key={row[0]?.code ?? i} reverse={i % 2 === 1} durationSec={58 + i * 6}>
                 {row.map((f) => (
