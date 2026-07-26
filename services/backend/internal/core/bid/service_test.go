@@ -264,3 +264,40 @@ func TestAddBid_UnknownTender(t *testing.T) {
 		t.Fatalf("want ErrInvalidArgument, got %v", err)
 	}
 }
+
+func TestSetGoNoGo_Records(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1", TenderID: 1, GoNoGo: GoNoGoUndecided, Stage: StageShortlisted}
+	b, err := svc.SetGoNoGo(context.Background(), "u1", "wb1", "b1", GoNoGoGo)
+	if err != nil || b.GoNoGo != GoNoGoGo {
+		t.Fatalf("set go: gng=%q err=%v", b.GoNoGo, err)
+	}
+}
+
+func TestSetGoNoGo_InvalidValue(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1"}
+	for _, d := range []GoNoGo{GoNoGoUndecided, "banana"} {
+		if _, err := svc.SetGoNoGo(context.Background(), "u1", "wb1", "b1", d); !errors.Is(err, ErrInvalidArgument) {
+			t.Fatalf("value %q: want ErrInvalidArgument, got %v", d, err)
+		}
+	}
+}
+
+func TestSetGoNoGo_Forbidden(t *testing.T) {
+	svc, repo, access, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1"}
+	access.manageErr["wb1"] = workbench.ErrForbidden
+	if _, err := svc.SetGoNoGo(context.Background(), "u1", "wb1", "b1", GoNoGoGo); !errors.Is(err, workbench.ErrForbidden) {
+		t.Fatalf("want ErrForbidden, got %v", err)
+	}
+}
+
+func TestSetGoNoGo_WrongWorkbench(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1"}
+	// Manage on wb2 is allowed (default nil), but b1 belongs to wb1 -> not found.
+	if _, err := svc.SetGoNoGo(context.Background(), "u1", "wb2", "b1", GoNoGoGo); !errors.Is(err, ErrBidNotFound) {
+		t.Fatalf("want ErrBidNotFound, got %v", err)
+	}
+}

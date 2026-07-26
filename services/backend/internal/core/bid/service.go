@@ -48,3 +48,17 @@ func (s *Service) AddBid(ctx context.Context, userID, workbenchID string, tender
 	}
 	return created, nil
 }
+
+// SetGoNoGo records the pursue/skip decision. Only "go"/"no_go" are settable.
+func (s *Service) SetGoNoGo(ctx context.Context, userID, workbenchID, bidID string, d GoNoGo) (Bid, error) {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return Bid{}, err
+	}
+	if d != GoNoGoGo && d != GoNoGoNoGo {
+		return Bid{}, ErrInvalidArgument
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return Bid{}, err
+	}
+	return s.repo.UpdateGoNoGo(ctx, bidID, d)
+}
