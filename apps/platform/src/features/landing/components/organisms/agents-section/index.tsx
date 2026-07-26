@@ -32,9 +32,12 @@ export function AgentsSection() {
     >
       <div className="mx-auto max-w-6xl px-6">
         <Reveal>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-200">
+            {t('landing.agents.eyebrow')}
+          </p>
           <h2
             id="agents-title"
-            className="max-w-[24ch] font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
+            className="mt-3 max-w-[24ch] font-display text-[2rem] leading-[1.05] tracking-tight text-white md:text-[2.7rem]"
           >
             {t('landing.agents.title')}
           </h2>
