@@ -1,5 +1,6 @@
 import { Link as RouterLink } from '@tanstack/react-router';
 import { motion, useReducedMotion } from 'motion/react';
+import { usePostHog } from 'posthog-js/react';
 import { Link } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { Logo } from '~/features/landing/components/atoms';
@@ -17,6 +18,7 @@ export function SiteHeader() {
   const reduce = useReducedMotion();
   const { t, i18n } = useTranslation();
   const locale = i18n.language;
+  const posthog = usePostHog();
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-3">
@@ -51,6 +53,8 @@ export function SiteHeader() {
           <RouterLink
             to="/$locale/auth/signup"
             params={{ locale }}
+            search={{ entry: 'header' }}
+            onClick={() => posthog?.capture('landing_cta_clicked', { location: 'header' })}
             className="inline-flex rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
           >
             {t('landing.header.signup', 'Sign up')}
