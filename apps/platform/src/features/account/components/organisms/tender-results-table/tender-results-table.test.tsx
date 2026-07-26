@@ -53,11 +53,7 @@ describe('TenderResultsTable — rendering', () => {
   });
 
   it('renders a fit pill when fitTier is set', () => {
-    renderWithI18n(
-      <TenderResultsTable
-        tenders={[fixture({ id: 't-1', fitTier: 'strong' })]}
-      />,
-    );
+    renderWithI18n(<TenderResultsTable tenders={[fixture({ id: 't-1', fitTier: 'strong' })]} />);
     expect(screen.getByText('Strong fit')).toBeInTheDocument();
   });
 
@@ -78,9 +74,7 @@ describe('TenderResultsTable — rendering', () => {
     const future = new Date();
     future.setDate(future.getDate() + 10);
     renderWithI18n(
-      <TenderResultsTable
-        tenders={[fixture({ id: 't-1', deadline: future.toISOString() })]}
-      />,
+      <TenderResultsTable tenders={[fixture({ id: 't-1', deadline: future.toISOString() })]} />,
     );
     expect(screen.getByText('10 days left')).toBeInTheDocument();
   });
