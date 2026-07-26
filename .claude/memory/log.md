@@ -2,6 +2,47 @@
 
 Append-only. Prefix `## [YYYY-MM-DD] <op> | <topic>` so `grep "^## \[" log.md | tail` shows the timeline.
 
+## [2026-07-26] ingest | landing-usp-redesign
+- Corrected a stale page rather than trusting its "updated" date: `vite-plugin-seo.md`
+  (last touched 2026-07-01) claimed static/identical meta and no hardcoded canonical — both
+  false in current code (verified directly against `index.ts`/`locale-pages.ts`/
+  `vite.config.ts`/`server.go`). Rewrote it: `writeBundle` -> `localizeIndexHtml` re-emits
+  per-locale `dist/<locale>/index.html` (localized title/description/OG/Twitter/`html lang`/
+  self-canonical — the no-canonical decision is now reversed/FAQPage JSON-LD/noscript hero
+  block), `llms.txt` generation is new, and the SPA (`landing-page/index.tsx`) also
+  resyncs 5 meta tags client-side on mount. Net: `landing.meta.*` copy edits propagate to
+  SEO with zero code change — confirmed while shipping this session's hero/meta rewrite.
+- Updated `eu-coverage-section.md`: reframed story is TED-native (always-on badge, pan-EU
+  baseline) + national portals (the lit flags); stat-box now leads on `{total}` "Markets
+  mapped", hides the "Live" row until `availableCount > 0`; new copy keys `tedNative`,
+  `nationalPortals`, `statusMapped`; explicit that IT is not integrated (ANAC is
+  retrospective, live/in-rollout portals are PL/FR/ES); noted the section now renders
+  before Assurance. Grayscale logic and `useCoverage` confirmed untouched.
+- Updated `landing-page-design.md`: new hero H1 asserts the intersection USP directly
+  (replacing a rhetorical-question framing) and the primary CTA now converts (routes to
+  signup instead of an in-page anchor); section order changed again (Coverage now before
+  Assurance, supersedes the 2026-07-16 order) and the light/dark rhythm paragraph updated
+  to match; scroll-aware header CTA salience (ghost at top, filled once scrolled); agents
+  eyebrow; a verified layout gotcha (hero H1 `max-w-[15ch]` is a no-op — width is capped by
+  the `md:grid-cols-[1.05fr_0.95fr]` hero column, not the `ch` utility; parked as a design
+  call); a naming gotcha (two distinct `Button` components — the landing atom vs.
+  `@tendersbay/components/core`'s — don't conflate their props).
+- New page `landing-analytics.md` (project): the landing PostHog house idiom, the full
+  event table (2 pre-existing + 3 new: `landing_cta_clicked`, `signup_started`,
+  `proof_strip_viewed`), the `location`/`entry` shared-vocabulary funnel join, how `entry`
+  rides the signup route's `?entry=` search param end to end, and a deferred non-blocking
+  gotcha (`signup_started`'s mount effect double-fires under React StrictMode in dev only,
+  not in prod or tests).
+- Updated `index.md`: landing-page-design/eu-coverage-section hooks refreshed, new
+  `landing-analytics.md` entry, vite-plugin-seo hook updated to mention llms.txt +
+  per-locale localized meta instead of the stale "static meta" description.
+- Skipped as already recorded / plan-only: the 24-locale translation mechanics (already
+  `locale-namespace-insertion.md` + `.claude/rules/frontend.md`), the PostHog idiom's
+  consent-gating/super-property mechanics (already established precedent, restated only
+  inside the new page's own scope), the per-task SDD process notes and pre-existing dev
+  debt (16 tsc errors, one Biome failure — unrelated WIP, not this branch's problem, surfaced
+  to the user directly rather than filed in the wiki).
+
 ## [2026-07-18] ingest | feedback-timing bias + tension-model personas
 - Source transcript (neuroscience/team-synchronization + course-design case study) was
   mostly not applicable — live-workshop facilitation research and a Typeform/Airtable/

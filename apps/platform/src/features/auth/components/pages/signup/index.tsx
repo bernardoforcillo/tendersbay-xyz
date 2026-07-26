@@ -1,6 +1,7 @@
-import { useParams } from '@tanstack/react-router';
+import { useParams, useSearch } from '@tanstack/react-router';
 import { Banner, Button, Field } from '@tendersbay/components/core';
-import { useState } from 'react';
+import { usePostHog } from 'posthog-js/react';
+import { useEffect, useState } from 'react';
 import { Form } from 'react-aria-components';
 import { useTranslation } from 'react-i18next';
 import { AuthCard } from '~/features/auth/components/templates/auth-card';
@@ -9,11 +10,17 @@ import { useRedirectParam } from '~/lib/redirect';
 
 export function SignupPage() {
   const { locale } = useParams({ from: '/$locale/auth/signup' });
+  const { entry } = useSearch({ from: '/$locale/auth/signup' });
   const { t } = useTranslation();
   const { raw: redirectRaw } = useRedirectParam();
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [pending, setPending] = useState(false);
+
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('signup_started', { entry: entry ?? 'direct' });
+  }, [posthog, entry]);
 
   const loginHref = redirectRaw
     ? `/${locale}/auth/login?redirect=${encodeURIComponent(redirectRaw)}`

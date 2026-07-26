@@ -210,6 +210,28 @@ func (s *Service) CanAccessWorkbench(ctx context.Context, userID, workbenchID st
 	return err
 }
 
+// CanManageWorkbench returns nil when userID may perform write actions on
+// workbenchID, and ErrWorkbenchNotFound / ErrForbidden otherwise. It mirrors
+// CanAccessWorkbench but resolves the same authorize path against
+// PermManageWorkbench, so an external caller (the bid domain gating its write
+// RPCs) gets an identical decision to the one UpdateWorkbench uses.
+func (s *Service) CanManageWorkbench(ctx context.Context, userID, workbenchID string) error {
+	_, err := s.authorize(ctx, workbenchID, userID, PermManageWorkbench)
+	return err
+}
+
+// WorkspaceOf resolves a workbench's parent workspace id. It performs no
+// authorization of its own — callers (the bid domain, after their own
+// CanAccessWorkbench check) use it only to scope a downstream profile/fit
+// lookup. Returns ErrWorkbenchNotFound when the workbench does not exist.
+func (s *Service) WorkspaceOf(ctx context.Context, workbenchID string) (string, error) {
+	wb, err := s.workbenches.FindByID(ctx, workbenchID)
+	if err != nil {
+		return "", err
+	}
+	return wb.WorkspaceID, nil
+}
+
 // AccessibleWorkbenchIDs returns the set of workbench IDs in workspaceID that
 // userID may view — the same visibility ListWorkbenches applies, indexed for an
 // O(1) membership test. Used to filter workbench-scoped chats in a workspace

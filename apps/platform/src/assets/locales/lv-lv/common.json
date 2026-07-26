@@ -170,8 +170,8 @@
       "results_other": "{{count}} iepirkumi"
     },
     "meta": {
-      "title": "tendersbay — ES publiskie iepirkumi, kurus izcīna jūsu MI aģenti",
-      "description": "MI aģenti, kas visā Eiropā izmedī īstos publiskos iepirkumus, sasmalcina dokumentāciju un pavada jūsu MVU no pirmās iepirkuma iespējas līdz pat piešķiršanai."
+      "title": "tendersbay — ES publiskie iepirkumi, kurus atrod un izcīna jūsu MI aģenti",
+      "description": "MI aģenti, kas izmedī īstos publiskos iepirkumus visās 27 ES valstīs, sasmalcina dokumentāciju un pavada jūsu MVU no iespējas līdz piešķiršanai."
     },
     "nav": {
       "problem": "Izmaksas",
@@ -179,11 +179,11 @@
       "vision": "Vīzija"
     },
     "hero": {
-      "titleLead": "Iepirkums, ko viņi jau uzskatīja par savu?",
-      "titleHighlight": "Piešķirts.",
-      "subtitle": "Šonakt noslēdzas iepirkums ar jūsu vārdu. Lielajiem spēlētājiem tam jau ir komanda. Jums ir atvērtas trīs cilnes Excel. Te tas beidzas — MI aģenti, kas to atrod, saplosa birokrātiju un ieliek jūs piedāvājumā. Kamēr jūs guļat.",
+      "titleLead": "Katrs publiskais iepirkums 27 valstīs — atrasts, sagatavots,",
+      "titleHighlight": "piešķirts.",
+      "subtitle": "Jūsu MVU nav piedāvājumu nodaļas. Un tai tā nav vajadzīga. MI aģentu komanda visā ES atrod pareizos iepirkumus, sakārto dokumentāciju un sagatavo jūsu piedāvājumu pa nakti — kamēr lielo spēlētāju komanda guļ.",
       "ctaPrimary": "Lieciet saviem aģentiem strādāt",
-      "ctaSecondary": "Skatiet vīziju",
+      "ctaSecondary": "Skatiet, kā tas darbojas",
       "trust": ["27 valstis, viena meklēšana", "Aģenti, kas nekad neguļ", "Birokrātija: nokārtota"],
       "deckLabel": "Piemēra rezultāti"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Aģenti, nevis vēl viens meklēšanas lodziņš",
       "title": "Lūk, ko jūsu aģenti paveica, kamēr jūs gulējāt.",
       "lead": "Nevis ātrāka meklēšanas josla, kas jums joprojām jāvada pašam. Aģentu komanda, kas apstrādā visu iepirkumu — atrod, sagatavo, uzvar — nakts laikā, lai jūs pamostos jau sacensībā.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 valstis. Ieņemam tās vienu pēc otras.",
-      "body": "Mēs paplašināmies visā Eiropas Savienībā, tirgu pēc tirgus. Katrs karogs iedegas dienā, kad jūsu valsts sāk darboties.",
+      "body": "Katrs iepirkums TED — Eiropas Savienības mēroga Tenders Electronic Daily — ir natīvi pārklāts jau no pirmās dienas visās 27 valstīs. Karogi, kas iedegas, ir nacionālie portāli, kuriem pievienojamies tieši, tirgu pēc tirgus.",
       "statusAvailable": "Aktīvs",
-      "statusComingSoon": "Drīzumā",
+      "statusComingSoon": "Ieviešanas procesā",
+      "statusMapped": "Kartētie tirgi",
+      "tedNative": "TED · atbalstīts natīvi",
+      "nationalPortals": "Nacionālie portāli",
       "note": "Pārklājums paplašinās visās 27 ES valstīs."
     },
     "footer": {
@@ -608,6 +612,83 @@
       "title": "Klienta piedāvājuma profils",
       "subtitle": "Tas, kādos iepirkumos šis klients piedalās — nozares, valstis un vērtību diapazons — nosaka katru ieteikumu.",
       "saved": "Profils saglabāts."
+    }
+  },
+  "bid": {
+    "stage": { "shortlisted": "Atlasīts", "preparing": "Tiek gatavots", "submitted": "Iesniegts" },
+    "goNoGo": { "undecided": "Nav izlemts", "go": "Piedalāmies", "noGo": "Nepiedalāmies" },
+    "outcome": { "open": "Atvērts", "won": "Uzvarēts", "lost": "Zaudēts", "withdrawn": "Atsaukts" },
+    "bands": {
+      "needsYouNow": "Nepieciešama uzmanība tagad",
+      "active": "Tiek gatavots",
+      "submitted": "Iesniegti",
+      "closed": "Pabeigti"
+    },
+    "actions": {
+      "prepare": "Sagatavot workbench",
+      "advance": "Virzīt uz nākamo posmu",
+      "markGo": "Piedalāmies",
+      "markNoGo": "Nepiedalāmies"
+    },
+    "empty": {
+      "title": "Vēl nav neviena sekota iepirkuma",
+      "description": "Pievienojiet iepirkumu šim workbench, lai sāktu tā sagatavošanu.",
+      "seedTitle": "Vispiemērotākie iepirkumi sagatavošanai",
+      "needsProfileTitle": "Izveidojiet klienta profilu, lai redzētu atbilstību",
+      "needsProfileCta": "Izveidot klienta profilu"
+    },
+    "fit": { "needsProfile": "Izveidojiet klienta profilu, lai redzētu atbilstību" },
+    "tombstone": {
+      "title": "Šis iepirkums vairs nav pieejams",
+      "description": "Avota portāls ir noņēmis šo paziņojumu. Jūsu kontrolsaraksts un piezīmes ir saglabāti."
+    },
+    "checklist": {
+      "title": "ESPD kontrolsaraksts",
+      "progress": "{{done}} no {{total}} pabeigti",
+      "statusLabel": "Statuss",
+      "noteLabel": "Piezīme",
+      "required": "Obligāts",
+      "notePlaceholder": "Pievienot piezīmi…",
+      "status": { "pending": "Gaida", "done": "Pabeigts", "na": "Neattiecas" },
+      "sections": {
+        "part_ii": "II daļa — Informācija par uzņēmēju",
+        "part_iii": "III daļa — Izslēgšanas iemesli",
+        "part_iv": "IV daļa — Atlases kritēriji",
+        "conclusion": "Noslēguma paziņojumi"
+      },
+      "items": {
+        "identification": "Uzņēmēja identifikācija un reģistrācija",
+        "sme_status": "MVU statusa deklarācija",
+        "representation": "Pilnvarots pārstāvis",
+        "criminal_convictions": "Nav sodāmības",
+        "tax_payments": "Nodokļi samaksāti",
+        "social_security": "Sociālās apdrošināšanas iemaksas samaksātas",
+        "insolvency": "Nav bankrota vai maksātnespējas",
+        "misconduct": "Nav smaga profesionālā pārkāpuma",
+        "conflict_interest": "Nav interešu konflikta",
+        "suitability": "Piemērotība darbības veikšanai",
+        "economic_standing": "Saimnieciskais un finansiālais stāvoklis",
+        "technical_ability": "Tehniskās un profesionālās spējas",
+        "quality_assurance": "Kvalitātes nodrošināšanas sistēmas",
+        "espd_signed": "ESPD aizpildīts un parakstīts"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Lēmums",
+      "stageTitle": "Posms",
+      "outcomeTitle": "Rezultāts",
+      "backToPortfolio": "Atpakaļ uz portfeli"
+    },
+    "picker": {
+      "title": "Izvēlieties workbench",
+      "recent": "Nesenie",
+      "all": "Visi workbench",
+      "empty": "Vēl nav neviena workbench — vispirms izveidojiet."
+    },
+    "errors": {
+      "duplicate": "Šis iepirkums jau ir šajā workbench.",
+      "unavailable": "Šis iepirkums vairs nav pieejams.",
+      "generic": "Kaut kas nogāja greizi. Lūdzu, mēģiniet vēlreiz."
     }
   },
   "workbench": {

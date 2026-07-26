@@ -59,7 +59,7 @@ describe('CoverageSection', () => {
     // Italy flips to "Live" once GetCoverage resolves with ['IT'].
     expect(await screen.findByRole('button', { name: /Italy.*Live/i })).toBeInTheDocument();
     // A country not in the coverage set stays coming-soon.
-    expect(screen.getByRole('button', { name: /Poland.*Coming soon/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Poland.*In rollout/i })).toBeInTheDocument();
   });
 
   it('localizes country names via Intl.DisplayNames', async () => {
@@ -74,5 +74,18 @@ describe('CoverageSection', () => {
     await user.tab();
     const card = await screen.findByRole('tooltip');
     expect(card).toHaveTextContent('BBG');
+  });
+
+  it('leads on markets-mapped, shows the TED badge, and hides the Live row until a portal is live', async () => {
+    getCoverage.mockResolvedValue({ countries: [] });
+    renderWithI18n(<CoverageSection />, 'en-ie');
+    expect(screen.getByText(/supported natively/i)).toBeInTheDocument();
+    expect(screen.getByText(/markets mapped/i)).toBeInTheDocument();
+    // Exact match, not a case-insensitive substring: the section's body copy also
+    // contains the phrase "national portals" in prose, which a /national portals/i
+    // regex would match too, causing a false "multiple elements" failure here.
+    expect(screen.getByText('National portals')).toBeInTheDocument();
+    await waitFor(() => expect(getCoverage).toHaveBeenCalled());
+    expect(screen.queryByText('Live')).not.toBeInTheDocument();
   });
 });

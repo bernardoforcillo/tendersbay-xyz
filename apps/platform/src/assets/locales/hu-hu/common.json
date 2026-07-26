@@ -170,8 +170,8 @@
       "results_other": "{{count}} pályázat"
     },
     "meta": {
-      "title": "tendersbay — Közbeszerzések az odaítélésig, MI-ügynökök csapatával",
-      "description": "MI-ügynökök, akik felkutatják a megfelelő közbeszerzéseket és közbeszerzési pályázatokat, szétzúzzák a papírmunkát, és az odaítélésig viszik az Ön kkv-ját."
+      "title": "tendersbay — uniós közbeszerzések, MI-ügynökök által megtalálva és odaítélve",
+      "description": "MI-ügynökök, akik felkutatják a megfelelő közbeszerzéseket mind a 27 uniós országban, szétzúzzák a papírmunkát, és a lehetőségtől az odaítélésig viszik az Ön kkv-ját."
     },
     "nav": {
       "problem": "A költség",
@@ -179,11 +179,11 @@
       "vision": "Vízió"
     },
     "hero": {
-      "titleLead": "A pályázat, amit már a sajátjuknak hittek?",
-      "titleHighlight": "Odaítélve.",
-      "subtitle": "Ma éjjel lejár egy pályázat az Ön nevével. A nagy szereplőknek már csapatuk van rajta. Önnek három lap van nyitva az Excelben. Itt vége — MI-ügynökök, akik megtalálják, széttépik a papírmunkát, és beállítják Önt az ajánlatba. Miközben alszik.",
+      "titleLead": "Minden közbeszerzési pályázat mind a 27 országban — megtalálva, előkészítve,",
+      "titleHighlight": "odaítélve.",
+      "subtitle": "Az Ön kkv-jának nincs pályázati irodája. Nincs is rá szüksége. Az MI-ügynökök csapata felkutatja a megfelelő pályázatokat az egész EU-ban, elintézi a papírmunkát, és egyetlen éjszaka alatt összeállítja az ajánlatát — miközben a nagyok csapata alszik.",
       "ctaPrimary": "Állítsa munkába az ügynökeit",
-      "ctaSecondary": "Tekintse meg a víziót",
+      "ctaSecondary": "Nézze meg, hogyan működik",
       "trust": [
         "27 ország, egy keresés",
         "Ügynökök, akik soha nem alszanak",
@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Ügynökök, nem még egy keresőmező",
       "title": "Íme, mit végeztek az ügynökei, amíg Ön aludt.",
       "lead": "Nem egy gyorsabb keresősáv, amit még mindig Önnek kell vezérelnie. Egy ügynökcsapat, amely a teljes pályázatot végigviszi — megtalál, előkészít, nyer — éjszaka, hogy már versenyben ébredjen.",
       "items": [
@@ -292,9 +293,12 @@
     },
     "coverage": {
       "title": "27 ország. Egyenként vesszük be őket.",
-      "body": "Az egész Európai Unióban terjeszkedünk, piacról piacra. Minden zászló kigyullad azon a napon, amikor az Ön országa élesben indul.",
+      "body": "Minden TED-en — az uniós szintű Tenders Electronic Dailyn — meghirdetett pályázat natívan lefedett, az első naptól kezdve, mind a 27 országban. A kigyulladó zászlók azok a nemzeti portálok, amelyekhez közvetlenül csatlakozunk, piacról piacra.",
       "statusAvailable": "Aktív",
-      "statusComingSoon": "Hamarosan",
+      "statusComingSoon": "Bevezetés alatt",
+      "statusMapped": "Feltérképezett piacok",
+      "tedNative": "TED · natívan támogatott",
+      "nationalPortals": "Nemzeti portálok",
       "note": "A lefedettség mind a 27 EU-országba megérkezik."
     },
     "footer": {
@@ -609,6 +613,92 @@
       "title": "Ügyfél ajánlati profilja",
       "subtitle": "Amire ez az ügyfél pályázik — szektorok, országok és értéktartomány — minden ajánlást meghatároz.",
       "saved": "Profil mentve."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Kiválasztva",
+      "preparing": "Előkészítés alatt",
+      "submitted": "Benyújtva"
+    },
+    "goNoGo": { "undecided": "Eldöntetlen", "go": "Indulunk", "noGo": "Nem indulunk" },
+    "outcome": {
+      "open": "Nyitott",
+      "won": "Megnyerve",
+      "lost": "Elveszítve",
+      "withdrawn": "Visszavonva"
+    },
+    "bands": {
+      "needsYouNow": "Azonnali figyelmet igényel",
+      "active": "Előkészítés alatt",
+      "submitted": "Benyújtott",
+      "closed": "Lezárt"
+    },
+    "actions": {
+      "prepare": "Előkészítés a workbenchben",
+      "advance": "Szakasz továbbléptetése",
+      "markGo": "Indulunk",
+      "markNoGo": "Nem indulunk"
+    },
+    "empty": {
+      "title": "Még nincs nyomon követett pályázat",
+      "description": "Vegyen fel egy pályázatot ebbe a workbenchbe az előkészítés megkezdéséhez.",
+      "seedTitle": "Legjobban illeszkedő pályázatok előkészítésre",
+      "needsProfileTitle": "Hozzon létre ügyfélprofilt az illeszkedés megtekintéséhez",
+      "needsProfileCta": "Ügyfélprofil létrehozása"
+    },
+    "fit": { "needsProfile": "Hozzon létre ügyfélprofilt az illeszkedés megtekintéséhez" },
+    "tombstone": {
+      "title": "Ez a pályázat már nem érhető el",
+      "description": "A forrásportál eltávolította ezt a hirdetményt. Az ellenőrzőlistája és jegyzetei megmaradtak."
+    },
+    "checklist": {
+      "title": "ESPD / EEKD ellenőrzőlista",
+      "progress": "{{done}} / {{total}} kész",
+      "statusLabel": "Állapot",
+      "noteLabel": "Megjegyzés",
+      "required": "Kötelező",
+      "notePlaceholder": "Megjegyzés hozzáadása…",
+      "status": { "pending": "Függőben", "done": "Kész", "na": "Nem alkalmazható" },
+      "sections": {
+        "part_ii": "II. rész — A gazdasági szereplőre vonatkozó információk",
+        "part_iii": "III. rész — Kizáró okok",
+        "part_iv": "IV. rész — Kiválasztási szempontok",
+        "conclusion": "Záró nyilatkozatok"
+      },
+      "items": {
+        "identification": "A gazdasági szereplő azonosítása és nyilvántartásba vétele",
+        "sme_status": "KKV-státusz nyilatkozat",
+        "representation": "Meghatalmazott képviselő",
+        "criminal_convictions": "Nincs büntetett előélet",
+        "tax_payments": "Adók megfizetve",
+        "social_security": "Társadalombiztosítási járulékok megfizetve",
+        "insolvency": "Nincs csőd- vagy felszámolási eljárás",
+        "misconduct": "Nincs súlyos szakmai kötelezettségszegés",
+        "conflict_interest": "Nincs összeférhetetlenség",
+        "suitability": "Alkalmasság a tevékenység folytatására",
+        "economic_standing": "Gazdasági és pénzügyi helyzet",
+        "technical_ability": "Műszaki és szakmai alkalmasság",
+        "quality_assurance": "Minőségbiztosítási rendszerek",
+        "espd_signed": "ESPD/EEKD kitöltve és aláírva"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Döntés",
+      "stageTitle": "Szakasz",
+      "outcomeTitle": "Eredmény",
+      "backToPortfolio": "Vissza a portfólióhoz"
+    },
+    "picker": {
+      "title": "Válasszon workbenchet",
+      "recent": "Legutóbbi",
+      "all": "Összes workbench",
+      "empty": "Még nincs workbench — hozzon létre egyet."
+    },
+    "errors": {
+      "duplicate": "Ez a pályázat már szerepel abban a workbenchben.",
+      "unavailable": "Ez a pályázat már nem érhető el.",
+      "generic": "Hiba történt. Kérjük, próbálja újra."
     }
   },
   "workbench": {

@@ -45,6 +45,13 @@ vi.mock('~/features/account/components/organisms', () => ({
   SearchDock: ({ onPress }: { onPress?: () => void }) => (
     <button type="button" data-testid="search-dock" onClick={onPress} />
   ),
+  // Stubbed only so the regression test below can mount AccountExplorePage
+  // (which renders ChatWindow) after Today's resume(); Today itself never
+  // renders ChatWindow.
+  ChatWindow: () => <div data-testid="chat-window" />,
+}));
+vi.mock('~/features/account/components/templates/account-layout', () => ({
+  AccountLayout: ({ children }: { children: ReactNode }) => <div>{children}</div>,
 }));
 // FirstRunProfile has its own dedicated test suite (its own GetClientProfile check,
 // Skip, and carry-over pre-fill); Today's tests only need it to pass its content through.
@@ -87,6 +94,28 @@ describe('WorkspaceTodayPage', () => {
     expect(useChatStore.getState().pendingChoice).toBeNull();
     expect(useChatStore.getState().currentChatId).toBe('c1');
     expect(navigateMock).toHaveBeenCalledWith({ to: '/explore' });
+  });
+
+  it('resuming a workspace chat clears a stale workbench scope, so landing on /explore does not wipe the resumed chat', async () => {
+    const { default: userEvent } = await import('@testing-library/user-event');
+    const user = userEvent.setup();
+    // Simulate an earlier workbench visit leaving the store workbench-scoped
+    // (currentWorkbenchId persists to sessionStorage across navigation).
+    useChatStore.setState({ currentWorkbenchId: 'wb-stale' });
+
+    render(<WorkspaceTodayPage />);
+    await user.click(screen.getByText('Bandi cloud Lombardia'));
+
+    expect(useChatStore.getState().currentChatId).toBe('c1');
+    expect(useChatStore.getState().currentWorkbenchId).toBeNull();
+
+    // Landing on /explore (AccountExplorePage's entry guard resets to
+    // workspace scope whenever currentWorkbenchId is still non-null) must not
+    // wipe the chat resume() just set.
+    const { AccountExplorePage } = await import('~/features/account/components/pages/explore');
+    render(<AccountExplorePage />);
+
+    expect(useChatStore.getState().currentChatId).toBe('c1');
   });
 
   it('pressing the search dock navigates to Tenders', async () => {

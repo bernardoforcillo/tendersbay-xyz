@@ -3,8 +3,13 @@ name: landing-page-design
 description: "tendersbay landing page — positioning, brand palette, tone, and key product framing"
 metadata:
   type: project
-  updated: 2026-07-16
-  sources: [docs/gtm/2026-07-15-landing-restructure.md]
+  updated: 2026-07-26
+  sources:
+    [
+      docs/gtm/2026-07-15-landing-restructure.md,
+      docs/superpowers/plans/2026-07-25-landing-usp-redesign.md,
+      docs/superpowers/specs/2026-07-25-landing-usp-redesign-design.md,
+    ]
 ---
 
 The tendersbay marketing/landing page (route `/$locale/` in `apps/platform`) is an
@@ -90,24 +95,62 @@ Coverage → Vision → CTA:
   via cherry-pick (the search-dock work already on `dev` auto-merged cleanly). Strategy doc:
   `docs/gtm/2026-07-15-landing-restructure.md`.
 
+**USP redesign (2026-07-26, `feature/landing-usp-redesign`):** rewrote the hero to assert
+the intersection USP directly instead of a rhetorical hook, hoisted the buried
+differentiators, and shipped the first PostHog conversion-funnel baseline.
+- **Hero H1** now states the USP head-on: "Every public tender in 27 countries — found,
+  prepared, **awarded.**" (replaces the earlier rhetorical-question framing). Primary CTA
+  now **converts**: routes to `/$locale/auth/signup` (`search={{ entry: 'hero' }}`) instead
+  of the in-page `#agents` anchor; secondary CTA repoints `#vision` → `#agents` ("See how it
+  works").
+- **Section order changed again** (supersedes the 2026-07-16 order below): Coverage now
+  renders **before** Assurance. Current full flow: Hero → Proof strip → Problem → Agents →
+  Audience → **Coverage → Assurance** → Vision → CtaBand.
+- **CTA salience:** the `SiteHeader` signup pill is scroll-aware — ghost/outline while at the
+  top of the page (hero primary CTA is the single dominant filled control) and filled
+  `bg-brand-600` once scrolled (header pill becomes the standing filled CTA), driven by the
+  header's existing `useScrolled()` and its ~32px threshold (same as the header's frost
+  morph). The "Log in" link is untouched.
+- **Agents section** gained a mono eyebrow above its title, `landing.agents.eyebrow` =
+  "Agents, not another search box", reinforcing the hero <-> Agents wedge without touching
+  the guarded `agents.items` timeline timestamps (`['02:14','05:30','07:00']`).
+- **Coverage reframed** around TED-native + national portals — see [[eu-coverage-section]]
+  for the stat-box/badge/copy details.
+- **Conversion funnel instrumented** (PostHog) — see [[landing-analytics]] for the event
+  contract and vocabulary.
+- **Hero H1 width is grid-bound, not `max-w`-bound (layout gotcha).** Verified live
+  (Vite+Playwright, 1280x900 desktop + 390x844 mobile): widening the H1's `max-w-[15ch]`
+  utility is a no-op — its rendered width is capped by the `md:grid-cols-[1.05fr_0.95fr]`
+  hero column (~554px) on desktop and by viewport padding on mobile, both narrower than what
+  `15ch` computes to (~588px, never binding). To actually change hero H1 wrapping, change
+  the grid ratio or the font-size, not the `ch` utility — parked as a design call (not fixed
+  in this session; see [[spacing-and-visual-rhythm]] for the adjacent spacing discipline).
+- **Two distinct `Button` components — don't conflate them.** The landing `Button` atom
+  (`features/landing/components/atoms/button`) is href/`to`-only (react-aria `Link` for
+  `href`, TanStack Router `Link` for `to`), and now also carries an optional `onPress`
+  (forwarded on all four render branches) plus a route-only `search` passthrough. It is a
+  separate component from `@tendersbay/components/core`'s `Button` ([[core-component-kit]]),
+  which instead has `onPress`/`isDisabled`/`type='submit'`/`variant='danger'`.
+
 **Env gotcha (2026-06-27):** `pnpm --filter platform exec vitest`/`pnpm exec biome` started
 failing in a pre-run deps check (`runDepsStatusCheck` → `pnpm install` → `ERR_PNPM_IGNORED_BUILDS:
 core-js`). Bypass by calling the binaries directly: `apps/platform/node_modules/.bin/vitest run
 --root apps/platform` and `node_modules/.bin/biome check --write <paths>`.
 
 **Light/dark section rhythm (2026-06-27, intentional — don't "fix" back; ladder updated
-2026-07-16):** value ladder `cream-50 → cream-100 → ink-900 → ink-950` used as an
-arousal/attention ladder. Current rhythm (verified against the code):
+2026-07-16, order updated 2026-07-26):** value ladder `cream-50 → cream-100 → ink-900 →
+ink-950` used as an arousal/attention ladder. Current rhythm (verified against the code):
 Hero L · **Proof L** (cream-100, the new proof strip continues the hero field) ·
 **Problem D** (`bg-ink-900` — now dark; the earlier "Problem L" note is stale) ·
-Agents (brand-700 teal band) · Audience L (cream-100, warm) · Assurance L (cream-50,
-distinct) · **Coverage D** (`bg-ink-950` — deliberately dark so the flag tiles, which are
-`bg-white`, *light up* against the dark) · **Vision L** (cream-100 — an airy "breath of
-light" before the close) · CtaBand (ink card) · Footer D. **Note (2026-07-16):** with
-Problem now dark, Coverage is no longer the *only* mid-page dark beat, so the original
-Von-Restorff rationale is partly superseded — whether the two dark beats + the teal Agents
-band read well together is a **design/UX call** (route to `/ux` if the rhythm needs a
-pass). Coverage still carries an aurora top bleed + bottom fade to `#fbf7f0`.
+Agents (brand-700 teal band) · Audience L (cream-100, warm) · **Coverage D** (`bg-ink-950` —
+deliberately dark so the flag tiles, which are `bg-white`, *light up* against the dark; now
+sits before Assurance, not after) · Assurance L (cream-50, distinct) · **Vision L**
+(cream-100 — an airy "breath of light" before the close) · CtaBand (ink card) · Footer D.
+**Note (2026-07-16):** with Problem now dark, Coverage is no longer the *only* mid-page dark
+beat, so the original Von-Restorff rationale is partly superseded — whether the two dark
+beats + the teal Agents band read well together is a **design/UX call** (route to `/ux` if
+the rhythm needs a pass). Coverage still carries an aurora top bleed + bottom fade to
+`#fbf7f0`.
 
 Full spec: `docs/superpowers/specs/2026-06-21-landing-page-design.md` (original) and
 `docs/superpowers/specs/2026-06-26-landing-copy-rearchitecture-design.md` (this rewrite) —

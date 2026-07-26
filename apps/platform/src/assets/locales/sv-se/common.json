@@ -170,8 +170,8 @@
       "results_other": "{{count}} upphandlingar"
     },
     "meta": {
-      "title": "tendersbay — Offentliga upphandlingar, tilldelade av AI-agenter",
-      "description": "AI-agenter som spårar upp rätt offentliga upphandlingar i hela Europa, krossar pappersarbetet och tar ditt SMF hela vägen till tilldelningen."
+      "title": "tendersbay — Offentliga upphandlingar i EU, hittade & tilldelade av AI-agenter",
+      "description": "AI-agenter som jagar rätt offentliga upphandlingar i alla 27 EU-länder, krossar pappersarbetet och tar ditt SMF från möjlighet till tilldelning."
     },
     "nav": {
       "problem": "Kostnaden",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "Upphandlingen de redan räknat som sin?",
-      "titleHighlight": "Tilldelad.",
-      "subtitle": "Ikväll stänger en upphandling med ditt namn på. De stora aktörerna har redan ett team på den. Du har tre flikar öppna i Excel. Det slutar här — AI-agenter som hittar den, sliter sönder pappersarbetet och placerar dig i anbudet. Medan du sover.",
+      "titleLead": "Varje offentlig upphandling i 27 länder — hittad, förberedd,",
+      "titleHighlight": "tilldelad.",
+      "subtitle": "Ditt SMF har ingen anbudsavdelning. Det behöver det inte heller. Ett team av AI-agenter jagar rätt upphandlingar i hela EU, sköter pappersarbetet och bygger ditt anbud under natten — medan de stora aktörernas team sover.",
       "ctaPrimary": "Sätt dina agenter i arbete",
-      "ctaSecondary": "Se visionen",
+      "ctaSecondary": "Se hur det fungerar",
       "trust": ["27 länder, en sökning", "Agenter som aldrig sover", "Pappersarbete: löst"],
       "deckLabel": "Exempelresultat"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenter, inte ännu en sökruta",
       "title": "Det här gjorde dina agenter medan du sov.",
       "lead": "Inte en snabbare sökruta som du ändå måste styra själv. Ett team av agenter som arbetar med hela upphandlingen — hittar, förbereder, vinner — under natten, så att du vaknar redan med i loppet.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 länder. Vi tar dem ett i taget.",
-      "body": "Vi expanderar i hela Europeiska unionen, marknad för marknad. Varje flagga tänds den dag ditt land går live.",
+      "body": "Varje upphandling på TED — det EU-omfattande Tenders Electronic Daily — täcks nativt, från dag ett, i alla 27 länder. Flaggorna som tänds är de nationella portaler vi kopplar oss direkt till, marknad för marknad.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Kommer snart",
+      "statusComingSoon": "Under utrullning",
+      "statusMapped": "Kartlagda marknader",
+      "tedNative": "TED · stöds nativt",
+      "nationalPortals": "Nationella portaler",
       "note": "Täckningen är på väg till alla 27 EU-länder."
     },
     "footer": {
@@ -605,6 +609,83 @@
       "title": "Kundens anbudsprofil",
       "subtitle": "Det den här kunden lämnar anbud på — sektorer, länder och värdeintervall — styr varje rekommendation.",
       "saved": "Profil sparad."
+    }
+  },
+  "bid": {
+    "stage": { "shortlisted": "Utvald", "preparing": "Förbereds", "submitted": "Inlämnad" },
+    "goNoGo": { "undecided": "Ej beslutat", "go": "Vi deltar", "noGo": "Vi deltar inte" },
+    "outcome": { "open": "Öppen", "won": "Vunnen", "lost": "Förlorad", "withdrawn": "Återkallad" },
+    "bands": {
+      "needsYouNow": "Behöver uppmärksamhet nu",
+      "active": "Förbereds",
+      "submitted": "Inlämnade",
+      "closed": "Avslutade"
+    },
+    "actions": {
+      "prepare": "Förbered i workbench",
+      "advance": "Gå vidare till nästa steg",
+      "markGo": "Vi deltar",
+      "markNoGo": "Vi deltar inte"
+    },
+    "empty": {
+      "title": "Inga upphandlingar bevakas ännu",
+      "description": "Lägg till en upphandling i detta workbench för att börja förbereda den.",
+      "seedTitle": "Bäst matchande upphandlingar att förbereda",
+      "needsProfileTitle": "Skapa en kundprofil för att se matchning",
+      "needsProfileCta": "Skapa kundprofil"
+    },
+    "fit": { "needsProfile": "Skapa en kundprofil för att se matchning" },
+    "tombstone": {
+      "title": "Denna upphandling är inte längre tillgänglig",
+      "description": "Källportalen har tagit bort annonsen. Din checklista och dina anteckningar finns kvar."
+    },
+    "checklist": {
+      "title": "ESPD-checklista",
+      "progress": "{{done}} av {{total}} klara",
+      "statusLabel": "Status",
+      "noteLabel": "Anteckning",
+      "required": "Obligatoriskt",
+      "notePlaceholder": "Lägg till en anteckning…",
+      "status": { "pending": "Väntar", "done": "Klar", "na": "Ej tillämpligt" },
+      "sections": {
+        "part_ii": "Del II — Uppgifter om den ekonomiska aktören",
+        "part_iii": "Del III — Uteslutningsgrunder",
+        "part_iv": "Del IV — Urvalskriterier",
+        "conclusion": "Avslutande försäkringar"
+      },
+      "items": {
+        "identification": "Identifiering och registrering av den ekonomiska aktören",
+        "sme_status": "Deklaration av SME-status",
+        "representation": "Auktoriserad företrädare",
+        "criminal_convictions": "Inga brottmålsdomar",
+        "tax_payments": "Skatter betalda",
+        "social_security": "Sociala avgifter betalda",
+        "insolvency": "Ingen konkurs eller insolvens",
+        "misconduct": "Inget allvarligt yrkesfel",
+        "conflict_interest": "Ingen intressekonflikt",
+        "suitability": "Lämplighet att utöva yrkesverksamheten",
+        "economic_standing": "Ekonomisk och finansiell ställning",
+        "technical_ability": "Teknisk och yrkesmässig kapacitet",
+        "quality_assurance": "System för kvalitetssäkring",
+        "espd_signed": "ESPD ifylld och undertecknad"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Beslut",
+      "stageTitle": "Steg",
+      "outcomeTitle": "Utfall",
+      "backToPortfolio": "Tillbaka till portföljen"
+    },
+    "picker": {
+      "title": "Välj ett workbench",
+      "recent": "Senaste",
+      "all": "Alla workbenches",
+      "empty": "Inga workbenches ännu — skapa ett först."
+    },
+    "errors": {
+      "duplicate": "Denna upphandling finns redan i det workbenchet.",
+      "unavailable": "Denna upphandling är inte längre tillgänglig.",
+      "generic": "Något gick fel. Försök igen."
     }
   },
   "workbench": {

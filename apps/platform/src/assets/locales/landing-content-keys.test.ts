@@ -5,10 +5,20 @@ type AgentItem = { time?: string; title?: string; body?: string };
 type Stat = { value?: string; label?: string };
 type Landing = {
   proof?: { lead?: string; items?: Stat[]; source?: string };
-  agents?: { lead?: string; title?: string; items?: AgentItem[] };
+  agents?: { eyebrow?: string; lead?: string; title?: string; items?: AgentItem[] };
   audience?: { title?: string; items?: Card[] };
   assurance?: { eyebrow?: string; title?: string; items?: Card[] };
   cta?: { title?: string; body?: string; button?: string };
+  coverage?: {
+    title?: string;
+    body?: string;
+    statusAvailable?: string;
+    statusComingSoon?: string;
+    statusMapped?: string;
+    tedNative?: string;
+    nationalPortals?: string;
+    note?: string;
+  };
 };
 
 // The overnight-hook timeline is universal (24h clock), like the proof stats:
@@ -65,6 +75,7 @@ describe('landing proof-strip + agents-lead locale keys', () => {
     expect(typeof agents?.lead, 'agents.lead is a string').toBe('string');
     expect(agents?.lead, 'agents.lead non-empty').toBeTruthy();
     expect(agents?.title, 'agents.title non-empty').toBeTruthy();
+    expect(agents?.eyebrow, 'agents.eyebrow non-empty').toBeTruthy();
     const items = agents?.items;
     expect(Array.isArray(items) && items.length === 3, 'agents.items has 3 cards').toBe(true);
     expect(
@@ -81,5 +92,21 @@ describe('landing proof-strip + agents-lead locale keys', () => {
   it.each(entries)('%s has a signup-oriented cta button', (_path, mod) => {
     const cta = mod.default.landing.cta;
     expect(cta?.button, 'cta.button non-empty').toBeTruthy();
+  });
+
+  it.each(entries)('%s has a full coverage block', (_path, mod) => {
+    const c = mod.default.landing.coverage;
+    for (const key of [
+      'title',
+      'body',
+      'statusAvailable',
+      'statusComingSoon',
+      'statusMapped',
+      'tedNative',
+      'nationalPortals',
+      'note',
+    ] as const) {
+      expect(c?.[key], `coverage.${key} non-empty`).toBeTruthy();
+    }
   });
 });

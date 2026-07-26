@@ -170,8 +170,8 @@
       "results_other": "{{count}} tenders"
     },
     "meta": {
-      "title": "tendersbay — EU public tenders, awarded by your AI agents",
-      "description": "AI agents that hunt down the right public tenders across Europe, demolish the paperwork, and walk your SME from the first tender opportunity all the way to the award."
+      "title": "tendersbay — EU public tenders, found & awarded by AI agents",
+      "description": "AI agents that hunt the right public tenders across all 27 EU countries, demolish the paperwork, and take your SME from opportunity to award."
     },
     "nav": {
       "problem": "The cost",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "The tender they already counted as theirs?",
-      "titleHighlight": "Awarded.",
-      "subtitle": "A tender with your name on it closes tonight. The big players have a team on it. You have three tabs open in Excel. That ends here — AI agents that find it, gut the paperwork, and put you on the bid. While you sleep.",
+      "titleLead": "Every public tender in 27 countries — found, prepared,",
+      "titleHighlight": "awarded.",
+      "subtitle": "Your SME doesn't have a bid office. It doesn't need one. A team of AI agents hunts the right tenders across the EU, handles the paperwork, and builds your bid overnight — while the big players' team sleeps.",
       "ctaPrimary": "Put your agents to work",
-      "ctaSecondary": "See the vision",
+      "ctaSecondary": "See how it works",
       "trust": ["27 countries, one search", "Agents that never sleep", "Paperwork: handled"],
       "deckLabel": "Sample results"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agents, not another search box",
       "title": "Here's what your agents did while you slept.",
       "lead": "Not a faster search box you still have to drive. A team of agents that works the whole tender — find, prepare, win — overnight, so you wake up already in the running.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 countries. We're taking them one by one.",
-      "body": "We're rolling out across the European Union, market by market. Every flag lights up the day your country goes live.",
+      "body": "Every tender on TED — the EU-wide Tenders Electronic Daily — is covered natively, day one, across all 27 countries. The flags that light up are the national portals we plug into directly, market by market.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Coming soon",
+      "statusComingSoon": "In rollout",
+      "statusMapped": "Markets mapped",
+      "tedNative": "TED · supported natively",
+      "nationalPortals": "National portals",
       "note": "Coverage is rolling out across all 27 EU countries."
     },
     "footer": {
@@ -605,6 +609,83 @@
       "title": "Client bid profile",
       "subtitle": "What this client bids on — sectors, countries, and value range — drives every recommendation.",
       "saved": "Profile saved."
+    }
+  },
+  "bid": {
+    "stage": { "shortlisted": "Shortlisted", "preparing": "Preparing", "submitted": "Submitted" },
+    "goNoGo": { "undecided": "Undecided", "go": "Go", "noGo": "No-go" },
+    "outcome": { "open": "Open", "won": "Won", "lost": "Lost", "withdrawn": "Withdrawn" },
+    "bands": {
+      "needsYouNow": "Needs you now",
+      "active": "In preparation",
+      "submitted": "Submitted",
+      "closed": "Closed"
+    },
+    "actions": {
+      "prepare": "Prepare in workbench",
+      "advance": "Advance stage",
+      "markGo": "Go",
+      "markNoGo": "No-go"
+    },
+    "empty": {
+      "title": "No bandi tracked yet",
+      "description": "Take a tender into this workbench to start preparing it.",
+      "seedTitle": "Best-fit bandi to prepare",
+      "needsProfileTitle": "Set up a client profile to see fit",
+      "needsProfileCta": "Set up client profile"
+    },
+    "fit": { "needsProfile": "Set up a client profile to see fit" },
+    "tombstone": {
+      "title": "This tender is no longer available",
+      "description": "The source portal removed this listing. Your checklist and notes are preserved."
+    },
+    "checklist": {
+      "title": "ESPD / DGUE checklist",
+      "progress": "{{done}} of {{total}} done",
+      "statusLabel": "Status",
+      "noteLabel": "Note",
+      "required": "Required",
+      "notePlaceholder": "Add a note…",
+      "status": { "pending": "Pending", "done": "Done", "na": "N/A" },
+      "sections": {
+        "part_ii": "Part II — Operator information",
+        "part_iii": "Part III — Exclusion grounds",
+        "part_iv": "Part IV — Selection criteria",
+        "conclusion": "Concluding statements"
+      },
+      "items": {
+        "identification": "Operator identification and registration",
+        "sme_status": "SME status declaration",
+        "representation": "Authorised representative",
+        "criminal_convictions": "No criminal convictions",
+        "tax_payments": "Taxes paid up to date",
+        "social_security": "Social security contributions paid",
+        "insolvency": "Not bankrupt or under insolvency",
+        "misconduct": "No grave professional misconduct",
+        "conflict_interest": "No conflict of interest",
+        "suitability": "Suitability to pursue the activity",
+        "economic_standing": "Economic and financial standing",
+        "technical_ability": "Technical and professional ability",
+        "quality_assurance": "Quality assurance schemes",
+        "espd_signed": "ESPD/DGUE completed and signed"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Decision",
+      "stageTitle": "Stage",
+      "outcomeTitle": "Outcome",
+      "backToPortfolio": "Back to portfolio"
+    },
+    "picker": {
+      "title": "Choose a workbench",
+      "recent": "Recent",
+      "all": "All workbenches",
+      "empty": "No workbenches yet — create one first."
+    },
+    "errors": {
+      "duplicate": "This tender is already in that workbench.",
+      "unavailable": "This tender is no longer available.",
+      "generic": "Something went wrong. Please try again."
     }
   },
   "workbench": {

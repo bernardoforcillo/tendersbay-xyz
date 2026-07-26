@@ -170,8 +170,8 @@
       "results_other": "{{count}} hanget"
     },
     "meta": {
-      "title": "tendersbay — Euroopa riigihanked, lepinguni teie AI-agentide abil",
-      "description": "Tehisintellekti agendid, kes jälitavad õigeid riigihankeid üle Euroopa, purustavad paberimajanduse ja viivad teie VKE esimesest hankevõimalusest kuni hankelepingu sõlmimiseni."
+      "title": "tendersbay — ELi riigihanked, mille leiavad ja sõlmivad teie AI-agendid",
+      "description": "Tehisintellekti agendid, kes jälitavad õigeid riigihankeid kõigis 27 ELi riigis, purustavad paberimajanduse ja viivad teie VKE võimalusest kuni hankelepingu sõlmimiseni."
     },
     "nav": {
       "problem": "Kulu",
@@ -179,11 +179,11 @@
       "vision": "Visioon"
     },
     "hero": {
-      "titleLead": "Hange, mille nad juba enda omaks lugesid?",
-      "titleHighlight": "Sõlmitud.",
-      "subtitle": "Täna öösel sulgub hange teie nimega. Suurtel tegijatel on sellega juba meeskond. Teil on Excelis kolm vahekaarti lahti. Siin on lõpp — tehisintellekti agendid, kes selle leiavad, rebivad paberimajanduse tükkideks ja viivad teid pakkumiseni. Sel ajal kui magate.",
+      "titleLead": "Iga riigihange kõigis 27 riigis — leitud, ette valmistatud,",
+      "titleHighlight": "sõlmitud.",
+      "subtitle": "Teie VKE-l ei ole pakkumiste osakonda. Ja ei olegi vaja. Tehisintellekti agentide meeskond otsib üles õiged hanked kogu ELis, korraldab paberimajanduse ja koostab teie pakkumise ööga — samal ajal kui suurte mängijate meeskond magab.",
       "ctaPrimary": "Pange oma agendid tööle",
-      "ctaSecondary": "Vaadake visiooni",
+      "ctaSecondary": "Vaadake, kuidas see töötab",
       "trust": ["27 riiki, üks otsing", "Agendid, kes ei maga kunagi", "Paberimajandus: korras"],
       "deckLabel": "Näidistulemused"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agendid, mitte veel üks otsingukast",
       "title": "Vaadake, mida teie agendid tegid, kui te magasite.",
       "lead": "Mitte kiirem otsinguriba, mida peate ikkagi ise juhtima. Agentide meeskond, kes töötab läbi kogu hanke — leiab, valmistab ette, võidab — öö jooksul, nii et ärkate juba mängus.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 riiki. Võtame need ükshaaval.",
-      "body": "Laieneme üle kogu Euroopa Liidu, turgude kaupa. Iga lipp süttib päeval, mil teie riik käivitub.",
+      "body": "Iga hange TED-is — üle-euroopalises Tenders Electronic Daily platvormis — on kaetud algupäraselt, esimesest päevast, kõigis 27 riigis. Süttivad lipud tähistavad riiklikke portaale, millega ühendume otse, turg turu haaval.",
       "statusAvailable": "Aktiivne",
-      "statusComingSoon": "Tulekul",
+      "statusComingSoon": "Kasutuselevõtul",
+      "statusMapped": "Turud kaardistatud",
+      "tedNative": "TED · toetatud algupäraselt",
+      "nationalPortals": "Riiklikud portaalid",
       "note": "Kaetus jõuab kõigisse 27 EL-i riiki."
     },
     "footer": {
@@ -605,6 +609,92 @@
       "title": "Kliendi pakkumisprofiil",
       "subtitle": "See, millele see klient pakkumusi teeb — sektorid, riigid ja väärtusvahemik — mõjutab iga soovitust.",
       "saved": "Profiil salvestatud."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Valikus",
+      "preparing": "Ettevalmistamisel",
+      "submitted": "Esitatud"
+    },
+    "goNoGo": { "undecided": "Otsustamata", "go": "Osaleme", "noGo": "Ei osale" },
+    "outcome": {
+      "open": "Avatud",
+      "won": "Võidetud",
+      "lost": "Kaotatud",
+      "withdrawn": "Tagasi võetud"
+    },
+    "bands": {
+      "needsYouNow": "Vajab kohe tähelepanu",
+      "active": "Ettevalmistamisel",
+      "submitted": "Esitatud",
+      "closed": "Lõpetatud"
+    },
+    "actions": {
+      "prepare": "Valmista ette workbenchis",
+      "advance": "Liigu järgmisse etappi",
+      "markGo": "Osaleme",
+      "markNoGo": "Ei osale"
+    },
+    "empty": {
+      "title": "Ühtegi hanget pole veel jälgimisel",
+      "description": "Lisage hange sellesse workbenchi, et alustada selle ettevalmistamist.",
+      "seedTitle": "Enim sobivad hanked ettevalmistamiseks",
+      "needsProfileTitle": "Looge kliendiprofiil, et näha sobivust",
+      "needsProfileCta": "Loo kliendiprofiil"
+    },
+    "fit": { "needsProfile": "Looge kliendiprofiil, et näha sobivust" },
+    "tombstone": {
+      "title": "See hange ei ole enam saadaval",
+      "description": "Allikaportaal eemaldas selle teate. Teie kontrollnimekiri ja märkmed on säilinud."
+    },
+    "checklist": {
+      "title": "ESPD kontrollnimekiri",
+      "progress": "{{done}} / {{total}} tehtud",
+      "statusLabel": "Olek",
+      "noteLabel": "Märkus",
+      "required": "Kohustuslik",
+      "notePlaceholder": "Lisa märkus…",
+      "status": { "pending": "Ootel", "done": "Tehtud", "na": "Ei kohaldu" },
+      "sections": {
+        "part_ii": "II osa — Ettevõtja andmed",
+        "part_iii": "III osa — Kõrvaldamise alused",
+        "part_iv": "IV osa — Valikukriteeriumid",
+        "conclusion": "Lõppdeklaratsioonid"
+      },
+      "items": {
+        "identification": "Ettevõtja identifitseerimine ja registreerimine",
+        "sme_status": "VKE staatuse deklaratsioon",
+        "representation": "Volitatud esindaja",
+        "criminal_convictions": "Kriminaalkaristusi ei ole",
+        "tax_payments": "Maksud tasutud",
+        "social_security": "Sotsiaalkindlustusmaksed tasutud",
+        "insolvency": "Ei ole pankrotis ega maksejõuetu",
+        "misconduct": "Rasket ametialast rikkumist ei ole",
+        "conflict_interest": "Huvide konflikti ei ole",
+        "suitability": "Sobivus tegevusala teostamiseks",
+        "economic_standing": "Majanduslik ja finantsseisund",
+        "technical_ability": "Tehniline ja kutsealane pädevus",
+        "quality_assurance": "Kvaliteedi tagamise süsteemid",
+        "espd_signed": "ESPD täidetud ja allkirjastatud"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Otsus",
+      "stageTitle": "Etapp",
+      "outcomeTitle": "Tulemus",
+      "backToPortfolio": "Tagasi portfelli"
+    },
+    "picker": {
+      "title": "Vali workbench",
+      "recent": "Hiljutised",
+      "all": "Kõik workbenchid",
+      "empty": "Workbenche pole veel — looge esmalt üks."
+    },
+    "errors": {
+      "duplicate": "See hange on juba selles workbenchis.",
+      "unavailable": "See hange ei ole enam saadaval.",
+      "generic": "Midagi läks valesti. Proovige uuesti."
     }
   },
   "workbench": {

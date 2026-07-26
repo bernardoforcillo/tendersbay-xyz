@@ -170,8 +170,8 @@
       "results_other": "{{count}} licitaciones"
     },
     "meta": {
-      "title": "tendersbay — Licitaciones públicas, adjudicadas por agentes de IA",
-      "description": "Agentes de IA que cazan las licitaciones públicas y los concursos públicos europeos adecuados, arrasan con el papeleo y llevan a tu pyme hasta la adjudicación."
+      "title": "tendersbay — Licitaciones públicas de la UE, encontradas y adjudicadas por agentes de IA",
+      "description": "Agentes de IA que rastrean las licitaciones públicas adecuadas en los 27 países de la UE, arrasan con el papeleo y llevan a tu pyme de la oportunidad a la adjudicación."
     },
     "nav": {
       "problem": "El coste",
@@ -179,11 +179,11 @@
       "vision": "Visión"
     },
     "hero": {
-      "titleLead": "¿La licitación que ya daban por suya?",
-      "titleHighlight": "Adjudicada.",
-      "subtitle": "Esta noche se cierra una licitación con tu nombre. Los grandes ya tienen un equipo en ella. Tú tienes tres pestañas abiertas en Excel. Aquí se acaba — agentes de IA que la encuentran, destrozan el papeleo y te ponen en la oferta. Mientras duermes.",
+      "titleLead": "Cada licitación pública en 27 países — encontrada, preparada,",
+      "titleHighlight": "adjudicada.",
+      "subtitle": "Tu pyme no tiene una oficina de licitaciones. No la necesita. Un equipo de agentes de IA rastrea las licitaciones adecuadas en toda la UE, se encarga del papeleo y prepara tu oferta durante la noche — mientras el equipo de los grandes duerme.",
       "ctaPrimary": "Pon a trabajar a tus agentes",
-      "ctaSecondary": "Ver la visión",
+      "ctaSecondary": "Ve cómo funciona",
       "trust": ["27 países, una búsqueda", "Agentes que nunca duermen", "Papeleo: resuelto"],
       "deckLabel": "Resultados de ejemplo"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentes, no otro cuadro de búsqueda",
       "title": "Esto es lo que hicieron tus agentes mientras dormías.",
       "lead": "No una barra de búsqueda más rápida que aun así tienes que pilotar tú. Un equipo de agentes que trabaja la licitación entera — encontrar, preparar, ganar — durante la noche, para que despiertes ya en la carrera.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 países. Los vamos conquistando uno a uno.",
-      "body": "Nos expandimos por toda la Unión Europea, mercado a mercado. Cada bandera se enciende el día en que tu país entra en marcha.",
+      "body": "Cada licitación en TED — el Tenders Electronic Daily de toda la UE — está cubierta de forma nativa, desde el primer día, en los 27 países. Las banderas que se encienden son los portales nacionales a los que nos conectamos directamente, mercado a mercado.",
       "statusAvailable": "Activo",
-      "statusComingSoon": "Próximamente",
+      "statusComingSoon": "En despliegue",
+      "statusMapped": "Mercados mapeados",
+      "tedNative": "TED · compatible de forma nativa",
+      "nationalPortals": "Portales nacionales",
       "note": "La cobertura está llegando a los 27 países de la UE."
     },
     "footer": {
@@ -605,6 +609,87 @@
       "title": "Perfil de licitación del cliente",
       "subtitle": "Aquello a lo que se presenta este cliente — sectores, países y rango de valor — guía cada recomendación.",
       "saved": "Perfil guardado."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Preseleccionada",
+      "preparing": "En preparación",
+      "submitted": "Presentada"
+    },
+    "goNoGo": { "undecided": "Sin decidir", "go": "Participamos", "noGo": "No participamos" },
+    "outcome": { "open": "Abierta", "won": "Ganada", "lost": "Perdida", "withdrawn": "Retirada" },
+    "bands": {
+      "needsYouNow": "Necesita atención ahora",
+      "active": "En preparación",
+      "submitted": "Presentadas",
+      "closed": "Cerradas"
+    },
+    "actions": {
+      "prepare": "Preparar en el workbench",
+      "advance": "Avanzar de fase",
+      "markGo": "Participamos",
+      "markNoGo": "No participamos"
+    },
+    "empty": {
+      "title": "Aún no hay licitaciones en seguimiento",
+      "description": "Añade una licitación a este workbench para empezar a prepararla.",
+      "seedTitle": "Licitaciones más afines para preparar",
+      "needsProfileTitle": "Crea un perfil de cliente para ver la afinidad",
+      "needsProfileCta": "Crear perfil de cliente"
+    },
+    "fit": { "needsProfile": "Crea un perfil de cliente para ver la afinidad" },
+    "tombstone": {
+      "title": "Esta licitación ya no está disponible",
+      "description": "El portal de origen ha eliminado este anuncio. Tu checklist y tus notas se conservan."
+    },
+    "checklist": {
+      "title": "Checklist DEUC",
+      "progress": "{{done}} de {{total}} completados",
+      "statusLabel": "Estado",
+      "noteLabel": "Nota",
+      "required": "Obligatorio",
+      "notePlaceholder": "Añadir una nota…",
+      "status": { "pending": "Pendiente", "done": "Hecho", "na": "N/D" },
+      "sections": {
+        "part_ii": "Parte II — Información sobre el operador económico",
+        "part_iii": "Parte III — Motivos de exclusión",
+        "part_iv": "Parte IV — Criterios de selección",
+        "conclusion": "Declaraciones finales"
+      },
+      "items": {
+        "identification": "Identificación e inscripción del operador económico",
+        "sme_status": "Declaración de condición de PYME",
+        "representation": "Representante autorizado",
+        "criminal_convictions": "Ausencia de condenas penales",
+        "tax_payments": "Impuestos al corriente de pago",
+        "social_security": "Cotizaciones a la seguridad social al corriente",
+        "insolvency": "Ausencia de quiebra o insolvencia",
+        "misconduct": "Ausencia de falta profesional grave",
+        "conflict_interest": "Ausencia de conflicto de intereses",
+        "suitability": "Aptitud para ejercer la actividad profesional",
+        "economic_standing": "Solvencia económica y financiera",
+        "technical_ability": "Capacidad técnica y profesional",
+        "quality_assurance": "Sistemas de aseguramiento de la calidad",
+        "espd_signed": "DEUC cumplimentado y firmado"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Decisión",
+      "stageTitle": "Fase",
+      "outcomeTitle": "Resultado",
+      "backToPortfolio": "Volver al portfolio"
+    },
+    "picker": {
+      "title": "Elige un workbench",
+      "recent": "Recientes",
+      "all": "Todos los workbenches",
+      "empty": "Aún no hay workbenches — crea uno primero."
+    },
+    "errors": {
+      "duplicate": "Esta licitación ya está en ese workbench.",
+      "unavailable": "Esta licitación ya no está disponible.",
+      "generic": "Algo ha salido mal. Inténtalo de nuevo."
     }
   },
   "workbench": {

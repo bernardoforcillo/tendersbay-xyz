@@ -170,8 +170,8 @@
       "results_other": "{{count}} Ausschreibungen"
     },
     "meta": {
-      "title": "tendersbay — Öffentliche Ausschreibungen, zugeschlagen von KI-Agenten",
-      "description": "KI-Agenten, die die richtigen öffentlichen Ausschreibungen und Aufträge in Europa aufspüren, den Papierkram zerlegen und Ihr KMU bis zum Zuschlag bringen."
+      "title": "tendersbay — EU-Ausschreibungen, gefunden & zugeschlagen von KI-Agenten",
+      "description": "KI-Agenten, die die richtigen öffentlichen Ausschreibungen in allen 27 EU-Ländern aufspüren, den Papierkram erledigen und Ihr KMU von der Gelegenheit bis zum Zuschlag bringen."
     },
     "nav": {
       "problem": "Die Kosten",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "Die Ausschreibung, die sie längst als ihre verbucht haben?",
-      "titleHighlight": "Zugeschlagen.",
-      "subtitle": "Heute Nacht läuft eine Ausschreibung mit Ihrem Namen aus. Die Großen haben längst ein Team daran. Sie haben drei Excel-Tabs offen. Damit ist Schluss — KI-Agenten, die sie finden, den Papierkram zerlegen und Sie ins Angebot bringen. Während Sie schlafen.",
+      "titleLead": "Jede öffentliche Ausschreibung in 27 Ländern — gefunden, vorbereitet,",
+      "titleHighlight": "zugeschlagen.",
+      "subtitle": "Ihr KMU hat kein eigenes Angebotsteam. Braucht es auch nicht. Ein Team von KI-Agenten durchsucht die richtigen Ausschreibungen in der ganzen EU, erledigt den Papierkram und erstellt Ihr Angebot über Nacht — während das Team der Großen schläft.",
       "ctaPrimary": "Setzen Sie Ihre Agenten ein",
-      "ctaSecondary": "Vision ansehen",
+      "ctaSecondary": "Sehen Sie, wie es funktioniert",
       "trust": ["27 Länder, eine Suche", "Agenten, die nie schlafen", "Papierkram: erledigt"],
       "deckLabel": "Beispielergebnisse"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenten, nicht noch ein Suchfeld",
       "title": "Das haben Ihre Agenten getan, während Sie schliefen.",
       "lead": "Keine schnellere Suchleiste, die Sie trotzdem selbst bedienen müssen. Ein Team von Agenten, das die ganze Ausschreibung bearbeitet — finden, vorbereiten, gewinnen — über Nacht, sodass Sie schon im Rennen aufwachen.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 Länder. Wir holen sie uns, eins nach dem anderen.",
-      "body": "Wir expandieren in der gesamten Europäischen Union, Markt für Markt. Jede Flagge leuchtet an dem Tag auf, an dem Ihr Land live geht.",
+      "body": "Jede Ausschreibung auf TED — dem EU-weiten Tenders Electronic Daily — ist von Tag eins an nativ abgedeckt, in allen 27 Ländern. Die Flaggen, die aufleuchten, sind die nationalen Portale, an die wir direkt angebunden sind, Markt für Markt.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Demnächst",
+      "statusComingSoon": "Im Rollout",
+      "statusMapped": "Erfasste Märkte",
+      "tedNative": "TED · nativ unterstützt",
+      "nationalPortals": "Nationale Portale",
       "note": "Die Abdeckung kommt in alle 27 EU-Länder."
     },
     "footer": {
@@ -605,6 +609,92 @@
       "title": "Kunden-Angebotsprofil",
       "subtitle": "Worauf dieser Kunde bietet — Sektoren, Länder und Wertspanne — bestimmt jede Empfehlung.",
       "saved": "Profil gespeichert."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Vorgemerkt",
+      "preparing": "In Vorbereitung",
+      "submitted": "Eingereicht"
+    },
+    "goNoGo": { "undecided": "Unentschieden", "go": "Teilnahme", "noGo": "Keine Teilnahme" },
+    "outcome": {
+      "open": "Offen",
+      "won": "Gewonnen",
+      "lost": "Verloren",
+      "withdrawn": "Zurückgezogen"
+    },
+    "bands": {
+      "needsYouNow": "Braucht jetzt Ihre Aufmerksamkeit",
+      "active": "In Vorbereitung",
+      "submitted": "Eingereicht",
+      "closed": "Abgeschlossen"
+    },
+    "actions": {
+      "prepare": "Im Workbench vorbereiten",
+      "advance": "Phase weiterschalten",
+      "markGo": "Teilnahme",
+      "markNoGo": "Keine Teilnahme"
+    },
+    "empty": {
+      "title": "Noch keine Ausschreibungen verfolgt",
+      "description": "Nehmen Sie eine Ausschreibung in dieses Workbench auf, um mit der Vorbereitung zu beginnen.",
+      "seedTitle": "Am besten passende Ausschreibungen zur Vorbereitung",
+      "needsProfileTitle": "Richten Sie ein Kundenprofil ein, um die Eignung zu sehen",
+      "needsProfileCta": "Kundenprofil einrichten"
+    },
+    "fit": { "needsProfile": "Richten Sie ein Kundenprofil ein, um die Eignung zu sehen" },
+    "tombstone": {
+      "title": "Diese Ausschreibung ist nicht mehr verfügbar",
+      "description": "Das Quellportal hat diese Bekanntmachung entfernt. Ihre Checkliste und Notizen bleiben erhalten."
+    },
+    "checklist": {
+      "title": "ESPD / EEE-Checkliste",
+      "progress": "{{done}} von {{total}} erledigt",
+      "statusLabel": "Status",
+      "noteLabel": "Notiz",
+      "required": "Erforderlich",
+      "notePlaceholder": "Notiz hinzufügen…",
+      "status": { "pending": "Ausstehend", "done": "Erledigt", "na": "Nicht zutreffend" },
+      "sections": {
+        "part_ii": "Teil II — Angaben zum Wirtschaftsteilnehmer",
+        "part_iii": "Teil III — Ausschlussgründe",
+        "part_iv": "Teil IV — Eignungskriterien",
+        "conclusion": "Abschließende Erklärungen"
+      },
+      "items": {
+        "identification": "Identifizierung und Registrierung des Wirtschaftsteilnehmers",
+        "sme_status": "Erklärung zum KMU-Status",
+        "representation": "Bevollmächtigter Vertreter",
+        "criminal_convictions": "Keine strafrechtlichen Verurteilungen",
+        "tax_payments": "Steuern beglichen",
+        "social_security": "Sozialversicherungsbeiträge entrichtet",
+        "insolvency": "Kein Konkurs oder Insolvenzverfahren",
+        "misconduct": "Keine schwere berufliche Verfehlung",
+        "conflict_interest": "Kein Interessenkonflikt",
+        "suitability": "Befähigung zur Berufsausübung",
+        "economic_standing": "Wirtschaftliche und finanzielle Leistungsfähigkeit",
+        "technical_ability": "Technische und berufliche Leistungsfähigkeit",
+        "quality_assurance": "Qualitätssicherungssysteme",
+        "espd_signed": "ESPD/EEE ausgefüllt und unterzeichnet"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Entscheidung",
+      "stageTitle": "Phase",
+      "outcomeTitle": "Ergebnis",
+      "backToPortfolio": "Zurück zum Portfolio"
+    },
+    "picker": {
+      "title": "Workbench auswählen",
+      "recent": "Zuletzt verwendet",
+      "all": "Alle Workbenches",
+      "empty": "Noch keine Workbenches — erstellen Sie zuerst eine."
+    },
+    "errors": {
+      "duplicate": "Diese Ausschreibung befindet sich bereits in diesem Workbench.",
+      "unavailable": "Diese Ausschreibung ist nicht mehr verfügbar.",
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
     }
   },
   "workbench": {

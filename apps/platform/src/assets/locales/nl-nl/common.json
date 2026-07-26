@@ -170,8 +170,8 @@
       "results_other": "{{count}} aanbestedingen"
     },
     "meta": {
-      "title": "tendersbay — Openbare aanbestedingen, gegund door uw AI-agenten",
-      "description": "AI-agenten die de juiste Europese aanbestedingen en overheidsopdrachten opsporen, het papierwerk slopen en uw mkb tot aan de gunning brengen."
+      "title": "tendersbay — EU-aanbestedingen, gevonden & gegund door AI-agenten",
+      "description": "AI-agenten die de juiste aanbestedingen opsporen in alle 27 EU-landen, het papierwerk slopen en uw mkb-bedrijf van kans tot gunning brengen."
     },
     "nav": {
       "problem": "De kosten",
@@ -179,11 +179,11 @@
       "vision": "Visie"
     },
     "hero": {
-      "titleLead": "De aanbesteding die ze al van zichzelf rekenden?",
-      "titleHighlight": "Gegund.",
-      "subtitle": "Vanavond sluit een aanbesteding met uw naam erop. De grote spelers hebben er al een team op. U heeft drie tabbladen open in Excel. Daar is het mee gedaan — AI-agenten die haar vinden, het papierwerk slopen en u op de inschrijving zetten. Terwijl u slaapt.",
+      "titleLead": "Elke overheidsopdracht in 27 landen — gevonden, voorbereid,",
+      "titleHighlight": "gegund.",
+      "subtitle": "Uw mkb-bedrijf heeft geen aanbestedingsafdeling. En heeft die ook niet nodig. Een team AI-agenten spoort de juiste aanbestedingen in de hele EU op, regelt het papierwerk en stelt uw inschrijving 's nachts samen — terwijl het team van de grote spelers slaapt.",
       "ctaPrimary": "Zet uw agenten aan het werk",
-      "ctaSecondary": "Bekijk de visie",
+      "ctaSecondary": "Bekijk hoe het werkt",
       "trust": ["27 landen, één zoekopdracht", "Agenten die nooit slapen", "Papierwerk: geregeld"],
       "deckLabel": "Voorbeeldresultaten"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenten, niet nog een zoekvak",
       "title": "Dit deden uw agenten terwijl u sliep.",
       "lead": "Geen snellere zoekbalk die u alsnog zelf moet besturen. Een team van agenten dat de hele aanbesteding afhandelt — vinden, voorbereiden, winnen — ’s nachts, zodat u al in de race wakker wordt.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 landen. We nemen ze één voor één in.",
-      "body": "We breiden uit over de hele Europese Unie, markt voor markt. Elke vlag licht op op de dag dat uw land live gaat.",
+      "body": "Elke aanbesteding op TED — het EU-brede Tenders Electronic Daily — wordt vanaf dag één native gedekt, in alle 27 landen. De vlaggen die oplichten zijn de nationale portalen waarmee we rechtstreeks zijn verbonden, markt voor markt.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Binnenkort",
+      "statusComingSoon": "Wordt uitgerold",
+      "statusMapped": "Markten in kaart gebracht",
+      "tedNative": "TED · native ondersteund",
+      "nationalPortals": "Nationale portalen",
       "note": "De dekking komt naar alle 27 EU-landen."
     },
     "footer": {
@@ -605,6 +609,92 @@
       "title": "Biedprofiel van de klant",
       "subtitle": "Waar deze klant op biedt — sectoren, landen en waardebereik — stuurt elke aanbeveling.",
       "saved": "Profiel opgeslagen."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Geselecteerd",
+      "preparing": "In voorbereiding",
+      "submitted": "Ingediend"
+    },
+    "goNoGo": { "undecided": "Onbeslist", "go": "We doen mee", "noGo": "We doen niet mee" },
+    "outcome": {
+      "open": "Open",
+      "won": "Gewonnen",
+      "lost": "Verloren",
+      "withdrawn": "Ingetrokken"
+    },
+    "bands": {
+      "needsYouNow": "Vraagt nu aandacht",
+      "active": "In voorbereiding",
+      "submitted": "Ingediend",
+      "closed": "Afgerond"
+    },
+    "actions": {
+      "prepare": "Voorbereiden in workbench",
+      "advance": "Fase vooruit zetten",
+      "markGo": "We doen mee",
+      "markNoGo": "We doen niet mee"
+    },
+    "empty": {
+      "title": "Nog geen aanbestedingen gevolgd",
+      "description": "Voeg een aanbesteding toe aan dit workbench om de voorbereiding te starten.",
+      "seedTitle": "Best passende aanbestedingen om voor te bereiden",
+      "needsProfileTitle": "Maak een klantprofiel aan om de match te zien",
+      "needsProfileCta": "Klantprofiel aanmaken"
+    },
+    "fit": { "needsProfile": "Maak een klantprofiel aan om de match te zien" },
+    "tombstone": {
+      "title": "Deze aanbesteding is niet meer beschikbaar",
+      "description": "Het bronportaal heeft deze aankondiging verwijderd. Je checklist en notities blijven bewaard."
+    },
+    "checklist": {
+      "title": "ESPD / UEA-checklist",
+      "progress": "{{done}} van {{total}} voltooid",
+      "statusLabel": "Status",
+      "noteLabel": "Notitie",
+      "required": "Verplicht",
+      "notePlaceholder": "Notitie toevoegen…",
+      "status": { "pending": "In behandeling", "done": "Voltooid", "na": "N.v.t." },
+      "sections": {
+        "part_ii": "Deel II — Gegevens over de ondernemer",
+        "part_iii": "Deel III — Uitsluitingsgronden",
+        "part_iv": "Deel IV — Selectiecriteria",
+        "conclusion": "Slotverklaringen"
+      },
+      "items": {
+        "identification": "Identificatie en registratie van de ondernemer",
+        "sme_status": "Verklaring mkb-status",
+        "representation": "Gemachtigde vertegenwoordiger",
+        "criminal_convictions": "Geen strafrechtelijke veroordelingen",
+        "tax_payments": "Belastingen betaald",
+        "social_security": "Socialezekerheidspremies betaald",
+        "insolvency": "Geen faillissement of insolventie",
+        "misconduct": "Geen ernstige beroepsfout",
+        "conflict_interest": "Geen belangenconflict",
+        "suitability": "Geschiktheid om de activiteit uit te oefenen",
+        "economic_standing": "Economische en financiële draagkracht",
+        "technical_ability": "Technische en beroepsbekwaamheid",
+        "quality_assurance": "Kwaliteitsborgingssystemen",
+        "espd_signed": "ESPD/UEA ingevuld en ondertekend"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Beslissing",
+      "stageTitle": "Fase",
+      "outcomeTitle": "Uitkomst",
+      "backToPortfolio": "Terug naar portfolio"
+    },
+    "picker": {
+      "title": "Kies een workbench",
+      "recent": "Recent",
+      "all": "Alle workbenches",
+      "empty": "Nog geen workbenches — maak er eerst een aan."
+    },
+    "errors": {
+      "duplicate": "Deze aanbesteding staat al in dat workbench.",
+      "unavailable": "Deze aanbesteding is niet meer beschikbaar.",
+      "generic": "Er is iets misgegaan. Probeer het opnieuw."
     }
   },
   "workbench": {

@@ -94,6 +94,29 @@ describe('chat store — ephemeral streaming/session state', () => {
     expect(persisted).not.toHaveProperty('tendersOpened');
     expect(persisted).not.toHaveProperty('streaming');
     // Assert the complete persisted shape to guard against accidental additions
-    expect(persisted).toEqual({ currentChatId: null, messages: [] });
+    expect(persisted).toEqual({ currentChatId: null, currentWorkbenchId: null, messages: [] });
+  });
+});
+
+describe('chat store — workbench scoping', () => {
+  beforeEach(() => useChatStore.getState().reset());
+
+  it('setCurrentWorkbench sets the active workbench id', () => {
+    useChatStore.getState().setCurrentWorkbench('wb-1');
+    expect(useChatStore.getState().currentWorkbenchId).toBe('wb-1');
+  });
+
+  it('reset() clears the active workbench id', () => {
+    useChatStore.getState().setCurrentWorkbench('wb-1');
+    useChatStore.getState().reset();
+    expect(useChatStore.getState().currentWorkbenchId).toBeNull();
+  });
+
+  it('persists currentWorkbenchId (partialize) so a reload keeps the workbench-scoped chat', () => {
+    useChatStore.getState().setCurrentWorkbench('wb-1');
+    const persisted = (useChatStore.persist.getOptions().partialize as (s: unknown) => object)(
+      useChatStore.getState(),
+    );
+    expect(persisted).toHaveProperty('currentWorkbenchId', 'wb-1');
   });
 });

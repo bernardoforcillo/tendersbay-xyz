@@ -170,8 +170,8 @@
       "results_other": "{{count}} pirkimų"
     },
     "meta": {
-      "title": "tendersbay — Europos viešieji pirkimai su jūsų DI agentais",
-      "description": "DI agentai, kurie suranda tinkamus viešuosius pirkimus ir pirkimų skelbimus Europoje, sutriuškina biurokratiją ir nuveda jūsų MVĮ iki sutarties sudarymo."
+      "title": "tendersbay — ES viešieji pirkimai, kuriuos randa ir laimi DI agentai",
+      "description": "DI agentai, kurie suranda tinkamus viešuosius pirkimus visose 27 ES šalyse, sutriuškina biurokratiją ir nuveda jūsų MVĮ nuo galimybės iki sutarties suteikimo."
     },
     "nav": {
       "problem": "Kaina",
@@ -179,11 +179,11 @@
       "vision": "Vizija"
     },
     "hero": {
-      "titleLead": "Pirkimas, kurį jie jau laikė savu?",
-      "titleHighlight": "Suteiktas.",
-      "subtitle": "Šįnakt baigiasi pirkimas su jūsų vardu. Didieji žaidėjai jau turi jam komandą. Jūs turite tris atidarytus skirtukus „Excel“. Čia tai baigiasi — DI agentai, kurie jį suranda, sudrasko biurokratiją ir įstato jus į pasiūlymą. Kol miegate.",
+      "titleLead": "Kiekvienas viešasis pirkimas 27 šalyse — rastas, paruoštas,",
+      "titleHighlight": "suteiktas.",
+      "subtitle": "Jūsų MVĮ neturi pasiūlymų skyriaus. Ir jai jo nereikia. DI agentų komanda susiranda tinkamus pirkimus visoje ES, sutvarko biurokratiją ir per naktį paruošia jūsų pasiūlymą — kol didžiųjų žaidėjų komanda miega.",
       "ctaPrimary": "Paleiskite savo agentus į darbą",
-      "ctaSecondary": "Žiūrėkite viziją",
+      "ctaSecondary": "Pažiūrėkite, kaip tai veikia",
       "trust": [
         "27 šalys, viena paieška",
         "Agentai, kurie niekada nemiega",
@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentai, ne dar vienas paieškos langelis",
       "title": "Štai ką jūsų agentai nuveikė, kol miegojote.",
       "lead": "Ne greitesnė paieškos juosta, kurią vis tiek turite valdyti patys. Agentų komanda, dirbanti visą pirkimą — randa, parengia, laimi — per naktį, kad pabustumėte jau lenktynėse.",
       "items": [
@@ -292,9 +293,12 @@
     },
     "coverage": {
       "title": "27 šalys. Imame jas po vieną.",
-      "body": "Plečiamės visoje Europos Sąjungoje, rinka po rinkos. Kiekviena vėliava užsidega tą dieną, kai jūsų šalis pradeda veikti.",
+      "body": "Kiekvienas pirkimas TED sistemoje — visos ES Tenders Electronic Daily platformoje — yra natūraliai aprėptas nuo pirmos dienos visose 27 šalyse. Įsižiebiančios vėliavos žymi nacionalinius portalus, prie kurių jungiamės tiesiogiai, rinka po rinkos.",
       "statusAvailable": "Aktyvu",
-      "statusComingSoon": "Netrukus",
+      "statusComingSoon": "Diegiama",
+      "statusMapped": "Sužymėtos rinkos",
+      "tedNative": "TED · palaikoma natūraliai",
+      "nationalPortals": "Nacionaliniai portalai",
       "note": "Aprėptis pasiekia visas 27 ES šalis."
     },
     "footer": {
@@ -612,6 +616,88 @@
       "title": "Kliento pasiūlymų profilis",
       "subtitle": "Tai, kokiuose pirkimuose šis klientas dalyvauja — sektoriai, šalys ir vertės ribos — lemia kiekvieną rekomendaciją.",
       "saved": "Profilis išsaugotas."
+    }
+  },
+  "bid": {
+    "stage": { "shortlisted": "Atrinkta", "preparing": "Ruošiama", "submitted": "Pateikta" },
+    "goNoGo": { "undecided": "Neapspręsta", "go": "Dalyvaujame", "noGo": "Nedalyvaujame" },
+    "outcome": {
+      "open": "Atviras",
+      "won": "Laimėta",
+      "lost": "Pralaimėta",
+      "withdrawn": "Atsiimta"
+    },
+    "bands": {
+      "needsYouNow": "Reikia dėmesio dabar",
+      "active": "Ruošiama",
+      "submitted": "Pateiktos",
+      "closed": "Užbaigtos"
+    },
+    "actions": {
+      "prepare": "Ruošti workbenche",
+      "advance": "Pereiti į kitą etapą",
+      "markGo": "Dalyvaujame",
+      "markNoGo": "Nedalyvaujame"
+    },
+    "empty": {
+      "title": "Kol kas nesekamas nė vienas pirkimas",
+      "description": "Pridėkite pirkimą į šį workbenchą, kad pradėtumėte jį ruošti.",
+      "seedTitle": "Labiausiai tinkami pirkimai ruošimui",
+      "needsProfileTitle": "Sukurkite kliento profilį, kad matytumėte atitiktį",
+      "needsProfileCta": "Sukurti kliento profilį"
+    },
+    "fit": { "needsProfile": "Sukurkite kliento profilį, kad matytumėte atitiktį" },
+    "tombstone": {
+      "title": "Šis pirkimas nebeprieinamas",
+      "description": "Šaltinio portalas pašalino šį skelbimą. Jūsų kontrolinis sąrašas ir pastabos išsaugoti."
+    },
+    "checklist": {
+      "title": "ESPD kontrolinis sąrašas",
+      "progress": "{{done}} iš {{total}} atlikta",
+      "statusLabel": "Būsena",
+      "noteLabel": "Pastaba",
+      "required": "Privaloma",
+      "notePlaceholder": "Pridėti pastabą…",
+      "status": { "pending": "Laukiama", "done": "Atlikta", "na": "Netaikoma" },
+      "sections": {
+        "part_ii": "II dalis — Informacija apie ūkio subjektą",
+        "part_iii": "III dalis — Pašalinimo pagrindai",
+        "part_iv": "IV dalis — Atrankos kriterijai",
+        "conclusion": "Baigiamieji pareiškimai"
+      },
+      "items": {
+        "identification": "Ūkio subjekto identifikavimas ir registracija",
+        "sme_status": "MVĮ statuso deklaracija",
+        "representation": "Įgaliotas atstovas",
+        "criminal_convictions": "Nėra teistumo",
+        "tax_payments": "Sumokėti mokesčiai",
+        "social_security": "Sumokėtos socialinio draudimo įmokos",
+        "insolvency": "Nėra bankroto ar nemokumo",
+        "misconduct": "Nėra šiurkštaus profesinio pažeidimo",
+        "conflict_interest": "Nėra interesų konflikto",
+        "suitability": "Tinkamumas vykdyti veiklą",
+        "economic_standing": "Ekonominė ir finansinė būklė",
+        "technical_ability": "Techniniai ir profesiniai gebėjimai",
+        "quality_assurance": "Kokybės užtikrinimo sistemos",
+        "espd_signed": "ESPD užpildytas ir pasirašytas"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Sprendimas",
+      "stageTitle": "Etapas",
+      "outcomeTitle": "Rezultatas",
+      "backToPortfolio": "Grįžti į portfelį"
+    },
+    "picker": {
+      "title": "Pasirinkite workbenchą",
+      "recent": "Naujausi",
+      "all": "Visi workbenchai",
+      "empty": "Kol kas nėra workbenchų — pirmiausia sukurkite."
+    },
+    "errors": {
+      "duplicate": "Šis pirkimas jau yra tame workbenche.",
+      "unavailable": "Šis pirkimas nebeprieinamas.",
+      "generic": "Kažkas nutiko ne taip. Bandykite dar kartą."
     }
   },
   "workbench": {

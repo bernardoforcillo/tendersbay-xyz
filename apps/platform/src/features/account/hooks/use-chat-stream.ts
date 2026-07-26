@@ -4,7 +4,7 @@ import type { CreditsData } from '~/features/account/components/molecules/credit
 import { agentClient } from '~/lib/api/client';
 import { useChatStore } from '~/store/chat';
 
-export function useChatStream() {
+export function useChatStream(location: 'explore' | 'workbench' = 'explore') {
   const abortRef = useRef<AbortController | null>(null);
   const posthog = usePostHog();
 
@@ -56,12 +56,12 @@ export function useChatStream() {
             if (status === 'running') {
               useChatStore.getState().incToolCalls();
               posthog?.capture('tool_call_breadcrumb_rendered', {
-                location: 'explore_chat',
+                location: `${location}_chat`,
                 tool_name: name,
               });
             }
             if (name === 'create_workbench' && status === 'done') {
-              posthog?.capture('workbench_created_from_chat', { location: 'explore_chat' });
+              posthog?.capture('workbench_created_from_chat', { location: `${location}_chat` });
             }
           } else if (event.case === 'tenderResults') {
             useChatStore.getState().addMessage({
@@ -140,7 +140,7 @@ export function useChatStream() {
 
       return null;
     },
-    [],
+    [location],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable
@@ -180,12 +180,12 @@ export function useChatStream() {
             if (status === 'running') {
               useChatStore.getState().incToolCalls();
               posthog?.capture('tool_call_breadcrumb_rendered', {
-                location: 'explore_chat',
+                location: `${location}_chat`,
                 tool_name: name,
               });
             }
             if (name === 'create_workbench' && status === 'done') {
-              posthog?.capture('workbench_created_from_chat', { location: 'explore_chat' });
+              posthog?.capture('workbench_created_from_chat', { location: `${location}_chat` });
             }
           } else if (event.case === 'tenderResults') {
             useChatStore.getState().addMessage({
@@ -264,7 +264,7 @@ export function useChatStream() {
 
       return null;
     },
-    [],
+    [location],
   );
 
   return { sendMessage, submitChoice, cancel };

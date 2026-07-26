@@ -170,8 +170,8 @@
       "results_other": "{{count}} zákaziek"
     },
     "meta": {
-      "title": "tendersbay — Verejné obstarávanie v Európe s vašimi AI agentmi",
-      "description": "AI agenti, ktorí vyhľadajú správne verejné obstarávania a verejné zákazky v Európe, rozdrvia papierovačky a dovedú vašu firmu až k udeleniu zákazky."
+      "title": "tendersbay — Verejné obstarávanie v EÚ, nájdené a udelené AI agentmi",
+      "description": "AI agenti, ktorí vyhľadajú správne verejné obstarávania a zákazky vo všetkých 27 krajinách EÚ, rozdrvia papierovačky a dovedú vašu firmu od príležitosti až k udeleniu zákazky."
     },
     "nav": {
       "problem": "Náklady",
@@ -179,11 +179,11 @@
       "vision": "Vízia"
     },
     "hero": {
-      "titleLead": "Zákazka, ktorú už rátali za svoju?",
-      "titleHighlight": "Udelená.",
-      "subtitle": "Dnes v noci sa uzatvára zákazka s vaším menom. Veľkí hráči na nej už majú tím. Vy máte otvorené tri karty v Exceli. Tu to končí — AI agenti, ktorí ju nájdu, rozcupujú papierovačky a postavia vás do ponuky. Kým spíte.",
+      "titleLead": "Každá verejná zákazka v 27 krajinách — nájdená, pripravená,",
+      "titleHighlight": "udelená.",
+      "subtitle": "Vaša firma nemá oddelenie pre verejné obstarávanie. A ani ho nepotrebuje. Tím AI agentov vyhľadá správne zákazky v celej EÚ, vybaví papierovačky a pripraví vašu ponuku cez noc — kým tím veľkých hráčov spí.",
       "ctaPrimary": "Pošlite svojich agentov do práce",
-      "ctaSecondary": "Pozrite si víziu",
+      "ctaSecondary": "Pozrite si, ako to funguje",
       "trust": [
         "27 krajín, jedno hľadanie",
         "Agenti, ktorí nikdy nespia",
@@ -227,6 +227,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenti, nie ďalšie vyhľadávacie políčko",
       "title": "Toto urobili vaši agenti, kým ste spali.",
       "lead": "Nie rýchlejšie vyhľadávacie pole, ktoré aj tak musíte riadiť vy. Tím agentov, ktorý spracuje celú zákazku — nájde, pripraví, vyhrá — cez noc, aby ste sa zobudili už v hre.",
       "items": [
@@ -292,9 +293,12 @@
     },
     "coverage": {
       "title": "27 krajín. Berieme ich jednu po druhej.",
-      "body": "Rozširujeme sa po celej Európskej únii, trh za trhom. Každá vlajka sa rozsvieti v deň, keď vaša krajina nabehne.",
+      "body": "Každá zákazka na TED — celoúnijnom Tenders Electronic Daily — je pokrytá natívne, od prvého dňa, vo všetkých 27 krajinách. Vlajky, ktoré sa rozsvietia, sú národné portály, na ktoré sa napájame priamo, trh po trhu.",
       "statusAvailable": "Aktívne",
-      "statusComingSoon": "Čoskoro",
+      "statusComingSoon": "Prebieha zavádzanie",
+      "statusMapped": "Zmapované trhy",
+      "tedNative": "TED · podporované natívne",
+      "nationalPortals": "Národné portály",
       "note": "Pokrytie prichádza do všetkých 27 krajín EÚ."
     },
     "footer": {
@@ -612,6 +616,88 @@
       "title": "Profil ponúk klienta",
       "subtitle": "To, na čo tento klient predkladá ponuky — sektory, krajiny a hodnotové rozpätie — určuje každé odporúčanie.",
       "saved": "Profil uložený."
+    }
+  },
+  "bid": {
+    "stage": { "shortlisted": "Vybrané", "preparing": "V príprave", "submitted": "Podané" },
+    "goNoGo": { "undecided": "Nerozhodnuté", "go": "Zúčastníme sa", "noGo": "Nezúčastníme sa" },
+    "outcome": {
+      "open": "Otvorené",
+      "won": "Vyhrané",
+      "lost": "Prehraté",
+      "withdrawn": "Stiahnuté"
+    },
+    "bands": {
+      "needsYouNow": "Vyžaduje pozornosť teraz",
+      "active": "V príprave",
+      "submitted": "Podané",
+      "closed": "Uzavreté"
+    },
+    "actions": {
+      "prepare": "Pripraviť vo workbenchi",
+      "advance": "Posunúť fázu",
+      "markGo": "Zúčastníme sa",
+      "markNoGo": "Nezúčastníme sa"
+    },
+    "empty": {
+      "title": "Zatiaľ nesledujete žiadne zákazky",
+      "description": "Pridajte zákazku do tohto workbenchu a začnite ju pripravovať.",
+      "seedTitle": "Najvhodnejšie zákazky na prípravu",
+      "needsProfileTitle": "Vytvorte profil klienta, aby ste videli zhodu",
+      "needsProfileCta": "Vytvoriť profil klienta"
+    },
+    "fit": { "needsProfile": "Vytvorte profil klienta, aby ste videli zhodu" },
+    "tombstone": {
+      "title": "Táto zákazka už nie je dostupná",
+      "description": "Zdrojový portál odstránil toto oznámenie. Váš kontrolný zoznam a poznámky zostávajú zachované."
+    },
+    "checklist": {
+      "title": "Kontrolný zoznam JED",
+      "progress": "{{done}} z {{total}} dokončených",
+      "statusLabel": "Stav",
+      "noteLabel": "Poznámka",
+      "required": "Povinné",
+      "notePlaceholder": "Pridať poznámku…",
+      "status": { "pending": "Čaká", "done": "Hotovo", "na": "Nevzťahuje sa" },
+      "sections": {
+        "part_ii": "Časť II — Informácie o hospodárskom subjekte",
+        "part_iii": "Časť III — Dôvody na vylúčenie",
+        "part_iv": "Časť IV — Kritériá výberu",
+        "conclusion": "Záverečné vyhlásenia"
+      },
+      "items": {
+        "identification": "Identifikácia a registrácia hospodárskeho subjektu",
+        "sme_status": "Vyhlásenie o statuse MSP",
+        "representation": "Oprávnený zástupca",
+        "criminal_convictions": "Bez trestných odsúdení",
+        "tax_payments": "Dane uhradené",
+        "social_security": "Odvody sociálneho poistenia uhradené",
+        "insolvency": "Bez konkurzu alebo insolvencie",
+        "misconduct": "Bez závažného odborného pochybenia",
+        "conflict_interest": "Bez konfliktu záujmov",
+        "suitability": "Spôsobilosť na výkon činnosti",
+        "economic_standing": "Ekonomická a finančná spôsobilosť",
+        "technical_ability": "Technická a odborná spôsobilosť",
+        "quality_assurance": "Systémy zabezpečenia kvality",
+        "espd_signed": "JED vyplnený a podpísaný"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Rozhodnutie",
+      "stageTitle": "Fáza",
+      "outcomeTitle": "Výsledok",
+      "backToPortfolio": "Späť na portfólio"
+    },
+    "picker": {
+      "title": "Vyberte workbench",
+      "recent": "Nedávne",
+      "all": "Všetky workbenche",
+      "empty": "Zatiaľ žiadne workbenche — najprv vytvorte jeden."
+    },
+    "errors": {
+      "duplicate": "Táto zákazka je už v tomto workbenchi.",
+      "unavailable": "Táto zákazka už nie je dostupná.",
+      "generic": "Niečo sa pokazilo. Skúste to znova."
     }
   },
   "workbench": {

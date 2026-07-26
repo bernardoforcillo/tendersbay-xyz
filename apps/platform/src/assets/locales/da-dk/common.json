@@ -170,8 +170,8 @@
       "results_other": "{{count}} udbud"
     },
     "meta": {
-      "title": "tendersbay — Offentlige udbud, tildelt af dine AI-agenter",
-      "description": "AI-agenter, der opsporer de rigtige offentlige udbud og EU-udbud i hele Europa, knuser papirarbejdet og fører din SMV hele vejen til tildelingen."
+      "title": "tendersbay — Offentlige EU-udbud, fundet & tildelt af AI-agenter",
+      "description": "AI-agenter, der opsporer de rigtige offentlige udbud i alle 27 EU-lande, knuser papirarbejdet og fører din SMV fra mulighed til tildeling."
     },
     "nav": {
       "problem": "Omkostningen",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "Udbuddet de allerede regnede for deres?",
-      "titleHighlight": "Tildelt.",
-      "subtitle": "I aften lukker et udbud med dit navn på. De store spillere har allerede et team på det. Du har tre faner åbne i Excel. Det slutter her — AI-agenter, der finder det, flår papirarbejdet fra hinanden og sætter dig på buddet. Mens du sover.",
+      "titleLead": "Hvert offentligt udbud i 27 lande — fundet, forberedt,",
+      "titleHighlight": "tildelt.",
+      "subtitle": "Din SMV har ikke en udbudsafdeling. Og den har ikke brug for en. Et hold af AI-agenter opsporer de rigtige udbud i hele EU, klarer papirarbejdet og bygger dit bud natten over — mens de store spilleres hold sover.",
       "ctaPrimary": "Sæt dine agenter i gang",
-      "ctaSecondary": "Se visionen",
+      "ctaSecondary": "Se, hvordan det virker",
       "trust": ["27 lande, én søgning", "Agenter der aldrig sover", "Papirarbejde: klaret"],
       "deckLabel": "Eksempelresultater"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agenter, ikke endnu en søgeboks",
       "title": "Her er, hvad dine agenter lavede, mens du sov.",
       "lead": "Ikke en hurtigere søgefelt, som du stadig selv skal styre. Et team af agenter, der arbejder med hele udbuddet — finder, forbereder, vinder — om natten, så du vågner allerede med i kampen.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 lande. Vi tager dem ét ad gangen.",
-      "body": "Vi udvider i hele Den Europæiske Union, marked for marked. Hvert flag lyser op den dag, dit land går live.",
+      "body": "Hvert udbud på TED — det EU-dækkende Tenders Electronic Daily — er dækket nativt, fra dag ét, i alle 27 lande. De flag, der lyser op, er de nationale portaler, vi kobler os direkte til, marked for marked.",
       "statusAvailable": "Live",
-      "statusComingSoon": "Kommer snart",
+      "statusComingSoon": "Under udrulning",
+      "statusMapped": "Kortlagte markeder",
+      "tedNative": "TED · understøttet nativt",
+      "nationalPortals": "Nationale portaler",
       "note": "Dækningen er på vej til alle 27 EU-lande."
     },
     "footer": {
@@ -605,6 +609,87 @@
       "title": "Kundens budprofil",
       "subtitle": "Det, denne kunde byder på — sektorer, lande og værdiinterval — styrer hver anbefaling.",
       "saved": "Profil gemt."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Udvalgt",
+      "preparing": "Under forberedelse",
+      "submitted": "Indsendt"
+    },
+    "goNoGo": { "undecided": "Ikke afgjort", "go": "Deltager", "noGo": "Deltager ikke" },
+    "outcome": { "open": "Åben", "won": "Vundet", "lost": "Tabt", "withdrawn": "Trukket tilbage" },
+    "bands": {
+      "needsYouNow": "Kræver din opmærksomhed nu",
+      "active": "Under forberedelse",
+      "submitted": "Indsendte",
+      "closed": "Afsluttede"
+    },
+    "actions": {
+      "prepare": "Forbered i workbench",
+      "advance": "Gå til næste fase",
+      "markGo": "Deltager",
+      "markNoGo": "Deltager ikke"
+    },
+    "empty": {
+      "title": "Ingen udbud fulgt endnu",
+      "description": "Tilføj et udbud til dette workbench for at begynde forberedelsen.",
+      "seedTitle": "Bedst egnede udbud at forberede",
+      "needsProfileTitle": "Opret en kundeprofil for at se relevans",
+      "needsProfileCta": "Opret kundeprofil"
+    },
+    "fit": { "needsProfile": "Opret en kundeprofil for at se relevans" },
+    "tombstone": {
+      "title": "Dette udbud er ikke længere tilgængeligt",
+      "description": "Kildeportalen har fjernet denne bekendtgørelse. Din tjekliste og dine noter er bevaret."
+    },
+    "checklist": {
+      "title": "ESPD-tjekliste",
+      "progress": "{{done}} af {{total}} udført",
+      "statusLabel": "Status",
+      "noteLabel": "Note",
+      "required": "Påkrævet",
+      "notePlaceholder": "Tilføj en note…",
+      "status": { "pending": "Afventer", "done": "Udført", "na": "Ikke relevant" },
+      "sections": {
+        "part_ii": "Del II — Oplysninger om den økonomiske aktør",
+        "part_iii": "Del III — Udelukkelsesgrunde",
+        "part_iv": "Del IV — Udvælgelseskriterier",
+        "conclusion": "Afsluttende erklæringer"
+      },
+      "items": {
+        "identification": "Identifikation og registrering af den økonomiske aktør",
+        "sme_status": "Erklæring om SMV-status",
+        "representation": "Bemyndiget repræsentant",
+        "criminal_convictions": "Ingen straffedomme",
+        "tax_payments": "Skatter betalt",
+        "social_security": "Sociale bidrag betalt",
+        "insolvency": "Ikke konkurs eller under insolvensbehandling",
+        "misconduct": "Ingen alvorlig forsømmelse i udøvelsen af erhvervet",
+        "conflict_interest": "Ingen interessekonflikt",
+        "suitability": "Egnethed til at udøve erhvervet",
+        "economic_standing": "Økonomisk og finansiel formåen",
+        "technical_ability": "Teknisk og faglig formåen",
+        "quality_assurance": "Ordninger for kvalitetssikring",
+        "espd_signed": "ESPD udfyldt og underskrevet"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Beslutning",
+      "stageTitle": "Fase",
+      "outcomeTitle": "Resultat",
+      "backToPortfolio": "Tilbage til porteføljen"
+    },
+    "picker": {
+      "title": "Vælg et workbench",
+      "recent": "Seneste",
+      "all": "Alle workbenches",
+      "empty": "Ingen workbenches endnu — opret ét først."
+    },
+    "errors": {
+      "duplicate": "Dette udbud findes allerede i det workbench.",
+      "unavailable": "Dette udbud er ikke længere tilgængeligt.",
+      "generic": "Noget gik galt. Prøv igen."
     }
   },
   "workbench": {

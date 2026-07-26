@@ -170,8 +170,8 @@
       "results_other": "{{count}} hankintaa"
     },
     "meta": {
-      "title": "tendersbay — Julkiset hankinnat, tekoälyagenttiesi valmistelemina",
-      "description": "Tekoälyagentit, jotka jäljittävät oikeat julkiset hankinnat ja tarjouspyynnöt Euroopassa, murskaavat paperityöt ja vievät pk-yrityksesi hankintapäätökseen asti."
+      "title": "tendersbay — EU:n julkiset hankinnat, tekoälyagenttien löytämät ja voittamat",
+      "description": "Tekoälyagentit, jotka jäljittävät oikeat julkiset hankinnat kaikissa 27 EU-maassa, murskaavat paperityöt ja vievät pk-yrityksesi mahdollisuudesta hankintapäätökseen asti."
     },
     "nav": {
       "problem": "Hinta",
@@ -179,11 +179,11 @@
       "vision": "Visio"
     },
     "hero": {
-      "titleLead": "Hankinta, jonka he jo laskivat omakseen?",
-      "titleHighlight": "Myönnetty.",
-      "subtitle": "Tänä yönä sulkeutuu hankinta, jossa on sinun nimesi. Suurilla toimijoilla on jo tiimi sen kimpussa. Sinulla on kolme välilehteä auki Excelissä. Se loppuu tähän — tekoälyagentit, jotka löytävät sen, repivät paperityöt kappaleiksi ja nostavat sinut tarjoukseen. Sillä aikaa kun nukut.",
+      "titleLead": "Jokainen julkinen hankinta 27 maassa — löydetty, valmisteltu,",
+      "titleHighlight": "myönnetty.",
+      "subtitle": "Pk-yritykselläsi ei ole tarjouspalvelua. Ei sitä tarvitakaan. Tekoälyagenttien tiimi jäljittää oikeat hankinnat kaikkialla EU:ssa, hoitaa paperityöt ja rakentaa tarjouksesi yön aikana — samalla kun suurten toimijoiden tiimi nukkuu.",
       "ctaPrimary": "Pane agenttisi töihin",
-      "ctaSecondary": "Katso visio",
+      "ctaSecondary": "Katso, miten se toimii",
       "trust": ["27 maata, yksi haku", "Agentit jotka eivät koskaan nuku", "Paperityöt: hoidettu"],
       "deckLabel": "Esimerkkituloksia"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Agentit, ei toinen hakulaatikko",
       "title": "Tässä on, mitä agenttisi tekivät nukkuessasi.",
       "lead": "Ei nopeampi hakupalkki, jota sinun on silti itse ohjattava. Tiimi agentteja, joka työstää koko hankinnan — löytää, valmistelee, voittaa — yön aikana, niin että heräät jo mukana kisassa.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 maata. Otamme ne yksi kerrallaan.",
-      "body": "Laajenemme koko Euroopan unioniin, markkina kerrallaan. Jokainen lippu syttyy sinä päivänä, kun maasi avautuu.",
+      "body": "Jokainen TED:n — EU:n laajuisen Tenders Electronic Dailyn — tarjouspyyntö katetaan natiivisti ensimmäisestä päivästä lähtien kaikissa 27 maassa. Syttyvät liput ovat kansallisia portaaleja, joihin liitymme suoraan, markkina kerrallaan.",
       "statusAvailable": "Aktiivinen",
-      "statusComingSoon": "Tulossa pian",
+      "statusComingSoon": "Käyttöönotossa",
+      "statusMapped": "Kartoitetut markkinat",
+      "tedNative": "TED · tuettu natiivisti",
+      "nationalPortals": "Kansalliset portaalit",
       "note": "Kattavuus laajenee kaikkiin 27 EU-maahan."
     },
     "footer": {
@@ -605,6 +609,87 @@
       "title": "Asiakkaan tarjousprofiili",
       "subtitle": "Se, mihin tämä asiakas tarjoaa — toimialat, maat ja arvoalue — ohjaa jokaista suositusta.",
       "saved": "Profiili tallennettu."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Valittu tarkasteluun",
+      "preparing": "Valmistelussa",
+      "submitted": "Jätetty"
+    },
+    "goNoGo": { "undecided": "Ei päätetty", "go": "Osallistumme", "noGo": "Emme osallistu" },
+    "outcome": { "open": "Avoin", "won": "Voitettu", "lost": "Hävitty", "withdrawn": "Peruttu" },
+    "bands": {
+      "needsYouNow": "Vaatii huomiota nyt",
+      "active": "Valmistelussa",
+      "submitted": "Jätetyt",
+      "closed": "Päättyneet"
+    },
+    "actions": {
+      "prepare": "Valmistele workbenchissä",
+      "advance": "Etene vaiheeseen",
+      "markGo": "Osallistumme",
+      "markNoGo": "Emme osallistu"
+    },
+    "empty": {
+      "title": "Ei vielä seurattuja hankintoja",
+      "description": "Lisää hankinta tähän workbenchiin aloittaaksesi sen valmistelun.",
+      "seedTitle": "Parhaiten sopivat hankinnat valmisteltavaksi",
+      "needsProfileTitle": "Luo asiakasprofiili nähdäksesi sopivuuden",
+      "needsProfileCta": "Luo asiakasprofiili"
+    },
+    "fit": { "needsProfile": "Luo asiakasprofiili nähdäksesi sopivuuden" },
+    "tombstone": {
+      "title": "Tämä hankinta ei ole enää saatavilla",
+      "description": "Lähdeportaali on poistanut tämän ilmoituksen. Tarkistuslistasi ja muistiinpanosi on säilytetty."
+    },
+    "checklist": {
+      "title": "ESPD-tarkistuslista",
+      "progress": "{{done}} / {{total}} valmis",
+      "statusLabel": "Tila",
+      "noteLabel": "Muistiinpano",
+      "required": "Pakollinen",
+      "notePlaceholder": "Lisää muistiinpano…",
+      "status": { "pending": "Kesken", "done": "Valmis", "na": "Ei sovellu" },
+      "sections": {
+        "part_ii": "II osa — Tiedot talouden toimijasta",
+        "part_iii": "III osa — Poissulkemisperusteet",
+        "part_iv": "IV osa — Valintaperusteet",
+        "conclusion": "Loppuvakuutukset"
+      },
+      "items": {
+        "identification": "Talouden toimijan tunnistaminen ja rekisteröinti",
+        "sme_status": "Pk-yritysaseman ilmoitus",
+        "representation": "Valtuutettu edustaja",
+        "criminal_convictions": "Ei rikostuomioita",
+        "tax_payments": "Verot maksettu",
+        "social_security": "Sosiaaliturvamaksut maksettu",
+        "insolvency": "Ei konkurssia tai maksukyvyttömyyttä",
+        "misconduct": "Ei vakavaa ammatillista virhettä",
+        "conflict_interest": "Ei eturistiriitaa",
+        "suitability": "Kelpoisuus harjoittaa ammattitoimintaa",
+        "economic_standing": "Taloudellinen ja rahoituksellinen tilanne",
+        "technical_ability": "Tekninen ja ammatillinen pätevyys",
+        "quality_assurance": "Laadunvarmistusjärjestelmät",
+        "espd_signed": "ESPD täytetty ja allekirjoitettu"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Päätös",
+      "stageTitle": "Vaihe",
+      "outcomeTitle": "Tulos",
+      "backToPortfolio": "Takaisin portfolioon"
+    },
+    "picker": {
+      "title": "Valitse workbench",
+      "recent": "Viimeisimmät",
+      "all": "Kaikki workbenchit",
+      "empty": "Ei vielä workbencheja — luo ensin yksi."
+    },
+    "errors": {
+      "duplicate": "Tämä hankinta on jo kyseisessä workbenchissä.",
+      "unavailable": "Tämä hankinta ei ole enää saatavilla.",
+      "generic": "Jokin meni pieleen. Yritä uudelleen."
     }
   },
   "workbench": {

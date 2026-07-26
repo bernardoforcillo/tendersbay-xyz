@@ -170,8 +170,8 @@
       "results_other": "{{count}} sejħiet"
     },
     "meta": {
-      "title": "tendersbay — Sejħiet għall-offerti, mogħtija mill-aġenti AI",
-      "description": "Aġenti AI li jfittxu l-aħjar sejħiet għall-offerti pubbliċi madwar l-Ewropa, ifarrku l-burokrazija, u jwasslu lill-SME tiegħek mill-ewwel sejħa sal-għoti tal-kuntratt."
+      "title": "tendersbay — Sejħiet għall-offerti tal-UE, misjuba u mogħtija mill-aġenti AI",
+      "description": "Aġenti AI li jfittxu s-sejħiet pubbliċi t-tajba fis-27 pajjiż kollha tal-UE, ifarrku l-burokrazija, u jwasslu lill-SME tiegħek mill-opportunità sal-għoti tal-kuntratt."
     },
     "nav": {
       "problem": "L-Ispiża",
@@ -179,11 +179,11 @@
       "vision": "Viżjoni"
     },
     "hero": {
-      "titleLead": "Is-sejħa li diġà qisuha tagħhom?",
-      "titleHighlight": "Mogħtija.",
-      "subtitle": "Illejla tagħlaq sejħa b'ismek fuqha. Il-plejers il-kbar diġà għandhom tim fuqha. Int għandek tliet tabs miftuħa f'Excel. Hawn jispiċċa — aġenti AI li jsibuha, iċarrtu l-burokrazija u jpoġġuk fl-offerta. Waqt li tkun rieqed.",
+      "titleLead": "Kull sejħa pubblika għall-offerti fi 27 pajjiż — misjuba, ippreparata,",
+      "titleHighlight": "mogħtija.",
+      "subtitle": "Is-SME tiegħek ma għandhiex uffiċċju tal-offerti. Lanqas ma teħtieġ wieħed. Tim ta' aġenti AI ifittex is-sejħiet it-tajba madwar l-UE kollha, jieħu ħsieb il-burokrazija, u jibni l-offerta tiegħek matul il-lejl — waqt li t-tim tal-kbar ikun rieqed.",
       "ctaPrimary": "Poġġi l-aġenti tiegħek jaħdmu",
-      "ctaSecondary": "Ara l-viżjoni",
+      "ctaSecondary": "Ara kif taħdem",
       "trust": ["27 pajjiż, tfittxija waħda", "Aġenti li qatt ma jorqdu", "Burokrazija: solvuta"],
       "deckLabel": "Riżultati ta' eżempju"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Aġenti, mhux search box ieħor",
       "title": "Dan hu li għamlu l-aġenti tiegħek waqt li kont rieqed.",
       "lead": "Mhux search bar aktar mgħaġġla li xorta trid tħaddem int. Tim ta’ aġenti li jaħdem is-sejħa kollha — isib, iħejji, jirbaħ — matul il-lejl, biex tqum diġà fit-tellieqa.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 pajjiż. Qed neħduhom wieħed wieħed.",
-      "body": "Qed nespandu mal-Unjoni Ewropea kollha, suq wara suq. Kull bandiera tixgħel fil-jum li pajjiżek jibda jaħdem.",
+      "body": "Kull sejħa għal offerti fuq TED — it-Tenders Electronic Daily madwar l-UE kollha — hija koperta b'mod nattiv, mill-ewwel jum, fis-27 pajjiż kollha. Il-bnadar li jixegħlu huma l-portali nazzjonali li magħhom nikkollegaw direttament, suq wara suq.",
       "statusAvailable": "Attiv",
-      "statusComingSoon": "Dalwaqt",
+      "statusComingSoon": "Qed jiġi implimentat",
+      "statusMapped": "Swieq immappjati",
+      "tedNative": "TED · appoġġjat b'mod nattiv",
+      "nationalPortals": "Portali nazzjonali",
       "note": "Il-kopertura qed tasal fis-27 pajjiż kollha tal-UE."
     },
     "footer": {
@@ -611,6 +615,91 @@
       "title": "Profil ta' offerta tal-klijent",
       "subtitle": "Fuq xiex joffri dan il-klijent — setturi, pajjiżi, u firxa ta’ valur — jiggwida kull rakkomandazzjoni.",
       "saved": "Profil issejvjat."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Magħżula",
+      "preparing": "Qed titħejja",
+      "submitted": "Ippreżentata"
+    },
+    "goNoGo": {
+      "undecided": "Mhux deċiż",
+      "go": "Ser nipparteċipaw",
+      "noGo": "Mhux ser nipparteċipaw"
+    },
+    "outcome": { "open": "Miftuħa", "won": "Rebħet", "lost": "Tilfet", "withdrawn": "Irtirata" },
+    "bands": {
+      "needsYouNow": "Teħtieġ attenzjoni issa",
+      "active": "Qed titħejja",
+      "submitted": "Ippreżentati",
+      "closed": "Magħluqa"
+    },
+    "actions": {
+      "prepare": "Ħejji fil-workbench",
+      "advance": "Avvanza l-istadju",
+      "markGo": "Ser nipparteċipaw",
+      "markNoGo": "Mhux ser nipparteċipaw"
+    },
+    "empty": {
+      "title": "L-ebda sejħa segwita s'issa",
+      "description": "Żid sejħa f'dan il-workbench biex tibda tħejjiha.",
+      "seedTitle": "L-aħjar sejħiet li jaqblu għat-tħejjija",
+      "needsProfileTitle": "Waqqaf profil tal-klijent biex tara l-adegwatezza",
+      "needsProfileCta": "Waqqaf profil tal-klijent"
+    },
+    "fit": { "needsProfile": "Waqqaf profil tal-klijent biex tara l-adegwatezza" },
+    "tombstone": {
+      "title": "Din is-sejħa m'għadhiex disponibbli",
+      "description": "Il-portal sors neħħa dan l-avviż. Il-lista ta' kontroll u n-noti tiegħek baqgħu salvati."
+    },
+    "checklist": {
+      "title": "Lista ta' kontroll ESPD",
+      "progress": "{{done}} minn {{total}} lesti",
+      "statusLabel": "Status",
+      "noteLabel": "Nota",
+      "required": "Meħtieġ",
+      "notePlaceholder": "Żid nota…",
+      "status": { "pending": "Pendenti", "done": "Lest", "na": "N/A" },
+      "sections": {
+        "part_ii": "Parti II — Informazzjoni dwar l-operatur",
+        "part_iii": "Parti III — Raġunijiet ta' esklużjoni",
+        "part_iv": "Parti IV — Kriterji ta' għażla",
+        "conclusion": "Dikjarazzjonijiet konklużivi"
+      },
+      "items": {
+        "identification": "Identifikazzjoni u reġistrazzjoni tal-operatur",
+        "sme_status": "Dikjarazzjoni tal-istatus SME",
+        "representation": "Rappreżentant awtorizzat",
+        "criminal_convictions": "L-ebda kundanna kriminali",
+        "tax_payments": "Taxxi mħallsa",
+        "social_security": "Kontribuzzjonijiet tas-sigurtà soċjali mħallsa",
+        "insolvency": "Mhux fallut jew f'insolvenza",
+        "misconduct": "L-ebda mġiba professjonali ħażina serja",
+        "conflict_interest": "L-ebda kunflitt ta' interess",
+        "suitability": "Idoneità biex titwettaq l-attività",
+        "economic_standing": "Pożizzjoni ekonomika u finanzjarja",
+        "technical_ability": "Kapaċità teknika u professjonali",
+        "quality_assurance": "Skemi ta' assigurazzjoni tal-kwalità",
+        "espd_signed": "ESPD mimli u ffirmat"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Deċiżjoni",
+      "stageTitle": "Stadju",
+      "outcomeTitle": "Riżultat",
+      "backToPortfolio": "Lura għall-portafoll"
+    },
+    "picker": {
+      "title": "Agħżel workbench",
+      "recent": "Reċenti",
+      "all": "Il-workbenches kollha",
+      "empty": "L-ebda workbench s'issa — oħloq wieħed l-ewwel."
+    },
+    "errors": {
+      "duplicate": "Din is-sejħa diġà tinsab f'dak il-workbench.",
+      "unavailable": "Din is-sejħa m'għadhiex disponibbli.",
+      "generic": "Xi ħaġa marret ħażin. Jekk jogħġbok erġa' pprova."
     }
   },
   "workbench": {

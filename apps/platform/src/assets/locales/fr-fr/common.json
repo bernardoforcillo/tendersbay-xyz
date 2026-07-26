@@ -170,8 +170,8 @@
       "results_other": "{{count}} marchés"
     },
     "meta": {
-      "title": "tendersbay — Appels d'offres publics, attribués par vos agents IA",
-      "description": "Des agents IA qui débusquent les bons appels d'offres et marchés publics en Europe, écrasent la paperasse et mènent votre PME jusqu'à l'attribution."
+      "title": "tendersbay — Appels d'offres publics UE, trouvés et attribués par des agents IA",
+      "description": "Des agents IA qui traquent les bons appels d'offres publics dans les 27 pays de l'UE, écrasent la paperasse et mènent votre PME de l'opportunité à l'attribution."
     },
     "nav": {
       "problem": "Le coût",
@@ -179,11 +179,11 @@
       "vision": "Vision"
     },
     "hero": {
-      "titleLead": "Le marché qu'ils croyaient déjà à eux ?",
-      "titleHighlight": "Attribué.",
-      "subtitle": "Un marché à votre nom se clôt ce soir. Les gros ont déjà une équipe dessus. Vous avez trois onglets ouverts dans Excel. Ça s'arrête ici — des agents IA qui le trouvent, étripent la paperasse et vous placent sur l'offre. Pendant que vous dormez.",
+      "titleLead": "Chaque marché public dans 27 pays — trouvé, préparé,",
+      "titleHighlight": "attribué.",
+      "subtitle": "Votre PME n'a pas de service dédié aux appels d'offres. Elle n'en a pas besoin. Une équipe d'agents IA traque les bons marchés dans toute l'UE, gère la paperasse et prépare votre offre pendant la nuit — pendant que l'équipe des grands groupes dort.",
       "ctaPrimary": "Mettez vos agents au travail",
-      "ctaSecondary": "Voir la vision",
+      "ctaSecondary": "Découvrez comment ça marche",
       "trust": ["27 pays, une recherche", "Des agents qui ne dorment jamais", "Paperasse : réglée"],
       "deckLabel": "Exemples de résultats"
     },
@@ -223,6 +223,7 @@
       ]
     },
     "agents": {
+      "eyebrow": "Des agents, pas une énième boîte de recherche",
       "title": "Voici ce que vos agents ont fait pendant votre sommeil.",
       "lead": "Pas une barre de recherche plus rapide que vous devez quand même piloter. Une équipe d’agents qui traite l’appel d’offres de bout en bout — trouver, préparer, remporter — pendant la nuit, pour que vous vous réveilliez déjà dans la course.",
       "items": [
@@ -288,9 +289,12 @@
     },
     "coverage": {
       "title": "27 pays. On les prend un par un.",
-      "body": "Nous nous déployons dans toute l'Union européenne, marché après marché. Chaque drapeau s'illumine le jour où votre pays passe en ligne.",
+      "body": "Chaque appel d'offres sur TED — le Tenders Electronic Daily à l'échelle de l'UE — est couvert nativement, dès le premier jour, dans les 27 pays. Les drapeaux qui s'allument sont les portails nationaux auxquels nous nous connectons directement, marché par marché.",
       "statusAvailable": "En ligne",
-      "statusComingSoon": "Bientôt",
+      "statusComingSoon": "En déploiement",
+      "statusMapped": "Marchés cartographiés",
+      "tedNative": "TED · pris en charge nativement",
+      "nationalPortals": "Portails nationaux",
       "note": "La couverture arrive dans les 27 pays de l'UE."
     },
     "footer": {
@@ -605,6 +609,87 @@
       "title": "Profil d'offre client",
       "subtitle": "Ce sur quoi ce client soumissionne — secteurs, pays et fourchette de valeur — oriente chaque recommandation.",
       "saved": "Profil enregistré."
+    }
+  },
+  "bid": {
+    "stage": {
+      "shortlisted": "Présélectionné",
+      "preparing": "En préparation",
+      "submitted": "Déposé"
+    },
+    "goNoGo": { "undecided": "Indécis", "go": "Participation", "noGo": "Pas de participation" },
+    "outcome": { "open": "Ouvert", "won": "Remporté", "lost": "Perdu", "withdrawn": "Retiré" },
+    "bands": {
+      "needsYouNow": "Nécessite votre attention maintenant",
+      "active": "En préparation",
+      "submitted": "Déposés",
+      "closed": "Clôturés"
+    },
+    "actions": {
+      "prepare": "Préparer dans le workbench",
+      "advance": "Passer à l'étape suivante",
+      "markGo": "Participation",
+      "markNoGo": "Pas de participation"
+    },
+    "empty": {
+      "title": "Aucun marché suivi pour le moment",
+      "description": "Ajoutez un marché à ce workbench pour commencer à le préparer.",
+      "seedTitle": "Marchés les plus pertinents à préparer",
+      "needsProfileTitle": "Configurez un profil client pour voir la pertinence",
+      "needsProfileCta": "Configurer un profil client"
+    },
+    "fit": { "needsProfile": "Configurez un profil client pour voir la pertinence" },
+    "tombstone": {
+      "title": "Ce marché n'est plus disponible",
+      "description": "Le portail source a retiré cet avis. Votre checklist et vos notes sont conservées."
+    },
+    "checklist": {
+      "title": "Checklist ESPD / DUME",
+      "progress": "{{done}} sur {{total}} complétés",
+      "statusLabel": "Statut",
+      "noteLabel": "Note",
+      "required": "Obligatoire",
+      "notePlaceholder": "Ajouter une note…",
+      "status": { "pending": "En attente", "done": "Terminé", "na": "N/A" },
+      "sections": {
+        "part_ii": "Partie II — Informations sur l'opérateur économique",
+        "part_iii": "Partie III — Motifs d'exclusion",
+        "part_iv": "Partie IV — Critères de sélection",
+        "conclusion": "Déclarations finales"
+      },
+      "items": {
+        "identification": "Identification et immatriculation de l'opérateur économique",
+        "sme_status": "Déclaration de statut PME",
+        "representation": "Représentant autorisé",
+        "criminal_convictions": "Absence de condamnation pénale",
+        "tax_payments": "Impôts acquittés",
+        "social_security": "Cotisations sociales acquittées",
+        "insolvency": "Absence de faillite ou d'insolvabilité",
+        "misconduct": "Absence de faute professionnelle grave",
+        "conflict_interest": "Absence de conflit d'intérêts",
+        "suitability": "Habilitation à exercer l'activité professionnelle",
+        "economic_standing": "Capacité économique et financière",
+        "technical_ability": "Capacité technique et professionnelle",
+        "quality_assurance": "Systèmes d'assurance qualité",
+        "espd_signed": "ESPD/DUME complété et signé"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Décision",
+      "stageTitle": "Étape",
+      "outcomeTitle": "Résultat",
+      "backToPortfolio": "Retour au portefeuille"
+    },
+    "picker": {
+      "title": "Choisissez un workbench",
+      "recent": "Récents",
+      "all": "Tous les workbenches",
+      "empty": "Aucun workbench pour le moment — créez-en un d'abord."
+    },
+    "errors": {
+      "duplicate": "Ce marché figure déjà dans ce workbench.",
+      "unavailable": "Ce marché n'est plus disponible.",
+      "generic": "Une erreur s'est produite. Veuillez réessayer."
     }
   },
   "workbench": {
