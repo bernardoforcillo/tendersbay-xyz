@@ -1,5 +1,5 @@
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { ChatWindow } from '~/features/account/components/organisms';
 import { useWorkbenchContext } from '~/features/workbench/context';
 import { agentClient } from '~/lib/api/client';
@@ -18,13 +18,9 @@ export function WorkbenchChatPanel() {
   const posthog = usePostHog();
   const { workbenchId, workbench } = useWorkbenchContext();
   const workspaceId = workbench.workspaceId;
-  const enteredRef = useRef<string | null>(null);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable
   useEffect(() => {
-    if (enteredRef.current === workbenchId) return;
-    enteredRef.current = workbenchId;
-
     const store = useChatStore.getState();
     if (store.currentWorkbenchId !== workbenchId) {
       store.reset();
