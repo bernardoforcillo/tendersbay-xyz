@@ -1,0 +1,96 @@
+syntax = "proto3";
+package bid.v1;
+
+option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1;bidv1";
+
+import "tender/v1/tender.proto";
+
+// BidService turns a found tender into a tracked bid inside a workbench and
+// drives its lifecycle: go/no-go, sector-adapted ESPD checklist, forward-only
+// stage stepper, terminal outcome. Every request carries workbench_id so the
+// handler resolves access in one round trip.
+service BidService {
+  rpc AddBid(AddBidRequest) returns (AddBidResponse);
+  rpc ListBids(ListBidsRequest) returns (ListBidsResponse);
+  rpc GetBid(GetBidRequest) returns (GetBidResponse);
+  rpc SetGoNoGo(SetGoNoGoRequest) returns (SetGoNoGoResponse);
+  rpc AdvanceStage(AdvanceStageRequest) returns (AdvanceStageResponse);
+  rpc RecordOutcome(RecordOutcomeRequest) returns (RecordOutcomeResponse);
+  rpc ListChecklistItems(ListChecklistItemsRequest) returns (ListChecklistItemsResponse);
+  rpc UpsertChecklistAnswer(UpsertChecklistAnswerRequest) returns (UpsertChecklistAnswerResponse);
+  rpc RemoveBid(RemoveBidRequest) returns (RemoveBidResponse);
+}
+
+message Bid {
+  string id = 1;
+  string workbench_id = 2;
+  string tender_id = 3;            // stringified int64
+  string go_no_go = 4;             // "undecided" | "go" | "no_go"
+  string stage = 5;                // "shortlisted" | "preparing" | "submitted"
+  string outcome = 6;              // "" | "won" | "lost" | "withdrawn"
+  string created_at = 7;           // RFC3339
+  string updated_at = 8;
+
+  // Embedded tender summary (avoids N+1), populated from the batch summary port.
+  bool   tender_available = 9;     // false => dangling; fields below empty
+  string tender_title = 10;
+  string tender_buyer_name = 11;
+  string tender_country = 12;      // alpha-2
+  string tender_cpv = 13;
+  int64  tender_value = 14;
+  string tender_currency = 15;
+  string tender_deadline = 16;     // RFC3339, live from the tender (sort key)
+  string tender_status = 17;
+
+  // Fit (fresh) — spec §5.
+  bool   needs_profile = 18;       // true => no client profile; fit_tier empty
+  string fit_tier = 19;            // "strong" | "possible" | "long_shot" | ""
+  tender.v1.ReasonSignals reason = 20;
+
+  // Checklist progress for the portfolio card.
+  int32  checklist_done = 21;
+  int32  checklist_total = 22;
+}
+
+message ChecklistItem {
+  string id = 1;
+  string section_code = 2;         // stable i18n stem, localized frontend-side
+  string item_code = 3;
+  string status = 4;               // "pending" | "done" | "na"
+  string note = 5;
+  bool   required = 6;
+  int32  position = 7;
+}
+
+message AddBidRequest { string workbench_id = 1; string tender_id = 2; }
+message AddBidResponse { Bid bid = 1; }
+
+message ListBidsRequest { string workbench_id = 1; }
+message ListBidsResponse { repeated Bid bids = 1; }
+
+message GetBidRequest { string workbench_id = 1; string bid_id = 2; }
+message GetBidResponse { Bid bid = 1; }
+
+message SetGoNoGoRequest { string workbench_id = 1; string bid_id = 2; string go_no_go = 3; }
+message SetGoNoGoResponse { Bid bid = 1; }
+
+message AdvanceStageRequest { string workbench_id = 1; string bid_id = 2; }
+message AdvanceStageResponse { Bid bid = 1; }
+
+message RecordOutcomeRequest { string workbench_id = 1; string bid_id = 2; string outcome = 3; }
+message RecordOutcomeResponse { Bid bid = 1; }
+
+message ListChecklistItemsRequest { string workbench_id = 1; string bid_id = 2; }
+message ListChecklistItemsResponse { repeated ChecklistItem items = 1; }
+
+message UpsertChecklistAnswerRequest {
+  string workbench_id = 1;
+  string bid_id = 2;
+  string item_code = 3;
+  string status = 4;
+  string note = 5;
+}
+message UpsertChecklistAnswerResponse { ChecklistItem item = 1; }
+
+message RemoveBidRequest { string workbench_id = 1; string bid_id = 2; }
+message RemoveBidResponse {}
