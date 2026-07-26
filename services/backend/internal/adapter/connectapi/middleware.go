@@ -10,6 +10,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
@@ -189,6 +190,21 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeFailedPrecondition, err)
 	case errors.Is(err, workbench.ErrAlreadyMember):
 		return connect.NewError(connect.CodeAlreadyExists, err)
+
+	// Bid domain — access-delegation errors (workbench.ErrForbidden,
+	// workbench.ErrWorkbenchNotFound) are already handled by the workbench
+	// block above, since bid.Service propagates them unchanged from its
+	// WorkbenchAccess port.
+	case errors.Is(err, bid.ErrBidNotFound),
+		errors.Is(err, bid.ErrChecklistItemNotFound):
+		return connect.NewError(connect.CodeNotFound, err)
+	case errors.Is(err, bid.ErrBidExists):
+		return connect.NewError(connect.CodeAlreadyExists, err)
+	case errors.Is(err, bid.ErrBidNotGo),
+		errors.Is(err, bid.ErrInvalidTransition):
+		return connect.NewError(connect.CodeFailedPrecondition, err)
+	case errors.Is(err, bid.ErrInvalidArgument):
+		return connect.NewError(connect.CodeInvalidArgument, err)
 
 	// Agent domain
 	case errors.Is(err, agent.ErrInsufficientCredits):
