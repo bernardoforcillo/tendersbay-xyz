@@ -1,4 +1,5 @@
 import { Link as RouterLink } from '@tanstack/react-router';
+import { cn } from '@tendersbay/components/core';
 import { motion, useReducedMotion } from 'motion/react';
 import { usePostHog } from 'posthog-js/react';
 import { Link } from 'react-aria-components';
@@ -55,7 +56,12 @@ export function SiteHeader() {
             params={{ locale }}
             search={{ entry: 'header' }}
             onClick={() => posthog?.capture('landing_cta_clicked', { location: 'header' })}
-            className="inline-flex rounded-full bg-brand-600 px-4 py-2 text-sm font-semibold text-white no-underline transition-colors hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2"
+            className={cn(
+              'inline-flex rounded-full border px-4 py-2 text-sm font-semibold no-underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2',
+              scrolled
+                ? 'border-transparent bg-brand-600 text-white hover:bg-brand-700'
+                : 'border-brand-600 bg-transparent text-brand-700 hover:bg-brand-50',
+            )}
           >
             {t('landing.header.signup', 'Sign up')}
           </RouterLink>

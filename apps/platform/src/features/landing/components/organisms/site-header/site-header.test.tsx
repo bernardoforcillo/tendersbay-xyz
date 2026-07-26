@@ -39,4 +39,11 @@ describe('SiteHeader', () => {
     fireEvent.click(screen.getByRole('link', { name: 'Sign up' }));
     expect(capture).toHaveBeenCalledWith('landing_cta_clicked', { location: 'header' });
   });
+
+  it('renders the signup pill as ghost while at the top of the page', () => {
+    renderWithI18n(<SiteHeader />, 'en-ie');
+    const pill = screen.getByRole('link', { name: 'Sign up' });
+    expect(pill.className).toContain('border-brand-600');
+    expect(pill.className).not.toContain('bg-brand-600');
+  });
 });
