@@ -27,6 +27,7 @@ export function WorkspaceTodayPage() {
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
   const setCurrentChat = useChatStore((s) => s.setCurrentChat);
+  const setCurrentWorkbench = useChatStore((s) => s.setCurrentWorkbench);
   const setMessages = useChatStore((s) => s.setMessages);
   const setPendingChoice = useChatStore((s) => s.setPendingChoice);
   const { data: chats } = useWorkspaceChats(workspace.id);
@@ -51,6 +52,12 @@ export function WorkspaceTodayPage() {
     setMessages([]);
     setPendingChoice(null);
     setCurrentChat(chatId);
+    // This resume list is workspace-scoped (useWorkspaceChats), so resuming
+    // one always means workspace scope — clear any workbench scope left over
+    // from an earlier workbench visit (currentWorkbenchId persists to
+    // sessionStorage). Otherwise AccountExplorePage's entry guard would see a
+    // stale non-null currentWorkbenchId and reset() the chat we just set.
+    setCurrentWorkbench(null);
     void navigate({ to: '/explore' });
   }
 
