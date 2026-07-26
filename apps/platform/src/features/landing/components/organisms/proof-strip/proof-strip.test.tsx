@@ -1,6 +1,14 @@
 import { screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { renderWithI18n } from '~/test/utils';
+
+const { capture } = vi.hoisted(() => ({ capture: vi.fn() }));
+vi.mock('posthog-js/react', () => ({ usePostHog: () => ({ capture }) }));
+vi.mock('motion/react', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('motion/react')>()),
+  useInView: () => true,
+}));
+
 import { ProofStrip } from './index';
 
 describe('ProofStrip', () => {
@@ -20,5 +28,10 @@ describe('ProofStrip', () => {
 
     // Exactly three stat items.
     expect(container.querySelectorAll('ul > li')).toHaveLength(3);
+  });
+
+  it('captures proof_strip_viewed once when in view', () => {
+    renderWithI18n(<ProofStrip />, 'en-ie');
+    expect(capture).toHaveBeenCalledWith('proof_strip_viewed', { location: 'proof' });
   });
 });
