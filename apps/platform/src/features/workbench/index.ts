@@ -1,3 +1,4 @@
+export { WorkbenchPicker } from './components/molecules';
 export { BidDetailPage } from './components/pages/bid-detail';
 export { WorkbenchMembersPage } from './components/pages/workbench-members';
 export { WorkbenchOverviewPage } from './components/pages/workbench-overview';
