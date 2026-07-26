@@ -360,3 +360,74 @@ func TestRecordOutcome_InvalidValue(t *testing.T) {
 		}
 	}
 }
+
+func TestRemoveBid_HardDeleteAndReAdd(t *testing.T) {
+	svc, repo, _, tenders := newBidTestService()
+	tenders.summaries[7] = tender.TenderSummary{ID: 7}
+	b, err := svc.AddBid(context.Background(), "u1", "wb1", 7)
+	if err != nil {
+		t.Fatalf("AddBid: %v", err)
+	}
+	if err := svc.RemoveBid(context.Background(), "u1", "wb1", b.ID); err != nil {
+		t.Fatalf("RemoveBid: %v", err)
+	}
+	if _, ok := repo.bids[b.ID]; ok {
+		t.Fatal("bid must be hard-deleted")
+	}
+	if _, err := svc.AddBid(context.Background(), "u1", "wb1", 7); err != nil {
+		t.Fatalf("re-add after remove (unique should be freed): %v", err)
+	}
+}
+
+func TestRemoveBid_Forbidden(t *testing.T) {
+	svc, repo, access, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1"}
+	access.manageErr["wb1"] = workbench.ErrForbidden
+	if err := svc.RemoveBid(context.Background(), "u1", "wb1", "b1"); !errors.Is(err, workbench.ErrForbidden) {
+		t.Fatalf("want ErrForbidden, got %v", err)
+	}
+}
+
+func TestListChecklistItems_ReadAccess(t *testing.T) {
+	svc, repo, access, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1"}
+	repo.checklist["b1"] = []ChecklistItem{{ID: "i1", BidID: "b1", ItemCode: "identification", Status: "pending"}}
+	items, err := svc.ListChecklistItems(context.Background(), "u1", "wb1", "b1")
+	if err != nil || len(items) != 1 {
+		t.Fatalf("list: n=%d err=%v", len(items), err)
+	}
+	access.accessErr["wb1"] = workbench.ErrForbidden // denied viewer
+	if _, err := svc.ListChecklistItems(context.Background(), "u1", "wb1", "b1"); !errors.Is(err, workbench.ErrForbidden) {
+		t.Fatalf("want ErrForbidden, got %v", err)
+	}
+}
+
+func TestUpsertChecklistAnswer_Upserts(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1"}
+	repo.checklist["b1"] = []ChecklistItem{{ID: "i1", BidID: "b1", ItemCode: "tax_payments", Status: "pending"}}
+	it, err := svc.UpsertChecklistAnswer(context.Background(), "u1", "wb1", "b1", "tax_payments", "done", "paid")
+	if err != nil {
+		t.Fatalf("upsert: %v", err)
+	}
+	if it.Status != "done" || it.Note != "paid" {
+		t.Fatalf("upsert result wrong: %+v", it)
+	}
+}
+
+func TestUpsertChecklistAnswer_InvalidStatus(t *testing.T) {
+	svc, repo, _, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1"}
+	if _, err := svc.UpsertChecklistAnswer(context.Background(), "u1", "wb1", "b1", "tax_payments", "maybe", ""); !errors.Is(err, ErrInvalidArgument) {
+		t.Fatalf("want ErrInvalidArgument, got %v", err)
+	}
+}
+
+func TestUpsertChecklistAnswer_Forbidden(t *testing.T) {
+	svc, repo, access, _ := newBidTestService()
+	repo.bids["b1"] = Bid{ID: "b1", WorkbenchID: "wb1"}
+	access.manageErr["wb1"] = workbench.ErrForbidden
+	if _, err := svc.UpsertChecklistAnswer(context.Background(), "u1", "wb1", "b1", "part_iii.taxes", "done", ""); !errors.Is(err, workbench.ErrForbidden) {
+		t.Fatalf("want ErrForbidden, got %v", err)
+	}
+}

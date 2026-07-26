@@ -106,3 +106,41 @@ func (s *Service) RecordOutcome(ctx context.Context, userID, workbenchID, bidID 
 	}
 	return s.repo.UpdateOutcome(ctx, bidID, o)
 }
+
+// RemoveBid hard-deletes a mistaken add, freeing the (workbench_id, tender_id)
+// unique for re-adding. The normal close is RecordOutcome, not this.
+func (s *Service) RemoveBid(ctx context.Context, userID, workbenchID, bidID string) error {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return err
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return err
+	}
+	return s.repo.DeleteBid(ctx, bidID)
+}
+
+// ListChecklistItems returns a bid's ESPD checklist (a read — shared-workbench
+// viewers may see it).
+func (s *Service) ListChecklistItems(ctx context.Context, userID, workbenchID, bidID string) ([]ChecklistItem, error) {
+	if err := s.access.CanAccessWorkbench(ctx, userID, workbenchID); err != nil {
+		return nil, err
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return nil, err
+	}
+	return s.repo.ListChecklistItems(ctx, bidID)
+}
+
+// UpsertChecklistAnswer sets one checklist line's status/note (a write).
+func (s *Service) UpsertChecklistAnswer(ctx context.Context, userID, workbenchID, bidID, itemCode, status, note string) (ChecklistItem, error) {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return ChecklistItem{}, err
+	}
+	if itemCode == "" || (status != "pending" && status != "done" && status != "na") {
+		return ChecklistItem{}, ErrInvalidArgument
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return ChecklistItem{}, err
+	}
+	return s.repo.UpsertChecklistItem(ctx, bidID, itemCode, status, note)
+}
