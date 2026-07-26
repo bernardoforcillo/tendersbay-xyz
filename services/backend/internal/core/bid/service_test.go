@@ -2,11 +2,13 @@ package bid
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"testing"
 	"time"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 )
 
 // ── fakeRepo ──────────────────────────────────────────────────────────────────
@@ -215,5 +217,50 @@ func TestNewService_WiresPorts(t *testing.T) {
 	}
 	if svc.summaries != TenderSummaries(tenders) {
 		t.Fatal("summaries not wired from tenders")
+	}
+}
+
+func TestAddBid_Defaults(t *testing.T) {
+	svc, repo, _, tenders := newBidTestService()
+	tenders.summaries[42] = tender.TenderSummary{ID: 42, Title: "Road works", CPV: "45000000"}
+	b, err := svc.AddBid(context.Background(), "u1", "wb1", 42)
+	if err != nil {
+		t.Fatalf("AddBid: %v", err)
+	}
+	if b.GoNoGo != GoNoGoUndecided || b.Stage != StageShortlisted || b.Outcome != "" {
+		t.Fatalf("defaults wrong: %+v", b)
+	}
+	if b.WorkbenchID != "wb1" || b.TenderID != 42 || b.CreatedBy != "u1" {
+		t.Fatalf("fields wrong: %+v", b)
+	}
+	if len(repo.checklist[b.ID]) == 0 {
+		t.Fatal("AddBid must seed the checklist")
+	}
+}
+
+func TestAddBid_Duplicate(t *testing.T) {
+	svc, _, _, tenders := newBidTestService()
+	tenders.summaries[42] = tender.TenderSummary{ID: 42}
+	if _, err := svc.AddBid(context.Background(), "u1", "wb1", 42); err != nil {
+		t.Fatalf("first AddBid: %v", err)
+	}
+	if _, err := svc.AddBid(context.Background(), "u1", "wb1", 42); !errors.Is(err, ErrBidExists) {
+		t.Fatalf("want ErrBidExists, got %v", err)
+	}
+}
+
+func TestAddBid_Forbidden(t *testing.T) {
+	svc, _, access, tenders := newBidTestService()
+	tenders.summaries[42] = tender.TenderSummary{ID: 42}
+	access.manageErr["wb1"] = workbench.ErrForbidden
+	if _, err := svc.AddBid(context.Background(), "u1", "wb1", 42); !errors.Is(err, workbench.ErrForbidden) {
+		t.Fatalf("want ErrForbidden, got %v", err)
+	}
+}
+
+func TestAddBid_UnknownTender(t *testing.T) {
+	svc, _, _, _ := newBidTestService()
+	if _, err := svc.AddBid(context.Background(), "u1", "wb1", 999); !errors.Is(err, ErrInvalidArgument) {
+		t.Fatalf("want ErrInvalidArgument, got %v", err)
 	}
 }
