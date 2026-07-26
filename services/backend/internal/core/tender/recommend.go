@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -332,4 +333,124 @@ func tierRank(t FitTier) int {
 	default:
 		return 0
 	}
+}
+
+// FitForTender computes one tender's fresh fit against workspaceID's client
+// profile (detail-page / GetBid path). profiles.Get is membership-checked, so
+// this does not re-check membership. Returns HasProfile=false with an empty
+// tier when the workspace has no profile, and Available=false (no error) when
+// the tender id is absent or no longer resolves.
+func (s *Service) FitForTender(ctx context.Context, userID, workspaceID, tenderID string) (TenderFitResult, error) {
+	profile, err := s.profiles.Get(ctx, userID, workspaceID)
+	hasProfile := true
+	if errors.Is(err, clientprofile.ErrProfileNotFound) {
+		hasProfile = false
+	} else if err != nil {
+		return TenderFitResult{}, err
+	}
+
+	id, ok := parseTenderID(tenderID)
+	if !ok {
+		return TenderFitResult{HasProfile: hasProfile, Available: false}, nil
+	}
+	detail, err := s.repo.FindDetailByID(ctx, id)
+	if err != nil {
+		if errors.Is(err, ErrTenderNotFound) {
+			return TenderFitResult{HasProfile: hasProfile, Available: false}, nil
+		}
+		return TenderFitResult{}, err
+	}
+	if !hasProfile {
+		return TenderFitResult{HasProfile: false, Available: true}, nil
+	}
+
+	t := Tender{CPV: detail.CPV, Country: detail.Country, NUTS: detail.NUTS, ProcedureType: detail.ProcedureType, Value: detail.Value, Deadline: detail.Deadline}
+	reason := computeReasonSignals(t, profile.Sectors, profile.Countries, profile.Regions, profile.ProcedureTypes, profile.ValueMin, profile.ValueMax, time.Now())
+	return TenderFitResult{Tier: computeFitTierFromSignals(reason, s.cfg.Fit), Reason: reason, HasProfile: true, Available: true}, nil
+}
+
+// FitForTenders batches FitForTender across a bid portfolio: ONE profiles.Get
+// plus ONE repo.EnrichTenders for the whole list. The returned map has one
+// entry per requested id — ids EnrichTenders did not resolve get
+// Available=false (dangling); with no profile every entry gets HasProfile=false
+// and an empty tier (never a fabricated long_shot).
+func (s *Service) FitForTenders(ctx context.Context, userID, workspaceID string, tenderIDs []int64) (map[int64]TenderFitResult, error) {
+	out := make(map[int64]TenderFitResult, len(tenderIDs))
+	if len(tenderIDs) == 0 {
+		return out, nil
+	}
+
+	profile, err := s.profiles.Get(ctx, userID, workspaceID)
+	hasProfile := true
+	if errors.Is(err, clientprofile.ErrProfileNotFound) {
+		hasProfile = false
+	} else if err != nil {
+		return nil, err
+	}
+
+	ids := make([]string, len(tenderIDs))
+	for i, id := range tenderIDs {
+		ids[i] = strconv.FormatInt(id, 10)
+	}
+	tenders, err := s.repo.EnrichTenders(ctx, ids, Filters{})
+	if err != nil {
+		return nil, err
+	}
+	byID := make(map[int64]Tender, len(tenders))
+	for _, t := range tenders {
+		n, perr := strconv.ParseInt(t.ID, 10, 64)
+		if perr != nil {
+			continue
+		}
+		byID[n] = t
+	}
+
+	now := time.Now()
+	for _, id := range tenderIDs {
+		t, ok := byID[id]
+		if !ok {
+			out[id] = TenderFitResult{HasProfile: hasProfile, Available: false}
+			continue
+		}
+		if !hasProfile {
+			out[id] = TenderFitResult{HasProfile: false, Available: true}
+			continue
+		}
+		reason := computeReasonSignals(t, profile.Sectors, profile.Countries, profile.Regions, profile.ProcedureTypes, profile.ValueMin, profile.ValueMax, now)
+		out[id] = TenderFitResult{Tier: computeFitTierFromSignals(reason, s.cfg.Fit), Reason: reason, HasProfile: true, Available: true}
+	}
+	return out, nil
+}
+
+// SummariesByIDs batch-loads tender-card data for a bid portfolio via ONE
+// repo.EnrichTenders. Ids that no longer resolve are simply absent from the
+// returned map (the caller treats a missing key as a dangling tender).
+func (s *Service) SummariesByIDs(ctx context.Context, tenderIDs []int64) (map[int64]TenderSummary, error) {
+	out := make(map[int64]TenderSummary, len(tenderIDs))
+	if len(tenderIDs) == 0 {
+		return out, nil
+	}
+	ids := make([]string, len(tenderIDs))
+	for i, id := range tenderIDs {
+		ids[i] = strconv.FormatInt(id, 10)
+	}
+	tenders, err := s.repo.EnrichTenders(ctx, ids, Filters{})
+	if err != nil {
+		return nil, err
+	}
+	for _, t := range tenders {
+		n, perr := strconv.ParseInt(t.ID, 10, 64)
+		if perr != nil {
+			continue
+		}
+		deadline := ""
+		if t.Deadline != nil {
+			deadline = t.Deadline.Format(time.RFC3339)
+		}
+		out[n] = TenderSummary{
+			ID: n, Title: t.Title, BuyerName: t.BuyerName, Country: t.Country,
+			CPV: t.CPV, Currency: t.Currency, Deadline: deadline, Status: t.Status, Value: t.Value,
+		}
+	}
+	return out, nil
 }
