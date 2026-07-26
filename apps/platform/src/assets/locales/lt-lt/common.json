@@ -614,6 +614,88 @@
       "saved": "Profilis išsaugotas."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Atrinkta", "preparing": "Ruošiama", "submitted": "Pateikta" },
+    "goNoGo": { "undecided": "Neapspręsta", "go": "Dalyvaujame", "noGo": "Nedalyvaujame" },
+    "outcome": {
+      "open": "Atviras",
+      "won": "Laimėta",
+      "lost": "Pralaimėta",
+      "withdrawn": "Atsiimta"
+    },
+    "bands": {
+      "needsYouNow": "Reikia dėmesio dabar",
+      "active": "Ruošiama",
+      "submitted": "Pateiktos",
+      "closed": "Užbaigtos"
+    },
+    "actions": {
+      "prepare": "Ruošti workbenche",
+      "advance": "Pereiti į kitą etapą",
+      "markGo": "Dalyvaujame",
+      "markNoGo": "Nedalyvaujame"
+    },
+    "empty": {
+      "title": "Kol kas nesekamas nė vienas pirkimas",
+      "description": "Pridėkite pirkimą į šį workbenchą, kad pradėtumėte jį ruošti.",
+      "seedTitle": "Labiausiai tinkami pirkimai ruošimui",
+      "needsProfileTitle": "Sukurkite kliento profilį, kad matytumėte atitiktį",
+      "needsProfileCta": "Sukurti kliento profilį"
+    },
+    "fit": { "needsProfile": "Sukurkite kliento profilį, kad matytumėte atitiktį" },
+    "tombstone": {
+      "title": "Šis pirkimas nebeprieinamas",
+      "description": "Šaltinio portalas pašalino šį skelbimą. Jūsų kontrolinis sąrašas ir pastabos išsaugoti."
+    },
+    "checklist": {
+      "title": "ESPD kontrolinis sąrašas",
+      "progress": "{{done}} iš {{total}} atlikta",
+      "statusLabel": "Būsena",
+      "noteLabel": "Pastaba",
+      "required": "Privaloma",
+      "notePlaceholder": "Pridėti pastabą…",
+      "status": { "pending": "Laukiama", "done": "Atlikta", "na": "Netaikoma" },
+      "sections": {
+        "part_ii": "II dalis — Informacija apie ūkio subjektą",
+        "part_iii": "III dalis — Pašalinimo pagrindai",
+        "part_iv": "IV dalis — Atrankos kriterijai",
+        "conclusion": "Baigiamieji pareiškimai"
+      },
+      "items": {
+        "identification": "Ūkio subjekto identifikavimas ir registracija",
+        "sme_status": "MVĮ statuso deklaracija",
+        "representation": "Įgaliotas atstovas",
+        "criminal_convictions": "Nėra teistumo",
+        "tax_payments": "Sumokėti mokesčiai",
+        "social_security": "Sumokėtos socialinio draudimo įmokos",
+        "insolvency": "Nėra bankroto ar nemokumo",
+        "misconduct": "Nėra šiurkštaus profesinio pažeidimo",
+        "conflict_interest": "Nėra interesų konflikto",
+        "suitability": "Tinkamumas vykdyti veiklą",
+        "economic_standing": "Ekonominė ir finansinė būklė",
+        "technical_ability": "Techniniai ir profesiniai gebėjimai",
+        "quality_assurance": "Kokybės užtikrinimo sistemos",
+        "espd_signed": "ESPD užpildytas ir pasirašytas"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Sprendimas",
+      "stageTitle": "Etapas",
+      "outcomeTitle": "Rezultatas",
+      "backToPortfolio": "Grįžti į portfelį"
+    },
+    "picker": {
+      "title": "Pasirinkite workbenchą",
+      "recent": "Naujausi",
+      "all": "Visi workbenchai",
+      "empty": "Kol kas nėra workbenchų — pirmiausia sukurkite."
+    },
+    "errors": {
+      "duplicate": "Šis pirkimas jau yra tame workbenche.",
+      "unavailable": "Šis pirkimas nebeprieinamas.",
+      "generic": "Kažkas nutiko ne taip. Bandykite dar kartą."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Įkeliama…",

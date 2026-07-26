@@ -607,6 +607,87 @@
       "saved": "Profiili tallennettu."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Valittu tarkasteluun",
+      "preparing": "Valmistelussa",
+      "submitted": "Jätetty"
+    },
+    "goNoGo": { "undecided": "Ei päätetty", "go": "Osallistumme", "noGo": "Emme osallistu" },
+    "outcome": { "open": "Avoin", "won": "Voitettu", "lost": "Hävitty", "withdrawn": "Peruttu" },
+    "bands": {
+      "needsYouNow": "Vaatii huomiota nyt",
+      "active": "Valmistelussa",
+      "submitted": "Jätetyt",
+      "closed": "Päättyneet"
+    },
+    "actions": {
+      "prepare": "Valmistele workbenchissä",
+      "advance": "Etene vaiheeseen",
+      "markGo": "Osallistumme",
+      "markNoGo": "Emme osallistu"
+    },
+    "empty": {
+      "title": "Ei vielä seurattuja hankintoja",
+      "description": "Lisää hankinta tähän workbenchiin aloittaaksesi sen valmistelun.",
+      "seedTitle": "Parhaiten sopivat hankinnat valmisteltavaksi",
+      "needsProfileTitle": "Luo asiakasprofiili nähdäksesi sopivuuden",
+      "needsProfileCta": "Luo asiakasprofiili"
+    },
+    "fit": { "needsProfile": "Luo asiakasprofiili nähdäksesi sopivuuden" },
+    "tombstone": {
+      "title": "Tämä hankinta ei ole enää saatavilla",
+      "description": "Lähdeportaali on poistanut tämän ilmoituksen. Tarkistuslistasi ja muistiinpanosi on säilytetty."
+    },
+    "checklist": {
+      "title": "ESPD-tarkistuslista",
+      "progress": "{{done}} / {{total}} valmis",
+      "statusLabel": "Tila",
+      "noteLabel": "Muistiinpano",
+      "required": "Pakollinen",
+      "notePlaceholder": "Lisää muistiinpano…",
+      "status": { "pending": "Kesken", "done": "Valmis", "na": "Ei sovellu" },
+      "sections": {
+        "part_ii": "II osa — Tiedot talouden toimijasta",
+        "part_iii": "III osa — Poissulkemisperusteet",
+        "part_iv": "IV osa — Valintaperusteet",
+        "conclusion": "Loppuvakuutukset"
+      },
+      "items": {
+        "identification": "Talouden toimijan tunnistaminen ja rekisteröinti",
+        "sme_status": "Pk-yritysaseman ilmoitus",
+        "representation": "Valtuutettu edustaja",
+        "criminal_convictions": "Ei rikostuomioita",
+        "tax_payments": "Verot maksettu",
+        "social_security": "Sosiaaliturvamaksut maksettu",
+        "insolvency": "Ei konkurssia tai maksukyvyttömyyttä",
+        "misconduct": "Ei vakavaa ammatillista virhettä",
+        "conflict_interest": "Ei eturistiriitaa",
+        "suitability": "Kelpoisuus harjoittaa ammattitoimintaa",
+        "economic_standing": "Taloudellinen ja rahoituksellinen tilanne",
+        "technical_ability": "Tekninen ja ammatillinen pätevyys",
+        "quality_assurance": "Laadunvarmistusjärjestelmät",
+        "espd_signed": "ESPD täytetty ja allekirjoitettu"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Päätös",
+      "stageTitle": "Vaihe",
+      "outcomeTitle": "Tulos",
+      "backToPortfolio": "Takaisin portfolioon"
+    },
+    "picker": {
+      "title": "Valitse workbench",
+      "recent": "Viimeisimmät",
+      "all": "Kaikki workbenchit",
+      "empty": "Ei vielä workbencheja — luo ensin yksi."
+    },
+    "errors": {
+      "duplicate": "Tämä hankinta on jo kyseisessä workbenchissä.",
+      "unavailable": "Tämä hankinta ei ole enää saatavilla.",
+      "generic": "Jokin meni pieleen. Yritä uudelleen."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Ladataan…",

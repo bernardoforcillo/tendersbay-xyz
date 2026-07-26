@@ -607,6 +607,83 @@
       "saved": "Profile saved."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Shortlisted", "preparing": "Preparing", "submitted": "Submitted" },
+    "goNoGo": { "undecided": "Undecided", "go": "Go", "noGo": "No-go" },
+    "outcome": { "open": "Open", "won": "Won", "lost": "Lost", "withdrawn": "Withdrawn" },
+    "bands": {
+      "needsYouNow": "Needs you now",
+      "active": "In preparation",
+      "submitted": "Submitted",
+      "closed": "Closed"
+    },
+    "actions": {
+      "prepare": "Prepare in workbench",
+      "advance": "Advance stage",
+      "markGo": "Go",
+      "markNoGo": "No-go"
+    },
+    "empty": {
+      "title": "No bandi tracked yet",
+      "description": "Take a tender into this workbench to start preparing it.",
+      "seedTitle": "Best-fit bandi to prepare",
+      "needsProfileTitle": "Set up a client profile to see fit",
+      "needsProfileCta": "Set up client profile"
+    },
+    "fit": { "needsProfile": "Set up a client profile to see fit" },
+    "tombstone": {
+      "title": "This tender is no longer available",
+      "description": "The source portal removed this listing. Your checklist and notes are preserved."
+    },
+    "checklist": {
+      "title": "ESPD / DGUE checklist",
+      "progress": "{{done}} of {{total}} done",
+      "statusLabel": "Status",
+      "noteLabel": "Note",
+      "required": "Required",
+      "notePlaceholder": "Add a note…",
+      "status": { "pending": "Pending", "done": "Done", "na": "N/A" },
+      "sections": {
+        "part_ii": "Part II — Operator information",
+        "part_iii": "Part III — Exclusion grounds",
+        "part_iv": "Part IV — Selection criteria",
+        "conclusion": "Concluding statements"
+      },
+      "items": {
+        "identification": "Operator identification and registration",
+        "sme_status": "SME status declaration",
+        "representation": "Authorised representative",
+        "criminal_convictions": "No criminal convictions",
+        "tax_payments": "Taxes paid up to date",
+        "social_security": "Social security contributions paid",
+        "insolvency": "Not bankrupt or under insolvency",
+        "misconduct": "No grave professional misconduct",
+        "conflict_interest": "No conflict of interest",
+        "suitability": "Suitability to pursue the activity",
+        "economic_standing": "Economic and financial standing",
+        "technical_ability": "Technical and professional ability",
+        "quality_assurance": "Quality assurance schemes",
+        "espd_signed": "ESPD/DGUE completed and signed"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Decision",
+      "stageTitle": "Stage",
+      "outcomeTitle": "Outcome",
+      "backToPortfolio": "Back to portfolio"
+    },
+    "picker": {
+      "title": "Choose a workbench",
+      "recent": "Recent",
+      "all": "All workbenches",
+      "empty": "No workbenches yet — create one first."
+    },
+    "errors": {
+      "duplicate": "This tender is already in that workbench.",
+      "unavailable": "This tender is no longer available.",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Loading…",

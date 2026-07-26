@@ -607,6 +607,91 @@
       "saved": "Perfil guardado."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Pré-selecionado",
+      "preparing": "Em preparação",
+      "submitted": "Submetido"
+    },
+    "goNoGo": {
+      "undecided": "Por decidir",
+      "go": "Vamos concorrer",
+      "noGo": "Não vamos concorrer"
+    },
+    "outcome": { "open": "Aberto", "won": "Ganho", "lost": "Perdido", "withdrawn": "Retirado" },
+    "bands": {
+      "needsYouNow": "Precisa de atenção agora",
+      "active": "Em preparação",
+      "submitted": "Submetidos",
+      "closed": "Encerrados"
+    },
+    "actions": {
+      "prepare": "Preparar no workbench",
+      "advance": "Avançar de fase",
+      "markGo": "Vamos concorrer",
+      "markNoGo": "Não vamos concorrer"
+    },
+    "empty": {
+      "title": "Ainda não há concursos acompanhados",
+      "description": "Adicione um concurso a este workbench para começar a prepará-lo.",
+      "seedTitle": "Concursos mais adequados para preparar",
+      "needsProfileTitle": "Configure um perfil de cliente para ver a adequação",
+      "needsProfileCta": "Configurar perfil de cliente"
+    },
+    "fit": { "needsProfile": "Configure um perfil de cliente para ver a adequação" },
+    "tombstone": {
+      "title": "Este concurso já não está disponível",
+      "description": "O portal de origem removeu este anúncio. A sua checklist e notas foram preservadas."
+    },
+    "checklist": {
+      "title": "Checklist DEUCP",
+      "progress": "{{done}} de {{total}} concluídos",
+      "statusLabel": "Estado",
+      "noteLabel": "Nota",
+      "required": "Obrigatório",
+      "notePlaceholder": "Adicionar uma nota…",
+      "status": { "pending": "Pendente", "done": "Concluído", "na": "N/A" },
+      "sections": {
+        "part_ii": "Parte II — Informações sobre o operador económico",
+        "part_iii": "Parte III — Motivos de exclusão",
+        "part_iv": "Parte IV — Critérios de seleção",
+        "conclusion": "Declarações finais"
+      },
+      "items": {
+        "identification": "Identificação e registo do operador económico",
+        "sme_status": "Declaração de estatuto de PME",
+        "representation": "Representante autorizado",
+        "criminal_convictions": "Ausência de condenações penais",
+        "tax_payments": "Impostos em dia",
+        "social_security": "Contribuições para a segurança social em dia",
+        "insolvency": "Ausência de falência ou insolvência",
+        "misconduct": "Ausência de falta profissional grave",
+        "conflict_interest": "Ausência de conflito de interesses",
+        "suitability": "Aptidão para o exercício da atividade profissional",
+        "economic_standing": "Capacidade económica e financeira",
+        "technical_ability": "Capacidade técnica e profissional",
+        "quality_assurance": "Sistemas de garantia da qualidade",
+        "espd_signed": "DEUCP preenchido e assinado"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Decisão",
+      "stageTitle": "Fase",
+      "outcomeTitle": "Resultado",
+      "backToPortfolio": "Voltar ao portefólio"
+    },
+    "picker": {
+      "title": "Escolha um workbench",
+      "recent": "Recentes",
+      "all": "Todos os workbenches",
+      "empty": "Ainda não há workbenches — crie um primeiro."
+    },
+    "errors": {
+      "duplicate": "Este concurso já está nesse workbench.",
+      "unavailable": "Este concurso já não está disponível.",
+      "generic": "Algo correu mal. Tente novamente."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "A carregar…",

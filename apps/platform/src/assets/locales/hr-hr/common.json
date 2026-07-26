@@ -614,6 +614,88 @@
       "saved": "Profil spremljen."
     }
   },
+  "bid": {
+    "stage": { "shortlisted": "Uži izbor", "preparing": "U pripremi", "submitted": "Poslano" },
+    "goNoGo": { "undecided": "Neodlučeno", "go": "Sudjelujemo", "noGo": "Ne sudjelujemo" },
+    "outcome": {
+      "open": "Otvoreno",
+      "won": "Dobiveno",
+      "lost": "Izgubljeno",
+      "withdrawn": "Povučeno"
+    },
+    "bands": {
+      "needsYouNow": "Zahtijeva pažnju odmah",
+      "active": "U pripremi",
+      "submitted": "Poslano",
+      "closed": "Zatvoreno"
+    },
+    "actions": {
+      "prepare": "Pripremi u workbenchu",
+      "advance": "Pomakni fazu",
+      "markGo": "Sudjelujemo",
+      "markNoGo": "Ne sudjelujemo"
+    },
+    "empty": {
+      "title": "Još nema praćenih natječaja",
+      "description": "Dodajte natječaj u ovaj workbench da biste započeli pripremu.",
+      "seedTitle": "Najprikladniji natječaji za pripremu",
+      "needsProfileTitle": "Izradite profil klijenta da biste vidjeli podudarnost",
+      "needsProfileCta": "Izradi profil klijenta"
+    },
+    "fit": { "needsProfile": "Izradite profil klijenta da biste vidjeli podudarnost" },
+    "tombstone": {
+      "title": "Ovaj natječaj više nije dostupan",
+      "description": "Izvorni portal uklonio je ovu obavijest. Vaš kontrolni popis i bilješke su sačuvani."
+    },
+    "checklist": {
+      "title": "ESPD kontrolni popis",
+      "progress": "{{done}} od {{total}} dovršeno",
+      "statusLabel": "Status",
+      "noteLabel": "Bilješka",
+      "required": "Obavezno",
+      "notePlaceholder": "Dodaj bilješku…",
+      "status": { "pending": "Na čekanju", "done": "Dovršeno", "na": "Nije primjenjivo" },
+      "sections": {
+        "part_ii": "Dio II — Podaci o gospodarskom subjektu",
+        "part_iii": "Dio III — Osnove za isključenje",
+        "part_iv": "Dio IV — Kriteriji za odabir",
+        "conclusion": "Završne izjave"
+      },
+      "items": {
+        "identification": "Identifikacija i registracija gospodarskog subjekta",
+        "sme_status": "Izjava o statusu MSP-a",
+        "representation": "Ovlašteni predstavnik",
+        "criminal_convictions": "Nema kaznenih presuda",
+        "tax_payments": "Porezi plaćeni",
+        "social_security": "Doprinosi za socijalno osiguranje plaćeni",
+        "insolvency": "Nema stečaja ni insolventnosti",
+        "misconduct": "Nema teškog profesionalnog propusta",
+        "conflict_interest": "Nema sukoba interesa",
+        "suitability": "Sposobnost za obavljanje djelatnosti",
+        "economic_standing": "Ekonomska i financijska sposobnost",
+        "technical_ability": "Tehnička i stručna sposobnost",
+        "quality_assurance": "Sustavi osiguranja kvalitete",
+        "espd_signed": "ESPD ispunjen i potpisan"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Odluka",
+      "stageTitle": "Faza",
+      "outcomeTitle": "Ishod",
+      "backToPortfolio": "Natrag na portfelj"
+    },
+    "picker": {
+      "title": "Odaberite workbench",
+      "recent": "Nedavno",
+      "all": "Svi workbenchevi",
+      "empty": "Još nema workbencheva — najprije izradite jedan."
+    },
+    "errors": {
+      "duplicate": "Ovaj natječaj već je u tom workbenchu.",
+      "unavailable": "Ovaj natječaj više nije dostupan.",
+      "generic": "Nešto je pošlo po zlu. Pokušajte ponovno."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Učitavanje…",

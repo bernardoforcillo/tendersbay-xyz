@@ -607,6 +607,87 @@
       "saved": "Profilo salvato."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "In valutazione",
+      "preparing": "In preparazione",
+      "submitted": "Presentata"
+    },
+    "goNoGo": { "undecided": "Da decidere", "go": "Partecipa", "noGo": "Non partecipare" },
+    "outcome": { "open": "Aperta", "won": "Aggiudicata", "lost": "Persa", "withdrawn": "Ritirata" },
+    "bands": {
+      "needsYouNow": "Richiede attenzione ora",
+      "active": "In preparazione",
+      "submitted": "Presentate",
+      "closed": "Chiuse"
+    },
+    "actions": {
+      "prepare": "Prepara nel workbench",
+      "advance": "Avanza fase",
+      "markGo": "Partecipa",
+      "markNoGo": "Non partecipare"
+    },
+    "empty": {
+      "title": "Nessun bando ancora seguito",
+      "description": "Porta un bando in questo workbench per iniziare a prepararlo.",
+      "seedTitle": "Bandi più in linea da preparare",
+      "needsProfileTitle": "Crea un profilo cliente per vedere l’affinità",
+      "needsProfileCta": "Crea profilo cliente"
+    },
+    "fit": { "needsProfile": "Crea un profilo cliente per vedere l’affinità" },
+    "tombstone": {
+      "title": "Questo bando non è più disponibile",
+      "description": "Il portale di origine ha rimosso l’avviso. La checklist e le note restano salvate."
+    },
+    "checklist": {
+      "title": "Checklist DGUE",
+      "progress": "{{done}} di {{total}} completati",
+      "statusLabel": "Stato",
+      "noteLabel": "Nota",
+      "required": "Obbligatorio",
+      "notePlaceholder": "Aggiungi una nota…",
+      "status": { "pending": "Da fare", "done": "Fatto", "na": "N/D" },
+      "sections": {
+        "part_ii": "Parte II — Informazioni sull’operatore",
+        "part_iii": "Parte III — Motivi di esclusione",
+        "part_iv": "Parte IV — Criteri di selezione",
+        "conclusion": "Dichiarazioni finali"
+      },
+      "items": {
+        "identification": "Identificazione e iscrizione dell’operatore",
+        "sme_status": "Dichiarazione di stato PMI",
+        "representation": "Rappresentante autorizzato",
+        "criminal_convictions": "Assenza di condanne penali",
+        "tax_payments": "Imposte in regola",
+        "social_security": "Contributi previdenziali versati",
+        "insolvency": "Assenza di fallimento o insolvenza",
+        "misconduct": "Assenza di gravi illeciti professionali",
+        "conflict_interest": "Assenza di conflitto di interessi",
+        "suitability": "Idoneità all’esercizio dell’attività",
+        "economic_standing": "Capacità economica e finanziaria",
+        "technical_ability": "Capacità tecnica e professionale",
+        "quality_assurance": "Sistemi di garanzia della qualità",
+        "espd_signed": "DGUE compilato e firmato"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Decisione",
+      "stageTitle": "Fase",
+      "outcomeTitle": "Esito",
+      "backToPortfolio": "Torna al portfolio"
+    },
+    "picker": {
+      "title": "Scegli un workbench",
+      "recent": "Recenti",
+      "all": "Tutti i workbench",
+      "empty": "Nessun workbench — creane uno prima."
+    },
+    "errors": {
+      "duplicate": "Questo bando è già in quel workbench.",
+      "unavailable": "Questo bando non è più disponibile.",
+      "generic": "Qualcosa è andato storto. Riprova."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Caricamento…",

@@ -607,6 +607,87 @@
       "saved": "Profil gemt."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Udvalgt",
+      "preparing": "Under forberedelse",
+      "submitted": "Indsendt"
+    },
+    "goNoGo": { "undecided": "Ikke afgjort", "go": "Deltager", "noGo": "Deltager ikke" },
+    "outcome": { "open": "Åben", "won": "Vundet", "lost": "Tabt", "withdrawn": "Trukket tilbage" },
+    "bands": {
+      "needsYouNow": "Kræver din opmærksomhed nu",
+      "active": "Under forberedelse",
+      "submitted": "Indsendte",
+      "closed": "Afsluttede"
+    },
+    "actions": {
+      "prepare": "Forbered i workbench",
+      "advance": "Gå til næste fase",
+      "markGo": "Deltager",
+      "markNoGo": "Deltager ikke"
+    },
+    "empty": {
+      "title": "Ingen udbud fulgt endnu",
+      "description": "Tilføj et udbud til dette workbench for at begynde forberedelsen.",
+      "seedTitle": "Bedst egnede udbud at forberede",
+      "needsProfileTitle": "Opret en kundeprofil for at se relevans",
+      "needsProfileCta": "Opret kundeprofil"
+    },
+    "fit": { "needsProfile": "Opret en kundeprofil for at se relevans" },
+    "tombstone": {
+      "title": "Dette udbud er ikke længere tilgængeligt",
+      "description": "Kildeportalen har fjernet denne bekendtgørelse. Din tjekliste og dine noter er bevaret."
+    },
+    "checklist": {
+      "title": "ESPD-tjekliste",
+      "progress": "{{done}} af {{total}} udført",
+      "statusLabel": "Status",
+      "noteLabel": "Note",
+      "required": "Påkrævet",
+      "notePlaceholder": "Tilføj en note…",
+      "status": { "pending": "Afventer", "done": "Udført", "na": "Ikke relevant" },
+      "sections": {
+        "part_ii": "Del II — Oplysninger om den økonomiske aktør",
+        "part_iii": "Del III — Udelukkelsesgrunde",
+        "part_iv": "Del IV — Udvælgelseskriterier",
+        "conclusion": "Afsluttende erklæringer"
+      },
+      "items": {
+        "identification": "Identifikation og registrering af den økonomiske aktør",
+        "sme_status": "Erklæring om SMV-status",
+        "representation": "Bemyndiget repræsentant",
+        "criminal_convictions": "Ingen straffedomme",
+        "tax_payments": "Skatter betalt",
+        "social_security": "Sociale bidrag betalt",
+        "insolvency": "Ikke konkurs eller under insolvensbehandling",
+        "misconduct": "Ingen alvorlig forsømmelse i udøvelsen af erhvervet",
+        "conflict_interest": "Ingen interessekonflikt",
+        "suitability": "Egnethed til at udøve erhvervet",
+        "economic_standing": "Økonomisk og finansiel formåen",
+        "technical_ability": "Teknisk og faglig formåen",
+        "quality_assurance": "Ordninger for kvalitetssikring",
+        "espd_signed": "ESPD udfyldt og underskrevet"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Beslutning",
+      "stageTitle": "Fase",
+      "outcomeTitle": "Resultat",
+      "backToPortfolio": "Tilbage til porteføljen"
+    },
+    "picker": {
+      "title": "Vælg et workbench",
+      "recent": "Seneste",
+      "all": "Alle workbenches",
+      "empty": "Ingen workbenches endnu — opret ét først."
+    },
+    "errors": {
+      "duplicate": "Dette udbud findes allerede i det workbench.",
+      "unavailable": "Dette udbud er ikke længere tilgængeligt.",
+      "generic": "Noget gik galt. Prøv igen."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Indlæser…",

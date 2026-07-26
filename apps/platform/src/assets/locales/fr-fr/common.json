@@ -607,6 +607,87 @@
       "saved": "Profil enregistré."
     }
   },
+  "bid": {
+    "stage": {
+      "shortlisted": "Présélectionné",
+      "preparing": "En préparation",
+      "submitted": "Déposé"
+    },
+    "goNoGo": { "undecided": "Indécis", "go": "Participation", "noGo": "Pas de participation" },
+    "outcome": { "open": "Ouvert", "won": "Remporté", "lost": "Perdu", "withdrawn": "Retiré" },
+    "bands": {
+      "needsYouNow": "Nécessite votre attention maintenant",
+      "active": "En préparation",
+      "submitted": "Déposés",
+      "closed": "Clôturés"
+    },
+    "actions": {
+      "prepare": "Préparer dans le workbench",
+      "advance": "Passer à l'étape suivante",
+      "markGo": "Participation",
+      "markNoGo": "Pas de participation"
+    },
+    "empty": {
+      "title": "Aucun marché suivi pour le moment",
+      "description": "Ajoutez un marché à ce workbench pour commencer à le préparer.",
+      "seedTitle": "Marchés les plus pertinents à préparer",
+      "needsProfileTitle": "Configurez un profil client pour voir la pertinence",
+      "needsProfileCta": "Configurer un profil client"
+    },
+    "fit": { "needsProfile": "Configurez un profil client pour voir la pertinence" },
+    "tombstone": {
+      "title": "Ce marché n'est plus disponible",
+      "description": "Le portail source a retiré cet avis. Votre checklist et vos notes sont conservées."
+    },
+    "checklist": {
+      "title": "Checklist ESPD / DUME",
+      "progress": "{{done}} sur {{total}} complétés",
+      "statusLabel": "Statut",
+      "noteLabel": "Note",
+      "required": "Obligatoire",
+      "notePlaceholder": "Ajouter une note…",
+      "status": { "pending": "En attente", "done": "Terminé", "na": "N/A" },
+      "sections": {
+        "part_ii": "Partie II — Informations sur l'opérateur économique",
+        "part_iii": "Partie III — Motifs d'exclusion",
+        "part_iv": "Partie IV — Critères de sélection",
+        "conclusion": "Déclarations finales"
+      },
+      "items": {
+        "identification": "Identification et immatriculation de l'opérateur économique",
+        "sme_status": "Déclaration de statut PME",
+        "representation": "Représentant autorisé",
+        "criminal_convictions": "Absence de condamnation pénale",
+        "tax_payments": "Impôts acquittés",
+        "social_security": "Cotisations sociales acquittées",
+        "insolvency": "Absence de faillite ou d'insolvabilité",
+        "misconduct": "Absence de faute professionnelle grave",
+        "conflict_interest": "Absence de conflit d'intérêts",
+        "suitability": "Habilitation à exercer l'activité professionnelle",
+        "economic_standing": "Capacité économique et financière",
+        "technical_ability": "Capacité technique et professionnelle",
+        "quality_assurance": "Systèmes d'assurance qualité",
+        "espd_signed": "ESPD/DUME complété et signé"
+      }
+    },
+    "detail": {
+      "goNoGoTitle": "Décision",
+      "stageTitle": "Étape",
+      "outcomeTitle": "Résultat",
+      "backToPortfolio": "Retour au portefeuille"
+    },
+    "picker": {
+      "title": "Choisissez un workbench",
+      "recent": "Récents",
+      "all": "Tous les workbenches",
+      "empty": "Aucun workbench pour le moment — créez-en un d'abord."
+    },
+    "errors": {
+      "duplicate": "Ce marché figure déjà dans ce workbench.",
+      "unavailable": "Ce marché n'est plus disponible.",
+      "generic": "Une erreur s'est produite. Veuillez réessayer."
+    }
+  },
   "workbench": {
     "common": {
       "loading": "Chargement…",
