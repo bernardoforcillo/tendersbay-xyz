@@ -34,6 +34,9 @@ vi.mock('~/features/account/components/pages/explore/use-client-shortlist', () =
 }));
 vi.mock('~/features/tenders', () => ({ useTenderLink: () => (_id: string, c: ReactNode) => c }));
 vi.mock('~/features/account/components/organisms', () => ({ TenderResultCard: () => <div /> }));
+vi.mock('~/features/workbench/components/organisms/workbench-chat-panel', () => ({
+  WorkbenchChatPanel: () => <div data-testid="workbench-chat-panel" />,
+}));
 
 import { WorkbenchOverviewPage } from './index';
 

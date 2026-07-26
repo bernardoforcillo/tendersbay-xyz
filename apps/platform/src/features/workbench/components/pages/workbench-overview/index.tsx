@@ -11,6 +11,7 @@ import {
 } from '~/features/account/components/organisms/tender-feed';
 import { useClientShortlist } from '~/features/account/components/pages/explore/use-client-shortlist';
 import { useTenderLink } from '~/features/tenders';
+import { WorkbenchChatPanel } from '~/features/workbench/components/organisms/workbench-chat-panel';
 import { useWorkbenchContext } from '~/features/workbench/context';
 import { useBids } from '~/features/workbench/hooks';
 
@@ -34,35 +35,49 @@ export function WorkbenchOverviewPage() {
   const { data: bids, loading } = useBids(workbench.id);
 
   if (loading)
-    return <p className="text-sm text-ink-500">{t('workbench.common.loading', 'Loading…')}</p>;
-  if (!bids || bids.length === 0) return <EmptyRoom workspaceId={workspaceId} />;
+    return (
+      <>
+        <p className="text-sm text-ink-500">{t('workbench.common.loading', 'Loading…')}</p>
+        <WorkbenchChatPanel />
+      </>
+    );
+  if (!bids || bids.length === 0)
+    return (
+      <>
+        <EmptyRoom workspaceId={workspaceId} />
+        <WorkbenchChatPanel />
+      </>
+    );
 
   const now = new Date();
   const grouped: Record<Band, Bid[]> = { needsYouNow: [], active: [], submitted: [], closed: [] };
   for (const bid of bids) grouped[bandOf(bid, now)].push(bid);
 
   return (
-    <div className="flex flex-col gap-8">
-      {BAND_ORDER.filter((b) => grouped[b].length > 0).map((band) => (
-        <section key={band} className="flex flex-col gap-3">
-          <h2
-            className={cn(
-              'text-sm font-semibold',
-              band === 'needsYouNow' ? 'text-brand-700' : 'text-ink-700',
-            )}
-          >
-            {t(`bid.bands.${band}`)}
-          </h2>
-          <ul className="flex flex-col gap-2">
-            {grouped[band].map((bid) => (
-              <li key={bid.id}>
-                <BidRow bid={bid} workspaceId={workspaceId} workbenchId={workbench.id} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
-    </div>
+    <>
+      <div className="flex flex-col gap-8">
+        {BAND_ORDER.filter((b) => grouped[b].length > 0).map((band) => (
+          <section key={band} className="flex flex-col gap-3">
+            <h2
+              className={cn(
+                'text-sm font-semibold',
+                band === 'needsYouNow' ? 'text-brand-700' : 'text-ink-700',
+              )}
+            >
+              {t(`bid.bands.${band}`)}
+            </h2>
+            <ul className="flex flex-col gap-2">
+              {grouped[band].map((bid) => (
+                <li key={bid.id}>
+                  <BidRow bid={bid} workspaceId={workspaceId} workbenchId={workbench.id} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+      <WorkbenchChatPanel />
+    </>
   );
 }
 
