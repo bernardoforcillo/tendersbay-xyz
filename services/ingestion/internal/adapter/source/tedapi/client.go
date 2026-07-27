@@ -40,7 +40,7 @@ const maxErrorBodyBytes = 2048
 // is how each of these was confirmed).
 var searchFields = []string{
 	"publication-number", "procedure-identifier", "notice-type", "procedure-type",
-	"notice-title", "buyer-name", "organisation-identifier-buyer", "official-language",
+	"notice-title", "description-proc", "buyer-name", "organisation-identifier-buyer", "official-language",
 	"buyer-country", "classification-cpv", "estimated-value-proc", "estimated-value-cur-proc",
 	"publication-date", "identifier-lot", "title-lot",
 	"deadline-receipt-tender-date-lot", "deadline-receipt-tender-time-lot", "links",

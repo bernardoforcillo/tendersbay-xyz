@@ -56,6 +56,22 @@ const fullFolder = `<cac-place-ext:ContractFolderStatus>
       <cbc:EndTime>23:59:00</cbc:EndTime>
     </cac:TenderSubmissionDeadlinePeriod>
   </cac:TenderingProcess>
+  <cac:LegalDocumentReference>
+    <cbc:ID>PCAP Toros 2026 ok.pdf</cbc:ID>
+    <cac:Attachment>
+      <cac:ExternalReference>
+        <cbc:URI>https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?DocumentIdParam=abc</cbc:URI>
+      </cac:ExternalReference>
+    </cac:Attachment>
+  </cac:LegalDocumentReference>
+  <cac:TechnicalDocumentReference>
+    <cbc:ID>PCAP Toros 2026.pdf</cbc:ID>
+    <cac:Attachment>
+      <cac:ExternalReference>
+        <cbc:URI>https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?DocumentIdParam=def</cbc:URI>
+      </cac:ExternalReference>
+    </cac:Attachment>
+  </cac:TechnicalDocumentReference>
 </cac-place-ext:ContractFolderStatus>`
 
 func TestParse_FullFolder(t *testing.T) {
@@ -93,6 +109,31 @@ func TestParse_FullFolder(t *testing.T) {
 	}
 	if len(d.Raw) == 0 {
 		t.Error("Raw should carry the untouched payload")
+	}
+	wantDocs := []codice.DocumentRef{
+		{Name: "PCAP Toros 2026 ok.pdf", Type: "legal", URI: "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?DocumentIdParam=abc"},
+		{Name: "PCAP Toros 2026.pdf", Type: "technical", URI: "https://contrataciondelestado.es/FileSystem/servlet/GetDocumentByIdServlet?DocumentIdParam=def"},
+	}
+	if len(d.Documents) != len(wantDocs) {
+		t.Fatalf("Documents = %+v, want %+v", d.Documents, wantDocs)
+	}
+	for i, want := range wantDocs {
+		if d.Documents[i] != want {
+			t.Errorf("Documents[%d] = %+v, want %+v", i, d.Documents[i], want)
+		}
+	}
+}
+
+func TestParse_NoDocumentReferences(t *testing.T) {
+	const xml = `<cac-place-ext:ContractFolderStatus>
+  <cbc:ContractFolderID>9/2026</cbc:ContractFolderID>
+</cac-place-ext:ContractFolderStatus>`
+	d, err := codice.Parse([]byte(xml))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	if d.Documents != nil {
+		t.Errorf("Documents = %v, want nil when the folder carries no document references", d.Documents)
 	}
 }
 

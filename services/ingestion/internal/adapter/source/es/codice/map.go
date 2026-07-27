@@ -37,8 +37,22 @@ func Map(d Document, source string) tender.Tender {
 		Value:        d.EstimatedValue,
 		Currency:     d.Currency,
 		Deadline:     d.SubmissionDeadline,
+		Documents:    mapDocuments(d.Documents),
 		Raw:          rawJSON(d.Raw),
 	}
+}
+
+// mapDocuments turns the folder's DocumentRefs (PCAP/PCTP) into
+// tender.Documents. Returns nil when the folder carries none.
+func mapDocuments(refs []DocumentRef) []tender.Document {
+	if len(refs) == 0 {
+		return nil
+	}
+	docs := make([]tender.Document, len(refs))
+	for i, r := range refs {
+		docs[i] = tender.Document{URL: r.URI, Type: r.Type}
+	}
+	return docs
 }
 
 // statusFromCode maps PLACSP's ContractFolderStatusCode onto the fixed

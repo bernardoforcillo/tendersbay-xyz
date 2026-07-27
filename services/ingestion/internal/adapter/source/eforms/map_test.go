@@ -38,6 +38,9 @@ func TestMap_CNStandard_SingleLot(t *testing.T) {
 	if got.Title != "Lucrări de drum" {
 		t.Errorf("Title = %q, want the RON title (official-language)", got.Title)
 	}
+	if want := "Lucrări de reparații și întreținere a drumurilor din municipiul Blaj."; got.Description != want {
+		t.Errorf("Description = %q, want the RON description-proc (official-language) %q", got.Description, want)
+	}
 	if got.Buyer.Name != "Municipiul Blaj" || got.Buyer.ID != "RO 4563007" {
 		t.Errorf("Buyer = %+v, want Name=Municipiul Blaj ID=RO 4563007", got.Buyer)
 	}
@@ -90,6 +93,9 @@ func TestMap_CANStandard_MissingOptionalFields(t *testing.T) {
 	}
 	if got.Buyer.ID != "fb197f94-7578-4673-8a57-4642ae120532" {
 		t.Errorf("Buyer.ID = %q, want the raw organisation-identifier-buyer value verbatim", got.Buyer.ID)
+	}
+	if got.Description != "" {
+		t.Errorf("Description = %q, want empty (description-proc absent from fixture)", got.Description)
 	}
 }
 

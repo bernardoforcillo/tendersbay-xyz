@@ -4,6 +4,7 @@
   "notice-type": "cn-standard",
   "procedure-type": "open",
   "notice-title": { "ron": "Lucrări de drum", "eng": "Road works" },
+  "description-proc": { "ron": "Lucrări de reparații și întreținere a drumurilor din municipiul Blaj.", "eng": "Repair and maintenance works for roads in the municipality of Blaj." },
   "buyer-name": { "ron": ["Municipiul Blaj"], "eng": ["Municipiul Blaj"] },
   "organisation-identifier-buyer": ["RO 4563007"],
   "official-language": ["RON"],
