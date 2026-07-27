@@ -22,6 +22,7 @@ type TenderRepo struct {
 type UnindexedTender struct {
 	ID            int64
 	Title         string
+	Description   string
 	BuyerName     string
 	CPV           string
 	ProcedureType string
@@ -45,15 +46,16 @@ func NewTenderRepo(db *pg.DB) *TenderRepo {
 
 const upsertTenderSQL = `
 INSERT INTO tenders.ingested_tenders (
-	source, source_ref, title, buyer_name, buyer_id, status, procedure_type,
+	source, source_ref, title, description, buyer_name, buyer_id, status, procedure_type,
 	language, country, nuts, cpv, cpv_secondary, value, currency,
 	published_at, deadline, raw, version, history, first_seen_at, last_seen_at
 ) VALUES (
-	$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12::text[], $13, $14, $15, $16, $17::jsonb,
+	$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::text[], $14, $15, $16, $17, $18::jsonb,
 	1, '[]'::jsonb, now(), now()
 )
 ON CONFLICT (source, source_ref) DO UPDATE SET
 	title = EXCLUDED.title,
+	description = EXCLUDED.description,
 	buyer_name = EXCLUDED.buyer_name,
 	buyer_id = EXCLUDED.buyer_id,
 	procedure_type = EXCLUDED.procedure_type,
@@ -81,6 +83,7 @@ ON CONFLICT (source, source_ref) DO UPDATE SET
 	status = EXCLUDED.status,
 	last_seen_at = now(),
 	indexed_at = CASE WHEN tenders.ingested_tenders.title IS DISTINCT FROM EXCLUDED.title
+	                    OR tenders.ingested_tenders.description IS DISTINCT FROM EXCLUDED.description
 	                    OR tenders.ingested_tenders.buyer_name IS DISTINCT FROM EXCLUDED.buyer_name
 	                    OR tenders.ingested_tenders.cpv IS DISTINCT FROM EXCLUDED.cpv
 	                    OR tenders.ingested_tenders.procedure_type IS DISTINCT FROM EXCLUDED.procedure_type
@@ -125,7 +128,7 @@ WHERE document_id = $1 ORDER BY index
 `
 
 const selectUnindexedTendersSQL = `
-SELECT id, title, buyer_name, cpv, procedure_type, country, status, source, source_ref
+SELECT id, title, description, buyer_name, cpv, procedure_type, country, status, source, source_ref
 FROM tenders.ingested_tenders
 WHERE indexed_at IS NULL
 ORDER BY id
@@ -176,7 +179,7 @@ func (r *TenderRepo) Save(ctx context.Context, tenders []tender.Tender) (ingesti
 func (r *TenderRepo) saveOne(ctx context.Context, t tender.Tender) (inserted bool, err error) {
 	err = r.db.InTx(ctx, func(tx *pg.DB) error {
 		rows, qErr := tx.Query(ctx, upsertTenderSQL,
-			t.Source, t.SourceRef, t.Title, t.Buyer.Name, t.Buyer.ID, string(t.Status),
+			t.Source, t.SourceRef, t.Title, t.Description, t.Buyer.Name, t.Buyer.ID, string(t.Status),
 			t.ProcedureType, t.Language, t.Country, t.NUTS, t.CPV,
 			pgTextArray(t.CPVSecondary), t.Value, t.Currency,
 			t.PublishedAt, t.Deadline, []byte(t.Raw),
@@ -278,7 +281,7 @@ func (r *TenderRepo) ListUnindexed(ctx context.Context, limit int) ([]UnindexedT
 	var tenders []UnindexedTender
 	for rows.Next() {
 		var t UnindexedTender
-		if err := rows.Scan(&t.ID, &t.Title, &t.BuyerName, &t.CPV, &t.ProcedureType,
+		if err := rows.Scan(&t.ID, &t.Title, &t.Description, &t.BuyerName, &t.CPV, &t.ProcedureType,
 			&t.Country, &t.Status, &t.Source, &t.SourceRef); err != nil {
 			rows.Close()
 			return nil, fmt.Errorf("postgres: scan unindexed tender: %w", err)

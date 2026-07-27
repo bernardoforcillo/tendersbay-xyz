@@ -15,6 +15,7 @@ type Tender struct {
 	Source        string // e.g. "ted", "it-mepa" — the provider's Name()
 	SourceRef     string // stable per-provider id (notice number, etc.)
 	Title         string
+	Description   string // free-text scope of work; "" when the source exposes none
 	Buyer         Buyer
 	Status        Status   // normalized lifecycle status — see below
 	ProcedureType string   // e.g. "open", "restricted", "negotiated", "competitive-dialogue"

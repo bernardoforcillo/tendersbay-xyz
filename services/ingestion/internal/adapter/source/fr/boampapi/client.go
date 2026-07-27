@@ -49,6 +49,26 @@ type Record struct {
 	Raw json.RawMessage // untouched record element from the `records` array
 }
 
+// Decode unmarshals one raw record element (a `records[]` entry from
+// searchResponse, or Record.Raw round-tripped from storage) into a Record.
+func Decode(raw json.RawMessage) (Record, error) {
+	var env recordEnvelope
+	if err := json.Unmarshal(raw, &env); err != nil {
+		return Record{}, fmt.Errorf("boampapi: decode record: %w", err)
+	}
+	return Record{
+		Idweb:             env.Fields.Idweb,
+		Objet:             env.Fields.Objet,
+		NomAcheteur:       env.Fields.NomAcheteur,
+		DateLimiteReponse: env.Fields.DateLimiteReponse,
+		DateParution:      env.Fields.DateParution,
+		Nature:            env.Fields.Nature,
+		NatureCategorise:  env.Fields.NatureCategorise,
+		Donnees:           env.Fields.Donnees,
+		Raw:               raw,
+	}, nil
+}
+
 // Client talks to BOAMP's Opendatasoft search API.
 type Client struct {
 	baseURL string
@@ -107,25 +127,15 @@ func (c *Client) FetchSince(ctx context.Context, since time.Time) ([]Record, err
 
 		stop := false
 		for _, raw := range resp.Records {
-			var env recordEnvelope
-			if err := json.Unmarshal(raw, &env); err != nil {
-				return nil, fmt.Errorf("boampapi: decode record: %w", err)
+			rec, err := Decode(raw)
+			if err != nil {
+				return nil, err
 			}
-			if pub, ok := parseDate(env.Fields.DateParution); ok && pub.Before(since) {
+			if pub, ok := parseDate(rec.DateParution); ok && pub.Before(since) {
 				stop = true
 				break
 			}
-			records = append(records, Record{
-				Idweb:             env.Fields.Idweb,
-				Objet:             env.Fields.Objet,
-				NomAcheteur:       env.Fields.NomAcheteur,
-				DateLimiteReponse: env.Fields.DateLimiteReponse,
-				DateParution:      env.Fields.DateParution,
-				Nature:            env.Fields.Nature,
-				NatureCategorise:  env.Fields.NatureCategorise,
-				Donnees:           env.Fields.Donnees,
-				Raw:               raw,
-			})
+			records = append(records, rec)
 		}
 
 		start += len(resp.Records)

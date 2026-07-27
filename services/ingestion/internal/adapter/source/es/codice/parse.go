@@ -27,27 +27,52 @@ import (
 // value (nil pointers, "" strings, nil CPV).
 type Document struct {
 	ContractFolderID   string
-	StatusCode         string     // cbc-place-ext:ContractFolderStatusCode (e.g. "EV")
-	Title              string     // cac:ProcurementProject/cbc:Name
-	CPV                []string   // every ItemClassificationCode, in document order
-	EstimatedValue     *int64     // minor units; nil when the folder carries no amount
-	Currency           string     // ISO-4217, from the amount's currencyID attribute
-	SubmissionDeadline *time.Time // TenderSubmissionDeadlinePeriod EndDate(+EndTime)
-	BuyerName          string     // the direct LocatedContractingParty's Party name
-	NUTS               string     // RealizedLocation/cbc:CountrySubentityCode
-	Raw                []byte     // untouched CODICE payload
+	StatusCode         string        // cbc-place-ext:ContractFolderStatusCode (e.g. "EV")
+	Title              string        // cac:ProcurementProject/cbc:Name
+	CPV                []string      // every ItemClassificationCode, in document order
+	EstimatedValue     *int64        // minor units; nil when the folder carries no amount
+	Currency           string        // ISO-4217, from the amount's currencyID attribute
+	SubmissionDeadline *time.Time    // TenderSubmissionDeadlinePeriod EndDate(+EndTime)
+	BuyerName          string        // the direct LocatedContractingParty's Party name
+	NUTS               string        // RealizedLocation/cbc:CountrySubentityCode
+	Documents          []DocumentRef // attached notice documents (PCAP/PCTP), nil when none
+	Raw                []byte        // untouched CODICE payload
+}
+
+// DocumentRef is one attachment referenced from a CODICE contract folder —
+// Spain's administrative clauses (PCAP, Type "legal") or technical
+// specification (PCTP, Type "technical") — carrying enough to fetch and
+// label it.
+type DocumentRef struct {
+	Name string // cbc:ID, usually the original filename (e.g. "PCAP Toros 2026.pdf")
+	Type string // "legal" (LegalDocumentReference) or "technical" (TechnicalDocumentReference)
+	URI  string
 }
 
 // contractFolderStatus is the decode target rooted at a ContractFolderStatus
 // element. Every xml tag is a bare local name; matching ignores the namespace
 // prefix.
 type contractFolderStatus struct {
-	XMLName          xml.Name           `xml:"ContractFolderStatus"`
-	ContractFolderID string             `xml:"ContractFolderID"`
-	StatusCode       string             `xml:"ContractFolderStatusCode"`
-	Party            locatedParty       `xml:"LocatedContractingParty"`
-	Project          procurementProject `xml:"ProcurementProject"`
-	Process          tenderingProcess   `xml:"TenderingProcess"`
+	XMLName           xml.Name           `xml:"ContractFolderStatus"`
+	ContractFolderID  string             `xml:"ContractFolderID"`
+	StatusCode        string             `xml:"ContractFolderStatusCode"`
+	Party             locatedParty       `xml:"LocatedContractingParty"`
+	Project           procurementProject `xml:"ProcurementProject"`
+	Process           tenderingProcess   `xml:"TenderingProcess"`
+	LegalDocument     documentReference  `xml:"LegalDocumentReference"`
+	TechnicalDocument documentReference  `xml:"TechnicalDocumentReference"`
+}
+
+// documentReference is a CODICE …DocumentReference element: an ID (usually
+// the original filename) plus an Attachment/ExternalReference/URI pointing
+// at the downloadable file.
+type documentReference struct {
+	ID         string `xml:"ID"`
+	Attachment struct {
+		ExternalReference struct {
+			URI string `xml:"URI"`
+		} `xml:"ExternalReference"`
+	} `xml:"Attachment"`
 }
 
 // locatedParty reads only the buyer's own Party name. It deliberately does not
@@ -125,7 +150,27 @@ func Parse(payload []byte) (Document, error) {
 	amt := pickAmount(cfs.Project.Budget)
 	doc.EstimatedValue = parseMinorUnits(amt.Value)
 	doc.Currency = strings.TrimSpace(amt.Currency)
+	doc.Documents = collectDocuments(cfs)
 	return doc, nil
+}
+
+// collectDocuments turns the folder's LegalDocumentReference (PCAP,
+// administrative clauses) and TechnicalDocumentReference (PCTP, technical
+// spec) into DocumentRefs, skipping either one that carries no URI.
+func collectDocuments(cfs contractFolderStatus) []DocumentRef {
+	var docs []DocumentRef
+	for _, ref := range []struct {
+		d   documentReference
+		typ string
+	}{
+		{cfs.LegalDocument, "legal"},
+		{cfs.TechnicalDocument, "technical"},
+	} {
+		if uri := strings.TrimSpace(ref.d.Attachment.ExternalReference.URI); uri != "" {
+			docs = append(docs, DocumentRef{Name: strings.TrimSpace(ref.d.ID), Type: ref.typ, URI: uri})
+		}
+	}
+	return docs
 }
 
 // pickAmount prefers the tax-exclusive budget (the "importe" PLACSP headlines

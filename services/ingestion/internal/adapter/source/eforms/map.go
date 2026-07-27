@@ -40,6 +40,7 @@ func Map(n Notice, source string) tender.Tender {
 		Source:        source,
 		SourceRef:     n.ProcedureIdentifier,
 		Title:         pickText(n.NoticeTitle, langKey),
+		Description:   pickText(n.DescriptionProc, langKey),
 		Buyer:         tender.Buyer{Name: first(pickTextArray(n.BuyerName, langKey)), ID: first(n.OrganisationIdentifierBuyer)},
 		Status:        statusFromNoticeType(n.NoticeType),
 		ProcedureType: n.ProcedureType,

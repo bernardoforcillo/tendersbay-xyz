@@ -110,6 +110,28 @@ func TestRunOnce_IndexesTenderWithSummaryOnly(t *testing.T) {
 	}
 }
 
+func TestRunOnce_SummaryIncludesDescriptionWhenPresent(t *testing.T) {
+	repo := &fakeRepo{unindexed: []postgres.UnindexedTender{
+		{ID: 42, Title: "Lavori stradali", Description: "Riasfaltatura delle strade del centro storico.",
+			BuyerName: "Comune di Roma", CPV: "45233220", Country: "IT", Status: "open", Source: "ted", SourceRef: "proc-1"},
+	}}
+	kb := &fakeKnowledgeBase{}
+	fetcher := &fakeFetcher{}
+
+	idx := index.New(repo, kb, fetcher)
+	if err := idx.RunOnce(context.Background()); err != nil {
+		t.Fatalf("RunOnce: %v", err)
+	}
+
+	summary := kb.ingested[0].Chunks[0].Content
+	if !contains(summary, "Riasfaltatura delle strade del centro storico.") {
+		t.Errorf("summary chunk %q does not contain the description", summary)
+	}
+	if !contains(summary, "Lavori stradali") {
+		t.Errorf("summary chunk %q does not still contain the title", summary)
+	}
+}
+
 func TestRunOnce_DownloadsAndPersistsDocumentPartsWhenNotAlreadySaved(t *testing.T) {
 	repo := &fakeRepo{
 		unindexed: []postgres.UnindexedTender{
