@@ -292,7 +292,8 @@ func TestListUnindexed_ReturnsOnlyNullIndexedAtWithDocuments(t *testing.T) {
 	if _, err := repo.Save(ctx, []tender.Tender{
 		{
 			Source: source, SourceRef: unindexedRef, Title: "Needs indexing",
-			Buyer: tender.Buyer{Name: "Comune di Roma"}, CPV: "45233220",
+			Description: "Resurfacing of municipal roads in the historic center.",
+			Buyer:       tender.Buyer{Name: "Comune di Roma"}, CPV: "45233220",
 			ProcedureType: "open", Country: "IT", Status: tender.StatusOpen,
 			Documents: []tender.Document{{URL: "https://example.org/a.pdf", Type: "notice"}},
 		},
@@ -336,6 +337,9 @@ func TestListUnindexed_ReturnsOnlyNullIndexedAtWithDocuments(t *testing.T) {
 		found.CPV != "45233220" || found.ProcedureType != "open" || found.Country != "IT" ||
 		found.Status != "open" || found.Source != source || found.SourceRef != unindexedRef {
 		t.Errorf("found tender = %+v, want matching structured fields", found)
+	}
+	if found.Description != "Resurfacing of municipal roads in the historic center." {
+		t.Errorf("found.Description = %q, want the saved free-text description", found.Description)
 	}
 	if len(found.Documents) != 1 || found.Documents[0].URL != "https://example.org/a.pdf" {
 		t.Errorf("found.Documents = %+v, want one document with the saved URL", found.Documents)
@@ -436,6 +440,43 @@ func TestSave_ResetsIndexedAtWhenSummaryFieldsChange(t *testing.T) {
 	}
 	if got := indexedAt(); !got.Valid {
 		t.Fatal("indexed_at was reset to NULL despite no summary-affecting field changing")
+	}
+}
+
+// TestSave_ResetsIndexedAtWhenDescriptionChanges covers the same CASE for
+// description specifically: backfilling a richer description onto a tender
+// that was already indexed with none (description = ”) must re-queue it
+// for indexing, the same way a title/status change already does.
+func TestSave_ResetsIndexedAtWhenDescriptionChanges(t *testing.T) {
+	repo, sqlDB := testRepo(t)
+	ctx := context.Background()
+	source, ref := "test-repo", "reindex-on-description-1"
+	cleanupTender(t, sqlDB, source, ref)
+
+	open := tender.Tender{Source: source, SourceRef: ref, Title: "Needs reindex", Status: tender.StatusOpen}
+	if _, err := repo.Save(ctx, []tender.Tender{open}); err != nil {
+		t.Fatalf("Save (insert): %v", err)
+	}
+	if _, err := sqlDB.ExecContext(ctx,
+		`UPDATE tenders.ingested_tenders SET indexed_at = now() WHERE source = $1 AND source_ref = $2`,
+		source, ref); err != nil {
+		t.Fatalf("mark indexed: %v", err)
+	}
+
+	withDescription := open
+	withDescription.Description = "Backfilled scope of work extracted from the raw payload."
+	if _, err := repo.Save(ctx, []tender.Tender{withDescription}); err != nil {
+		t.Fatalf("Save (description backfill): %v", err)
+	}
+
+	var got sql.NullTime
+	if err := sqlDB.QueryRowContext(ctx,
+		`SELECT indexed_at FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2`,
+		source, ref).Scan(&got); err != nil {
+		t.Fatalf("query indexed_at: %v", err)
+	}
+	if got.Valid {
+		t.Fatalf("indexed_at = %v, want NULL after description changed from empty to non-empty", got.Time)
 	}
 }
 

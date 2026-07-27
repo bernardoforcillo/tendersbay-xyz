@@ -77,9 +77,13 @@ func (idx *Indexer) RunOnce(ctx context.Context) error {
 }
 
 func (idx *Indexer) indexOne(ctx context.Context, t postgres.UnindexedTender) error {
-	summary := fmt.Sprintf(
-		"%s. Buyer: %s. CPV: %s. Procedure: %s. Country: %s. Status: %s.",
-		t.Title, t.BuyerName, t.CPV, t.ProcedureType, t.Country, t.Status,
+	summary := t.Title + "."
+	if t.Description != "" {
+		summary += " " + t.Description
+	}
+	summary += fmt.Sprintf(
+		" Buyer: %s. CPV: %s. Procedure: %s. Country: %s. Status: %s.",
+		t.BuyerName, t.CPV, t.ProcedureType, t.Country, t.Status,
 	)
 	tenderID := strconv.FormatInt(t.ID, 10)
 	chunks := []rag.Chunk{{

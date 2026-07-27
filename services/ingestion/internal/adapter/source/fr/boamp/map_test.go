@@ -40,6 +40,45 @@ func donnees(t *testing.T, main string, additional ...string) string {
 	return string(b)
 }
 
+// donneesWithDescription builds a donnees blob carrying only the
+// ProcurementProject's free-text Description — the same EFORMS structure
+// donnees() reads for CPV, but the scope-of-work text (BT-24) instead.
+func donneesWithDescription(t *testing.T, description string) string {
+	t.Helper()
+	b, err := json.Marshal(map[string]any{
+		"EFORMS": map[string]any{
+			"ContractNotice": map[string]any{
+				"cac:ProcurementProject": map[string]any{
+					"cbc:Description": map[string]any{"@languageID": "FRA", "#text": description},
+				},
+			},
+		},
+	})
+	if err != nil {
+		t.Fatalf("build donnees: %v", err)
+	}
+	return string(b)
+}
+
+func TestMap_DescriptionFromDonnees(t *testing.T) {
+	want := "Prestations de géomètres-experts concernant les travaux préparatoires aux acquisitions foncières."
+	got := Map(boampapi.Record{
+		Idweb:   "26-19",
+		Nature:  "APPEL_OFFRE",
+		Donnees: donneesWithDescription(t, want),
+	}, "fr-boamp")
+	if got.Description != want {
+		t.Errorf("Description = %q, want %q", got.Description, want)
+	}
+}
+
+func TestMap_NoDescriptionStaysEmpty(t *testing.T) {
+	got := Map(boampapi.Record{Idweb: "26-0", Nature: "APPEL_OFFRE"}, "fr-boamp")
+	if got.Description != "" {
+		t.Errorf("Description = %q, want empty when donnees is absent", got.Description)
+	}
+}
+
 func TestMap(t *testing.T) {
 	got := Map(boampapi.Record{
 		Idweb:             "26-71206",

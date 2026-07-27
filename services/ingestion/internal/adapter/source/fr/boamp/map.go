@@ -24,6 +24,7 @@ func Map(r boampapi.Record, source string) tender.Tender {
 		Source:       source,
 		SourceRef:    r.Idweb,
 		Title:        r.Objet,
+		Description:  extractDescription(r.Donnees),
 		Buyer:        tender.Buyer{Name: r.NomAcheteur},
 		Status:       statusFromNature(r.Nature, r.NatureCategorise),
 		Country:      "FR",
@@ -72,8 +73,15 @@ type eformsNotice struct {
 // nest under cac:ProcurementProjectLot, which we deliberately ignore so the CPV
 // reflects the tender, not one lot).
 type procurementProject struct {
-	Main       commodityClassification `json:"cac:MainCommodityClassification"`
-	Additional json.RawMessage         `json:"cac:AdditionalCommodityClassification"`
+	Main        commodityClassification `json:"cac:MainCommodityClassification"`
+	Additional  json.RawMessage         `json:"cac:AdditionalCommodityClassification"`
+	Description textElement             `json:"cbc:Description"`
+}
+
+// textElement decodes a CODICE/EFORMS multilingual text element's payload
+// (e.g. {"@languageID": "FRA", "#text": "..."}), keeping only the text.
+type textElement struct {
+	Text string `json:"#text"`
 }
 
 type commodityClassification struct {
@@ -112,6 +120,31 @@ func extractCPV(donnees string) (string, []string) {
 		}
 	}
 	return "", nil
+}
+
+// extractDescription digs the whole-notice ProcurementProject's free-text
+// Description (BT-24, the scope of work) out of the EFORMS Donnees blob —
+// the same structure extractCPV reads for the CPV code. It returns "" when
+// the blob is absent, unparseable, or carries no description, rather than
+// fabricating one.
+func extractDescription(donnees string) string {
+	if donnees == "" {
+		return ""
+	}
+	var env donneesEnvelope
+	if err := json.Unmarshal([]byte(donnees), &env); err != nil {
+		return ""
+	}
+	for _, rawNotice := range env.EFORMS {
+		var n eformsNotice
+		if err := json.Unmarshal(rawNotice, &n); err != nil {
+			continue
+		}
+		if desc := strings.TrimSpace(n.ProcurementProject.Description.Text); desc != "" {
+			return desc
+		}
+	}
+	return ""
 }
 
 // extractAdditional reads AdditionalCommodityClassification, which BOAMP emits

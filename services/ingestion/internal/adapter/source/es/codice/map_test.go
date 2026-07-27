@@ -22,7 +22,11 @@ func TestMap_Fields(t *testing.T) {
 		SubmissionDeadline: &deadline,
 		BuyerName:          "Alcaldía del Ayuntamiento de Navas del Madroño",
 		NUTS:               "ES432",
-		Raw:                []byte(`<ContractFolderStatus>...</ContractFolderStatus>`),
+		Documents: []codice.DocumentRef{
+			{Name: "PCAP.pdf", Type: "legal", URI: "https://example.org/pcap.pdf"},
+			{Name: "PCTP.pdf", Type: "technical", URI: "https://example.org/pctp.pdf"},
+		},
+		Raw: []byte(`<ContractFolderStatus>...</ContractFolderStatus>`),
 	}
 
 	got := codice.Map(d, "es-placsp")
@@ -65,6 +69,25 @@ func TestMap_Fields(t *testing.T) {
 	}
 	if !json.Valid(got.Raw) {
 		t.Errorf("Raw must be valid JSON for the jsonb column, got %s", got.Raw)
+	}
+	wantDocs := []tender.Document{
+		{URL: "https://example.org/pcap.pdf", Type: "legal"},
+		{URL: "https://example.org/pctp.pdf", Type: "technical"},
+	}
+	if len(got.Documents) != len(wantDocs) {
+		t.Fatalf("Documents = %+v, want %+v", got.Documents, wantDocs)
+	}
+	for i, want := range wantDocs {
+		if got.Documents[i] != want {
+			t.Errorf("Documents[%d] = %+v, want %+v", i, got.Documents[i], want)
+		}
+	}
+}
+
+func TestMap_NoDocumentsStaysNil(t *testing.T) {
+	got := codice.Map(codice.Document{ContractFolderID: "1/2026"}, "es-placsp")
+	if got.Documents != nil {
+		t.Errorf("Documents = %v, want nil when the folder carries none", got.Documents)
 	}
 }
 

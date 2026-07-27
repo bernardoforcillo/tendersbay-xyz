@@ -13,6 +13,7 @@ type Notice struct {
 	NoticeType                   string              `json:"notice-type"`
 	ProcedureType                string              `json:"procedure-type"`
 	NoticeTitle                  map[string]string   `json:"notice-title"`
+	DescriptionProc              map[string]string   `json:"description-proc"`
 	BuyerName                    map[string][]string `json:"buyer-name"`
 	OrganisationIdentifierBuyer  []string            `json:"organisation-identifier-buyer"`
 	OfficialLanguage             []string            `json:"official-language"`
