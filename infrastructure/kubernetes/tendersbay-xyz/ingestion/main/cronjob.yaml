@@ -37,7 +37,7 @@ spec:
               # Image published by .github/workflows/ci-ingestion.yml; tag
               # rewritten by Flux image automation once the first build
               # lands (see update.yaml). :latest is a bootstrap placeholder.
-              image: bernardoforcillo/tendersbay-ingestion:20260727211911-df4acfafdc8734e901bd7d7e848dc052635c850d@sha256:14de204f9d457a0990248c40204ca96d6c762b8bb8adff2e4f61fa9a6a24d0bb # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
+              image: bernardoforcillo/tendersbay-ingestion:20260728081340-59aa0f822bf66c49ae8ab3fa32f57c98b141406f@sha256:074203d5b523b9c1aff52189aff5cc1da57bcb35d2b675cfb8f4292c42912530 # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
