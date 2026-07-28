@@ -406,7 +406,19 @@
       "deadline7": "Li jmiss 7 jiem",
       "deadline30": "Li jmiss 30 jum",
       "deadline90": "Li jmiss 90 jum",
-      "clear": "Ħassar kollox"
+      "clear": "Ħassar kollox",
+      "sort": "Issortja skont",
+      "sorts": {
+        "relevance": "Rilevanza",
+        "deadline": "Skadenza",
+        "published": "L-aktar reċenti",
+        "value": "Valur"
+      },
+      "valueMin": "Valur minimu",
+      "valueMax": "Valur massimu",
+      "valuePlaceholder": "eż. 100000",
+      "buyer": "Awtorità kontraenti",
+      "buyerPlaceholder": "Isem l-awtorità"
     },
     "detail": {
       "overview": "Ħarsa ġenerali",
@@ -452,6 +464,16 @@
       "reasonValueAbove": "Fuq il-firxa ta' valur tiegħek",
       "reasonRegion": "Fir-reġjun tiegħek",
       "reasonProcedure": "Jaqbel mat-tip ta' proċedura tiegħek"
+    },
+    "degraded": "Parti mit-tfittxija mhijiex disponibbli, għalhekk dawn ir-riżultati jistgħu jkunu inkompleti.",
+    "applied": {
+      "label": "Maqru mit-tfittxija tiegħek:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "sa {{max}}",
+      "valueMin": "minn {{min}}",
+      "deadlineUntil": "tagħlaq sa {{date}}",
+      "undo": "Naddaf"
     }
   },
   "today": {

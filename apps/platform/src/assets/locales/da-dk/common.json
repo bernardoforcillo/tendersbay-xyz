@@ -402,7 +402,19 @@
       "deadline7": "Næste 7 dage",
       "deadline30": "Næste 30 dage",
       "deadline90": "Næste 90 dage",
-      "clear": "Ryd alt"
+      "clear": "Ryd alt",
+      "sort": "Sortér efter",
+      "sorts": {
+        "relevance": "Relevans",
+        "deadline": "Frist",
+        "published": "Nyeste",
+        "value": "Værdi"
+      },
+      "valueMin": "Mindste værdi",
+      "valueMax": "Største værdi",
+      "valuePlaceholder": "f.eks. 100000",
+      "buyer": "Ordregiver",
+      "buyerPlaceholder": "Ordregiverens navn"
     },
     "detail": {
       "overview": "Oversigt",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Over dit værdiinterval",
       "reasonRegion": "I din region",
       "reasonProcedure": "Matcher din udbudsform"
+    },
+    "degraded": "En del af søgningen er utilgængelig, så disse resultater kan være ufuldstændige.",
+    "applied": {
+      "label": "Læst fra din søgning:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "op til {{max}}",
+      "valueMin": "fra {{min}}",
+      "deadlineUntil": "lukker senest {{date}}",
+      "undo": "Ryd"
     }
   },
   "today": {

@@ -412,7 +412,19 @@
       "deadline7": "An chéad 7 lá eile",
       "deadline30": "An chéad 30 lá eile",
       "deadline90": "An chéad 90 lá eile",
-      "clear": "Glan gach rud"
+      "clear": "Glan gach rud",
+      "sort": "Sórtáil de réir",
+      "sorts": {
+        "relevance": "Ábharthacht",
+        "deadline": "Spriocdháta",
+        "published": "Is déanaí",
+        "value": "Luach"
+      },
+      "valueMin": "Luach íosta",
+      "valueMax": "Luach uasta",
+      "valuePlaceholder": "m.sh. 100000",
+      "buyer": "Údarás conartha",
+      "buyerPlaceholder": "Ainm an údaráis"
     },
     "detail": {
       "overview": "Forbhreathnú",
@@ -458,6 +470,16 @@
       "reasonValueAbove": "Os cionn do raoin luacha",
       "reasonRegion": "I do réigiún",
       "reasonProcedure": "Ag teacht le do chineál nóis imeachta"
+    },
+    "degraded": "Níl cuid den chuardach ar fáil, mar sin d'fhéadfadh na torthaí seo a bheith neamhiomlán.",
+    "applied": {
+      "label": "Léite ó do chuardach:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "suas go {{max}}",
+      "valueMin": "ó {{min}}",
+      "deadlineUntil": "dúnann faoi {{date}}",
+      "undo": "Glan"
     }
   },
   "today": {

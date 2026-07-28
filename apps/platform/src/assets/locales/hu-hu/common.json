@@ -406,7 +406,19 @@
       "deadline7": "Következő 7 nap",
       "deadline30": "Következő 30 nap",
       "deadline90": "Következő 90 nap",
-      "clear": "Összes törlése"
+      "clear": "Összes törlése",
+      "sort": "Rendezés",
+      "sorts": {
+        "relevance": "Relevancia",
+        "deadline": "Határidő",
+        "published": "Legújabb",
+        "value": "Érték"
+      },
+      "valueMin": "Minimális érték",
+      "valueMax": "Maximális érték",
+      "valuePlaceholder": "pl. 100000",
+      "buyer": "Ajánlatkérő",
+      "buyerPlaceholder": "Az ajánlatkérő neve"
     },
     "detail": {
       "overview": "Áttekintés",
@@ -452,6 +464,16 @@
       "reasonValueAbove": "Az Ön értéksávja felett",
       "reasonRegion": "Az Ön régiójában",
       "reasonProcedure": "Megfelel az Ön eljárástípusának"
+    },
+    "degraded": "A keresés egy része nem érhető el, ezért ezek az eredmények hiányosak lehetnek.",
+    "applied": {
+      "label": "A keresésből kiolvasva:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "legfeljebb {{max}}",
+      "valueMin": "legalább {{min}}",
+      "deadlineUntil": "határidő: {{date}}",
+      "undo": "Törlés"
     }
   },
   "today": {

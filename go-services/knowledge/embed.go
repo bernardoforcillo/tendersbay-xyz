@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -20,13 +21,83 @@ import (
 type Embedder struct {
 	baseURL string
 	model   string
+	prompt  promptStyle
 	http    *http.Client
 }
 
 // NewEmbedder returns an Embedder pointed at baseURL (e.g.
-// "http://localhost:11434") using model (e.g. "embeddinggemma:latest").
+// "http://localhost:11434") using model (e.g. "embeddinggemma:latest"). The
+// model name also selects the task-prompt style — see promptStyleFor.
 func NewEmbedder(baseURL, model string) *Embedder {
-	return &Embedder{baseURL: baseURL, model: model, http: &http.Client{Timeout: 30 * time.Second}}
+	return &Embedder{
+		baseURL: baseURL,
+		model:   model,
+		prompt:  promptStyleFor(model),
+		http:    &http.Client{Timeout: 30 * time.Second},
+	}
+}
+
+// promptStyle names the asymmetric task-prompt convention an embedding model
+// was trained with. Retrieval models are trained on (query, document) pairs
+// where each side carries a distinct instruction prefix; feeding both sides
+// bare text — as this package did before — projects them into different
+// regions of the vector space and measurably degrades recall. The prefix is
+// not cosmetic, it is part of the model's input contract.
+type promptStyle int
+
+const (
+	// promptNone sends text through unchanged, for models with no documented
+	// task prefix (and as the safe default for an unrecognised model: a
+	// wrong prefix is worse than none).
+	promptNone promptStyle = iota
+	// promptGemma is EmbeddingGemma's convention.
+	promptGemma
+	// promptNomic is the nomic-embed-text family's convention.
+	promptNomic
+)
+
+// promptStyleFor picks the prompt convention for an Ollama model tag
+// ("embeddinggemma:latest", "nomic-embed-text:v1.5", …). An unrecognised
+// model deliberately gets promptNone rather than a guess.
+func promptStyleFor(model string) promptStyle {
+	name := strings.ToLower(model)
+	switch {
+	case strings.Contains(name, "embeddinggemma"):
+		return promptGemma
+	case strings.Contains(name, "nomic-embed"):
+		return promptNomic
+	default:
+		return promptNone
+	}
+}
+
+// queryPrompt wraps a user's search text in the model's query-side prefix.
+func (e *Embedder) queryPrompt(query string) string {
+	switch e.prompt {
+	case promptGemma:
+		return "task: search result | query: " + query
+	case promptNomic:
+		return "search_query: " + query
+	default:
+		return query
+	}
+}
+
+// documentPrompt wraps indexed text in the model's document-side prefix.
+// EmbeddingGemma's document format carries a title slot, and expects the
+// literal "none" when there isn't one — an empty title is not the same input.
+func (e *Embedder) documentPrompt(title, text string) string {
+	switch e.prompt {
+	case promptGemma:
+		if title == "" {
+			title = "none"
+		}
+		return "title: " + title + " | text: " + text
+	case promptNomic:
+		return "search_document: " + text
+	default:
+		return text
+	}
 }
 
 type embedRequest struct {
@@ -38,7 +109,24 @@ type embedResponse struct {
 	Embeddings [][]float32 `json:"embeddings"`
 }
 
-// Embed returns the embedding vector for text.
+// EmbedQuery returns the embedding vector for a user's search text, wrapped
+// in the model's query-side task prompt. Use this for anything typed by a
+// person; use EmbedDocument for anything being indexed.
+func (e *Embedder) EmbedQuery(ctx context.Context, query string) ([]float32, error) {
+	return e.Embed(ctx, e.queryPrompt(query))
+}
+
+// EmbedDocument returns the embedding vector for indexed content, wrapped in
+// the model's document-side task prompt. Pass an empty title when the chunk
+// has none.
+func (e *Embedder) EmbedDocument(ctx context.Context, title, text string) ([]float32, error) {
+	return e.Embed(ctx, e.documentPrompt(title, text))
+}
+
+// Embed returns the embedding vector for text exactly as given, applying no
+// task prompt. It is the raw transport primitive behind EmbedQuery and
+// EmbedDocument — prefer those, so query and document sides stay on the
+// convention the model was trained with.
 func (e *Embedder) Embed(ctx context.Context, text string) ([]float32, error) {
 	payload, err := json.Marshal(embedRequest{Model: e.model, Input: text})
 	if err != nil {

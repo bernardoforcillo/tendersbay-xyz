@@ -159,3 +159,42 @@ describe('TenderResultCard', () => {
     });
   });
 });
+
+describe('TenderResultCard — match snippet', () => {
+  it('marks the matched terms and keeps the surrounding text', () => {
+    renderWithI18n(
+      <TenderResultCard
+        tender={fixture()}
+        snippet="Supply of <mark>road</mark> maintenance for the <mark>city</mark>"
+      />,
+    );
+
+    const snippet = screen.getByTestId('tender-snippet');
+    expect(snippet).toHaveTextContent('Supply of road maintenance for the city');
+    expect(snippet.querySelectorAll('mark')).toHaveLength(2);
+    expect(snippet.querySelectorAll('mark')[0]).toHaveTextContent('road');
+  });
+
+  // The snippet carries raw tender copy from an external source around the
+  // markers. Rendering it as HTML would turn a notice title containing markup
+  // into live DOM, so everything except the markers must stay text.
+  it('renders markup in the surrounding text as literal text', () => {
+    renderWithI18n(
+      <TenderResultCard
+        tender={fixture()}
+        snippet='<img src=x onerror="alert(1)"> repair of <mark>roads</mark>'
+      />,
+    );
+
+    const snippet = screen.getByTestId('tender-snippet');
+    expect(snippet.querySelector('img')).toBeNull();
+    expect(snippet).toHaveTextContent('<img src=x onerror="alert(1)">');
+    // The real markers still work — escaping the text must not disable them.
+    expect(snippet.querySelectorAll('mark')).toHaveLength(1);
+  });
+
+  it('renders no snippet element when the server sent none', () => {
+    renderWithI18n(<TenderResultCard tender={fixture()} />);
+    expect(screen.queryByTestId('tender-snippet')).toBeNull();
+  });
+});

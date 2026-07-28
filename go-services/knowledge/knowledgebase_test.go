@@ -59,6 +59,10 @@ func alwaysExistingCollectionHandler(t *testing.T, onUpsert func(body map[string
 			}
 			w.Header().Set("Content-Type", "application/json")
 			_, _ = w.Write([]byte(`{"result":{"operation_id":1,"status":"completed"},"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPut && r.URL.Path == "/collections/tenders/index":
+			// Payload field indexes, created best-effort on every boot.
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"acknowledged"},"status":"ok","time":0.01}`))
 		default:
 			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -181,6 +185,10 @@ func TestSearch_ReconstructsChunksFromPayload(t *testing.T) {
 			_ = json.NewDecoder(r.Body).Decode(&gotSearchBody)
 			w.Header().Set("Content-Type", "application/json")
 			_, _ = w.Write([]byte(`{"result":[{"id":"42_chunk_0","score":0.87,"payload":{"content":"Lavori stradali","tender_id":"42","chunk_index":0,"source":"ted"}}],"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPut && r.URL.Path == "/collections/tenders/index":
+			// Payload field indexes, created best-effort on every boot.
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"acknowledged"},"status":"ok","time":0.01}`))
 		default:
 			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -225,6 +233,10 @@ func TestSearchWithScores_IncludesRelevanceScore(t *testing.T) {
 			_ = json.NewDecoder(r.Body).Decode(&gotSearchBody)
 			w.Header().Set("Content-Type", "application/json")
 			_, _ = w.Write([]byte(`{"result":[{"id":"42_chunk_0","score":0.87,"payload":{"content":"Lavori stradali","tender_id":"42","chunk_index":0,"source":"ted"}}],"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPut && r.URL.Path == "/collections/tenders/index":
+			// Payload field indexes, created best-effort on every boot.
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"acknowledged"},"status":"ok","time":0.01}`))
 		default:
 			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -261,6 +273,10 @@ func TestSearch_DefaultsLimitWhenZero(t *testing.T) {
 			_ = json.NewDecoder(r.Body).Decode(&gotSearchBody)
 			w.Header().Set("Content-Type", "application/json")
 			_, _ = w.Write([]byte(`{"result":[],"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPut && r.URL.Path == "/collections/tenders/index":
+			// Payload field indexes, created best-effort on every boot.
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"acknowledged"},"status":"ok","time":0.01}`))
 		default:
 			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
 		}
@@ -288,6 +304,10 @@ func TestDelete_FiltersByTenderID(t *testing.T) {
 			_ = json.NewDecoder(r.Body).Decode(&gotDeleteBody)
 			w.Header().Set("Content-Type", "application/json")
 			_, _ = w.Write([]byte(`{"result":{"operation_id":1,"status":"completed"},"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPut && r.URL.Path == "/collections/tenders/index":
+			// Payload field indexes, created best-effort on every boot.
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"acknowledged"},"status":"ok","time":0.01}`))
 		default:
 			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
 		}
@@ -329,6 +349,10 @@ func TestList_GroupsChunksByTenderID(t *testing.T) {
 				{"id":"42_chunk_1","payload":{"content":"parte 2","tender_id":"42"}},
 				{"id":"7_chunk_0","payload":{"content":"altro tender","tender_id":"7"}}
 			],"next_page_offset":null},"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPut && r.URL.Path == "/collections/tenders/index":
+			// Payload field indexes, created best-effort on every boot.
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"acknowledged"},"status":"ok","time":0.01}`))
 		default:
 			t.Errorf("unexpected qdrant request: %s %s", r.Method, r.URL.Path)
 		}

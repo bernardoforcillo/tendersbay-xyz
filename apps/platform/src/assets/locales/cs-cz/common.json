@@ -404,7 +404,19 @@
       "deadline7": "Příštích 7 dní",
       "deadline30": "Příštích 30 dní",
       "deadline90": "Příštích 90 dní",
-      "clear": "Vymazat vše"
+      "clear": "Vymazat vše",
+      "sort": "Seřadit podle",
+      "sorts": {
+        "relevance": "Relevance",
+        "deadline": "Lhůta",
+        "published": "Nejnovější",
+        "value": "Hodnota"
+      },
+      "valueMin": "Minimální hodnota",
+      "valueMax": "Maximální hodnota",
+      "valuePlaceholder": "např. 100000",
+      "buyer": "Zadavatel",
+      "buyerPlaceholder": "Název zadavatele"
     },
     "detail": {
       "overview": "Přehled",
@@ -450,6 +462,16 @@
       "reasonValueAbove": "Nad vaším hodnotovým rozpětím",
       "reasonRegion": "Ve vašem regionu",
       "reasonProcedure": "Odpovídá vašemu typu řízení"
+    },
+    "degraded": "Část vyhledávání není dostupná, takže tyto výsledky mohou být neúplné.",
+    "applied": {
+      "label": "Načteno z dotazu:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "do {{max}}",
+      "valueMin": "od {{min}}",
+      "deadlineUntil": "uzávěrka do {{date}}",
+      "undo": "Vymazat"
     }
   },
   "today": {

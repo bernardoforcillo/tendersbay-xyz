@@ -155,15 +155,30 @@ func main() {
 	)
 
 	// Tender search — Qdrant/Ollama/Redis unreachable at startup is logged,
-	// not fatal: search degrades to Postgres-only filtering via
-	// knowledgeBaseAdapter's nil handling (for Qdrant/Ollama) or fails
-	// rate-limit checks via unavailableRateLimiter (for Redis) — neither
-	// blocks the whole service from starting over an optional dependency.
+	// not fatal: with the vector store down, knowledgeBaseAdapter's nil
+	// handling makes every semantic call error, and hybrid retrieval keeps
+	// answering queries from the lexical index alone (reporting the
+	// degradation via SearchOutput.Mode). Redis down fails rate-limit checks
+	// closed via unavailableRateLimiter. Neither blocks the whole service from
+	// starting over an optional dependency.
 	// MOVED above the agent block: agentSvc's search_tenders tool needs
 	// tenderSvc as its TenderSearcher.
 	kb, kbErr := knowledge.NewKnowledgeBase(ctx, cfg.QdrantURL, cfg.OllamaBaseURL, cfg.EmbeddingModel)
 	if kbErr != nil {
 		slog.Warn("failed to connect to knowledge base, semantic search will be degraded", "error", kbErr)
+	}
+
+	// Query embeddings are memoised in Redis. Embedding is an HTTP round trip
+	// to Ollama on the critical path of every search — and of every page of
+	// the same search. Keyed by embedding model, so switching models can never
+	// serve a vector computed by the previous one. Optional: a failure here
+	// only costs latency, so it's a warning, not a startup failure.
+	var embeddingCache tender.EmbeddingCache
+	if cache, cacheErr := redis.NewEmbeddingCache(cfg.RedisURL, cfg.EmbeddingModel, embeddingCacheTTL); cacheErr != nil {
+		slog.Warn("failed to build the embedding cache, every search will re-embed its query", "error", cacheErr)
+	} else {
+		embeddingCache = cache
+		defer cache.Close()
 	}
 
 	tenderRepo := postgres.NewTenderRepo(db)
@@ -178,7 +193,13 @@ func main() {
 			GetTenderTier: tender.Tier{MaxResults: 20, RateLimit: 600, RateWindow: time.Minute},
 			// Uncalibrated defaults — no conversion data exists pre-launch
 			// (see the design spec's Risks section). Retune here, no code change.
+			// NOTE: RelevanceScore is now the normalised hybrid-fusion score
+			// (1.0 = top of both retrievers), not a raw cosine similarity —
+			// these thresholds are read on that scale. See tender.Service.fuse.
 			Fit: tender.FitThresholds{RelevanceHigh: 0.75, RelevanceLow: 0.4, MinDeadlineDays: 10, UrgentDeadlineDays: 5},
+			// Hybrid ranking knobs, tunable here without touching the ranking
+			// logic. Uncalibrated like Fit above — there is no click data yet.
+			Ranking: tender.DefaultRanking(),
 			// Statutory EU procurement thresholds (2026-2027, EC), minor units.
 			// A biennial revision is a one-line change here — never in the classifier.
 			EU: tender.EUThreshold{
@@ -187,7 +208,7 @@ func main() {
 				SuppliesSubCentralMinor: 21600000,  // €216,000
 			},
 		},
-	)
+	).WithEmbeddingCache(embeddingCache)
 	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo)
 
 	// Bid lifecycle (workbench-bando-hub) — consumes workbenchSvc for access
@@ -267,6 +288,12 @@ func main() {
 	}
 }
 
+// embeddingCacheTTL bounds how long a memoised query embedding lives. Long
+// enough that paging through one search, and repeats of a popular query,
+// never re-embed; short enough that the cache's memory stays proportional to
+// recent traffic rather than growing with every query ever typed.
+const embeddingCacheTTL = time.Hour
+
 // knowledgeBaseAdapter converts *knowledge.KnowledgeBase's
 // []knowledge.SearchResult into the []tender.ScoredChunk shape
 // tender.KnowledgeBase expects, and turns a nil KnowledgeBase (Qdrant/Ollama
@@ -277,11 +304,18 @@ type knowledgeBaseAdapter struct {
 	kb *knowledge.KnowledgeBase
 }
 
-func (a knowledgeBaseAdapter) SearchWithScores(ctx context.Context, query string, limit int) ([]tender.ScoredChunk, error) {
+func (a knowledgeBaseAdapter) EmbedQuery(ctx context.Context, query string) ([]float32, error) {
 	if a.kb == nil {
 		return nil, errors.New("knowledge base unavailable")
 	}
-	results, err := a.kb.SearchWithScores(ctx, query, limit)
+	return a.kb.EmbedQuery(ctx, query)
+}
+
+func (a knowledgeBaseAdapter) SearchByVector(ctx context.Context, vec []float32, limit int, filters tender.Filters) ([]tender.ScoredChunk, error) {
+	if a.kb == nil {
+		return nil, errors.New("knowledge base unavailable")
+	}
+	results, err := a.kb.SearchByVector(ctx, vec, limit, vectorFilter(filters))
 	if err != nil {
 		return nil, err
 	}
@@ -290,6 +324,24 @@ func (a knowledgeBaseAdapter) SearchWithScores(ctx context.Context, query string
 		out[i] = tender.ScoredChunk{DocID: r.DocID, Score: r.Score}
 	}
 	return out, nil
+}
+
+// vectorFilter maps the domain's filters onto the vector store's payload
+// filter. Buyer is deliberately not carried across: buyer_name is not in the
+// point payload, and this filter is only ever an optimisation — dropping a
+// constraint here costs some wasted candidates, whereas approximating one
+// would hide matching tenders. Postgres applies the full filter regardless.
+func vectorFilter(f tender.Filters) knowledge.SearchFilter {
+	return knowledge.SearchFilter{
+		Countries:    f.Countries,
+		Statuses:     f.Statuses,
+		CPVPrefixes:  f.CPVPrefixes,
+		NUTSPrefixes: f.NUTSPrefixes,
+		ValueMin:     f.ValueMin,
+		ValueMax:     f.ValueMax,
+		DeadlineFrom: f.DeadlineFrom,
+		DeadlineTo:   f.DeadlineTo,
+	}
 }
 
 func (a knowledgeBaseAdapter) RelatedByDocID(ctx context.Context, docID string, limit int) ([]tender.ScoredChunk, error) {

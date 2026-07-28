@@ -1,0 +1,20 @@
+-- Forces a full re-index of the vector collection. Two changes landing with
+-- this migration make every stored embedding and every stored payload stale
+-- at once, and both are only applied at Ingest time:
+--
+--   1. embeddings are now computed with EmbeddingGemma's required task
+--      prompts (see go-services/knowledge/embed.go). Without them, queries
+--      and documents are projected into different regions of the vector
+--      space, which is the single largest quality loss in the old pipeline;
+--   2. Qdrant point payloads now carry country / cpv / cpv_secondary /
+--      status / deadline / value / published_at, so a filtered search can
+--      pre-filter in Qdrant instead of retrieving 250 unfiltered candidates
+--      and throwing most of them away in Postgres.
+--
+-- Clearing indexed_at is exactly what the indexer already treats as "needs
+-- indexing" (services/ingestion/internal/adapter/index), so the backlog
+-- drains at batchSize (200) tenders per hourly cycle rather than in one
+-- burst against Ollama. Search keeps serving the old points meanwhile:
+-- point IDs are deterministic (knowledge.pointID), so each tender's points
+-- are overwritten in place and no tender is ever unsearchable mid-drain.
+UPDATE tenders.ingested_tenders SET indexed_at = NULL;

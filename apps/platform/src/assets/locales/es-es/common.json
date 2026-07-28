@@ -402,7 +402,19 @@
       "deadline7": "Próximos 7 días",
       "deadline30": "Próximos 30 días",
       "deadline90": "Próximos 90 días",
-      "clear": "Borrar todo"
+      "clear": "Borrar todo",
+      "sort": "Ordenar por",
+      "sorts": {
+        "relevance": "Relevancia",
+        "deadline": "Plazo",
+        "published": "Más recientes",
+        "value": "Importe"
+      },
+      "valueMin": "Importe mínimo",
+      "valueMax": "Importe máximo",
+      "valuePlaceholder": "p. ej. 100000",
+      "buyer": "Órgano de contratación",
+      "buyerPlaceholder": "Nombre del organismo"
     },
     "detail": {
       "overview": "Resumen",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Por encima de tu rango de valor",
       "reasonRegion": "En tu región",
       "reasonProcedure": "Coincide con tu tipo de procedimiento"
+    },
+    "degraded": "Parte de la búsqueda no está disponible, por lo que estos resultados pueden estar incompletos.",
+    "applied": {
+      "label": "Leído de tu búsqueda:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "hasta {{max}}",
+      "valueMin": "desde {{min}}",
+      "deadlineUntil": "cierra antes del {{date}}",
+      "undo": "Borrar"
     }
   },
   "today": {

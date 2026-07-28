@@ -408,7 +408,19 @@
       "deadline7": "Najbližších 7 dní",
       "deadline30": "Najbližších 30 dní",
       "deadline90": "Najbližších 90 dní",
-      "clear": "Vymazať všetko"
+      "clear": "Vymazať všetko",
+      "sort": "Zoradiť podľa",
+      "sorts": {
+        "relevance": "Relevancia",
+        "deadline": "Lehota",
+        "published": "Najnovšie",
+        "value": "Hodnota"
+      },
+      "valueMin": "Minimálna hodnota",
+      "valueMax": "Maximálna hodnota",
+      "valuePlaceholder": "napr. 100000",
+      "buyer": "Obstarávateľ",
+      "buyerPlaceholder": "Názov obstarávateľa"
     },
     "detail": {
       "overview": "Prehľad",
@@ -454,6 +466,16 @@
       "reasonValueAbove": "Nad vaším hodnotovým rozpätím",
       "reasonRegion": "Vo vašom regióne",
       "reasonProcedure": "Zodpovedá vášmu typu postupu"
+    },
+    "degraded": "Časť vyhľadávania nie je dostupná, preto môžu byť tieto výsledky neúplné.",
+    "applied": {
+      "label": "Načítané z dopytu:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "do {{max}}",
+      "valueMin": "od {{min}}",
+      "deadlineUntil": "uzávierka do {{date}}",
+      "undo": "Vymazať"
     }
   },
   "today": {

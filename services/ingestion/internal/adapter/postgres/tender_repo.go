@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/bernardoforcillo/drops/pg"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/tender"
@@ -31,6 +32,15 @@ type UnindexedTender struct {
 	Source        string
 	SourceRef     string
 	Documents     []UnindexedDocument
+
+	// Facets below are not embedded as text — they become the vector store's
+	// filterable point payload. Nil means the column is NULL, which a range
+	// filter must treat as "excluded", not as zero.
+	CPVSecondary []string
+	NUTS         string
+	Value        *int64
+	PublishedAt  *time.Time
+	Deadline     *time.Time
 }
 
 // UnindexedDocument is one document attached to an UnindexedTender.
@@ -127,8 +137,15 @@ SELECT content FROM tenders.ingested_tender_document_parts
 WHERE document_id = $1 ORDER BY index
 `
 
+// The trailing columns feed the vector store's payload rather than the
+// embedded text, so a filtered search can constrain the vector search itself
+// instead of over-fetching and discarding (see knowledge.Attributes).
+// cpv_secondary crosses the database/sql boundary as a comma-joined string
+// for the same reason it's written as a text literal in upsertTenderSQL —
+// database/sql has no native text[] support without a driver-specific wrapper.
 const selectUnindexedTendersSQL = `
-SELECT id, title, description, buyer_name, cpv, procedure_type, country, status, source, source_ref
+SELECT id, title, description, buyer_name, cpv, procedure_type, country, status, source, source_ref,
+       array_to_string(cpv_secondary, ','), nuts, value, published_at, deadline
 FROM tenders.ingested_tenders
 WHERE indexed_at IS NULL
 ORDER BY id
@@ -156,6 +173,24 @@ func pgTextArray(vals []string) string {
 		quoted[i] = `"` + escaped + `"`
 	}
 	return "{" + strings.Join(quoted, ",") + "}"
+}
+
+// splitTextArray is pgTextArray's read-side counterpart: it turns the
+// comma-joined text[] selectUnindexedTendersSQL produces via array_to_string
+// back into a slice, dropping empties so an empty array yields nil rather than
+// a one-element slice holding "".
+func splitTextArray(joined string) []string {
+	if joined == "" {
+		return nil
+	}
+	parts := strings.Split(joined, ",")
+	out := make([]string, 0, len(parts))
+	for _, p := range parts {
+		if p = strings.TrimSpace(p); p != "" {
+			out = append(out, p)
+		}
+	}
+	return out
 }
 
 // Save upserts each tender (and its documents/lots) in its own transaction,
@@ -280,12 +315,17 @@ func (r *TenderRepo) ListUnindexed(ctx context.Context, limit int) ([]UnindexedT
 	}
 	var tenders []UnindexedTender
 	for rows.Next() {
-		var t UnindexedTender
+		var (
+			t            UnindexedTender
+			cpvSecondary string
+		)
 		if err := rows.Scan(&t.ID, &t.Title, &t.Description, &t.BuyerName, &t.CPV, &t.ProcedureType,
-			&t.Country, &t.Status, &t.Source, &t.SourceRef); err != nil {
+			&t.Country, &t.Status, &t.Source, &t.SourceRef,
+			&cpvSecondary, &t.NUTS, &t.Value, &t.PublishedAt, &t.Deadline); err != nil {
 			rows.Close()
 			return nil, fmt.Errorf("postgres: scan unindexed tender: %w", err)
 		}
+		t.CPVSecondary = splitTextArray(cpvSecondary)
 		tenders = append(tenders, t)
 	}
 	if err := rows.Err(); err != nil {

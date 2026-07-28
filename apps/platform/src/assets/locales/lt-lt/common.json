@@ -408,7 +408,19 @@
       "deadline7": "Artimiausios 7 dienos",
       "deadline30": "Artimiausios 30 dienų",
       "deadline90": "Artimiausios 90 dienų",
-      "clear": "Išvalyti viską"
+      "clear": "Išvalyti viską",
+      "sort": "Rikiuoti pagal",
+      "sorts": {
+        "relevance": "Atitiktis",
+        "deadline": "Terminas",
+        "published": "Naujausi",
+        "value": "Vertė"
+      },
+      "valueMin": "Mažiausia vertė",
+      "valueMax": "Didžiausia vertė",
+      "valuePlaceholder": "pvz., 100000",
+      "buyer": "Perkančioji organizacija",
+      "buyerPlaceholder": "Organizacijos pavadinimas"
     },
     "detail": {
       "overview": "Apžvalga",
@@ -454,6 +466,16 @@
       "reasonValueAbove": "Aukščiau jūsų vertės ribų",
       "reasonRegion": "Jūsų regione",
       "reasonProcedure": "Atitinka jūsų procedūros tipą"
+    },
+    "degraded": "Dalis paieškos nepasiekiama, todėl šie rezultatai gali būti neišsamūs.",
+    "applied": {
+      "label": "Perskaityta iš užklausos:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "iki {{max}}",
+      "valueMin": "nuo {{min}}",
+      "deadlineUntil": "baigiasi iki {{date}}",
+      "undo": "Išvalyti"
     }
   },
   "today": {
