@@ -178,7 +178,13 @@ func main() {
 			GetTenderTier: tender.Tier{MaxResults: 20, RateLimit: 600, RateWindow: time.Minute},
 			// Uncalibrated defaults — no conversion data exists pre-launch
 			// (see the design spec's Risks section). Retune here, no code change.
+			// NOTE: RelevanceScore is now the normalised hybrid-fusion score
+			// (1.0 = top of both retrievers), not a raw cosine similarity —
+			// these thresholds are read on that scale. See tender.Service.fuse.
 			Fit: tender.FitThresholds{RelevanceHigh: 0.75, RelevanceLow: 0.4, MinDeadlineDays: 10, UrgentDeadlineDays: 5},
+			// Hybrid ranking knobs, tunable here without touching the ranking
+			// logic. Uncalibrated like Fit above — there is no click data yet.
+			Ranking: tender.DefaultRanking(),
 			// Statutory EU procurement thresholds (2026-2027, EC), minor units.
 			// A biennial revision is a one-line change here — never in the classifier.
 			EU: tender.EUThreshold{
@@ -277,11 +283,11 @@ type knowledgeBaseAdapter struct {
 	kb *knowledge.KnowledgeBase
 }
 
-func (a knowledgeBaseAdapter) SearchWithScores(ctx context.Context, query string, limit int) ([]tender.ScoredChunk, error) {
+func (a knowledgeBaseAdapter) SearchFiltered(ctx context.Context, query string, limit int, filters tender.Filters) ([]tender.ScoredChunk, error) {
 	if a.kb == nil {
 		return nil, errors.New("knowledge base unavailable")
 	}
-	results, err := a.kb.SearchWithScores(ctx, query, limit)
+	results, err := a.kb.SearchFiltered(ctx, query, limit, vectorFilter(filters))
 	if err != nil {
 		return nil, err
 	}
@@ -290,6 +296,24 @@ func (a knowledgeBaseAdapter) SearchWithScores(ctx context.Context, query string
 		out[i] = tender.ScoredChunk{DocID: r.DocID, Score: r.Score}
 	}
 	return out, nil
+}
+
+// vectorFilter maps the domain's filters onto the vector store's payload
+// filter. Buyer is deliberately not carried across: buyer_name is not in the
+// point payload, and this filter is only ever an optimisation — dropping a
+// constraint here costs some wasted candidates, whereas approximating one
+// would hide matching tenders. Postgres applies the full filter regardless.
+func vectorFilter(f tender.Filters) knowledge.SearchFilter {
+	return knowledge.SearchFilter{
+		Countries:    f.Countries,
+		Statuses:     f.Statuses,
+		CPVPrefixes:  f.CPVPrefixes,
+		NUTSPrefixes: f.NUTSPrefixes,
+		ValueMin:     f.ValueMin,
+		ValueMax:     f.ValueMax,
+		DeadlineFrom: f.DeadlineFrom,
+		DeadlineTo:   f.DeadlineTo,
+	}
 }
 
 func (a knowledgeBaseAdapter) RelatedByDocID(ctx context.Context, docID string, limit int) ([]tender.ScoredChunk, error) {

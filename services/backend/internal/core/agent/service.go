@@ -501,8 +501,15 @@ func (s *Service) runTurn(
 	searchTenders := func(query, country, cpv, status string) ([]tender.ScoredTender, error) {
 		curUserID, _, curCtx, _, curSendTenderResults, _, _ := ts.snapshot()
 		out, err := s.tenders.Search(curCtx, tender.SearchParams{
-			Query:         query,
-			Filters:       tender.Filters{Country: country, CPV: cpv, Status: status},
+			Query: query,
+			// The tool exposes one value per facet; Filters takes lists, so
+			// each is wrapped. SingleFilter drops the empty ones — an unset
+			// tool argument must contribute no predicate at all.
+			Filters: tender.Filters{
+				Countries:   tender.SingleFilter(country),
+				CPVPrefixes: tender.SingleFilter(cpv),
+				Statuses:    tender.SingleFilter(status),
+			},
 			Limit:         searchTendersToolLimit,
 			Authenticated: true,
 			RateLimitKey:  curUserID,

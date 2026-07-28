@@ -248,6 +248,21 @@ func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, limit, _
 	return f.results[:end], nil
 }
 
+// LexicalSearch returns the same rows SearchTenders does, so the hybrid path
+// has something to fuse in these tests — they exercise fit annotation, not
+// retrieval.
+func (f *recommendFakeRepo) LexicalSearch(ctx context.Context, _ string, _ Filters, limit int) ([]ScoredTender, error) {
+	tenders, err := f.SearchTenders(ctx, Filters{}, limit, 0)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]ScoredTender, len(tenders))
+	for i, t := range tenders {
+		out[i] = ScoredTender{Tender: t, RelevanceScore: 1}
+	}
+	return out, nil
+}
+
 func (f *recommendFakeRepo) EnrichTenders(context.Context, []string, Filters) ([]Tender, error) {
 	return nil, nil
 }

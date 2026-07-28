@@ -3,10 +3,13 @@ package index_test
 import (
 	"context"
 	"errors"
+	"reflect"
 	"testing"
+	"time"
 
 	"github.com/buildwithgo/berrygem/rag"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/index"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/postgres"
 )
@@ -48,14 +51,16 @@ func (f *fakeRepo) MarkIndexed(_ context.Context, tenderID int64) error {
 
 type fakeKnowledgeBase struct {
 	ingested []*rag.Document
+	attrs    []knowledge.Attributes
 	err      error
 }
 
-func (f *fakeKnowledgeBase) Ingest(_ context.Context, doc *rag.Document) error {
+func (f *fakeKnowledgeBase) IngestWithAttributes(_ context.Context, doc *rag.Document, attrs knowledge.Attributes) error {
 	if f.err != nil {
 		return f.err
 	}
 	f.ingested = append(f.ingested, doc)
+	f.attrs = append(f.attrs, attrs)
 	return nil
 }
 
@@ -107,6 +112,61 @@ func TestRunOnce_IndexesTenderWithSummaryOnly(t *testing.T) {
 	}
 	if len(repo.indexedIDs) != 1 || repo.indexedIDs[0] != 42 {
 		t.Errorf("repo.indexedIDs = %v, want [42]", repo.indexedIDs)
+	}
+}
+
+// The facets travel alongside the embedded text, not inside it: they are what
+// the search API filters the vector store on, so a column dropped here becomes
+// a filter that silently can't be pushed down.
+func TestRunOnce_ProjectsFilterableAttributes(t *testing.T) {
+	value := int64(500000)
+	deadline := time.Date(2026, 9, 1, 12, 0, 0, 0, time.UTC)
+	published := time.Date(2026, 7, 1, 8, 0, 0, 0, time.UTC)
+	repo := &fakeRepo{unindexed: []postgres.UnindexedTender{
+		{
+			ID: 42, Title: "Lavori stradali", BuyerName: "Comune di Roma",
+			CPV: "45233220", CPVSecondary: []string{"45233120"}, NUTS: "ITI43",
+			Country: "IT", Status: "open", Source: "ted", SourceRef: "proc-1",
+			Value: &value, PublishedAt: &published, Deadline: &deadline,
+		},
+	}}
+	kb := &fakeKnowledgeBase{}
+
+	idx := index.New(repo, kb, &fakeFetcher{})
+	if err := idx.RunOnce(context.Background()); err != nil {
+		t.Fatalf("RunOnce: %v", err)
+	}
+
+	if len(kb.attrs) != 1 {
+		t.Fatalf("len(kb.attrs) = %d, want 1", len(kb.attrs))
+	}
+	got := kb.attrs[0]
+	want := knowledge.Attributes{
+		Title: "Lavori stradali", Country: "IT", Status: "open",
+		CPV: "45233220", CPVSecondary: []string{"45233120"}, NUTS: "ITI43",
+		Value: &value, PublishedAt: &published, Deadline: &deadline,
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("attributes = %+v, want %+v", got, want)
+	}
+}
+
+// A tender with no value/deadline must project nil, not a zero time or a zero
+// value — a range filter has to exclude it rather than treat it as 0.
+func TestRunOnce_LeavesUnknownFacetsNil(t *testing.T) {
+	repo := &fakeRepo{unindexed: []postgres.UnindexedTender{
+		{ID: 7, Title: "Fornitura arredi", Country: "IT", Status: "open", Source: "ted", SourceRef: "proc-2"},
+	}}
+	kb := &fakeKnowledgeBase{}
+
+	idx := index.New(repo, kb, &fakeFetcher{})
+	if err := idx.RunOnce(context.Background()); err != nil {
+		t.Fatalf("RunOnce: %v", err)
+	}
+
+	got := kb.attrs[0]
+	if got.Value != nil || got.Deadline != nil || got.PublishedAt != nil {
+		t.Errorf("attributes = %+v, want Value/Deadline/PublishedAt all nil", got)
 	}
 }
 

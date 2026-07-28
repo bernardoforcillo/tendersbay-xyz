@@ -18,6 +18,10 @@ type fitFakeRepo struct {
 func (f *fitFakeRepo) SearchTenders(context.Context, Filters, int, int) ([]Tender, error) {
 	return nil, nil
 }
+func (f *fitFakeRepo) LexicalSearch(context.Context, string, Filters, int) ([]ScoredTender, error) {
+	return nil, nil
+}
+
 func (f *fitFakeRepo) EnrichTenders(_ context.Context, _ []string, _ Filters) ([]Tender, error) {
 	return f.enrich, nil
 }

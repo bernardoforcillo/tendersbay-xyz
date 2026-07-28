@@ -153,7 +153,11 @@ func filtersFromProto(f *tenderv1.TenderFilters) (tender.Filters, error) {
 	if f == nil {
 		return tender.Filters{}, nil
 	}
-	out := tender.Filters{Country: f.Country, CPV: f.Cpv, Status: f.Status}
+	out := tender.Filters{
+		Countries:   tender.SingleFilter(f.Country),
+		CPVPrefixes: tender.SingleFilter(f.Cpv),
+		Statuses:    tender.SingleFilter(f.Status),
+	}
 	if f.DeadlineFrom != "" {
 		t, err := time.Parse(time.RFC3339, f.DeadlineFrom)
 		if err != nil {

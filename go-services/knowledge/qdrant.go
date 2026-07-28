@@ -24,7 +24,9 @@ type KnowledgeBase struct {
 // collection exists (768-dim, cosine distance — EmbeddingGemma's verified
 // default output size), and returns a KnowledgeBase ready for
 // Ingest/Search/Delete/List. Embeddings are computed via Ollama at
-// ollamaBaseURL using embeddingModel.
+// ollamaBaseURL using embeddingModel. The payload field indexes that keep
+// filtered search fast are created here too, best-effort — see
+// ensurePayloadIndexes.
 func NewKnowledgeBase(ctx context.Context, qdrantURL, ollamaBaseURL, embeddingModel string) (*KnowledgeBase, error) {
 	q, err := qdrant.NewClient(qdrantURL)
 	if err != nil {
@@ -43,9 +45,11 @@ func NewKnowledgeBase(ctx context.Context, qdrantURL, ollamaBaseURL, embeddingMo
 		}
 	}
 
-	return &KnowledgeBase{
+	kb := &KnowledgeBase{
 		qdrant:     q,
 		embedder:   NewEmbedder(ollamaBaseURL, embeddingModel),
 		collection: collectionName,
-	}, nil
+	}
+	kb.ensurePayloadIndexes(ctx)
+	return kb, nil
 }

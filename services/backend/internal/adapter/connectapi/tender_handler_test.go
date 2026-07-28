@@ -26,6 +26,10 @@ func (f *fakeRepo) SearchTenders(context.Context, tender.Filters, int, int) ([]t
 func (f *fakeRepo) DistinctCountries(context.Context) ([]string, error) {
 	return f.countries, nil
 }
+func (f *fakeRepo) LexicalSearch(context.Context, string, tender.Filters, int) ([]tender.ScoredTender, error) {
+	return nil, nil
+}
+
 func (f *fakeRepo) EnrichTenders(context.Context, []string, tender.Filters) ([]tender.Tender, error) {
 	return nil, nil
 }
@@ -43,7 +47,7 @@ func (f *fakeRepo) RecentTenderRefs(context.Context, int) ([]tender.TenderRef, e
 
 type fakeKB struct{}
 
-func (fakeKB) SearchWithScores(context.Context, string, int) ([]tender.ScoredChunk, error) {
+func (fakeKB) SearchFiltered(context.Context, string, int, tender.Filters) ([]tender.ScoredChunk, error) {
 	return nil, nil
 }
 func (fakeKB) RelatedByDocID(context.Context, string, int) ([]tender.ScoredChunk, error) {

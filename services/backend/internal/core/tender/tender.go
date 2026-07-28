@@ -13,7 +13,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"sort"
+	"strings"
 	"time"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
@@ -29,15 +29,6 @@ var (
 	// callers can map it to a retryable status instead of a generic
 	// internal error.
 	ErrRateLimiterUnavailable = errors.New("tender: rate limiter unavailable")
-)
-
-// candidateMultiplier over-fetches Qdrant candidates so a restrictive
-// filter doesn't starve the result page below the requested limit.
-// maxCandidates bounds worst-case Qdrant/Postgres load regardless of the
-// requested limit.
-const (
-	candidateMultiplier = 5
-	maxCandidates       = 250
 )
 
 // Tender is a search result's structured fields.
@@ -59,13 +50,48 @@ type Tender struct {
 	SourceURL     string // the notice document's URL; "" if none is ingested
 }
 
-// Filters narrows a search. Zero-value fields are unset.
+// Filters narrows a search. Zero-value fields are unset, and every list field
+// is an OR within itself while separate fields AND together — "Italy or
+// Germany, and construction".
+//
+// The code lists are PREFIX matches against a hierarchical code, not equality:
+// CPV "45" selects all of division 45, NUTS "ITC" all of north-west Italy. A
+// CPV prefix matches a tender's secondary CPVs as well as its primary one, so
+// a tender only incidentally in a sector is still findable there — and so the
+// SQL and vector paths agree, since the vector payload indexes both (see
+// knowledge.Attributes).
 type Filters struct {
-	Country      string
-	CPV          string
-	Status       string
+	Countries    []string
+	CPVPrefixes  []string
+	Statuses     []string
+	NUTSPrefixes []string
+	// Buyer is a case-insensitive substring of the contracting authority's
+	// name, not a prefix — buyers are written inconsistently across sources
+	// ("Comune di Roma" / "Roma Capitale — Comune di Roma").
+	Buyer        string
+	ValueMin     *int64
+	ValueMax     *int64
 	DeadlineFrom *time.Time
 	DeadlineTo   *time.Time
+}
+
+// SingleFilter wraps one optional facet value as a Filters list field,
+// returning nil for the empty string so an unset value contributes no
+// predicate. For callers whose input shape is one-value-per-facet — the
+// agent's search tool, a single-select UI control.
+func SingleFilter(v string) []string {
+	if v == "" {
+		return nil
+	}
+	return []string{v}
+}
+
+// IsZero reports whether the filters constrain nothing.
+func (f Filters) IsZero() bool {
+	return len(f.Countries) == 0 && len(f.CPVPrefixes) == 0 && len(f.Statuses) == 0 &&
+		len(f.NUTSPrefixes) == 0 && f.Buyer == "" &&
+		f.ValueMin == nil && f.ValueMax == nil &&
+		f.DeadlineFrom == nil && f.DeadlineTo == nil
 }
 
 // ScoredTender is a Tender plus its semantic-search relevance score (0
@@ -78,6 +104,11 @@ type ScoredTender struct {
 // Repo is the subset of postgres.TenderRepo the service needs.
 type Repo interface {
 	SearchTenders(ctx context.Context, filters Filters, limit, offset int) ([]Tender, error)
+	// LexicalSearch is the keyword half of hybrid retrieval — full-text and
+	// trigram matching, already filtered and ranked, best-first. It answers
+	// the queries dense embeddings structurally can't: exact codes, notice
+	// references, buyer names, rare acronyms.
+	LexicalSearch(ctx context.Context, query string, filters Filters, limit int) ([]ScoredTender, error)
 	EnrichTenders(ctx context.Context, ids []string, filters Filters) ([]Tender, error)
 	FindDetailByID(ctx context.Context, id int64) (*TenderDetail, error)
 	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)
@@ -94,10 +125,16 @@ type ScoredChunk struct {
 }
 
 // KnowledgeBase is the subset of knowledge.KnowledgeBase the service
-// needs, expressed in this package's own ScoredChunk type rather than
-// go-services/knowledge's — see the package doc comment.
+// needs, expressed in this package's own ScoredChunk and Filters types
+// rather than go-services/knowledge's — see the package doc comment.
 type KnowledgeBase interface {
-	SearchWithScores(ctx context.Context, query string, limit int) ([]ScoredChunk, error)
+	// SearchFiltered narrows the vector search by the same facets the SQL
+	// side filters on. Pushing the filter into the vector store is what keeps
+	// a narrow filter (one country out of 27) from consuming the whole
+	// candidate window with rows that will be discarded moments later. It is
+	// an optimisation only: results are filtered authoritatively in Postgres
+	// afterwards either way.
+	SearchFiltered(ctx context.Context, query string, limit int, filters Filters) ([]ScoredChunk, error)
 	RelatedByDocID(ctx context.Context, docID string, limit int) ([]ScoredChunk, error)
 }
 
@@ -132,6 +169,9 @@ type Config struct {
 	GetTenderTier Tier // generous; GetTender is cheap and called server-side per crawl
 	Fit           FitThresholds
 	EU            EUThreshold
+	// Ranking tunes hybrid fusion and the post-fusion business boost. An
+	// unset (zero) Ranking falls back to DefaultRanking — see hybrid.go.
+	Ranking Ranking
 }
 
 // ProfileSource is the subset of clientprofile.Service this package needs to
@@ -175,13 +215,21 @@ type SearchParams struct {
 type SearchOutput struct {
 	Results []ScoredTender
 	HasMore bool
+	// Mode says which retrievers produced these results. Callers surface it
+	// so a degraded search is visibly degraded rather than quietly answering
+	// a different question — see RetrievalMode.
+	Mode RetrievalMode
 }
 
 // Search runs one tender search: rate-limits, clamps the result count to
-// the caller's auth tier, then either a structured filter query
-// (no Query text) or a semantic search enriched with structured filters
-// (Query present). A Qdrant/Ollama failure during the semantic path
-// degrades to the filters-only path rather than failing the request.
+// the caller's auth tier, then either a filtered browse (no Query text) or
+// hybrid retrieval — lexical and vector search fused by Reciprocal Rank
+// Fusion, then adjusted by deadline/status/freshness (see hybrid.go).
+//
+// If one retriever fails the other still answers the query, and Mode reports
+// the degradation. If both fail, the search fails: it deliberately does NOT
+// fall back to the filters-only path, which ignores the query entirely and
+// would return recently-published tenders dressed up as search results.
 func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, error) {
 	if p.Filters.DeadlineFrom != nil && p.Filters.DeadlineTo != nil && p.Filters.DeadlineFrom.After(*p.Filters.DeadlineTo) {
 		return SearchOutput{}, ErrInvalidFilters
@@ -210,15 +258,10 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 		offset = 0
 	}
 
-	if p.Query == "" {
+	if strings.TrimSpace(p.Query) == "" {
 		return s.searchByFiltersOnly(ctx, p.Filters, limit, offset)
 	}
-
-	out, err := s.searchSemantic(ctx, p.Query, p.Filters, limit, offset)
-	if err != nil {
-		return s.searchByFiltersOnly(ctx, p.Filters, limit, offset)
-	}
-	return out, nil
+	return s.searchHybrid(ctx, p.Query, p.Filters, limit, offset)
 }
 
 func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, limit, offset int) (SearchOutput, error) {
@@ -234,49 +277,5 @@ func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, limi
 	for i, t := range tenders {
 		results[i] = ScoredTender{Tender: t}
 	}
-	return SearchOutput{Results: results, HasMore: hasMore}, nil
-}
-
-func (s *Service) searchSemantic(ctx context.Context, query string, filters Filters, limit, offset int) (SearchOutput, error) {
-	candidateLimit := limit * candidateMultiplier
-	if candidateLimit > maxCandidates {
-		candidateLimit = maxCandidates
-	}
-
-	hits, err := s.kb.SearchWithScores(ctx, query, candidateLimit)
-	if err != nil {
-		return SearchOutput{}, fmt.Errorf("tender: semantic search: %w", err)
-	}
-
-	bestScore := map[string]float32{}
-	var ids []string
-	for _, h := range hits {
-		if existing, ok := bestScore[h.DocID]; !ok || h.Score > existing {
-			if !ok {
-				ids = append(ids, h.DocID)
-			}
-			bestScore[h.DocID] = h.Score
-		}
-	}
-
-	tenders, err := s.repo.EnrichTenders(ctx, ids, filters)
-	if err != nil {
-		return SearchOutput{}, fmt.Errorf("tender: enrich candidates: %w", err)
-	}
-
-	scored := make([]ScoredTender, len(tenders))
-	for i, t := range tenders {
-		scored[i] = ScoredTender{Tender: t, RelevanceScore: float64(bestScore[t.ID])}
-	}
-	sort.Slice(scored, func(i, j int) bool { return scored[i].RelevanceScore > scored[j].RelevanceScore })
-
-	if offset >= len(scored) {
-		return SearchOutput{Results: []ScoredTender{}, HasMore: false}, nil
-	}
-	end := offset + limit
-	hasMore := len(scored) > end
-	if end > len(scored) {
-		end = len(scored)
-	}
-	return SearchOutput{Results: scored[offset:end], HasMore: hasMore}, nil
+	return SearchOutput{Results: results, HasMore: hasMore, Mode: ModeFilters}, nil
 }

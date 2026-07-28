@@ -57,6 +57,9 @@ func insertTestTender(t *testing.T, sqlDB *sql.DB, sourceRef string, opts ...fun
 	return id
 }
 
+// itoa renders a seeded row's bigserial id the way the domain types carry it.
+func itoa(id int64) string { return strconv.FormatInt(id, 10) }
+
 type testTenderRow struct {
 	source, sourceRef, title, buyerName, status, procedureType, country, cpv, currency, nuts string
 	value                                                                                    *int64
@@ -70,7 +73,7 @@ func withPublishedAt(ts time.Time) func(*testTenderRow) {
 }
 func withNUTS(n string) func(*testTenderRow) { return func(r *testTenderRow) { r.nuts = n } }
 
-func TestSearchByFilters_FiltersByCountryAndOrdersByPublishedAtDesc(t *testing.T) {
+func TestSearchByFiltersRanked_FiltersByCountryAndOrdersByPublishedAtDesc(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()
 
@@ -80,19 +83,19 @@ func TestSearchByFilters_FiltersByCountryAndOrdersByPublishedAtDesc(t *testing.T
 	idIT2 := insertTestTender(t, sqlDB, "search-2", withCountry("ITA"), withPublishedAt(newer))
 	_ = insertTestTender(t, sqlDB, "search-3", withCountry("FRA"), withPublishedAt(newer))
 
-	rows, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "ITA"}, 10, 0)
+	rows, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"ITA"}}, 10, 0)
 	if err != nil {
-		t.Fatalf("SearchByFilters: %v", err)
+		t.Fatalf("SearchByFiltersRanked: %v", err)
 	}
 	if len(rows) != 2 {
 		t.Fatalf("len(rows) = %d, want 2 (only ITA tenders)", len(rows))
 	}
-	if rows[0].ID != idIT2 || rows[1].ID != idIT1 {
-		t.Errorf("rows = [%d, %d], want [%d, %d] (newest published_at first)", rows[0].ID, rows[1].ID, idIT2, idIT1)
+	if rows[0].ID != itoa(idIT2) || rows[1].ID != itoa(idIT1) {
+		t.Errorf("rows = [%s, %s], want [%d, %d] (newest published_at first)", rows[0].ID, rows[1].ID, idIT2, idIT1)
 	}
 }
 
-func TestSearchByFilters_RespectsLimitAndOffset(t *testing.T) {
+func TestSearchByFiltersRanked_RespectsLimitAndOffset(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()
 
@@ -100,23 +103,23 @@ func TestSearchByFilters_RespectsLimitAndOffset(t *testing.T) {
 		insertTestTender(t, sqlDB, "page-"+string(rune('a'+i)), withCountry("DEU"), withPublishedAt(time.Now().Add(-time.Duration(i)*time.Hour)))
 	}
 
-	page1, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "DEU"}, 2, 0)
+	page1, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"DEU"}}, 2, 0)
 	if err != nil {
-		t.Fatalf("SearchByFilters page1: %v", err)
+		t.Fatalf("SearchByFiltersRanked page1: %v", err)
 	}
 	if len(page1) != 2 {
 		t.Fatalf("len(page1) = %d, want 2", len(page1))
 	}
-	page2, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "DEU"}, 2, 2)
+	page2, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"DEU"}}, 2, 2)
 	if err != nil {
-		t.Fatalf("SearchByFilters page2: %v", err)
+		t.Fatalf("SearchByFiltersRanked page2: %v", err)
 	}
 	if len(page2) != 1 {
 		t.Fatalf("len(page2) = %d, want 1 (3 total, page size 2, offset 2)", len(page2))
 	}
 }
 
-func TestFindByIDs_ReturnsOnlyMatchingIDsAndFilters(t *testing.T) {
+func TestFindByIDsFiltered_ReturnsOnlyMatchingIDsAndFilters(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()
 
@@ -124,20 +127,20 @@ func TestFindByIDs_ReturnsOnlyMatchingIDsAndFilters(t *testing.T) {
 	idWrongStatus := insertTestTender(t, sqlDB, "ids-2", withStatus("awarded"))
 	_ = idWrongStatus
 
-	rows, err := repo.FindByIDs(ctx, []int64{idMatch, idWrongStatus, 999999}, postgres.TenderFilters{Status: "open"})
+	rows, err := repo.FindByIDsFiltered(ctx, []string{itoa(idMatch), itoa(idWrongStatus), "999999"}, tender.Filters{Statuses: []string{"open"}})
 	if err != nil {
-		t.Fatalf("FindByIDs: %v", err)
+		t.Fatalf("FindByIDsFiltered: %v", err)
 	}
-	if len(rows) != 1 || rows[0].ID != idMatch {
+	if len(rows) != 1 || rows[0].ID != itoa(idMatch) {
 		t.Errorf("rows = %+v, want exactly [id=%d] (status filter excludes idWrongStatus, 999999 doesn't exist)", rows, idMatch)
 	}
 }
 
-func TestFindByIDs_EmptyIDsReturnsEmptyNoQuery(t *testing.T) {
+func TestFindByIDsFiltered_EmptyIDsReturnsEmptyNoQuery(t *testing.T) {
 	repo, _ := testTenderRepo(t)
-	rows, err := repo.FindByIDs(context.Background(), nil, postgres.TenderFilters{})
+	rows, err := repo.FindByIDsFiltered(context.Background(), nil, tender.Filters{})
 	if err != nil {
-		t.Fatalf("FindByIDs: %v", err)
+		t.Fatalf("FindByIDsFiltered: %v", err)
 	}
 	if len(rows) != 0 {
 		t.Errorf("len(rows) = %d, want 0", len(rows))
@@ -149,7 +152,7 @@ func TestSearchTenders_RoundTripsStringIDs(t *testing.T) {
 	ctx := context.Background()
 	insertTestTender(t, sqlDB, "domain-1", withCountry("ITA"), withPublishedAt(time.Now()))
 
-	rows, err := repo.SearchTenders(ctx, tender.Filters{Country: "ITA"}, 10, 0)
+	rows, err := repo.SearchTenders(ctx, tender.Filters{Countries: []string{"ITA"}}, 10, 0)
 	if err != nil {
 		t.Fatalf("SearchTenders: %v", err)
 	}
@@ -161,16 +164,16 @@ func TestSearchTenders_RoundTripsStringIDs(t *testing.T) {
 	}
 }
 
-func TestSearchByFilters_ReturnsNUTS(t *testing.T) {
+func TestSearchByFiltersRanked_ReturnsNUTS(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	id := insertTestTender(t, sqlDB, "nuts-row", withCountry("ITA"), withNUTS("ITC4"))
-	rows, err := repo.SearchByFilters(context.Background(), postgres.TenderFilters{Country: "ITA"}, 10, 0)
+	rows, err := repo.SearchByFiltersRanked(context.Background(), tender.Filters{Countries: []string{"ITA"}}, 10, 0)
 	if err != nil {
-		t.Fatalf("SearchByFilters: %v", err)
+		t.Fatalf("SearchByFiltersRanked: %v", err)
 	}
-	var got *postgres.TenderResultRow
+	var got *tender.ScoredTender
 	for i := range rows {
-		if rows[i].ID == id {
+		if rows[i].ID == itoa(id) {
 			got = &rows[i]
 		}
 	}
@@ -199,7 +202,7 @@ func insertTestDocument(t *testing.T, sqlDB *sql.DB, tenderID int64, docType, ur
 	})
 }
 
-func TestSearchByFilters_JoinsNoticeDocumentURL(t *testing.T) {
+func TestSearchByFiltersRanked_JoinsNoticeDocumentURL(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()
 
@@ -208,28 +211,28 @@ func TestSearchByFilters_JoinsNoticeDocumentURL(t *testing.T) {
 	insertTestDocument(t, sqlDB, withDoc, "spec", "https://ted.europa.eu/example/spec") // must NOT be picked
 	withoutDoc := insertTestTender(t, sqlDB, "doc-without-notice", withCountry("ITA"))
 
-	rows, err := repo.SearchByFilters(ctx, postgres.TenderFilters{Country: "ITA"}, 10, 0)
+	rows, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"ITA"}}, 10, 0)
 	if err != nil {
-		t.Fatalf("SearchByFilters: %v", err)
+		t.Fatalf("SearchByFiltersRanked: %v", err)
 	}
 
-	var gotWith, gotWithout *postgres.TenderResultRow
+	var gotWith, gotWithout *tender.ScoredTender
 	for i := range rows {
 		switch rows[i].ID {
-		case withDoc:
+		case itoa(withDoc):
 			gotWith = &rows[i]
-		case withoutDoc:
+		case itoa(withoutDoc):
 			gotWithout = &rows[i]
 		}
 	}
 	if gotWith == nil || gotWithout == nil {
 		t.Fatalf("expected both seeded rows in results, got %d rows", len(rows))
 	}
-	if gotWith.SourceURL == nil || *gotWith.SourceURL != "https://ted.europa.eu/example/notice" {
-		t.Fatalf("gotWith.SourceURL = %v, want the notice-type URL (not the spec one)", gotWith.SourceURL)
+	if gotWith.SourceURL != "https://ted.europa.eu/example/notice" {
+		t.Fatalf("gotWith.SourceURL = %q, want the notice-type URL (not the spec one)", gotWith.SourceURL)
 	}
-	if gotWithout.SourceURL != nil {
-		t.Fatalf("gotWithout.SourceURL = %v, want nil (no document ingested)", *gotWithout.SourceURL)
+	if gotWithout.SourceURL != "" {
+		t.Fatalf("gotWithout.SourceURL = %q, want empty (no document ingested)", gotWithout.SourceURL)
 	}
 }
 
@@ -266,7 +269,7 @@ func TestEnrichTenders_RoundTripsStringIDs(t *testing.T) {
 	ctx := context.Background()
 	id := insertTestTender(t, sqlDB, "domain-2", withStatus("open"))
 
-	rows, err := repo.EnrichTenders(ctx, []string{strconv.FormatInt(id, 10)}, tender.Filters{Status: "open"})
+	rows, err := repo.EnrichTenders(ctx, []string{strconv.FormatInt(id, 10)}, tender.Filters{Statuses: []string{"open"}})
 	if err != nil {
 		t.Fatalf("EnrichTenders: %v", err)
 	}
