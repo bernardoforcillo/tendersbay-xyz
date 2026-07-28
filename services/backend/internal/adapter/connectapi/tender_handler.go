@@ -62,8 +62,11 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 	}
 
 	out, err := h.svc.Search(ctx, tender.SearchParams{
-		Query:         req.Msg.Query,
-		Filters:       filters,
+		Query:   req.Msg.Query,
+		Filters: filters,
+		// This query is typed by a person into a search box, so the
+		// constraints buried in it are meant as constraints.
+		ParseQuery:    true,
 		Sort:          tender.ParseSortOrder(req.Msg.Sort),
 		Limit:         int(req.Msg.Limit),
 		Offset:        int(req.Msg.Offset),

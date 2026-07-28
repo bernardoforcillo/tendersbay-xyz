@@ -1,6 +1,7 @@
 package tender
 
 import (
+	"context"
 	"testing"
 	"time"
 )
@@ -271,4 +272,82 @@ func TestAlternation_EscapesRegexMetacharacters(t *testing.T) {
 	if got := alternation([]string{"a.b"}); got != `a\.b` {
 		t.Errorf("alternation = %q, want the dot escaped", got)
 	}
+}
+
+// Query parsing is only right for text a person typed into a search box.
+// Applied to arbitrary domain prose it misreads it — which is why it is
+// opt-in per call site rather than always on.
+func TestSearch_DoesNotParseConstraintsUnlessAsked(t *testing.T) {
+	repo := &parseFakeRepo{}
+	svc := NewService(repo, &parseFakeKB{}, allowAll{}, nil, Config{
+		AnonTier:   Tier{MaxResults: 10, RateLimit: 100, RateWindow: time.Minute},
+		AuthedTier: Tier{MaxResults: 50, RateLimit: 100, RateWindow: time.Minute},
+	})
+
+	// A client profile describing a company, not a search.
+	const notes = "Costruiamo strade da trent'anni, con un fatturato oltre 5 milioni"
+
+	if _, err := svc.Search(context.Background(), SearchParams{
+		Query: notes, Limit: 10, RateLimitKey: "k",
+	}); err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if repo.gotFilters.ValueMin != nil {
+		t.Errorf("ValueMin = %d, want nil — prose must not become a budget filter",
+			*repo.gotFilters.ValueMin)
+	}
+	if repo.gotQuery != notes {
+		t.Errorf("query = %q, want it passed through untouched", repo.gotQuery)
+	}
+
+	if _, err := svc.Search(context.Background(), SearchParams{
+		Query: notes, ParseQuery: true, Limit: 10, RateLimitKey: "k",
+	}); err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if repo.gotFilters.ValueMin == nil || *repo.gotFilters.ValueMin != 5_000_000 {
+		t.Errorf("ValueMin = %v, want 5000000 once parsing is opted into", repo.gotFilters.ValueMin)
+	}
+}
+
+type parseFakeRepo struct {
+	gotQuery   string
+	gotFilters Filters
+}
+
+func (f *parseFakeRepo) LexicalSearch(_ context.Context, q string, filters Filters, _ int) ([]ScoredTender, error) {
+	f.gotQuery, f.gotFilters = q, filters
+	return nil, nil
+}
+func (f *parseFakeRepo) SearchTenders(context.Context, Filters, SortOrder, int, int) ([]Tender, error) {
+	return nil, nil
+}
+func (f *parseFakeRepo) FacetCounts(context.Context, Filters) (Facets, error) { return Facets{}, nil }
+func (f *parseFakeRepo) EnrichTenders(context.Context, []string, Filters) ([]Tender, error) {
+	return nil, nil
+}
+func (f *parseFakeRepo) FindDetailByID(context.Context, int64) (*TenderDetail, error) {
+	return nil, nil
+}
+func (f *parseFakeRepo) DocumentsByTenderID(context.Context, int64) ([]Document, error) {
+	return nil, nil
+}
+func (f *parseFakeRepo) LotsByTenderID(context.Context, int64) ([]Lot, error)       { return nil, nil }
+func (f *parseFakeRepo) RecentTenderRefs(context.Context, int) ([]TenderRef, error) { return nil, nil }
+func (f *parseFakeRepo) DistinctCountries(context.Context) ([]string, error)        { return nil, nil }
+
+type parseFakeKB struct{}
+
+func (parseFakeKB) EmbedQuery(context.Context, string) ([]float32, error) { return []float32{0.1}, nil }
+func (parseFakeKB) SearchByVector(context.Context, []float32, int, Filters) ([]ScoredChunk, error) {
+	return nil, nil
+}
+func (parseFakeKB) RelatedByDocID(context.Context, string, int) ([]ScoredChunk, error) {
+	return nil, nil
+}
+
+type allowAll struct{}
+
+func (allowAll) Allow(context.Context, string, int64, time.Duration) (bool, error) {
+	return true, nil
 }

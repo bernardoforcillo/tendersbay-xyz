@@ -255,8 +255,12 @@ func (s *Service) RecommendForClient(ctx context.Context, userID, workspaceID st
 	}
 
 	out, err := s.Search(ctx, SearchParams{
-		Query:         profile.Notes,
-		Filters:       filters,
+		Query:   profile.Notes,
+		Filters: filters,
+		// ParseQuery stays OFF here on purpose. profile.Notes describes the
+		// client's business, not a search: a note reading "fatturato oltre 5
+		// milioni" would be read as a "value >= 5,000,000" filter and exclude
+		// almost every tender that client could actually bid on.
 		Limit:         limit,
 		Authenticated: true,
 		RateLimitKey:  userID,

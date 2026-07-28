@@ -266,6 +266,15 @@ func (s *Service) embedQuery(ctx context.Context, query string) ([]float32, erro
 type SearchParams struct {
 	Query   string
 	Filters Filters
+	// ParseQuery lifts constraints out of Query text ("sotto 100k" becomes a
+	// value bound — see ParseQuery). Opt-in per call site, because it is only
+	// right for text a PERSON typed into a search box.
+	//
+	// Feeding it arbitrary domain prose misreads it: a client profile
+	// describing a company as "fatturato oltre 5 milioni" would become a
+	// "value >= 5,000,000" filter and quietly exclude almost every tender that
+	// client could actually bid on.
+	ParseQuery bool
 	// Sort selects the result ordering; the zero value means relevance.
 	Sort          SortOrder
 	Limit         int
@@ -338,7 +347,10 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 	// Lift the constraints hiding in the prose ("sotto 100k", "entro 30
 	// giorni") into real filters before retrieving — see ParseQuery. Filters
 	// the caller set explicitly always win over what was inferred.
-	parsed := ParseQuery(p.Query, time.Now())
+	parsed := ParsedQuery{Text: p.Query}
+	if p.ParseQuery {
+		parsed = ParseQuery(p.Query, time.Now())
+	}
 	filters := mergeParsedFilters(p.Filters, parsed.Filters)
 
 	// If the query was nothing BUT constraints ("bandi aperti sotto 100k"),

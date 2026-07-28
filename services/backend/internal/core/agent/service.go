@@ -510,6 +510,9 @@ func (s *Service) runTurn(
 				CPVPrefixes: tender.SingleFilter(cpv),
 				Statuses:    tender.SingleFilter(status),
 			},
+			// The model builds this query from what the user asked for, so it
+			// carries the same buried constraints a typed search would.
+			ParseQuery:    true,
 			Limit:         searchTendersToolLimit,
 			Authenticated: true,
 			RateLimitKey:  curUserID,
