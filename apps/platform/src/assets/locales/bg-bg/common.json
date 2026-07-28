@@ -402,7 +402,19 @@
       "deadline7": "Следващите 7 дни",
       "deadline30": "Следващите 30 дни",
       "deadline90": "Следващите 90 дни",
-      "clear": "Изчисти всичко"
+      "clear": "Изчисти всичко",
+      "sort": "Подреждане по",
+      "sorts": {
+        "relevance": "Релевантност",
+        "deadline": "Краен срок",
+        "published": "Най-нови",
+        "value": "Стойност"
+      },
+      "valueMin": "Минимална стойност",
+      "valueMax": "Максимална стойност",
+      "valuePlaceholder": "напр. 100000",
+      "buyer": "Възложител",
+      "buyerPlaceholder": "Име на възложителя"
     },
     "detail": {
       "overview": "Общ преглед",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Над вашия ценови диапазон",
       "reasonRegion": "Във вашия регион",
       "reasonProcedure": "Съответства на вашия вид процедура"
+    },
+    "degraded": "Част от търсенето е недостъпна, затова тези резултати може да са непълни.",
+    "applied": {
+      "label": "Разчетено от заявката:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "до {{max}}",
+      "valueMin": "от {{min}}",
+      "deadlineUntil": "краен срок до {{date}}",
+      "undo": "Изчисти"
     }
   },
   "today": {

@@ -13,6 +13,16 @@ const { searchMock, loadMoreMock, useTenderSearchMock } = vi.hoisted(() => ({
   useTenderSearchMock: vi.fn(),
 }));
 
+/** The search metadata shape the hook always returns — see `SearchMeta`. */
+const EMPTY_META = {
+  mode: 'hybrid',
+  degraded: false,
+  appliedQuery: '',
+  countryFacets: [],
+  statusFacets: [],
+  cpvDivisionFacets: [],
+};
+
 const { navigateMock } = vi.hoisted(() => ({ navigateMock: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
   useNavigate: () => navigateMock,
@@ -114,6 +124,7 @@ type HookReturn = {
   hasMore: boolean;
   loading: boolean;
   error: string | null;
+  meta: typeof EMPTY_META;
   search: (query: string) => Promise<void>;
   loadMore: () => Promise<void>;
 };
@@ -124,6 +135,7 @@ function mockHook(overrides: Partial<HookReturn> = {}) {
     hasMore: false,
     loading: false,
     error: null,
+    meta: EMPTY_META,
     search: searchMock,
     loadMore: loadMoreMock,
     ...overrides,
@@ -162,7 +174,7 @@ describe('AccountTendersPage — search', () => {
     const user = userEvent.setup();
     renderTenders();
     await submit(user, '  roads  ');
-    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1');
+    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1', 'relevance');
   });
 
   it('is a no-op on an empty (whitespace-only) submit', async () => {
@@ -196,7 +208,7 @@ describe('AccountTendersPage — search', () => {
     const user = userEvent.setup();
     renderTenders();
     await submit(user, 'roads');
-    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1');
+    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1', 'relevance');
   });
 
   it('renders the fit-tier pill on a manual search result when the backend annotated it', async () => {
@@ -276,11 +288,12 @@ describe('AccountTendersPage — search', () => {
       hasMore: false,
       loading: false,
       error: null,
+      meta: EMPTY_META,
       search: searchMock,
       loadMore: loadMoreMock,
     });
     renderTenders('?q=roads');
-    expect(searchMock).toHaveBeenCalledWith('roads', expect.anything(), 'ws-1');
+    expect(searchMock).toHaveBeenCalledWith('roads', expect.anything(), 'ws-1', 'relevance');
   });
 
   it('navigates to /explore when a chat draft arrives', () => {
@@ -292,22 +305,75 @@ describe('AccountTendersPage — search', () => {
   it('runs a filters-only search when a filter is set with an empty query', async () => {
     const user = userEvent.setup();
     renderTenders();
-    await user.selectOptions(screen.getByLabelText('Country'), 'IT');
-    expect(searchMock).toHaveBeenCalledWith('', { country: 'IT' }, 'ws-1');
+    await user.click(screen.getByRole('button', { name: 'Italy' }));
+    expect(searchMock).toHaveBeenCalledWith('', { countries: ['IT'] }, 'ws-1', 'relevance');
   });
 
   it('maps the sector selection to a CPV prefix', async () => {
     const user = userEvent.setup();
     renderTenders();
-    await user.selectOptions(screen.getByLabelText('Sector'), 'construction');
-    expect(searchMock).toHaveBeenCalledWith('', { cpv: '45' }, 'ws-1');
+    await user.click(screen.getByRole('button', { name: 'Construction' }));
+    expect(searchMock).toHaveBeenCalledWith('', { cpvPrefixes: ['45'] }, 'ws-1', 'relevance');
   });
 
   it('includes the active filters when searching with a query', async () => {
     const user = userEvent.setup();
     renderTenders('?q=roads');
-    await user.selectOptions(screen.getByLabelText('Status'), 'open');
-    expect(searchMock).toHaveBeenLastCalledWith('roads', { status: 'open' }, 'ws-1');
+    await user.click(screen.getByRole('button', { name: 'Open' }));
+    expect(searchMock).toHaveBeenLastCalledWith(
+      'roads',
+      { statuses: ['open'] },
+      'ws-1',
+      'relevance',
+    );
+  });
+
+  // Multi-select is the point of the chips: a bidder working in two countries
+  // shouldn't have to run the same search twice.
+  it('accumulates multiple values on one facet', async () => {
+    const user = userEvent.setup();
+    renderTenders();
+    await user.click(screen.getByRole('button', { name: 'Italy' }));
+    await user.click(screen.getByRole('button', { name: 'Germany' }));
+    expect(searchMock).toHaveBeenLastCalledWith(
+      '',
+      { countries: ['IT', 'DE'] },
+      'ws-1',
+      'relevance',
+    );
+  });
+
+  it('deselects a value when its chip is clicked again', async () => {
+    const user = userEvent.setup();
+    renderTenders('?q=roads');
+    await user.click(screen.getByRole('button', { name: 'Italy' }));
+    await user.click(screen.getByRole('button', { name: 'Italy' }));
+    expect(searchMock).toHaveBeenLastCalledWith('roads', {}, 'ws-1', 'relevance');
+  });
+
+  it('threads the chosen sort into the search', async () => {
+    const user = userEvent.setup();
+    renderTenders('?q=roads');
+    await user.selectOptions(screen.getByLabelText('Sort by'), 'deadline');
+    expect(searchMock).toHaveBeenLastCalledWith('roads', {}, 'ws-1', 'deadline');
+  });
+
+  // A half-typed number must not become a `0` bound that silently empties the
+  // results.
+  it('ignores a value bound until it parses as a number', async () => {
+    const user = userEvent.setup();
+    renderTenders('?q=roads');
+    await user.type(screen.getByLabelText('Max value'), 'abc');
+    expect(searchMock).toHaveBeenLastCalledWith('roads', {}, 'ws-1', 'relevance');
+
+    await user.clear(screen.getByLabelText('Max value'));
+    await user.type(screen.getByLabelText('Max value'), '100000');
+    expect(searchMock).toHaveBeenLastCalledWith(
+      'roads',
+      { valueMax: 100000n },
+      'ws-1',
+      'relevance',
+    );
   });
 
   it('maps a deadline preset to an RFC3339 from/to window', async () => {
@@ -328,11 +394,27 @@ describe('AccountTendersPage — search', () => {
   it('clears filters and re-runs the search with the query only', async () => {
     const user = userEvent.setup();
     renderTenders('?q=roads');
-    await user.selectOptions(screen.getByLabelText('Country'), 'IT');
+    await user.click(screen.getByRole('button', { name: 'Italy' }));
     searchMock.mockClear();
     await user.click(screen.getByRole('button', { name: 'Clear all' }));
-    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1');
-    expect(screen.getByLabelText('Country')).toHaveValue('');
+    expect(searchMock).toHaveBeenCalledWith('roads', {}, 'ws-1', 'relevance');
+    expect(screen.getByRole('button', { name: 'Italy' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  // A search running on one retriever answers the question asked, just less
+  // well — saying so beats presenting partial results as complete ones.
+  it('warns when the search ran degraded', async () => {
+    mockHook({ meta: { ...EMPTY_META, mode: 'lexical', degraded: true } });
+    renderTenders('?q=roads');
+    expect(
+      screen.getByText(/Part of the search is unavailable/, { exact: false }),
+    ).toBeInTheDocument();
+  });
+
+  it('does not warn when both retrievers answered', async () => {
+    mockHook({ meta: { ...EMPTY_META, mode: 'hybrid', degraded: false } });
+    renderTenders('?q=roads');
+    expect(screen.queryByText(/Part of the search is unavailable/, { exact: false })).toBeNull();
   });
 });
 

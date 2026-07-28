@@ -410,7 +410,19 @@
       "deadline7": "Najbliższe 7 dni",
       "deadline30": "Najbliższe 30 dni",
       "deadline90": "Najbliższe 90 dni",
-      "clear": "Wyczyść wszystko"
+      "clear": "Wyczyść wszystko",
+      "sort": "Sortuj według",
+      "sorts": {
+        "relevance": "Trafność",
+        "deadline": "Termin",
+        "published": "Najnowsze",
+        "value": "Wartość"
+      },
+      "valueMin": "Wartość minimalna",
+      "valueMax": "Wartość maksymalna",
+      "valuePlaceholder": "np. 100000",
+      "buyer": "Zamawiający",
+      "buyerPlaceholder": "Nazwa zamawiającego"
     },
     "detail": {
       "overview": "Przegląd",
@@ -456,6 +468,16 @@
       "reasonValueAbove": "Powyżej Twojego przedziału wartości",
       "reasonRegion": "W Twoim regionie",
       "reasonProcedure": "Pasuje do Twojego typu procedury"
+    },
+    "degraded": "Część wyszukiwania jest niedostępna, więc te wyniki mogą być niepełne.",
+    "applied": {
+      "label": "Odczytane z zapytania:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "do {{max}}",
+      "valueMin": "od {{min}}",
+      "deadlineUntil": "termin do {{date}}",
+      "undo": "Wyczyść"
     }
   },
   "today": {

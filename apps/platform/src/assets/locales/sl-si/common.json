@@ -406,7 +406,19 @@
       "deadline7": "Naslednjih 7 dni",
       "deadline30": "Naslednjih 30 dni",
       "deadline90": "Naslednjih 90 dni",
-      "clear": "Počisti vse"
+      "clear": "Počisti vse",
+      "sort": "Razvrsti po",
+      "sorts": {
+        "relevance": "Ustreznost",
+        "deadline": "Rok",
+        "published": "Najnovejše",
+        "value": "Vrednost"
+      },
+      "valueMin": "Najnižja vrednost",
+      "valueMax": "Najvišja vrednost",
+      "valuePlaceholder": "npr. 100000",
+      "buyer": "Naročnik",
+      "buyerPlaceholder": "Naziv naročnika"
     },
     "detail": {
       "overview": "Pregled",
@@ -452,6 +464,16 @@
       "reasonValueAbove": "Nad vašim vrednostnim razponom",
       "reasonRegion": "V vaši regiji",
       "reasonProcedure": "Ujema se z vrsto vašega postopka"
+    },
+    "degraded": "Del iskanja ni na voljo, zato so ti rezultati morda nepopolni.",
+    "applied": {
+      "label": "Prebrano iz iskanja:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "do {{max}}",
+      "valueMin": "od {{min}}",
+      "deadlineUntil": "zapre se do {{date}}",
+      "undo": "Počisti"
     }
   },
   "today": {

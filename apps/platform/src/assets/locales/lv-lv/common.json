@@ -404,7 +404,19 @@
       "deadline7": "Nākamās 7 dienas",
       "deadline30": "Nākamās 30 dienas",
       "deadline90": "Nākamās 90 dienas",
-      "clear": "Notīrīt visu"
+      "clear": "Notīrīt visu",
+      "sort": "Kārtot pēc",
+      "sorts": {
+        "relevance": "Atbilstība",
+        "deadline": "Termiņš",
+        "published": "Jaunākie",
+        "value": "Vērtība"
+      },
+      "valueMin": "Mazākā vērtība",
+      "valueMax": "Lielākā vērtība",
+      "valuePlaceholder": "piem., 100000",
+      "buyer": "Pasūtītājs",
+      "buyerPlaceholder": "Pasūtītāja nosaukums"
     },
     "detail": {
       "overview": "Pārskats",
@@ -450,6 +462,16 @@
       "reasonValueAbove": "Virs jūsu vērtību diapazona",
       "reasonRegion": "Jūsu reģionā",
       "reasonProcedure": "Atbilst jūsu procedūras veidam"
+    },
+    "degraded": "Daļa meklēšanas nav pieejama, tāpēc šie rezultāti var būt nepilnīgi.",
+    "applied": {
+      "label": "Nolasīts no meklējuma:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "līdz {{max}}",
+      "valueMin": "no {{min}}",
+      "deadlineUntil": "noslēdzas līdz {{date}}",
+      "undo": "Notīrīt"
     }
   },
   "today": {

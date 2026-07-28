@@ -402,7 +402,19 @@
       "deadline7": "Järgmised 7 päeva",
       "deadline30": "Järgmised 30 päeva",
       "deadline90": "Järgmised 90 päeva",
-      "clear": "Tühjenda kõik"
+      "clear": "Tühjenda kõik",
+      "sort": "Sorteeri",
+      "sorts": {
+        "relevance": "Asjakohasus",
+        "deadline": "Tähtaeg",
+        "published": "Uusimad",
+        "value": "Maksumus"
+      },
+      "valueMin": "Väikseim maksumus",
+      "valueMax": "Suurim maksumus",
+      "valuePlaceholder": "nt 100000",
+      "buyer": "Hankija",
+      "buyerPlaceholder": "Hankija nimi"
     },
     "detail": {
       "overview": "Ülevaade",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Üle teie väärtusvahemiku",
       "reasonRegion": "Teie piirkonnas",
       "reasonProcedure": "Vastab teie menetlusliigile"
+    },
+    "degraded": "Osa otsingust pole saadaval, seega võivad need tulemused olla puudulikud.",
+    "applied": {
+      "label": "Loetud sinu otsingust:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "kuni {{max}}",
+      "valueMin": "alates {{min}}",
+      "deadlineUntil": "sulgub {{date}}",
+      "undo": "Tühjenda"
     }
   },
   "today": {

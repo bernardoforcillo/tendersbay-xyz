@@ -402,7 +402,19 @@
       "deadline7": "Next 7 days",
       "deadline30": "Next 30 days",
       "deadline90": "Next 90 days",
-      "clear": "Clear all"
+      "clear": "Clear all",
+      "sort": "Sort by",
+      "sorts": {
+        "relevance": "Relevance",
+        "deadline": "Deadline",
+        "published": "Newest",
+        "value": "Value"
+      },
+      "valueMin": "Min value",
+      "valueMax": "Max value",
+      "valuePlaceholder": "e.g. 100000",
+      "buyer": "Buyer",
+      "buyerPlaceholder": "Contracting authority"
     },
     "detail": {
       "overview": "Overview",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Above your value band",
       "reasonRegion": "In your region",
       "reasonProcedure": "Matches your procedure type"
+    },
+    "degraded": "Part of the search is unavailable, so these results may be incomplete.",
+    "applied": {
+      "label": "Read from your search:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "up to {{max}}",
+      "valueMin": "from {{min}}",
+      "deadlineUntil": "closing by {{date}}",
+      "undo": "Clear"
     }
   },
   "today": {

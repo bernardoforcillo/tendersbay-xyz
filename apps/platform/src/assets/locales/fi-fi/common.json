@@ -402,7 +402,19 @@
       "deadline7": "Seuraavat 7 päivää",
       "deadline30": "Seuraavat 30 päivää",
       "deadline90": "Seuraavat 90 päivää",
-      "clear": "Tyhjennä kaikki"
+      "clear": "Tyhjennä kaikki",
+      "sort": "Järjestä",
+      "sorts": {
+        "relevance": "Osuvuus",
+        "deadline": "Määräaika",
+        "published": "Uusimmat",
+        "value": "Arvo"
+      },
+      "valueMin": "Vähimmäisarvo",
+      "valueMax": "Enimmäisarvo",
+      "valuePlaceholder": "esim. 100000",
+      "buyer": "Hankintayksikkö",
+      "buyerPlaceholder": "Hankintayksikön nimi"
     },
     "detail": {
       "overview": "Yleiskatsaus",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Arvoalueesi yläpuolella",
       "reasonRegion": "Alueellasi",
       "reasonProcedure": "Vastaa menettelytyyppiäsi"
+    },
+    "degraded": "Osa hausta ei ole käytettävissä, joten nämä tulokset voivat olla puutteellisia.",
+    "applied": {
+      "label": "Luettu hakusanoistasi:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "enintään {{max}}",
+      "valueMin": "vähintään {{min}}",
+      "deadlineUntil": "päättyy {{date}}",
+      "undo": "Tyhjennä"
     }
   },
   "today": {
