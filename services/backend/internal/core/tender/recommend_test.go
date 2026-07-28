@@ -240,7 +240,11 @@ func (f *recommendFakeRepo) DistinctCountries(context.Context) ([]string, error)
 	return f.countries, nil
 }
 
-func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, limit, _ int) ([]Tender, error) {
+func (f *recommendFakeRepo) FacetCounts(context.Context, Filters) (Facets, error) {
+	return Facets{}, nil
+}
+
+func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, _ SortOrder, limit, _ int) ([]Tender, error) {
 	end := limit
 	if end > len(f.results) {
 		end = len(f.results)
@@ -252,7 +256,7 @@ func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, limit, _
 // has something to fuse in these tests — they exercise fit annotation, not
 // retrieval.
 func (f *recommendFakeRepo) LexicalSearch(ctx context.Context, _ string, _ Filters, limit int) ([]ScoredTender, error) {
-	tenders, err := f.SearchTenders(ctx, Filters{}, limit, 0)
+	tenders, err := f.SearchTenders(ctx, Filters{}, SortRelevance, limit, 0)
 	if err != nil {
 		return nil, err
 	}

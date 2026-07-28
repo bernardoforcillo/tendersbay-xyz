@@ -179,8 +179,16 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, query string, filters te
 		rank = "GREATEST(" + rank + ", similarity(t.title, " + trg + "), similarity(t.buyer_name, " + trg + "))"
 	}
 
+	// A snippet of the matched text with the query terms marked, so a result
+	// can show WHY it matched. The source text is truncated first: ts_headline
+	// cost grows with document length, and no useful fragment comes from
+	// beyond the first few thousand characters.
+	snippet := "ts_headline('simple', left(coalesce(NULLIF(t.description, ''), t.title), 4000), " +
+		"websearch_to_tsquery('simple', " + tsq + "), " +
+		"'StartSel=<mark>, StopSel=</mark>, MaxWords=32, MinWords=12, MaxFragments=1, FragmentDelimiter= … ')"
+
 	clauses := append([]string{match}, filterClauses(filters, b)...)
-	sql := "SELECT" + tenderSelectColumns + ",\n\t" + rank + " AS relevance" +
+	sql := "SELECT" + tenderSelectColumns + ",\n\t" + rank + " AS relevance,\n\t" + snippet + " AS snippet" +
 		tenderFromClause + whereClause(clauses) +
 		// t.id last so the order is total: without it, two equally-ranked
 		// tenders published at the same instant could swap places between
@@ -191,19 +199,88 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, query string, filters te
 	return r.queryScoredTenders(ctx, "lexical search", sql, b.args)
 }
 
-// SearchByFiltersRanked returns tenders matching filters ordered by
-// published_at descending — the browse path, used when there is no query text
-// to rank by. Scores are left at zero: with no query, relevance is undefined,
-// and inventing one would be a lie the UI would then display.
-func (r *TenderRepo) SearchByFiltersRanked(ctx context.Context, filters tender.Filters, limit, offset int) ([]tender.ScoredTender, error) {
+// browseOrderBy renders a sort order as SQL for the browse path.
+//
+// Every branch ends in t.id so the order is total: without a final
+// tie-break, rows that compare equal can be returned in a different order on
+// each page, making a tender appear twice or not at all as the user pages.
+// NULLs sort last throughout — an unknown value is not a small one.
+func browseOrderBy(sortBy tender.SortOrder) string {
+	switch sortBy {
+	case tender.SortDeadline:
+		// Only deadlines still ahead of us are useful "soonest first"; expired
+		// and missing ones go to the end rather than the top.
+		return "\nORDER BY (t.deadline IS NULL OR t.deadline < now()), t.deadline ASC, t.id DESC"
+	case tender.SortValue:
+		return "\nORDER BY t.value DESC NULLS LAST, t.id DESC"
+	default:
+		return "\nORDER BY t.published_at DESC NULLS LAST, t.id DESC"
+	}
+}
+
+// SearchByFiltersRanked returns tenders matching filters in the requested
+// order — the browse path, used when there is no query text to rank by.
+// Scores are left at zero: with no query, relevance is undefined, and
+// inventing one would be a lie the UI would then display.
+func (r *TenderRepo) SearchByFiltersRanked(ctx context.Context, filters tender.Filters, sortBy tender.SortOrder, limit, offset int) ([]tender.ScoredTender, error) {
 	b := &argBuilder{}
 	clauses := filterClauses(filters, b)
-	sql := "SELECT" + tenderSelectColumns + ",\n\t0::float8 AS relevance" +
+	sql := "SELECT" + tenderSelectColumns + ",\n\t0::float8 AS relevance,\n\t'' AS snippet" +
 		tenderFromClause + whereClause(clauses) +
-		"\nORDER BY t.published_at DESC NULLS LAST, t.id DESC" +
+		browseOrderBy(sortBy) +
 		"\nLIMIT " + b.next(limit) + " OFFSET " + b.next(offset)
 
 	return r.queryScoredTenders(ctx, "search by filters", sql, b.args)
+}
+
+// FacetCounts aggregates the filtered corpus by country, status and CPV
+// division in one round trip.
+//
+// These are exact counts over everything matching the filters, not over a
+// page — which is what makes them useful on a filter control ("Germany: 412").
+// The three aggregates are UNION ALL-ed rather than issued separately so the
+// filter predicates are evaluated once per grouping instead of three times
+// across three round trips.
+func (r *TenderRepo) FacetCounts(ctx context.Context, filters tender.Filters) (tender.Facets, error) {
+	b := &argBuilder{}
+	// Each arm builds its own clauses so the placeholders stay sequential
+	// across the whole statement.
+	sql := facetArm("country", "t.country", filters, b) +
+		"\nUNION ALL" + facetArm("status", "t.status", filters, b) +
+		"\nUNION ALL" + facetArm("cpv", "left(t.cpv, 2)", filters, b)
+
+	rows, err := r.db.Query(ctx, sql, b.args...)
+	if err != nil {
+		return tender.Facets{}, fmt.Errorf("postgres: facet counts: %w", err)
+	}
+	defer rows.Close()
+
+	byKind := map[string]map[string]int{"country": {}, "status": {}, "cpv": {}}
+	for rows.Next() {
+		var (
+			kind  string
+			value string
+			count int
+		)
+		if err := rows.Scan(&kind, &value, &count); err != nil {
+			return tender.Facets{}, fmt.Errorf("postgres: scan facet count: %w", err)
+		}
+		if bucket, ok := byKind[kind]; ok && value != "" {
+			bucket[value] = count
+		}
+	}
+	if err := rows.Err(); err != nil {
+		return tender.Facets{}, fmt.Errorf("postgres: facet counts: %w", err)
+	}
+	return tender.BuildFacets(byKind["country"], byKind["status"], byKind["cpv"]), nil
+}
+
+// facetArm renders one GROUP BY arm of the facet query.
+func facetArm(kind, expr string, filters tender.Filters, b *argBuilder) string {
+	clauses := filterClauses(filters, b)
+	return "\nSELECT " + b.next(kind) + " AS kind, coalesce(" + expr + ", '') AS value, count(*)::int AS n" +
+		"\nFROM tenders.ingested_tenders t" + whereClause(clauses) +
+		"\nGROUP BY 1, 2"
 }
 
 // FindByIDsFiltered resolves ids to full tenders, keeping only those that also
@@ -228,7 +305,7 @@ func (r *TenderRepo) FindByIDsFiltered(ctx context.Context, ids []string, filter
 	// bigint[]: database/sql has no portable slice binding, and this keeps one
 	// placeholder per id under the same escaping as every other argument.
 	clauses := append([]string{"t.id IN (" + placeholders(numeric, b) + ")"}, filterClauses(filters, b)...)
-	sql := "SELECT" + tenderSelectColumns + ",\n\t0::float8 AS relevance" +
+	sql := "SELECT" + tenderSelectColumns + ",\n\t0::float8 AS relevance,\n\t'' AS snippet" +
 		tenderFromClause + whereClause(clauses)
 
 	scored, err := r.queryScoredTenders(ctx, "find tenders by ids", sql, b.args)
@@ -258,10 +335,11 @@ func (r *TenderRepo) queryScoredTenders(ctx context.Context, what, sql string, a
 			id        int64
 			sourceURL *string
 			relevance float64
+			snippet   string
 		)
 		if err := rows.Scan(&id, &row.Title, &row.BuyerName, &row.Status, &row.ProcedureType,
 			&row.Country, &row.CPV, &row.Value, &row.Currency, &row.PublishedAt, &row.Deadline,
-			&row.Source, &row.SourceRef, &row.NUTS, &sourceURL, &relevance); err != nil {
+			&row.Source, &row.SourceRef, &row.NUTS, &sourceURL, &relevance, &snippet); err != nil {
 			return nil, fmt.Errorf("postgres: scan %s row: %w", what, err)
 		}
 		t := tender.Tender{
@@ -274,7 +352,7 @@ func (r *TenderRepo) queryScoredTenders(ctx context.Context, what, sql string, a
 		if sourceURL != nil {
 			t.SourceURL = *sourceURL
 		}
-		out = append(out, tender.ScoredTender{Tender: t, RelevanceScore: relevance})
+		out = append(out, tender.ScoredTender{Tender: t, RelevanceScore: relevance, Snippet: snippet})
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("postgres: %s: %w", what, err)

@@ -273,3 +273,121 @@ func TestDistinctByBestScore_KeepsBestChunkPerTenderInOrder(t *testing.T) {
 		t.Errorf("best[1] = %v, want 0.8 (the higher-scoring chunk)", best["1"])
 	}
 }
+
+func TestParseSortOrder(t *testing.T) {
+	for input, want := range map[string]SortOrder{
+		"deadline":  SortDeadline,
+		"PUBLISHED": SortPublished,
+		" value ":   SortValue,
+		"relevance": SortRelevance,
+		// An unknown sort is a client bug; falling back beats failing the
+		// whole search over the ordering of results it would still return.
+		"nonsense": SortRelevance,
+		"":         SortRelevance,
+	} {
+		if got := ParseSortOrder(input); got != want {
+			t.Errorf("ParseSortOrder(%q) = %q, want %q", input, got, want)
+		}
+	}
+}
+
+// Sorting "soonest deadline first" naively puts the longest-expired notice at
+// the very top, which is the opposite of useful.
+func TestApplySort_DeadlinePushesExpiredAndUndatedLast(t *testing.T) {
+	now := time.Date(2026, 7, 28, 12, 0, 0, 0, time.UTC)
+	past := now.AddDate(0, 0, -10)
+	soon := now.AddDate(0, 0, 3)
+	later := now.AddDate(0, 0, 40)
+
+	results := []ScoredTender{
+		{Tender: Tender{ID: "expired", Deadline: &past}},
+		{Tender: Tender{ID: "none"}},
+		{Tender: Tender{ID: "later", Deadline: &later}},
+		{Tender: Tender{ID: "soon", Deadline: &soon}},
+	}
+	applySort(results, SortDeadline, now)
+
+	if !equalIDs(results[:2], "soon", "later") {
+		t.Errorf("order = %v, want the actionable deadlines first", ids(results))
+	}
+	if results[2].ID == "soon" || results[3].ID == "later" {
+		t.Errorf("order = %v, want expired and undated tenders at the end", ids(results))
+	}
+}
+
+// An unknown value is not a small one, but it can't outrank a known one either.
+func TestApplySort_ValueAndPublishedPutUnknownsLast(t *testing.T) {
+	now := time.Now()
+	big, small := int64(1_000_000), int64(1_000)
+	old := now.AddDate(-1, 0, 0)
+
+	byValue := []ScoredTender{
+		{Tender: Tender{ID: "unknown"}},
+		{Tender: Tender{ID: "small", Value: &small}},
+		{Tender: Tender{ID: "big", Value: &big}},
+	}
+	applySort(byValue, SortValue, now)
+	if !equalIDs(byValue, "big", "small", "unknown") {
+		t.Errorf("value order = %v, want [big small unknown]", ids(byValue))
+	}
+
+	byPublished := []ScoredTender{
+		{Tender: Tender{ID: "undated"}},
+		{Tender: Tender{ID: "old", PublishedAt: &old}},
+		{Tender: Tender{ID: "new", PublishedAt: &now}},
+	}
+	applySort(byPublished, SortPublished, now)
+	if !equalIDs(byPublished, "new", "old", "undated") {
+		t.Errorf("published order = %v, want [new old undated]", ids(byPublished))
+	}
+}
+
+// Relevance means "leave the fused order alone": re-sorting on the score would
+// discard the deterministic tie-breaks fuse already applied.
+func TestApplySort_RelevanceLeavesTheFusedOrderIntact(t *testing.T) {
+	results := scored("c", "a", "b")
+	applySort(results, SortRelevance, time.Now())
+	if !equalIDs(results, "c", "a", "b") {
+		t.Errorf("order = %v, want it untouched", ids(results))
+	}
+}
+
+func TestFacetsOf_CountsByCountryStatusAndCPVDivision(t *testing.T) {
+	got := facetsOf([]ScoredTender{
+		{Tender: Tender{ID: "1", Country: "IT", Status: "open", CPV: "45233120"}},
+		{Tender: Tender{ID: "2", Country: "IT", Status: "open", CPV: "45000000"}},
+		{Tender: Tender{ID: "3", Country: "DE", Status: "awarded", CPV: "72000000"}},
+		{Tender: Tender{ID: "4"}}, // no facets at all — must not become an "" bucket
+	})
+
+	if len(got.Countries) != 2 || got.Countries[0].Value != "IT" || got.Countries[0].Count != 2 {
+		t.Errorf("Countries = %+v, want IT:2 first then DE:1", got.Countries)
+	}
+	if len(got.CPVDivisions) != 2 || got.CPVDivisions[0].Value != "45" || got.CPVDivisions[0].Count != 2 {
+		t.Errorf("CPVDivisions = %+v, want division 45 counted twice", got.CPVDivisions)
+	}
+	for _, f := range got.Statuses {
+		if f.Value == "" {
+			t.Error("an empty status became a facet bucket")
+		}
+	}
+}
+
+// Map iteration is randomised, so unsorted facets would reorder the filter bar
+// on every request.
+func TestSortedFacets_IsDeterministic(t *testing.T) {
+	counts := map[string]int{"a": 2, "b": 2, "c": 5, "d": 1}
+	first := sortedFacets(counts)
+	for i := 0; i < 20; i++ {
+		got := sortedFacets(counts)
+		for j := range got {
+			if got[j] != first[j] {
+				t.Fatalf("facet order changed between identical calls: %+v then %+v", first, got)
+			}
+		}
+	}
+	// Highest count first, ties broken by value.
+	if first[0].Value != "c" || first[1].Value != "a" || first[2].Value != "b" {
+		t.Errorf("order = %+v, want c, then a and b by value, then d", first)
+	}
+}

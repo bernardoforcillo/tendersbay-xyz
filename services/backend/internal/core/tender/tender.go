@@ -99,11 +99,22 @@ func (f Filters) IsZero() bool {
 type ScoredTender struct {
 	Tender
 	RelevanceScore float64
+	// Snippet is a fragment of the matched text with the query terms wrapped
+	// in <mark>…</mark>, so a result can show WHY it matched. Only the keyword
+	// retriever can produce one, so it is empty for results found by vector
+	// search alone and for filters-only browses.
+	//
+	// It contains raw tender text around those markers: renderers must split
+	// on the markers and escape everything else, never inject it as HTML.
+	Snippet string
 }
 
 // Repo is the subset of postgres.TenderRepo the service needs.
 type Repo interface {
-	SearchTenders(ctx context.Context, filters Filters, limit, offset int) ([]Tender, error)
+	SearchTenders(ctx context.Context, filters Filters, sortBy SortOrder, limit, offset int) ([]Tender, error)
+	// FacetCounts aggregates the whole filtered corpus by country, status and
+	// CPV division — the browse path's facets are exact, not windowed.
+	FacetCounts(ctx context.Context, filters Filters) (Facets, error)
 	// LexicalSearch is the keyword half of hybrid retrieval — full-text and
 	// trigram matching, already filtered and ranked, best-first. It answers
 	// the queries dense embeddings structurally can't: exact codes, notice
@@ -253,8 +264,10 @@ func (s *Service) embedQuery(ctx context.Context, query string) ([]float32, erro
 // (the ConnectRPC handler) decides which, Search just uses whatever key
 // it's given.
 type SearchParams struct {
-	Query         string
-	Filters       Filters
+	Query   string
+	Filters Filters
+	// Sort selects the result ordering; the zero value means relevance.
+	Sort          SortOrder
 	Limit         int
 	Offset        int
 	Authenticated bool
@@ -269,6 +282,15 @@ type SearchOutput struct {
 	// so a degraded search is visibly degraded rather than quietly answering
 	// a different question — see RetrievalMode.
 	Mode RetrievalMode
+	// AppliedFilters and AppliedQuery are what the search actually ran with
+	// after constraints were lifted out of the query text (see ParseQuery).
+	// Returned so the UI can show what it understood and let the user undo it
+	// — a filter the user can't see is one they can't correct.
+	AppliedFilters Filters
+	AppliedQuery   string
+	// Facets are per-field counts for filter-bar badges. See Facets for what
+	// they count, which differs between a query-driven search and a browse.
+	Facets Facets
 }
 
 // Search runs one tender search: rate-limits, clamps the result count to
@@ -309,7 +331,8 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 	}
 
 	if strings.TrimSpace(p.Query) == "" {
-		return s.searchByFiltersOnly(ctx, p.Filters, limit, offset)
+		out, err := s.searchByFiltersOnly(ctx, p.Filters, p.Sort, limit, offset)
+		return withApplied(out, err, p.Filters, "")
 	}
 
 	// Lift the constraints hiding in the prose ("sotto 100k", "entro 30
@@ -321,13 +344,29 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 	// If the query was nothing BUT constraints ("bandi aperti sotto 100k"),
 	// there is no text left to retrieve on and this is really a browse.
 	if parsed.Text == "" {
-		return s.searchByFiltersOnly(ctx, filters, limit, offset)
+		out, err := s.searchByFiltersOnly(ctx, filters, p.Sort, limit, offset)
+		return withApplied(out, err, filters, "")
 	}
-	return s.searchHybrid(ctx, parsed.Text, filters, limit, offset)
+	out, err := s.searchHybrid(ctx, parsed.Text, filters, p.Sort, limit, offset)
+	return withApplied(out, err, filters, parsed.Text)
 }
 
-func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, limit, offset int) (SearchOutput, error) {
-	tenders, err := s.repo.SearchTenders(ctx, filters, limit+1, offset)
+// withApplied stamps the filters and query the search actually ran with onto
+// its output, so every return path reports them the same way.
+func withApplied(out SearchOutput, err error, filters Filters, query string) (SearchOutput, error) {
+	if err != nil {
+		return SearchOutput{}, err
+	}
+	out.AppliedFilters = filters
+	out.AppliedQuery = query
+	return out, nil
+}
+
+// searchByFiltersOnly is the browse path: no query text, so results are
+// ordered by the requested sort (publication date by default) rather than by a
+// relevance that doesn't exist.
+func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, sortBy SortOrder, limit, offset int) (SearchOutput, error) {
+	tenders, err := s.repo.SearchTenders(ctx, filters, browseSort(sortBy), limit+1, offset)
 	if err != nil {
 		return SearchOutput{}, fmt.Errorf("tender: search by filters: %w", err)
 	}
@@ -339,5 +378,24 @@ func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, limi
 	for i, t := range tenders {
 		results[i] = ScoredTender{Tender: t}
 	}
-	return SearchOutput{Results: results, HasMore: hasMore, Mode: ModeFilters}, nil
+
+	// Browse facets are exact counts over the whole filtered corpus, which the
+	// database can aggregate directly — unlike a query-driven search, there is
+	// no ranked window here to count instead. A facet failure is not worth
+	// failing the search over; the badges simply don't render.
+	out := SearchOutput{Results: results, HasMore: hasMore, Mode: ModeFilters}
+	if facets, facetErr := s.repo.FacetCounts(ctx, filters); facetErr == nil {
+		out.Facets = facets
+	}
+	return out, nil
+}
+
+// browseSort maps a requested order onto one the browse path can serve.
+// Relevance is undefined with no query, so it becomes "newest first" rather
+// than an arbitrary order dressed up as ranking.
+func browseSort(sortBy SortOrder) SortOrder {
+	if sortBy == SortRelevance || sortBy == "" {
+		return SortPublished
+	}
+	return sortBy
 }

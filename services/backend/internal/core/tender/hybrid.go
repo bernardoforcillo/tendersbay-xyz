@@ -3,7 +3,9 @@ package tender
 import (
 	"context"
 	"fmt"
+	"math"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -30,6 +32,150 @@ const (
 // search would normally use.
 func (m RetrievalMode) Degraded() bool {
 	return m == ModeLexical || m == ModeSemantic
+}
+
+// SortOrder names how results should be ordered.
+type SortOrder string
+
+const (
+	// SortRelevance is the default: the fused ranking. It is undefined without
+	// a query, where it falls back to SortPublished rather than pretending
+	// every result is equally relevant.
+	SortRelevance SortOrder = "relevance"
+	// SortDeadline puts the soonest still-open deadline first. Tenders whose
+	// deadline has passed, or that have none, sort last — ordering by "soonest"
+	// would otherwise surface the most thoroughly expired notice first.
+	SortDeadline SortOrder = "deadline"
+	// SortPublished is newest first.
+	SortPublished SortOrder = "published"
+	// SortValue is largest first; tenders with no known value sort last.
+	SortValue SortOrder = "value"
+)
+
+// ParseSortOrder maps a wire value onto a SortOrder, falling back to
+// SortRelevance for anything unrecognised — an unknown sort is a client bug,
+// and failing the whole search over it would be a worse answer than the
+// default ordering.
+func ParseSortOrder(s string) SortOrder {
+	switch SortOrder(strings.ToLower(strings.TrimSpace(s))) {
+	case SortDeadline:
+		return SortDeadline
+	case SortPublished:
+		return SortPublished
+	case SortValue:
+		return SortValue
+	default:
+		return SortRelevance
+	}
+}
+
+// applySort reorders a ranked list. SortRelevance leaves it alone: it is
+// already in fused order, and re-sorting on the score would discard the
+// deterministic tie-breaks fuse applied.
+func applySort(results []ScoredTender, order SortOrder, now time.Time) {
+	switch order {
+	case SortDeadline:
+		sort.SliceStable(results, func(i, j int) bool {
+			return deadlineSortKey(results[i], now) < deadlineSortKey(results[j], now)
+		})
+	case SortPublished:
+		sort.SliceStable(results, func(i, j int) bool {
+			return publishedSortKey(results[i]) > publishedSortKey(results[j])
+		})
+	case SortValue:
+		sort.SliceStable(results, func(i, j int) bool {
+			return valueSortKey(results[i]) > valueSortKey(results[j])
+		})
+	}
+}
+
+// deadlineSortKey ranks by how soon a tender closes, pushing expired and
+// deadline-less tenders to the end. Sorting "soonest first" naively would put
+// the longest-expired notice at the very top, which is the opposite of useful.
+func deadlineSortKey(t ScoredTender, now time.Time) int64 {
+	if t.Deadline == nil || t.Deadline.Before(now) {
+		return math.MaxInt64
+	}
+	return t.Deadline.Unix()
+}
+
+func publishedSortKey(t ScoredTender) int64 {
+	if t.PublishedAt == nil {
+		return math.MinInt64
+	}
+	return t.PublishedAt.Unix()
+}
+
+func valueSortKey(t ScoredTender) int64 {
+	if t.Value == nil {
+		return math.MinInt64
+	}
+	return *t.Value
+}
+
+// FacetCount is one facet value and how many results carry it.
+type FacetCount struct {
+	Value string
+	Count int
+}
+
+// Facets are per-field result counts, for filter-bar badges.
+//
+// What they count depends on the search, and the difference is reported rather
+// than smoothed over: for a query-driven search they describe the ranked
+// window this request considered, since that is the set that was actually
+// scored; for a filters-only browse they are exact counts over the whole
+// filtered corpus, which the database can aggregate directly. Presenting a
+// window count as a corpus count would be a number that looks authoritative
+// and isn't.
+type Facets struct {
+	Countries    []FacetCount
+	Statuses     []FacetCount
+	CPVDivisions []FacetCount // keyed by the 2-digit CPV division
+}
+
+// facetsOf counts a result window by country, status and CPV division.
+func facetsOf(results []ScoredTender) Facets {
+	countries, statuses, divisions := map[string]int{}, map[string]int{}, map[string]int{}
+	for _, r := range results {
+		if r.Country != "" {
+			countries[r.Country]++
+		}
+		if r.Status != "" {
+			statuses[r.Status]++
+		}
+		if len(r.CPV) >= 2 {
+			divisions[r.CPV[:2]]++
+		}
+	}
+	return BuildFacets(countries, statuses, divisions)
+}
+
+// BuildFacets assembles Facets from per-field count maps. Exported for the
+// repository adapter, which aggregates the same three groupings in SQL for
+// the browse path and needs to present them identically.
+func BuildFacets(countries, statuses, cpvDivisions map[string]int) Facets {
+	return Facets{
+		Countries:    sortedFacets(countries),
+		Statuses:     sortedFacets(statuses),
+		CPVDivisions: sortedFacets(cpvDivisions),
+	}
+}
+
+// sortedFacets orders counts descending, then by value, so the same result set
+// always produces the same facet order.
+func sortedFacets(counts map[string]int) []FacetCount {
+	out := make([]FacetCount, 0, len(counts))
+	for value, count := range counts {
+		out = append(out, FacetCount{Value: value, Count: count})
+	}
+	sort.SliceStable(out, func(i, j int) bool {
+		if out[i].Count != out[j].Count {
+			return out[i].Count > out[j].Count
+		}
+		return out[i].Value < out[j].Value
+	})
+	return out
 }
 
 // Retrieval-window bounds. They exist because a chunk is not a tender: one
@@ -136,7 +282,7 @@ func (r Ranking) withDefaults() Ranking {
 // Both retrievers return tenders that have already passed the authoritative
 // Postgres filter — the vector store's own pre-filter narrows the search but
 // never decides what is allowed through.
-func (s *Service) searchHybrid(ctx context.Context, query string, filters Filters, limit, offset int) (SearchOutput, error) {
+func (s *Service) searchHybrid(ctx context.Context, query string, filters Filters, sortBy SortOrder, limit, offset int) (SearchOutput, error) {
 	// Retrieve one past the end of the requested page so has_more can be
 	// answered without a second COUNT query.
 	want := offset + limit + 1
@@ -160,13 +306,21 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 		mode = ModeSemantic
 	}
 
-	fused := s.fuse(lexical, dense, time.Now())
+	now := time.Now()
+	fused := s.fuse(lexical, dense, now)
+
+	// Facets are counted over the whole ranked window, before paging — they
+	// describe the result set, not the page the caller happens to be on.
+	facets := facetsOf(fused)
+	applySort(fused, sortBy, now)
 
 	// Either retriever coming back exactly full means it was truncated, so
 	// more matches exist beyond this window even if the fused set doesn't
 	// reach past the page.
 	truncated := len(lexical) >= want || len(dense) >= want
-	return page(fused, limit, offset, truncated, mode), nil
+	out := page(fused, limit, offset, truncated, mode)
+	out.Facets = facets
+	return out, nil
 }
 
 // denseCandidates runs the vector retriever and resolves its hits to tenders,

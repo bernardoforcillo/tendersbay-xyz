@@ -29,6 +29,8 @@ type fakeRepo struct {
 	lexicalErr   error
 	gotLexLimit  int
 	gotFilters   tender.Filters
+	gotSort      tender.SortOrder
+	facets       tender.Facets
 }
 
 func (f *fakeRepo) LexicalSearch(_ context.Context, _ string, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
@@ -43,7 +45,12 @@ func (f *fakeRepo) LexicalSearch(_ context.Context, _ string, filters tender.Fil
 	return f.lexical, nil
 }
 
-func (f *fakeRepo) SearchTenders(_ context.Context, _ tender.Filters, limit, offset int) ([]tender.Tender, error) {
+func (f *fakeRepo) FacetCounts(context.Context, tender.Filters) (tender.Facets, error) {
+	return f.facets, nil
+}
+
+func (f *fakeRepo) SearchTenders(_ context.Context, _ tender.Filters, sortBy tender.SortOrder, limit, offset int) ([]tender.Tender, error) {
+	f.gotSort = sortBy
 	f.gotLimit = limit
 	if f.byFiltersErr != nil {
 		return nil, f.byFiltersErr

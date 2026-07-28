@@ -60,8 +60,8 @@ var _ tender.Repo = (*TenderRepo)(nil)
 
 // SearchTenders satisfies tender.Repo. Pass limit+1 from the caller to
 // compute has_more without a separate COUNT(*).
-func (r *TenderRepo) SearchTenders(ctx context.Context, filters tender.Filters, limit, offset int) ([]tender.Tender, error) {
-	scored, err := r.SearchByFiltersRanked(ctx, filters, limit, offset)
+func (r *TenderRepo) SearchTenders(ctx context.Context, filters tender.Filters, sortBy tender.SortOrder, limit, offset int) ([]tender.Tender, error) {
+	scored, err := r.SearchByFiltersRanked(ctx, filters, sortBy, limit, offset)
 	if err != nil {
 		return nil, err
 	}

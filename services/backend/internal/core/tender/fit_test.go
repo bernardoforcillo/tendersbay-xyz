@@ -15,8 +15,12 @@ type fitFakeRepo struct {
 	detail *TenderDetail
 }
 
-func (f *fitFakeRepo) SearchTenders(context.Context, Filters, int, int) ([]Tender, error) {
+func (f *fitFakeRepo) SearchTenders(context.Context, Filters, SortOrder, int, int) ([]Tender, error) {
 	return nil, nil
+}
+
+func (f *fitFakeRepo) FacetCounts(context.Context, Filters) (Facets, error) {
+	return Facets{}, nil
 }
 func (f *fitFakeRepo) LexicalSearch(context.Context, string, Filters, int) ([]ScoredTender, error) {
 	return nil, nil

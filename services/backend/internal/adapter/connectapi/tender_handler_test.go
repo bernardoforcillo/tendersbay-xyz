@@ -20,7 +20,11 @@ type fakeRepo struct {
 	countries []string
 }
 
-func (f *fakeRepo) SearchTenders(context.Context, tender.Filters, int, int) ([]tender.Tender, error) {
+func (f *fakeRepo) FacetCounts(context.Context, tender.Filters) (tender.Facets, error) {
+	return tender.Facets{}, nil
+}
+
+func (f *fakeRepo) SearchTenders(context.Context, tender.Filters, tender.SortOrder, int, int) ([]tender.Tender, error) {
 	return f.results, nil
 }
 func (f *fakeRepo) DistinctCountries(context.Context) ([]string, error) {

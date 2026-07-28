@@ -83,7 +83,7 @@ func TestSearchByFiltersRanked_FiltersByCountryAndOrdersByPublishedAtDesc(t *tes
 	idIT2 := insertTestTender(t, sqlDB, "search-2", withCountry("ITA"), withPublishedAt(newer))
 	_ = insertTestTender(t, sqlDB, "search-3", withCountry("FRA"), withPublishedAt(newer))
 
-	rows, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"ITA"}}, 10, 0)
+	rows, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"ITA"}}, tender.SortPublished, 10, 0)
 	if err != nil {
 		t.Fatalf("SearchByFiltersRanked: %v", err)
 	}
@@ -103,14 +103,14 @@ func TestSearchByFiltersRanked_RespectsLimitAndOffset(t *testing.T) {
 		insertTestTender(t, sqlDB, "page-"+string(rune('a'+i)), withCountry("DEU"), withPublishedAt(time.Now().Add(-time.Duration(i)*time.Hour)))
 	}
 
-	page1, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"DEU"}}, 2, 0)
+	page1, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"DEU"}}, tender.SortPublished, 2, 0)
 	if err != nil {
 		t.Fatalf("SearchByFiltersRanked page1: %v", err)
 	}
 	if len(page1) != 2 {
 		t.Fatalf("len(page1) = %d, want 2", len(page1))
 	}
-	page2, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"DEU"}}, 2, 2)
+	page2, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"DEU"}}, tender.SortPublished, 2, 2)
 	if err != nil {
 		t.Fatalf("SearchByFiltersRanked page2: %v", err)
 	}
@@ -152,7 +152,7 @@ func TestSearchTenders_RoundTripsStringIDs(t *testing.T) {
 	ctx := context.Background()
 	insertTestTender(t, sqlDB, "domain-1", withCountry("ITA"), withPublishedAt(time.Now()))
 
-	rows, err := repo.SearchTenders(ctx, tender.Filters{Countries: []string{"ITA"}}, 10, 0)
+	rows, err := repo.SearchTenders(ctx, tender.Filters{Countries: []string{"ITA"}}, tender.SortPublished, 10, 0)
 	if err != nil {
 		t.Fatalf("SearchTenders: %v", err)
 	}
@@ -167,7 +167,7 @@ func TestSearchTenders_RoundTripsStringIDs(t *testing.T) {
 func TestSearchByFiltersRanked_ReturnsNUTS(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	id := insertTestTender(t, sqlDB, "nuts-row", withCountry("ITA"), withNUTS("ITC4"))
-	rows, err := repo.SearchByFiltersRanked(context.Background(), tender.Filters{Countries: []string{"ITA"}}, 10, 0)
+	rows, err := repo.SearchByFiltersRanked(context.Background(), tender.Filters{Countries: []string{"ITA"}}, tender.SortPublished, 10, 0)
 	if err != nil {
 		t.Fatalf("SearchByFiltersRanked: %v", err)
 	}
@@ -211,7 +211,7 @@ func TestSearchByFiltersRanked_JoinsNoticeDocumentURL(t *testing.T) {
 	insertTestDocument(t, sqlDB, withDoc, "spec", "https://ted.europa.eu/example/spec") // must NOT be picked
 	withoutDoc := insertTestTender(t, sqlDB, "doc-without-notice", withCountry("ITA"))
 
-	rows, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"ITA"}}, 10, 0)
+	rows, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"ITA"}}, tender.SortPublished, 10, 0)
 	if err != nil {
 		t.Fatalf("SearchByFiltersRanked: %v", err)
 	}
