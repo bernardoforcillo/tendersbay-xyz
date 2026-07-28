@@ -182,7 +182,10 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, query string, filters te
 	clauses := append([]string{match}, filterClauses(filters, b)...)
 	sql := "SELECT" + tenderSelectColumns + ",\n\t" + rank + " AS relevance" +
 		tenderFromClause + whereClause(clauses) +
-		"\nORDER BY relevance DESC, t.published_at DESC NULLS LAST" +
+		// t.id last so the order is total: without it, two equally-ranked
+		// tenders published at the same instant could swap places between
+		// pages and make a result appear twice or not at all.
+		"\nORDER BY relevance DESC, t.published_at DESC NULLS LAST, t.id DESC" +
 		"\nLIMIT " + b.next(limit)
 
 	return r.queryScoredTenders(ctx, "lexical search", sql, b.args)

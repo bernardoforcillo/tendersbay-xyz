@@ -155,15 +155,30 @@ func main() {
 	)
 
 	// Tender search — Qdrant/Ollama/Redis unreachable at startup is logged,
-	// not fatal: search degrades to Postgres-only filtering via
-	// knowledgeBaseAdapter's nil handling (for Qdrant/Ollama) or fails
-	// rate-limit checks via unavailableRateLimiter (for Redis) — neither
-	// blocks the whole service from starting over an optional dependency.
+	// not fatal: with the vector store down, knowledgeBaseAdapter's nil
+	// handling makes every semantic call error, and hybrid retrieval keeps
+	// answering queries from the lexical index alone (reporting the
+	// degradation via SearchOutput.Mode). Redis down fails rate-limit checks
+	// closed via unavailableRateLimiter. Neither blocks the whole service from
+	// starting over an optional dependency.
 	// MOVED above the agent block: agentSvc's search_tenders tool needs
 	// tenderSvc as its TenderSearcher.
 	kb, kbErr := knowledge.NewKnowledgeBase(ctx, cfg.QdrantURL, cfg.OllamaBaseURL, cfg.EmbeddingModel)
 	if kbErr != nil {
 		slog.Warn("failed to connect to knowledge base, semantic search will be degraded", "error", kbErr)
+	}
+
+	// Query embeddings are memoised in Redis. Embedding is an HTTP round trip
+	// to Ollama on the critical path of every search — and of every page of
+	// the same search. Keyed by embedding model, so switching models can never
+	// serve a vector computed by the previous one. Optional: a failure here
+	// only costs latency, so it's a warning, not a startup failure.
+	var embeddingCache tender.EmbeddingCache
+	if cache, cacheErr := redis.NewEmbeddingCache(cfg.RedisURL, cfg.EmbeddingModel, embeddingCacheTTL); cacheErr != nil {
+		slog.Warn("failed to build the embedding cache, every search will re-embed its query", "error", cacheErr)
+	} else {
+		embeddingCache = cache
+		defer cache.Close()
 	}
 
 	tenderRepo := postgres.NewTenderRepo(db)
@@ -193,7 +208,7 @@ func main() {
 				SuppliesSubCentralMinor: 21600000,  // €216,000
 			},
 		},
-	)
+	).WithEmbeddingCache(embeddingCache)
 	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo)
 
 	// Bid lifecycle (workbench-bando-hub) — consumes workbenchSvc for access
@@ -273,6 +288,12 @@ func main() {
 	}
 }
 
+// embeddingCacheTTL bounds how long a memoised query embedding lives. Long
+// enough that paging through one search, and repeats of a popular query,
+// never re-embed; short enough that the cache's memory stays proportional to
+// recent traffic rather than growing with every query ever typed.
+const embeddingCacheTTL = time.Hour
+
 // knowledgeBaseAdapter converts *knowledge.KnowledgeBase's
 // []knowledge.SearchResult into the []tender.ScoredChunk shape
 // tender.KnowledgeBase expects, and turns a nil KnowledgeBase (Qdrant/Ollama
@@ -283,11 +304,18 @@ type knowledgeBaseAdapter struct {
 	kb *knowledge.KnowledgeBase
 }
 
-func (a knowledgeBaseAdapter) SearchFiltered(ctx context.Context, query string, limit int, filters tender.Filters) ([]tender.ScoredChunk, error) {
+func (a knowledgeBaseAdapter) EmbedQuery(ctx context.Context, query string) ([]float32, error) {
 	if a.kb == nil {
 		return nil, errors.New("knowledge base unavailable")
 	}
-	results, err := a.kb.SearchFiltered(ctx, query, limit, vectorFilter(filters))
+	return a.kb.EmbedQuery(ctx, query)
+}
+
+func (a knowledgeBaseAdapter) SearchByVector(ctx context.Context, vec []float32, limit int, filters tender.Filters) ([]tender.ScoredChunk, error) {
+	if a.kb == nil {
+		return nil, errors.New("knowledge base unavailable")
+	}
+	results, err := a.kb.SearchByVector(ctx, vec, limit, vectorFilter(filters))
 	if err != nil {
 		return nil, err
 	}

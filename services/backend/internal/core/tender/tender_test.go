@@ -94,9 +94,23 @@ type fakeKnowledgeBase struct {
 	related    []tender.ScoredChunk
 	relatedErr error
 	gotFilters tender.Filters
+	gotVector  []float32
+	gotQuery   string
+	embedCalls int
+	embedErr   error
 }
 
-func (f *fakeKnowledgeBase) SearchFiltered(_ context.Context, _ string, limit int, filters tender.Filters) ([]tender.ScoredChunk, error) {
+func (f *fakeKnowledgeBase) EmbedQuery(_ context.Context, query string) ([]float32, error) {
+	f.embedCalls++
+	f.gotQuery = query
+	if f.embedErr != nil {
+		return nil, f.embedErr
+	}
+	return []float32{0.1, 0.2, 0.3}, nil
+}
+
+func (f *fakeKnowledgeBase) SearchByVector(_ context.Context, vec []float32, limit int, filters tender.Filters) ([]tender.ScoredChunk, error) {
+	f.gotVector = vec
 	f.gotLimit = limit
 	f.gotFilters = filters
 	if f.err != nil {

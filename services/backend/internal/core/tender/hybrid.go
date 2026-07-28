@@ -183,12 +183,20 @@ func (s *Service) denseCandidates(ctx context.Context, query string, filters Fil
 		chunkLimit = maxDenseChunks
 	}
 
+	// Embed once, outside the retry loop: the second round differs only in how
+	// many chunks it asks for, and re-embedding for it would double the cost
+	// of the most expensive step for no benefit.
+	vec, err := s.embedQuery(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("tender: embed query: %w", err)
+	}
+
 	var (
 		ids       []string
 		bestScore map[string]float32
 	)
 	for round := 0; round < 2; round++ {
-		hits, err := s.kb.SearchFiltered(ctx, query, chunkLimit, filters)
+		hits, err := s.kb.SearchByVector(ctx, vec, chunkLimit, filters)
 		if err != nil {
 			return nil, fmt.Errorf("tender: semantic search: %w", err)
 		}
@@ -201,9 +209,9 @@ func (s *Service) denseCandidates(ctx context.Context, query string, filters Fil
 		chunkLimit = maxDenseChunks
 	}
 
-	tenders, err := s.repo.EnrichTenders(ctx, ids, filters)
-	if err != nil {
-		return nil, fmt.Errorf("tender: enrich candidates: %w", err)
+	tenders, enrichErr := s.repo.EnrichTenders(ctx, ids, filters)
+	if enrichErr != nil {
+		return nil, fmt.Errorf("tender: enrich candidates: %w", enrichErr)
 	}
 
 	scored := make([]ScoredTender, len(tenders))

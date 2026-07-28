@@ -47,7 +47,11 @@ func (f *fakeRepo) RecentTenderRefs(context.Context, int) ([]tender.TenderRef, e
 
 type fakeKB struct{}
 
-func (fakeKB) SearchFiltered(context.Context, string, int, tender.Filters) ([]tender.ScoredChunk, error) {
+func (fakeKB) EmbedQuery(context.Context, string) ([]float32, error) {
+	return []float32{0.1}, nil
+}
+
+func (fakeKB) SearchByVector(context.Context, []float32, int, tender.Filters) ([]tender.ScoredChunk, error) {
 	return nil, nil
 }
 func (fakeKB) RelatedByDocID(context.Context, string, int) ([]tender.ScoredChunk, error) {

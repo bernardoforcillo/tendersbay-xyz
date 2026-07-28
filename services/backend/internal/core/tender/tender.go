@@ -128,14 +128,32 @@ type ScoredChunk struct {
 // needs, expressed in this package's own ScoredChunk and Filters types
 // rather than go-services/knowledge's — see the package doc comment.
 type KnowledgeBase interface {
-	// SearchFiltered narrows the vector search by the same facets the SQL
+	// EmbedQuery and SearchByVector are separate because embedding is a
+	// network round trip to the model server and searching is not: splitting
+	// them is what lets this package cache the expensive half (see
+	// EmbeddingCache) instead of paying for it again on every page of the
+	// same search.
+	EmbedQuery(ctx context.Context, query string) ([]float32, error)
+	// SearchByVector narrows the vector search by the same facets the SQL
 	// side filters on. Pushing the filter into the vector store is what keeps
 	// a narrow filter (one country out of 27) from consuming the whole
 	// candidate window with rows that will be discarded moments later. It is
 	// an optimisation only: results are filtered authoritatively in Postgres
 	// afterwards either way.
-	SearchFiltered(ctx context.Context, query string, limit int, filters Filters) ([]ScoredChunk, error)
+	SearchByVector(ctx context.Context, vec []float32, limit int, filters Filters) ([]ScoredChunk, error)
 	RelatedByDocID(ctx context.Context, docID string, limit int) ([]ScoredChunk, error)
+}
+
+// EmbeddingCache memoises query embeddings across requests. Optional: a nil
+// cache simply means every search embeds its own query.
+//
+// Correctness never depends on it — a miss, a corrupt entry, or an unreachable
+// cache all just mean "compute it", which is always available and always
+// right. Cache errors are therefore treated as misses rather than propagated.
+type EmbeddingCache interface {
+	// GetEmbedding reports ok=false for a miss, with a nil error.
+	GetEmbedding(ctx context.Context, query string) ([]float32, bool, error)
+	SetEmbedding(ctx context.Context, query string, vec []float32) error
 }
 
 // RateLimiter is the subset of redis.RateLimiter the service needs.
@@ -190,12 +208,44 @@ type Service struct {
 	kb       KnowledgeBase
 	rl       RateLimiter
 	profiles ProfileSource
+	cache    EmbeddingCache // optional; nil disables embedding reuse
 	cfg      Config
 }
 
 // NewService returns a Service.
 func NewService(repo Repo, kb KnowledgeBase, rl RateLimiter, profiles ProfileSource, cfg Config) *Service {
 	return &Service{repo: repo, kb: kb, rl: rl, profiles: profiles, cfg: cfg}
+}
+
+// WithEmbeddingCache attaches a query-embedding cache and returns s. It is a
+// separate step rather than a constructor argument because the cache is
+// genuinely optional — the service is fully correct without one, just slower.
+func (s *Service) WithEmbeddingCache(c EmbeddingCache) *Service {
+	s.cache = c
+	return s
+}
+
+// embedQuery returns query's embedding, reusing a cached one when available.
+//
+// Every cache failure degrades to computing the embedding: a cache that is
+// down, slow to parse, or holding garbage must never be able to fail a search
+// that could otherwise have succeeded.
+func (s *Service) embedQuery(ctx context.Context, query string) ([]float32, error) {
+	if s.cache != nil {
+		if vec, ok, err := s.cache.GetEmbedding(ctx, query); err == nil && ok {
+			return vec, nil
+		}
+	}
+	vec, err := s.kb.EmbedQuery(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	if s.cache != nil {
+		// A failed write is not worth failing the request over — the next
+		// search simply recomputes.
+		_ = s.cache.SetEmbedding(ctx, query, vec)
+	}
+	return vec, nil
 }
 
 // SearchParams is Search's input. RateLimitKey is the client IP for
@@ -261,7 +311,19 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 	if strings.TrimSpace(p.Query) == "" {
 		return s.searchByFiltersOnly(ctx, p.Filters, limit, offset)
 	}
-	return s.searchHybrid(ctx, p.Query, p.Filters, limit, offset)
+
+	// Lift the constraints hiding in the prose ("sotto 100k", "entro 30
+	// giorni") into real filters before retrieving — see ParseQuery. Filters
+	// the caller set explicitly always win over what was inferred.
+	parsed := ParseQuery(p.Query, time.Now())
+	filters := mergeParsedFilters(p.Filters, parsed.Filters)
+
+	// If the query was nothing BUT constraints ("bandi aperti sotto 100k"),
+	// there is no text left to retrieve on and this is really a browse.
+	if parsed.Text == "" {
+		return s.searchByFiltersOnly(ctx, filters, limit, offset)
+	}
+	return s.searchHybrid(ctx, parsed.Text, filters, limit, offset)
 }
 
 func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, limit, offset int) (SearchOutput, error) {
