@@ -239,24 +239,28 @@ func (s *Service) RecommendForClient(ctx context.Context, userID, workspaceID st
 		limit = defaultRecommendLimit
 	}
 
-	filters := Filters{Status: "open"}
-	if len(profile.Countries) > 0 {
-		// profile.Countries is alpha-2 (clientprofile.Profile's Countries
-		// field comment: "matches ingested_tenders.country (alpha3ToAlpha2
-		// at ingestion)" — Task 1's delta). Before that, Countries was
-		// alpha-3, so this filter silently matched zero rows against the
-		// alpha-2 ingested_tenders.country column — a real bug, now fixed
-		// by the type change alone; this line's logic did not need to
-		// change.
-		filters.Country = profile.Countries[0]
-	}
-	if len(profile.Sectors) > 0 {
-		filters.CPV = profile.Sectors[0]
+	// Every country and sector on the profile is passed through, not just the
+	// first: a client that works in three countries was previously shortlisted
+	// against one of them, so two thirds of their profile silently did nothing.
+	//
+	// profile.Countries is alpha-2 (clientprofile.Profile's Countries field
+	// comment: "matches ingested_tenders.country (alpha3ToAlpha2 at
+	// ingestion)" — Task 1's delta). Before that, Countries was alpha-3, so
+	// this filter matched zero rows against the alpha-2
+	// ingested_tenders.country column — fixed by that type change.
+	filters := Filters{
+		Statuses:    []string{"open"},
+		Countries:   profile.Countries,
+		CPVPrefixes: profile.Sectors,
 	}
 
 	out, err := s.Search(ctx, SearchParams{
-		Query:         profile.Notes,
-		Filters:       filters,
+		Query:   profile.Notes,
+		Filters: filters,
+		// ParseQuery stays OFF here on purpose. profile.Notes describes the
+		// client's business, not a search: a note reading "fatturato oltre 5
+		// milioni" would be read as a "value >= 5,000,000" filter and exclude
+		// almost every tender that client could actually bid on.
 		Limit:         limit,
 		Authenticated: true,
 		RateLimitKey:  userID,

@@ -62,8 +62,12 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 	}
 
 	out, err := h.svc.Search(ctx, tender.SearchParams{
-		Query:         req.Msg.Query,
-		Filters:       filters,
+		Query:   req.Msg.Query,
+		Filters: filters,
+		// This query is typed by a person into a search box, so the
+		// constraints buried in it are meant as constraints.
+		ParseQuery:    true,
+		Sort:          tender.ParseSortOrder(req.Msg.Sort),
 		Limit:         int(req.Msg.Limit),
 		Offset:        int(req.Msg.Offset),
 		Authenticated: authed,
@@ -107,9 +111,48 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 	}
 
 	return connect.NewResponse(&tenderv1.SearchTendersResponse{
-		Results: results,
-		HasMore: out.HasMore,
+		Results:           results,
+		HasMore:           out.HasMore,
+		RetrievalMode:     string(out.Mode),
+		Degraded:          out.Mode.Degraded(),
+		AppliedFilters:    filtersToProto(out.AppliedFilters),
+		AppliedQuery:      out.AppliedQuery,
+		CountryFacets:     facetsToProto(out.Facets.Countries),
+		StatusFacets:      facetsToProto(out.Facets.Statuses),
+		CpvDivisionFacets: facetsToProto(out.Facets.CPVDivisions),
 	}), nil
+}
+
+// facetsToProto maps facet counts onto the wire type.
+func facetsToProto(counts []tender.FacetCount) []*tenderv1.FacetCount {
+	out := make([]*tenderv1.FacetCount, len(counts))
+	for i, c := range counts {
+		out[i] = &tenderv1.FacetCount{Value: c.Value, Count: int32(c.Count)}
+	}
+	return out
+}
+
+// filtersToProto reports back the filters the search actually ran with,
+// including any lifted out of the query text. Only the plural fields are
+// filled: the singular ones are deprecated inputs, and echoing a value into
+// both shapes would leave the client guessing which one is authoritative.
+func filtersToProto(f tender.Filters) *tenderv1.TenderFilters {
+	out := &tenderv1.TenderFilters{
+		Countries:    f.Countries,
+		CpvPrefixes:  f.CPVPrefixes,
+		Statuses:     f.Statuses,
+		NutsPrefixes: f.NUTSPrefixes,
+		Buyer:        f.Buyer,
+		ValueMin:     f.ValueMin,
+		ValueMax:     f.ValueMax,
+	}
+	if f.DeadlineFrom != nil {
+		out.DeadlineFrom = f.DeadlineFrom.Format(time.RFC3339)
+	}
+	if f.DeadlineTo != nil {
+		out.DeadlineTo = f.DeadlineTo.Format(time.RFC3339)
+	}
+	return out
 }
 
 // RecommendTendersForClient requires auth like every other handler in this
@@ -149,11 +192,25 @@ func (h *TenderHandler) GetCoverage(ctx context.Context, _ *connect.Request[tend
 	return connect.NewResponse(&tenderv1.GetCoverageResponse{Countries: countries}), nil
 }
 
+// filtersFromProto maps the wire filters onto the domain's.
+//
+// The deprecated singular fields are merged into their plural counterparts
+// rather than ignored: they are a live wire contract, and a client still
+// sending country="IT" must keep getting Italian tenders. Since values within
+// one facet are OR-ed, appending is the correct merge — never a replacement.
 func filtersFromProto(f *tenderv1.TenderFilters) (tender.Filters, error) {
 	if f == nil {
 		return tender.Filters{}, nil
 	}
-	out := tender.Filters{Country: f.Country, CPV: f.Cpv, Status: f.Status}
+	out := tender.Filters{
+		Countries:    append(tender.SingleFilter(f.Country), f.Countries...),
+		CPVPrefixes:  append(tender.SingleFilter(f.Cpv), f.CpvPrefixes...),
+		Statuses:     append(tender.SingleFilter(f.Status), f.Statuses...),
+		NUTSPrefixes: f.NutsPrefixes,
+		Buyer:        f.Buyer,
+		ValueMin:     f.ValueMin,
+		ValueMax:     f.ValueMax,
+	}
 	if f.DeadlineFrom != "" {
 		t, err := time.Parse(time.RFC3339, f.DeadlineFrom)
 		if err != nil {
@@ -195,7 +252,7 @@ func tenderResultToProto(t tender.ScoredTender) *tenderv1.TenderResult {
 		ProcedureType: t.ProcedureType, Country: t.Country, Cpv: t.CPV,
 		Value: value, Currency: t.Currency, PublishedAt: publishedAt, Deadline: deadline,
 		RelevanceScore: t.RelevanceScore, Source: t.Source, SourceRef: t.SourceRef,
-		SourceUrl: t.SourceURL,
+		SourceUrl: t.SourceURL, Snippet: t.Snippet,
 	}
 }
 

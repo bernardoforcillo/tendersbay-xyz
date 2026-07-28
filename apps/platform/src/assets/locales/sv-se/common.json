@@ -402,7 +402,19 @@
       "deadline7": "Nästa 7 dagar",
       "deadline30": "Nästa 30 dagar",
       "deadline90": "Nästa 90 dagar",
-      "clear": "Rensa allt"
+      "clear": "Rensa allt",
+      "sort": "Sortera efter",
+      "sorts": {
+        "relevance": "Relevans",
+        "deadline": "Sista dag",
+        "published": "Senaste",
+        "value": "Värde"
+      },
+      "valueMin": "Lägsta värde",
+      "valueMax": "Högsta värde",
+      "valuePlaceholder": "t.ex. 100000",
+      "buyer": "Upphandlande myndighet",
+      "buyerPlaceholder": "Myndighetens namn"
     },
     "detail": {
       "overview": "Översikt",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Över ditt värdeintervall",
       "reasonRegion": "I din region",
       "reasonProcedure": "Matchar din förfarandetyp"
+    },
+    "degraded": "En del av sökningen är otillgänglig, så dessa resultat kan vara ofullständiga.",
+    "applied": {
+      "label": "Tolkat från din sökning:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "upp till {{max}}",
+      "valueMin": "från {{min}}",
+      "deadlineUntil": "stänger senast {{date}}",
+      "undo": "Rensa"
     }
   },
   "today": {

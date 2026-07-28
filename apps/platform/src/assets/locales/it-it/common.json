@@ -402,7 +402,19 @@
       "deadline7": "Prossimi 7 giorni",
       "deadline30": "Prossimi 30 giorni",
       "deadline90": "Prossimi 90 giorni",
-      "clear": "Cancella tutto"
+      "clear": "Cancella tutto",
+      "sort": "Ordina per",
+      "sorts": {
+        "relevance": "Pertinenza",
+        "deadline": "Scadenza",
+        "published": "Più recenti",
+        "value": "Importo"
+      },
+      "valueMin": "Importo minimo",
+      "valueMax": "Importo massimo",
+      "valuePlaceholder": "es. 100000",
+      "buyer": "Stazione appaltante",
+      "buyerPlaceholder": "Nome dell'ente"
     },
     "detail": {
       "overview": "Panoramica",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Sopra la tua fascia di valore",
       "reasonRegion": "Nella tua regione",
       "reasonProcedure": "Corrisponde al tuo tipo di procedura"
+    },
+    "degraded": "Una parte della ricerca non è disponibile, quindi questi risultati potrebbero essere incompleti.",
+    "applied": {
+      "label": "Letto dalla tua ricerca:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "fino a {{max}}",
+      "valueMin": "da {{min}}",
+      "deadlineUntil": "in scadenza entro il {{date}}",
+      "undo": "Cancella"
     }
   },
   "today": {

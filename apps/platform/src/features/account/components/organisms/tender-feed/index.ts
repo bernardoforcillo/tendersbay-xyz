@@ -8,5 +8,5 @@ export { fitReasonFragments, fitTierPillClassName, fitTierPillTone } from './fit
 export { formatTenderValue } from './format';
 export { thresholdBadge } from './threshold';
 export { tenderTitle } from './title';
-export type { TenderFilterValues } from './use-tender-search';
+export type { SearchMeta, TenderFilterValues, TenderSort } from './use-tender-search';
 export { useTenderSearch } from './use-tender-search';

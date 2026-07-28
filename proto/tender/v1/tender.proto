@@ -29,24 +29,72 @@ message SearchTendersRequest {
   string query = 1;          // optional; empty = filters-only search
   TenderFilters filters = 2; // optional
   int32 limit = 3;           // optional, server-clamped by auth tier
-  int32 offset = 4;          // optional, default 0; for semantic (non-empty query) searches,
-                              // paging is bounded by the candidate window (~250 results) —
-                              // very deep pages may return empty even with more matches server-side
+  int32 offset = 4;          // optional, default 0. A query-driven search ranks
+                              // within a bounded window of the top ~300 tenders;
+                              // paging past it returns empty. A filters-only
+                              // (empty query) search pages without that bound.
   string workspace_id = 5;   // optional; empty = today's anonymous-safe behavior
+  // Optional result ordering: "relevance" (default), "deadline" (soonest
+  // actionable first), "published" (newest first), "value" (largest first).
+  // "relevance" is meaningless without a query and falls back to "published".
+  string sort = 6;
 }
 
 message TenderFilters {
-  string country = 1;         // alpha-2, e.g. "IT", "DE"
-  string cpv = 2;              // prefix match
-  string status = 3;           // open/awarded/cancelled/closed/unknown
-  string deadline_from = 4;    // RFC3339
-  string deadline_to = 5;      // RFC3339
+  // country/cpv/status are the original single-value fields. They still work
+  // and are OR-ed with their plural counterparts below, but new callers should
+  // use the repeated fields — a real filter bar is multi-select.
+  string country = 1 [deprecated = true]; // alpha-2, e.g. "IT", "DE"
+  string cpv = 2 [deprecated = true];      // prefix match
+  string status = 3 [deprecated = true];   // open/awarded/cancelled/closed/unknown
+  string deadline_from = 4;                 // RFC3339
+  string deadline_to = 5;                   // RFC3339
+
+  // Values within one field are OR-ed; separate fields are AND-ed.
+  repeated string countries = 6;      // alpha-2
+  // Prefix match against a tender's primary CPV *or* any of its secondary
+  // ones: "45" selects all of division 45.
+  repeated string cpv_prefixes = 7;
+  repeated string statuses = 8;
+  repeated string nuts_prefixes = 9;  // "ITC" selects all of north-west Italy
+  // Case-insensitive substring of the contracting authority's name — not a
+  // prefix, since buyers are written inconsistently across sources.
+  string buyer = 10;
+  // Value bounds in the tender's own currency unit. optional, so that "no
+  // lower bound" stays distinct from "at least zero".
+  optional int64 value_min = 11;
+  optional int64 value_max = 12;
 }
 
 message SearchTendersResponse {
   repeated TenderResult results = 1;
   bool has_more = 2; // server fetches limit+1 rows and trims, to avoid a
                       // separate COUNT(*) query
+  // Which retrievers produced these results: "hybrid" (both), "lexical" or
+  // "semantic" (one was unavailable), "filters" (no query — a date-ordered
+  // browse, where relevance_score is meaningless). Reported so a degraded
+  // search can be shown as degraded instead of quietly answering a different
+  // question than the one asked.
+  string retrieval_mode = 3;
+  bool degraded = 4; // true when retrieval_mode is "lexical" or "semantic"
+  // The filters the server actually applied, including any it lifted out of
+  // the query text ("sotto 100k" becomes value_max). Returned so the UI can
+  // show what it understood — and let the user undo it.
+  TenderFilters applied_filters = 5;
+  // The remaining query text after those constraints were lifted out. Empty
+  // when the query was nothing but constraints.
+  string applied_query = 6;
+  // Counts per facet over the retrieved window, for filter-bar badges. These
+  // describe the ranked window this request considered, NOT the whole corpus —
+  // an exact global count would need a separate aggregate query per facet.
+  repeated FacetCount country_facets = 7;
+  repeated FacetCount status_facets = 8;
+  repeated FacetCount cpv_division_facets = 9; // keyed by 2-digit CPV division
+}
+
+message FacetCount {
+  string value = 1;
+  int32 count = 2;
 }
 
 message TenderResult {
@@ -71,6 +119,11 @@ message TenderResult {
   string eu_threshold = 19;     // "below_eu" | "above_eu" | "" — coarse, buyer-agnostic
                                  // EU-threshold band (SME-winnable = below). Empty when
                                  // value is unknown OR the band is ambiguous. NOT value_fit.
+  // A fragment of the matched text with the query terms marked by <mark>…</mark>,
+  // so a result can show WHY it matched. Only the keyword retriever can produce
+  // one, so it is empty for results found by vector search alone and for
+  // filters-only browses.
+  string snippet = 20;
 }
 
 message RecommendTendersForClientRequest {

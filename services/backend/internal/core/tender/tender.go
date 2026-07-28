@@ -13,7 +13,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"sort"
+	"strings"
 	"time"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
@@ -29,15 +29,6 @@ var (
 	// callers can map it to a retryable status instead of a generic
 	// internal error.
 	ErrRateLimiterUnavailable = errors.New("tender: rate limiter unavailable")
-)
-
-// candidateMultiplier over-fetches Qdrant candidates so a restrictive
-// filter doesn't starve the result page below the requested limit.
-// maxCandidates bounds worst-case Qdrant/Postgres load regardless of the
-// requested limit.
-const (
-	candidateMultiplier = 5
-	maxCandidates       = 250
 )
 
 // Tender is a search result's structured fields.
@@ -59,13 +50,48 @@ type Tender struct {
 	SourceURL     string // the notice document's URL; "" if none is ingested
 }
 
-// Filters narrows a search. Zero-value fields are unset.
+// Filters narrows a search. Zero-value fields are unset, and every list field
+// is an OR within itself while separate fields AND together — "Italy or
+// Germany, and construction".
+//
+// The code lists are PREFIX matches against a hierarchical code, not equality:
+// CPV "45" selects all of division 45, NUTS "ITC" all of north-west Italy. A
+// CPV prefix matches a tender's secondary CPVs as well as its primary one, so
+// a tender only incidentally in a sector is still findable there — and so the
+// SQL and vector paths agree, since the vector payload indexes both (see
+// knowledge.Attributes).
 type Filters struct {
-	Country      string
-	CPV          string
-	Status       string
+	Countries    []string
+	CPVPrefixes  []string
+	Statuses     []string
+	NUTSPrefixes []string
+	// Buyer is a case-insensitive substring of the contracting authority's
+	// name, not a prefix — buyers are written inconsistently across sources
+	// ("Comune di Roma" / "Roma Capitale — Comune di Roma").
+	Buyer        string
+	ValueMin     *int64
+	ValueMax     *int64
 	DeadlineFrom *time.Time
 	DeadlineTo   *time.Time
+}
+
+// SingleFilter wraps one optional facet value as a Filters list field,
+// returning nil for the empty string so an unset value contributes no
+// predicate. For callers whose input shape is one-value-per-facet — the
+// agent's search tool, a single-select UI control.
+func SingleFilter(v string) []string {
+	if v == "" {
+		return nil
+	}
+	return []string{v}
+}
+
+// IsZero reports whether the filters constrain nothing.
+func (f Filters) IsZero() bool {
+	return len(f.Countries) == 0 && len(f.CPVPrefixes) == 0 && len(f.Statuses) == 0 &&
+		len(f.NUTSPrefixes) == 0 && f.Buyer == "" &&
+		f.ValueMin == nil && f.ValueMax == nil &&
+		f.DeadlineFrom == nil && f.DeadlineTo == nil
 }
 
 // ScoredTender is a Tender plus its semantic-search relevance score (0
@@ -73,11 +99,27 @@ type Filters struct {
 type ScoredTender struct {
 	Tender
 	RelevanceScore float64
+	// Snippet is a fragment of the matched text with the query terms wrapped
+	// in <mark>…</mark>, so a result can show WHY it matched. Only the keyword
+	// retriever can produce one, so it is empty for results found by vector
+	// search alone and for filters-only browses.
+	//
+	// It contains raw tender text around those markers: renderers must split
+	// on the markers and escape everything else, never inject it as HTML.
+	Snippet string
 }
 
 // Repo is the subset of postgres.TenderRepo the service needs.
 type Repo interface {
-	SearchTenders(ctx context.Context, filters Filters, limit, offset int) ([]Tender, error)
+	SearchTenders(ctx context.Context, filters Filters, sortBy SortOrder, limit, offset int) ([]Tender, error)
+	// FacetCounts aggregates the whole filtered corpus by country, status and
+	// CPV division — the browse path's facets are exact, not windowed.
+	FacetCounts(ctx context.Context, filters Filters) (Facets, error)
+	// LexicalSearch is the keyword half of hybrid retrieval — full-text and
+	// trigram matching, already filtered and ranked, best-first. It answers
+	// the queries dense embeddings structurally can't: exact codes, notice
+	// references, buyer names, rare acronyms.
+	LexicalSearch(ctx context.Context, query string, filters Filters, limit int) ([]ScoredTender, error)
 	EnrichTenders(ctx context.Context, ids []string, filters Filters) ([]Tender, error)
 	FindDetailByID(ctx context.Context, id int64) (*TenderDetail, error)
 	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)
@@ -94,11 +136,35 @@ type ScoredChunk struct {
 }
 
 // KnowledgeBase is the subset of knowledge.KnowledgeBase the service
-// needs, expressed in this package's own ScoredChunk type rather than
-// go-services/knowledge's — see the package doc comment.
+// needs, expressed in this package's own ScoredChunk and Filters types
+// rather than go-services/knowledge's — see the package doc comment.
 type KnowledgeBase interface {
-	SearchWithScores(ctx context.Context, query string, limit int) ([]ScoredChunk, error)
+	// EmbedQuery and SearchByVector are separate because embedding is a
+	// network round trip to the model server and searching is not: splitting
+	// them is what lets this package cache the expensive half (see
+	// EmbeddingCache) instead of paying for it again on every page of the
+	// same search.
+	EmbedQuery(ctx context.Context, query string) ([]float32, error)
+	// SearchByVector narrows the vector search by the same facets the SQL
+	// side filters on. Pushing the filter into the vector store is what keeps
+	// a narrow filter (one country out of 27) from consuming the whole
+	// candidate window with rows that will be discarded moments later. It is
+	// an optimisation only: results are filtered authoritatively in Postgres
+	// afterwards either way.
+	SearchByVector(ctx context.Context, vec []float32, limit int, filters Filters) ([]ScoredChunk, error)
 	RelatedByDocID(ctx context.Context, docID string, limit int) ([]ScoredChunk, error)
+}
+
+// EmbeddingCache memoises query embeddings across requests. Optional: a nil
+// cache simply means every search embeds its own query.
+//
+// Correctness never depends on it — a miss, a corrupt entry, or an unreachable
+// cache all just mean "compute it", which is always available and always
+// right. Cache errors are therefore treated as misses rather than propagated.
+type EmbeddingCache interface {
+	// GetEmbedding reports ok=false for a miss, with a nil error.
+	GetEmbedding(ctx context.Context, query string) ([]float32, bool, error)
+	SetEmbedding(ctx context.Context, query string, vec []float32) error
 }
 
 // RateLimiter is the subset of redis.RateLimiter the service needs.
@@ -132,6 +198,9 @@ type Config struct {
 	GetTenderTier Tier // generous; GetTender is cheap and called server-side per crawl
 	Fit           FitThresholds
 	EU            EUThreshold
+	// Ranking tunes hybrid fusion and the post-fusion business boost. An
+	// unset (zero) Ranking falls back to DefaultRanking — see hybrid.go.
+	Ranking Ranking
 }
 
 // ProfileSource is the subset of clientprofile.Service this package needs to
@@ -150,6 +219,7 @@ type Service struct {
 	kb       KnowledgeBase
 	rl       RateLimiter
 	profiles ProfileSource
+	cache    EmbeddingCache // optional; nil disables embedding reuse
 	cfg      Config
 }
 
@@ -158,13 +228,55 @@ func NewService(repo Repo, kb KnowledgeBase, rl RateLimiter, profiles ProfileSou
 	return &Service{repo: repo, kb: kb, rl: rl, profiles: profiles, cfg: cfg}
 }
 
+// WithEmbeddingCache attaches a query-embedding cache and returns s. It is a
+// separate step rather than a constructor argument because the cache is
+// genuinely optional — the service is fully correct without one, just slower.
+func (s *Service) WithEmbeddingCache(c EmbeddingCache) *Service {
+	s.cache = c
+	return s
+}
+
+// embedQuery returns query's embedding, reusing a cached one when available.
+//
+// Every cache failure degrades to computing the embedding: a cache that is
+// down, slow to parse, or holding garbage must never be able to fail a search
+// that could otherwise have succeeded.
+func (s *Service) embedQuery(ctx context.Context, query string) ([]float32, error) {
+	if s.cache != nil {
+		if vec, ok, err := s.cache.GetEmbedding(ctx, query); err == nil && ok {
+			return vec, nil
+		}
+	}
+	vec, err := s.kb.EmbedQuery(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	if s.cache != nil {
+		// A failed write is not worth failing the request over — the next
+		// search simply recomputes.
+		_ = s.cache.SetEmbedding(ctx, query, vec)
+	}
+	return vec, nil
+}
+
 // SearchParams is Search's input. RateLimitKey is the client IP for
 // anonymous callers or the user ID for authenticated ones — the caller
 // (the ConnectRPC handler) decides which, Search just uses whatever key
 // it's given.
 type SearchParams struct {
-	Query         string
-	Filters       Filters
+	Query   string
+	Filters Filters
+	// ParseQuery lifts constraints out of Query text ("sotto 100k" becomes a
+	// value bound — see ParseQuery). Opt-in per call site, because it is only
+	// right for text a PERSON typed into a search box.
+	//
+	// Feeding it arbitrary domain prose misreads it: a client profile
+	// describing a company as "fatturato oltre 5 milioni" would become a
+	// "value >= 5,000,000" filter and quietly exclude almost every tender that
+	// client could actually bid on.
+	ParseQuery bool
+	// Sort selects the result ordering; the zero value means relevance.
+	Sort          SortOrder
 	Limit         int
 	Offset        int
 	Authenticated bool
@@ -175,13 +287,30 @@ type SearchParams struct {
 type SearchOutput struct {
 	Results []ScoredTender
 	HasMore bool
+	// Mode says which retrievers produced these results. Callers surface it
+	// so a degraded search is visibly degraded rather than quietly answering
+	// a different question — see RetrievalMode.
+	Mode RetrievalMode
+	// AppliedFilters and AppliedQuery are what the search actually ran with
+	// after constraints were lifted out of the query text (see ParseQuery).
+	// Returned so the UI can show what it understood and let the user undo it
+	// — a filter the user can't see is one they can't correct.
+	AppliedFilters Filters
+	AppliedQuery   string
+	// Facets are per-field counts for filter-bar badges. See Facets for what
+	// they count, which differs between a query-driven search and a browse.
+	Facets Facets
 }
 
 // Search runs one tender search: rate-limits, clamps the result count to
-// the caller's auth tier, then either a structured filter query
-// (no Query text) or a semantic search enriched with structured filters
-// (Query present). A Qdrant/Ollama failure during the semantic path
-// degrades to the filters-only path rather than failing the request.
+// the caller's auth tier, then either a filtered browse (no Query text) or
+// hybrid retrieval — lexical and vector search fused by Reciprocal Rank
+// Fusion, then adjusted by deadline/status/freshness (see hybrid.go).
+//
+// If one retriever fails the other still answers the query, and Mode reports
+// the degradation. If both fail, the search fails: it deliberately does NOT
+// fall back to the filters-only path, which ignores the query entirely and
+// would return recently-published tenders dressed up as search results.
 func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, error) {
 	if p.Filters.DeadlineFrom != nil && p.Filters.DeadlineTo != nil && p.Filters.DeadlineFrom.After(*p.Filters.DeadlineTo) {
 		return SearchOutput{}, ErrInvalidFilters
@@ -210,19 +339,46 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 		offset = 0
 	}
 
-	if p.Query == "" {
-		return s.searchByFiltersOnly(ctx, p.Filters, limit, offset)
+	if strings.TrimSpace(p.Query) == "" {
+		out, err := s.searchByFiltersOnly(ctx, p.Filters, p.Sort, limit, offset)
+		return withApplied(out, err, p.Filters, "")
 	}
 
-	out, err := s.searchSemantic(ctx, p.Query, p.Filters, limit, offset)
-	if err != nil {
-		return s.searchByFiltersOnly(ctx, p.Filters, limit, offset)
+	// Lift the constraints hiding in the prose ("sotto 100k", "entro 30
+	// giorni") into real filters before retrieving — see ParseQuery. Filters
+	// the caller set explicitly always win over what was inferred.
+	parsed := ParsedQuery{Text: p.Query}
+	if p.ParseQuery {
+		parsed = ParseQuery(p.Query, time.Now())
 	}
+	filters := mergeParsedFilters(p.Filters, parsed.Filters)
+
+	// If the query was nothing BUT constraints ("bandi aperti sotto 100k"),
+	// there is no text left to retrieve on and this is really a browse.
+	if parsed.Text == "" {
+		out, err := s.searchByFiltersOnly(ctx, filters, p.Sort, limit, offset)
+		return withApplied(out, err, filters, "")
+	}
+	out, err := s.searchHybrid(ctx, parsed.Text, filters, p.Sort, limit, offset)
+	return withApplied(out, err, filters, parsed.Text)
+}
+
+// withApplied stamps the filters and query the search actually ran with onto
+// its output, so every return path reports them the same way.
+func withApplied(out SearchOutput, err error, filters Filters, query string) (SearchOutput, error) {
+	if err != nil {
+		return SearchOutput{}, err
+	}
+	out.AppliedFilters = filters
+	out.AppliedQuery = query
 	return out, nil
 }
 
-func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, limit, offset int) (SearchOutput, error) {
-	tenders, err := s.repo.SearchTenders(ctx, filters, limit+1, offset)
+// searchByFiltersOnly is the browse path: no query text, so results are
+// ordered by the requested sort (publication date by default) rather than by a
+// relevance that doesn't exist.
+func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, sortBy SortOrder, limit, offset int) (SearchOutput, error) {
+	tenders, err := s.repo.SearchTenders(ctx, filters, browseSort(sortBy), limit+1, offset)
 	if err != nil {
 		return SearchOutput{}, fmt.Errorf("tender: search by filters: %w", err)
 	}
@@ -234,49 +390,24 @@ func (s *Service) searchByFiltersOnly(ctx context.Context, filters Filters, limi
 	for i, t := range tenders {
 		results[i] = ScoredTender{Tender: t}
 	}
-	return SearchOutput{Results: results, HasMore: hasMore}, nil
+
+	// Browse facets are exact counts over the whole filtered corpus, which the
+	// database can aggregate directly — unlike a query-driven search, there is
+	// no ranked window here to count instead. A facet failure is not worth
+	// failing the search over; the badges simply don't render.
+	out := SearchOutput{Results: results, HasMore: hasMore, Mode: ModeFilters}
+	if facets, facetErr := s.repo.FacetCounts(ctx, filters); facetErr == nil {
+		out.Facets = facets
+	}
+	return out, nil
 }
 
-func (s *Service) searchSemantic(ctx context.Context, query string, filters Filters, limit, offset int) (SearchOutput, error) {
-	candidateLimit := limit * candidateMultiplier
-	if candidateLimit > maxCandidates {
-		candidateLimit = maxCandidates
+// browseSort maps a requested order onto one the browse path can serve.
+// Relevance is undefined with no query, so it becomes "newest first" rather
+// than an arbitrary order dressed up as ranking.
+func browseSort(sortBy SortOrder) SortOrder {
+	if sortBy == SortRelevance || sortBy == "" {
+		return SortPublished
 	}
-
-	hits, err := s.kb.SearchWithScores(ctx, query, candidateLimit)
-	if err != nil {
-		return SearchOutput{}, fmt.Errorf("tender: semantic search: %w", err)
-	}
-
-	bestScore := map[string]float32{}
-	var ids []string
-	for _, h := range hits {
-		if existing, ok := bestScore[h.DocID]; !ok || h.Score > existing {
-			if !ok {
-				ids = append(ids, h.DocID)
-			}
-			bestScore[h.DocID] = h.Score
-		}
-	}
-
-	tenders, err := s.repo.EnrichTenders(ctx, ids, filters)
-	if err != nil {
-		return SearchOutput{}, fmt.Errorf("tender: enrich candidates: %w", err)
-	}
-
-	scored := make([]ScoredTender, len(tenders))
-	for i, t := range tenders {
-		scored[i] = ScoredTender{Tender: t, RelevanceScore: float64(bestScore[t.ID])}
-	}
-	sort.Slice(scored, func(i, j int) bool { return scored[i].RelevanceScore > scored[j].RelevanceScore })
-
-	if offset >= len(scored) {
-		return SearchOutput{Results: []ScoredTender{}, HasMore: false}, nil
-	}
-	end := offset + limit
-	hasMore := len(scored) > end
-	if end > len(scored) {
-		end = len(scored)
-	}
-	return SearchOutput{Results: scored[offset:end], HasMore: hasMore}, nil
+	return sortBy
 }

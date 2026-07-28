@@ -13,6 +13,7 @@ import (
 
 	"github.com/buildwithgo/berrygem/rag"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/postgres"
 )
 
@@ -30,8 +31,11 @@ type Repo interface {
 }
 
 // KnowledgeBase is the subset of knowledge.KnowledgeBase the indexer needs.
+// IngestWithAttributes rather than plain Ingest: the structured facets it
+// carries are what let the search API pre-filter inside the vector store
+// instead of retrieving unfiltered candidates and discarding most of them.
 type KnowledgeBase interface {
-	Ingest(ctx context.Context, doc *rag.Document) error
+	IngestWithAttributes(ctx context.Context, doc *rag.Document, attrs knowledge.Attributes) error
 }
 
 // Fetcher downloads and extracts one document's text.
@@ -134,5 +138,23 @@ func (idx *Indexer) indexOne(ctx context.Context, t postgres.UnindexedTender) er
 			"source_ref": t.SourceRef,
 		},
 	}
-	return idx.kb.Ingest(ctx, doc)
+	return idx.kb.IngestWithAttributes(ctx, doc, attributesFor(t))
+}
+
+// attributesFor projects a tender's structured columns onto the vector store's
+// filterable payload. These deliberately duplicate what Postgres already
+// holds: the vector search has to be able to narrow itself, and it can only do
+// that from its own payload.
+func attributesFor(t postgres.UnindexedTender) knowledge.Attributes {
+	return knowledge.Attributes{
+		Title:        t.Title,
+		Country:      t.Country,
+		Status:       t.Status,
+		CPV:          t.CPV,
+		CPVSecondary: t.CPVSecondary,
+		NUTS:         t.NUTS,
+		Value:        t.Value,
+		PublishedAt:  t.PublishedAt,
+		Deadline:     t.Deadline,
+	}
 }

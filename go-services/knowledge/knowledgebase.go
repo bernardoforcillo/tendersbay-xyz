@@ -27,21 +27,47 @@ func pointID(docID string, index int) string {
 
 // Ingest embeds and upserts every chunk of doc as a Qdrant point. If
 // doc.Chunks is empty, doc.Content is used as a single chunk (index 0) —
-// so a document with no pre-computed chunking is still searchable. Each
+// so a document with no pre-computed chunking is still searchable. Every
+// chunk is embedded through Embedder.EmbedDocument, using doc.Metadata's
+// "title" (when present) as the document-prompt title slot, so the indexed
+// side carries the same task prompt the query side gets from EmbedQuery.
+// Each
 // point's payload carries "content" (so Search can reconstruct
 // rag.Chunk.Content from a hit) and "tender_id" (doc.ID — what Delete
 // filters on), plus every key from doc.Metadata passed through verbatim.
 // On success, the computed embeddings are written back onto doc.Chunks,
 // mirroring berrygem's own InMemoryKB.Ingest behavior.
+//
+// Ingest indexes no filterable facets — use IngestWithAttributes for that.
+// It exists as the plain rag.KnowledgeBase implementation.
 func (kb *KnowledgeBase) Ingest(ctx context.Context, doc *rag.Document) error {
+	return kb.IngestWithAttributes(ctx, doc, Attributes{})
+}
+
+// IngestWithAttributes is Ingest plus attrs' structured facets (country,
+// status, CPV/NUTS prefixes, value, dates) stamped onto every point's payload,
+// which is what lets a later search pre-filter inside Qdrant instead of
+// over-fetching and discarding. attrs.Title also supplies the document-side
+// task prompt's title slot, so it doesn't have to be duplicated into Metadata.
+//
+// Attribute keys are written after doc.Metadata, so a facet the caller also
+// happens to put in Metadata can't shadow the typed value a range filter
+// depends on.
+func (kb *KnowledgeBase) IngestWithAttributes(ctx context.Context, doc *rag.Document, attrs Attributes) error {
 	chunks := doc.Chunks
 	if len(chunks) == 0 {
 		chunks = []rag.Chunk{{ID: fmt.Sprintf("%s_chunk_0", doc.ID), DocID: doc.ID, Index: 0, Content: doc.Content}}
 	}
 
+	title := attrs.Title
+	if title == "" {
+		title = doc.Metadata["title"]
+	}
+	facets := attrs.Payload()
+
 	points := make([]qdrant.Point, len(chunks))
 	for i, c := range chunks {
-		vec, err := kb.embedder.Embed(ctx, c.Content)
+		vec, err := kb.embedder.EmbedDocument(ctx, title, c.Content)
 		if err != nil {
 			return fmt.Errorf("knowledge: embed chunk %s: %w", c.ID, err)
 		}
@@ -50,8 +76,11 @@ func (kb *KnowledgeBase) Ingest(ctx context.Context, doc *rag.Document) error {
 		for k, v := range doc.Metadata {
 			payload[k] = v
 		}
+		for k, v := range facets {
+			payload[k] = v
+		}
 		payload["content"] = c.Content
-		payload["tender_id"] = doc.ID
+		payload[fieldTenderID] = doc.ID
 		payload["chunk_index"] = c.Index
 
 		points[i] = qdrant.Point{
@@ -103,9 +132,50 @@ func (kb *KnowledgeBase) Search(ctx context.Context, query string, limit int) ([
 // relevance score, for callers (e.g. services/backend's search API) that
 // need to rank results.
 func (kb *KnowledgeBase) SearchWithScores(ctx context.Context, query string, limit int) ([]SearchResult, error) {
-	hits, err := kb.search(ctx, query, limit)
+	return kb.SearchFiltered(ctx, query, limit, SearchFilter{})
+}
+
+// SearchFiltered is SearchWithScores constrained to the tenders matching
+// filter, evaluated by Qdrant during the vector search rather than afterwards.
+// That distinction is the whole point: filtering after retrieval means a
+// narrow filter (one country, one CPV division) discards most of a fixed
+// candidate window and leaves the result page short, however many tenders
+// actually match.
+//
+// The filter is an optimisation, not a guarantee — see SearchFilter's doc for
+// which constraints are and aren't pushed down. Callers must still apply the
+// authoritative filter to the tenders these hits resolve to.
+func (kb *KnowledgeBase) SearchFiltered(ctx context.Context, query string, limit int, filter SearchFilter) ([]SearchResult, error) {
+	vec, err := kb.EmbedQuery(ctx, query)
 	if err != nil {
 		return nil, err
+	}
+	return kb.SearchByVector(ctx, vec, limit, filter)
+}
+
+// EmbedQuery embeds a user's search text with the model's query-side task
+// prompt. Exposed so a caller that searches the same query more than once
+// (paging, a cached page) can reuse one embedding instead of paying for a
+// fresh Ollama round trip each time.
+func (kb *KnowledgeBase) EmbedQuery(ctx context.Context, query string) ([]float32, error) {
+	vec, err := kb.embedder.EmbedQuery(ctx, query)
+	if err != nil {
+		return nil, fmt.Errorf("knowledge: embed query: %w", err)
+	}
+	return vec, nil
+}
+
+// SearchByVector runs the filtered similarity search for an already-computed
+// query embedding — the half of SearchFiltered that doesn't need Ollama.
+func (kb *KnowledgeBase) SearchByVector(ctx context.Context, vec []float32, limit int, filter SearchFilter) ([]SearchResult, error) {
+	hits, err := kb.qdrant.Search(ctx, kb.collection, qdrant.SearchRequest{
+		Vector:      vec,
+		Limit:       limit,
+		Filter:      filter.qdrantFilter(),
+		WithPayload: true,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("knowledge: search: %w", err)
 	}
 	results := make([]SearchResult, len(hits))
 	for i, h := range hits {
@@ -114,12 +184,12 @@ func (kb *KnowledgeBase) SearchWithScores(ctx context.Context, query string, lim
 	return results, nil
 }
 
-// search does the embed-then-Qdrant-search work shared by Search and
-// SearchWithScores.
+// search does the embed-then-Qdrant-search work Search needs, returning raw
+// hits.
 func (kb *KnowledgeBase) search(ctx context.Context, query string, limit int) ([]qdrant.Hit, error) {
-	vec, err := kb.embedder.Embed(ctx, query)
+	vec, err := kb.EmbedQuery(ctx, query)
 	if err != nil {
-		return nil, fmt.Errorf("knowledge: embed query: %w", err)
+		return nil, err
 	}
 	hits, err := kb.qdrant.Search(ctx, kb.collection, qdrant.SearchRequest{
 		Vector:      vec,

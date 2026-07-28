@@ -404,7 +404,19 @@
       "deadline7": "Următoarele 7 zile",
       "deadline30": "Următoarele 30 de zile",
       "deadline90": "Următoarele 90 de zile",
-      "clear": "Șterge tot"
+      "clear": "Șterge tot",
+      "sort": "Sortează după",
+      "sorts": {
+        "relevance": "Relevanță",
+        "deadline": "Termen",
+        "published": "Cele mai noi",
+        "value": "Valoare"
+      },
+      "valueMin": "Valoare minimă",
+      "valueMax": "Valoare maximă",
+      "valuePlaceholder": "ex. 100000",
+      "buyer": "Autoritate contractantă",
+      "buyerPlaceholder": "Numele autorității"
     },
     "detail": {
       "overview": "Prezentare generală",
@@ -450,6 +462,16 @@
       "reasonValueAbove": "Peste intervalul dumneavoastră de valoare",
       "reasonRegion": "În regiunea dumneavoastră",
       "reasonProcedure": "Se potrivește cu tipul dumneavoastră de procedură"
+    },
+    "degraded": "O parte din căutare este indisponibilă, deci aceste rezultate pot fi incomplete.",
+    "applied": {
+      "label": "Citit din căutarea ta:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "până la {{max}}",
+      "valueMin": "de la {{min}}",
+      "deadlineUntil": "se închide până la {{date}}",
+      "undo": "Șterge"
     }
   },
   "today": {

@@ -402,7 +402,19 @@
       "deadline7": "Komende 7 dagen",
       "deadline30": "Komende 30 dagen",
       "deadline90": "Komende 90 dagen",
-      "clear": "Alles wissen"
+      "clear": "Alles wissen",
+      "sort": "Sorteren op",
+      "sorts": {
+        "relevance": "Relevantie",
+        "deadline": "Deadline",
+        "published": "Nieuwste",
+        "value": "Waarde"
+      },
+      "valueMin": "Minimale waarde",
+      "valueMax": "Maximale waarde",
+      "valuePlaceholder": "bijv. 100000",
+      "buyer": "Aanbestedende dienst",
+      "buyerPlaceholder": "Naam van de dienst"
     },
     "detail": {
       "overview": "Overzicht",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Boven jouw waardebereik",
       "reasonRegion": "In jouw regio",
       "reasonProcedure": "Komt overeen met jouw procedure type"
+    },
+    "degraded": "Een deel van de zoekfunctie is niet beschikbaar, dus deze resultaten kunnen onvolledig zijn.",
+    "applied": {
+      "label": "Uit je zoekopdracht gelezen:",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "tot {{max}}",
+      "valueMin": "vanaf {{min}}",
+      "deadlineUntil": "sluit vóór {{date}}",
+      "undo": "Wissen"
     }
   },
   "today": {

@@ -25,9 +25,32 @@ type fakeRepo struct {
 	detail       *tender.TenderDetail
 	detailErr    error
 	refs         []tender.TenderRef
+	lexical      []tender.ScoredTender
+	lexicalErr   error
+	gotLexLimit  int
+	gotFilters   tender.Filters
+	gotSort      tender.SortOrder
+	facets       tender.Facets
 }
 
-func (f *fakeRepo) SearchTenders(_ context.Context, _ tender.Filters, limit, offset int) ([]tender.Tender, error) {
+func (f *fakeRepo) LexicalSearch(_ context.Context, _ string, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
+	f.gotLexLimit = limit
+	f.gotFilters = filters
+	if f.lexicalErr != nil {
+		return nil, f.lexicalErr
+	}
+	if len(f.lexical) > limit {
+		return f.lexical[:limit], nil
+	}
+	return f.lexical, nil
+}
+
+func (f *fakeRepo) FacetCounts(context.Context, tender.Filters) (tender.Facets, error) {
+	return f.facets, nil
+}
+
+func (f *fakeRepo) SearchTenders(_ context.Context, _ tender.Filters, sortBy tender.SortOrder, limit, offset int) ([]tender.Tender, error) {
+	f.gotSort = sortBy
 	f.gotLimit = limit
 	if f.byFiltersErr != nil {
 		return nil, f.byFiltersErr
@@ -77,12 +100,31 @@ type fakeKnowledgeBase struct {
 	gotLimit   int
 	related    []tender.ScoredChunk
 	relatedErr error
+	gotFilters tender.Filters
+	gotVector  []float32
+	gotQuery   string
+	embedCalls int
+	embedErr   error
 }
 
-func (f *fakeKnowledgeBase) SearchWithScores(_ context.Context, _ string, limit int) ([]tender.ScoredChunk, error) {
+func (f *fakeKnowledgeBase) EmbedQuery(_ context.Context, query string) ([]float32, error) {
+	f.embedCalls++
+	f.gotQuery = query
+	if f.embedErr != nil {
+		return nil, f.embedErr
+	}
+	return []float32{0.1, 0.2, 0.3}, nil
+}
+
+func (f *fakeKnowledgeBase) SearchByVector(_ context.Context, vec []float32, limit int, filters tender.Filters) ([]tender.ScoredChunk, error) {
+	f.gotVector = vec
 	f.gotLimit = limit
+	f.gotFilters = filters
 	if f.err != nil {
 		return nil, f.err
+	}
+	if len(f.results) > limit {
+		return f.results[:limit], nil
 	}
 	return f.results, nil
 }
@@ -153,10 +195,17 @@ func TestSearch_SemanticMergesScoresAndSortsDescending(t *testing.T) {
 	}
 }
 
-func TestSearch_KeepsBestScorePerTenderWhenMultipleChunksMatch(t *testing.T) {
-	repo := &fakeRepo{byIDs: map[string]tender.Tender{"1": {ID: "1", Title: "T"}}}
+// A tender is one result however many of its chunks matched — otherwise a
+// tender with a long attached PDF would crowd the page with copies of itself
+// and consume the candidate budget several times over.
+func TestSearch_DedupesChunksOfTheSameTender(t *testing.T) {
+	repo := &fakeRepo{byIDs: map[string]tender.Tender{
+		"1": {ID: "1", Title: "T1"},
+		"2": {ID: "2", Title: "T2"},
+	}}
 	kb := &fakeKnowledgeBase{results: []tender.ScoredChunk{
 		{DocID: "1", Score: 0.3},
+		{DocID: "2", Score: 0.5},
 		{DocID: "1", Score: 0.95}, // same tender, different chunk, higher score
 	}}
 	rl := &fakeRateLimiter{allow: true}
@@ -166,26 +215,106 @@ func TestSearch_KeepsBestScorePerTenderWhenMultipleChunksMatch(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Search: %v", err)
 	}
-	if len(out.Results) != 1 {
-		t.Fatalf("len(out.Results) = %d, want 1 (deduped by tender id)", len(out.Results))
+	if len(out.Results) != 2 {
+		t.Fatalf("len(out.Results) = %d, want 2 (deduped by tender id)", len(out.Results))
 	}
-	if out.Results[0].RelevanceScore != float64(float32(0.95)) {
-		t.Errorf("RelevanceScore = %v, want the higher of the two chunk scores (0.95)", out.Results[0].RelevanceScore)
+	// Tender 1's best chunk (0.95) beats tender 2's only chunk (0.5), so the
+	// dedupe must keep the best score, not the first-seen one.
+	if out.Results[0].ID != "1" {
+		t.Errorf("results = [%s, %s], want tender 1 first (its best chunk outscores tender 2)",
+			out.Results[0].ID, out.Results[1].ID)
 	}
 }
 
-func TestSearch_FallsBackToFiltersOnlyWhenKnowledgeBaseErrors(t *testing.T) {
-	repo := &fakeRepo{byFilters: []tender.Tender{{ID: "1", Title: "Fallback result"}}}
+// A dead vector store must not turn a query into a date-ordered browse: the
+// lexical retriever still answers the question that was actually asked, and
+// the mode says the search ran degraded.
+func TestSearch_DegradesToLexicalWhenKnowledgeBaseErrors(t *testing.T) {
+	repo := &fakeRepo{
+		byFilters: []tender.Tender{{ID: "99", Title: "Merely the most recent tender"}},
+		lexical:   []tender.ScoredTender{{Tender: tender.Tender{ID: "1", Title: "Actual keyword match"}}},
+	}
 	kb := &fakeKnowledgeBase{err: errors.New("qdrant unreachable")}
 	rl := &fakeRateLimiter{allow: true}
 	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
 	out, err := svc.Search(context.Background(), tender.SearchParams{Query: "q", Limit: 10, RateLimitKey: "k"})
 	if err != nil {
-		t.Fatalf("Search: want nil error (should degrade to filters-only), got %v", err)
+		t.Fatalf("Search: want nil error (lexical retrieval still works), got %v", err)
 	}
 	if len(out.Results) != 1 || out.Results[0].ID != "1" {
-		t.Errorf("out.Results = %+v, want the filters-only fallback result", out.Results)
+		t.Errorf("out.Results = %+v, want the lexical match, never the filters-only browse", out.Results)
+	}
+	if out.Mode != tender.ModeLexical {
+		t.Errorf("out.Mode = %q, want %q", out.Mode, tender.ModeLexical)
+	}
+	if !out.Mode.Degraded() {
+		t.Error("out.Mode.Degraded() = false, want true so callers can surface the degradation")
+	}
+}
+
+// The symmetric case: a lexical failure leaves the semantic retriever answering.
+func TestSearch_DegradesToSemanticWhenLexicalErrors(t *testing.T) {
+	repo := &fakeRepo{
+		byIDs:      map[string]tender.Tender{"1": {ID: "1", Title: "Semantic match"}},
+		lexicalErr: errors.New("full-text index unavailable"),
+	}
+	kb := &fakeKnowledgeBase{results: []tender.ScoredChunk{{DocID: "1", Score: 0.8}}}
+	rl := &fakeRateLimiter{allow: true}
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
+
+	out, err := svc.Search(context.Background(), tender.SearchParams{Query: "q", Limit: 10, RateLimitKey: "k"})
+	if err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if len(out.Results) != 1 || out.Results[0].ID != "1" {
+		t.Errorf("out.Results = %+v, want the semantic match", out.Results)
+	}
+	if out.Mode != tender.ModeSemantic {
+		t.Errorf("out.Mode = %q, want %q", out.Mode, tender.ModeSemantic)
+	}
+}
+
+// With neither retriever available the request must FAIL. Answering it with
+// the most recently published tenders would present unrelated rows as search
+// results, which is worse than a visible error.
+func TestSearch_FailsWhenBothRetrieversError(t *testing.T) {
+	repo := &fakeRepo{
+		byFilters:  []tender.Tender{{ID: "99", Title: "Merely the most recent tender"}},
+		lexicalErr: errors.New("full-text index unavailable"),
+	}
+	kb := &fakeKnowledgeBase{err: errors.New("qdrant unreachable")}
+	rl := &fakeRateLimiter{allow: true}
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
+
+	_, err := svc.Search(context.Background(), tender.SearchParams{Query: "q", Limit: 10, RateLimitKey: "k"})
+	if err == nil {
+		t.Fatal("Search: want an error when no retriever can answer the query, got nil")
+	}
+}
+
+// An empty query is a browse, not a failed search — it legitimately orders by
+// publication date and says so.
+func TestSearch_EmptyQueryBrowsesByFilters(t *testing.T) {
+	repo := &fakeRepo{byFilters: []tender.Tender{{ID: "1", Title: "Most recent"}}}
+	rl := &fakeRateLimiter{allow: true}
+	svc := tender.NewService(repo, &fakeKnowledgeBase{}, rl, &fakeProfiles{}, testConfig())
+
+	out, err := svc.Search(context.Background(), tender.SearchParams{
+		Query: "   ", Limit: 10, RateLimitKey: "k",
+	})
+	if err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if out.Mode != tender.ModeFilters {
+		t.Errorf("out.Mode = %q, want %q", out.Mode, tender.ModeFilters)
+	}
+	if len(out.Results) != 1 {
+		t.Fatalf("len(out.Results) = %d, want 1", len(out.Results))
+	}
+	if out.Results[0].RelevanceScore != 0 {
+		t.Errorf("RelevanceScore = %v, want 0 — with no query, relevance is undefined",
+			out.Results[0].RelevanceScore)
 	}
 }
 
@@ -236,41 +365,75 @@ func TestSearch_ClampsNegativeOffsetToZero(t *testing.T) {
 	}
 }
 
-func TestSearch_OverFetchesCandidatesByFiveX(t *testing.T) {
+// The vector store is asked for CHUNKS, but the budget is expressed in
+// TENDERS: one tender with a long attached PDF holds dozens of chunks, so a
+// budget counted in chunks silently collapses to a handful of distinct
+// tenders. The fan-out multiplier is what keeps the two straight.
+func TestSearch_RequestsChunkBudgetScaledFromTheTenderWindow(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{allow: true}
 	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
-	// Authenticated tier max is 50; Limit: 20 stays under that, so effective
-	// limit is 20, and candidateLimit should be 20*5 = 100.
+	// Authenticated tier max is 50, so Limit 20 stands. The window is
+	// offset+limit+1 = 21 tenders, and the chunk request is that times the
+	// fan-out.
 	_, err := svc.Search(context.Background(), tender.SearchParams{
 		Query: "q", Limit: 20, RateLimitKey: "k", Authenticated: true,
 	})
 	if err != nil {
 		t.Fatalf("Search: %v", err)
 	}
-	if kb.gotLimit != 100 {
-		t.Errorf("SearchWithScores called with limit=%d, want 100 (20*5)", kb.gotLimit)
+	if want := 21 * 8; kb.gotLimit != want {
+		t.Errorf("SearchFiltered called with limit=%d, want %d (21 tenders x fan-out 8)", kb.gotLimit, want)
+	}
+	// The lexical side is counted in tenders directly — no fan-out.
+	if repo.gotLexLimit != 21 {
+		t.Errorf("LexicalSearch called with limit=%d, want 21", repo.gotLexLimit)
 	}
 }
 
-func TestSearch_CapsCandidatesAt250(t *testing.T) {
+// Deep paging must not turn into an unbounded retrieval: the window is capped,
+// and past it the page is honestly empty rather than ever more expensive.
+func TestSearch_CapsTheRetrievalWindow(t *testing.T) {
 	repo := &fakeRepo{}
 	kb := &fakeKnowledgeBase{}
 	rl := &fakeRateLimiter{allow: true}
 	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
 
-	// Authenticated tier max is 50; even at the max, 50*5 = 250 exactly hits
-	// the cap. Confirm it's capped, not left uncapped past 250.
 	_, err := svc.Search(context.Background(), tender.SearchParams{
-		Query: "q", Limit: 50, RateLimitKey: "k", Authenticated: true,
+		Query: "q", Limit: 50, Offset: 5000, RateLimitKey: "k", Authenticated: true,
 	})
 	if err != nil {
 		t.Fatalf("Search: %v", err)
 	}
-	if kb.gotLimit != 250 {
-		t.Errorf("SearchWithScores called with limit=%d, want 250 (capped)", kb.gotLimit)
+	if repo.gotLexLimit != 300 {
+		t.Errorf("LexicalSearch called with limit=%d, want the 300-tender window cap", repo.gotLexLimit)
+	}
+	if kb.gotLimit != 600 {
+		t.Errorf("SearchFiltered called with limit=%d, want the 600-chunk cap", kb.gotLimit)
+	}
+}
+
+// The filters the caller asked for must reach the vector store, not just the
+// SQL side — that is the whole point of pre-filtering.
+func TestSearch_PushesFiltersIntoBothRetrievers(t *testing.T) {
+	repo := &fakeRepo{}
+	kb := &fakeKnowledgeBase{}
+	rl := &fakeRateLimiter{allow: true}
+	svc := tender.NewService(repo, kb, rl, &fakeProfiles{}, testConfig())
+
+	filters := tender.Filters{Countries: []string{"IT"}, CPVPrefixes: []string{"45"}}
+	if _, err := svc.Search(context.Background(), tender.SearchParams{
+		Query: "q", Filters: filters, Limit: 10, RateLimitKey: "k",
+	}); err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+	if len(kb.gotFilters.Countries) != 1 || kb.gotFilters.Countries[0] != "IT" {
+		t.Errorf("vector filters = %+v, want the country pushed down", kb.gotFilters)
+	}
+	if len(repo.gotFilters.CPVPrefixes) != 1 || repo.gotFilters.CPVPrefixes[0] != "45" {
+		t.Errorf("lexical filters = %+v, want the CPV prefix applied", repo.gotFilters)
 	}
 }
 

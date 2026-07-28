@@ -26,6 +26,10 @@ func TestRelatedByDocID_ExcludesSelfAndDedupesByTender(t *testing.T) {
 				{"id":"c","score":0.75,"payload":{"tender_id":"42","content":"c","chunk_index":0}},
 				{"id":"d","score":0.60,"payload":{"tender_id":"9","content":"c","chunk_index":0}}
 			],"status":"ok","time":0.01}`))
+		case r.Method == http.MethodPut && r.URL.Path == "/collections/tenders/index":
+			// Payload field indexes, created best-effort on every boot.
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"result":{"status":"acknowledged"},"status":"ok","time":0.01}`))
 		default:
 			t.Errorf("unexpected request: %s %s", r.Method, r.URL.Path)
 			w.WriteHeader(http.StatusInternalServerError)

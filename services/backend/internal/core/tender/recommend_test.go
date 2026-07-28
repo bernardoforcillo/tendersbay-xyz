@@ -240,12 +240,31 @@ func (f *recommendFakeRepo) DistinctCountries(context.Context) ([]string, error)
 	return f.countries, nil
 }
 
-func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, limit, _ int) ([]Tender, error) {
+func (f *recommendFakeRepo) FacetCounts(context.Context, Filters) (Facets, error) {
+	return Facets{}, nil
+}
+
+func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, _ SortOrder, limit, _ int) ([]Tender, error) {
 	end := limit
 	if end > len(f.results) {
 		end = len(f.results)
 	}
 	return f.results[:end], nil
+}
+
+// LexicalSearch returns the same rows SearchTenders does, so the hybrid path
+// has something to fuse in these tests — they exercise fit annotation, not
+// retrieval.
+func (f *recommendFakeRepo) LexicalSearch(ctx context.Context, _ string, _ Filters, limit int) ([]ScoredTender, error) {
+	tenders, err := f.SearchTenders(ctx, Filters{}, SortRelevance, limit, 0)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]ScoredTender, len(tenders))
+	for i, t := range tenders {
+		out[i] = ScoredTender{Tender: t, RelevanceScore: 1}
+	}
+	return out, nil
 }
 
 func (f *recommendFakeRepo) EnrichTenders(context.Context, []string, Filters) ([]Tender, error) {

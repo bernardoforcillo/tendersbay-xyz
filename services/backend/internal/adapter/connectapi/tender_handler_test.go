@@ -20,12 +20,20 @@ type fakeRepo struct {
 	countries []string
 }
 
-func (f *fakeRepo) SearchTenders(context.Context, tender.Filters, int, int) ([]tender.Tender, error) {
+func (f *fakeRepo) FacetCounts(context.Context, tender.Filters) (tender.Facets, error) {
+	return tender.Facets{}, nil
+}
+
+func (f *fakeRepo) SearchTenders(context.Context, tender.Filters, tender.SortOrder, int, int) ([]tender.Tender, error) {
 	return f.results, nil
 }
 func (f *fakeRepo) DistinctCountries(context.Context) ([]string, error) {
 	return f.countries, nil
 }
+func (f *fakeRepo) LexicalSearch(context.Context, string, tender.Filters, int) ([]tender.ScoredTender, error) {
+	return nil, nil
+}
+
 func (f *fakeRepo) EnrichTenders(context.Context, []string, tender.Filters) ([]tender.Tender, error) {
 	return nil, nil
 }
@@ -43,7 +51,11 @@ func (f *fakeRepo) RecentTenderRefs(context.Context, int) ([]tender.TenderRef, e
 
 type fakeKB struct{}
 
-func (fakeKB) SearchWithScores(context.Context, string, int) ([]tender.ScoredChunk, error) {
+func (fakeKB) EmbedQuery(context.Context, string) ([]float32, error) {
+	return []float32{0.1}, nil
+}
+
+func (fakeKB) SearchByVector(context.Context, []float32, int, tender.Filters) ([]tender.ScoredChunk, error) {
 	return nil, nil
 }
 func (fakeKB) RelatedByDocID(context.Context, string, int) ([]tender.ScoredChunk, error) {

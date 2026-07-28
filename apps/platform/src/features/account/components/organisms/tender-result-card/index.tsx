@@ -20,8 +20,41 @@ export type TenderResultCardProps = {
   /** Set only on a per-client shortlist result (RecommendTendersForClient) — a plain search result carries neither. */
   fitTier?: FitTier;
   reason?: ReasonSignals;
+  /**
+   * A fragment of matched text with the query terms wrapped in `<mark>…</mark>`,
+   * from the server. Only keyword retrieval produces one, so it is absent for
+   * results found by vector search alone and for filter-only browses.
+   */
+  snippet?: string;
   className?: string;
 };
+
+/**
+ * Renders a server snippet by SPLITTING on the `<mark>` markers, never by
+ * injecting HTML. The text around the markers is raw tender copy from an
+ * external source: a notice title containing markup would become live DOM
+ * under `dangerouslySetInnerHTML`, so the markers are the only thing treated
+ * as structure and everything else stays text.
+ */
+function HighlightedSnippet({ snippet }: { snippet: string }) {
+  const parts = snippet.split(/<mark>|<\/mark>/);
+  return (
+    <p data-testid="tender-snippet" className="mt-1.5 line-clamp-2 text-xs text-ink-500">
+      {parts.map((part, i) =>
+        // Odd indices are what sat between an opening and a closing marker.
+        i % 2 === 1 ? (
+          // biome-ignore lint/suspicious/noArrayIndexKey: split fragments have no identity beyond their position
+          <mark key={i} className="bg-brand-100 font-medium text-brand-900">
+            {part}
+          </mark>
+        ) : (
+          // biome-ignore lint/suspicious/noArrayIndexKey: split fragments have no identity beyond their position
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </p>
+  );
+}
 
 const FIT_TIER_LABEL: Record<FitTier, { key: string; defaultValue: string }> = {
   strong: { key: 'tenders.fit.tier.strong', defaultValue: 'Strong fit' },
@@ -65,7 +98,13 @@ const EU_THRESHOLD_DEFAULT: Record<'below' | 'above', string> = {
  * portal it was published on, e.g. TED), with the deadline pill trailing. Title leads the body;
  * value, status and CPV close the card.
  */
-export function TenderResultCard({ tender, fitTier, reason, className }: TenderResultCardProps) {
+export function TenderResultCard({
+  tender,
+  fitTier,
+  reason,
+  snippet,
+  className,
+}: TenderResultCardProps) {
   const { t, i18n } = useTranslation();
 
   const Flag = tender.country ? countryFlag(tender.country) : null;
@@ -147,6 +186,7 @@ export function TenderResultCard({ tender, fitTier, reason, className }: TenderR
           {reasonLine}
         </p>
       )}
+      {snippet && <HighlightedSnippet snippet={snippet} />}
 
       <div className="mt-3 flex items-center justify-between gap-3 border-t border-cream-200 pt-2.5">
         <div className="flex min-w-0 items-center gap-2">

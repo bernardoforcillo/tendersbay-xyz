@@ -42,6 +42,7 @@ describe('useTenderSearch', () => {
       limit: 20,
       offset: 0,
       workspaceId: '',
+      sort: 'relevance',
     });
     expect(result.current.results).toEqual([fakeResult('1'), fakeResult('2')]);
     expect(result.current.hasMore).toBe(true);
@@ -70,6 +71,7 @@ describe('useTenderSearch', () => {
       limit: 20,
       offset: 20,
       workspaceId: '',
+      sort: 'relevance',
     });
     expect(result.current.results).toHaveLength(21);
     expect(result.current.hasMore).toBe(false);
@@ -97,6 +99,7 @@ describe('useTenderSearch', () => {
       limit: 20,
       offset: 10,
       workspaceId: '',
+      sort: 'relevance',
     });
     expect(result.current.results).toHaveLength(11);
   });
@@ -124,6 +127,7 @@ describe('useTenderSearch', () => {
       limit: 20,
       offset: 0,
       workspaceId: '',
+      sort: 'relevance',
     });
     expect(result.current.results).toEqual([fakeResult('9')]);
   });
@@ -233,14 +237,15 @@ describe('useTenderSearch', () => {
     searchTenders.mockResolvedValueOnce({ results: [fakeResult('1')], hasMore: true });
     const { result } = renderHook(() => useTenderSearch());
     await act(async () => {
-      await result.current.search('roads', { country: 'ITA', cpv: '45' });
+      await result.current.search('roads', { countries: ['ITA'], cpvPrefixes: ['45'] });
     });
     expect(searchTenders).toHaveBeenCalledWith({
       query: 'roads',
-      filters: { country: 'ITA', cpv: '45' },
+      filters: { countries: ['ITA'], cpvPrefixes: ['45'] },
       limit: 20,
       offset: 0,
       workspaceId: '',
+      sort: 'relevance',
     });
 
     searchTenders.mockResolvedValueOnce({ results: [fakeResult('2')], hasMore: false });
@@ -249,10 +254,11 @@ describe('useTenderSearch', () => {
     });
     expect(searchTenders).toHaveBeenLastCalledWith({
       query: 'roads',
-      filters: { country: 'ITA', cpv: '45' },
+      filters: { countries: ['ITA'], cpvPrefixes: ['45'] },
       limit: 20,
       offset: 1,
       workspaceId: '',
+      sort: 'relevance',
     });
   });
 
@@ -260,14 +266,15 @@ describe('useTenderSearch', () => {
     searchTenders.mockResolvedValueOnce({ results: [fakeResult('1')], hasMore: true });
     const { result } = renderHook(() => useTenderSearch());
     await act(async () => {
-      await result.current.search('roads', { country: 'ITA' }, 'ws-1');
+      await result.current.search('roads', { countries: ['ITA'] }, 'ws-1');
     });
     expect(searchTenders).toHaveBeenCalledWith({
       query: 'roads',
-      filters: { country: 'ITA' },
+      filters: { countries: ['ITA'] },
       limit: 20,
       offset: 0,
       workspaceId: 'ws-1',
+      sort: 'relevance',
     });
 
     searchTenders.mockResolvedValueOnce({ results: [fakeResult('2')], hasMore: false });
@@ -276,10 +283,11 @@ describe('useTenderSearch', () => {
     });
     expect(searchTenders).toHaveBeenLastCalledWith({
       query: 'roads',
-      filters: { country: 'ITA' },
+      filters: { countries: ['ITA'] },
       limit: 20,
       offset: 1,
       workspaceId: 'ws-1',
+      sort: 'relevance',
     });
   });
 
@@ -287,14 +295,15 @@ describe('useTenderSearch', () => {
     searchTenders.mockResolvedValueOnce({ results: [fakeResult('1')], hasMore: false });
     const { result } = renderHook(() => useTenderSearch());
     await act(async () => {
-      await result.current.search('', { status: 'open' });
+      await result.current.search('', { statuses: ['open'] });
     });
     expect(searchTenders).toHaveBeenCalledWith({
       query: '',
-      filters: { status: 'open' },
+      filters: { statuses: ['open'] },
       limit: 20,
       offset: 0,
       workspaceId: '',
+      sort: 'relevance',
     });
     expect(result.current.results).toEqual([fakeResult('1')]);
   });

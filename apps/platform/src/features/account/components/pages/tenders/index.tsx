@@ -4,15 +4,16 @@ import { SearchX } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useQueryState } from 'nuqs';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AppliedFilterChips } from '~/features/account/components/molecules';
 import {
   ClientProfileForm,
   PageHeader,
   SearchDock,
   TenderResultCard,
 } from '~/features/account/components/organisms';
-import { useTenderSearch } from '~/features/account/components/organisms/tender-feed';
+import { cpvPrefix, useTenderSearch } from '~/features/account/components/organisms/tender-feed';
 import {
   EMPTY_FILTERS,
   type ExploreFilterKey,
@@ -39,8 +40,11 @@ export function AccountTendersPage() {
   const [query, setQuery] = useQueryState('q', { defaultValue: '', clearOnDefault: true });
   const tenderLink = useTenderLink();
   const [searched, setSearched] = useState(false);
+  // The last query actually run, so a re-run with new filters can be told
+  // apart from a brand-new search.
+  const lastQueryRef = useRef('');
   const [filters, setFilters] = useState<FilterSelections>(EMPTY_FILTERS);
-  const { results, hasMore, loading, error, search, loadMore } = useTenderSearch();
+  const { results, hasMore, loading, error, meta, search, loadMore } = useTenderSearch();
   const currentWorkspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
   const shortlist = useClientShortlist(currentWorkspaceId);
 
@@ -62,8 +66,26 @@ export function AccountTendersPage() {
   const runSearch = (selections: FilterSelections) => {
     const trimmed = query.trim();
     if (!trimmed && !hasActiveFilters(selections)) return;
+    // A repeat of the same query with the filters changed is a REFINEMENT, not
+    // a fresh search. Distinguishing them is the point: a refinement means the
+    // first answer wasn't good enough, which is the signal that says whether
+    // ranking changes actually help.
+    const refined = lastQueryRef.current === trimmed && searched;
+    lastQueryRef.current = trimmed;
     setSearched(true);
-    void search(trimmed, toFilterValues(selections, new Date()), currentWorkspaceId ?? undefined);
+    posthog?.capture(refined ? 'search_refined' : 'search_performed', {
+      location: 'explore',
+      has_query: trimmed.length > 0,
+      query_length: trimmed.length,
+      has_filters: hasActiveFilters(selections),
+      sort: selections.sort,
+    });
+    void search(
+      trimmed,
+      toFilterValues(selections, new Date()),
+      currentWorkspaceId ?? undefined,
+      selections.sort,
+    );
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount only.
@@ -73,16 +95,36 @@ export function AccountTendersPage() {
     }
   }, []);
 
+  // Reported once a result set has settled, never mid-flight — a search still
+  // loading has zero results for reasons that have nothing to do with the
+  // query. `mode` says which retrievers answered, so a spike in empty results
+  // can be told apart from a spike in outages.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: posthog is stable, intentionally excluded
+  useEffect(() => {
+    if (!searched || loading || error) return;
+    if (results.length > 0) return;
+    posthog?.capture('search_zero_results', {
+      location: 'explore',
+      mode: meta.mode,
+      degraded: meta.degraded,
+      has_filters: hasActiveFilters(filters),
+    });
+  }, [searched, loading, error, results.length, meta.mode, meta.degraded]);
+
   function handleSearch() {
     runSearch(filters);
   }
 
-  function handleFilterChange(key: ExploreFilterKey, next: string) {
-    const updated = { ...filters, [key]: next };
+  function handleFilterChange(key: ExploreFilterKey, next: string[] | string) {
+    const updated = { ...filters, [key]: next } as FilterSelections;
     setFilters(updated);
     posthog?.capture('explore_filter_applied', {
       filter: key,
+      // How many values are active on this facet, not which — keeps the
+      // property low-cardinality while still showing multi-select adoption.
+      selected_count: Array.isArray(next) ? next.length : next ? 1 : 0,
       has_query: query.trim().length > 0,
+      location: 'explore_filters',
     });
     runSearch(updated);
   }
@@ -126,18 +168,44 @@ export function AccountTendersPage() {
           <ExploreFilters
             value={filters}
             locale={i18n.language}
+            facets={{
+              countries: meta.countryFacets,
+              statuses: meta.statusFacets,
+              cpvDivisions: meta.cpvDivisionFacets,
+            }}
             onChange={handleFilterChange}
             onClear={handleClearFilters}
           />
           {searched ? (
-            <div className="mx-auto w-full max-w-xl space-y-4">
+            <div className="mx-auto w-full max-w-2xl space-y-4">
+              <AppliedFilterChips
+                applied={meta.appliedFilters}
+                explicit={{
+                  countries: filters.countries,
+                  cpvPrefixes: filters.sectors
+                    .map(cpvPrefix)
+                    .filter((p): p is string => Boolean(p)),
+                  statuses: filters.statuses,
+                  hasValueBounds: Boolean(filters.valueMin || filters.valueMax),
+                  hasDeadline: Boolean(filters.deadline),
+                }}
+                locale={i18n.language}
+                onClear={() => {
+                  void setQuery('');
+                  runSearch(filters);
+                }}
+              />
+              {/* A search running on one retriever answers the question asked,
+                  just less well — say so rather than presenting partial
+                  results as complete ones. */}
+              {meta.degraded && <Banner tone="warning">{t('tenders.degraded')}</Banner>}
               {results.length > 0 && (
                 <>
                   <p className="text-sm text-ink-500">
                     {t('tenders.results', { count: results.length })}
                   </p>
                   <div className="space-y-3">
-                    {results.map((tender) => (
+                    {results.map((tender, index) => (
                       <div key={tender.id}>
                         {tenderLink(
                           tender.id,
@@ -149,8 +217,19 @@ export function AccountTendersPage() {
                                 : undefined
                             }
                             reason={tender.fitTier ? tender.reason : undefined}
+                            snippet={tender.snippet}
                           />,
                           'block rounded-2xl no-underline outline-none focus-visible:ring-2 focus-visible:ring-brand-600',
+                          () =>
+                            posthog?.capture('search_result_clicked', {
+                              location: 'explore',
+                              // Position is what makes ranking measurable: a
+                              // change that moves clicks up the list is the
+                              // only evidence that it improved relevance.
+                              position: index,
+                              mode: meta.mode,
+                              has_snippet: Boolean(tender.snippet),
+                            }),
                         )}
                       </div>
                     ))}

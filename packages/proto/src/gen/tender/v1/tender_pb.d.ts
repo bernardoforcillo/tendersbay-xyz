@@ -36,21 +36,31 @@ export declare type SearchTendersRequest = Message<"tender.v1.SearchTendersReque
   limit: number;
 
   /**
-   * optional, default 0; for semantic (non-empty query) searches,
+   * optional, default 0. A query-driven search ranks
    *
    * @generated from field: int32 offset = 4;
    */
   offset: number;
 
   /**
-   * paging is bounded by the candidate window (~250 results) —
-   * very deep pages may return empty even with more matches server-side
+   * within a bounded window of the top ~300 tenders;
+   * paging past it returns empty. A filters-only
+   * (empty query) search pages without that bound.
    *
    * optional; empty = today's anonymous-safe behavior
    *
    * @generated from field: string workspace_id = 5;
    */
   workspaceId: string;
+
+  /**
+   * Optional result ordering: "relevance" (default), "deadline" (soonest
+   * actionable first), "published" (newest first), "value" (largest first).
+   * "relevance" is meaningless without a query and falls back to "published".
+   *
+   * @generated from field: string sort = 6;
+   */
+  sort: string;
 };
 
 /**
@@ -64,23 +74,30 @@ export declare const SearchTendersRequestSchema: GenMessage<SearchTendersRequest
  */
 export declare type TenderFilters = Message<"tender.v1.TenderFilters"> & {
   /**
+   * country/cpv/status are the original single-value fields. They still work
+   * and are OR-ed with their plural counterparts below, but new callers should
+   * use the repeated fields — a real filter bar is multi-select.
+   *
    * alpha-2, e.g. "IT", "DE"
    *
-   * @generated from field: string country = 1;
+   * @generated from field: string country = 1 [deprecated = true];
+   * @deprecated
    */
   country: string;
 
   /**
    * prefix match
    *
-   * @generated from field: string cpv = 2;
+   * @generated from field: string cpv = 2 [deprecated = true];
+   * @deprecated
    */
   cpv: string;
 
   /**
    * open/awarded/cancelled/closed/unknown
    *
-   * @generated from field: string status = 3;
+   * @generated from field: string status = 3 [deprecated = true];
+   * @deprecated
    */
   status: string;
 
@@ -97,6 +114,56 @@ export declare type TenderFilters = Message<"tender.v1.TenderFilters"> & {
    * @generated from field: string deadline_to = 5;
    */
   deadlineTo: string;
+
+  /**
+   * Values within one field are OR-ed; separate fields are AND-ed.
+   *
+   * alpha-2
+   *
+   * @generated from field: repeated string countries = 6;
+   */
+  countries: string[];
+
+  /**
+   * Prefix match against a tender's primary CPV *or* any of its secondary
+   * ones: "45" selects all of division 45.
+   *
+   * @generated from field: repeated string cpv_prefixes = 7;
+   */
+  cpvPrefixes: string[];
+
+  /**
+   * @generated from field: repeated string statuses = 8;
+   */
+  statuses: string[];
+
+  /**
+   * "ITC" selects all of north-west Italy
+   *
+   * @generated from field: repeated string nuts_prefixes = 9;
+   */
+  nutsPrefixes: string[];
+
+  /**
+   * Case-insensitive substring of the contracting authority's name — not a
+   * prefix, since buyers are written inconsistently across sources.
+   *
+   * @generated from field: string buyer = 10;
+   */
+  buyer: string;
+
+  /**
+   * Value bounds in the tender's own currency unit. optional, so that "no
+   * lower bound" stays distinct from "at least zero".
+   *
+   * @generated from field: optional int64 value_min = 11;
+   */
+  valueMin?: bigint | undefined;
+
+  /**
+   * @generated from field: optional int64 value_max = 12;
+   */
+  valueMax?: bigint | undefined;
 };
 
 /**
@@ -120,6 +187,63 @@ export declare type SearchTendersResponse = Message<"tender.v1.SearchTendersResp
    * @generated from field: bool has_more = 2;
    */
   hasMore: boolean;
+
+  /**
+   * separate COUNT(*) query
+   * Which retrievers produced these results: "hybrid" (both), "lexical" or
+   * "semantic" (one was unavailable), "filters" (no query — a date-ordered
+   * browse, where relevance_score is meaningless). Reported so a degraded
+   * search can be shown as degraded instead of quietly answering a different
+   * question than the one asked.
+   *
+   * @generated from field: string retrieval_mode = 3;
+   */
+  retrievalMode: string;
+
+  /**
+   * true when retrieval_mode is "lexical" or "semantic"
+   *
+   * @generated from field: bool degraded = 4;
+   */
+  degraded: boolean;
+
+  /**
+   * The filters the server actually applied, including any it lifted out of
+   * the query text ("sotto 100k" becomes value_max). Returned so the UI can
+   * show what it understood — and let the user undo it.
+   *
+   * @generated from field: tender.v1.TenderFilters applied_filters = 5;
+   */
+  appliedFilters?: TenderFilters | undefined;
+
+  /**
+   * The remaining query text after those constraints were lifted out. Empty
+   * when the query was nothing but constraints.
+   *
+   * @generated from field: string applied_query = 6;
+   */
+  appliedQuery: string;
+
+  /**
+   * Counts per facet over the retrieved window, for filter-bar badges. These
+   * describe the ranked window this request considered, NOT the whole corpus —
+   * an exact global count would need a separate aggregate query per facet.
+   *
+   * @generated from field: repeated tender.v1.FacetCount country_facets = 7;
+   */
+  countryFacets: FacetCount[];
+
+  /**
+   * @generated from field: repeated tender.v1.FacetCount status_facets = 8;
+   */
+  statusFacets: FacetCount[];
+
+  /**
+   * keyed by 2-digit CPV division
+   *
+   * @generated from field: repeated tender.v1.FacetCount cpv_division_facets = 9;
+   */
+  cpvDivisionFacets: FacetCount[];
 };
 
 /**
@@ -127,6 +251,27 @@ export declare type SearchTendersResponse = Message<"tender.v1.SearchTendersResp
  * Use `create(SearchTendersResponseSchema)` to create a new message.
  */
 export declare const SearchTendersResponseSchema: GenMessage<SearchTendersResponse>;
+
+/**
+ * @generated from message tender.v1.FacetCount
+ */
+export declare type FacetCount = Message<"tender.v1.FacetCount"> & {
+  /**
+   * @generated from field: string value = 1;
+   */
+  value: string;
+
+  /**
+   * @generated from field: int32 count = 2;
+   */
+  count: number;
+};
+
+/**
+ * Describes the message tender.v1.FacetCount.
+ * Use `create(FacetCountSchema)` to create a new message.
+ */
+export declare const FacetCountSchema: GenMessage<FacetCount>;
 
 /**
  * @generated from message tender.v1.TenderResult
@@ -246,6 +391,18 @@ export declare type TenderResult = Message<"tender.v1.TenderResult"> & {
    * @generated from field: string eu_threshold = 19;
    */
   euThreshold: string;
+
+  /**
+   * EU-threshold band (SME-winnable = below). Empty when
+   * value is unknown OR the band is ambiguous. NOT value_fit.
+   * A fragment of the matched text with the query terms marked by <mark>…</mark>,
+   * so a result can show WHY it matched. Only the keyword retriever can produce
+   * one, so it is empty for results found by vector search alone and for
+   * filters-only browses.
+   *
+   * @generated from field: string snippet = 20;
+   */
+  snippet: string;
 };
 
 /**

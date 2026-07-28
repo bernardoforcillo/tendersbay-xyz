@@ -402,7 +402,19 @@
       "deadline7": "7 prochains jours",
       "deadline30": "30 prochains jours",
       "deadline90": "90 prochains jours",
-      "clear": "Tout effacer"
+      "clear": "Tout effacer",
+      "sort": "Trier par",
+      "sorts": {
+        "relevance": "Pertinence",
+        "deadline": "Échéance",
+        "published": "Plus récents",
+        "value": "Montant"
+      },
+      "valueMin": "Montant minimum",
+      "valueMax": "Montant maximum",
+      "valuePlaceholder": "ex. 100000",
+      "buyer": "Acheteur",
+      "buyerPlaceholder": "Nom du pouvoir adjudicateur"
     },
     "detail": {
       "overview": "Aperçu",
@@ -448,6 +460,16 @@
       "reasonValueAbove": "Au-dessus de votre fourchette de valeur",
       "reasonRegion": "Dans votre région",
       "reasonProcedure": "Correspond à votre type de procédure"
+    },
+    "degraded": "Une partie de la recherche est indisponible, ces résultats peuvent donc être incomplets.",
+    "applied": {
+      "label": "Lu dans votre recherche :",
+      "cpv": "CPV {{code}}",
+      "valueRange": "{{min}}–{{max}}",
+      "valueMax": "jusqu'à {{max}}",
+      "valueMin": "à partir de {{min}}",
+      "deadlineUntil": "clôture avant le {{date}}",
+      "undo": "Effacer"
     }
   },
   "today": {
