@@ -1,0 +1,16 @@
+[
+  {
+    "id": "cleaning-it-crosslang",
+    "query": "pulizie uffici",
+    "language": "it",
+    "note": "must reach DE/FR/ES notices carrying CPV 909192xx",
+    "judgements": { "ted:de-1": 2, "ted:fr-1": 1 }
+  },
+  {
+    "id": "bridge-en",
+    "query": "bridge inspection",
+    "language": "en",
+    "note": "same-language baseline",
+    "judgements": { "ted:it-1": 2 }
+  }
+]
