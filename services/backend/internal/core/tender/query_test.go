@@ -407,6 +407,9 @@ func (f *parseFakeRepo) LexicalSearch(_ context.Context, q LexicalQuery, filters
 	f.gotLexical, f.gotFilters = q, filters
 	return nil, nil
 }
+func (f *parseFakeRepo) FindByCPVPrefixes(context.Context, []string, Filters, int) ([]ScoredTender, error) {
+	return nil, nil
+}
 func (f *parseFakeRepo) SearchTenders(context.Context, Filters, SortOrder, int, int) ([]Tender, error) {
 	return nil, nil
 }

@@ -199,6 +199,41 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, q tender.LexicalQuery, f
 	return r.queryScoredTenders(ctx, "lexical search", sql, b.args)
 }
 
+// FindByCPVPrefixes returns tenders whose primary or any secondary CPV is
+// prefixed by one of codes, newest first.
+//
+// It reuses filterClauses' CPV predicate shape rather than inventing a second
+// one, so the arm and the CPVPrefixes filter can never disagree about what "a
+// tender in this category" means — including the escapeLike guard, without which
+// a code containing a wildcard would silently widen the match.
+//
+// Ordering is by recency, not by a score: the codes carry the relevance (they
+// came out of the lexicon ranked), and within one code every tender is equally
+// "in that category". Fusion works on RANKS, so recency is the only defensible
+// tie-break here — and t.id makes the order total so paging cannot repeat a row.
+func (r *TenderRepo) FindByCPVPrefixes(ctx context.Context, codes []string, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
+	vals := nonEmpty(codes)
+	if len(vals) == 0 || limit <= 0 {
+		return nil, nil
+	}
+
+	b := &argBuilder{}
+	var arms []string
+	for _, v := range vals {
+		p := b.next(escapeLike(v) + "%")
+		arms = append(arms, "t.cpv LIKE "+p,
+			"EXISTS (SELECT 1 FROM unnest(t.cpv_secondary) AS sec WHERE sec LIKE "+p+")")
+	}
+	clauses := append([]string{"(" + strings.Join(arms, " OR ") + ")"}, filterClauses(filters, b)...)
+
+	sql := "SELECT" + tenderSelectColumns + ",\n\t0::float8 AS relevance,\n\t'' AS snippet" +
+		tenderFromClause + whereClause(clauses) +
+		"\nORDER BY t.published_at DESC NULLS LAST, t.id DESC" +
+		"\nLIMIT " + b.next(limit)
+
+	return r.queryScoredTenders(ctx, "find tenders by cpv prefixes", sql, b.args)
+}
+
 // browseOrderBy renders a sort order as SQL for the browse path.
 //
 // Every branch ends in t.id so the order is total: without a final

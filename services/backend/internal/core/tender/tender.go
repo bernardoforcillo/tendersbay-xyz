@@ -136,6 +136,14 @@ type Repo interface {
 	// the queries dense embeddings structurally can't: exact codes, notice
 	// references, buyer names, rare acronyms.
 	LexicalSearch(ctx context.Context, q LexicalQuery, filters Filters, limit int) ([]ScoredTender, error)
+	// FindByCPVPrefixes returns tenders whose primary or secondary CPV is
+	// prefixed by any of codes, newest first. It backs the CPV retrieval arm —
+	// the language-independent half of cross-language search.
+	//
+	// Prefix rather than equality so a resolved division ("45") behaves the same
+	// way the CPVPrefixes filter already does, and so a resolved 8-digit code
+	// still matches a tender that records it with a trailing refinement.
+	FindByCPVPrefixes(ctx context.Context, codes []string, filters Filters, limit int) ([]ScoredTender, error)
 	EnrichTenders(ctx context.Context, ids []string, filters Filters) ([]Tender, error)
 	FindDetailByID(ctx context.Context, id int64) (*TenderDetail, error)
 	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)
@@ -236,6 +244,7 @@ type Service struct {
 	rl       RateLimiter
 	profiles ProfileSource
 	cache    EmbeddingCache // optional; nil disables embedding reuse
+	lexicon  CPVLexicon     // optional; nil disables the CPV arm
 	cfg      Config
 }
 
@@ -249,6 +258,17 @@ func NewService(repo Repo, kb KnowledgeBase, rl RateLimiter, profiles ProfileSou
 // genuinely optional — the service is fully correct without one, just slower.
 func (s *Service) WithEmbeddingCache(c EmbeddingCache) *Service {
 	s.cache = c
+	return s
+}
+
+// WithCPVLexicon attaches a CPV vocabulary and returns s.
+//
+// A separate step rather than a constructor argument for the same reason
+// WithEmbeddingCache is: the service is fully correct without one — the CPV arm
+// simply contributes nothing — and a database whose cpv_terms table has not been
+// seeded must not be able to stop the service from starting.
+func (s *Service) WithCPVLexicon(l CPVLexicon) *Service {
+	s.lexicon = l
 	return s
 }
 
@@ -313,6 +333,14 @@ type SearchOutput struct {
 	// — a filter the user can't see is one they can't correct.
 	AppliedFilters Filters
 	AppliedQuery   string
+	// AppliedCPV are the CPV codes the search inferred from the query text, with
+	// the label that matched. Reported for the same reason AppliedFilters is: the
+	// user must be able to see that "pulizie uffici" was read as
+	// "90919200 — Servizi di pulizia di uffici", and remove it.
+	//
+	// Unlike AppliedFilters these did not NARROW anything — the CPV arm is a
+	// boost, so a wrong match reorders the page rather than emptying it.
+	AppliedCPV []CPVMatch
 	// Facets are per-field counts for filter-bar badges. See Facets for what
 	// they count, which differs between a query-driven search and a browse.
 	Facets Facets

@@ -488,9 +488,20 @@ func TestWithDefaults_LeavesTheCPVTogglesAlone(t *testing.T) {
 	if r.CPVIndexExpanded {
 		t.Error("CPVIndexExpanded = true, want false for a zero-value Ranking")
 	}
-	// …while DefaultRanking, which production uses, turns both on.
+	// …while DefaultRanking, which production uses, turns index expansion on
+	// but leaves the CPV retrieval arm itself off. Task 14 measured the arm
+	// (CPVWeight > 0) against the live eval corpus at three prefix depths and
+	// every one scored below the two-arm baseline, with its four target
+	// cross-language cells still stuck at 0.0000 — see DefaultRanking's
+	// CPVWeight comment and task-14-report.md. CPVIndexExpanded is a
+	// different, separately-measured signal (it widens the lexical arm's own
+	// match, rather than adding a third arm) and is unaffected by that
+	// finding.
 	d := DefaultRanking()
-	if d.CPVWeight <= 0 || !d.CPVIndexExpanded {
-		t.Errorf("DefaultRanking = %+v, want the CPV arm and index expansion enabled", d)
+	if d.CPVWeight != 0 {
+		t.Errorf("DefaultRanking.CPVWeight = %v, want 0 — Task 14 measured the arm and it made every metric worse", d.CPVWeight)
+	}
+	if !d.CPVIndexExpanded {
+		t.Error("DefaultRanking.CPVIndexExpanded = false, want true — production still uses index expansion")
 	}
 }

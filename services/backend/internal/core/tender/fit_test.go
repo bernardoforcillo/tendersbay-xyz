@@ -25,6 +25,9 @@ func (f *fitFakeRepo) FacetCounts(context.Context, Filters) (Facets, error) {
 func (f *fitFakeRepo) LexicalSearch(context.Context, LexicalQuery, Filters, int) ([]ScoredTender, error) {
 	return nil, nil
 }
+func (f *fitFakeRepo) FindByCPVPrefixes(context.Context, []string, Filters, int) ([]ScoredTender, error) {
+	return nil, nil
+}
 
 func (f *fitFakeRepo) EnrichTenders(_ context.Context, _ []string, _ Filters) ([]Tender, error) {
 	return f.enrich, nil

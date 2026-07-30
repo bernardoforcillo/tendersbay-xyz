@@ -49,6 +49,10 @@ func (f *fakeRepo) FacetCounts(context.Context, tender.Filters) (tender.Facets, 
 	return f.facets, nil
 }
 
+func (f *fakeRepo) FindByCPVPrefixes(context.Context, []string, tender.Filters, int) ([]tender.ScoredTender, error) {
+	return nil, nil
+}
+
 func (f *fakeRepo) SearchTenders(_ context.Context, _ tender.Filters, sortBy tender.SortOrder, limit, offset int) ([]tender.Tender, error) {
 	f.gotSort = sortBy
 	f.gotLimit = limit

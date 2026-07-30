@@ -159,7 +159,13 @@ func newHarness(t *testing.T) harness {
 			AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 1 << 30, RateWindow: time.Minute},
 			Ranking:    tender.DefaultRanking(),
 		},
-	)
+		// Same attachment main.go makes: unconditional, since an unseeded
+		// cpv_terms table simply resolves no codes and the arm contributes
+		// nothing (see tender.Service.cpvCandidates). Without this the harness
+		// measures a Service with the CPV arm permanently off, regardless of
+		// what main.go wires — a bespoke omission here would be exactly the
+		// "numbers that describe nothing shipped" the comment above warns against.
+	).WithCPVLexicon(postgres.NewCPVLexicon(db))
 
 	return harness{svc: svc, corpus: corpus, golden: golden}
 }

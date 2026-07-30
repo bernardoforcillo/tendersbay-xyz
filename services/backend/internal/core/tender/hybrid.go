@@ -256,9 +256,31 @@ type Ranking struct {
 // tests so the numbers live in exactly one place.
 func DefaultRanking() Ranking {
 	return Ranking{
-		LexicalWeight:    0.5,
-		DenseWeight:      0.5,
-		CPVWeight:        0.4, // below the text retrievers, on purpose — see the field comment
+		LexicalWeight: 0.5,
+		DenseWeight:   0.5,
+		// CPVWeight 0 — the arm is wired (cpv.go) but OFF. Task 14 measured it
+		// against the live eval corpus with three prefix-truncation depths
+		// (strip-then-drop-a-level, fixed 4-digit, fixed 6-digit — see
+		// cpvHierarchyPrefix) and every one of them scored BELOW this baseline
+		// (recall@20 0.6315/ndcg 0.4946/mrr 0.4862): best was ~0.593/0.460/0.439.
+		// Worse, the four cross-language cells the arm exists to fix (it→de,
+		// fr→de, nl→de, pl→de) stayed at exactly 0.0000 in all three variants —
+		// truncation depth was not the deciding factor. The actual blocker,
+		// confirmed against the eval DB: FindByCPVPrefixes is called with the
+		// same small per-page window every other arm uses (~21 rows for a
+		// 20-result page) and orders its matches by recency, not relevance: for
+		// "pulizie uffici" → class 9091, 56 tenders in that class exist and the
+		// one judged-relevant German tender ranks 31st by publish date, so it
+		// never enters the candidate window regardless of how the code was
+		// truncated — and even an EXACT leaf match to a French query's own
+		// target tender ("services de nettoyage" → 90910000, that tender's own
+		// code) still scored fr→de 0.0000 for the identical reason. A category
+		// this wide needs relevance-ordered retrieval or a larger candidate
+		// window, neither of which this task's brief authorized changing — so
+		// the honest result is to ship the bridge switched off with the
+		// truncation bug fixed underneath it, not to tune weights until a
+		// number moves. See task-14-report.md for the full harness output.
+		CPVWeight:        0,
 		CPVIndexExpanded: true,
 		RRFK:             60, // the value the RRF paper uses and everyone since
 		ClosedPenalty:    0.5,
@@ -326,6 +348,9 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 		ExpandCPVLabels: s.cfg.Ranking.CPVIndexExpanded,
 	}, filters, want)
 	dense, denseErr := s.denseCandidates(ctx, query, filters, want)
+	// No error return: every CPV failure degrades to an absent arm — see
+	// cpvCandidates.
+	cpvArm, cpvMatches := s.cpvCandidates(ctx, query, filters, want)
 
 	mode := ModeHybrid
 	switch {
@@ -341,9 +366,7 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 	}
 
 	now := time.Now()
-	// No CPV list is retrieved yet — Task 14 wires it. Passing nil here keeps
-	// this call's behaviour byte-identical to before this task's change.
-	fused := s.fuse(lexical, dense, nil, now)
+	fused := s.fuse(lexical, dense, cpvArm, now)
 
 	// Facets are counted over the whole ranked window, before paging — they
 	// describe the result set, not the page the caller happens to be on.
@@ -356,6 +379,7 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 	truncated := len(lexical) >= want || len(dense) >= want
 	out := page(fused, limit, offset, truncated, mode)
 	out.Facets = facets
+	out.AppliedCPV = cpvMatches
 	return out, nil
 }
 

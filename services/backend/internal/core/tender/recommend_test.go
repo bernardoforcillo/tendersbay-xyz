@@ -271,6 +271,13 @@ func (f *recommendFakeRepo) EnrichTenders(context.Context, []string, Filters) ([
 	return nil, nil
 }
 
+// FindByCPVPrefixes: these tests exercise fit annotation, not the CPV arm, so
+// a trivial stub (no candidates) satisfies the interface without adding
+// meaningful behavior here.
+func (f *recommendFakeRepo) FindByCPVPrefixes(context.Context, []string, Filters, int) ([]ScoredTender, error) {
+	return nil, nil
+}
+
 // recommendFakeRepo's tests exercise RecommendForClient only — the detail-page
 // methods below (added to Repo by the tender-detail feature) are never called
 // from this file, so trivial stubs satisfy the interface without adding

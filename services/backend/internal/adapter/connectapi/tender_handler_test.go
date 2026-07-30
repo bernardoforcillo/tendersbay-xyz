@@ -33,6 +33,9 @@ func (f *fakeRepo) DistinctCountries(context.Context) ([]string, error) {
 func (f *fakeRepo) LexicalSearch(context.Context, tender.LexicalQuery, tender.Filters, int) ([]tender.ScoredTender, error) {
 	return nil, nil
 }
+func (f *fakeRepo) FindByCPVPrefixes(context.Context, []string, tender.Filters, int) ([]tender.ScoredTender, error) {
+	return nil, nil
+}
 
 func (f *fakeRepo) EnrichTenders(context.Context, []string, tender.Filters) ([]tender.Tender, error) {
 	return nil, nil

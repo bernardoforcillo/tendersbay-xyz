@@ -31,3 +31,121 @@ type CPVLexicon interface {
 	// describes this" is a normal answer, not a failure.
 	MatchCodes(ctx context.Context, query string, limit int) ([]CPVMatch, error)
 }
+
+// maxCPVCodes bounds how many codes one query may resolve to.
+//
+// Eight because a real query names one or two concepts; a query that matches
+// forty labels has matched a common word ("servizi", "services") rather than a
+// concept, and letting all forty through would turn the arm into "anything in
+// any of these categories" — which is not a relevance signal at all.
+const maxCPVCodes = 8
+
+// cpvHierarchyPrefix truncates a resolved CPV leaf code to a coarser
+// hierarchy level, for prefix matching against tenders.cpv / cpv_secondary.
+//
+// Why this exists: CPV's 8 digits are hierarchical — 2-digit division, 4-digit
+// class, 8-digit fully specified leaf — and an unspecified finer level is
+// written as TRAILING ZEROS, not a shorter string: "90919200" is a
+// fully-specified leaf ("office cleaning"), not a code with two blank digits.
+// Task 12/13 wired the arm to prefix-match that leaf verbatim, which the live
+// eval corpus showed is accidental EQUALITY, not a category match: the query
+// "pulizie uffici" resolves to 90919200, but the judged German/French/Spanish
+// tenders for that exact query carry 90911200, 90911000 and 90919000 —
+// siblings that only agree with the resolved code on the first four digits,
+// "9091" (cleaning services). Matching the full leaf asked every other
+// language to have logged the identical leaf category, which they hadn't;
+// that is why the four off-diagonal cells this phase targets (it→de, fr→de,
+// nl→de, pl→de) sat at exactly 0.0000 with the leaf-equality version of this
+// arm, and why other, previously-working cells regressed — a handful of
+// leaf-only hits displaced good dense results instead of adding to them.
+//
+// This backs the code off by one hierarchy level: strip the trailing-zero
+// padding to find how many digits are actually specified, then drop the
+// least-significant 2-digit block of what's left. 90919200 → strip trailing
+// zeros → 909192 (still leaf-precision, just not padded) → drop one level →
+// 9091 (the level the four judged codes above actually share). An
+// already-short or all-zero code (e.g. "90000000", division only) has nothing
+// coarser to back off to without becoming an empty prefix — i.e. "match
+// everything" — so it is returned as-is once at or below the 2-digit
+// division level, never truncated to "".
+//
+// NOTE — measured against the live eval corpus (Task 14), this fix alone did
+// NOT move the four target cells: the deeper blocker turned out to be
+// FindByCPVPrefixes' recency-ordered, page-sized candidate window discarding
+// the actually-relevant tender before fusion ever saw it (see DefaultRanking's
+// CPVWeight comment in hybrid.go and task-14-report.md). The arm ships
+// disabled (CPVWeight 0) with this truncation bug fixed underneath it, so
+// re-enabling it later starts from a correct prefix instead of the leaf-
+// equality bug this comment describes.
+func cpvHierarchyPrefix(code string) string {
+	// How many digits are actually specified: the position just past the last
+	// non-zero digit, rounded UP to the next even (2-digit) boundary so an
+	// odd-positioned significant digit is never itself cut off — "90000000"
+	// (division 90, nothing more specified) must round up to "90", not down
+	// to the single digit "9".
+	specified := 0
+	for i, r := range code {
+		if r != '0' {
+			specified = i + 1
+		}
+	}
+	if specified == 0 {
+		// No non-zero digit anywhere — only a pathological all-zero input
+		// reaches this (a real CPV code always has at least a division
+		// digit). Treat it as "division-level, nothing more specified"
+		// rather than truncating to "", which would match every row in the
+		// table instead of narrowing anything.
+		specified = 2
+	} else if specified%2 != 0 {
+		specified++
+	}
+	if specified > len(code) {
+		specified = len(code)
+	}
+	prefix := code[:specified]
+
+	if len(prefix) <= 2 {
+		return prefix
+	}
+	return prefix[:len(prefix)-2]
+}
+
+// cpvCandidates resolves the query onto CPV codes and returns the tenders
+// carrying them, plus what was understood.
+//
+// Every failure degrades to "the arm contributes nothing", never to an error:
+// the CPV bridge is an enrichment on top of two retrievers that already answer
+// the query, and a missing or unseeded cpv_terms table must not be able to fail
+// a search they could have served. This mirrors EmbeddingCache's contract, and
+// it is deliberately NOT reflected in RetrievalMode — that field reports whether
+// the search answered the question asked, and a missing enrichment does not
+// change the question.
+//
+// The matches are returned even when the fetch failed: the inference itself
+// succeeded, and the UI should still show what the server understood.
+func (s *Service) cpvCandidates(ctx context.Context, query string, filters Filters, want int) ([]ScoredTender, []CPVMatch) {
+	if s.lexicon == nil || s.cfg.Ranking.CPVWeight <= 0 {
+		// A disabled arm must not even resolve codes: it would contribute nothing
+		// to fusion, so the round trip would be pure waste on every search.
+		return nil, nil
+	}
+
+	matches, err := s.lexicon.MatchCodes(ctx, query, maxCPVCodes)
+	if err != nil || len(matches) == 0 {
+		return nil, nil
+	}
+
+	// Match by CATEGORY, not by leaf — see cpvHierarchyPrefix. The resolved
+	// code itself (matches[i].Code) is still what AppliedCPV reports to the
+	// caller; only the repo query is widened.
+	codes := make([]string, len(matches))
+	for i, m := range matches {
+		codes[i] = cpvHierarchyPrefix(m.Code)
+	}
+
+	tenders, err := s.repo.FindByCPVPrefixes(ctx, codes, filters, want)
+	if err != nil {
+		return nil, matches
+	}
+	return tenders, matches
+}
