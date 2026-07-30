@@ -394,7 +394,7 @@ func TestSearchHybrid_PassesTheParsedTextAsALexicalQuery(t *testing.T) {
 	// so later work can add fields (query language, index-expansion toggle)
 	// without another nine-method interface break.
 	if repo.gotLexical.Text != "pulizie uffici" {
-		t.Errorf("LexicalQuery.Text = %q, want %q", repo.gotLexical.Text, "pulizie uffici")
+		t.Errorf("LexicalQuery.Text = %q, want %q — the struct must carry the parsed text through to the repo call", repo.gotLexical.Text, "pulizie uffici")
 	}
 }
 
