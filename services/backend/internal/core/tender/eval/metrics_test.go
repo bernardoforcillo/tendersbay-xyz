@@ -83,11 +83,12 @@ func TestMetrics_IgnoreDuplicateIDsAfterTheFirst(t *testing.T) {
 		t.Errorf("NDCGAtK = %v, want 1 — duplicates must not inflate nDCG above the single-occurrence score", got)
 	}
 
-	// MRR uses only the first relevant rank, so duplicates must not move it.
-	// Here the first relevant item appears at rank 2, and repeating it should
-	// not change the score.
+	// MRR deduplicate irrelevant ids: a repeated irrelevant id before the first
+	// relevant hit must not push the relevant hit further down the ranking.
+	// With dedupe: ["ted:x","ted:x","ted:b"] → ["ted:x","ted:b"], relevant at rank 2 → 1/2.
+	// Without dedupe: ["ted:x","ted:x","ted:b"], relevant at rank 3 → 1/3.
 	j2 := Judgements{"ted:b": 1}
-	if got := MRR([]string{"ted:a", "ted:b", "ted:b"}, j2); !close(got, 0.5) {
-		t.Errorf("MRR = %v, want 1/2 — duplicates must not move the first relevant rank", got)
+	if got := MRR([]string{"ted:x", "ted:x", "ted:b"}, j2); !close(got, 0.5) {
+		t.Errorf("MRR = %v, want 1/2 — repeated irrelevant ids must not push the first relevant hit further down", got)
 	}
 }
