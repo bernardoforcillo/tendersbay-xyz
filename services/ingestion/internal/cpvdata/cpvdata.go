@@ -46,6 +46,10 @@ func Rows() ([]Row, error) {
 
 	r := csv.NewReader(zr)
 	r.FieldsPerRecord = 3
+	// Safe to reuse the backing []string across Read calls: Go strings are
+	// immutable, so rec[0]/rec[1]/rec[2] below each copy out their own string
+	// value at append time rather than aliasing a slot csv.Reader overwrites
+	// on the next call.
 	r.ReuseRecord = true
 
 	header, err := r.Read()
