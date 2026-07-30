@@ -3,10 +3,10 @@
     "id": "crosslang-it-cleaning-offices",
     "query": "pulizie uffici",
     "language": "it",
-    "note": "Cross-language: an Italian SME searching office cleaning must reach the German, French and Spanish notices in CPV division 90 — none share a lexeme with the query text, so only a CPV-aware or dense arm can bridge them.",
+    "note": "Cross-language: an Italian SME searching office cleaning must reach the German, French and Spanish notices in CPV division 90 — none share a lexeme with the query text, so only a CPV-aware or dense arm can bridge them. Grades follow the CPV code, not the prose: only the Spanish notice's own code (90919000, 'Office, school and office-equipment cleaning services') names offices, so it is the direct hit. The German notice is CPV 90911200 (building cleaning) for a school building, and the French notice is CPV 90911000 (cleaning of dwellings, buildings and windows) for a police school and a detention centre — both are building cleaning at the right sector, but neither is classified as office cleaning, so a bidder hunting office contracts would have to widen intent to want them.",
     "judgements": {
-      "ted:0d403a1f-c511-415f-890a-36b5b2264bf1": 2,
-      "ted:34a5cbd6-d214-4a93-8187-fbe665911a00": 2,
+      "ted:0d403a1f-c511-415f-890a-36b5b2264bf1": 1,
+      "ted:34a5cbd6-d214-4a93-8187-fbe665911a00": 1,
       "ted:50372acb-4f9e-4da7-8166-75236ce24d8a": 2
     }
   },
