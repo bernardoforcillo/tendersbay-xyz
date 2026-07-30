@@ -11,13 +11,13 @@ func TestLoadGolden_ReadsQueriesAndGrades(t *testing.T) {
 		t.Fatalf("LoadGolden: %v", err)
 	}
 	if len(set) != 2 {
-		t.Fatalf("len(set) = %d, want 2", len(set))
+		t.Fatalf("len(set) = %d, want 2 — a loader that silently drops or duplicates a query would still return no error, and the count is the only place that shows up before every aggregate downstream is wrong", len(set))
 	}
 	if set[0].ID != "cleaning-it-crosslang" || set[0].Language != "it" {
-		t.Errorf("set[0] = %+v, want the Italian cross-language query first", set[0])
+		t.Errorf("set[0] = %+v, want the Italian cross-language query first — a field decoded onto the wrong query would silently misattribute its judgements in the report", set[0])
 	}
 	if set[0].Judgements["ted:de-1"] != 2 {
-		t.Errorf("grade = %d, want 2", set[0].Judgements["ted:de-1"])
+		t.Errorf("grade = %d, want 2 — confirms judgements decode keyed by source:source_ref, the exact identity the metrics join against", set[0].Judgements["ted:de-1"])
 	}
 }
 
@@ -29,7 +29,7 @@ func TestLoadGolden_RejectsADuplicateID(t *testing.T) {
 	  {"id":"a","query":"y","language":"it","judgements":{"ted:2":2}}
 	]`)}
 	if _, err := LoadGolden(fsys, "g.json"); err == nil {
-		t.Error("LoadGolden = nil error, want a duplicate-id failure")
+		t.Error("LoadGolden = nil error, want a duplicate-id failure — a silently accepted duplicate id would collide in the per-query report and overwrite one query's score with the other's, looking exactly like a query that simply scored badly")
 	}
 }
 
@@ -38,7 +38,7 @@ func TestLoadGolden_RejectsAnOutOfRangeGrade(t *testing.T) {
 	// change what the metric means rather than fail.
 	fsys := mapFS{"g.json": []byte(`[{"id":"a","query":"x","language":"it","judgements":{"ted:1":3}}]`)}
 	if _, err := LoadGolden(fsys, "g.json"); err == nil {
-		t.Error("LoadGolden = nil error, want an out-of-range grade failure")
+		t.Error("LoadGolden = nil error, want an out-of-range grade failure — a silently accepted grade outside 0/1/2 would change what nDCG's gain function means for that judgement, looking exactly like a query that simply scored badly")
 	}
 }
 
@@ -47,7 +47,7 @@ func TestLoadGolden_RejectsAQueryWithNothingRelevant(t *testing.T) {
 	// does, so it can only dilute the report.
 	fsys := mapFS{"g.json": []byte(`[{"id":"a","query":"x","language":"it","judgements":{"ted:1":0}}]`)}
 	if _, err := LoadGolden(fsys, "g.json"); err == nil {
-		t.Error("LoadGolden = nil error, want a no-relevant-tenders failure")
+		t.Error("LoadGolden = nil error, want a no-relevant-tenders failure — a silently accepted query with nothing relevant would score 0 no matter what the engine does, diluting the report while looking exactly like a query that simply scored badly")
 	}
 }
 
@@ -56,6 +56,26 @@ func TestLoadGolden_RejectsAnEmptyQueryText(t *testing.T) {
 	// undefined — it measures nothing about ranking.
 	fsys := mapFS{"g.json": []byte(`[{"id":"a","query":"  ","language":"it","judgements":{"ted:1":2}}]`)}
 	if _, err := LoadGolden(fsys, "g.json"); err == nil {
-		t.Error("LoadGolden = nil error, want an empty-query failure")
+		t.Error("LoadGolden = nil error, want an empty-query failure — a silently accepted empty query takes the undefined browse path, and its score would look exactly like a query that simply scored badly")
+	}
+}
+
+func TestLoadGolden_RejectsAnEmptySet(t *testing.T) {
+	// An empty set has nothing for the harness to report on; accepting it as
+	// valid would let a broken export (an empty glob, a failed fetch) pass as
+	// a clean run with zero findings instead of failing loudly.
+	fsys := mapFS{"g.json": []byte(`[]`)}
+	if _, err := LoadGolden(fsys, "g.json"); err == nil {
+		t.Error("LoadGolden = nil error, want an empty-set failure — a silently accepted empty set would let a broken export pass as a clean zero-query run instead of failing loudly")
+	}
+}
+
+func TestLoadGolden_RejectsAMissingLanguage(t *testing.T) {
+	// The report groups results by language; a query with none would either
+	// silently vanish from every per-language breakdown or land in an
+	// empty-string bucket, both wrong in ways that look like a clean report.
+	fsys := mapFS{"g.json": []byte(`[{"id":"a","query":"x","judgements":{"ted:1":2}}]`)}
+	if _, err := LoadGolden(fsys, "g.json"); err == nil {
+		t.Error("LoadGolden = nil error, want a missing-language failure — a silently accepted query with no language would vanish from every per-language breakdown, looking exactly like a query that simply scored badly")
 	}
 }
