@@ -227,8 +227,28 @@ type Ranking struct {
 	FreshBoost      float64
 	FreshWithinDays int
 
-	// CPVIndexExpanded widens the lexical match to each tender's CPV labels.
-	// See Task 13 / cpv.go for the rationale and the double-counting note.
+	// CPVWeight is the fusion weight of the CPV arm — tenders found because the
+	// query resolved to a CPV code they carry (see cpv.go). It is what makes
+	// cross-language retrieval work: a code is identical in all 24 EU languages.
+	//
+	// It is deliberately LOWER than the two text retrievers. A category label
+	// says what a notice is about; a title match says it is about exactly this.
+	//
+	// Zero means the arm is off, and unlike every other knob in this struct that
+	// is a MEANINGFUL value rather than "unset" — see withDefaults.
+	CPVWeight float64
+	// CPVIndexExpanded widens the lexical match to each tender's cpv_labels
+	// weight class, so a query in one language can match a notice in another
+	// through the label text denormalised onto it.
+	//
+	// This expresses the SAME signal as CPVWeight by a different route, so
+	// running both counts it twice: the labels inflate the lexical arm's rank
+	// AND the concept re-enters as its own arm, leaving the effective CPV weight
+	// unknown. That is a real tuning hazard, which is why both are independently
+	// switchable and why the evaluation harness measures all four combinations
+	// before either is left on.
+	//
+	// False means off, and like CPVWeight that is meaningful, not unset.
 	CPVIndexExpanded bool
 }
 
@@ -238,6 +258,8 @@ func DefaultRanking() Ranking {
 	return Ranking{
 		LexicalWeight:    0.5,
 		DenseWeight:      0.5,
+		CPVWeight:        0.4, // below the text retrievers, on purpose — see the field comment
+		CPVIndexExpanded: true,
 		RRFK:             60, // the value the RRF paper uses and everyone since
 		ClosedPenalty:    0.5,
 		ExpiredPenalty:   0.35,
@@ -251,6 +273,11 @@ func DefaultRanking() Ranking {
 // withDefaults fills in any unset knob, so a Config built without a Ranking
 // (every existing caller and test) gets sane behaviour rather than a
 // zero-weight ranking that scores everything 0.
+//
+// CPVWeight and CPVIndexExpanded are deliberately NOT filled. For them, the zero
+// value is a real setting — "the CPV arm is off", "index expansion is off" — not
+// an absent one, so default-filling would make them impossible to disable and
+// would silently switch the arm on in every test that builds a bare Ranking{}.
 func (r Ranking) withDefaults() Ranking {
 	d := DefaultRanking()
 	if r.LexicalWeight == 0 && r.DenseWeight == 0 {
@@ -314,7 +341,9 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 	}
 
 	now := time.Now()
-	fused := s.fuse(lexical, dense, now)
+	// No CPV list is retrieved yet — Task 14 wires it. Passing nil here keeps
+	// this call's behaviour byte-identical to before this task's change.
+	fused := s.fuse(lexical, dense, nil, now)
 
 	// Facets are counted over the whole ranked window, before paging — they
 	// describe the result set, not the page the caller happens to be on.
@@ -406,14 +435,21 @@ func distinctByBestScore(hits []ScoredChunk) ([]string, map[string]float32) {
 	return ids, best
 }
 
-// fuse merges two ranked lists with Reciprocal Rank Fusion, then applies the
+// fuse merges the ranked lists with Reciprocal Rank Fusion, then applies the
 // business boost, and returns the result ordered best-first.
 //
-// The fused RelevanceScore is normalised so that 1.0 means "top of both
-// lists". It is NOT a cosine similarity any more — FitThresholds compares
+// The fused RelevanceScore is normalised so that 1.0 means "top of both TEXT
+// retrievers". It is NOT a cosine similarity any more — FitThresholds compares
 // against this field (see recommend.go), so those thresholds are calibrated
 // against this scale, not against raw embedding distance.
-func (s *Service) fuse(lexical, dense []ScoredTender, now time.Time) []ScoredTender {
+//
+// The CPV arm is deliberately absent from that normalisation. Adding its weight
+// to the denominator would push every result found by lexical+dense but not CPV
+// down from 1.0 to 0.667 of max, silently reclassifying "strong" fits as
+// "possible" — a regression in a feature this arm has nothing to do with. Left
+// out, the arm can only RAISE a score, so every existing threshold keeps exactly
+// the meaning it had.
+func (s *Service) fuse(lexical, dense, cpv []ScoredTender, now time.Time) []ScoredTender {
 	r := s.cfg.Ranking.withDefaults()
 
 	type entry struct {
@@ -423,6 +459,14 @@ func (s *Service) fuse(lexical, dense []ScoredTender, now time.Time) []ScoredTen
 	merged := map[string]*entry{}
 
 	contribute := func(list []ScoredTender, weight float64) {
+		// A zero (or negative) weight means this arm is off. Skipping it here —
+		// rather than just contributing 0 — keeps an off arm from inserting its
+		// tenders into merged at all: without this guard, a CPV-only result
+		// would still appear in the output ranked last instead of being absent,
+		// and CPVWeight: 0 would stop being byte-identical to no arm at all.
+		if weight <= 0 {
+			return
+		}
 		for i, t := range list {
 			rrf := weight / (r.RRFK + float64(i+1))
 			e, ok := merged[t.ID]
@@ -435,8 +479,10 @@ func (s *Service) fuse(lexical, dense []ScoredTender, now time.Time) []ScoredTen
 	}
 	contribute(lexical, r.LexicalWeight)
 	contribute(dense, r.DenseWeight)
+	contribute(cpv, r.CPVWeight)
 
-	// The best attainable fused score: rank 1 in both lists.
+	// The best attainable score from the two TEXT retrievers: rank 1 in both.
+	// The CPV arm is deliberately excluded — see the fuse doc comment.
 	maxScore := (r.LexicalWeight + r.DenseWeight) / (r.RRFK + 1)
 
 	out := make([]ScoredTender, 0, len(merged))

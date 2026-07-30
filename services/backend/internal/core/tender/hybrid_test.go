@@ -58,7 +58,7 @@ func TestFuse_RewardsAgreementBetweenRetrievers(t *testing.T) {
 	dense := scored("vecOnly", "y1", "agreed", "y2", "y3", "y4", "y5", "y6", "y7", "y8",
 		"y9", "y10", "y11", "y12", "y13", "y14", "y15", "y16", "y17", "lexOnly")
 
-	got := s.fuse(lexical, dense, now)
+	got := s.fuse(lexical, dense, nil, now)
 	if got[0].ID != "agreed" {
 		t.Errorf("order = %v, want \"agreed\" first — it is the only tender both retrievers rank highly", ids(got)[:3])
 	}
@@ -76,7 +76,7 @@ func TestFuse_IgnoresRawScoresAndUsesRankOnly(t *testing.T) {
 	// Give "b" an enormous raw score. Its rank is still second, so it stays second.
 	dense[1].RelevanceScore = 1000
 
-	got := s.fuse(lexical, dense, now)
+	got := s.fuse(lexical, dense, nil, now)
 	if !equalIDs(got, "a", "b") {
 		t.Errorf("order = %v, want [a b] — a raw score must not override rank", ids(got))
 	}
@@ -87,12 +87,12 @@ func TestFuse_WeightsShiftTheBalanceBetweenRetrievers(t *testing.T) {
 	lexical := scored("lex")
 	dense := scored("vec")
 
-	lexHeavy := fusionService(Ranking{LexicalWeight: 0.9, DenseWeight: 0.1}).fuse(lexical, dense, now)
+	lexHeavy := fusionService(Ranking{LexicalWeight: 0.9, DenseWeight: 0.1}).fuse(lexical, dense, nil, now)
 	if lexHeavy[0].ID != "lex" {
 		t.Errorf("order = %v, want the lexical hit first when lexical is weighted up", ids(lexHeavy))
 	}
 
-	denseHeavy := fusionService(Ranking{LexicalWeight: 0.1, DenseWeight: 0.9}).fuse(lexical, dense, now)
+	denseHeavy := fusionService(Ranking{LexicalWeight: 0.1, DenseWeight: 0.9}).fuse(lexical, dense, nil, now)
 	if denseHeavy[0].ID != "vec" {
 		t.Errorf("order = %v, want the vector hit first when dense is weighted up", ids(denseHeavy))
 	}
@@ -103,7 +103,7 @@ func TestFuse_WeightsShiftTheBalanceBetweenRetrievers(t *testing.T) {
 // RelevanceScore, so the scale is part of the contract.
 func TestFuse_NormalisesTopOfBothListsToOne(t *testing.T) {
 	s := fusionService(DefaultRanking())
-	got := s.fuse(scored("a"), scored("a"), time.Now())
+	got := s.fuse(scored("a"), scored("a"), nil, time.Now())
 	if len(got) != 1 {
 		t.Fatalf("len(got) = %d, want 1", len(got))
 	}
@@ -123,7 +123,7 @@ func TestFuse_DemotesTendersThatCannotBeBidOn(t *testing.T) {
 	open := ScoredTender{Tender: Tender{ID: "open", Status: "open"}}
 
 	// The closed tender is the better TEXT match: first in both lists.
-	got := s.fuse([]ScoredTender{closed, open}, []ScoredTender{closed, open}, now)
+	got := s.fuse([]ScoredTender{closed, open}, []ScoredTender{closed, open}, nil, now)
 	if got[0].ID != "open" {
 		t.Errorf("order = %v, want the open tender first despite ranking lower textually", ids(got))
 	}
@@ -138,7 +138,7 @@ func TestFuse_DemotesExpiredDeadlines(t *testing.T) {
 	expired := ScoredTender{Tender: Tender{ID: "expired", Status: "open", Deadline: &past}}
 	live := ScoredTender{Tender: Tender{ID: "live", Status: "open", Deadline: &future}}
 
-	got := s.fuse([]ScoredTender{expired, live}, []ScoredTender{expired, live}, now)
+	got := s.fuse([]ScoredTender{expired, live}, []ScoredTender{expired, live}, nil, now)
 	if got[0].ID != "live" {
 		t.Errorf("order = %v, want the tender that can still be bid on first", ids(got))
 	}
@@ -151,7 +151,7 @@ func TestFuse_KeepsDemotedTendersInTheResults(t *testing.T) {
 	past := time.Now().Add(-24 * time.Hour)
 	expired := ScoredTender{Tender: Tender{ID: "expired", Status: "cancelled", Deadline: &past}}
 
-	got := s.fuse([]ScoredTender{expired}, nil, time.Now())
+	got := s.fuse([]ScoredTender{expired}, nil, nil, time.Now())
 	if len(got) != 1 {
 		t.Fatalf("len(got) = %d, want the demoted tender still present", len(got))
 	}
@@ -170,7 +170,7 @@ func TestFuse_BoostsFreshlyPublishedTenders(t *testing.T) {
 	a := ScoredTender{Tender: Tender{ID: "stale", Status: "open", PublishedAt: &stale}}
 	b := ScoredTender{Tender: Tender{ID: "fresh", Status: "open", PublishedAt: &fresh}}
 
-	got := s.fuse([]ScoredTender{a, b}, []ScoredTender{b, a}, now)
+	got := s.fuse([]ScoredTender{a, b}, []ScoredTender{b, a}, nil, now)
 	if got[0].ID != "fresh" {
 		t.Errorf("order = %v, want the freshly published tender to break the tie", ids(got))
 	}
@@ -182,9 +182,9 @@ func TestFuse_IsDeterministicForEqualScores(t *testing.T) {
 	s := fusionService(DefaultRanking())
 	now := time.Now()
 
-	first := ids(s.fuse(scored("c", "a", "b"), scored("a", "b", "c"), now))
+	first := ids(s.fuse(scored("c", "a", "b"), scored("a", "b", "c"), nil, now))
 	for i := 0; i < 20; i++ {
-		if got := ids(s.fuse(scored("c", "a", "b"), scored("a", "b", "c"), now)); !equalStrings(got, first) {
+		if got := ids(s.fuse(scored("c", "a", "b"), scored("a", "b", "c"), nil, now)); !equalStrings(got, first) {
 			t.Fatalf("order changed between identical calls: %v then %v", first, got)
 		}
 	}
@@ -205,8 +205,16 @@ func equalStrings(a, b []string) bool {
 // A Config built without a Ranking must still rank, not score everything zero.
 func TestRanking_ZeroValueFallsBackToDefaults(t *testing.T) {
 	got := Ranking{}.withDefaults()
-	if got != DefaultRanking() {
-		t.Errorf("withDefaults() = %+v, want %+v", got, DefaultRanking())
+	// CPVWeight and CPVIndexExpanded are the one deliberate exception: their
+	// zero value is a real "off" setting, not an absent one, so withDefaults
+	// leaves them alone rather than inheriting DefaultRanking's — see
+	// TestWithDefaults_LeavesTheCPVTogglesAlone. Every other knob must still
+	// fall back to DefaultRanking's value, which this comparison still checks.
+	want := DefaultRanking()
+	want.CPVWeight = 0
+	want.CPVIndexExpanded = false
+	if got != want {
+		t.Errorf("withDefaults() = %+v, want %+v", got, want)
 	}
 }
 
@@ -389,5 +397,100 @@ func TestSortedFacets_IsDeterministic(t *testing.T) {
 	// Highest count first, ties broken by value.
 	if first[0].Value != "c" || first[1].Value != "a" || first[2].Value != "b" {
 		t.Errorf("order = %+v, want c, then a and b by value, then d", first)
+	}
+}
+
+func TestFuse_CPVArmPromotesACodeMatchTheTextMissed(t *testing.T) {
+	// The cross-language case in miniature: "de-1" shares no lexeme with the
+	// query so the lexical arm never saw it, and it ranks poorly on the dense
+	// arm — but it carries the CPV code the query resolved to.
+	svc := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, CPVWeight: 0.4, RRFK: 60})
+	got := svc.fuse(scored("it-1"), scored("it-1", "de-1"), scored("de-1"), time.Now())
+
+	if !equalIDs(got, "it-1", "de-1") {
+		t.Fatalf("order = %v, want it-1 then de-1", ids(got))
+	}
+	// Without the CPV arm de-1 would sit at rank 2 of one list only; with it, it
+	// also holds rank 1 of the CPV list.
+	withoutCPV := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(scored("it-1"), scored("it-1", "de-1"), nil, time.Now())
+	if got[1].RelevanceScore <= withoutCPV[1].RelevanceScore {
+		t.Errorf("de-1 scored %v with the CPV arm and %v without; the arm must raise it",
+			got[1].RelevanceScore, withoutCPV[1].RelevanceScore)
+	}
+}
+
+func TestFuse_CPVArmNeverLowersAnyScore(t *testing.T) {
+	// FitThresholds (RelevanceHigh 0.75, RelevanceLow 0.4) are calibrated against
+	// this scale and read by computeFitTier. If enabling the arm could lower a
+	// score, results would silently reclassify from "strong" to "possible" —
+	// a regression in a feature this change does not touch.
+	lexical, dense := scored("a", "b", "c"), scored("b", "a", "d")
+	now := time.Now()
+
+	base := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(lexical, dense, nil, now)
+	withArm := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, CPVWeight: 0.4, RRFK: 60}).
+		fuse(lexical, dense, scored("d", "c"), now)
+
+	baseScore := map[string]float64{}
+	for _, r := range base {
+		baseScore[r.ID] = r.RelevanceScore
+	}
+	for _, r := range withArm {
+		if before, ok := baseScore[r.ID]; ok && r.RelevanceScore < before {
+			t.Errorf("%s scored %v with the CPV arm, down from %v — the arm must only add", r.ID, r.RelevanceScore, before)
+		}
+	}
+}
+
+func TestFuse_ZeroCPVWeightReproducesTheTwoArmResultExactly(t *testing.T) {
+	// The disable path has to be byte-identical, not merely similar: it is what
+	// lets the harness measure the arm's effect as a controlled difference, and
+	// what keeps every Ranking{} literal in the existing tests meaningful.
+	lexical, dense := scored("a", "b"), scored("b", "c")
+	now := time.Now()
+
+	off := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, CPVWeight: 0, RRFK: 60}).
+		fuse(lexical, dense, scored("c"), now)
+	twoArm := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(lexical, dense, nil, now)
+
+	if len(off) != len(twoArm) {
+		t.Fatalf("len = %d with CPVWeight 0, %d without the arm", len(off), len(twoArm))
+	}
+	for i := range off {
+		if off[i].ID != twoArm[i].ID || off[i].RelevanceScore != twoArm[i].RelevanceScore {
+			t.Errorf("position %d = %s/%v, want %s/%v", i, off[i].ID, off[i].RelevanceScore, twoArm[i].ID, twoArm[i].RelevanceScore)
+		}
+	}
+}
+
+func TestFuse_CPVOnlyResultStillScoresBelowAgreementOfBothRetrievers(t *testing.T) {
+	// A taxonomy match is weaker evidence than a text match: the category says
+	// what a notice is about, a title match says it is about exactly this.
+	svc := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, CPVWeight: 0.4, RRFK: 60})
+	got := svc.fuse(scored("text"), scored("text"), scored("code"), time.Now())
+	if !equalIDs(got, "text", "code") {
+		t.Errorf("order = %v, want the lexical+dense agreement first", ids(got))
+	}
+}
+
+func TestWithDefaults_LeavesTheCPVTogglesAlone(t *testing.T) {
+	// Unlike every other knob, zero/false is MEANINGFUL here — it is how the arm
+	// and the index expansion are switched off. Default-filling them would make
+	// them impossible to disable and would silently change every existing test
+	// that builds a bare Ranking{}.
+	r := Ranking{}.withDefaults()
+	if r.CPVWeight != 0 {
+		t.Errorf("CPVWeight = %v, want 0 — a zero-value Ranking must leave the arm off", r.CPVWeight)
+	}
+	if r.CPVIndexExpanded {
+		t.Error("CPVIndexExpanded = true, want false for a zero-value Ranking")
+	}
+	// …while DefaultRanking, which production uses, turns both on.
+	d := DefaultRanking()
+	if d.CPVWeight <= 0 || !d.CPVIndexExpanded {
+		t.Errorf("DefaultRanking = %+v, want the CPV arm and index expansion enabled", d)
 	}
 }
