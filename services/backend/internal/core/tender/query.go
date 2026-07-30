@@ -354,13 +354,20 @@ func extractDeadline(text string, now time.Time, filters *Filters) string {
 
 // ── Status ──
 
+// Gendered/inflected forms are listed alongside their base form wherever a
+// language's tender noun is commonly used in both genders/numbers — e.g. IT's
+// masculine "bando/bandi" and feminine "gara/gare", or ES/PT's feminine
+// "licitación(es)/licitação(ões)" (the ES spelling already appears as a
+// leading noun hint in openStatusPattern below). Missing the inflected form
+// is the same failure mode regardless of which language it's in: the base
+// word alone doesn't match the attributive phrase people actually type.
 var openWords = []string{
-	"aperti", "aperto", "in corso", // it
+	"aperti", "aperto", "aperta", "aperte", "in corso", // it
 	"open", "ongoing", "current", "live", // en
 	"ouverts", "ouvert", "en cours", // fr
-	"offen", "offene", "laufend", // de
-	"abiertos", "abierto", "en curso", // es
-	"abertos", "aberto", // pt
+	"offen", "offene", "laufend", "laufende", // de
+	"abiertos", "abierto", "abierta", "abiertas", "en curso", // es
+	"abertos", "aberto", "aberta", "abertas", // pt
 	"otwarte", "otwarty", // pl
 	"lopend", "lopende", // nl
 }

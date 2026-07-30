@@ -148,11 +148,33 @@ func TestParseQuery_ExtractsRelativeDeadline(t *testing.T) {
 }
 
 func TestParseQuery_ExtractsOpenStatus(t *testing.T) {
-	for _, q := range []string{"bandi aperti pulizie", "open tenders cleaning", "ausschreibungen offen"} {
+	for _, q := range []string{
+		"bandi aperti pulizie", "open tenders cleaning", "ausschreibungen offen",
+		// Italian and Iberian tenders are as often referred to by a feminine
+		// noun (gara, licitación/licitação) as by the masculine one already
+		// covered above (bando/bandi) — the adjective must agree in gender.
+		"gara aperta pulizie", "licitaciones abiertas limpieza", "licitações abertas limpeza",
+	} {
 		got := ParseQuery(q, parseNow)
 		if len(got.Filters.Statuses) != 1 || got.Filters.Statuses[0] != "open" {
 			t.Errorf("ParseQuery(%q): Statuses = %v, want [open]", q, got.Filters.Statuses)
 		}
+	}
+}
+
+// German only carried the uninflected predicate form ("die Ausschreibung ist
+// offen") in openWords, not the attributive one that agrees with the noun in
+// front of it ("laufende Ausschreibungen") — which is the ordinary way a
+// German speaker writes "ongoing tenders". openStatusPattern matches on word
+// boundaries, so "laufende" (missing) extracted nothing even though "laufend"
+// (present) would have.
+func TestParseQuery_ExtractsGermanInflectedOpenStatus(t *testing.T) {
+	got := ParseQuery("laufende Ausschreibungen für Bauarbeiten", parseNow)
+	if len(got.Filters.Statuses) != 1 || got.Filters.Statuses[0] != "open" {
+		t.Fatalf("Statuses = %v, want [open]", got.Filters.Statuses)
+	}
+	if strings.Contains(strings.ToLower(got.Text), "laufende") {
+		t.Errorf("Text = %q, want \"laufende\" stripped from the residual text", got.Text)
 	}
 }
 
