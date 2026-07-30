@@ -31,18 +31,26 @@ import (
 // exceeds cpvTrigramMaxLen falls back to lexeme-only and silently loses that
 // bridge, exactly as it lost "pulizie" above.
 //
-// That cost is bounded by what the table can actually hold: cpv_terms labels
-// average 28 runes and sit at 62 runes at the 95th percentile (measured
-// directly — `SELECT percentile_cont(0.95) ... length(label)`), so pg_trgm's
-// similarity — normalised by the combined trigram count of query AND label —
-// is already collapsing toward zero past that range regardless of any bound
-// here: a genuinely long, sentence-shaped query cannot score above the 0.3
-// cutoff against a label this short no matter what the cutoff is set to. 60
-// sits just above that p95, wide enough to keep the arm live for any
-// realistic multi-word technical phrase ("attrezzature per la pulizia degli
-// uffici comunali"), and reuses a bound this codebase has already vetted for
-// exactly this shaped trade-off rather than inventing a second, unexplained
-// number for the same problem in the same file family.
+// cpv_terms labels average 28 runes and sit at 62 runes at the 95th
+// percentile (measured directly — `SELECT percentile_cont(0.95) ...
+// length(label)`), which is the range that actually matters here: pg_trgm's
+// similarity is normalised by the combined trigram count of query AND label,
+// so a genuinely long, sentence-shaped query collapses toward a zero score
+// against a label this short well before the query itself reaches sentence
+// length, regardless of where the cutoff is set — the cutoff only does real
+// work near a label's own length, not far past it.
+//
+// 60 lands just BELOW that measured p95 (62), not above it — it does not
+// formally cover the single longest 5% of labels. That gap is deliberate,
+// not an oversight: the actual reason 60 was chosen over the brief's
+// illustrative 40 is that it reuses trigramQueryMaxLen, a bound this exact
+// codebase already vetted for the identical shaped trade-off (the fuzzy arm
+// over short/name-like input) one file over, rather than introducing a
+// second, unexplained number for the same problem in the same file family.
+// It is wide enough for any realistic multi-word technical phrase — the
+// demonstrated bridge query "pulizie uffici" is 14 runes — and widening it
+// further to formally clear the p95 is a reasonable future tweak, not one
+// this task's evidence required.
 const cpvTrigramMaxLen = 60
 
 // CPVLexicon resolves queries to CPV codes.

@@ -39,11 +39,11 @@ func TestMatchCodes_ResolvesAnItalianQueryToACodeSharedWithGerman(t *testing.T) 
 			sawCleaning = true
 		}
 		if m.Label == "" || m.Lang == "" {
-			t.Errorf("match %+v has no label/lang; the UI needs both to show what was understood", m)
+			t.Errorf("match %+v has label=%q lang=%q, want both non-empty — the UI needs both to show the user what their query was understood as, and a signal they can't see is one they can't correct", m, m.Label, m.Lang)
 		}
 	}
 	if !sawCleaning {
-		t.Errorf("matches = %+v, want a 9091xxxx cleaning-services code", matches)
+		t.Errorf("matches = %+v, want a 9091xxxx cleaning-services code among them — this is the premise of the whole phase: the Italian phrase must resolve to the same code a German (or any other language's) notice carries", matches)
 	}
 }
 
@@ -56,7 +56,7 @@ func TestMatchCodes_ReturnsNothingForNonsense(t *testing.T) {
 		t.Fatalf("MatchCodes: %v", err)
 	}
 	if len(matches) != 0 {
-		t.Errorf("matches = %+v, want none", matches)
+		t.Errorf("matches = %+v, want none — a query that resolves to no code must contribute no arm at all rather than falling back to something arbitrary", matches)
 	}
 }
 
@@ -67,7 +67,7 @@ func TestMatchCodes_HonoursTheLimit(t *testing.T) {
 		t.Fatalf("MatchCodes: %v", err)
 	}
 	if len(matches) > 3 {
-		t.Errorf("len(matches) = %d, want at most 3", len(matches))
+		t.Errorf("len(matches) = %d, want at most 3 — exceeding the caller's requested limit means LIMIT was dropped or miscounted in the SQL, and callers rely on it to cap what they render", len(matches))
 	}
 }
 
@@ -84,7 +84,7 @@ func TestMatchCodes_IsDeterministic(t *testing.T) {
 			t.Fatalf("MatchCodes: %v", err)
 		}
 		if len(again) != len(first) {
-			t.Fatalf("run %d returned %d matches, first returned %d", i, len(again), len(first))
+			t.Fatalf("run %d returned %d matches, first returned %d — repeated identical queries must return the same result SET, or the per-position comparison below is meaningless", i, len(again), len(first))
 		}
 		for j := range first {
 			if again[j].Code != first[j].Code {
