@@ -280,7 +280,7 @@ func TestLexicalSearch_ShortQueryDoesNotErrorOnTrigramOperator(t *testing.T) {
 
 	// "comune bergam" is 13 runes — well under trigramQueryMaxLen (60) — so
 	// LexicalSearch adds the `t.title % $n` / `t.buyer_name % $n` arm.
-	_, err := repo.LexicalSearch(ctx, "comune bergam", tender.Filters{}, 10)
+	_, err := repo.LexicalSearch(ctx, tender.LexicalQuery{Text: "comune bergam"}, tender.Filters{}, 10)
 	if err != nil {
 		t.Fatalf("LexicalSearch(short query) error = %v, want nil — the trigram `%%` operator must resolve via search_path", err)
 	}

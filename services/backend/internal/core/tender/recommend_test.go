@@ -255,7 +255,7 @@ func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, _ SortOr
 // LexicalSearch returns the same rows SearchTenders does, so the hybrid path
 // has something to fuse in these tests — they exercise fit annotation, not
 // retrieval.
-func (f *recommendFakeRepo) LexicalSearch(ctx context.Context, _ string, _ Filters, limit int) ([]ScoredTender, error) {
+func (f *recommendFakeRepo) LexicalSearch(ctx context.Context, _ LexicalQuery, _ Filters, limit int) ([]ScoredTender, error) {
 	tenders, err := f.SearchTenders(ctx, Filters{}, SortRelevance, limit, 0)
 	if err != nil {
 		return nil, err

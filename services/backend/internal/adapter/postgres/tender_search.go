@@ -156,8 +156,8 @@ func whereClause(clauses []string) string {
 // The 'simple' text-search configuration matches the one the generated column
 // was built with in the ingestion migration; using a different one here would
 // silently stop matching.
-func (r *TenderRepo) LexicalSearch(ctx context.Context, query string, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
-	query = strings.TrimSpace(query)
+func (r *TenderRepo) LexicalSearch(ctx context.Context, q tender.LexicalQuery, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
+	query := strings.TrimSpace(q.Text)
 	if query == "" || limit <= 0 {
 		return nil, nil
 	}

@@ -363,8 +363,8 @@ func TestSearch_DoesNotParseConstraintsUnlessAsked(t *testing.T) {
 		t.Errorf("ValueMin = %d, want nil — prose must not become a budget filter",
 			*repo.gotFilters.ValueMin)
 	}
-	if repo.gotQuery != notes {
-		t.Errorf("query = %q, want it passed through untouched", repo.gotQuery)
+	if repo.gotLexical.Text != notes {
+		t.Errorf("LexicalQuery.Text = %q, want it passed through untouched", repo.gotLexical.Text)
 	}
 
 	if _, err := svc.Search(context.Background(), SearchParams{
@@ -377,13 +377,34 @@ func TestSearch_DoesNotParseConstraintsUnlessAsked(t *testing.T) {
 	}
 }
 
+func TestSearchHybrid_PassesTheParsedTextAsALexicalQuery(t *testing.T) {
+	repo := &parseFakeRepo{}
+	svc := NewService(repo, &parseFakeKB{}, allowAll{}, nil, Config{
+		AnonTier:   Tier{MaxResults: 10, RateLimit: 100, RateWindow: time.Minute},
+		AuthedTier: Tier{MaxResults: 50, RateLimit: 100, RateWindow: time.Minute},
+	})
+
+	if _, err := svc.Search(context.Background(), SearchParams{
+		Query: "pulizie uffici", ParseQuery: true, Limit: 10, RateLimitKey: "k",
+	}); err != nil {
+		t.Fatalf("Search: %v", err)
+	}
+
+	// The repo must receive the query as a struct carrying the retrievable text,
+	// so later work can add fields (query language, index-expansion toggle)
+	// without another nine-method interface break.
+	if repo.gotLexical.Text != "pulizie uffici" {
+		t.Errorf("LexicalQuery.Text = %q, want %q", repo.gotLexical.Text, "pulizie uffici")
+	}
+}
+
 type parseFakeRepo struct {
-	gotQuery   string
+	gotLexical LexicalQuery
 	gotFilters Filters
 }
 
-func (f *parseFakeRepo) LexicalSearch(_ context.Context, q string, filters Filters, _ int) ([]ScoredTender, error) {
-	f.gotQuery, f.gotFilters = q, filters
+func (f *parseFakeRepo) LexicalSearch(_ context.Context, q LexicalQuery, filters Filters, _ int) ([]ScoredTender, error) {
+	f.gotLexical, f.gotFilters = q, filters
 	return nil, nil
 }
 func (f *parseFakeRepo) SearchTenders(context.Context, Filters, SortOrder, int, int) ([]Tender, error) {

@@ -109,6 +109,22 @@ type ScoredTender struct {
 	Snippet string
 }
 
+// LexicalQuery is what the keyword retriever is asked for.
+//
+// It is a struct rather than a bare string because Repo has nine methods and
+// five fakes implement it: every scalar parameter added later would break all
+// six call sites at once, whereas a new FIELD breaks nothing. The fields that
+// follow Text are all "how should this text be matched", not "what to match".
+type LexicalQuery struct {
+	// Text is the query with structured constraints already lifted out — see
+	// ParseQuery. Empty means there is nothing to retrieve on.
+	Text string
+	// ExpandCPVLabels widens the match to the tender's CPV labels weight class
+	// (see the cpv_labels column). Off means match only title/buyer/code/
+	// description, which is exactly today's behaviour.
+	ExpandCPVLabels bool
+}
+
 // Repo is the subset of postgres.TenderRepo the service needs.
 type Repo interface {
 	SearchTenders(ctx context.Context, filters Filters, sortBy SortOrder, limit, offset int) ([]Tender, error)
@@ -119,7 +135,7 @@ type Repo interface {
 	// trigram matching, already filtered and ranked, best-first. It answers
 	// the queries dense embeddings structurally can't: exact codes, notice
 	// references, buyer names, rare acronyms.
-	LexicalSearch(ctx context.Context, query string, filters Filters, limit int) ([]ScoredTender, error)
+	LexicalSearch(ctx context.Context, q LexicalQuery, filters Filters, limit int) ([]ScoredTender, error)
 	EnrichTenders(ctx context.Context, ids []string, filters Filters) ([]Tender, error)
 	FindDetailByID(ctx context.Context, id int64) (*TenderDetail, error)
 	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)

@@ -226,6 +226,10 @@ type Ranking struct {
 	// FreshBoost multiplies a tender published within FreshWithinDays.
 	FreshBoost      float64
 	FreshWithinDays int
+
+	// CPVIndexExpanded widens the lexical match to each tender's CPV labels.
+	// See Task 13 / cpv.go for the rationale and the double-counting note.
+	CPVIndexExpanded bool
 }
 
 // DefaultRanking is the starting configuration, shared by main.go and the
@@ -290,7 +294,10 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 		want = maxWindow
 	}
 
-	lexical, lexErr := s.repo.LexicalSearch(ctx, query, filters, want)
+	lexical, lexErr := s.repo.LexicalSearch(ctx, LexicalQuery{
+		Text:            query,
+		ExpandCPVLabels: s.cfg.Ranking.CPVIndexExpanded,
+	}, filters, want)
 	dense, denseErr := s.denseCandidates(ctx, query, filters, want)
 
 	mode := ModeHybrid

@@ -30,7 +30,7 @@ func (f *fakeRepo) SearchTenders(context.Context, tender.Filters, tender.SortOrd
 func (f *fakeRepo) DistinctCountries(context.Context) ([]string, error) {
 	return f.countries, nil
 }
-func (f *fakeRepo) LexicalSearch(context.Context, string, tender.Filters, int) ([]tender.ScoredTender, error) {
+func (f *fakeRepo) LexicalSearch(context.Context, tender.LexicalQuery, tender.Filters, int) ([]tender.ScoredTender, error) {
 	return nil, nil
 }
 
