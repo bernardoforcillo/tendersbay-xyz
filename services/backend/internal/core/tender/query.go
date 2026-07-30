@@ -158,6 +158,15 @@ var (
 	valueBetweenPattern = buildBetweenPattern()
 )
 
+// magnitudeWords are amountPattern's suffix alternatives. Built as a slice
+// and rendered through alternation() (see below) rather than hand-ordered
+// inline, so the longest-first order it enforces can never drift out of sync
+// with this list the way it once did — see the fix note on amountPattern.
+var magnitudeWords = []string{
+	"k", "m", "mln", "mio", "mila", "milioni", "millions", "million",
+	"millionen", "millones", "milhões", "milhoes", "tysięcy", "tysiecy", "tys",
+}
+
 // amountPattern is the number itself: digits with optional thousands/decimal
 // separators, an optional magnitude suffix, and an optional currency mark.
 // Written once and embedded in each comparison pattern so all of them accept
@@ -169,7 +178,16 @@ var (
 // number into the following words. The currency alternation lists longer
 // forms first, since Go's regexp picks the leftmost-FIRST alternative — with
 // "eur" first, "euro" would only ever match its prefix.
-const amountPattern = `([0-9][0-9.,]*(?:[ \x{00a0}][0-9]{3})*)\s*(k|m|mln|mio|mila|milioni|millions|million|millionen|millones|milhões|milhoes|tysięcy|tysiecy|tys)?\s*(€|euros|euro|eur)?`
+//
+// The magnitude alternation needs the exact same longest-first treatment, and
+// for a while didn't get it: a hand-ordered list put "m" (1,000,000) before
+// "mila" (1,000), so "100 mila" silently parsed as 100 million instead of
+// 100 thousand — the leftmost-first alternative that still lets the rest of
+// the pattern match wins, not the longest one, and a bare "m" always lets the
+// rest match. Routing magnitudeWords through alternation() — already used for
+// every other keyword list in this file — fixes it the same way and, unlike a
+// second hand-ordered literal, can't silently regress if the list changes.
+var amountPattern = `([0-9][0-9.,]*(?:[ \x{00a0}][0-9]{3})*)\s*(` + alternation(magnitudeWords) + `)?\s*(€|euros|euro|eur)?`
 
 // minBareAmount is the smallest number accepted as money when nothing marks it
 // as money — no magnitude suffix, no currency.
@@ -336,13 +354,20 @@ func extractDeadline(text string, now time.Time, filters *Filters) string {
 
 // ── Status ──
 
+// Gendered/inflected forms are listed alongside their base form wherever a
+// language's tender noun is commonly used in both genders/numbers — e.g. IT's
+// masculine "bando/bandi" and feminine "gara/gare", or ES/PT's feminine
+// "licitación(es)/licitação(ões)" (the ES spelling already appears as a
+// leading noun hint in openStatusPattern below). Missing the inflected form
+// is the same failure mode regardless of which language it's in: the base
+// word alone doesn't match the attributive phrase people actually type.
 var openWords = []string{
-	"aperti", "aperto", "in corso", // it
+	"aperti", "aperto", "aperta", "aperte", "in corso", // it
 	"open", "ongoing", "current", "live", // en
 	"ouverts", "ouvert", "en cours", // fr
-	"offen", "offene", "laufend", // de
-	"abiertos", "abierto", "en curso", // es
-	"abertos", "aberto", // pt
+	"offen", "offene", "laufend", "laufende", // de
+	"abiertos", "abierto", "abierta", "abiertas", "en curso", // es
+	"abertos", "aberto", "aberta", "abertas", // pt
 	"otwarte", "otwarty", // pl
 	"lopend", "lopende", // nl
 }
