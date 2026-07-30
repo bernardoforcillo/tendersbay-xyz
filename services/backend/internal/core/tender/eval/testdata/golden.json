@@ -1,0 +1,475 @@
+[
+  {
+    "id": "crosslang-it-cleaning-offices",
+    "query": "pulizie uffici",
+    "language": "it",
+    "note": "Cross-language: an Italian SME searching office cleaning must reach the German, French and Spanish notices in CPV division 90 — none share a lexeme with the query text, so only a CPV-aware or dense arm can bridge them.",
+    "judgements": {
+      "ted:0d403a1f-c511-415f-890a-36b5b2264bf1": 2,
+      "ted:34a5cbd6-d214-4a93-8187-fbe665911a00": 2,
+      "ted:50372acb-4f9e-4da7-8166-75236ce24d8a": 2
+    }
+  },
+  {
+    "id": "crosslang-it-medical-devices",
+    "query": "dispositivi medici",
+    "language": "it",
+    "note": "Cross-language: an Italian buyer of medical devices should also see the German and Polish device notices (division 33). The Bulgarian mammography-scanner notice is a narrower device subtype, so it only widens intent rather than being a direct hit.",
+    "judgements": {
+      "ted:6888c0a8-6161-4be9-af7e-6c04b40bcf80": 2,
+      "ted:f58f8c36-bf1d-4901-b847-d535746abe49": 2,
+      "ted:3a2f10b5-e95b-47b7-bf93-5c0b7fb2ffda": 1
+    }
+  },
+  {
+    "id": "crosslang-fr-cleaning-services",
+    "query": "services de nettoyage",
+    "language": "fr",
+    "note": "Cross-language: a French buyer's generic cleaning-services query should surface the Dutch and Italian building-cleaning notices in division 90. The German notice is facility management more broadly (Gebaeudemanagement), so it is adjacent rather than a direct hit.",
+    "judgements": {
+      "ted:5e555cf8-49cd-413e-bbb3-73ef230e926a": 2,
+      "ted:5973a226-3155-4ca4-9a5b-4f17e87265b8": 2,
+      "ted:2f144e21-edcc-4d99-9902-5c0c923c13a2": 1
+    }
+  },
+  {
+    "id": "crosslang-fr-road-construction",
+    "query": "travaux de construction de routes",
+    "language": "fr",
+    "note": "Cross-language: road-construction works are CPV 45233xxx across the union. The German motorway notice, the Croatian street-reconstruction notice and the Latvian road-rebuild notice all carry that code family despite sharing no lexeme with the French query.",
+    "judgements": {
+      "ted:658843a9-8b73-43b6-a3d6-68923d68f11b": 2,
+      "ted:bfec82bd-090f-4623-8dd7-0f98ae26522e": 2,
+      "ted:06cccf60-badf-48fb-83fd-3847e5297c19": 2
+    }
+  },
+  {
+    "id": "crosslang-de-cleaning-services",
+    "query": "Reinigungsdienste",
+    "language": "de",
+    "note": "Cross-language: a German-speaking buyer of cleaning services should also reach the Dutch, French and Greek division-90 notices — the German word 'Reinigungsdienste' appears nowhere in any of them.",
+    "judgements": {
+      "ted:fe9bdd20-75c4-4bf0-9511-4a65618e6d6a": 2,
+      "ted:5496c479-098d-4acb-9995-b59e06c3bedc": 2,
+      "ted:5e8e4021-ddfd-46df-bfa5-46f401af04ea": 2
+    }
+  },
+  {
+    "id": "crosslang-de-software-development",
+    "query": "Softwareentwicklung",
+    "language": "de",
+    "note": "Cross-language: application-software development (CPV 722xx) is the same buyer need in English, Swedish and Slovenian notices as it is in German. None of them contain the word 'Softwareentwicklung'.",
+    "judgements": {
+      "ted:4cc6dcd0-c8c9-43e2-bc0e-cbb7499ef9ae": 2,
+      "ted:291dd507-6386-423a-958e-8734dd5c4887": 2,
+      "ted:2363aee7-7dd5-44aa-bd4c-cf6324d7ae24": 2
+    }
+  },
+  {
+    "id": "crosslang-es-cleaning-services",
+    "query": "servicios de limpieza",
+    "language": "es",
+    "note": "Cross-language: a Spanish buyer's cleaning-services query should reach the Italian, French and Dutch division-90 notices — a bidder scanning the whole union for cleaning work, not only Spanish-language listings.",
+    "judgements": {
+      "ted:e89cb6dd-4c57-4bfe-9d74-5628343c0d02": 2,
+      "ted:93b2effa-5c70-4082-8c97-58006a7b772e": 2,
+      "ted:a03f344b-9bf9-4815-92fd-7865b5b14d45": 2
+    }
+  },
+  {
+    "id": "crosslang-es-medical-equipment",
+    "query": "equipos medicos",
+    "language": "es",
+    "note": "Cross-language: medical-equipment notices (division 33) in German, Lithuanian and Romanian are direct hits for this Spanish query even though none of them share a token with it — the CPV code is the only thing that ties them together.",
+    "judgements": {
+      "ted:9982a494-ff24-4bff-94a0-5351afe3a5ee": 2,
+      "ted:117c855e-3b95-4b89-bf4d-bf76ef536c74": 2,
+      "ted:0f7b1c9a-613f-4d1a-bb47-e63eb2d1adb2": 2
+    }
+  },
+  {
+    "id": "crosslang-pl-road-construction",
+    "query": "roboty budowlane drogowe",
+    "language": "pl",
+    "note": "Cross-language: road/construction works in German, French and Croatian all belong to the same CPV 45xxx family a Polish buyer searching road works should see, despite zero shared vocabulary. The Austrian notice is a mountain-pass road tunnel — road infrastructure, but tunnelling is enough of a distinct trade from surface road-building that it only widens intent rather than being a clean direct hit.",
+    "judgements": {
+      "ted:df609d67-66ec-417a-be89-9af62ed9241b": 1,
+      "ted:d6466922-7278-44e2-87dc-db6808ec553f": 2,
+      "ted:bfec82bd-090f-4623-8dd7-0f98ae26522e": 2
+    }
+  },
+  {
+    "id": "crosslang-pl-building-cleaning",
+    "query": "sprzatanie budynkow",
+    "language": "pl",
+    "note": "Cross-language: building-cleaning notices in Dutch, German and French (division 90) are what a Polish facility manager scanning the whole union for cleaning contracts should also see.",
+    "judgements": {
+      "ted:dee88d7c-5c91-416e-80a1-7e9935865674": 2,
+      "ted:eeb6e884-38f0-45e5-97db-fb388d87ae9e": 2,
+      "ted:9084c764-cad8-42ee-b4d6-cb34448b4827": 2
+    }
+  },
+  {
+    "id": "crosslang-nl-cleaning-services",
+    "query": "schoonmaakdiensten",
+    "language": "nl",
+    "note": "Cross-language: the Italian and French division-90 notices are direct cleaning-service hits for a Dutch-speaking buyer; the German notice covers wider urban/rural-area cleaning and remediation, so it only widens intent.",
+    "judgements": {
+      "ted:54d4f34f-d0d9-4d92-9da3-b6467ef284e1": 2,
+      "ted:81499872-4c6d-4dc2-9b73-229369956ab0": 2,
+      "ted:b39bae73-ae65-436b-b3e4-4765ce69989f": 1
+    }
+  },
+  {
+    "id": "crosslang-nl-road-construction",
+    "query": "wegenbouw",
+    "language": "nl",
+    "note": "Cross-language: motorway-construction works in German and French (Switzerland) both sit in the same CPV 45233xxx family a Dutch-speaking buyer scanning wegenbouw notices union-wide should reach. The Latvian notice carries the same code but is cycling infrastructure specifically, not a motor-vehicle road, so it only widens intent.",
+    "judgements": {
+      "ted:658843a9-8b73-43b6-a3d6-68923d68f11b": 2,
+      "ted:d877093a-aec1-42a3-ba73-6fa6ff47e1f5": 2,
+      "ted:598a8a1f-96bd-4f4f-899d-9a692a9db076": 1
+    }
+  },
+  {
+    "id": "crosslang-en-laboratory-reagents",
+    "query": "laboratory reagents",
+    "language": "en",
+    "note": "Cross-language: 'laboratory reagents' is CPV 336965xx everywhere in the union. These Lithuanian, Spanish, Estonian and Greek notices all carry that code but share no English vocabulary with the query — a textbook case for the CPV bridge or dense arm.",
+    "judgements": {
+      "ted:08479c8c-bafb-46a9-8013-6c7cb822f802": 2,
+      "ted:60f3dd45-ed5d-4177-8583-b2543fa2baff": 2,
+      "ted:2f33d059-cf27-4fc3-9bc1-a10c28100742": 2,
+      "ted:d96ffe3c-51ae-4ed0-b572-c9d638553287": 2
+    }
+  },
+  {
+    "id": "crosslang-en-architectural-design",
+    "query": "architectural design services",
+    "language": "en",
+    "note": "Cross-language: architecture/engineering-office services (division 71) in German, French and Dutch are direct hits for this English query — the sector is identical, only the notice language differs.",
+    "judgements": {
+      "ted:302fa434-a02e-4bc8-a458-a74ce9e94e0b": 2,
+      "ted:3c873eea-99bf-44d2-ac4d-5bef68fc600b": 2,
+      "ted:57afdc61-3124-4c01-b69f-b8cdf2c3f595": 2
+    }
+  },
+  {
+    "id": "sameeng-road-construction",
+    "query": "road construction works",
+    "language": "en",
+    "note": "Same-language baseline for the road-construction cross-language queries: both notices are in English (Ireland, Iceland) and directly name road-construction works.",
+    "judgements": {
+      "ted:82639abf-fafa-43ba-af3c-ceacac1a6de0": 2,
+      "ted:0bf4213c-ac6e-4090-a662-6279a30f40b6": 2
+    }
+  },
+  {
+    "id": "sameeng-mass-spectrometer",
+    "query": "laboratory mass spectrometer",
+    "language": "en",
+    "note": "Same-language sector query in division 38 (lab/optical equipment): both Swedish university notices are English-language and name a mass spectrometer directly.",
+    "judgements": {
+      "ted:1a96a271-8807-4d65-b744-f57a1ca86c9d": 2,
+      "ted:32edcfa9-6692-4554-8ecc-2f6410d2bd85": 2
+    }
+  },
+  {
+    "id": "sameeng-fire-rescue-vehicles",
+    "query": "fire and rescue vehicles",
+    "language": "en",
+    "note": "Same-language sector query in division 34 (transport equipment): an Irish fire-service van tender and a Norwegian firefighting-vehicle tender, both English-language, both direct hits.",
+    "judgements": {
+      "ted:20b3ceef-764b-4352-90b9-8c5f0384037e": 2,
+      "ted:28ce333a-a421-4924-8f26-29d2953beb1c": 2
+    }
+  },
+  {
+    "id": "sameit-cleaning-buildings",
+    "query": "servizi di pulizia edifici",
+    "language": "it",
+    "note": "Same-language baseline for the Italian cross-language cleaning queries: three Italian building-cleaning notices are direct hits; the fourth bundles pest control (deratizzazione/disinfestazione) with cleaning, so it only widens intent.",
+    "judgements": {
+      "ted:54d4f34f-d0d9-4d92-9da3-b6467ef284e1": 2,
+      "ted:5973a226-3155-4ca4-9a5b-4f17e87265b8": 2,
+      "ted:e89cb6dd-4c57-4bfe-9d74-5628343c0d02": 2,
+      "ted:fd62b612-87b3-4e1b-84b9-1a1589cda5c3": 1
+    }
+  },
+  {
+    "id": "samede-cleaning-services",
+    "query": "Gebaeudereinigung Dienstleistungen",
+    "language": "de",
+    "note": "Same-language baseline for the German cross-language cleaning queries: two building-cleaning notices are direct hits; the third is broader infrastructural facility management, so it only widens intent.",
+    "judgements": {
+      "ted:0d403a1f-c511-415f-890a-36b5b2264bf1": 2,
+      "ted:eeb6e884-38f0-45e5-97db-fb388d87ae9e": 2,
+      "ted:2f144e21-edcc-4d99-9902-5c0c923c13a2": 1
+    }
+  },
+  {
+    "id": "samefr-cleaning-buildings",
+    "query": "nettoyage batiments",
+    "language": "fr",
+    "note": "Same-language baseline for the French cross-language cleaning queries: two multi-service cleaning notices are direct hits; the third names a single site (Parc SCH2) rather than a general building-cleaning scope, so it widens intent slightly.",
+    "judgements": {
+      "ted:34a5cbd6-d214-4a93-8187-fbe665911a00": 2,
+      "ted:5496c479-098d-4acb-9995-b59e06c3bedc": 2,
+      "ted:93b2effa-5c70-4082-8c97-58006a7b772e": 1
+    }
+  },
+  {
+    "id": "samees-cleaning-buildings",
+    "query": "limpieza de edificios",
+    "language": "es",
+    "note": "Same-language baseline for the Spanish cross-language cleaning queries: two building-cleaning notices are direct hits; the third names housing specifically (viviendas) rather than buildings generally, so it widens intent slightly.",
+    "judgements": {
+      "ted:260d869f-a288-4430-895b-7df0bd361c3d": 2,
+      "ted:fc7b1b5a-b030-4c8c-b2c2-a916afc0617d": 2,
+      "ted:8be192ac-65a3-4b4b-93b6-758913000732": 1
+    }
+  },
+  {
+    "id": "samepl-road-construction",
+    "query": "roboty budowlane drogi",
+    "language": "pl",
+    "note": "Same-language baseline for the Polish cross-language road-construction queries: a bypass build and a motorway widening, both Polish-language, both direct road-construction hits.",
+    "judgements": {
+      "ted:0e81b2c3-c185-48e2-a4df-1b1232a8ca94": 2,
+      "ted:397d33f6-9e35-4080-9cb1-1b5e6e3437e2": 2
+    }
+  },
+  {
+    "id": "samenl-architecture-housing-renovation",
+    "query": "architectuur ontwerpteam woningrenovatie",
+    "language": "nl",
+    "note": "Same-language sector query in division 71: two Belgian notices calling for a design team (ontwerpteam) for residential renovation/replacement-build projects — both direct hits. (Verified against the full titles, not just the truncated index: both are housing projects, not the school building an earlier draft of this query assumed.)",
+    "judgements": {
+      "ted:57afdc61-3124-4c01-b69f-b8cdf2c3f595": 2,
+      "ted:64c5caea-0c4f-4852-a32b-6eb4927391c1": 2
+    }
+  },
+  {
+    "id": "sameeng-audit-services",
+    "query": "accounting audit services",
+    "language": "en",
+    "note": "Same-language sector query in division 79 (business services): an Irish statutory-audit framework and a Luxembourg financial-instruments audit, both direct hits.",
+    "judgements": {
+      "ted:2fa1e349-76a8-43a9-b3b8-427ad74231de": 2,
+      "ted:3a6c9286-8856-495e-8b6f-80d4e5b5bb7c": 2
+    }
+  },
+  {
+    "id": "sameeng-building-maintenance",
+    "query": "repair and maintenance of building installations",
+    "language": "en",
+    "note": "Same-language sector query in division 50 (repair/maintenance): a Maltese preventive/corrective maintenance contract and an Irish thermographic-survey contract, both on building installations, both direct hits.",
+    "judgements": {
+      "ted:36b45816-bcef-41e7-8cee-9ad34fa854b8": 2,
+      "ted:5918e6af-e0e0-4e22-97b6-565293a42555": 2
+    }
+  },
+  {
+    "id": "samesv-software-development",
+    "query": "IT-tjaenster systemutveckling",
+    "language": "sv",
+    "note": "Same-language baseline for the German cross-language software-development query: two Swedish public-sector software/IT-consulting notices, both direct hits.",
+    "judgements": {
+      "ted:291dd507-6386-423a-958e-8734dd5c4887": 2,
+      "ted:2c2e62b7-4daa-4fb4-9c3f-726647932602": 2
+    }
+  },
+  {
+    "id": "exact-cpv-software-programming",
+    "query": "72212000",
+    "language": "en",
+    "note": "Exact 8-digit CPV code (application software programming services). All three corpus matches happen to be non-English notices (Swiss French, Croatian, Slovenian) — expected, since a CPV code is language-neutral and this is incidentally also a cross-language probe. The lexical arm matches the digits directly; an embedding has nothing to anchor a bare number on.",
+    "judgements": {
+      "ted:f85e92d5-b1cf-43f8-abb2-487a1b796b3e": 2,
+      "ted:408ebf14-2b0a-4dfb-a68f-eabd79f46061": 2,
+      "ted:2363aee7-7dd5-44aa-bd4c-cf6324d7ae24": 2
+    }
+  },
+  {
+    "id": "exact-cpv-street-lighting-maintenance",
+    "query": "50232100",
+    "language": "de",
+    "note": "Exact 8-digit CPV code (street-lighting maintenance services) — every corpus match under this code, from Estonia to Italy, none sharing German vocabulary with the query. Again incidentally cross-language, because the code itself carries the meaning.",
+    "judgements": {
+      "ted:f1f15152-4af9-487c-b3a9-3e642d09a26f": 2,
+      "ted:0d03d625-5fc3-476c-a6c0-0a14569a7067": 2,
+      "ted:86b7d52f-6139-4985-929f-790535aa3e57": 2,
+      "ted:79e1ee5b-1686-4293-93bb-05083ebe7275": 2
+    }
+  },
+  {
+    "id": "exact-cpv-road-construction",
+    "query": "45233120",
+    "language": "en",
+    "note": "Exact 8-digit CPV code (road-construction works) — a deliberately large true-positive set in this corpus (14 notices across 10 languages); this judges a representative spread rather than all 14, since the point is exercising the exact-code match, not exhaustive recall accounting. Every one of these is a direct hit by definition of carrying the literal code.",
+    "judgements": {
+      "ted:e3b0b749-aa9a-4eea-b0a8-fb37a9b2a16c": 2,
+      "ted:d6466922-7278-44e2-87dc-db6808ec553f": 2,
+      "ted:13dedc6f-3ad2-4ec7-87c5-433781939fb5": 2,
+      "ted:fd0c471c-7de5-4e44-a19c-ab0869b5af4b": 2,
+      "ted:598a8a1f-96bd-4f4f-899d-9a692a9db076": 2,
+      "ted:17a285aa-b2a9-4053-9ab9-f75039c5e7ad": 2
+    }
+  },
+  {
+    "id": "exact-ref-swiss-bridge-tender",
+    "query": "MD001/MD059",
+    "language": "de",
+    "note": "Exact notice reference lifted from the title (Swiss cantonal cycle-route bridge works, split into two lots that both carry the same reference code). A bidder who received this reference by email types it verbatim; the CPV/dense arms have no way to reproduce an arbitrary alphanumeric code.",
+    "judgements": {
+      "ted:0fd688a5-c477-4988-bb11-9e0395e0e6e1": 2,
+      "ted:61898e50-1583-48e0-aa3c-386f18991323": 2
+    }
+  },
+  {
+    "id": "exact-ref-verona-street-cleaning",
+    "query": "AV180/2025",
+    "language": "it",
+    "note": "Exact notice reference lifted from the title (Verona street-drain cleaning). A single, unambiguous target: the reference string only appears in this one notice's title in the whole corpus.",
+    "judgements": {
+      "ted:bc0253e0-2ad3-4d29-a628-7199f0d9a037": 2
+    }
+  },
+  {
+    "id": "exact-ref-malta-transport",
+    "query": "CT2255/2026",
+    "language": "en",
+    "note": "Exact notice reference lifted from the title (Malta chauffeur-driven transport framework). Same rationale as the other reference-code queries: only the lexical arm can match an arbitrary procurement reference verbatim.",
+    "judgements": {
+      "ted:48c1bf66-8585-4641-ba15-fcfb37138ce3": 2
+    }
+  },
+  {
+    "id": "buyer-comune-di-bologna",
+    "query": "Comune di Bologna",
+    "language": "it",
+    "note": "Exact buyer-name match. Tests that a full, correctly-spelled buyer name retrieves that buyer's notice via the buyer_name column (weight B in the search vector).",
+    "judgements": {
+      "ted:4d42bfda-191d-4148-8eeb-7e1cb042b2de": 2
+    }
+  },
+  {
+    "id": "buyer-comune-di-bologna-misspelled",
+    "query": "comune di blogna",
+    "language": "it",
+    "note": "Deliberately misspelled buyer name (transposed letters, 'blogna' for 'bologna') — trigram territory. The tsvector lexeme match fails outright on this input; only the pg_trgm similarity fallback (title/buyer_name % query, per the migration's own 'comune bergam' example) can still find the right buyer.",
+    "judgements": {
+      "ted:4d42bfda-191d-4148-8eeb-7e1cb042b2de": 2
+    }
+  },
+  {
+    "id": "buyer-generalna-dyrekcja-drog",
+    "query": "Generalna Dyrekcja Drog Krajowych i Autostrad",
+    "language": "pl",
+    "note": "Exact buyer-name match against Poland's national roads authority, which owns two distinct motorway notices in the snapshot — both are direct hits for a bidder tracking everything this specific buyer publishes.",
+    "judgements": {
+      "ted:397d33f6-9e35-4080-9cb1-1b5e6e3437e2": 2,
+      "ted:976753bf-1b9f-43dc-9e6f-6b0f2822264b": 2
+    }
+  },
+  {
+    "id": "buyer-bordeaux-metropole",
+    "query": "Bordeaux Metropole",
+    "language": "fr",
+    "note": "Exact buyer-name match. The one notice this buyer owns in the snapshot is a professional-reinsertion services contract, topically unrelated to what the buyer name itself suggests (a transport/urban authority) — a reminder that buyer-name search must not be confused with a sector filter.",
+    "judgements": {
+      "ted:3c3ad835-b747-46a3-8e80-c3dfa02a2d47": 2
+    }
+  },
+  {
+    "id": "buyer-ministerstvo-zdravotnictva-sr",
+    "query": "Ministerstvo zdravotnictva Slovenskej republiky",
+    "language": "sk",
+    "note": "Exact buyer-name match against Slovakia's health ministry, which owns two distinct IT/software notices in the snapshot — both direct hits.",
+    "judgements": {
+      "ted:791318c5-d3a8-4223-bd79-cf7bf4852d49": 2,
+      "ted:0212bd4e-3d21-4d81-a190-3f19c1f4f7cd": 2
+    }
+  },
+  {
+    "id": "constraint-it-cleaning-under-value",
+    "query": "pulizie sotto 100k",
+    "language": "it",
+    "note": "Constraint-bearing prose: ParseQuery lifts 'sotto 100k' out as a value-max filter before retrieval, so this judges the residual text 'pulizie' against the corpus. The deratizzazione/disinfestazione notice bundles pest control with cleaning, so it only widens intent.",
+    "judgements": {
+      "ted:5973a226-3155-4ca4-9a5b-4f17e87265b8": 2,
+      "ted:e89cb6dd-4c57-4bfe-9d74-5628343c0d02": 2,
+      "ted:fd62b612-87b3-4e1b-84b9-1a1589cda5c3": 1
+    }
+  },
+  {
+    "id": "constraint-it-open-cleaning-deadline",
+    "query": "bandi aperti di pulizia entro 30 giorni",
+    "language": "it",
+    "note": "Constraint-bearing prose: ParseQuery lifts 'aperti' out as a status=open filter and 'entro 30 giorni' out as a deadline window, leaving 'bandi di pulizia' as the residual retrieval text. Judgement targets that residual topic; the street-drain-cleaning notice is a narrower cleaning subtype, so it only widens intent.",
+    "judgements": {
+      "ted:54d4f34f-d0d9-4d92-9da3-b6467ef284e1": 2,
+      "ted:bc0253e0-2ad3-4d29-a628-7199f0d9a037": 1
+    }
+  },
+  {
+    "id": "constraint-fr-cleaning-open-large",
+    "query": "marche de nettoyage ouvert de plus de 50 millions",
+    "language": "fr",
+    "note": "Constraint-bearing prose: ParseQuery lifts 'ouvert' out as a status filter and 'de plus de 50 millions' out as a value-min filter, leaving 'marche de nettoyage' as the residual retrieval text. The third notice names one site (Parc SCH2) rather than a general cleaning market, so it only widens intent.",
+    "judgements": {
+      "ted:34a5cbd6-d214-4a93-8187-fbe665911a00": 2,
+      "ted:5496c479-098d-4acb-9995-b59e06c3bedc": 2,
+      "ted:93b2effa-5c70-4082-8c97-58006a7b772e": 1
+    }
+  },
+  {
+    "id": "constraint-de-open-construction",
+    "query": "laufende Ausschreibungen fuer Bauarbeiten",
+    "language": "de",
+    "note": "Constraint-bearing prose: ParseQuery lifts 'laufende' out as a status=open filter, leaving 'Ausschreibungen fuer Bauarbeiten' as the residual retrieval text. The catenary/overhead-line notice is a narrower construction subtype, so it only widens intent.",
+    "judgements": {
+      "ted:df609d67-66ec-417a-be89-9af62ed9241b": 2,
+      "ted:e41fc229-824f-4070-a665-44f6331a28df": 2,
+      "ted:30b03a5c-b825-4e3b-beab-131ee13f78de": 1
+    }
+  },
+  {
+    "id": "constraint-es-ongoing-construction",
+    "query": "obras de construccion en curso",
+    "language": "es",
+    "note": "Constraint-bearing prose: ParseQuery lifts 'en curso' out as a status=open filter, leaving 'obras de construccion' as the residual retrieval text. All three matches are open-status Spanish construction-works notices, so all are direct hits.",
+    "judgements": {
+      "ted:96cacbf0-d0a5-4357-a9ba-bee9bd983d99": 2,
+      "ted:1fc38e1a-3a83-4b21-8b1f-4fc58dacb39e": 2,
+      "ted:2a0dbf1a-23a7-4f31-a018-531c366d0559": 2
+    }
+  },
+  {
+    "id": "lowsignal-quantum-sensor-calibration",
+    "query": "quantum sensor calibration services",
+    "language": "en",
+    "note": "Deliberately low-signal: the corpus has no quantum-sensor or calibration-service notice at all (confirmed: zero matches for 'quantum', 'sensor', or 'calibration' anywhere in the snapshot). The nearest thing is a precision-instrument purchase (a mass spectrometer) — adjacent lab-instrumentation territory, but an equipment purchase is not a calibration service and nothing about it is quantum. A ranking change that starts confidently returning anything else here is surfacing noise.",
+    "judgements": {
+      "ted:dc4389b3-79af-4712-93b5-068fc8cda9a0": 1
+    }
+  },
+  {
+    "id": "lowsignal-drone-training",
+    "query": "formation professionnelle aux drones",
+    "language": "fr",
+    "note": "Deliberately low-signal: the corpus has exactly one notice anywhere touching drones, and it procures a mobile-classroom truck equipped to host drone-related vocational training — not drone-training services themselves. Grade 1 reflects that gap between the notice and the literal query intent; nothing else in the corpus should score at all.",
+    "judgements": {
+      "ted:348e9201-7aab-4830-9cc6-f206ccc86792": 1
+    }
+  },
+  {
+    "id": "lowsignal-blockchain-government",
+    "query": "blockchain voor overheidsadministratie",
+    "language": "nl",
+    "note": "Deliberately low-signal: the corpus has zero blockchain notices (confirmed: no title anywhere contains the word). The closest available stretch is an unrelated emerging-software project — an AI chatbot for student legal services — included only so the query has a non-empty judgement to load; a ranking change that starts returning anything else confidently here is noise.",
+    "judgements": {
+      "ted:f51c247b-8b4a-48d6-8349-265bddbc3726": 1
+    }
+  }
+]
