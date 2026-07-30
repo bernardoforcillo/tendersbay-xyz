@@ -51,9 +51,3 @@ CREATE INDEX IF NOT EXISTS idx_cpv_terms_label_vector
 -- lexeme match but a high trigram similarity.
 CREATE INDEX IF NOT EXISTS idx_cpv_terms_label_trgm
     ON tenders.cpv_terms USING GIN (label gin_trgm_ops);
-
--- The label-expansion path (a later task) looks up every label for one code,
--- and the primary key's leading column already serves that. This index instead
--- backs the reverse lookup the seeder does when recomputing a single language.
-CREATE INDEX IF NOT EXISTS idx_cpv_terms_lang
-    ON tenders.cpv_terms (lang);
