@@ -5,10 +5,18 @@ import (
 	"testing"
 )
 
-// sample builds a three-query report spanning two query languages and three
-// document languages, including one cross-language pair (it→de) and one
-// same-language pair (it→it), so both Matrix and ByQueryLanguage have
-// something non-trivial to assert against.
+// sample builds a four-query report spanning two query languages and five
+// query×document language pairs.
+//
+// it-1, it-2 and en-1 each carry exactly one ByDocLanguage bucket equal to
+// their own Scores — on that data alone, per-query averaging and per-bucket
+// averaging produce identical numbers, so a BuildReport that accumulated
+// ByDocLanguage buckets instead of per-query Scores would pass every test
+// below undetected. it-3 breaks that coincidence on purpose: its own Scores
+// (0.6) differs from both of its two ByDocLanguage buckets (es=1.0, pl=0.2),
+// so per-query and per-bucket aggregation diverge — see
+// TestBuildReport_AveragesPerQueryNotPerHit and
+// TestBuildReport_GroupsByQueryLanguage for the two numbers this produces.
 func sample() Report {
 	return BuildReport(20, []QueryResult{
 		{
@@ -26,43 +34,68 @@ func sample() Report {
 			Scores:        Scores{Recall: 0.0, NDCG: 0.0, MRR: 0.0, Queries: 1},
 			ByDocLanguage: map[string]Scores{"fr": {Recall: 0.0, NDCG: 0.0, MRR: 0.0, Queries: 1}},
 		},
+		{
+			ID: "it-3", QueryLanguage: "it",
+			Scores: Scores{Recall: 0.6, NDCG: 0.6, MRR: 0.6, Queries: 1},
+			ByDocLanguage: map[string]Scores{
+				"es": {Recall: 1.0, NDCG: 1.0, MRR: 1.0, Queries: 1},
+				"pl": {Recall: 0.2, NDCG: 0.2, MRR: 0.2, Queries: 1},
+			},
+		},
 	})
 }
 
 func TestBuildReport_AveragesPerQueryNotPerHit(t *testing.T) {
 	// Every query weighs the same regardless of how many relevant tenders it
 	// has, or a single broadly-judged query would dominate the whole report.
+	//
+	// it-3 is the discriminator (see sample's doc comment): per-query averaging
+	// gives (1.0+0.5+0.0+0.6)/4 = 0.525 over 4 queries. Summing ByDocLanguage
+	// buckets instead of Scores would give (1.0+0.5+0.0+1.0+0.2)/5 = 0.54 over
+	// 5 additions — a different number and a different Queries count — because
+	// it-3 alone would contribute two additions (its es and pl buckets)
+	// instead of one.
 	r := sample()
-	want := (1.0 + 0.5 + 0.0) / 3
+	want := (1.0 + 0.5 + 0.0 + 0.6) / 4
 	if !close(r.Overall.Recall, want) {
-		t.Errorf("Overall.Recall = %v, want %v — per-hit weighting would let one broadly-judged query dominate the report instead of each query counting equally", r.Overall.Recall, want)
+		t.Errorf("Overall.Recall = %v, want %v — summing it-3's two ByDocLanguage buckets instead of its single Scores value would let it outweigh every other query and produce 0.54 instead", r.Overall.Recall, want)
 	}
-	if r.Overall.Queries != 3 {
-		t.Errorf("Overall.Queries = %d, want 3 — a wrong count would silently change the denominator every average downstream divides by", r.Overall.Queries)
+	if r.Overall.Queries != 4 {
+		t.Errorf("Overall.Queries = %d, want 4 — summing ByDocLanguage buckets instead of per-query Scores would count it-3 twice (once per bucket) and report 5", r.Overall.Queries)
 	}
 }
 
 func TestBuildReport_GroupsByQueryLanguage(t *testing.T) {
+	// it-3 is again the discriminator: per-query averaging over the three it
+	// queries gives (1.0+0.5+0.6)/3 = 0.7. Summing it-3's two ByDocLanguage
+	// buckets in place of its Scores would instead average over 4 additions —
+	// (1.0+0.5+1.0+0.2)/4 = 0.675 — a different number and a different count.
 	r := sample()
 	it, ok := r.ByQueryLanguage["it"]
 	if !ok {
 		t.Fatalf("ByQueryLanguage has no it — got %v, so a whole query language would be invisible from the per-language breakdown", r.ByQueryLanguage)
 	}
-	if it.Queries != 2 || !close(it.Recall, 0.75) {
-		t.Errorf("ByQueryLanguage[it] = %+v, want 2 queries averaging 0.75 recall — a wrong grouping would mix it-1/it-2 into en or merge only one of the two it queries", it)
+	if it.Queries != 3 || !close(it.Recall, 0.7) {
+		t.Errorf("ByQueryLanguage[it] = %+v, want 3 queries averaging 0.7 recall — summing it-3's two ByDocLanguage buckets instead of its Scores would instead produce 4 queries averaging 0.675", it)
 	}
 }
 
 func TestBuildReport_MatrixSeparatesCrossLanguageFromSameLanguage(t *testing.T) {
 	// This is the whole point of the matrix: an aggregate that mixes it→it with
-	// it→de hides a total cross-language failure behind a healthy same-language
-	// number.
+	// it→de (or it→es, it→pl) hides a total cross-language failure behind a
+	// healthy same-language number.
 	r := sample()
 	if got := r.Matrix["it"]["de"]; !close(got.Recall, 1.0) {
 		t.Errorf("Matrix[it][de].Recall = %v, want 1.0 — collapsing this cross-language cell into the it→it number would hide a total cross-language failure behind a healthy same-language score", got.Recall)
 	}
 	if got := r.Matrix["it"]["it"]; !close(got.Recall, 0.5) {
-		t.Errorf("Matrix[it][it].Recall = %v, want 0.5 — the same-language cell must stay independent of the it→de cell above it, or the two would bleed into a single misleading average", got.Recall)
+		t.Errorf("Matrix[it][it].Recall = %v, want 0.5 — the same-language cell must stay independent of the cross-language cells around it, or they would bleed into a single misleading average", got.Recall)
+	}
+	if got := r.Matrix["it"]["es"]; !close(got.Recall, 1.0) {
+		t.Errorf("Matrix[it][es].Recall = %v, want 1.0 — it-3 alone must land its es bucket in its own cell, independent of its pl sibling and of it-3's own Scores.Recall (0.6)", got.Recall)
+	}
+	if got := r.Matrix["it"]["pl"]; !close(got.Recall, 0.2) {
+		t.Errorf("Matrix[it][pl].Recall = %v, want 0.2 — a single query contributing two document languages must not average or merge its own buckets together", got.Recall)
 	}
 	if _, ok := r.Matrix["en"]["de"]; ok {
 		t.Error("Matrix[en][de] exists, want absent — no en query touched a de document, and a spurious cell would report a cross-language pair that was never actually evaluated")
@@ -156,9 +189,12 @@ func TestCompare_ReportsAByQueryLanguageScopeThatDisappeared(t *testing.T) {
 
 func TestFormat_ShowsTheMatrixAndIsStablyOrdered(t *testing.T) {
 	// Ordered output so a baseline diff is readable; map iteration alone would
-	// reshuffle the table on every run.
+	// reshuffle the table on every run. Five matrix cells across two rows (up
+	// from three across two rows) give an unsorted implementation more distinct
+	// orderings to coincidentally reproduce twice in a row, so widening the
+	// fixture makes the determinism check below actually bite.
 	got := sample().Format()
-	for _, want := range []string{"overall", "recall@20", "it→de", "it→it", "en→fr"} {
+	for _, want := range []string{"overall", "recall@20", "it→de", "it→it", "it→es", "it→pl", "en→fr"} {
 		if !strings.Contains(got, want) {
 			t.Errorf("Format() missing %q — a scope absent from the text report is invisible to anyone reading a baseline diff, however correct the underlying Report value is\n%s", want, got)
 		}
