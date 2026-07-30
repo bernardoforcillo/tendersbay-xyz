@@ -131,3 +131,43 @@ func TestHybridSearchMigrationUsesImmutableTSVector(t *testing.T) {
 		}
 	}
 }
+
+func TestFilesEmbedsCPVVocabularyMigration(t *testing.T) {
+	entries, err := fs.ReadDir(migrations.Files, ".")
+	if err != nil {
+		t.Fatalf("ReadDir: %v", err)
+	}
+	var found bool
+	for _, e := range entries {
+		if e.Name() == "0007_cpv_vocabulary.up.sql" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("0007_cpv_vocabulary.up.sql not found in embedded migrations: %v", entries)
+	}
+}
+
+// TestCPVVocabularyMigrationUsesImmutableTSVector guards 0007's generated
+// column the same way TestHybridSearchMigrationUsesImmutableTSVector guards
+// 0005's: a STORED generated column may only call IMMUTABLE functions, and
+// to_tsvector is immutable only in its two-argument form. unaccent() is STABLE
+// and must not appear — the usual workaround of wrapping it in a function
+// falsely declared IMMUTABLE silently corrupts the index when the unaccent
+// dictionary changes.
+func TestCPVVocabularyMigrationUsesImmutableTSVector(t *testing.T) {
+	body, err := fs.ReadFile(migrations.Files, "0007_cpv_vocabulary.up.sql")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	sql := string(body)
+	if strings.Contains(sql, "unaccent") {
+		t.Error("0007 calls unaccent, which is STABLE and cannot appear in a STORED generated column — the migration would fail to apply, or silently freeze stale accents if wrapped in a falsely-IMMUTABLE wrapper")
+	}
+	if !strings.Contains(sql, "to_tsvector('simple', label)") {
+		t.Error("0007 missing the immutable two-argument tsvector expression over label — its absence means the generated column would fail to create or silently use a mutable configuration")
+	}
+	if !strings.Contains(sql, "PRIMARY KEY (code, lang)") {
+		t.Error("0007 missing the (code, lang) primary key that makes the seed idempotent — without it, ON CONFLICT DO UPDATE in the seeder has no target and re-seeding duplicates rows")
+	}
+}
