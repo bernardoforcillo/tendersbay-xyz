@@ -16,11 +16,11 @@ func TestRecallAtK_CountsOnlyGradedHitsInsideTheWindow(t *testing.T) {
 
 	// 2 of the 3 relevant tenders appear in the top 4.
 	if got := RecallAtK(ranked, j, 4); !close(got, 2.0/3.0) {
-		t.Errorf("RecallAtK(k=4) = %v, want 2/3", got)
+		t.Errorf("RecallAtK(k=4) = %v, want 2/3 — window size must include only top k results", got)
 	}
 	// Narrowing the window must drop the hit that fell outside it.
 	if got := RecallAtK(ranked, j, 2); !close(got, 1.0/3.0) {
-		t.Errorf("RecallAtK(k=2) = %v, want 1/3", got)
+		t.Errorf("RecallAtK(k=2) = %v, want 1/3 — narrowing the window must drop hits beyond k", got)
 	}
 }
 
@@ -28,14 +28,14 @@ func TestRecallAtK_NoGradedTendersIsZeroNotNaN(t *testing.T) {
 	// A query whose judgements are all 0 has no attainable recall. Returning
 	// NaN would poison every average that includes it, so it must be 0.
 	if got := RecallAtK([]string{"ted:a"}, Judgements{"ted:a": 0}, 10); got != 0 {
-		t.Errorf("RecallAtK = %v, want 0 for a query with nothing relevant", got)
+		t.Errorf("RecallAtK = %v, want 0 — NaN would poison aggregates, so return 0 when nothing is relevant", got)
 	}
 }
 
 func TestNDCGAtK_PerfectOrderIsOne(t *testing.T) {
 	j := Judgements{"ted:a": 2, "ted:b": 1}
 	if got := NDCGAtK([]string{"ted:a", "ted:b"}, j, 10); !close(got, 1) {
-		t.Errorf("NDCGAtK = %v, want 1 for the ideal ordering", got)
+		t.Errorf("NDCGAtK = %v, want 1 — the ideal ranking must score perfectly", got)
 	}
 }
 
@@ -62,10 +62,10 @@ func TestNDCGAtK_IdealIsBoundedByK(t *testing.T) {
 func TestMRR_UsesTheFirstRelevantRankOnly(t *testing.T) {
 	j := Judgements{"ted:b": 1, "ted:c": 2}
 	if got := MRR([]string{"ted:a", "ted:b", "ted:c"}, j); !close(got, 0.5) {
-		t.Errorf("MRR = %v, want 1/2", got)
+		t.Errorf("MRR = %v, want 1/2 — only the rank of the first relevant result matters", got)
 	}
 	if got := MRR([]string{"ted:z"}, j); got != 0 {
-		t.Errorf("MRR = %v, want 0 when nothing relevant was retrieved", got)
+		t.Errorf("MRR = %v, want 0 — return 0 when no relevant results were retrieved", got)
 	}
 }
 
@@ -74,6 +74,20 @@ func TestMetrics_IgnoreDuplicateIDsAfterTheFirst(t *testing.T) {
 	// inflate recall past 1.0 — dedupe is the metric's job, not the caller's.
 	j := Judgements{"ted:a": 2}
 	if got := RecallAtK([]string{"ted:a", "ted:a"}, j, 10); !close(got, 1) {
-		t.Errorf("RecallAtK = %v, want exactly 1", got)
+		t.Errorf("RecallAtK = %v, want exactly 1 — duplicates must not inflate recall past the count of unique relevant results", got)
+	}
+
+	// NDCGAtK must also deduplicate: returning the same relevant tender twice
+	// must not increase the score above what a single occurrence produces.
+	if got := NDCGAtK([]string{"ted:a", "ted:a"}, j, 10); !close(got, 1) {
+		t.Errorf("NDCGAtK = %v, want 1 — duplicates must not inflate nDCG above the single-occurrence score", got)
+	}
+
+	// MRR uses only the first relevant rank, so duplicates must not move it.
+	// Here the first relevant item appears at rank 2, and repeating it should
+	// not change the score.
+	j2 := Judgements{"ted:b": 1}
+	if got := MRR([]string{"ted:a", "ted:b", "ted:b"}, j2); !close(got, 0.5) {
+		t.Errorf("MRR = %v, want 1/2 — duplicates must not move the first relevant rank", got)
 	}
 }
