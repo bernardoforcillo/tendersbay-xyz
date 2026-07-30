@@ -12,34 +12,54 @@
 // ingestion module here would invert that ownership for the sake of a
 // fixture.
 //
-// # Why idempotence is NOT "is the Qdrant collection non-empty"
+// # Idempotence
 //
-// go-services/knowledge hardcodes its Qdrant collection name ("tenders") as a
-// package constant — there is no way to point this command at a
-// dedicated eval collection. It is the SAME collection services/ingestion's
-// real pipeline writes to. A "does a vector search return any hit" probe
-// would therefore report "already loaded" on the very first run, before a
-// single corpus tender had been embedded, simply because the shared
-// collection already holds tens of thousands of real points. Idempotence is
-// tracked instead with tendersbay_eval's own indexed_at column — the exact
-// mechanism services/ingestion's real indexer already uses (indexed_at IS
-// NULL means "needs indexing", see services/ingestion's markIndexedSQL) —
-// which is per-tender, resumes correctly after a partial failure, and needs
-// no knowledge of what else lives in the shared collection.
+// A re-run costs seconds, not minutes: idempotence is tracked with
+// tendersbay_eval's own indexed_at column, the exact mechanism
+// services/ingestion's real indexer already uses (indexed_at IS NULL means
+// "needs indexing" — see its markIndexedSQL/MarkIndexed). Every upsert
+// leaves indexed_at untouched, and embedAll only sets it once a tender's own
+// Qdrant write has actually succeeded — so a tender is never marked done on
+// a failure, and a crash partway through a run leaves only the true
+// remainder to embed next time. This is deliberately NOT "does a vector
+// search against the collection return any hit": that check cannot tell
+// "this corpus is loaded" apart from "something else happens to already be
+// in this collection", which matters a great deal given the next point.
 //
-// Because the collection is shared, every corpus document is also keyed in
-// Qdrant by its own stable identity (eval.CorpusTender.Key(),
-// "source:source_ref") rather than by the eval database's row id. A real
-// tender's Qdrant document is keyed by its decimal Postgres id (see
-// services/ingestion/internal/adapter/index/indexer.go's indexOne), and
-// tendersbay_eval's bigserial sequence starts fresh at 1 — so an eval row's
-// id would very likely collide with a REAL tender's id already indexed in
-// that same shared collection, silently overwriting its embedding.
-// "source:source_ref" always contains a colon, which a bare decimal id
-// string never does, so the collision is structurally impossible. It is
-// also the identity the golden judged set (Task 5) already keys judgements
-// on, so a later harness needs no extra lookup to match a hit back to a
-// judgement.
+// # Document identity: the eval row's own id, and why that is now required
+//
+// Every corpus document is keyed in Qdrant by the eval database's own row id
+// (the id returned from the upsert) — exactly like a real tender
+// (services/ingestion/internal/adapter/index/indexer.go's indexOne keys the
+// same way), not by the corpus's own "source:source_ref" identity, even
+// though the latter is arguably the more meaningful key. That is because the
+// only place a Qdrant hit's DocID goes downstream is
+// internal/adapter/postgres/tender_search.go's FindByIDsFiltered, which
+// parses it with a bare strconv.ParseInt: a non-numeric id parses as
+// nothing, is silently dropped, and once every id in a batch is dropped that
+// way, FindByIDsFiltered returns (nil, nil) — no error, no degraded-mode
+// signal, just an empty dense candidate set folded into a fusion that still
+// reports RetrievalMode "hybrid". Keying by "source:source_ref" therefore
+// does not merely lose a convenience, it makes every dense hit silently
+// unresolvable while the search path insists nothing went wrong. Keying by
+// id is a hard requirement of the current search path, not a style choice.
+//
+// This id-based keying is only safe because EVAL_QDRANT_URL must point at a
+// Qdrant instance DEDICATED to this eval corpus (this repo's eval stack runs
+// one on :6533, isolated from the shared dev instance on :6333, which real
+// ingestion also writes to). go-services/knowledge hardcodes its collection
+// name ("tenders") as a package constant, so a caller cannot select a
+// different collection on a shared instance — only a separate instance
+// provides real isolation. tendersbay_eval's bigserial sequence starts fresh
+// at 1, and a real tender's Qdrant document is keyed by its own decimal
+// Postgres id the same way — so on a SHARED instance this exact keying would
+// silently overwrite a real tender's embedding the moment their ids
+// coincide, which they very likely would. Do not point EVAL_QDRANT_URL at a
+// shared instance to "simplify the setup": if collection isolation is ever
+// removed, this keying must go back to something collision-proof
+// (source:source_ref was used for exactly that reason, briefly, before the
+// dedicated instance existed), and FindByIDsFiltered's id-only assumption
+// would need to change first.
 package main
 
 import (
@@ -48,7 +68,9 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -123,6 +145,9 @@ func run(corpusPath string, force bool) error {
 	if err != nil {
 		return err
 	}
+	if err := evalDatabaseGuard(dsn); err != nil {
+		return err
+	}
 	qdrantURL, err := mustEnv("EVAL_QDRANT_URL")
 	if err != nil {
 		return err
@@ -177,9 +202,10 @@ func run(corpusPath string, force bool) error {
 }
 
 // pendingTender is a corpus tender that still needs embedding, paired with
-// the Postgres row id upsertCorpus resolved for it (needed only to mark it
-// indexed afterwards — Qdrant itself is keyed by c.Key(), never by id; see
-// the package doc).
+// the Postgres row id upsertCorpus resolved for it. That id does double
+// duty: it is both the mark-indexed key and the Qdrant document id (see the
+// package doc for why by-id keying is required, and why that is only safe
+// against a dedicated eval Qdrant instance).
 type pendingTender struct {
 	id int64
 	c  eval.CorpusTender
@@ -217,7 +243,10 @@ func embedAll(ctx context.Context, db *sql.DB, kb *knowledge.KnowledgeBase, toEm
 	for i, p := range toEmbed {
 		c := p.c
 		doc := &rag.Document{
-			ID:      c.Key(),
+			// strconv.FormatInt of the eval row's own id, mirroring
+			// services/ingestion's indexOne exactly — see the package doc
+			// for why this must be the numeric id and not c.Key().
+			ID:      strconv.FormatInt(p.id, 10),
 			Content: summaryText(c),
 			Metadata: map[string]string{
 				"source":     c.Source,
@@ -296,4 +325,48 @@ func mustEnv(name string) (string, error) {
 		return "", fmt.Errorf("eval-load: %s is not set", name)
 	}
 	return v, nil
+}
+
+// evalDatabaseGuard refuses to run unless dsn's database name plainly marks
+// it as an evaluation target (contains "eval", case-insensitive).
+//
+// The corpus snapshot carries REAL production (source, source_ref) keys —
+// eval-export drew it straight from tenders.ingested_tenders — and every
+// upsert here is an ON CONFLICT (source, source_ref) DO UPDATE. Pointed at
+// the production database by a copy-paste or env-var mistake, this command
+// would not just add rows: it would silently overwrite live tenders with
+// stale, 4000-character-truncated snapshot data. This is a cheap guard
+// against exactly that mistake, not a full authorization system —
+// "contains eval" is deliberately permissive about tendersbay_eval,
+// tendersbay-eval-2, and similar, while blocking the one name that actually
+// matters: "tendersbay" itself.
+func evalDatabaseGuard(dsn string) error {
+	name, err := dsnDatabaseName(dsn)
+	if err != nil {
+		return fmt.Errorf("eval-load: could not determine a database name from EVAL_DATABASE_URL (%w); refusing to run without confirming it targets an evaluation database", err)
+	}
+	if !strings.Contains(strings.ToLower(name), "eval") {
+		return fmt.Errorf("eval-load: refusing to run against database %q (parsed from EVAL_DATABASE_URL): its name does not contain \"eval\", and this command's ON CONFLICT DO UPDATE would silently overwrite real tenders if this is a production database; point EVAL_DATABASE_URL at an evaluation-only database instead", name)
+	}
+	return nil
+}
+
+// dsnDatabaseName extracts the database name from a Postgres DSN, supporting
+// both URL form (postgres://user:pass@host:port/dbname?opts...) and libpq
+// keyword form (space-separated key=value pairs including dbname=... or
+// database=...).
+func dsnDatabaseName(dsn string) (string, error) {
+	if u, err := url.Parse(dsn); err == nil && (u.Scheme == "postgres" || u.Scheme == "postgresql") {
+		if name := strings.TrimPrefix(u.Path, "/"); name != "" {
+			return name, nil
+		}
+	}
+	for _, field := range strings.Fields(dsn) {
+		for _, key := range []string{"dbname=", "database="} {
+			if rest, ok := strings.CutPrefix(field, key); ok {
+				return strings.Trim(rest, `'"`), nil
+			}
+		}
+	}
+	return "", fmt.Errorf("no database name found in DSN")
 }
