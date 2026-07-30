@@ -2,6 +2,7 @@ package tender
 
 import (
 	"context"
+	"strings"
 	"testing"
 	"time"
 )
@@ -241,6 +242,50 @@ func TestMergeParsedFilters_TreatsAValueRangeAsOneFacet(t *testing.T) {
 	}
 	if got.ValueMin == nil || *got.ValueMin != 10_000 {
 		t.Errorf("ValueMin = %v, want the explicit 10000", got.ValueMin)
+	}
+}
+
+// The magnitude alternation must be longest-first: Go's regexp picks the
+// leftmost alternative that still lets the rest of the pattern match, not the
+// longest one, so an unsorted list lets a short prefix ("m", 1,000,000)
+// shadow a longer word that starts with it ("mila", 1,000) — a silent
+// factor-of-1000 error on the budget filter.
+func TestParseQuery_ItalianThousandsSuffixNotShadowedByBareM(t *testing.T) {
+	got := ParseQuery("pulizie sotto 100 mila", parseNow)
+	if got.Filters.ValueMax == nil || *got.Filters.ValueMax != 100_000 {
+		t.Errorf("ValueMax = %v, want 100000 — \"mila\" must not be read as \"m\" (1000x too large)", got.Filters.ValueMax)
+	}
+	// "m" shadowing "mila" also leaves "ila" behind as unconsumed query text,
+	// polluting what gets handed to the retrievers.
+	if strings.Contains(got.Text, "ila") {
+		t.Errorf("Text = %q, want no leftover suffix from a partially-matched magnitude word", got.Text)
+	}
+}
+
+// "milioni" happens to share "mila"'s multiplier's sibling (1,000,000) with
+// the bare "m" that would otherwise shadow it, so the value comes out right
+// either way — but the match still only consumes "m", leaving "ilioni" as
+// residual noise in the retrieval text. This only catches the residual-text
+// half of the bug; TestParseQuery_ItalianThousandsSuffixNotShadowedByBareM
+// above catches the value half.
+func TestParseQuery_ItalianMillionsLeavesNoResidualSuffix(t *testing.T) {
+	got := ParseQuery("sotto 5 milioni", parseNow)
+	if got.Filters.ValueMax == nil || *got.Filters.ValueMax != 5_000_000 {
+		t.Errorf("ValueMax = %v, want 5000000", got.Filters.ValueMax)
+	}
+	if strings.Contains(got.Text, "ilioni") {
+		t.Errorf("Text = %q, want \"milioni\" consumed whole, not shadowed down to \"m\"", got.Text)
+	}
+}
+
+// Same residual-text hazard as the Italian case above, for the French form.
+func TestParseQuery_FrenchMillionsLeavesNoResidualSuffix(t *testing.T) {
+	got := ParseQuery("plus de 50 millions", parseNow)
+	if got.Filters.ValueMin == nil || *got.Filters.ValueMin != 50_000_000 {
+		t.Errorf("ValueMin = %v, want 50000000", got.Filters.ValueMin)
+	}
+	if strings.Contains(got.Text, "illions") {
+		t.Errorf("Text = %q, want \"millions\" consumed whole, not shadowed down to \"m\"", got.Text)
 	}
 }
 
