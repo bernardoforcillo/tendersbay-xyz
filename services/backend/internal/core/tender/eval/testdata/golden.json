@@ -406,7 +406,7 @@
     "id": "constraint-it-open-cleaning-deadline",
     "query": "bandi aperti di pulizia entro 30 giorni",
     "language": "it",
-    "note": "Constraint-bearing prose: ParseQuery lifts 'aperti' out as a status=open filter and 'entro 30 giorni' out as a deadline window, leaving 'bandi di pulizia' as the residual retrieval text. Judgement targets that residual topic; the street-drain-cleaning notice is a narrower cleaning subtype, so it only widens intent.",
+    "note": "Constraint-bearing prose: ParseQuery lifts 'entro 30 giorni' out as a deadline window, then 'bandi aperti' out as a single span (openStatusPattern's optional notice-type prefix group swallows 'bandi' together with 'aperti' as one match, since 'bandi' is directly followed by the status word), leaving 'di pulizia' — not 'bandi di pulizia' — as the residual retrieval text. Judgement targets that residual topic; the street-drain-cleaning notice is a narrower cleaning subtype, so it only widens intent.",
     "judgements": {
       "ted:54d4f34f-d0d9-4d92-9da3-b6467ef284e1": 2,
       "ted:bc0253e0-2ad3-4d29-a628-7199f0d9a037": 1
@@ -416,7 +416,7 @@
     "id": "constraint-fr-cleaning-open-large",
     "query": "marche de nettoyage ouvert de plus de 50 millions",
     "language": "fr",
-    "note": "Constraint-bearing prose: ParseQuery lifts 'ouvert' out as a status filter and 'de plus de 50 millions' out as a value-min filter, leaving 'marche de nettoyage' as the residual retrieval text. The third notice names one site (Parc SCH2) rather than a general cleaning market, so it only widens intent.",
+    "note": "Constraint-bearing prose, kept deliberately as a documented query.go defect rather than rewritten around it: the value-min filter correctly resolves to 50,000,000 (parseAmount reads the 'm' magnitude suffix as million), but amountPattern's magnitude alternation is NOT sorted longest-first the way the comparison-keyword lists are, so 'millions' matches only its leading 'm' and 'illions' survives as leftover text. Trace: value extraction removes 'plus de 50 m' (not 'plus de 50 millions'), then status extraction removes 'ouvert'; the real residual retrieval text is 'marche de nettoyage de illions', not 'marche de nettoyage'. The stray 'illions'/'de' tokens are retrieval noise from this bug, out of scope for this task. The third notice names one site (Parc SCH2) rather than a general cleaning market, so it only widens intent.",
     "judgements": {
       "ted:34a5cbd6-d214-4a93-8187-fbe665911a00": 2,
       "ted:5496c479-098d-4acb-9995-b59e06c3bedc": 2,
@@ -425,9 +425,9 @@
   },
   {
     "id": "constraint-de-open-construction",
-    "query": "laufende Ausschreibungen fuer Bauarbeiten",
+    "query": "offene Ausschreibungen fuer Bauarbeiten",
     "language": "de",
-    "note": "Constraint-bearing prose: ParseQuery lifts 'laufende' out as a status=open filter, leaving 'Ausschreibungen fuer Bauarbeiten' as the residual retrieval text. The catenary/overhead-line notice is a narrower construction subtype, so it only widens intent.",
+    "note": "Constraint-bearing prose: uses 'offene', which openWords actually contains — not 'laufende', which an earlier draft used. The word list has 'laufend' but not 'laufende', and word-boundary matching fails on the trailing 'e', so that draft extracted nothing at all (a query.go defect, out of scope here, reported separately as its own fix). ParseQuery lifts 'offene' out as a status=open filter, leaving 'Ausschreibungen fuer Bauarbeiten' as the residual retrieval text. The catenary/overhead-line notice is a narrower construction subtype, so it only widens intent.",
     "judgements": {
       "ted:df609d67-66ec-417a-be89-9af62ed9241b": 2,
       "ted:e41fc229-824f-4070-a665-44f6331a28df": 2,

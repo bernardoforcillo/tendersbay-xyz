@@ -43,7 +43,7 @@ func TestGolden_EveryJudgedTenderExistsInTheCorpus(t *testing.T) {
 	for _, q := range set {
 		for key := range q.Judgements {
 			if _, ok := corpus[key]; !ok {
-				t.Errorf("golden query %q judges %s, which is not in the corpus snapshot", q.ID, key)
+				t.Errorf("corpus[%s] ok = %v, want true — golden query %q judges this tender, and a judgement pointing outside the corpus snapshot is unreachable, silently capping recall below 1.0 forever and looking exactly like a ranking failure", key, ok, q.ID)
 			}
 		}
 	}
@@ -52,7 +52,7 @@ func TestGolden_EveryJudgedTenderExistsInTheCorpus(t *testing.T) {
 func TestGolden_HasEnoughQueriesToBeWorthReading(t *testing.T) {
 	set, _ := loadCommittedGolden(t)
 	if len(set) < minGoldenQueries {
-		t.Errorf("golden set has %d queries, want at least %d", len(set), minGoldenQueries)
+		t.Errorf("len(set) = %d, want at least %d — below this floor the report's per-language cells become single-query anecdotes, not a measurement", len(set), minGoldenQueries)
 	}
 }
 
@@ -83,7 +83,7 @@ func TestGolden_CoversMoreThanOneQueryLanguage(t *testing.T) {
 		langs[q.Language] = true
 	}
 	if len(langs) < 4 {
-		t.Errorf("golden queries span %d languages (%v), want at least 4", len(langs), sortedKeys(langs))
+		t.Errorf("len(langs) = %d %v, want at least 4 — fewer would report a healthy overall number while saying nothing about the other locales this project serves", len(langs), sortedKeys(langs))
 	}
 }
 
@@ -101,7 +101,7 @@ func TestGolden_NoteExplainsEveryCrossLanguageQuery(t *testing.T) {
 			}
 		}
 		if crossLang && strings.TrimSpace(q.Note) == "" {
-			t.Errorf("golden query %q judges a foreign-language tender but has no note explaining why", q.ID)
+			t.Errorf("query %q note = %q, want non-empty — a cross-language judgement is the non-obvious kind: six months from now nobody will remember why this query should match a foreign-language document unless the note says so", q.ID, q.Note)
 		}
 	}
 }
