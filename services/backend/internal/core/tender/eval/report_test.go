@@ -168,7 +168,7 @@ func TestFormat_ShowsTheMatrixAndIsStablyOrdered(t *testing.T) {
 	}
 }
 
-func TestLoadBaseline_RejectsKZero(t *testing.T) {
+func TestLoadBaseline_RejectsAZeroK(t *testing.T) {
 	// A baseline JSON with k=0 was never produced by BuildReport — K is always
 	// the caller's real window size — so it signals a hand-edited or corrupted
 	// file. Accepting it would let Compare label every metric "recall@0" and
