@@ -264,6 +264,28 @@ func TestDistinctCountries_ReturnsDedupedNonEmpty(t *testing.T) {
 	}
 }
 
+// LexicalSearch adds a trigram similarity arm (the `%` operator) whenever the
+// query is short enough to be name-shaped (see trigramQueryMaxLen). pg_trgm is
+// installed in the `tenders` schema, not `public` — if the connection's
+// search_path doesn't include `tenders`, Postgres can't resolve the `%`
+// operator at all and every short query errors, silently degrading hybrid
+// search to dense-only for essentially every real user query. This is the
+// regression test for that: before the search_path fix it fails with
+// "could not choose a best candidate operator for `%` operator"; after, it
+// must return without error.
+func TestLexicalSearch_ShortQueryDoesNotErrorOnTrigramOperator(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+	insertTestTender(t, sqlDB, "lexical-trigram-1", withCountry("ITA"))
+
+	// "comune bergam" is 13 runes — well under trigramQueryMaxLen (60) — so
+	// LexicalSearch adds the `t.title % $n` / `t.buyer_name % $n` arm.
+	_, err := repo.LexicalSearch(ctx, "comune bergam", tender.Filters{}, 10)
+	if err != nil {
+		t.Fatalf("LexicalSearch(short query) error = %v, want nil — the trigram `%%` operator must resolve via search_path", err)
+	}
+}
+
 func TestEnrichTenders_RoundTripsStringIDs(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()
