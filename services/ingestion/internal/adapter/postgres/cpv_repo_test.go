@@ -45,7 +45,7 @@ func TestUpsertTerms_InsertsAndIsIdempotent(t *testing.T) {
 		{Code: "99999901", Lang: "de", Label: "Testdienstleistungen"},
 	}
 	if n, err := repo.UpsertTerms(ctx, rows); err != nil || n != 2 {
-		t.Fatalf("UpsertTerms = %d, %v; want 2, nil", n, err)
+		t.Fatalf("UpsertTerms(rows) = (%d, %v), want (2, nil) — a batch write must report one row sent per input row with no error", n, err)
 	}
 
 	// Re-seeding must not duplicate: the (code, lang) primary key plus
@@ -84,7 +84,7 @@ func TestUpsertTerms_UpdatesAChangedLabelAndItsVector(t *testing.T) {
 		t.Fatalf("query vector: %v", err)
 	}
 	if !matches {
-		t.Error("label_vector does not match the updated label")
+		t.Errorf("label_vector @@ to_tsquery('nuova') = %v, want true — the generated column must follow an updated label, not stay frozen on the stale one", matches)
 	}
 }
 
@@ -105,6 +105,6 @@ func TestCountTerms_ReportsTheWholeVocabulary(t *testing.T) {
 		t.Fatalf("CountTerms: %v", err)
 	}
 	if after != before+1 {
-		t.Errorf("CountTerms = %d, want %d", after, before+1)
+		t.Errorf("CountTerms after insert = %d, want %d — inserting one new row must advance the count by exactly one", after, before+1)
 	}
 }

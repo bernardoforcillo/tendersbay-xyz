@@ -52,18 +52,9 @@ func (r *CPVRepo) UpsertTerms(ctx context.Context, rows []cpvdata.Row) (int, err
 		}
 		batch := rows[start:end]
 
-		var (
-			placeholders = make([]string, len(batch))
-			args         = make([]any, 0, len(batch)*3)
-		)
-		for i, row := range batch {
-			n := i * 3
-			placeholders[i] = "($" + strconv.Itoa(n+1) + ", $" + strconv.Itoa(n+2) + ", $" + strconv.Itoa(n+3) + ")"
-			args = append(args, row.Code, row.Lang, row.Label)
-		}
-
+		placeholders, args := buildUpsertValues(batch)
 		sql := `INSERT INTO tenders.cpv_terms (code, lang, label) VALUES ` +
-			strings.Join(placeholders, ", ") +
+			placeholders +
 			` ON CONFLICT (code, lang) DO UPDATE SET label = EXCLUDED.label`
 
 		if _, err := r.db.Exec(ctx, sql, args...); err != nil {
@@ -72,6 +63,29 @@ func (r *CPVRepo) UpsertTerms(ctx context.Context, rows []cpvdata.Row) (int, err
 		sent += len(batch)
 	}
 	return sent, nil
+}
+
+// buildUpsertValues renders batch as a parenthesised, comma-joined VALUES
+// placeholder list ("($1, $2, $3), ($4, $5, $6)") alongside the args slice it
+// references, each row contributing (code, lang, label) in that order.
+//
+// Pulled out of UpsertTerms as a pure function so this arithmetic — the
+// riskiest part of the whole task — can be pinned by a plain unit test
+// instead of only ever running through a live database. code, lang and label
+// are all `text`: a misaligned bind would not error, it would silently seed
+// a label under the wrong language, and every downstream consumer of the CPV
+// bridge would trust the corrupted row.
+func buildUpsertValues(batch []cpvdata.Row) (string, []any) {
+	var (
+		placeholders = make([]string, len(batch))
+		args         = make([]any, 0, len(batch)*3)
+	)
+	for i, row := range batch {
+		n := i * 3
+		placeholders[i] = "($" + strconv.Itoa(n+1) + ", $" + strconv.Itoa(n+2) + ", $" + strconv.Itoa(n+3) + ")"
+		args = append(args, row.Code, row.Lang, row.Label)
+	}
+	return strings.Join(placeholders, ", "), args
 }
 
 // CountTerms is how many vocabulary rows the table holds. Used by the seeder to
