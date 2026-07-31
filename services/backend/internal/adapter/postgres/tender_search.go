@@ -144,11 +144,6 @@ func whereClause(clauses []string) string {
 	return "\nWHERE " + strings.Join(clauses, "\n  AND ")
 }
 
-// labelWeightClasses are the weight classes to keep when CPV-label expansion
-// is off: A title, B buyer_name, D description. C is excluded because
-// migration 0008 put the CPV labels there, alongside the code itself.
-const labelWeightClasses = "'{a,b,d}'"
-
 // lexicalSQL builds the keyword statement and its arguments.
 //
 // Split out from LexicalSearch so the SQL can be asserted without a database
@@ -163,50 +158,24 @@ func lexicalSQL(q tender.LexicalQuery, filters tender.Filters, limit int) (strin
 	b := &argBuilder{}
 	tsq := b.next(query)
 
-	// The vector to match against. The CPV labels (migration 0008) live INSIDE
-	// search_vector's weight class C, alongside the code itself, so an
-	// unmodified `@@` match picks them up unconditionally regardless of the
-	// toggle — turning expansion off therefore has to NARROW the vector, not
-	// merely skip widening it, or ExpandCPVLabels=false would be a lie.
-	// ts_filter is the operator for that: it drops class C wholesale, leaving
-	// exactly title/buyer/description — today's pre-Task-16 behaviour.
-	vector := "t.search_vector"
-	if !q.ExpandCPVLabels {
-		vector = "ts_filter(t.search_vector, " + labelWeightClasses + ")"
-	}
-
+	// The vector to match against. Migration 0009 reverted search_vector to
+	// exactly title/buyer_name/cpv/description (weight classes A/B/C/D) — no
+	// toggle, no narrowing. A prior version of this function briefly matched
+	// against ts_filter(t.search_vector, …) to exclude a cpv_labels weight
+	// class (migration 0008) on demand; that function call sat to the LEFT of
+	// `@@`, which is not the indexed expression, and because the predicate was
+	// an OR chain the whole clause degraded to a sequential scan in
+	// production regardless of the toggle's value — see migration 0009's
+	// header and Ranking.CPVWeight's doc comment (hybrid.go) for the measured
+	// cost and the reasoning for reverting rather than retuning. Match plainly
+	// against the indexed column so idx_ingested_tenders_search_vector stays
+	// usable.
+	//
 	// ts_rank_cd's normalisation flag 32 divides the raw rank by rank+1,
 	// mapping an unbounded score into (0,1) — comparable across queries, which
 	// a raw ts_rank_cd value is not.
-	rank := "ts_rank_cd(" + vector + ", websearch_to_tsquery('simple', " + tsq + "), 32)"
-	match := vector + " @@ websearch_to_tsquery('simple', " + tsq + ")"
-
-	if !q.ExpandCPVLabels {
-		// The bare 8-digit CPV code shares weight class C with the labels
-		// (migration 0008: cpv and cpv_labels are setweight together), so
-		// dropping C to disable expansion also — as an unintended side effect —
-		// stops an exact code from matching. An exact code is precisely what
-		// this retriever exists to answer (vector search cannot: dense
-		// embeddings map a code onto whatever it most resembles, not onto
-		// itself), so that has to be restored explicitly rather than accepted
-		// as collateral damage of the toggle. Scoped to the off branch only:
-		// with expansion on, search_vector's own class C already carries the
-		// code, so an unconditional arm here would be a redundant OR.
-		code := b.next(query)
-		match = "(" + match + " OR t.cpv = " + code + ")"
-		// The equality above only widens WHERE. Without also widening rank, a
-		// row that matches ONLY via the bare code (no text overlap in
-		// title/buyer/description) gets ts_rank_cd = 0 against the narrowed
-		// vector — the code lexeme lived in the now-dropped weight class C —
-		// and sorts behind every other candidate, tied at the bottom and
-		// ordered only by recency. An exact CPV code is the strongest possible
-		// signal this retriever can receive, so it earns the maximum rank
-		// (ts_rank_cd's own ceiling, under flag 32's rank/(rank+1)
-		// normalisation, is an asymptote just short of 1). Mirrors the
-		// trigram arm's GREATEST(rank, similarity(...)) below: widen match,
-		// widen rank, together.
-		rank = "GREATEST(" + rank + ", (t.cpv = " + code + ")::int::float8)"
-	}
+	rank := "ts_rank_cd(t.search_vector, websearch_to_tsquery('simple', " + tsq + "), 32)"
+	match := "t.search_vector @@ websearch_to_tsquery('simple', " + tsq + ")"
 
 	if len([]rune(query)) <= trigramQueryMaxLen {
 		trg := b.next(query)
@@ -243,8 +212,7 @@ func lexicalSQL(q tender.LexicalQuery, filters tender.Filters, limit int) (strin
 
 // LexicalSearch runs the keyword half of hybrid retrieval: a full-text match
 // over the generated search_vector, ranked by ts_rank_cd, optionally widened
-// by a trigram similarity arm for short misspelled input, and optionally
-// narrowed to exclude the CPV-label weight class — see lexicalSQL.
+// by a trigram similarity arm for short misspelled input.
 //
 // This is the half that finds what vector search structurally cannot — an
 // exact CPV code, a notice reference, a buyer's name, a rare acronym. Dense

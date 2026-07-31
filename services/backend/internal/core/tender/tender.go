@@ -119,10 +119,6 @@ type LexicalQuery struct {
 	// Text is the query with structured constraints already lifted out — see
 	// ParseQuery. Empty means there is nothing to retrieve on.
 	Text string
-	// ExpandCPVLabels widens the match to the tender's CPV labels weight class
-	// (see the cpv_labels column). Off means match only title/buyer/code/
-	// description, which is exactly today's behaviour.
-	ExpandCPVLabels bool
 }
 
 // Repo is the subset of postgres.TenderRepo the service needs.

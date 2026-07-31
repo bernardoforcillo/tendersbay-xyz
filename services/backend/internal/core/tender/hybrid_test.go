@@ -205,15 +205,13 @@ func equalStrings(a, b []string) bool {
 // A Config built without a Ranking must still rank, not score everything zero.
 func TestRanking_ZeroValueFallsBackToDefaults(t *testing.T) {
 	got := Ranking{}.withDefaults()
-	// CPVWeight, CPVIndexExpanded and CPVBoost are the deliberate exception:
-	// their zero value is a real "off" setting, not an absent one, so
-	// withDefaults leaves them alone rather than inheriting DefaultRanking's —
-	// see TestWithDefaults_LeavesTheCPVTogglesAlone. Every other knob must
-	// still fall back to DefaultRanking's value, which this comparison still
-	// checks.
+	// CPVWeight and CPVBoost are the deliberate exception: their zero value is
+	// a real "off" setting, not an absent one, so withDefaults leaves them
+	// alone rather than inheriting DefaultRanking's — see
+	// TestWithDefaults_LeavesTheCPVTogglesAlone. Every other knob must still
+	// fall back to DefaultRanking's value, which this comparison still checks.
 	want := DefaultRanking()
 	want.CPVWeight = 0
-	want.CPVIndexExpanded = false
 	want.CPVBoost = 0
 	if got != want {
 		t.Errorf("withDefaults() = %+v, want %+v", got, want)
@@ -597,43 +595,36 @@ func TestFuse_CPVBoostOffOrNoMatchesReproducesTheUnboostedResultExactly(t *testi
 
 func TestWithDefaults_LeavesTheCPVTogglesAlone(t *testing.T) {
 	// Unlike every other knob, zero (or, for CPVBoost, <=1) is MEANINGFUL here
-	// — it is how the retrieval arm, the index expansion, and the post-fusion
-	// boost are each switched off. Default-filling them would make them
-	// impossible to disable and would silently change every existing test
-	// that builds a bare Ranking{}.
+	// — it is how the retrieval arm and the post-fusion boost are each
+	// switched off. Default-filling them would make them impossible to
+	// disable and would silently change every existing test that builds a
+	// bare Ranking{}.
 	r := Ranking{}.withDefaults()
 	if r.CPVWeight != 0 {
 		t.Errorf("CPVWeight = %v, want 0 — a zero-value Ranking must leave the arm off", r.CPVWeight)
-	}
-	if r.CPVIndexExpanded {
-		t.Error("CPVIndexExpanded = true, want false for a zero-value Ranking")
 	}
 	if r.CPVBoost > 1 {
 		t.Errorf("CPVBoost = %v, want <=1 (off) for a zero-value Ranking", r.CPVBoost)
 	}
 	// …while DefaultRanking, which production uses, turns the CPVBoost
-	// multiplier on, but leaves the CPV retrieval arm AND index expansion off.
-	// Task 14 measured the arm (CPVWeight > 0) against the live eval corpus at
-	// three prefix depths and every one scored below the two-arm baseline,
-	// with its four target cross-language cells still stuck at 0.0000. Task 15
-	// then fixed the arm's OWN ordering and window bugs and measured it again
-	// — still below baseline — while CPVBoost (a structurally different use of
-	// the same resolved-code signal: a post-fusion multiplier, not a fourth
+	// multiplier on, but leaves the CPV retrieval arm off. Task 14 measured
+	// the arm (CPVWeight > 0) against the live eval corpus at three prefix
+	// depths and every one scored below the two-arm baseline, with its four
+	// target cross-language cells still stuck at 0.0000. Task 15 then fixed
+	// the arm's OWN ordering and window bugs and measured it again — still
+	// below baseline — while CPVBoost (a structurally different use of the
+	// same resolved-code signal: a post-fusion multiplier, not a fourth
 	// retrieval) beat it. See DefaultRanking's CPVWeight comment for the full
-	// comparison and task-14-report.md for the harness output. CPVIndexExpanded
-	// is a third, separately-measured signal (it widens the lexical arm's own
-	// match, rather than adding a retrieval arm or a multiplier); Task 16 wired
-	// it into lexicalSQL and measured all four {CPVWeight, CPVIndexExpanded}
-	// combinations — index expansion moved NONE of the four target cells off
-	// 0.0000 in any of them, and cost real ndcg/mrr on the same-language
-	// diagonal when on alone, so it ships off too. See DefaultRanking's
-	// CPVIndexExpanded comment and task-16-report.md for the full comparison.
+	// comparison and task-14-report.md for the harness output. A third
+	// mechanism, index-side CPV label expansion (Task 16), was also measured
+	// and — unlike the retrieval arm, which just stays off — was REMOVED
+	// entirely: it moved none of the four target cells and cost same-language
+	// ndcg/mrr, and its shipped-disabled path also collapsed lexical search to
+	// a sequential scan in production (migration 0009 reverted it). See
+	// DefaultRanking's CPVWeight comment for the full history.
 	d := DefaultRanking()
 	if d.CPVWeight != 0 {
 		t.Errorf("DefaultRanking.CPVWeight = %v, want 0 — the retrieval arm made every metric worse both times it was measured", d.CPVWeight)
-	}
-	if d.CPVIndexExpanded {
-		t.Error("DefaultRanking.CPVIndexExpanded = true, want false — Task 16 measured it moving none of the four target cells and costing same-language ndcg/mrr")
 	}
 	if d.CPVBoost <= 1 {
 		t.Errorf("DefaultRanking.CPVBoost = %v, want >1 — the post-fusion multiplier beat baseline and ships enabled", d.CPVBoost)
