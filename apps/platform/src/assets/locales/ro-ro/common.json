@@ -471,7 +471,8 @@
       "valueMax": "până la {{max}}",
       "valueMin": "de la {{min}}",
       "deadlineUntil": "se închide până la {{date}}",
-      "undo": "Șterge"
+      "undo": "Șterge",
+      "remove": "Elimină {{chip}}"
     }
   },
   "today": {

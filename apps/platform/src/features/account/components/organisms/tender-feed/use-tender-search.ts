@@ -1,4 +1,5 @@
 import type {
+  CpvMatch,
   FacetCount,
   TenderFilters,
   TenderResult,
@@ -43,12 +44,16 @@ export type TenderSort = 'relevance' | 'deadline' | 'published' | 'value';
  * degraded search can be shown as degraded rather than silently returning
  * something else; `appliedFilters`/`appliedQuery` say which constraints were
  * lifted out of the query text, so the user can see and undo them.
+ * `appliedCpv` is the same idea for the CPV lexicon: the codes the server
+ * read out of the text, so the UI can show them and let the user suppress
+ * one it got wrong.
  */
 export type SearchMeta = {
   mode: string;
   degraded: boolean;
   appliedFilters?: TenderFilters;
   appliedQuery: string;
+  appliedCpv: CpvMatch[];
   countryFacets: FacetCount[];
   statusFacets: FacetCount[];
   cpvDivisionFacets: FacetCount[];
@@ -58,6 +63,7 @@ const EMPTY_META: SearchMeta = {
   mode: '',
   degraded: false,
   appliedQuery: '',
+  appliedCpv: [],
   countryFacets: [],
   statusFacets: [],
   cpvDivisionFacets: [],
@@ -84,6 +90,7 @@ export function useTenderSearch(): {
     filters?: TenderFilterValues,
     workspaceId?: string,
     sort?: TenderSort,
+    suppressedCpv?: string[],
   ) => Promise<void>;
   loadMore: () => Promise<void>;
 } {
@@ -97,6 +104,7 @@ export function useTenderSearch(): {
   const filtersRef = useRef<TenderFilterValues | undefined>(undefined);
   const workspaceIdRef = useRef<string | undefined>(undefined);
   const sortRef = useRef<TenderSort>('relevance');
+  const suppressedCpvRef = useRef<string[] | undefined>(undefined);
   const offsetRef = useRef(0);
   const requestIdRef = useRef(0);
   const inFlightRef = useRef(false);
@@ -107,6 +115,7 @@ export function useTenderSearch(): {
       filters?: TenderFilterValues,
       workspaceId?: string,
       sort: TenderSort = 'relevance',
+      suppressedCpv?: string[],
     ) => {
       const requestId = ++requestIdRef.current;
       inFlightRef.current = true;
@@ -114,6 +123,7 @@ export function useTenderSearch(): {
       filtersRef.current = filters;
       workspaceIdRef.current = workspaceId;
       sortRef.current = sort;
+      suppressedCpvRef.current = suppressedCpv;
       offsetRef.current = 0;
       setLoading(true);
       setError(null);
@@ -126,6 +136,10 @@ export function useTenderSearch(): {
           offset: 0,
           workspaceId: workspaceId ?? '',
           sort,
+          // Omitted rather than sent as `[]`: the request-object equality
+          // assertions in this hook's own tests (and the page's) expect no
+          // `suppressedCpv` key at all when nothing is suppressed.
+          ...(suppressedCpv && suppressedCpv.length > 0 ? { suppressedCpv } : {}),
         });
         if (requestIdRef.current !== requestId) return;
         // Page by rows actually received, not by PAGE_SIZE: the server clamps
@@ -169,6 +183,9 @@ export function useTenderSearch(): {
         offset: nextOffset,
         workspaceId: workspaceIdRef.current ?? '',
         sort: sortRef.current,
+        ...(suppressedCpvRef.current && suppressedCpvRef.current.length > 0
+          ? { suppressedCpv: suppressedCpvRef.current }
+          : {}),
       });
       if (requestIdRef.current !== requestId) return;
       offsetRef.current = nextOffset + res.results.length;
@@ -200,6 +217,7 @@ function metaOf(res: {
   degraded: boolean;
   appliedFilters?: TenderFilters;
   appliedQuery: string;
+  appliedCpv?: CpvMatch[];
   countryFacets: FacetCount[];
   statusFacets: FacetCount[];
   cpvDivisionFacets: FacetCount[];
@@ -209,6 +227,9 @@ function metaOf(res: {
     degraded: res.degraded,
     appliedFilters: res.appliedFilters,
     appliedQuery: res.appliedQuery,
+    // `?? []`: this hook's own tests (and the page's) mock a bare response
+    // object with no `appliedCpv` at all.
+    appliedCpv: res.appliedCpv ?? [],
     countryFacets: res.countryFacets,
     statusFacets: res.statusFacets,
     cpvDivisionFacets: res.cpvDivisionFacets,

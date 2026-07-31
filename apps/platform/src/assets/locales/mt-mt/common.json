@@ -473,7 +473,8 @@
       "valueMax": "sa {{max}}",
       "valueMin": "minn {{min}}",
       "deadlineUntil": "tagħlaq sa {{date}}",
-      "undo": "Naddaf"
+      "undo": "Naddaf",
+      "remove": "Neħħi {{chip}}"
     }
   },
   "today": {

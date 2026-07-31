@@ -469,7 +469,8 @@
       "valueMax": "op til {{max}}",
       "valueMin": "fra {{min}}",
       "deadlineUntil": "lukker senest {{date}}",
-      "undo": "Ryd"
+      "undo": "Ryd",
+      "remove": "Fjern {{chip}}"
     }
   },
   "today": {

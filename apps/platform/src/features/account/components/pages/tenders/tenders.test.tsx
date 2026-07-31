@@ -18,6 +18,7 @@ const EMPTY_META = {
   mode: 'hybrid',
   degraded: false,
   appliedQuery: '',
+  appliedCpv: [],
   countryFacets: [],
   statusFacets: [],
   cpvDivisionFacets: [],

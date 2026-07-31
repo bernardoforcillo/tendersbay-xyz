@@ -1,3 +1,4 @@
+export { AppliedCpvChips } from './applied-cpv-chips';
 export { AppliedFilterChips } from './applied-filter-chips';
 export { ChatInput } from './chat-input';
 export { ChoicePromptCard } from './choice-prompt-card';

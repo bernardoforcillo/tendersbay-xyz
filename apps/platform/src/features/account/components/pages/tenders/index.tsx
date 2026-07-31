@@ -6,7 +6,7 @@ import { useQueryState } from 'nuqs';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppliedFilterChips } from '~/features/account/components/molecules';
+import { AppliedCpvChips, AppliedFilterChips } from '~/features/account/components/molecules';
 import {
   ClientProfileForm,
   PageHeader,
@@ -44,6 +44,9 @@ export function AccountTendersPage() {
   // apart from a brand-new search.
   const lastQueryRef = useRef('');
   const [filters, setFilters] = useState<FilterSelections>(EMPTY_FILTERS);
+  // Codes the user removed from the inferred set. Client-side because the server
+  // re-infers them from the same text on every request.
+  const [suppressedCpv, setSuppressedCpv] = useState<string[]>([]);
   const { results, hasMore, loading, error, meta, search, loadMore } = useTenderSearch();
   const currentWorkspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
   const shortlist = useClientShortlist(currentWorkspaceId);
@@ -63,7 +66,7 @@ export function AccountTendersPage() {
     });
   }, [shortlist.results, shortlist.needsProfile]);
 
-  const runSearch = (selections: FilterSelections) => {
+  const runSearch = (selections: FilterSelections, suppressed: string[] = suppressedCpv) => {
     const trimmed = query.trim();
     if (!trimmed && !hasActiveFilters(selections)) return;
     // A repeat of the same query with the filters changed is a REFINEMENT, not
@@ -71,21 +74,39 @@ export function AccountTendersPage() {
     // first answer wasn't good enough, which is the signal that says whether
     // ranking changes actually help.
     const refined = lastQueryRef.current === trimmed && searched;
+    // A new query text is a new inference; carrying the previous suppressions
+    // forward would narrow a search the user never narrowed.
+    const carried = refined ? suppressed : [];
     lastQueryRef.current = trimmed;
     setSearched(true);
+    if (carried !== suppressed) setSuppressedCpv(carried);
     posthog?.capture(refined ? 'search_refined' : 'search_performed', {
       location: 'explore',
       has_query: trimmed.length > 0,
       query_length: trimmed.length,
       has_filters: hasActiveFilters(selections),
       sort: selections.sort,
+      suppressed_cpv_count: carried.length,
     });
-    void search(
-      trimmed,
-      toFilterValues(selections, new Date()),
-      currentWorkspaceId ?? undefined,
-      selections.sort,
-    );
+    // The fifth argument is omitted rather than passed as `[]`: the hook only
+    // sends `suppressedCpv` on the wire when there is something to suppress,
+    // and several existing tests assert `search`'s call arguments exactly.
+    if (carried.length > 0) {
+      void search(
+        trimmed,
+        toFilterValues(selections, new Date()),
+        currentWorkspaceId ?? undefined,
+        selections.sort,
+        carried,
+      );
+    } else {
+      void search(
+        trimmed,
+        toFilterValues(selections, new Date()),
+        currentWorkspaceId ?? undefined,
+        selections.sort,
+      );
+    }
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount only.
@@ -178,6 +199,15 @@ export function AccountTendersPage() {
           />
           {searched ? (
             <div className="mx-auto w-full max-w-2xl space-y-4">
+              <AppliedCpvChips
+                matches={meta.appliedCpv}
+                onRemove={(code) => {
+                  const next = [...suppressedCpv, code];
+                  setSuppressedCpv(next);
+                  posthog?.capture('search_cpv_suppressed', { location: 'explore', code });
+                  runSearch(filters, next);
+                }}
+              />
               <AppliedFilterChips
                 applied={meta.appliedFilters}
                 explicit={{

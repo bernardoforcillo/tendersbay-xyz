@@ -469,7 +469,8 @@
       "valueMax": "до {{max}}",
       "valueMin": "от {{min}}",
       "deadlineUntil": "краен срок до {{date}}",
-      "undo": "Изчисти"
+      "undo": "Изчисти",
+      "remove": "Премахни {{chip}}"
     }
   },
   "today": {

@@ -469,7 +469,8 @@
       "valueMax": "kuni {{max}}",
       "valueMin": "alates {{min}}",
       "deadlineUntil": "sulgub {{date}}",
-      "undo": "Tühjenda"
+      "undo": "Tühjenda",
+      "remove": "Eemalda {{chip}}"
     }
   },
   "today": {
