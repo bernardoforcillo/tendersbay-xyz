@@ -87,3 +87,38 @@ breaking it into smaller steps (e.g. backfill a new column with batched
 `UPDATE`s before the schema change that depends on it, the way
 `cmd/backfill-descriptions` already does for description backfill) rather
 than one long rewrite that risks the deadline.
+
+## Seeding the CPV vocabulary — required once per environment, fails silently if skipped
+
+`cmd/seed-cpv` loads the embedded CPV 2008 vocabulary into `tenders.cpv_terms`.
+Nothing in the CronJob or its migrations does this automatically — it is a
+separate command precisely because embedding ~227k `INSERT`s in a migration
+would bloat every binary that imports the migrations package and would hold
+the migration transaction's locks for minutes (see `cmd/seed-cpv`'s package
+doc). **It must be run by hand, once per environment, after migrations have
+applied** (the CronJob applies those automatically on its first run — see
+above).
+
+Until it has run, `cpv_terms` is empty. This is not a startup failure: the
+CronJob starts and ingests tenders normally, `MatchCodes` simply resolves
+nothing against an empty table, `AppliedCPV` is always `[]`, the chips UI
+never renders anything, and `CPVBoost` never contributes to ranking. Nothing
+logs an error and nothing crash-loops — the CPV feature is just silently
+inert.
+
+Run it with the one-off Kubernetes Job in this folder (deliberately **not**
+part of `kustomization.yaml` — see that file's header comment for why a
+completed Job can't be Flux-managed):
+
+```sh
+kubectl apply -f infrastructure/kubernetes/tendersbay-xyz/ingestion/main/seed-cpv-job.yaml
+kubectl logs -n tendersbay-xyz job/seed-cpv -f
+```
+
+**A CPV vocabulary revision means re-running it.** `UpsertTerms` is
+idempotent (`ON CONFLICT DO UPDATE` on `(code, lang)`), and `seed-cpv` also
+recomputes `cpv_labels` on every already-ingested tender afterward, so a
+re-run is the intended way to roll out a revised vocabulary — not a one-time
+bootstrap step to forget about. Delete the completed Job object first
+(`kubectl delete job seed-cpv -n tendersbay-xyz --ignore-not-found`) since a
+Job's spec is immutable once created.
