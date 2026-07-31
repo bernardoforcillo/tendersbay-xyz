@@ -45,8 +45,12 @@ const maxCorpusLine = 1 << 20
 // LoadCorpus reads a gzipped JSONL snapshot.
 //
 // JSONL rather than one JSON array so the exporter can stream, and gzipped
-// because the descriptions dominate the size — the uncompressed form is several
-// times larger for no benefit, and this file is committed.
+// because the uncompressed form is several times larger for no benefit and
+// this file is committed. (Not because descriptions dominate the size, as an
+// earlier version of this comment claimed: 0 of the 3,030 tenders in the
+// committed snapshot carry a description at all — see eval/README.md's
+// "Corpus limitation" section. The size here is titles/buyer names/CPV codes
+// repeated ~3,000 times, which gzip still compresses well.)
 func LoadCorpus(fsys fs.FS, name string) ([]CorpusTender, error) {
 	f, err := fsys.Open(name)
 	if err != nil {
