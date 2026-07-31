@@ -401,6 +401,14 @@ func DefaultRanking() Ranking {
 		// comparison against the retrieval-arm alternative. Shipped ENABLED:
 		// this is the one CPV-signal knob in this struct whose zero-ish value
 		// (<=1) is the OFF state and whose shipped default is switched on.
+		//
+		// The win is real but small, and smaller than it first looks:
+		// regressionTolerance (eval/harness_test.go) is 0.01, and of the three
+		// gains only mrr (+0.0121) clears that noise floor — ndcg (+0.0058)
+		// sits BELOW the harness's own tolerance and recall is exactly flat,
+		// so this is "one metric above noise, one below it, one unmoved," not
+		// an unqualified win; a future reader should not read the harness
+		// passing as this beating the baseline by a wide margin.
 		CPVBoost:         1.15,
 		RRFK:             60, // the value the RRF paper uses and everyone since
 		ClosedPenalty:    0.5,
