@@ -85,7 +85,7 @@ func TestRunOnce_IndexesTenderWithSummaryOnly(t *testing.T) {
 	fetcher := &fakeFetcher{}
 
 	idx := index.New(repo, kb, fetcher)
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: %v", err)
 	}
 
@@ -133,7 +133,7 @@ func TestRunOnce_ProjectsFilterableAttributes(t *testing.T) {
 	kb := &fakeKnowledgeBase{}
 
 	idx := index.New(repo, kb, &fakeFetcher{})
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: %v", err)
 	}
 
@@ -160,7 +160,7 @@ func TestRunOnce_LeavesUnknownFacetsNil(t *testing.T) {
 	kb := &fakeKnowledgeBase{}
 
 	idx := index.New(repo, kb, &fakeFetcher{})
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: %v", err)
 	}
 
@@ -179,7 +179,7 @@ func TestRunOnce_SummaryIncludesDescriptionWhenPresent(t *testing.T) {
 	fetcher := &fakeFetcher{}
 
 	idx := index.New(repo, kb, fetcher)
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: %v", err)
 	}
 
@@ -205,7 +205,7 @@ func TestRunOnce_DownloadsAndPersistsDocumentPartsWhenNotAlreadySaved(t *testing
 	}}
 
 	idx := index.New(repo, kb, fetcher)
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: %v", err)
 	}
 
@@ -239,7 +239,7 @@ func TestRunOnce_SkipsRedownloadWhenPartsAlreadyExist(t *testing.T) {
 		fetchCalled = true
 		return fetcher.FetchAndExtract(ctx, url)
 	}))
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: %v", err)
 	}
 	if fetchCalled {
@@ -266,7 +266,7 @@ func TestRunOnce_LogsAndContinuesOnIngestFailure(t *testing.T) {
 	fetcher := &fakeFetcher{}
 
 	idx := index.New(repo, kb, fetcher)
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: want nil error even when individual tenders fail to ingest, got %v", err)
 	}
 	if len(repo.indexedIDs) != 0 {
@@ -291,7 +291,7 @@ func TestRunOnce_ChunkIndexContinuesAcrossMultipleDocuments(t *testing.T) {
 	fetcher := &fakeFetcher{}
 
 	idx := index.New(repo, kb, fetcher)
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: %v", err)
 	}
 
@@ -316,7 +316,7 @@ func TestRunOnce_LogsAndContinuesOnMarkIndexedFailure(t *testing.T) {
 	fetcher := &fakeFetcher{}
 
 	idx := index.New(repo, kb, fetcher)
-	if err := idx.RunOnce(context.Background()); err != nil {
+	if _, err := idx.RunOnce(context.Background()); err != nil {
 		t.Fatalf("RunOnce: want nil error even when MarkIndexed fails, got %v", err)
 	}
 	if len(kb.ingested) != 1 {
@@ -324,6 +324,108 @@ func TestRunOnce_LogsAndContinuesOnMarkIndexedFailure(t *testing.T) {
 	}
 	if len(repo.indexedIDs) != 0 {
 		t.Errorf("repo.indexedIDs = %v, want none (MarkIndexed failed, so the fake never appended)", repo.indexedIDs)
+	}
+}
+
+// drainRepo models the real ListUnindexed contract that fakeRepo does not:
+// a tender stops being listed once it is marked indexed. Drain's loop only
+// terminates against a repo that actually shrinks.
+type drainRepo struct {
+	remaining []postgres.UnindexedTender
+	listCalls int
+}
+
+// The returned batch is a copy: MarkIndexed reslices d.remaining in place,
+// and handing back a view into that same backing array would corrupt the
+// caller's iteration mid-loop.
+func (d *drainRepo) ListUnindexed(_ context.Context, limit int) ([]postgres.UnindexedTender, error) {
+	d.listCalls++
+	n := min(limit, len(d.remaining))
+	batch := make([]postgres.UnindexedTender, n)
+	copy(batch, d.remaining[:n])
+	return batch, nil
+}
+
+func (d *drainRepo) DocumentParts(_ context.Context, _ int64) ([]string, error) { return nil, nil }
+
+func (d *drainRepo) SaveDocumentParts(_ context.Context, _ int64, _ []string) error { return nil }
+
+func (d *drainRepo) MarkIndexed(_ context.Context, tenderID int64) error {
+	for i, t := range d.remaining {
+		if t.ID == tenderID {
+			d.remaining = append(d.remaining[:i], d.remaining[i+1:]...)
+			return nil
+		}
+	}
+	return nil
+}
+
+// 250 tenders exceed the unexported batchSize of 200, so draining them
+// requires more than one pass — which is the whole point of Drain over a
+// bare RunOnce.
+func TestDrain_ClearsBacklogLargerThanOneBatch(t *testing.T) {
+	repo := &drainRepo{}
+	for i := int64(1); i <= 250; i++ {
+		repo.remaining = append(repo.remaining, postgres.UnindexedTender{
+			ID: i, Title: "Bando", Source: "ted", SourceRef: "proc",
+		})
+	}
+
+	idx := index.New(repo, &fakeKnowledgeBase{}, &fakeFetcher{})
+	if err := idx.Drain(context.Background()); err != nil {
+		t.Fatalf("Drain: %v", err)
+	}
+
+	if len(repo.remaining) != 0 {
+		t.Errorf("remaining = %d, want 0 — Drain stopped before clearing the backlog", len(repo.remaining))
+	}
+	if repo.listCalls < 2 {
+		t.Errorf("listCalls = %d, want at least 2 — a 250-tender backlog cannot fit in one batch", repo.listCalls)
+	}
+}
+
+// The regression this guards: terminating on "listed nothing" instead of
+// "indexed nothing" spins forever when every tender in a batch fails, since
+// the failures stay unindexed and are listed again identically.
+func TestDrain_StopsWhenABatchMakesNoProgress(t *testing.T) {
+	repo := &fakeRepo{unindexed: []postgres.UnindexedTender{
+		{ID: 1, Title: "Bando", Source: "ted", SourceRef: "proc-1"},
+	}}
+	kb := &fakeKnowledgeBase{err: errors.New("qdrant unreachable")}
+
+	idx := index.New(repo, kb, &fakeFetcher{})
+
+	done := make(chan error, 1)
+	go func() { done <- idx.Drain(context.Background()) }()
+
+	select {
+	case err := <-done:
+		if err != nil {
+			t.Fatalf("Drain: want nil error when a batch fails to index, got %v", err)
+		}
+	case <-time.After(5 * time.Second):
+		t.Fatal("Drain did not terminate: a batch that indexes nothing must end the pass, not retry it forever")
+	}
+
+	if len(repo.indexedIDs) != 0 {
+		t.Errorf("indexedIDs = %v, want none — every ingest failed", repo.indexedIDs)
+	}
+}
+
+func TestDrain_StopsOnCancelledContext(t *testing.T) {
+	repo := &drainRepo{remaining: []postgres.UnindexedTender{
+		{ID: 1, Title: "Bando", Source: "ted", SourceRef: "proc-1"},
+	}}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+
+	idx := index.New(repo, &fakeKnowledgeBase{}, &fakeFetcher{})
+	if err := idx.Drain(ctx); err != nil {
+		t.Fatalf("Drain: want nil on cancellation (a deadline ending a large backlog is normal), got %v", err)
+	}
+	if repo.listCalls != 0 {
+		t.Errorf("listCalls = %d, want 0 — cancellation should be checked before listing", repo.listCalls)
 	}
 }
 

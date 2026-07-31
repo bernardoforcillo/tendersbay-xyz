@@ -29,6 +29,29 @@ import (
 // connection for concurrent queries, and a session-level SET only affects
 // the connection it ran on.
 func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
+	db, sqlDB, err := Connect(ctx, dsn)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	m := pg.NewMigrator(db) // default ledger table name — isolated by schema, not by name
+	if err := m.AddFS(migrations.Files, "."); err != nil {
+		return nil, nil, err
+	}
+	return db, sqlDB, m.Up(ctx)
+}
+
+// Connect opens the same schema-scoped connection as New but applies no
+// migrations, for workloads that read and write existing tables without
+// owning the schema.
+//
+// Keeping exactly one migrating entrypoint is the point. Migrations run
+// unattended at process start, so every additional binary that calls New
+// becomes another writer racing to apply the same migration — and since the
+// indexer CronJob fires four times an hour against an hourly ingestion job,
+// they would eventually overlap. The ingestion job owns the schema; the
+// indexer just uses it.
+func Connect(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 	cfg, err := pgx.ParseConfig(dsn)
 	if err != nil {
 		return nil, nil, err
@@ -47,10 +70,5 @@ func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 		return nil, nil, err
 	}
 
-	db := pg.New(dropsstdlib.New(sqlDB))
-	m := pg.NewMigrator(db) // default ledger table name — isolated by schema, not by name
-	if err := m.AddFS(migrations.Files, "."); err != nil {
-		return nil, nil, err
-	}
-	return db, sqlDB, m.Up(ctx)
+	return pg.New(dropsstdlib.New(sqlDB)), sqlDB, nil
 }

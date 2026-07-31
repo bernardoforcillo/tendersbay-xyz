@@ -31,9 +31,16 @@ RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /ingestion .
 # run it out-of-band. ENTRYPOINT below stays /ingestion.
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /seed-cpv ./cmd/seed-cpv
 
+# indexer drains the search-indexing backlog. It is a recurring workload, not
+# a one-off like seed-cpv: it has its own CronJob (indexer-cronjob.yaml)
+# overriding `command`, because sharing one job with ingestion let a slow
+# fetch consume the whole deadline and starve indexing entirely.
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /indexer ./cmd/indexer
+
 # ---- Stage 2: minimal runtime ----
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=builder /ingestion /ingestion
 COPY --from=builder /seed-cpv /seed-cpv
+COPY --from=builder /indexer /indexer
 USER nonroot:nonroot
 ENTRYPOINT ["/ingestion"]

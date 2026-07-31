@@ -62,12 +62,15 @@ func New(repo Repo, kb KnowledgeBase, fetcher Fetcher) *Indexer {
 // logged and skipped, not fatal — the tender stays unindexed and is
 // retried on a later cycle. RunOnce itself only returns an error for a
 // failure that prevents listing candidates at all.
-func (idx *Indexer) RunOnce(ctx context.Context) error {
+// It returns how many tenders it successfully marked indexed, which is what
+// Drain uses to decide whether a pass made progress.
+func (idx *Indexer) RunOnce(ctx context.Context) (int, error) {
 	tenders, err := idx.repo.ListUnindexed(ctx, batchSize)
 	if err != nil {
-		return fmt.Errorf("index: list unindexed: %w", err)
+		return 0, fmt.Errorf("index: list unindexed: %w", err)
 	}
 
+	indexed := 0
 	for _, t := range tenders {
 		if err := idx.indexOne(ctx, t); err != nil {
 			slog.ErrorContext(ctx, "failed to index tender", "tender_id", t.ID, "error", err)
@@ -75,9 +78,45 @@ func (idx *Indexer) RunOnce(ctx context.Context) error {
 		}
 		if err := idx.repo.MarkIndexed(ctx, t.ID); err != nil {
 			slog.ErrorContext(ctx, "failed to mark tender indexed", "tender_id", t.ID, "error", err)
+			continue
 		}
+		indexed++
 	}
-	return nil
+	return indexed, nil
+}
+
+// Drain repeats RunOnce until a pass indexes nothing, so one invocation
+// clears as much of the backlog as its time budget allows instead of
+// stopping at batchSize.
+//
+// Terminating on "indexed nothing" rather than "listed nothing" is what
+// keeps this from spinning: a batch whose every tender fails (Ollama or
+// Qdrant down) leaves those same rows unindexed, so ListUnindexed would
+// hand back an identical batch forever. No progress ends the pass and the
+// rows are retried on the next scheduled run.
+//
+// Cancellation is not an error: the caller's deadline expiring mid-drain is
+// the normal way a large backlog ends a run, and every completed batch is
+// already committed.
+func (idx *Indexer) Drain(ctx context.Context) error {
+	total := 0
+	for {
+		if err := ctx.Err(); err != nil {
+			slog.InfoContext(ctx, "indexing pass stopped early", "reason", err, "indexed_total", total)
+			return nil
+		}
+
+		indexed, err := idx.RunOnce(ctx)
+		total += indexed
+		if err != nil {
+			return err
+		}
+		if indexed == 0 {
+			slog.InfoContext(ctx, "indexing pass complete", "indexed_total", total)
+			return nil
+		}
+		slog.InfoContext(ctx, "indexing batch complete", "indexed", indexed, "indexed_total", total)
+	}
 }
 
 func (idx *Indexer) indexOne(ctx context.Context, t postgres.UnindexedTender) error {
