@@ -144,32 +144,69 @@ func whereClause(clauses []string) string {
 	return "\nWHERE " + strings.Join(clauses, "\n  AND ")
 }
 
-// LexicalSearch runs the keyword half of hybrid retrieval: a full-text match
-// over the generated search_vector, ranked by ts_rank_cd, optionally widened
-// by a trigram similarity arm for short misspelled input.
+// labelWeightClasses are the weight classes to keep when CPV-label expansion
+// is off: A title, B buyer_name, D description. C is excluded because
+// migration 0008 put the CPV labels there, alongside the code itself.
+const labelWeightClasses = "'{a,b,d}'"
+
+// lexicalSQL builds the keyword statement and its arguments.
 //
-// This is the half that finds what vector search structurally cannot — an
-// exact CPV code, a notice reference, a buyer's name, a rare acronym. Dense
-// embeddings map those onto whatever they most resemble; a lexical index
-// matches them.
-//
-// The 'simple' text-search configuration matches the one the generated column
-// was built with in the ingestion migration; using a different one here would
-// silently stop matching.
-func (r *TenderRepo) LexicalSearch(ctx context.Context, q tender.LexicalQuery, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
+// Split out from LexicalSearch so the SQL can be asserted without a database
+// — CI has no Postgres, so anything only a DB-gated test checks gates nothing
+// — the same split matchCodesSQL uses in cpv_lexicon.go.
+func lexicalSQL(q tender.LexicalQuery, filters tender.Filters, limit int) (string, []any) {
 	query := strings.TrimSpace(q.Text)
 	if query == "" || limit <= 0 {
-		return nil, nil
+		return "", nil
 	}
 
 	b := &argBuilder{}
 	tsq := b.next(query)
 
+	// The vector to match against. The CPV labels (migration 0008) live INSIDE
+	// search_vector's weight class C, alongside the code itself, so an
+	// unmodified `@@` match picks them up unconditionally regardless of the
+	// toggle — turning expansion off therefore has to NARROW the vector, not
+	// merely skip widening it, or ExpandCPVLabels=false would be a lie.
+	// ts_filter is the operator for that: it drops class C wholesale, leaving
+	// exactly title/buyer/description — today's pre-Task-16 behaviour.
+	vector := "t.search_vector"
+	if !q.ExpandCPVLabels {
+		vector = "ts_filter(t.search_vector, " + labelWeightClasses + ")"
+	}
+
 	// ts_rank_cd's normalisation flag 32 divides the raw rank by rank+1,
 	// mapping an unbounded score into (0,1) — comparable across queries, which
 	// a raw ts_rank_cd value is not.
-	rank := "ts_rank_cd(t.search_vector, websearch_to_tsquery('simple', " + tsq + "), 32)"
-	match := "t.search_vector @@ websearch_to_tsquery('simple', " + tsq + ")"
+	rank := "ts_rank_cd(" + vector + ", websearch_to_tsquery('simple', " + tsq + "), 32)"
+	match := vector + " @@ websearch_to_tsquery('simple', " + tsq + ")"
+
+	if !q.ExpandCPVLabels {
+		// The bare 8-digit CPV code shares weight class C with the labels
+		// (migration 0008: cpv and cpv_labels are setweight together), so
+		// dropping C to disable expansion also — as an unintended side effect —
+		// stops an exact code from matching. An exact code is precisely what
+		// this retriever exists to answer (vector search cannot: dense
+		// embeddings map a code onto whatever it most resembles, not onto
+		// itself), so that has to be restored explicitly rather than accepted
+		// as collateral damage of the toggle. Scoped to the off branch only:
+		// with expansion on, search_vector's own class C already carries the
+		// code, so an unconditional arm here would be a redundant OR.
+		code := b.next(query)
+		match = "(" + match + " OR t.cpv = " + code + ")"
+		// The equality above only widens WHERE. Without also widening rank, a
+		// row that matches ONLY via the bare code (no text overlap in
+		// title/buyer/description) gets ts_rank_cd = 0 against the narrowed
+		// vector — the code lexeme lived in the now-dropped weight class C —
+		// and sorts behind every other candidate, tied at the bottom and
+		// ordered only by recency. An exact CPV code is the strongest possible
+		// signal this retriever can receive, so it earns the maximum rank
+		// (ts_rank_cd's own ceiling, under flag 32's rank/(rank+1)
+		// normalisation, is an asymptote just short of 1). Mirrors the
+		// trigram arm's GREATEST(rank, similarity(...)) below: widen match,
+		// widen rank, together.
+		rank = "GREATEST(" + rank + ", (t.cpv = " + code + ")::int::float8)"
+	}
 
 	if len([]rune(query)) <= trigramQueryMaxLen {
 		trg := b.next(query)
@@ -183,6 +220,11 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, q tender.LexicalQuery, f
 	// can show WHY it matched. The source text is truncated first: ts_headline
 	// cost grows with document length, and no useful fragment comes from
 	// beyond the first few thousand characters.
+	//
+	// Deliberately built from description/title only, never from cpv_labels: a
+	// snippet reading "Servizi di pulizia di uffici" lifted from a taxonomy
+	// label would look like the notice's own words and tell the user nothing
+	// about this particular tender.
 	snippet := "ts_headline('simple', left(coalesce(NULLIF(t.description, ''), t.title), 4000), " +
 		"websearch_to_tsquery('simple', " + tsq + "), " +
 		"'StartSel=<mark>, StopSel=</mark>, MaxWords=32, MinWords=12, MaxFragments=1, FragmentDelimiter= … ')"
@@ -196,7 +238,28 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, q tender.LexicalQuery, f
 		"\nORDER BY relevance DESC, t.published_at DESC NULLS LAST, t.id DESC" +
 		"\nLIMIT " + b.next(limit)
 
-	return r.queryScoredTenders(ctx, "lexical search", sql, b.args)
+	return sql, b.args
+}
+
+// LexicalSearch runs the keyword half of hybrid retrieval: a full-text match
+// over the generated search_vector, ranked by ts_rank_cd, optionally widened
+// by a trigram similarity arm for short misspelled input, and optionally
+// narrowed to exclude the CPV-label weight class — see lexicalSQL.
+//
+// This is the half that finds what vector search structurally cannot — an
+// exact CPV code, a notice reference, a buyer's name, a rare acronym. Dense
+// embeddings map those onto whatever they most resemble; a lexical index
+// matches them.
+//
+// The 'simple' text-search configuration matches the one the generated column
+// was built with in the ingestion migration; using a different one here would
+// silently stop matching.
+func (r *TenderRepo) LexicalSearch(ctx context.Context, q tender.LexicalQuery, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
+	sql, args := lexicalSQL(q, filters, limit)
+	if sql == "" {
+		return nil, nil
+	}
+	return r.queryScoredTenders(ctx, "lexical search", sql, args)
 }
 
 // FindByCPVPrefixes returns tenders whose primary or any secondary CPV is

@@ -216,3 +216,98 @@ func TestCPVPrefixRanking_NoCodesProducesNoPredicate(t *testing.T) {
 		t.Errorf("args = %v, want none bound when there are no codes to match", b.args)
 	}
 }
+
+// lexicalSQL backs LexicalSearch (Task 16): whether the CPV-label weight
+// class (migration 0008) is part of the lexical match is a toggle,
+// tender.LexicalQuery.ExpandCPVLabels, and these tests pin its SQL shape down
+// directly, without a live database — the same way cpvPrefixRanking's tests
+// above do, and matchCodesSQL's in cpv_lexicon_internal_test.go.
+
+func TestLexicalSQL_ExpansionOnMatchesTheWholeVector(t *testing.T) {
+	sql, _ := lexicalSQL(tender.LexicalQuery{Text: "pulizie", ExpandCPVLabels: true}, tender.Filters{}, 20)
+	if strings.Contains(sql, "ts_filter") {
+		t.Errorf("SQL narrows the vector with expansion ON:\n%s", sql)
+	}
+	if !strings.Contains(sql, "t.search_vector @@ websearch_to_tsquery('simple'") {
+		t.Errorf("SQL missing the full-vector match:\n%s", sql)
+	}
+}
+
+func TestLexicalSQL_ExpansionOffDropsTheLabelWeightClass(t *testing.T) {
+	// The labels live inside search_vector, so an unmodified match picks them up
+	// unconditionally — the toggle only means something if it narrows.
+	sql, _ := lexicalSQL(tender.LexicalQuery{Text: "pulizie", ExpandCPVLabels: false}, tender.Filters{}, 20)
+	if !strings.Contains(sql, "ts_filter(t.search_vector, '{a,b,d}')") {
+		t.Errorf("SQL does not drop weight class C with expansion OFF:\n%s", sql)
+	}
+}
+
+func TestLexicalSQL_KeepsTheBareCodeMatchableWhenExpansionIsOff(t *testing.T) {
+	// cpv and cpv_labels share weight class C, so dropping C would also stop the
+	// bare 8-digit code from matching — and an exact code is exactly what the
+	// lexical arm exists to answer.
+	sql, _ := lexicalSQL(tender.LexicalQuery{Text: "45233120", ExpandCPVLabels: false}, tender.Filters{}, 20)
+	if !strings.Contains(sql, "t.cpv = ") && !strings.Contains(sql, "t.cpv LIKE ") {
+		t.Errorf("SQL has no direct cpv arm, so an exact code stops matching with expansion off:\n%s", sql)
+	}
+}
+
+// The direct t.cpv arm must be scoped to expansion-off ONLY. With expansion
+// on, search_vector's weight class C already carries the code (migration 0008
+// sets weight C from the cpv column together with cpv_labels), so an
+// unconditional extra arm here would not be wrong, exactly, but would make the
+// OFF path's SQL indistinguishable from a bug that always adds it — this pins
+// the arm to the branch that actually needs it.
+func TestLexicalSQL_ExpansionOnHasNoRedundantCPVArm(t *testing.T) {
+	sql, _ := lexicalSQL(tender.LexicalQuery{Text: "45233120", ExpandCPVLabels: true}, tender.Filters{}, 20)
+	if strings.Contains(sql, "t.cpv = ") || strings.Contains(sql, "t.cpv LIKE ") {
+		t.Errorf("SQL has a direct t.cpv arm with expansion ON, want none — search_vector already covers the code:\n%s", sql)
+	}
+}
+
+// A row matching ONLY via the direct t.cpv arm (no text overlap in
+// title/buyer/description) must not sort behind every other candidate: with
+// expansion off, ts_rank_cd against the narrowed vector is 0 for such a row
+// (the code lexeme lived in the now-dropped weight class C), so without an
+// explicit rank contribution an exact-code match — the one case this
+// retriever exists to answer — ties at the bottom with every non-match and is
+// ordered only by recency. Mirrors the trigram arm's own
+// GREATEST(rank, similarity(...)) pattern a few lines below in lexicalSQL.
+func TestLexicalSQL_BareCodeMatchEarnsARankContribution(t *testing.T) {
+	sql, _ := lexicalSQL(tender.LexicalQuery{Text: "45233120", ExpandCPVLabels: false}, tender.Filters{}, 20)
+	if !strings.Contains(sql, "GREATEST(") {
+		t.Fatalf("SQL has no GREATEST rank combinator:\n%s", sql)
+	}
+	// The RANK clause (before "AS relevance") must itself reference the cpv
+	// equality, not just the WHERE clause — widening WHERE without widening
+	// rank leaves the row matchable but effectively unranked.
+	rankClause := sql[:strings.Index(sql, "AS relevance")]
+	if !strings.Contains(rankClause, "t.cpv = ") {
+		t.Errorf("rank clause = %q, want it to reference t.cpv so an exact-code-only match outranks a zero-relevance tie", rankClause)
+	}
+}
+
+func TestLexicalSQL_EmptyTextProducesNoStatement(t *testing.T) {
+	sql, args := lexicalSQL(tender.LexicalQuery{Text: "   "}, tender.Filters{}, 20)
+	if sql != "" || len(args) != 0 {
+		t.Errorf("lexicalSQL = %q / %v, want empty for blank text", sql, args)
+	}
+}
+
+func TestLexicalSQL_StillAppliesTheFilters(t *testing.T) {
+	// Both retrievers must pass through the same authoritative Postgres filter;
+	// a narrowing that skipped it would return rows the caller excluded.
+	sql, args := lexicalSQL(tender.LexicalQuery{Text: "pulizie"}, tender.Filters{Countries: []string{"IT"}}, 20)
+	if !strings.Contains(sql, "t.country IN (") {
+		t.Errorf("SQL lost the country filter:\n%s", sql)
+	}
+	var sawIT bool
+	for _, a := range args {
+		if a == "IT" {
+			sawIT = true
+		}
+	}
+	if !sawIT {
+		t.Errorf("args = %v, want IT recorded", args)
+	}
+}

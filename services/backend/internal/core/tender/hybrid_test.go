@@ -611,8 +611,8 @@ func TestWithDefaults_LeavesTheCPVTogglesAlone(t *testing.T) {
 	if r.CPVBoost > 1 {
 		t.Errorf("CPVBoost = %v, want <=1 (off) for a zero-value Ranking", r.CPVBoost)
 	}
-	// …while DefaultRanking, which production uses, turns index expansion AND
-	// the CPVBoost multiplier on, but leaves the CPV retrieval arm itself off.
+	// …while DefaultRanking, which production uses, turns the CPVBoost
+	// multiplier on, but leaves the CPV retrieval arm AND index expansion off.
 	// Task 14 measured the arm (CPVWeight > 0) against the live eval corpus at
 	// three prefix depths and every one scored below the two-arm baseline,
 	// with its four target cross-language cells still stuck at 0.0000. Task 15
@@ -622,14 +622,18 @@ func TestWithDefaults_LeavesTheCPVTogglesAlone(t *testing.T) {
 	// retrieval) beat it. See DefaultRanking's CPVWeight comment for the full
 	// comparison and task-14-report.md for the harness output. CPVIndexExpanded
 	// is a third, separately-measured signal (it widens the lexical arm's own
-	// match, rather than adding a retrieval arm or a multiplier) and is
-	// unaffected by either finding.
+	// match, rather than adding a retrieval arm or a multiplier); Task 16 wired
+	// it into lexicalSQL and measured all four {CPVWeight, CPVIndexExpanded}
+	// combinations — index expansion moved NONE of the four target cells off
+	// 0.0000 in any of them, and cost real ndcg/mrr on the same-language
+	// diagonal when on alone, so it ships off too. See DefaultRanking's
+	// CPVIndexExpanded comment and task-16-report.md for the full comparison.
 	d := DefaultRanking()
 	if d.CPVWeight != 0 {
 		t.Errorf("DefaultRanking.CPVWeight = %v, want 0 — the retrieval arm made every metric worse both times it was measured", d.CPVWeight)
 	}
-	if !d.CPVIndexExpanded {
-		t.Error("DefaultRanking.CPVIndexExpanded = false, want true — production still uses index expansion")
+	if d.CPVIndexExpanded {
+		t.Error("DefaultRanking.CPVIndexExpanded = true, want false — Task 16 measured it moving none of the four target cells and costing same-language ndcg/mrr")
 	}
 	if d.CPVBoost <= 1 {
 		t.Errorf("DefaultRanking.CPVBoost = %v, want >1 — the post-fusion multiplier beat baseline and ships enabled", d.CPVBoost)

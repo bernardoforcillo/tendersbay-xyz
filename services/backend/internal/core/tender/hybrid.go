@@ -249,6 +249,14 @@ type Ranking struct {
 	// before either is left on.
 	//
 	// False means off, and like CPVWeight that is meaningful, not unset.
+	//
+	// Measured by Task 16 (lexicalSQL in tender_search.go honours it — see
+	// DefaultRanking for the four-combination comparison): it moved NONE of
+	// the four target cross-language cells off 0.0000 and cost real ndcg/mrr
+	// on the same-language diagonal, so it ships off. The mechanism is proven
+	// correct at the data layer (Task 15) but the match strategy — an ANDed,
+	// unstemmed websearch_to_tsquery against official CPV taxonomy wording —
+	// cannot exploit it for a natural-language query; see DefaultRanking.
 	CPVIndexExpanded bool
 
 	// CPVBoost is a STRUCTURALLY DIFFERENT way of using the same CPV signal:
@@ -341,8 +349,66 @@ func DefaultRanking() Ranking {
 		// rank noise no amount of ordering or window-widening fixes — never
 		// runs. See task-14-report.md (Task 14 run) and task-14-report.md's
 		// Task 15 section (this decision) for the full harness output.
+		//
+		// Task 16 wired CPVIndexExpanded into lexicalSQL (tender_search.go) —
+		// before this task the field existed but nothing read it, so every prior
+		// run above measured it as a no-op regardless of its value. This is the
+		// FIRST run where it does anything, and it was measured against all four
+		// combinations of {CPVWeight, CPVIndexExpanded} the table in task-16's
+		// brief specifies, against the same 45-query harness:
+		//
+		//   (0,    false) recall@20 0.6315 / ndcg 0.5004 / mrr 0.4983 — the
+		//                 pre-Phase-1 baseline, reproduced BYTE-FOR-BYTE (not
+		//                 just within tolerance) against testdata/baseline.json
+		//                 once lexicalSQL's bare-code arm carried its own rank
+		//                 contribution (see the GREATEST(...) fix in
+		//                 tender_search.go and TestHarness_NoRegressionAgainstBaseline
+		//                 passing outright — no regressions listed at all).
+		//   (0.4,  false) recall@20 0.5778 / ndcg 0.4412 / mrr 0.4354 — the
+		//                 retrieval arm alone, confirming Task 14/15 a third time.
+		//   (0,    true)  recall@20 0.6389 / ndcg 0.4764 / mrr 0.4538 — index
+		//                 expansion alone.
+		//   (0.4,  true)  recall@20 0.5981 / ndcg 0.4427 / mrr 0.4275 — both.
+		//
+		// In EVERY combination the four target cells (it→de, fr→de, nl→de,
+		// pl→de) stayed at EXACTLY 0.0000 — index expansion moved zero of them,
+		// which is the opposite of the phase's goal (see the CPVIndexExpanded
+		// field doc). Root cause, confirmed directly against the eval DB
+		// (task-16-report.md has the full session): websearch_to_tsquery ANDs
+		// every word in a multi-word query, the 'simple' text-search config does
+		// no stemming or diacritic folding, and an official CPV taxonomy label
+		// ("Building-cleaning services") is worded nothing like a natural query
+		// ("pulizie uffici" — Italian for "cleaning offices"; "uffici" appears in
+		// NO CPV label for that category, in any language). cpv_labels was
+		// verified present and correct (1871 chars, includes the Italian label
+		// "Servizi di pulizia di edifici") on the exact German tender
+		// it→de needs — the data is right, the match strategy cannot use it.
+		// This is a genuinely different failure from "not indexed" and would
+		// need query-side work (per-word OR, stemming/unaccenting, or a
+		// synonym bridge) to fix — out of scope for a toggle that only decides
+		// WHICH weight classes participate in an unchanged match strategy.
+		//
+		// (0, true) also cost real ndcg/mrr versus baseline (-0.024 / -0.045)
+		// while gaining nothing on the target cells — the dilution risk flagged
+		// before this task ran: cpv+cpv_labels is a large fraction of each
+		// eval tender's indexed text (no description in this corpus), so it
+		// competes with title matches on the SAME-language diagonal even where
+		// it does nothing cross-language (it→it ndcg 0.6474→0.5736, mrr
+		// 0.6667→0.5278; en→en ndcg 0.8272→0.7668, mrr 0.8571→0.7619). Shipped
+		// DISABLED: gains nothing measurable, costs measurably. See
+		// task-16-report.md for the full four-report comparison.
+		//
+		// One more thing worth naming: HEAD, on the branch, as this task started
+		// — before lexicalSQL read the toggle at all — was ALREADY silently
+		// regressed relative to testdata/baseline.json, by this exact (0, true)
+		// amount. Migration 0008 (Task 15) added cpv_labels to search_vector's
+		// weight class C unconditionally; with nothing reading ExpandCPVLabels
+		// yet, EVERY lexical search always matched the full vector, so the
+		// dilution above was already live in production, just unmeasured. Wiring
+		// the toggle and shipping it off does not merely avoid a new regression —
+		// it restores the byte-for-byte baseline that had quietly drifted.
 		CPVWeight:        0,
-		CPVIndexExpanded: true,
+		CPVIndexExpanded: false,
 		// CPVBoost 1.15 — see the CPVWeight comment above for the full
 		// comparison against the retrieval-arm alternative. Shipped ENABLED:
 		// this is the one CPV-signal knob in this struct whose zero-ish value
