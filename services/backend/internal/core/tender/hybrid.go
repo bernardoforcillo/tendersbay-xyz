@@ -468,7 +468,11 @@ func (r Ranking) withDefaults() Ranking {
 // Both retrievers return tenders that have already passed the authoritative
 // Postgres filter — the vector store's own pre-filter narrows the search but
 // never decides what is allowed through.
-func (s *Service) searchHybrid(ctx context.Context, query string, filters Filters, sortBy SortOrder, limit, offset int) (SearchOutput, error) {
+//
+// suppressed are CPV codes the caller does not want inferred (see
+// SearchParams.SuppressedCPV) — passed straight through to cpvCandidates,
+// which is where the actual filtering happens.
+func (s *Service) searchHybrid(ctx context.Context, query string, filters Filters, sortBy SortOrder, limit, offset int, suppressed []string) (SearchOutput, error) {
 	// Retrieve one past the end of the requested page so has_more can be
 	// answered without a second COUNT query.
 	want := offset + limit + 1
@@ -485,7 +489,7 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 	// cpvCandidates. cpvArm is only non-nil when the retrieval arm (CPVWeight)
 	// is on; cpvMatches is used both for AppliedCPV below and, inside fuse, for
 	// the CPVBoost multiplier.
-	cpvArm, cpvMatches := s.cpvCandidates(ctx, query, filters)
+	cpvArm, cpvMatches := s.cpvCandidates(ctx, query, filters, suppressed)
 
 	mode := ModeHybrid
 	switch {

@@ -153,7 +153,14 @@ const cpvArmWindow = maxWindow
 //
 // The matches are returned even when the fetch failed: the inference itself
 // succeeded, and the UI should still show what the server understood.
-func (s *Service) cpvCandidates(ctx context.Context, query string, filters Filters) ([]ScoredTender, []CPVMatch) {
+//
+// suppressed are codes the caller does not want inferred — the user removed
+// that chip on an earlier request. Filtered in here, immediately after
+// MatchCodes returns, and before the codes reach EITHER consumer: the
+// (disabled) retrieval arm's fetch and the AppliedCPV/CPVBoost reporting
+// path both key off matches, so filtering once here is what keeps a
+// suppressed code from being re-fetched OR re-reported through either route.
+func (s *Service) cpvCandidates(ctx context.Context, query string, filters Filters, suppressed []string) ([]ScoredTender, []CPVMatch) {
 	r := s.cfg.Ranking
 	if s.lexicon == nil || (r.CPVWeight <= 0 && r.CPVBoost <= 1) {
 		// Neither consumer of the CPV signal is switched on: resolving codes
@@ -164,6 +171,26 @@ func (s *Service) cpvCandidates(ctx context.Context, query string, filters Filte
 
 	matches, err := s.lexicon.MatchCodes(ctx, query, maxCPVCodes)
 	if err != nil || len(matches) == 0 {
+		return nil, nil
+	}
+
+	if len(suppressed) > 0 {
+		skip := make(map[string]bool, len(suppressed))
+		for _, code := range suppressed {
+			skip[code] = true
+		}
+		kept := make([]CPVMatch, 0, len(matches))
+		for _, m := range matches {
+			if !skip[m.Code] {
+				kept = append(kept, m)
+			}
+		}
+		matches = kept
+	}
+	if len(matches) == 0 {
+		// Every resolved code was suppressed, so there is nothing left for the
+		// arm to fetch — and reporting the suppressed codes back as AppliedCPV
+		// would re-render the very chips the user just removed.
 		return nil, nil
 	}
 

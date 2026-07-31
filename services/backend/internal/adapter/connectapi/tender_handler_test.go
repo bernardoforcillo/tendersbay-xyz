@@ -52,6 +52,15 @@ func (f *fakeRepo) RecentTenderRefs(context.Context, int) ([]tender.TenderRef, e
 	return []tender.TenderRef{{ID: "1", Lastmod: "2026-01-01T00:00:00Z"}}, nil
 }
 
+// fakeLexicon is a settable double for tender.CPVLexicon — it always
+// returns its canned matches and no error, mirroring the always-succeeds
+// contract every other fake in this file gives its own narrow port.
+type fakeLexicon struct{ matches []tender.CPVMatch }
+
+func (f fakeLexicon) MatchCodes(context.Context, string, int) ([]tender.CPVMatch, error) {
+	return f.matches, nil
+}
+
 type fakeKB struct{}
 
 func (fakeKB) EmbedQuery(context.Context, string) ([]float32, error) {
@@ -151,6 +160,59 @@ func TestSearchTenders_RejectsInvalidDeadlineRangeAsInvalidArgument(t *testing.T
 	var connectErr *connect.Error
 	if !errors.As(err, &connectErr) || connectErr.Code() != connect.CodeInvalidArgument {
 		t.Errorf("error = %v, want a connect.Error with CodeInvalidArgument", err)
+	}
+}
+
+// TestSearchTenders_ReportsAppliedCPVToTheClient proves cpvMatchesToProto's
+// mapping end to end: a query the lexicon resolves to a code must reach the
+// wire response with that code, its label and its language — a signal the
+// user can't see is one the UI can't offer to undo.
+func TestSearchTenders_ReportsAppliedCPVToTheClient(t *testing.T) {
+	repo := &fakeRepo{}
+	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, nil, tender.Config{
+		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 100, RateWindow: time.Minute},
+		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 100, RateWindow: time.Minute},
+		Ranking:    tender.DefaultRanking(),
+	}).WithCPVLexicon(fakeLexicon{matches: []tender.CPVMatch{
+		{Code: "90919200", Lang: "it", Label: "Servizi di pulizia di uffici", Score: 0.9},
+	}})
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+
+	res, err := h.SearchTenders(context.Background(), connect.NewRequest(&tenderv1.SearchTendersRequest{
+		Query: "pulizie uffici", Limit: 10,
+	}))
+	if err != nil {
+		t.Fatalf("SearchTenders: %v", err)
+	}
+
+	if len(res.Msg.AppliedCpv) != 1 {
+		t.Fatalf("AppliedCpv = %+v, want one match — the UI cannot let the user undo what it cannot see", res.Msg.AppliedCpv)
+	}
+	got := res.Msg.AppliedCpv[0]
+	if got.Code != "90919200" || got.Label != "Servizi di pulizia di uffici" || got.Language != "it" {
+		t.Errorf("AppliedCpv[0] = %+v, want the code, its label and its language", got)
+	}
+}
+
+// TestSearchTenders_AppliedCPVIsEmptyNotNilWithoutALexicon proves the
+// empty-slice-not-nil house rule (see tender.page) also holds for AppliedCpv:
+// the field reaches JSON, where nil and [] read differently to a client.
+func TestSearchTenders_AppliedCPVIsEmptyNotNilWithoutALexicon(t *testing.T) {
+	repo := &fakeRepo{}
+	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, nil, tender.Config{
+		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 100, RateWindow: time.Minute},
+		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 100, RateWindow: time.Minute},
+	})
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+
+	res, err := h.SearchTenders(context.Background(), connect.NewRequest(&tenderv1.SearchTendersRequest{
+		Query: "pulizie", Limit: 10,
+	}))
+	if err != nil {
+		t.Fatalf("SearchTenders: %v", err)
+	}
+	if res.Msg.AppliedCpv == nil {
+		t.Error("AppliedCpv is nil, want an empty slice")
 	}
 }
 

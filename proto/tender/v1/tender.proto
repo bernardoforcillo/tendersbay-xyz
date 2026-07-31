@@ -38,6 +38,29 @@ message SearchTendersRequest {
   // actionable first), "published" (newest first), "value" (largest first).
   // "relevance" is meaningless without a query and falls back to "published".
   string sort = 6;
+  // ISO 639-1 language of the query text ("it", "de"), taken from the caller's
+  // UI locale. Used to pick the stemming configuration for the keyword
+  // retriever. Empty is valid and means "match unstemmed only", which is
+  // today's behaviour for every caller.
+  //
+  // Populated by the frontend from i18n.language's leading subtag; the server
+  // ignores any value it has no configuration for rather than failing, since an
+  // unknown language is a client bug and losing the whole search over it would
+  // be a worse answer than an unstemmed match.
+  //
+  // Forward declaration: Phase 2 threads this into SearchParams. Nothing reads
+  // it yet.
+  string language = 7;
+  // CPV codes the client does not want inferred from this query.
+  //
+  // Removing an inferred code cannot be a purely client-side act: the server
+  // resolves it from the same text on every request, so it would reappear on the
+  // next page. The exclusion therefore travels with the request.
+  //
+  // Codes only, never a free-text exclusion: the value is compared against what
+  // the lexicon resolved, so an unknown code is simply never matched and costs
+  // nothing.
+  repeated string suppressed_cpv = 8;
 }
 
 message TenderFilters {
@@ -90,11 +113,54 @@ message SearchTendersResponse {
   repeated FacetCount country_facets = 7;
   repeated FacetCount status_facets = 8;
   repeated FacetCount cpv_division_facets = 9; // keyed by 2-digit CPV division
+  // CPV codes the server inferred from the query text, with the label that
+  // matched. Returned so the UI can show what was understood and let the user
+  // remove it — the same reason applied_filters is returned.
+  //
+  // Unlike applied_filters these NARROWED nothing: the CPV signal is a ranking
+  // boost, so a wrong match reorders the page rather than emptying it.
+  repeated CpvMatch applied_cpv = 10;
+  // Signals read out of the query text and applied as ranking boosts rather than
+  // filters. Distinct from applied_filters precisely because they do not narrow
+  // the result set: the UI offers to promote them to real filters, it does not
+  // report them as already applied.
+  //
+  // Forward declaration: populated from a later phase (Phase 3); currently
+  // always unset (nil), which is the correct wire representation of "nothing
+  // inferred".
+  InferredSignals inferred = 11;
 }
 
 message FacetCount {
   string value = 1;
   int32 count = 2;
+}
+
+// CpvMatch is one CPV code a query resolved to.
+//
+// A CPV code means the same thing in all 24 official EU languages, which is what
+// makes it the bridge for cross-language search: a query in Italian resolves to a
+// code that a German notice also carries.
+message CpvMatch {
+  string code = 1;     // 8 digits, no check digit
+  string label = 2;    // the official label that matched, already localised data
+  string language = 3; // ISO 639-1 of that label — may differ from the query's
+  double score = 4;    // relative match strength; only the ordering is meaningful
+}
+
+// InferredSignals are constraints the server read out of the query text and
+// applied as ranking boosts, NOT as filters.
+//
+// Kept separate from TenderFilters for exactly that reason: a filter narrows and
+// can empty a page, a boost only reorders. The UI presents these as an offer
+// ("only Germany") the user may promote to a real filter, never as something
+// already applied.
+//
+// Forward declaration: no producer populates this message yet (Phase 3).
+message InferredSignals {
+  string country = 1;       // alpha-2; empty when no full country name was recognised
+  string country_label = 2; // the name as it appeared in the query, for the chip
+  string buyer = 3;         // buyer name matched by trigram; empty when none
 }
 
 message TenderResult {

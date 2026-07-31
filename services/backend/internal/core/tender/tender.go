@@ -312,8 +312,13 @@ type SearchParams struct {
 	// client could actually bid on.
 	ParseQuery bool
 	// Sort selects the result ordering; the zero value means relevance.
-	Sort          SortOrder
-	Limit         int
+	Sort  SortOrder
+	Limit int
+	// SuppressedCPV are codes the caller does not want inferred, because the
+	// user removed the chip for them. Client-supplied because the server
+	// would otherwise resolve the same code from the same text on the next
+	// page — see cpvCandidates.
+	SuppressedCPV []string
 	Offset        int
 	Authenticated bool
 	RateLimitKey  string
@@ -403,7 +408,7 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 		out, err := s.searchByFiltersOnly(ctx, filters, p.Sort, limit, offset)
 		return withApplied(out, err, filters, "")
 	}
-	out, err := s.searchHybrid(ctx, parsed.Text, filters, p.Sort, limit, offset)
+	out, err := s.searchHybrid(ctx, parsed.Text, filters, p.Sort, limit, offset, p.SuppressedCPV)
 	return withApplied(out, err, filters, parsed.Text)
 }
 

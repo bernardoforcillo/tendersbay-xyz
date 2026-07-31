@@ -58,7 +58,7 @@ func TestCPVCandidates_ResolvesCodesThenFetchesTendersCarryingThem(t *testing.T)
 	repo := &cpvArmFakeRepo{byCPV: scored("de-1", "fr-1")}
 	svc := &Service{repo: repo, lexicon: lex, cfg: Config{Ranking: cpvArmTestRanking()}}
 
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie uffici", Filters{})
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie uffici", Filters{}, nil)
 
 	if !equalIDs(got, "de-1", "fr-1") {
 		t.Errorf("arm = %v, want de-1 and fr-1", ids(got))
@@ -90,7 +90,7 @@ func TestCPVCandidates_NilLexiconContributesNothing(t *testing.T) {
 	// The lexicon is optional in exactly the way EmbeddingCache is: a Service
 	// without one must behave as it did before the arm existed.
 	svc := &Service{repo: &cpvArmFakeRepo{}, cfg: Config{Ranking: cpvArmTestRanking()}}
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{})
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, nil)
 	if got != nil || matches != nil {
 		t.Errorf("arm = %v / %v, want nil for a Service with no lexicon", ids(got), matches)
 	}
@@ -101,7 +101,7 @@ func TestCPVCandidates_ALexiconFailureIsSwallowed(t *testing.T) {
 	// search that lexical and dense can answer between them.
 	lex := &cpvArmFakeLexicon{err: errors.New("relation cpv_terms does not exist")}
 	svc := &Service{repo: &cpvArmFakeRepo{}, lexicon: lex, cfg: Config{Ranking: cpvArmTestRanking()}}
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{})
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, nil)
 	if got != nil || matches != nil {
 		t.Errorf("arm = %v / %v, want nil after a lexicon error", ids(got), matches)
 	}
@@ -115,7 +115,7 @@ func TestCPVCandidates_ARepoFailureStillReportsWhatWasUnderstood(t *testing.T) {
 	repo := &cpvArmFakeRepo{byCPVErr: errors.New("boom")}
 	svc := &Service{repo: repo, lexicon: lex, cfg: Config{Ranking: cpvArmTestRanking()}}
 
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{})
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, nil)
 	if got != nil {
 		t.Errorf("arm = %v, want nil after a repo error", ids(got))
 	}
@@ -133,7 +133,7 @@ func TestCPVCandidates_SkippedEntirelyWhenBothCPVSignalsAreDisabled(t *testing.T
 		LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVWeight: 0, CPVBoost: 0,
 	}}}
 
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{})
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, nil)
 	if got != nil || matches != nil {
 		t.Errorf("arm = %v / %v, want nil with both CPVWeight 0 and CPVBoost 0", ids(got), matches)
 	}
@@ -153,7 +153,7 @@ func TestCPVCandidates_ArmOffButBoostOnResolvesMatchesWithoutFetching(t *testing
 		LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVWeight: 0, CPVBoost: 1.5,
 	}}}
 
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie uffici", Filters{})
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie uffici", Filters{}, nil)
 	if got != nil {
 		t.Errorf("arm = %v, want nil — CPVBoost must not trigger a second retrieval", ids(got))
 	}
@@ -165,12 +165,62 @@ func TestCPVCandidates_ArmOffButBoostOnResolvesMatchesWithoutFetching(t *testing
 	}
 }
 
+// TestCPVCandidates_SkipsSuppressedCodes proves a suppressed code is filtered
+// BEFORE it reaches either consumer of the resolved matches: the (here,
+// deliberately turned on) retrieval fetch below, and the reported matches
+// slice — checked together because filtering only one of the two would still
+// let a removed chip reappear through the other route.
+func TestCPVCandidates_SkipsSuppressedCodes(t *testing.T) {
+	lex := &cpvArmFakeLexicon{matches: []CPVMatch{
+		{Code: "90919200", Label: "uffici"},
+		{Code: "90911200", Label: "edifici"},
+	}}
+	repo := &cpvArmFakeRepo{byCPV: scored("de-1")}
+	svc := &Service{repo: repo, lexicon: lex, cfg: Config{Ranking: cpvArmTestRanking()}}
+
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, []string{"90919200"})
+
+	if len(matches) != 1 || matches[0].Code != "90911200" {
+		t.Errorf("matches = %+v, want only the code that was not suppressed", matches)
+	}
+	// Both demo codes share the "9091" class prefix (see cpvHierarchyPrefix,
+	// and the worked example in TestCPVCandidates_ResolvesCodesThenFetchesTendersCarryingThem),
+	// so the single surviving match still yields a single-entry repo query —
+	// the suppressed code's prefix must never reach the fetch either.
+	if !equalStrings(repo.gotCodes, []string{"9091"}) {
+		t.Errorf("repo asked for %v, want only the kept code's class prefix", repo.gotCodes)
+	}
+	if got == nil {
+		t.Error("arm is empty, want the kept code still to retrieve")
+	}
+}
+
+// TestCPVCandidates_SuppressingEveryCodeReportsNothing exercises the
+// ACTUALLY SHIPPED configuration — DefaultRanking, CPVWeight 0 (retrieval arm
+// off), CPVBoost 1.15 (the post-fusion boost is the live consumer of these
+// matches, see hybrid.go's cpvBoost) — because that is the shape Task 18's
+// suppression chip removal has to work against in production, not the
+// (disabled) arm. Suppressing the query's only resolved code must report
+// nothing at all: reporting the suppressed code back as AppliedCPV would
+// re-render the very chip the user just removed, and letting it survive into
+// matches would still let cpvBoost re-apply the multiplier the user asked to
+// undo.
+func TestCPVCandidates_SuppressingEveryCodeReportsNothing(t *testing.T) {
+	lex := &cpvArmFakeLexicon{matches: []CPVMatch{{Code: "90919200", Label: "uffici"}}}
+	svc := &Service{repo: &cpvArmFakeRepo{}, lexicon: lex, cfg: Config{Ranking: DefaultRanking()}}
+
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, []string{"90919200"})
+	if got != nil || matches != nil {
+		t.Errorf("arm = %v / %v, want nil when every resolved code was suppressed", ids(got), matches)
+	}
+}
+
 func TestSearchHybrid_ReportsAppliedCPVAndFusesTheArm(t *testing.T) {
 	lex := &cpvArmFakeLexicon{matches: []CPVMatch{{Code: "90919200", Lang: "it", Label: "Servizi di pulizia di uffici"}}}
 	repo := &cpvArmFakeRepo{byCPV: scored("de-1")}
 	svc := &Service{repo: repo, kb: parseFakeKB{}, lexicon: lex, cfg: Config{Ranking: cpvArmTestRanking()}}
 
-	out, err := svc.searchHybrid(context.Background(), "pulizie uffici", Filters{}, SortRelevance, 20, 0)
+	out, err := svc.searchHybrid(context.Background(), "pulizie uffici", Filters{}, SortRelevance, 20, 0, nil)
 	if err != nil {
 		t.Fatalf("searchHybrid: %v", err)
 	}
@@ -202,7 +252,7 @@ func TestSearchHybrid_DefaultRankingAppliesTheBoostNotTheArm(t *testing.T) {
 	repo := &cpvArmFakeRepo{byCPV: scored("de-1")} // would only ever surface via the (disabled) arm
 	svc := &Service{repo: repo, kb: parseFakeKB{}, lexicon: lex, cfg: Config{Ranking: DefaultRanking()}}
 
-	out, err := svc.searchHybrid(context.Background(), "pulizie uffici", Filters{}, SortRelevance, 20, 0)
+	out, err := svc.searchHybrid(context.Background(), "pulizie uffici", Filters{}, SortRelevance, 20, 0, nil)
 	if err != nil {
 		t.Fatalf("searchHybrid: %v", err)
 	}
