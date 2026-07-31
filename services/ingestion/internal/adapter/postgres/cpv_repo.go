@@ -107,3 +107,52 @@ func (r *CPVRepo) CountTerms(ctx context.Context) (int, error) {
 	}
 	return n, nil
 }
+
+// recomputeLabelsSQL refills every tender's cpv_labels from the vocabulary.
+//
+// The WHERE clause skips rows whose labels are already correct, so a re-run after
+// an unchanged vocabulary touches nothing and the generated search_vector is not
+// pointlessly rebuilt for the whole table. That guarantee depends on
+// string_agg's ORDER BY (code, lang): string_agg's row order is otherwise
+// unspecified, and an unordered aggregate can concatenate the same label set
+// in a different sequence on every execution, which would make "IS DISTINCT
+// FROM" see a change that isn't one and rewrite the row anyway.
+const recomputeLabelsSQL = `
+UPDATE tenders.ingested_tenders t
+SET cpv_labels = derived.labels
+FROM (
+	SELECT t2.id,
+	       coalesce((
+	           SELECT string_agg(ct.label, ' ' ORDER BY ct.code, ct.lang)
+	           FROM tenders.cpv_terms ct
+	           WHERE ct.code = t2.cpv OR ct.code = ANY(t2.cpv_secondary)
+	       ), '') AS labels
+	FROM tenders.ingested_tenders t2
+) derived
+WHERE t.id = derived.id
+  AND t.cpv_labels IS DISTINCT FROM derived.labels
+`
+
+// RecomputeLabels refills cpv_labels across the whole tenders table and returns
+// how many rows changed.
+//
+// This is how a vocabulary revision reaches tenders that were already ingested:
+// the upsert only recomputes a row it is writing anyway, so without this a
+// re-seed would leave every existing tender carrying the old labels.
+//
+// It is deliberately one statement rather than a batched loop: it must be
+// all-or-nothing, since a half-updated table would make identical queries return
+// different results depending on which rows had been reached.
+func (r *CPVRepo) RecomputeLabels(ctx context.Context) (int64, error) {
+	res, err := r.db.Exec(ctx, recomputeLabelsSQL)
+	if err != nil {
+		return 0, fmt.Errorf("postgres: recompute cpv labels: %w", err)
+	}
+	n, err := res.RowsAffected()
+	if err != nil {
+		// Some drivers do not report this. The update succeeded either way, and
+		// failing over a missing count would be worse than reporting zero.
+		return 0, nil
+	}
+	return n, nil
+}

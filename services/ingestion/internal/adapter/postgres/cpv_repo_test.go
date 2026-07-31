@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/postgres"
@@ -106,5 +107,59 @@ func TestCountTerms_ReportsTheWholeVocabulary(t *testing.T) {
 	}
 	if after != before+1 {
 		t.Errorf("CountTerms after insert = %d, want %d — inserting one new row must advance the count by exactly one", after, before+1)
+	}
+}
+
+func TestRecomputeLabels_FillsLabelsFromTheVocabulary(t *testing.T) {
+	repo, sqlDB := testCPVRepo(t)
+	ctx := context.Background()
+	cleanupTerms(t, sqlDB, "99999904")
+	t.Cleanup(func() {
+		_, _ = sqlDB.Exec(`DELETE FROM tenders.ingested_tenders WHERE source = $1`, "test-cpv-labels")
+	})
+
+	if _, err := repo.UpsertTerms(ctx, []cpvdata.Row{
+		{Code: "99999904", Lang: "it", Label: "servizi di prova"},
+		{Code: "99999904", Lang: "de", Label: "testdienstleistungen"},
+	}); err != nil {
+		t.Fatalf("UpsertTerms: %v", err)
+	}
+
+	// Insert a tender directly with an EMPTY cpv_labels, as a row predating the
+	// vocabulary would be.
+	if _, err := sqlDB.Exec(`
+		INSERT INTO tenders.ingested_tenders (source, source_ref, title, status, cpv, cpv_labels)
+		VALUES ($1, $2, $3, 'open', $4, '')`,
+		"test-cpv-labels", "r-1", "Prova", "99999904"); err != nil {
+		t.Fatalf("insert tender: %v", err)
+	}
+
+	if _, err := repo.RecomputeLabels(ctx); err != nil {
+		t.Fatalf("RecomputeLabels: %v", err)
+	}
+
+	var labels string
+	if err := sqlDB.QueryRow(
+		`SELECT cpv_labels FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2`,
+		"test-cpv-labels", "r-1").Scan(&labels); err != nil {
+		t.Fatalf("read labels: %v", err)
+	}
+	for _, want := range []string{"servizi di prova", "testdienstleistungen"} {
+		if !strings.Contains(labels, want) {
+			t.Errorf("cpv_labels = %q, want it to contain %q — the bridge needs every language", labels, want)
+		}
+	}
+
+	// And the generated search_vector must now match a German word even though
+	// the tender's own text is entirely Italian. That is the bridge working.
+	var matches bool
+	if err := sqlDB.QueryRow(`
+		SELECT search_vector @@ websearch_to_tsquery('simple', 'testdienstleistungen')
+		FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2`,
+		"test-cpv-labels", "r-1").Scan(&matches); err != nil {
+		t.Fatalf("query vector: %v", err)
+	}
+	if !matches {
+		t.Error("search_vector does not match the German CPV label — index-side expansion is not reaching the vector")
 	}
 }

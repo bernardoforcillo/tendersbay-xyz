@@ -171,3 +171,56 @@ func TestCPVVocabularyMigrationUsesImmutableTSVector(t *testing.T) {
 		t.Error("0007 missing the (code, lang) primary key that makes the seed idempotent — without it, ON CONFLICT DO UPDATE in the seeder has no target and re-seeding duplicates rows")
 	}
 }
+
+func TestFilesEmbedsCPVLabelExpansionMigration(t *testing.T) {
+	entries, err := fs.ReadDir(migrations.Files, ".")
+	if err != nil {
+		t.Fatalf("ReadDir: %v", err)
+	}
+	var found bool
+	for _, e := range entries {
+		if e.Name() == "0008_cpv_label_expansion.up.sql" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("0008_cpv_label_expansion.up.sql not found in embedded migrations: %v", entries)
+	}
+}
+
+// TestCPVLabelExpansionRebuildsTheVectorImmutably guards the rebuilt
+// search_vector the same way TestHybridSearchMigrationUsesImmutableTSVector
+// guards the original: a STORED generated column may only call IMMUTABLE
+// functions. It also pins the weight class the labels land in, because moving
+// them to A or B would let a category label outrank a title match.
+func TestCPVLabelExpansionRebuildsTheVectorImmutably(t *testing.T) {
+	body, err := fs.ReadFile(migrations.Files, "0008_cpv_label_expansion.up.sql")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	sql := string(body)
+
+	for _, forbidden := range []string{"array_to_string", "unaccent"} {
+		if strings.Contains(sql, forbidden) {
+			t.Errorf("0008 calls %s, which is STABLE and cannot appear in a STORED generated column", forbidden)
+		}
+	}
+	for _, want := range []string{
+		"to_tsvector('simple', coalesce(title, ''))",
+		"to_tsvector('simple', coalesce(buyer_name, ''))",
+		"to_tsvector('simple', coalesce(cpv, '') || ' ' || coalesce(cpv_labels, ''))",
+		"to_tsvector('simple', coalesce(description, ''))",
+	} {
+		if !strings.Contains(sql, want) {
+			t.Errorf("0008 missing immutable tsvector expression %q", want)
+		}
+	}
+	// Dropping the column drops its index too; forgetting to recreate it turns
+	// every lexical search into a sequential scan with no error to notice.
+	if !strings.Contains(sql, "idx_ingested_tenders_search_vector") {
+		t.Error("0008 drops and rebuilds search_vector but never recreates its GIN index")
+	}
+	if !strings.Contains(sql, "setweight(to_tsvector('simple', coalesce(cpv, '') || ' ' || coalesce(cpv_labels, '')), 'C')") {
+		t.Error("0008 does not put cpv_labels in weight class C alongside the code")
+	}
+}

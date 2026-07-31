@@ -81,5 +81,15 @@ func run() int {
 		return 1
 	}
 	fmt.Printf("seeded %d rows; cpv_terms now holds %d\n", n, total)
+
+	// Existing tenders carry whatever labels the previous vocabulary produced —
+	// the upsert only recomputes a row it is writing. Without this step a
+	// re-seed would change nothing for anything already ingested.
+	changed, err := repo.RecomputeLabels(ctx)
+	if err != nil {
+		slog.Error("failed to recompute tender labels", "error", err)
+		return 1
+	}
+	fmt.Printf("recomputed cpv_labels on %d tenders\n", changed)
 	return 0
 }
