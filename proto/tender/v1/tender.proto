@@ -38,18 +38,16 @@ message SearchTendersRequest {
   // actionable first), "published" (newest first), "value" (largest first).
   // "relevance" is meaningless without a query and falls back to "published".
   string sort = 6;
-  // ISO 639-1 language of the query text ("it", "de"), taken from the caller's
-  // UI locale. Used to pick the stemming configuration for the keyword
-  // retriever. Empty is valid and means "match unstemmed only", which is
-  // today's behaviour for every caller.
+  // ISO 639-1 language of the query text ("it", "de"). Intended to be taken
+  // from the caller's UI locale (i18n.language's leading subtag) and used to
+  // pick the stemming configuration for the keyword retriever, so the server
+  // would ignore any value it has no configuration for rather than failing —
+  // an unknown language is a client bug, and losing the whole search over it
+  // would be a worse answer than an unstemmed match. Empty is valid and means
+  // "match unstemmed only", which is every caller's behaviour today.
   //
-  // Populated by the frontend from i18n.language's leading subtag; the server
-  // ignores any value it has no configuration for rather than failing, since an
-  // unknown language is a client bug and losing the whole search over it would
-  // be a worse answer than an unstemmed match.
-  //
-  // Forward declaration: Phase 2 threads this into SearchParams. Nothing reads
-  // it yet.
+  // Forward declaration: no caller populates this field yet, and nothing on
+  // the server reads it. Phase 2 threads this into SearchParams.
   string language = 7;
   // CPV codes the client does not want inferred from this query.
   //
