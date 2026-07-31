@@ -475,7 +475,8 @@
       "valueMax": "do {{max}}",
       "valueMin": "od {{min}}",
       "deadlineUntil": "uzávierka do {{date}}",
-      "undo": "Vymazať"
+      "undo": "Vymazať",
+      "remove": "Odstrániť {{chip}}"
     }
   },
   "today": {

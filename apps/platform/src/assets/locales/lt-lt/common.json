@@ -475,7 +475,8 @@
       "valueMax": "iki {{max}}",
       "valueMin": "nuo {{min}}",
       "deadlineUntil": "baigiasi iki {{date}}",
-      "undo": "Išvalyti"
+      "undo": "Išvalyti",
+      "remove": "Pašalinti {{chip}}"
     }
   },
   "today": {

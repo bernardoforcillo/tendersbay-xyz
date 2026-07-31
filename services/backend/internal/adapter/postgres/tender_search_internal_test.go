@@ -162,3 +162,119 @@ func TestNonEmpty_TrimsAndDropsBlanks(t *testing.T) {
 		t.Errorf("nonEmpty = %v, want [IT DE] trimmed", got)
 	}
 }
+
+// cpvPrefixRanking backs FindByCPVPrefixes' ordering fix (Task 14/15): a
+// tender's rank must follow the CALLER'S code order, not just recency. These
+// two tests pin the SQL shape down directly, without a live database — the
+// behaviour itself (does the database actually order rows this way) is
+// checked against a real one in TestFindByCPVPrefixes_* in tender_repo_test.go.
+func TestCPVPrefixRanking_MatchesBothPrimaryAndSecondaryCPV(t *testing.T) {
+	b := &argBuilder{}
+	predicate, rank := cpvPrefixRanking([]string{"9091", "45"}, b)
+
+	if !strings.Contains(predicate, "t.cpv LIKE") {
+		t.Errorf("predicate = %q, want a primary-CPV prefix match", predicate)
+	}
+	if !strings.Contains(predicate, "unnest(t.cpv_secondary)") {
+		t.Errorf("predicate = %q, want a secondary-CPV prefix match too", predicate)
+	}
+	if len(b.args) != 2 || b.args[0] != "9091%" || b.args[1] != "45%" {
+		t.Errorf("args = %v, want [9091%% 45%%] — one LIKE pattern per code, shared by its primary and secondary arm", b.args)
+	}
+	if !strings.HasPrefix(rank, "CASE ") || !strings.HasSuffix(rank, " END") {
+		t.Errorf("rank = %q, want a CASE…END expression", rank)
+	}
+}
+
+// The FIRST code the caller passed is the one the lexicon ranked highest
+// (cpvCandidates preserves MatchCodes' order), so it must resolve to the
+// LOWEST — i.e. best — CASE rank. Getting this backwards would silently
+// invert the fix: a tender matching only the query's weakest resolved code
+// would outrank one matching its best.
+func TestCPVPrefixRanking_RanksTheCallersFirstCodeBest(t *testing.T) {
+	b := &argBuilder{}
+	_, rank := cpvPrefixRanking([]string{"9091", "45", "72"}, b)
+
+	posBest := strings.Index(rank, "THEN 0")
+	posMid := strings.Index(rank, "THEN 1")
+	posWorst := strings.Index(rank, "THEN 2")
+	if posBest == -1 || posMid == -1 || posWorst == -1 {
+		t.Fatalf("rank = %q, want THEN 0, THEN 1 and THEN 2 (one per code)", rank)
+	}
+	if !(posBest < posMid && posMid < posWorst) {
+		t.Errorf("rank = %q, want THEN 0 before THEN 1 before THEN 2 — CASE evaluates WHENs in order, so this is what makes the caller's best-ranked code win", rank)
+	}
+}
+
+func TestCPVPrefixRanking_NoCodesProducesNoPredicate(t *testing.T) {
+	b := &argBuilder{}
+	predicate, rank := cpvPrefixRanking(nil, b)
+	if predicate != "" || rank != "" {
+		t.Errorf("predicate=%q rank=%q, want both empty for no codes — a non-empty predicate here would risk matching every tender", predicate, rank)
+	}
+	if len(b.args) != 0 {
+		t.Errorf("args = %v, want none bound when there are no codes to match", b.args)
+	}
+}
+
+// lexicalSQL matches the whole search_vector, unconditionally. Migration 0009
+// reverted the generated column to its pre-0008 shape (title/buyer_name/cpv/
+// description — no cpv_labels), so there is no longer a weight class to
+// conditionally widen or narrow into. A prior version of both this file and
+// lexicalSQL gated that with tender.LexicalQuery.ExpandCPVLabels and a
+// ts_filter(...)-based narrowing on the off path; both were removed after the
+// final whole-branch review found that the toggle's SHIPPED (off) path
+// defeated idx_ingested_tenders_search_vector in production — ts_filter sits
+// to the left of `@@`, so it is never the indexed expression, and the OR-chain
+// predicate around it degraded to a sequential scan of the whole table. See
+// migration 0009's header for the measured EXPLAIN plans. These tests pin the
+// plain, always-indexable shape down directly, without a live database — the
+// same way cpvPrefixRanking's tests above do.
+
+func TestLexicalSQL_MatchesTheWholeSearchVector(t *testing.T) {
+	sql, _ := lexicalSQL(tender.LexicalQuery{Text: "pulizie"}, tender.Filters{}, 20)
+	if strings.Contains(sql, "ts_filter") {
+		t.Errorf("SQL wraps the vector in ts_filter — that expression sits left of @@ and defeats idx_ingested_tenders_search_vector, degrading to a sequential scan:\n%s", sql)
+	}
+	if !strings.Contains(sql, "t.search_vector @@ websearch_to_tsquery('simple'") {
+		t.Errorf("SQL missing the plain, indexable full-vector match:\n%s", sql)
+	}
+}
+
+// cpv lives in search_vector's own weight class C (migration 0005/0009), so
+// an exact code matches through the plain vector match above without any
+// bespoke arm. A prior version of this function added a separate t.cpv arm
+// (with its own GREATEST(...) rank combinator) to compensate for a narrowed
+// vector that no longer exists — reintroducing it would be dead code at best
+// and a sign the vector got narrowed again at worst.
+func TestLexicalSQL_HasNoSeparateCPVArm(t *testing.T) {
+	sql, _ := lexicalSQL(tender.LexicalQuery{Text: "45233120"}, tender.Filters{}, 20)
+	if strings.Contains(sql, "t.cpv = ") || strings.Contains(sql, "t.cpv LIKE ") {
+		t.Errorf("SQL has a direct t.cpv arm, want none — search_vector's own weight class C already covers the code:\n%s", sql)
+	}
+}
+
+func TestLexicalSQL_EmptyTextProducesNoStatement(t *testing.T) {
+	sql, args := lexicalSQL(tender.LexicalQuery{Text: "   "}, tender.Filters{}, 20)
+	if sql != "" || len(args) != 0 {
+		t.Errorf("lexicalSQL = %q / %v, want empty for blank text", sql, args)
+	}
+}
+
+func TestLexicalSQL_StillAppliesTheFilters(t *testing.T) {
+	// Both retrievers must pass through the same authoritative Postgres filter;
+	// a narrowing that skipped it would return rows the caller excluded.
+	sql, args := lexicalSQL(tender.LexicalQuery{Text: "pulizie"}, tender.Filters{Countries: []string{"IT"}}, 20)
+	if !strings.Contains(sql, "t.country IN (") {
+		t.Errorf("SQL lost the country filter:\n%s", sql)
+	}
+	var sawIT bool
+	for _, a := range args {
+		if a == "IT" {
+			sawIT = true
+		}
+	}
+	if !sawIT {
+		t.Errorf("args = %v, want IT recorded", args)
+	}
+}

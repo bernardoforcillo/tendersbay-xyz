@@ -307,4 +307,56 @@ describe('useTenderSearch', () => {
     });
     expect(result.current.results).toEqual([fakeResult('1')]);
   });
+
+  it('exposes the inferred CPV codes as search metadata', async () => {
+    searchTenders.mockResolvedValue({
+      results: [fakeResult('1')],
+      hasMore: false,
+      appliedCpv: [
+        { code: '90919200', label: 'Servizi di pulizia di uffici', language: 'it', score: 0.9 },
+      ],
+    });
+
+    const { result } = renderHook(() => useTenderSearch());
+    await act(async () => {
+      await result.current.search('pulizie uffici');
+    });
+
+    expect(result.current.meta.appliedCpv).toEqual([
+      { code: '90919200', label: 'Servizi di pulizia di uffici', language: 'it', score: 0.9 },
+    ]);
+  });
+
+  it('threads suppressed CPV codes into the request and reuses them on loadMore', async () => {
+    // Removing a chip cannot un-infer the code: the server resolves it from the
+    // same text every time, so the exclusion has to travel with the request.
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('1')], hasMore: true });
+    const { result } = renderHook(() => useTenderSearch());
+    await act(async () => {
+      await result.current.search('pulizie', undefined, undefined, 'relevance', ['90919200']);
+    });
+    expect(searchTenders).toHaveBeenCalledWith({
+      query: 'pulizie',
+      filters: undefined,
+      limit: 20,
+      offset: 0,
+      workspaceId: '',
+      sort: 'relevance',
+      suppressedCpv: ['90919200'],
+    });
+
+    searchTenders.mockResolvedValueOnce({ results: [fakeResult('2')], hasMore: false });
+    await act(async () => {
+      await result.current.loadMore();
+    });
+    expect(searchTenders).toHaveBeenLastCalledWith({
+      query: 'pulizie',
+      filters: undefined,
+      limit: 20,
+      offset: 1,
+      workspaceId: '',
+      sort: 'relevance',
+      suppressedCpv: ['90919200'],
+    });
+  });
 });

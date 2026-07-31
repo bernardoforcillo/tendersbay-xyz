@@ -58,10 +58,21 @@ const upsertTenderSQL = `
 INSERT INTO tenders.ingested_tenders (
 	source, source_ref, title, description, buyer_name, buyer_id, status, procedure_type,
 	language, country, nuts, cpv, cpv_secondary, value, currency,
-	published_at, deadline, raw, version, history, first_seen_at, last_seen_at
+	published_at, deadline, raw, version, history, first_seen_at, last_seen_at,
+	cpv_labels
 ) VALUES (
 	$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::text[], $14, $15, $16, $17, $18::jsonb,
-	1, '[]'::jsonb, now(), now()
+	1, '[]'::jsonb, now(), now(),
+	-- Derived from the vocabulary rather than passed in: it consumes no
+	-- placeholder, so nothing after it renumbers, and it cannot drift out of step
+	-- with cpv/cpv_secondary the way a Go-side lookup could. ORDER BY (code,
+	-- lang) inside string_agg matters here for the same reason it matters in
+	-- RecomputeLabels: without it, the label order is unspecified and two
+	-- upserts of the identical cpv/cpv_secondary pair could legally produce a
+	-- different cpv_labels string, making an otherwise-no-op re-save look like
+	-- a change.
+	coalesce((SELECT string_agg(ct.label, ' ' ORDER BY ct.code, ct.lang) FROM tenders.cpv_terms ct
+	          WHERE ct.code = $12 OR ct.code = ANY($13::text[])), '')
 )
 ON CONFLICT (source, source_ref) DO UPDATE SET
 	title = EXCLUDED.title,
@@ -74,6 +85,8 @@ ON CONFLICT (source, source_ref) DO UPDATE SET
 	nuts = EXCLUDED.nuts,
 	cpv = EXCLUDED.cpv,
 	cpv_secondary = EXCLUDED.cpv_secondary,
+	cpv_labels = coalesce((SELECT string_agg(ct.label, ' ' ORDER BY ct.code, ct.lang) FROM tenders.cpv_terms ct
+	                       WHERE ct.code = EXCLUDED.cpv OR ct.code = ANY(EXCLUDED.cpv_secondary)), ''),
 	value = EXCLUDED.value,
 	currency = EXCLUDED.currency,
 	published_at = EXCLUDED.published_at,
@@ -163,7 +176,7 @@ UPDATE tenders.ingested_tenders SET indexed_at = now() WHERE id = $1
 // pgTextArray renders a Go string slice as a PostgreSQL array literal, e.g.
 // []string{"a", "b"} -> `{"a","b"}`. CPVSecondary crosses the database/sql
 // boundary as a single text parameter, cast to text[] in SQL (see
-// upsertTenderSQL's $12::text[]) rather than relying on driver-specific
+// upsertTenderSQL's $13::text[]) rather than relying on driver-specific
 // slice encoding.
 func pgTextArray(vals []string) string {
 	quoted := make([]string, len(vals))

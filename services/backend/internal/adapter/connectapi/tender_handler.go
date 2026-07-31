@@ -66,9 +66,15 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 		Filters: filters,
 		// This query is typed by a person into a search box, so the
 		// constraints buried in it are meant as constraints.
-		ParseQuery:    true,
-		Sort:          tender.ParseSortOrder(req.Msg.Sort),
-		Limit:         int(req.Msg.Limit),
+		ParseQuery: true,
+		Sort:       tender.ParseSortOrder(req.Msg.Sort),
+		Limit:      int(req.Msg.Limit),
+		// SuppressedCpv is honoured now, unlike req.Msg.Language (a forward
+		// declaration Phase 2 wires up — deliberately not read here yet):
+		// Task 18 needs removing an inferred CPV chip to actually stick on the
+		// next request, since the server resolves the same code from the same
+		// text every time otherwise.
+		SuppressedCPV: req.Msg.SuppressedCpv,
 		Offset:        int(req.Msg.Offset),
 		Authenticated: authed,
 		RateLimitKey:  rateLimitKey,
@@ -117,6 +123,7 @@ func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[
 		Degraded:          out.Mode.Degraded(),
 		AppliedFilters:    filtersToProto(out.AppliedFilters),
 		AppliedQuery:      out.AppliedQuery,
+		AppliedCpv:        cpvMatchesToProto(out.AppliedCPV),
 		CountryFacets:     facetsToProto(out.Facets.Countries),
 		StatusFacets:      facetsToProto(out.Facets.Statuses),
 		CpvDivisionFacets: facetsToProto(out.Facets.CPVDivisions),
@@ -128,6 +135,24 @@ func facetsToProto(counts []tender.FacetCount) []*tenderv1.FacetCount {
 	out := make([]*tenderv1.FacetCount, len(counts))
 	for i, c := range counts {
 		out[i] = &tenderv1.FacetCount{Value: c.Value, Count: int32(c.Count)}
+	}
+	return out
+}
+
+// cpvMatchesToProto maps the inferred CPV codes for the wire.
+//
+// Always a non-nil slice: the field reaches JSON, where nil and [] read
+// differently to a client, and the house rule on those paths is
+// empty-slice-not-nil (see tender.page).
+func cpvMatchesToProto(matches []tender.CPVMatch) []*tenderv1.CpvMatch {
+	out := make([]*tenderv1.CpvMatch, len(matches))
+	for i, m := range matches {
+		out[i] = &tenderv1.CpvMatch{
+			Code:     m.Code,
+			Label:    m.Label,
+			Language: m.Lang,
+			Score:    m.Score,
+		}
 	}
 	return out
 }

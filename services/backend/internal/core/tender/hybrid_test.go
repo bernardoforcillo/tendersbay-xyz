@@ -58,7 +58,7 @@ func TestFuse_RewardsAgreementBetweenRetrievers(t *testing.T) {
 	dense := scored("vecOnly", "y1", "agreed", "y2", "y3", "y4", "y5", "y6", "y7", "y8",
 		"y9", "y10", "y11", "y12", "y13", "y14", "y15", "y16", "y17", "lexOnly")
 
-	got := s.fuse(lexical, dense, now)
+	got := s.fuse(lexical, dense, nil, nil, now)
 	if got[0].ID != "agreed" {
 		t.Errorf("order = %v, want \"agreed\" first — it is the only tender both retrievers rank highly", ids(got)[:3])
 	}
@@ -76,7 +76,7 @@ func TestFuse_IgnoresRawScoresAndUsesRankOnly(t *testing.T) {
 	// Give "b" an enormous raw score. Its rank is still second, so it stays second.
 	dense[1].RelevanceScore = 1000
 
-	got := s.fuse(lexical, dense, now)
+	got := s.fuse(lexical, dense, nil, nil, now)
 	if !equalIDs(got, "a", "b") {
 		t.Errorf("order = %v, want [a b] — a raw score must not override rank", ids(got))
 	}
@@ -87,12 +87,12 @@ func TestFuse_WeightsShiftTheBalanceBetweenRetrievers(t *testing.T) {
 	lexical := scored("lex")
 	dense := scored("vec")
 
-	lexHeavy := fusionService(Ranking{LexicalWeight: 0.9, DenseWeight: 0.1}).fuse(lexical, dense, now)
+	lexHeavy := fusionService(Ranking{LexicalWeight: 0.9, DenseWeight: 0.1}).fuse(lexical, dense, nil, nil, now)
 	if lexHeavy[0].ID != "lex" {
 		t.Errorf("order = %v, want the lexical hit first when lexical is weighted up", ids(lexHeavy))
 	}
 
-	denseHeavy := fusionService(Ranking{LexicalWeight: 0.1, DenseWeight: 0.9}).fuse(lexical, dense, now)
+	denseHeavy := fusionService(Ranking{LexicalWeight: 0.1, DenseWeight: 0.9}).fuse(lexical, dense, nil, nil, now)
 	if denseHeavy[0].ID != "vec" {
 		t.Errorf("order = %v, want the vector hit first when dense is weighted up", ids(denseHeavy))
 	}
@@ -103,7 +103,7 @@ func TestFuse_WeightsShiftTheBalanceBetweenRetrievers(t *testing.T) {
 // RelevanceScore, so the scale is part of the contract.
 func TestFuse_NormalisesTopOfBothListsToOne(t *testing.T) {
 	s := fusionService(DefaultRanking())
-	got := s.fuse(scored("a"), scored("a"), time.Now())
+	got := s.fuse(scored("a"), scored("a"), nil, nil, time.Now())
 	if len(got) != 1 {
 		t.Fatalf("len(got) = %d, want 1", len(got))
 	}
@@ -123,7 +123,7 @@ func TestFuse_DemotesTendersThatCannotBeBidOn(t *testing.T) {
 	open := ScoredTender{Tender: Tender{ID: "open", Status: "open"}}
 
 	// The closed tender is the better TEXT match: first in both lists.
-	got := s.fuse([]ScoredTender{closed, open}, []ScoredTender{closed, open}, now)
+	got := s.fuse([]ScoredTender{closed, open}, []ScoredTender{closed, open}, nil, nil, now)
 	if got[0].ID != "open" {
 		t.Errorf("order = %v, want the open tender first despite ranking lower textually", ids(got))
 	}
@@ -138,7 +138,7 @@ func TestFuse_DemotesExpiredDeadlines(t *testing.T) {
 	expired := ScoredTender{Tender: Tender{ID: "expired", Status: "open", Deadline: &past}}
 	live := ScoredTender{Tender: Tender{ID: "live", Status: "open", Deadline: &future}}
 
-	got := s.fuse([]ScoredTender{expired, live}, []ScoredTender{expired, live}, now)
+	got := s.fuse([]ScoredTender{expired, live}, []ScoredTender{expired, live}, nil, nil, now)
 	if got[0].ID != "live" {
 		t.Errorf("order = %v, want the tender that can still be bid on first", ids(got))
 	}
@@ -151,7 +151,7 @@ func TestFuse_KeepsDemotedTendersInTheResults(t *testing.T) {
 	past := time.Now().Add(-24 * time.Hour)
 	expired := ScoredTender{Tender: Tender{ID: "expired", Status: "cancelled", Deadline: &past}}
 
-	got := s.fuse([]ScoredTender{expired}, nil, time.Now())
+	got := s.fuse([]ScoredTender{expired}, nil, nil, nil, time.Now())
 	if len(got) != 1 {
 		t.Fatalf("len(got) = %d, want the demoted tender still present", len(got))
 	}
@@ -170,7 +170,7 @@ func TestFuse_BoostsFreshlyPublishedTenders(t *testing.T) {
 	a := ScoredTender{Tender: Tender{ID: "stale", Status: "open", PublishedAt: &stale}}
 	b := ScoredTender{Tender: Tender{ID: "fresh", Status: "open", PublishedAt: &fresh}}
 
-	got := s.fuse([]ScoredTender{a, b}, []ScoredTender{b, a}, now)
+	got := s.fuse([]ScoredTender{a, b}, []ScoredTender{b, a}, nil, nil, now)
 	if got[0].ID != "fresh" {
 		t.Errorf("order = %v, want the freshly published tender to break the tie", ids(got))
 	}
@@ -182,9 +182,9 @@ func TestFuse_IsDeterministicForEqualScores(t *testing.T) {
 	s := fusionService(DefaultRanking())
 	now := time.Now()
 
-	first := ids(s.fuse(scored("c", "a", "b"), scored("a", "b", "c"), now))
+	first := ids(s.fuse(scored("c", "a", "b"), scored("a", "b", "c"), nil, nil, now))
 	for i := 0; i < 20; i++ {
-		if got := ids(s.fuse(scored("c", "a", "b"), scored("a", "b", "c"), now)); !equalStrings(got, first) {
+		if got := ids(s.fuse(scored("c", "a", "b"), scored("a", "b", "c"), nil, nil, now)); !equalStrings(got, first) {
 			t.Fatalf("order changed between identical calls: %v then %v", first, got)
 		}
 	}
@@ -205,8 +205,16 @@ func equalStrings(a, b []string) bool {
 // A Config built without a Ranking must still rank, not score everything zero.
 func TestRanking_ZeroValueFallsBackToDefaults(t *testing.T) {
 	got := Ranking{}.withDefaults()
-	if got != DefaultRanking() {
-		t.Errorf("withDefaults() = %+v, want %+v", got, DefaultRanking())
+	// CPVWeight and CPVBoost are the deliberate exception: their zero value is
+	// a real "off" setting, not an absent one, so withDefaults leaves them
+	// alone rather than inheriting DefaultRanking's — see
+	// TestWithDefaults_LeavesTheCPVTogglesAlone. Every other knob must still
+	// fall back to DefaultRanking's value, which this comparison still checks.
+	want := DefaultRanking()
+	want.CPVWeight = 0
+	want.CPVBoost = 0
+	if got != want {
+		t.Errorf("withDefaults() = %+v, want %+v", got, want)
 	}
 }
 
@@ -389,5 +397,236 @@ func TestSortedFacets_IsDeterministic(t *testing.T) {
 	// Highest count first, ties broken by value.
 	if first[0].Value != "c" || first[1].Value != "a" || first[2].Value != "b" {
 		t.Errorf("order = %+v, want c, then a and b by value, then d", first)
+	}
+}
+
+func TestFuse_CPVArmPromotesACodeMatchTheTextMissed(t *testing.T) {
+	// The cross-language case in miniature: "de-1" shares no lexeme with the
+	// query so the lexical arm never saw it, and it ranks poorly on the dense
+	// arm — but it carries the CPV code the query resolved to.
+	svc := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, CPVWeight: 0.4, RRFK: 60})
+	got := svc.fuse(scored("it-1"), scored("it-1", "de-1"), scored("de-1"), nil, time.Now())
+
+	if !equalIDs(got, "it-1", "de-1") {
+		t.Fatalf("order = %v, want it-1 then de-1", ids(got))
+	}
+	// Without the CPV arm de-1 would sit at rank 2 of one list only; with it, it
+	// also holds rank 1 of the CPV list.
+	withoutCPV := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(scored("it-1"), scored("it-1", "de-1"), nil, nil, time.Now())
+	if got[1].RelevanceScore <= withoutCPV[1].RelevanceScore {
+		t.Errorf("de-1 scored %v with the CPV arm and %v without; the arm must raise it",
+			got[1].RelevanceScore, withoutCPV[1].RelevanceScore)
+	}
+}
+
+func TestFuse_CPVArmNeverLowersAnyScore(t *testing.T) {
+	// FitThresholds (RelevanceHigh 0.75, RelevanceLow 0.4) are calibrated against
+	// this scale and read by computeFitTier. If enabling the arm could lower a
+	// score, results would silently reclassify from "strong" to "possible" —
+	// a regression in a feature this change does not touch.
+	lexical, dense := scored("a", "b", "c"), scored("b", "a", "d")
+	now := time.Now()
+
+	base := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(lexical, dense, nil, nil, now)
+	withArm := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, CPVWeight: 0.4, RRFK: 60}).
+		fuse(lexical, dense, scored("d", "c"), nil, now)
+
+	baseScore := map[string]float64{}
+	for _, r := range base {
+		baseScore[r.ID] = r.RelevanceScore
+	}
+	for _, r := range withArm {
+		if before, ok := baseScore[r.ID]; ok && r.RelevanceScore < before {
+			t.Errorf("%s scored %v with the CPV arm, down from %v — the arm must only add", r.ID, r.RelevanceScore, before)
+		}
+	}
+}
+
+func TestFuse_ZeroCPVWeightReproducesTheTwoArmResultExactly(t *testing.T) {
+	// The disable path has to be byte-identical, not merely similar: it is what
+	// lets the harness measure the arm's effect as a controlled difference, and
+	// what keeps every Ranking{} literal in the existing tests meaningful.
+	lexical, dense := scored("a", "b"), scored("b", "c")
+	now := time.Now()
+
+	off := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, CPVWeight: 0, RRFK: 60}).
+		fuse(lexical, dense, scored("c"), nil, now)
+	twoArm := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(lexical, dense, nil, nil, now)
+
+	if len(off) != len(twoArm) {
+		t.Fatalf("len = %d with CPVWeight 0, %d without the arm", len(off), len(twoArm))
+	}
+	for i := range off {
+		if off[i].ID != twoArm[i].ID || off[i].RelevanceScore != twoArm[i].RelevanceScore {
+			t.Errorf("position %d = %s/%v, want %s/%v", i, off[i].ID, off[i].RelevanceScore, twoArm[i].ID, twoArm[i].RelevanceScore)
+		}
+	}
+}
+
+func TestFuse_CPVOnlyResultStillScoresBelowAgreementOfBothRetrievers(t *testing.T) {
+	// A taxonomy match is weaker evidence than a text match: the category says
+	// what a notice is about, a title match says it is about exactly this.
+	svc := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, CPVWeight: 0.4, RRFK: 60})
+	got := svc.fuse(scored("text"), scored("text"), scored("code"), nil, time.Now())
+	if !equalIDs(got, "text", "code") {
+		t.Errorf("order = %v, want the lexical+dense agreement first", ids(got))
+	}
+}
+
+// The tests below exercise CPVBoost — Task 15's structural alternative to the
+// CPV retrieval arm (CPVWeight, tested above). Where the arm injects a FOURTH
+// ranked list into RRF, CPVBoost multiplies the score of a candidate lexical
+// or dense ALREADY found, when its own CPV matches a resolved code's
+// category. It shipped enabled (DefaultRanking.CPVBoost 1.15) because it beat
+// the baseline where the arm — even fixed — did not; see DefaultRanking's
+// CPVWeight comment for the full comparison.
+
+func TestFuse_CPVBoostRaisesOnlyTheMatchingCandidate(t *testing.T) {
+	lexical := scored("de-1", "other")
+	lexical[0].CPV = "90911200" // the DE sibling code from Task 14's worked example
+	dense := scored("de-1", "other")
+	dense[0].CPV = "90911200"
+	// The query resolved to the IT leaf 90919200 — a different 8-digit code,
+	// agreeing with de-1's own code only on the shared 4-digit class "9091".
+	matches := []CPVMatch{{Code: "90919200"}}
+
+	withBoost := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVBoost: 1.5}).
+		fuse(lexical, dense, nil, matches, time.Now())
+	withoutBoost := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(lexical, dense, nil, nil, time.Now())
+
+	scoreOf := func(results []ScoredTender, id string) float64 {
+		for _, r := range results {
+			if r.ID == id {
+				return r.RelevanceScore
+			}
+		}
+		t.Fatalf("%s missing from results", id)
+		return 0
+	}
+	if got, base := scoreOf(withBoost, "de-1"), scoreOf(withoutBoost, "de-1"); got <= base {
+		t.Errorf("de-1 scored %v with CPVBoost and %v without; a category match must raise it", got, base)
+	}
+	// "other" carries no CPV at all, so the boost must leave it untouched —
+	// this is what makes CPVBoost SELECTIVE rather than a blanket multiplier
+	// on every fused result.
+	if got, base := scoreOf(withBoost, "other"), scoreOf(withoutBoost, "other"); got != base {
+		t.Errorf("other scored %v with CPVBoost and %v without; a non-matching candidate must be unaffected", got, base)
+	}
+}
+
+// Matching on the raw resolved leaf would recreate the exact bug Task 14
+// fixed in the retrieval arm: an Italian "pulizie uffici" resolves to leaf
+// 90919200, but the German sibling tender carries the DIFFERENT leaf
+// 90911200 — they agree only on the shared class "9091". Leaf equality would
+// never fire for the cross-language case this signal exists to help, so
+// cpvBoost must go through cpvHierarchyPrefix the same way the arm does.
+func TestFuse_CPVBoostMatchesByCategoryNotLeafEquality(t *testing.T) {
+	sibling := ScoredTender{Tender: Tender{ID: "de-1", Status: "open", CPV: "90911200"}}
+	matches := []CPVMatch{{Code: "90919200"}}
+
+	got := cpvBoost(sibling, matches, Ranking{CPVBoost: 1.5})
+	if got != 1.5 {
+		t.Errorf("cpvBoost = %v, want 1.5 — 90911200 and 90919200 share the class \"9091\" even though their leaves differ", got)
+	}
+}
+
+func TestFuse_CPVBoostNeverLowersAnyScore(t *testing.T) {
+	// Mirrors TestFuse_CPVArmNeverLowersAnyScore: FitThresholds (RelevanceHigh
+	// 0.75, RelevanceLow 0.4) are calibrated against this scale, so no
+	// CPV-related mechanism — arm or boost — may lower a score.
+	lexical, dense := scored("a", "b", "c"), scored("b", "a", "d")
+	lexical[0].CPV = "90911200" // "a" is the only candidate the boost can match
+	now := time.Now()
+
+	base := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(lexical, dense, nil, nil, now)
+	withBoost := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVBoost: 1.5}).
+		fuse(lexical, dense, nil, []CPVMatch{{Code: "90919200"}}, now)
+
+	baseScore := map[string]float64{}
+	for _, r := range base {
+		baseScore[r.ID] = r.RelevanceScore
+	}
+	for _, r := range withBoost {
+		if before, ok := baseScore[r.ID]; ok && r.RelevanceScore < before {
+			t.Errorf("%s scored %v with CPVBoost, down from %v — the boost must only add", r.ID, r.RelevanceScore, before)
+		}
+	}
+}
+
+func TestFuse_CPVBoostOffOrNoMatchesReproducesTheUnboostedResultExactly(t *testing.T) {
+	// CPVBoost <=1 is the OFF state (see its doc comment: a multiplier's "off"
+	// is 1, not 0 — 0 would zero every score it touched). The disabled path has
+	// to be byte-identical, the same invariant TestFuse_ZeroCPVWeightReproduces…
+	// checks for the arm, so a Ranking{} literal built without CPVBoost in any
+	// existing test still means exactly what it always meant.
+	lexical, dense := scored("a", "b"), scored("b", "c")
+	lexical[0].CPV = "90911200"
+	matches := []CPVMatch{{Code: "90919200"}}
+	now := time.Now()
+
+	unboosted := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60}).
+		fuse(lexical, dense, nil, nil, now)
+
+	off := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVBoost: 1}).
+		fuse(lexical, dense, nil, matches, now)
+	noMatches := fusionService(Ranking{LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVBoost: 1.5}).
+		fuse(lexical, dense, nil, nil, now)
+
+	for _, variant := range []struct {
+		name string
+		got  []ScoredTender
+	}{{"CPVBoost<=1", off}, {"no resolved matches", noMatches}} {
+		if len(variant.got) != len(unboosted) {
+			t.Fatalf("%s: len = %d, want %d", variant.name, len(variant.got), len(unboosted))
+		}
+		for i := range variant.got {
+			if variant.got[i].ID != unboosted[i].ID || variant.got[i].RelevanceScore != unboosted[i].RelevanceScore {
+				t.Errorf("%s: position %d = %s/%v, want %s/%v", variant.name, i,
+					variant.got[i].ID, variant.got[i].RelevanceScore, unboosted[i].ID, unboosted[i].RelevanceScore)
+			}
+		}
+	}
+}
+
+func TestWithDefaults_LeavesTheCPVTogglesAlone(t *testing.T) {
+	// Unlike every other knob, zero (or, for CPVBoost, <=1) is MEANINGFUL here
+	// — it is how the retrieval arm and the post-fusion boost are each
+	// switched off. Default-filling them would make them impossible to
+	// disable and would silently change every existing test that builds a
+	// bare Ranking{}.
+	r := Ranking{}.withDefaults()
+	if r.CPVWeight != 0 {
+		t.Errorf("CPVWeight = %v, want 0 — a zero-value Ranking must leave the arm off", r.CPVWeight)
+	}
+	if r.CPVBoost > 1 {
+		t.Errorf("CPVBoost = %v, want <=1 (off) for a zero-value Ranking", r.CPVBoost)
+	}
+	// …while DefaultRanking, which production uses, turns the CPVBoost
+	// multiplier on, but leaves the CPV retrieval arm off. Task 14 measured
+	// the arm (CPVWeight > 0) against the live eval corpus at three prefix
+	// depths and every one scored below the two-arm baseline, with its four
+	// target cross-language cells still stuck at 0.0000. Task 15 then fixed
+	// the arm's OWN ordering and window bugs and measured it again — still
+	// below baseline — while CPVBoost (a structurally different use of the
+	// same resolved-code signal: a post-fusion multiplier, not a fourth
+	// retrieval) beat it. See DefaultRanking's CPVWeight comment for the full
+	// comparison and task-14-report.md for the harness output. A third
+	// mechanism, index-side CPV label expansion (Task 16), was also measured
+	// and — unlike the retrieval arm, which just stays off — was REMOVED
+	// entirely: it moved none of the four target cells and cost same-language
+	// ndcg/mrr, and its shipped-disabled path also collapsed lexical search to
+	// a sequential scan in production (migration 0009 reverted it). See
+	// DefaultRanking's CPVWeight comment for the full history.
+	d := DefaultRanking()
+	if d.CPVWeight != 0 {
+		t.Errorf("DefaultRanking.CPVWeight = %v, want 0 — the retrieval arm made every metric worse both times it was measured", d.CPVWeight)
+	}
+	if d.CPVBoost <= 1 {
+		t.Errorf("DefaultRanking.CPVBoost = %v, want >1 — the post-fusion multiplier beat baseline and ships enabled", d.CPVBoost)
 	}
 }

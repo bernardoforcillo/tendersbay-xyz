@@ -469,7 +469,8 @@
       "valueMax": "tot {{max}}",
       "valueMin": "vanaf {{min}}",
       "deadlineUntil": "sluit vóór {{date}}",
-      "undo": "Wissen"
+      "undo": "Wissen",
+      "remove": "{{chip}} verwijderen"
     }
   },
   "today": {

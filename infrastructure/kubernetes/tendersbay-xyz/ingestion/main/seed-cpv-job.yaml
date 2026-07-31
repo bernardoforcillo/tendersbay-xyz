@@ -1,0 +1,99 @@
+# seed-cpv-job.yaml — run-once Job, deliberately NOT in kustomization.yaml.
+#
+# cmd/seed-cpv loads the embedded CPV 2008 vocabulary into tenders.cpv_terms.
+# Until this Job has run once per environment (after migrations), cpv_terms
+# is empty: MatchCodes resolves nothing, AppliedCPV is always [], the chips
+# UI never renders, and CPVBoost never fires — silently, with no error. See
+# cmd/seed-cpv's package doc and readme.md's "Seeding the CPV vocabulary"
+# section in this folder for the full story.
+#
+# It is excluded from kustomization.yaml on purpose: a completed Job has an
+# immutable spec (Kubernetes rejects any attempt to mutate it in place), so
+# if Flux tried to re-apply this manifest on every reconcile (prune: true),
+# reconciliation would fail permanently the moment the Job first completes.
+# This is an apply-by-hand artifact, same reasoning as ingestion-secrets in
+# readme.md.
+#
+# Apply it once per environment, after migrations have run at least once
+# (the ingestion CronJob applies them automatically — see readme.md), and
+# again any time the CPV vocabulary itself is revised:
+#
+#   kubectl apply -f infrastructure/kubernetes/tendersbay-xyz/ingestion/main/seed-cpv-job.yaml
+#
+# Re-running is safe (UpsertTerms is an idempotent ON CONFLICT DO UPDATE).
+# A re-run does NOT auto-replace a still-completed prior Job object — delete
+# it first if one from an earlier run is still around:
+#
+#   kubectl delete job seed-cpv -n tendersbay-xyz --ignore-not-found
+#
+# Then watch it:
+#
+#   kubectl logs -n tendersbay-xyz job/seed-cpv -f
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed-cpv
+  namespace: tendersbay-xyz
+  labels:
+    app: tendersbay-xyz
+    tier: ingestion
+spec:
+  backoffLimit: 2
+  # Completed/failed Job objects self-delete after an hour so a re-run isn't
+  # blocked by a stale object from a prior apply (Jobs are otherwise
+  # immutable once created — see the header comment above).
+  ttlSecondsAfterFinished: 3600
+  template:
+    metadata:
+      labels:
+        app: tendersbay-xyz
+        tier: ingestion
+    spec:
+      restartPolicy: OnFailure
+      securityContext:
+        # gcr.io/distroless/static-debian12:nonroot is UID/GID 65532.
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        fsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: seed-cpv
+          # Same image the ingestion CronJob runs — see cronjob.yaml and
+          # Dockerfile's second `go build` — with /seed-cpv overriding the
+          # image's /ingestion ENTRYPOINT. Image tag automation (update.yaml)
+          # already keeps this repo's ingestion image references current;
+          # this Job shares that same repository/policy, not a separate one.
+          image: bernardoforcillo/tendersbay-ingestion:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
+          command: ['/seed-cpv']
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          # ~227k vocabulary rows decoded and batch-upserted once; comfortably
+          # inside the CronJob's own memory/cpu envelope (cronjob.yaml), so no
+          # bump needed here.
+          resources:
+            limits:
+              memory: '256Mi'
+              cpu: '200m'
+            requests:
+              memory: '128Mi'
+              cpu: '50m'
+          # seed-cpv only reads DATABASE_URL (config.FromEnv's other fields —
+          # PostHog/Qdrant/Ollama — are unused by this command; see
+          # cmd/seed-cpv/main.go), so unlike cronjob.yaml this Job doesn't
+          # need the rest of the ingestion env vars.
+          envFrom:
+            - secretRef:
+                name: ingestion-secrets
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

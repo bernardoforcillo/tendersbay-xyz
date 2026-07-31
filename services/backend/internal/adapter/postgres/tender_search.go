@@ -144,27 +144,33 @@ func whereClause(clauses []string) string {
 	return "\nWHERE " + strings.Join(clauses, "\n  AND ")
 }
 
-// LexicalSearch runs the keyword half of hybrid retrieval: a full-text match
-// over the generated search_vector, ranked by ts_rank_cd, optionally widened
-// by a trigram similarity arm for short misspelled input.
+// lexicalSQL builds the keyword statement and its arguments.
 //
-// This is the half that finds what vector search structurally cannot — an
-// exact CPV code, a notice reference, a buyer's name, a rare acronym. Dense
-// embeddings map those onto whatever they most resemble; a lexical index
-// matches them.
-//
-// The 'simple' text-search configuration matches the one the generated column
-// was built with in the ingestion migration; using a different one here would
-// silently stop matching.
-func (r *TenderRepo) LexicalSearch(ctx context.Context, query string, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
-	query = strings.TrimSpace(query)
+// Split out from LexicalSearch so the SQL can be asserted without a database
+// — CI has no Postgres, so anything only a DB-gated test checks gates nothing
+// — the same split matchCodesSQL uses in cpv_lexicon.go.
+func lexicalSQL(q tender.LexicalQuery, filters tender.Filters, limit int) (string, []any) {
+	query := strings.TrimSpace(q.Text)
 	if query == "" || limit <= 0 {
-		return nil, nil
+		return "", nil
 	}
 
 	b := &argBuilder{}
 	tsq := b.next(query)
 
+	// The vector to match against. Migration 0009 reverted search_vector to
+	// exactly title/buyer_name/cpv/description (weight classes A/B/C/D) — no
+	// toggle, no narrowing. A prior version of this function briefly matched
+	// against ts_filter(t.search_vector, …) to exclude a cpv_labels weight
+	// class (migration 0008) on demand; that function call sat to the LEFT of
+	// `@@`, which is not the indexed expression, and because the predicate was
+	// an OR chain the whole clause degraded to a sequential scan in
+	// production regardless of the toggle's value — see migration 0009's
+	// header and Ranking.CPVWeight's doc comment (hybrid.go) for the measured
+	// cost and the reasoning for reverting rather than retuning. Match plainly
+	// against the indexed column so idx_ingested_tenders_search_vector stays
+	// usable.
+	//
 	// ts_rank_cd's normalisation flag 32 divides the raw rank by rank+1,
 	// mapping an unbounded score into (0,1) — comparable across queries, which
 	// a raw ts_rank_cd value is not.
@@ -183,6 +189,11 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, query string, filters te
 	// can show WHY it matched. The source text is truncated first: ts_headline
 	// cost grows with document length, and no useful fragment comes from
 	// beyond the first few thousand characters.
+	//
+	// Deliberately built from description/title only, never from cpv_labels: a
+	// snippet reading "Servizi di pulizia di uffici" lifted from a taxonomy
+	// label would look like the notice's own words and tell the user nothing
+	// about this particular tender.
 	snippet := "ts_headline('simple', left(coalesce(NULLIF(t.description, ''), t.title), 4000), " +
 		"websearch_to_tsquery('simple', " + tsq + "), " +
 		"'StartSel=<mark>, StopSel=</mark>, MaxWords=32, MinWords=12, MaxFragments=1, FragmentDelimiter= … ')"
@@ -196,7 +207,113 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, query string, filters te
 		"\nORDER BY relevance DESC, t.published_at DESC NULLS LAST, t.id DESC" +
 		"\nLIMIT " + b.next(limit)
 
-	return r.queryScoredTenders(ctx, "lexical search", sql, b.args)
+	return sql, b.args
+}
+
+// LexicalSearch runs the keyword half of hybrid retrieval: a full-text match
+// over the generated search_vector, ranked by ts_rank_cd, optionally widened
+// by a trigram similarity arm for short misspelled input.
+//
+// This is the half that finds what vector search structurally cannot — an
+// exact CPV code, a notice reference, a buyer's name, a rare acronym. Dense
+// embeddings map those onto whatever they most resemble; a lexical index
+// matches them.
+//
+// The 'simple' text-search configuration matches the one the generated column
+// was built with in the ingestion migration; using a different one here would
+// silently stop matching.
+func (r *TenderRepo) LexicalSearch(ctx context.Context, q tender.LexicalQuery, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
+	sql, args := lexicalSQL(q, filters, limit)
+	if sql == "" {
+		return nil, nil
+	}
+	return r.queryScoredTenders(ctx, "lexical search", sql, args)
+}
+
+// FindByCPVPrefixes returns tenders whose primary or any secondary CPV is
+// prefixed by one of codes, ordered by how strongly each tender's OWN code
+// matches the caller's ranking, recency only as the tie-break within that.
+//
+// codes is expected in caller-ranked order, best match first (cpvCandidates
+// passes the lexicon's own MatchCodes ranking, code by code, truncated to a
+// category prefix). A tender matching an earlier — i.e. better-ranked — code
+// sorts before one that only matches a later one.
+//
+// This USED to order by recency alone: "the codes carry the relevance, and
+// within one code every tender is equally in that category, so recency is the
+// only defensible tie-break." That reasoning is still correct as far as it
+// goes, but it missed the actual failure mode. Task 14 measured a real query
+// against the live eval corpus ("pulizie uffici" -> class 9091) where 56
+// tenders shared that one resolved class, and the judged-relevant tender
+// ranked 31st by publish date — a rank the caller's small shared candidate
+// window (~21 rows, sized off the page) never reached, discarding it before
+// fusion ever saw it, regardless of how precisely the CPV code itself was
+// truncated. Ranking by the caller's own code order fixes the ACROSS-codes
+// case (a tender matching the query's best code should not lose to one
+// matching its eighth-best), but ties within a single code are still
+// arbitrary — see cpvArmWindow in cpv.go for the other half of the fix: the
+// arm now requests a candidate budget wide enough that a same-category tie
+// does not need to be resolved by ordering alone.
+//
+// It reuses filterClauses' CPV predicate shape rather than inventing a second
+// one, so the arm and the CPVPrefixes filter can never disagree about what "a
+// tender in this category" means — including the escapeLike guard, without which
+// a code containing a wildcard would silently widen the match.
+func (r *TenderRepo) FindByCPVPrefixes(ctx context.Context, codes []string, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
+	if limit <= 0 {
+		return nil, nil
+	}
+
+	b := &argBuilder{}
+	predicate, codeRank := cpvPrefixRanking(codes, b)
+	if predicate == "" {
+		return nil, nil
+	}
+	clauses := append([]string{predicate}, filterClauses(filters, b)...)
+
+	sql := "SELECT" + tenderSelectColumns + ",\n\t0::float8 AS relevance,\n\t'' AS snippet" +
+		tenderFromClause + whereClause(clauses) +
+		// t.id last, as before: without a final tie-break two equally-ranked
+		// tenders published at the same instant could swap places between
+		// pages and make a result appear twice or not at all.
+		"\nORDER BY " + codeRank + " ASC, t.published_at DESC NULLS LAST, t.id DESC" +
+		"\nLIMIT " + b.next(limit)
+
+	return r.queryScoredTenders(ctx, "find tenders by cpv prefixes", sql, b.args)
+}
+
+// cpvPrefixRanking builds the WHERE predicate matching any of codes (primary
+// or secondary CPV, prefix match) and the CASE expression that ranks a
+// matching row by the EARLIEST — i.e. best — code in codes it matches.
+//
+// Pulled out of FindByCPVPrefixes so this shape can be asserted directly
+// without a live database, the same way filterClauses already is elsewhere in
+// this file — the SQL-string tests below are what actually pin the ordering
+// behaviour down; FindByCPVPrefixes itself is exercised against a real
+// database in tender_repo_test.go.
+//
+// codeRank has no ELSE branch: the predicate this returns is exactly the OR
+// of every WHEN condition, so any row a caller's WHERE clause keeps always
+// matches at least one of them — CASE therefore always resolves.
+func cpvPrefixRanking(codes []string, b *argBuilder) (predicate, codeRank string) {
+	vals := nonEmpty(codes)
+	if len(vals) == 0 {
+		return "", ""
+	}
+
+	var arms, whens []string
+	for i, v := range vals {
+		p := b.next(escapeLike(v) + "%")
+		cond := "(t.cpv LIKE " + p + " OR EXISTS (SELECT 1 FROM unnest(t.cpv_secondary) AS sec WHERE sec LIKE " + p + "))"
+		arms = append(arms, cond)
+		whens = append(whens, "WHEN "+cond+" THEN "+strconv.Itoa(i))
+	}
+	predicate = "(" + strings.Join(arms, " OR ") + ")"
+	// CASE evaluates its WHENs in order and stops at the first match, so a row
+	// that happens to ALSO match a weaker, later-ranked code is never pushed
+	// down by it — it keeps the best rank it earned.
+	codeRank = "CASE " + strings.Join(whens, " ") + " END"
+	return predicate, codeRank
 }
 
 // browseOrderBy renders a sort order as SQL for the browse path.

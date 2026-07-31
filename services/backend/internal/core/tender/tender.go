@@ -109,6 +109,18 @@ type ScoredTender struct {
 	Snippet string
 }
 
+// LexicalQuery is what the keyword retriever is asked for.
+//
+// It is a struct rather than a bare string because Repo has nine methods and
+// five fakes implement it: every scalar parameter added later would break all
+// six call sites at once, whereas a new FIELD breaks nothing. The fields that
+// follow Text are all "how should this text be matched", not "what to match".
+type LexicalQuery struct {
+	// Text is the query with structured constraints already lifted out — see
+	// ParseQuery. Empty means there is nothing to retrieve on.
+	Text string
+}
+
 // Repo is the subset of postgres.TenderRepo the service needs.
 type Repo interface {
 	SearchTenders(ctx context.Context, filters Filters, sortBy SortOrder, limit, offset int) ([]Tender, error)
@@ -119,7 +131,15 @@ type Repo interface {
 	// trigram matching, already filtered and ranked, best-first. It answers
 	// the queries dense embeddings structurally can't: exact codes, notice
 	// references, buyer names, rare acronyms.
-	LexicalSearch(ctx context.Context, query string, filters Filters, limit int) ([]ScoredTender, error)
+	LexicalSearch(ctx context.Context, q LexicalQuery, filters Filters, limit int) ([]ScoredTender, error)
+	// FindByCPVPrefixes returns tenders whose primary or secondary CPV is
+	// prefixed by any of codes, newest first. It backs the CPV retrieval arm —
+	// the language-independent half of cross-language search.
+	//
+	// Prefix rather than equality so a resolved division ("45") behaves the same
+	// way the CPVPrefixes filter already does, and so a resolved 8-digit code
+	// still matches a tender that records it with a trailing refinement.
+	FindByCPVPrefixes(ctx context.Context, codes []string, filters Filters, limit int) ([]ScoredTender, error)
 	EnrichTenders(ctx context.Context, ids []string, filters Filters) ([]Tender, error)
 	FindDetailByID(ctx context.Context, id int64) (*TenderDetail, error)
 	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)
@@ -220,6 +240,7 @@ type Service struct {
 	rl       RateLimiter
 	profiles ProfileSource
 	cache    EmbeddingCache // optional; nil disables embedding reuse
+	lexicon  CPVLexicon     // optional; nil disables the CPV arm
 	cfg      Config
 }
 
@@ -233,6 +254,17 @@ func NewService(repo Repo, kb KnowledgeBase, rl RateLimiter, profiles ProfileSou
 // genuinely optional — the service is fully correct without one, just slower.
 func (s *Service) WithEmbeddingCache(c EmbeddingCache) *Service {
 	s.cache = c
+	return s
+}
+
+// WithCPVLexicon attaches a CPV vocabulary and returns s.
+//
+// A separate step rather than a constructor argument for the same reason
+// WithEmbeddingCache is: the service is fully correct without one — the CPV arm
+// simply contributes nothing — and a database whose cpv_terms table has not been
+// seeded must not be able to stop the service from starting.
+func (s *Service) WithCPVLexicon(l CPVLexicon) *Service {
+	s.lexicon = l
 	return s
 }
 
@@ -276,8 +308,13 @@ type SearchParams struct {
 	// client could actually bid on.
 	ParseQuery bool
 	// Sort selects the result ordering; the zero value means relevance.
-	Sort          SortOrder
-	Limit         int
+	Sort  SortOrder
+	Limit int
+	// SuppressedCPV are codes the caller does not want inferred, because the
+	// user removed the chip for them. Client-supplied because the server
+	// would otherwise resolve the same code from the same text on the next
+	// page — see cpvCandidates.
+	SuppressedCPV []string
 	Offset        int
 	Authenticated bool
 	RateLimitKey  string
@@ -297,6 +334,14 @@ type SearchOutput struct {
 	// — a filter the user can't see is one they can't correct.
 	AppliedFilters Filters
 	AppliedQuery   string
+	// AppliedCPV are the CPV codes the search inferred from the query text, with
+	// the label that matched. Reported for the same reason AppliedFilters is: the
+	// user must be able to see that "pulizie uffici" was read as
+	// "90919200 — Servizi di pulizia di uffici", and remove it.
+	//
+	// Unlike AppliedFilters these did not NARROW anything — the CPV arm is a
+	// boost, so a wrong match reorders the page rather than emptying it.
+	AppliedCPV []CPVMatch
 	// Facets are per-field counts for filter-bar badges. See Facets for what
 	// they count, which differs between a query-driven search and a browse.
 	Facets Facets
@@ -359,7 +404,7 @@ func (s *Service) Search(ctx context.Context, p SearchParams) (SearchOutput, err
 		out, err := s.searchByFiltersOnly(ctx, filters, p.Sort, limit, offset)
 		return withApplied(out, err, filters, "")
 	}
-	out, err := s.searchHybrid(ctx, parsed.Text, filters, p.Sort, limit, offset)
+	out, err := s.searchHybrid(ctx, parsed.Text, filters, p.Sort, limit, offset, p.SuppressedCPV)
 	return withApplied(out, err, filters, parsed.Text)
 }
 

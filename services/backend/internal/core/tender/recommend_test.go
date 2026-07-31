@@ -255,7 +255,7 @@ func (f *recommendFakeRepo) SearchTenders(_ context.Context, _ Filters, _ SortOr
 // LexicalSearch returns the same rows SearchTenders does, so the hybrid path
 // has something to fuse in these tests — they exercise fit annotation, not
 // retrieval.
-func (f *recommendFakeRepo) LexicalSearch(ctx context.Context, _ string, _ Filters, limit int) ([]ScoredTender, error) {
+func (f *recommendFakeRepo) LexicalSearch(ctx context.Context, _ LexicalQuery, _ Filters, limit int) ([]ScoredTender, error) {
 	tenders, err := f.SearchTenders(ctx, Filters{}, SortRelevance, limit, 0)
 	if err != nil {
 		return nil, err
@@ -268,6 +268,13 @@ func (f *recommendFakeRepo) LexicalSearch(ctx context.Context, _ string, _ Filte
 }
 
 func (f *recommendFakeRepo) EnrichTenders(context.Context, []string, Filters) ([]Tender, error) {
+	return nil, nil
+}
+
+// FindByCPVPrefixes: these tests exercise fit annotation, not the CPV arm, so
+// a trivial stub (no candidates) satisfies the interface without adding
+// meaningful behavior here.
+func (f *recommendFakeRepo) FindByCPVPrefixes(context.Context, []string, Filters, int) ([]ScoredTender, error) {
 	return nil, nil
 }
 
