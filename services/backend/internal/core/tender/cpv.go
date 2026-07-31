@@ -72,11 +72,17 @@ const maxCPVCodes = 8
 // NOTE — measured against the live eval corpus (Task 14), this fix alone did
 // NOT move the four target cells: the deeper blocker turned out to be
 // FindByCPVPrefixes' recency-ordered, page-sized candidate window discarding
-// the actually-relevant tender before fusion ever saw it (see DefaultRanking's
-// CPVWeight comment in hybrid.go and task-14-report.md). The arm ships
-// disabled (CPVWeight 0) with this truncation bug fixed underneath it, so
-// re-enabling it later starts from a correct prefix instead of the leaf-
-// equality bug this comment describes.
+// the actually-relevant tender before fusion ever saw it. Task 15 fixed THAT
+// too — ranking by the caller's own code order (cpvPrefixRanking) and giving
+// the arm its own wide budget (cpvArmWindow) — and it STILL scored below
+// baseline: RRF fuses on rank, and rank carries no relevance information
+// inside one CPV category, so a widened window just floods fusion with more
+// arbitrarily-ordered noise. See DefaultRanking's CPVWeight comment in
+// hybrid.go for the full comparison against CPVBoost, the mechanism that
+// replaced this arm in production. The arm ships disabled (CPVWeight 0) with
+// this truncation bug — and the ordering/window ones — fixed underneath it,
+// so re-enabling it later starts from a correct prefix instead of
+// rediscovering bugs already found once.
 func cpvHierarchyPrefix(code string) string {
 	// How many digits are actually specified: the position just past the last
 	// non-zero digit, rounded UP to the next even (2-digit) boundary so an
@@ -110,8 +116,32 @@ func cpvHierarchyPrefix(code string) string {
 	return prefix[:len(prefix)-2]
 }
 
-// cpvCandidates resolves the query onto CPV codes and returns the tenders
-// carrying them, plus what was understood.
+// cpvArmWindow is the retrieval arm's OWN candidate budget, independent of
+// the shared per-page window every other retriever uses (searchHybrid's
+// `want`, sized off offset+limit).
+//
+// Task 14 found that sharing the small page window was the actual reason the
+// arm never worked, not the resolved code's precision: for "pulizie uffici"
+// -> class 9091, 56 tenders in the eval corpus carry that class, and the one
+// judged-relevant German tender ranked 31st by publish date — outside the
+// ~21-row shared window regardless of how the code was truncated. maxWindow
+// is already this codebase's ceiling on how deep any one retrieval may reach
+// (see its doc comment in hybrid.go), so reusing it here costs nothing new;
+// it just stops the arm sharing the SMALLER page-sized budget with lexical
+// and dense, which is the whole point — a category of 56 must not be
+// truncated to ~21 before FindByCPVPrefixes' own ranking (see its doc
+// comment) even gets to order them.
+const cpvArmWindow = maxWindow
+
+// cpvCandidates resolves the query onto CPV codes and, when the retrieval arm
+// is enabled, returns the tenders carrying them, plus what was understood.
+//
+// Resolving codes is useful even when the arm itself is off: AppliedCPV shows
+// the user what the query was read as regardless, and the CPVBoost multiplier
+// (see fuse) needs the same resolved codes without needing a second
+// retrieval. So the two concerns split here: MatchCodes always runs when the
+// CPV signal is wanted in ANY form; FindByCPVPrefixes — the actual extra
+// retrieval — only runs when the arm (CPVWeight) is switched on.
 //
 // Every failure degrades to "the arm contributes nothing", never to an error:
 // the CPV bridge is an enrichment on top of two retrievers that already answer
@@ -123,16 +153,26 @@ func cpvHierarchyPrefix(code string) string {
 //
 // The matches are returned even when the fetch failed: the inference itself
 // succeeded, and the UI should still show what the server understood.
-func (s *Service) cpvCandidates(ctx context.Context, query string, filters Filters, want int) ([]ScoredTender, []CPVMatch) {
-	if s.lexicon == nil || s.cfg.Ranking.CPVWeight <= 0 {
-		// A disabled arm must not even resolve codes: it would contribute nothing
-		// to fusion, so the round trip would be pure waste on every search.
+func (s *Service) cpvCandidates(ctx context.Context, query string, filters Filters) ([]ScoredTender, []CPVMatch) {
+	r := s.cfg.Ranking
+	if s.lexicon == nil || (r.CPVWeight <= 0 && r.CPVBoost <= 1) {
+		// Neither consumer of the CPV signal is switched on: resolving codes
+		// would be pure waste on every search, same reasoning as before this
+		// function had two consumers.
 		return nil, nil
 	}
 
 	matches, err := s.lexicon.MatchCodes(ctx, query, maxCPVCodes)
 	if err != nil || len(matches) == 0 {
 		return nil, nil
+	}
+
+	if r.CPVWeight <= 0 {
+		// The retrieval arm is off. CPVBoost, if enabled, is applied later
+		// directly against candidates lexical/dense already found — see fuse's
+		// CPVBoost doc comment for why a fourth ranked list is the wrong shape
+		// for this signal. No separate fetch, no candidate slots spent.
+		return nil, matches
 	}
 
 	// Match by CATEGORY, not by leaf — see cpvHierarchyPrefix. The resolved
@@ -143,7 +183,8 @@ func (s *Service) cpvCandidates(ctx context.Context, query string, filters Filte
 		codes[i] = cpvHierarchyPrefix(m.Code)
 	}
 
-	tenders, err := s.repo.FindByCPVPrefixes(ctx, codes, filters, want)
+	// cpvArmWindow, not the shared page window — see its doc comment.
+	tenders, err := s.repo.FindByCPVPrefixes(ctx, codes, filters, cpvArmWindow)
 	if err != nil {
 		return nil, matches
 	}

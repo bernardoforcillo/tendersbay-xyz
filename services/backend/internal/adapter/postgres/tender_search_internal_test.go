@@ -162,3 +162,57 @@ func TestNonEmpty_TrimsAndDropsBlanks(t *testing.T) {
 		t.Errorf("nonEmpty = %v, want [IT DE] trimmed", got)
 	}
 }
+
+// cpvPrefixRanking backs FindByCPVPrefixes' ordering fix (Task 14/15): a
+// tender's rank must follow the CALLER'S code order, not just recency. These
+// two tests pin the SQL shape down directly, without a live database — the
+// behaviour itself (does the database actually order rows this way) is
+// checked against a real one in TestFindByCPVPrefixes_* in tender_repo_test.go.
+func TestCPVPrefixRanking_MatchesBothPrimaryAndSecondaryCPV(t *testing.T) {
+	b := &argBuilder{}
+	predicate, rank := cpvPrefixRanking([]string{"9091", "45"}, b)
+
+	if !strings.Contains(predicate, "t.cpv LIKE") {
+		t.Errorf("predicate = %q, want a primary-CPV prefix match", predicate)
+	}
+	if !strings.Contains(predicate, "unnest(t.cpv_secondary)") {
+		t.Errorf("predicate = %q, want a secondary-CPV prefix match too", predicate)
+	}
+	if len(b.args) != 2 || b.args[0] != "9091%" || b.args[1] != "45%" {
+		t.Errorf("args = %v, want [9091%% 45%%] — one LIKE pattern per code, shared by its primary and secondary arm", b.args)
+	}
+	if !strings.HasPrefix(rank, "CASE ") || !strings.HasSuffix(rank, " END") {
+		t.Errorf("rank = %q, want a CASE…END expression", rank)
+	}
+}
+
+// The FIRST code the caller passed is the one the lexicon ranked highest
+// (cpvCandidates preserves MatchCodes' order), so it must resolve to the
+// LOWEST — i.e. best — CASE rank. Getting this backwards would silently
+// invert the fix: a tender matching only the query's weakest resolved code
+// would outrank one matching its best.
+func TestCPVPrefixRanking_RanksTheCallersFirstCodeBest(t *testing.T) {
+	b := &argBuilder{}
+	_, rank := cpvPrefixRanking([]string{"9091", "45", "72"}, b)
+
+	posBest := strings.Index(rank, "THEN 0")
+	posMid := strings.Index(rank, "THEN 1")
+	posWorst := strings.Index(rank, "THEN 2")
+	if posBest == -1 || posMid == -1 || posWorst == -1 {
+		t.Fatalf("rank = %q, want THEN 0, THEN 1 and THEN 2 (one per code)", rank)
+	}
+	if !(posBest < posMid && posMid < posWorst) {
+		t.Errorf("rank = %q, want THEN 0 before THEN 1 before THEN 2 — CASE evaluates WHENs in order, so this is what makes the caller's best-ranked code win", rank)
+	}
+}
+
+func TestCPVPrefixRanking_NoCodesProducesNoPredicate(t *testing.T) {
+	b := &argBuilder{}
+	predicate, rank := cpvPrefixRanking(nil, b)
+	if predicate != "" || rank != "" {
+		t.Errorf("predicate=%q rank=%q, want both empty for no codes — a non-empty predicate here would risk matching every tender", predicate, rank)
+	}
+	if len(b.args) != 0 {
+		t.Errorf("args = %v, want none bound when there are no codes to match", b.args)
+	}
+}

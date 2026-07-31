@@ -25,10 +25,14 @@ type cpvArmFakeRepo struct {
 	byCPV         []ScoredTender
 	byCPVErr      error
 	gotCodes      []string
+	gotLimit      int
+	fetchCalled   bool // true iff FindByCPVPrefixes was invoked at all
 }
 
-func (f *cpvArmFakeRepo) FindByCPVPrefixes(_ context.Context, codes []string, _ Filters, _ int) ([]ScoredTender, error) {
+func (f *cpvArmFakeRepo) FindByCPVPrefixes(_ context.Context, codes []string, _ Filters, limit int) ([]ScoredTender, error) {
+	f.fetchCalled = true
 	f.gotCodes = codes
+	f.gotLimit = limit
 	return f.byCPV, f.byCPVErr
 }
 
@@ -54,7 +58,7 @@ func TestCPVCandidates_ResolvesCodesThenFetchesTendersCarryingThem(t *testing.T)
 	repo := &cpvArmFakeRepo{byCPV: scored("de-1", "fr-1")}
 	svc := &Service{repo: repo, lexicon: lex, cfg: Config{Ranking: cpvArmTestRanking()}}
 
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie uffici", Filters{}, 20)
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie uffici", Filters{})
 
 	if !equalIDs(got, "de-1", "fr-1") {
 		t.Errorf("arm = %v, want de-1 and fr-1", ids(got))
@@ -69,6 +73,14 @@ func TestCPVCandidates_ResolvesCodesThenFetchesTendersCarryingThem(t *testing.T)
 	if !equalStrings(repo.gotCodes, []string{"9091", "9091"}) {
 		t.Errorf("repo asked for %v, want both codes truncated to their shared class prefix, not the raw 8-digit leaves", repo.gotCodes)
 	}
+	// The arm must request its OWN wide budget (cpvArmWindow), not whatever
+	// small per-page window the caller happens to be paging with — see
+	// cpvArmWindow's doc comment: Task 14 found the shared ~21-row window was
+	// why a 56-tender CPV class silently discarded the relevant tender before
+	// fusion ever ran.
+	if repo.gotLimit != cpvArmWindow {
+		t.Errorf("repo asked for limit %d, want cpvArmWindow (%d) — the arm must not share the small per-page window with lexical/dense", repo.gotLimit, cpvArmWindow)
+	}
 	if lex.gotQuery != "pulizie uffici" {
 		t.Errorf("lexicon got %q, want the query text", lex.gotQuery)
 	}
@@ -78,7 +90,7 @@ func TestCPVCandidates_NilLexiconContributesNothing(t *testing.T) {
 	// The lexicon is optional in exactly the way EmbeddingCache is: a Service
 	// without one must behave as it did before the arm existed.
 	svc := &Service{repo: &cpvArmFakeRepo{}, cfg: Config{Ranking: cpvArmTestRanking()}}
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, 20)
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{})
 	if got != nil || matches != nil {
 		t.Errorf("arm = %v / %v, want nil for a Service with no lexicon", ids(got), matches)
 	}
@@ -89,7 +101,7 @@ func TestCPVCandidates_ALexiconFailureIsSwallowed(t *testing.T) {
 	// search that lexical and dense can answer between them.
 	lex := &cpvArmFakeLexicon{err: errors.New("relation cpv_terms does not exist")}
 	svc := &Service{repo: &cpvArmFakeRepo{}, lexicon: lex, cfg: Config{Ranking: cpvArmTestRanking()}}
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, 20)
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{})
 	if got != nil || matches != nil {
 		t.Errorf("arm = %v / %v, want nil after a lexicon error", ids(got), matches)
 	}
@@ -103,7 +115,7 @@ func TestCPVCandidates_ARepoFailureStillReportsWhatWasUnderstood(t *testing.T) {
 	repo := &cpvArmFakeRepo{byCPVErr: errors.New("boom")}
 	svc := &Service{repo: repo, lexicon: lex, cfg: Config{Ranking: cpvArmTestRanking()}}
 
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, 20)
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{})
 	if got != nil {
 		t.Errorf("arm = %v, want nil after a repo error", ids(got))
 	}
@@ -112,21 +124,44 @@ func TestCPVCandidates_ARepoFailureStillReportsWhatWasUnderstood(t *testing.T) {
 	}
 }
 
-func TestCPVCandidates_SkippedEntirelyWhenTheArmIsDisabled(t *testing.T) {
-	// CPVWeight 0 must not even reach the lexicon: the arm would contribute
-	// nothing to fusion, so resolving codes would be a wasted round trip on
-	// every single search.
+func TestCPVCandidates_SkippedEntirelyWhenBothCPVSignalsAreDisabled(t *testing.T) {
+	// CPVWeight 0 AND CPVBoost <= 1 must not even reach the lexicon: neither
+	// consumer of the resolved codes is switched on, so resolving them would
+	// be a wasted round trip on every single search.
 	lex := &cpvArmFakeLexicon{matches: []CPVMatch{{Code: "90919200"}}}
 	svc := &Service{repo: &cpvArmFakeRepo{}, lexicon: lex, cfg: Config{Ranking: Ranking{
-		LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVWeight: 0,
+		LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVWeight: 0, CPVBoost: 0,
 	}}}
 
-	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{}, 20)
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie", Filters{})
 	if got != nil || matches != nil {
-		t.Errorf("arm = %v / %v, want nil with CPVWeight 0", ids(got), matches)
+		t.Errorf("arm = %v / %v, want nil with both CPVWeight 0 and CPVBoost 0", ids(got), matches)
 	}
 	if lex.gotQuery != "" {
 		t.Errorf("lexicon was called with %q, want not called at all", lex.gotQuery)
+	}
+}
+
+func TestCPVCandidates_ArmOffButBoostOnResolvesMatchesWithoutFetching(t *testing.T) {
+	// CPVWeight 0 keeps the retrieval arm off, but CPVBoost > 1 is a SECOND,
+	// independent consumer of the resolved codes: the post-fusion multiplier
+	// (see cpvBoost in hybrid.go) needs them too, without triggering a second
+	// retrieval — that's the whole point of the structural fix over the arm.
+	lex := &cpvArmFakeLexicon{matches: []CPVMatch{{Code: "90919200", Label: "x"}}}
+	repo := &cpvArmFakeRepo{}
+	svc := &Service{repo: repo, lexicon: lex, cfg: Config{Ranking: Ranking{
+		LexicalWeight: 0.5, DenseWeight: 0.5, RRFK: 60, CPVWeight: 0, CPVBoost: 1.5,
+	}}}
+
+	got, matches := svc.cpvCandidates(context.Background(), "pulizie uffici", Filters{})
+	if got != nil {
+		t.Errorf("arm = %v, want nil — CPVBoost must not trigger a second retrieval", ids(got))
+	}
+	if len(matches) != 1 || matches[0].Code != "90919200" {
+		t.Errorf("matches = %+v, want the resolved code — the CPVBoost multiplier needs it", matches)
+	}
+	if repo.fetchCalled {
+		t.Error("FindByCPVPrefixes was called, want it skipped entirely while the retrieval arm (CPVWeight) is off")
 	}
 }
 
@@ -153,31 +188,34 @@ func TestSearchHybrid_ReportsAppliedCPVAndFusesTheArm(t *testing.T) {
 	}
 }
 
-func TestSearchHybrid_DefaultRankingLeavesTheArmOff(t *testing.T) {
-	// Task 14's measured verdict: the arm made every eval metric worse and
-	// left its four target cells at 0.0000 regardless of prefix depth (see
-	// task-14-report.md), so DefaultRanking ships it disabled. A search built
-	// with the real default must not resolve any CPV codes or fuse in a
-	// CPV-only result — this is the "shipped switched off" contract, checked
-	// end to end rather than just at the CPVWeight field.
+func TestSearchHybrid_DefaultRankingAppliesTheBoostNotTheArm(t *testing.T) {
+	// Task 14/15's measured verdict: the RETRIEVAL ARM (CPVWeight) made every
+	// eval metric worse, twice — once as delivered, once again after Task 15
+	// fixed its ordering and window bugs — and left its four target cells at
+	// 0.0000 regardless. CPVBoost (the post-fusion multiplier) beat the
+	// baseline and ships enabled instead. So DefaultRanking must resolve CPV
+	// codes (AppliedCPV, and the boost both need them) but must NOT fuse in a
+	// candidate that only a separate CPV retrieval would have found — this is
+	// the "arm off, boost on" contract, checked end to end rather than just at
+	// the two fields.
 	lex := &cpvArmFakeLexicon{matches: []CPVMatch{{Code: "90919200", Lang: "it", Label: "Servizi di pulizia di uffici"}}}
-	repo := &cpvArmFakeRepo{byCPV: scored("de-1")}
+	repo := &cpvArmFakeRepo{byCPV: scored("de-1")} // would only ever surface via the (disabled) arm
 	svc := &Service{repo: repo, kb: parseFakeKB{}, lexicon: lex, cfg: Config{Ranking: DefaultRanking()}}
 
 	out, err := svc.searchHybrid(context.Background(), "pulizie uffici", Filters{}, SortRelevance, 20, 0)
 	if err != nil {
 		t.Fatalf("searchHybrid: %v", err)
 	}
-	if len(out.AppliedCPV) != 0 {
-		t.Errorf("AppliedCPV = %+v, want empty — DefaultRanking's CPVWeight is 0", out.AppliedCPV)
+	if len(out.AppliedCPV) != 1 || out.AppliedCPV[0].Code != "90919200" {
+		t.Errorf("AppliedCPV = %+v, want the resolved code — CPVBoost needs it even with the retrieval arm off, and a signal the user can't see is one they can't correct", out.AppliedCPV)
 	}
 	for _, r := range out.Results {
 		if r.ID == "de-1" {
-			t.Errorf("results = %v, want de-1 (a CPV-only match) absent — the arm must not fuse in candidates when it is off", ids(out.Results))
+			t.Errorf("results = %v, want de-1 (an ARM-only match) absent — CPVWeight is 0, so no separate CPV retrieval ran", ids(out.Results))
 		}
 	}
-	if lex.gotQuery != "" {
-		t.Errorf("lexicon was called with %q, want not called at all — resolving codes for an arm that contributes nothing is a wasted round trip", lex.gotQuery)
+	if repo.fetchCalled {
+		t.Error("FindByCPVPrefixes was called, want the retrieval arm to stay off under DefaultRanking")
 	}
 }
 

@@ -200,38 +200,89 @@ func (r *TenderRepo) LexicalSearch(ctx context.Context, q tender.LexicalQuery, f
 }
 
 // FindByCPVPrefixes returns tenders whose primary or any secondary CPV is
-// prefixed by one of codes, newest first.
+// prefixed by one of codes, ordered by how strongly each tender's OWN code
+// matches the caller's ranking, recency only as the tie-break within that.
+//
+// codes is expected in caller-ranked order, best match first (cpvCandidates
+// passes the lexicon's own MatchCodes ranking, code by code, truncated to a
+// category prefix). A tender matching an earlier — i.e. better-ranked — code
+// sorts before one that only matches a later one.
+//
+// This USED to order by recency alone: "the codes carry the relevance, and
+// within one code every tender is equally in that category, so recency is the
+// only defensible tie-break." That reasoning is still correct as far as it
+// goes, but it missed the actual failure mode. Task 14 measured a real query
+// against the live eval corpus ("pulizie uffici" -> class 9091) where 56
+// tenders shared that one resolved class, and the judged-relevant tender
+// ranked 31st by publish date — a rank the caller's small shared candidate
+// window (~21 rows, sized off the page) never reached, discarding it before
+// fusion ever saw it, regardless of how precisely the CPV code itself was
+// truncated. Ranking by the caller's own code order fixes the ACROSS-codes
+// case (a tender matching the query's best code should not lose to one
+// matching its eighth-best), but ties within a single code are still
+// arbitrary — see cpvArmWindow in cpv.go for the other half of the fix: the
+// arm now requests a candidate budget wide enough that a same-category tie
+// does not need to be resolved by ordering alone.
 //
 // It reuses filterClauses' CPV predicate shape rather than inventing a second
 // one, so the arm and the CPVPrefixes filter can never disagree about what "a
 // tender in this category" means — including the escapeLike guard, without which
 // a code containing a wildcard would silently widen the match.
-//
-// Ordering is by recency, not by a score: the codes carry the relevance (they
-// came out of the lexicon ranked), and within one code every tender is equally
-// "in that category". Fusion works on RANKS, so recency is the only defensible
-// tie-break here — and t.id makes the order total so paging cannot repeat a row.
 func (r *TenderRepo) FindByCPVPrefixes(ctx context.Context, codes []string, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
-	vals := nonEmpty(codes)
-	if len(vals) == 0 || limit <= 0 {
+	if limit <= 0 {
 		return nil, nil
 	}
 
 	b := &argBuilder{}
-	var arms []string
-	for _, v := range vals {
-		p := b.next(escapeLike(v) + "%")
-		arms = append(arms, "t.cpv LIKE "+p,
-			"EXISTS (SELECT 1 FROM unnest(t.cpv_secondary) AS sec WHERE sec LIKE "+p+")")
+	predicate, codeRank := cpvPrefixRanking(codes, b)
+	if predicate == "" {
+		return nil, nil
 	}
-	clauses := append([]string{"(" + strings.Join(arms, " OR ") + ")"}, filterClauses(filters, b)...)
+	clauses := append([]string{predicate}, filterClauses(filters, b)...)
 
 	sql := "SELECT" + tenderSelectColumns + ",\n\t0::float8 AS relevance,\n\t'' AS snippet" +
 		tenderFromClause + whereClause(clauses) +
-		"\nORDER BY t.published_at DESC NULLS LAST, t.id DESC" +
+		// t.id last, as before: without a final tie-break two equally-ranked
+		// tenders published at the same instant could swap places between
+		// pages and make a result appear twice or not at all.
+		"\nORDER BY " + codeRank + " ASC, t.published_at DESC NULLS LAST, t.id DESC" +
 		"\nLIMIT " + b.next(limit)
 
 	return r.queryScoredTenders(ctx, "find tenders by cpv prefixes", sql, b.args)
+}
+
+// cpvPrefixRanking builds the WHERE predicate matching any of codes (primary
+// or secondary CPV, prefix match) and the CASE expression that ranks a
+// matching row by the EARLIEST — i.e. best — code in codes it matches.
+//
+// Pulled out of FindByCPVPrefixes so this shape can be asserted directly
+// without a live database, the same way filterClauses already is elsewhere in
+// this file — the SQL-string tests below are what actually pin the ordering
+// behaviour down; FindByCPVPrefixes itself is exercised against a real
+// database in tender_repo_test.go.
+//
+// codeRank has no ELSE branch: the predicate this returns is exactly the OR
+// of every WHEN condition, so any row a caller's WHERE clause keeps always
+// matches at least one of them — CASE therefore always resolves.
+func cpvPrefixRanking(codes []string, b *argBuilder) (predicate, codeRank string) {
+	vals := nonEmpty(codes)
+	if len(vals) == 0 {
+		return "", ""
+	}
+
+	var arms, whens []string
+	for i, v := range vals {
+		p := b.next(escapeLike(v) + "%")
+		cond := "(t.cpv LIKE " + p + " OR EXISTS (SELECT 1 FROM unnest(t.cpv_secondary) AS sec WHERE sec LIKE " + p + "))"
+		arms = append(arms, cond)
+		whens = append(whens, "WHEN "+cond+" THEN "+strconv.Itoa(i))
+	}
+	predicate = "(" + strings.Join(arms, " OR ") + ")"
+	// CASE evaluates its WHENs in order and stops at the first match, so a row
+	// that happens to ALSO match a weaker, later-ranked code is never pushed
+	// down by it — it keeps the best rank it earned.
+	codeRank = "CASE " + strings.Join(whens, " ") + " END"
+	return predicate, codeRank
 }
 
 // browseOrderBy renders a sort order as SQL for the browse path.
