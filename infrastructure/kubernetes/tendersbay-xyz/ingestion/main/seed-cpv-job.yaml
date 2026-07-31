@@ -65,7 +65,7 @@ spec:
           # image's /ingestion ENTRYPOINT. Image tag automation (update.yaml)
           # already keeps this repo's ingestion image references current;
           # this Job shares that same repository/policy, not a separate one.
-          image: bernardoforcillo/tendersbay-ingestion:20260728081340-59aa0f822bf66c49ae8ab3fa32f57c98b141406f@sha256:074203d5b523b9c1aff52189aff5cc1da57bcb35d2b675cfb8f4292c42912530 # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
+          image: bernardoforcillo/tendersbay-ingestion:20260731171903-103055fdfd2dfde9037a16ddc3fcc43463d14276@sha256:5dd8b6efe3658c30e769e905952e915fef7c8d2587eaa7b1b925ab11a6f597be # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
           command: ['/seed-cpv']
           securityContext:
             allowPrivilegeEscalation: false
