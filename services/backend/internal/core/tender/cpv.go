@@ -1,6 +1,9 @@
 package tender
 
-import "context"
+import (
+	"context"
+	"log/slog"
+)
 
 // CPVMatch is one CPV code a query resolved to, with the label that matched it.
 //
@@ -170,7 +173,19 @@ func (s *Service) cpvCandidates(ctx context.Context, query string, filters Filte
 	}
 
 	matches, err := s.lexicon.MatchCodes(ctx, query, maxCPVCodes)
-	if err != nil || len(matches) == 0 {
+	if err != nil {
+		// Every CPV failure degrades to "the signal contributes nothing" (see
+		// this function's doc comment) rather than failing the search, but a
+		// silent, unlogged failure here is indistinguishable from the normal
+		// "no code describes this query" answer — e.g. an unseeded cpv_terms
+		// table would silently disable the CPV signal on every search, forever,
+		// with nothing to notice. Logging costs nothing on the request path
+		// (the search still degrades gracefully) and turns a silent outage into
+		// a visible one.
+		slog.WarnContext(ctx, "cpv lexicon match failed; degrading to no CPV signal", "error", err)
+		return nil, nil
+	}
+	if len(matches) == 0 {
 		return nil, nil
 	}
 
