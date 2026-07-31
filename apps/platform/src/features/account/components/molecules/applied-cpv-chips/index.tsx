@@ -24,10 +24,15 @@ import { useTranslation } from 'react-i18next';
  * mean shipping 9.450 codes of app copy to say what the vocabulary already says.
  *
  * Deliberately renders with NO leading "Read from your query:" label of its
- * own, even though AppliedFilterChips (its sibling on the tenders page) does:
- * the two are stacked together, and both showing that same label would read
- * as the sentence repeated twice on screen. Each chip already spells out "CPV
- * {code} — {label}", which carries its own context without one.
+ * own — nor does its sibling AppliedFilterChips. The two are stacked
+ * together on the tenders page, and each family can be empty independently
+ * (a query can resolve a CPV code with zero applied filters, or vice versa),
+ * so neither component can safely own the label itself without either
+ * showing it twice (both present) or not at all (only one present, if each
+ * only showed it conditionally on ITS OWN content). The tenders page renders
+ * the shared label once, gated on either family having something to show,
+ * above both. Each chip here already spells out "CPV {code} — {label}",
+ * which carries its own context regardless.
  */
 export function AppliedCpvChips({
   matches,

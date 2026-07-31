@@ -6,7 +6,11 @@ import { useQueryState } from 'nuqs';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppliedCpvChips, AppliedFilterChips } from '~/features/account/components/molecules';
+import {
+  AppliedCpvChips,
+  AppliedFilterChips,
+  appliedFilterEntries,
+} from '~/features/account/components/molecules';
 import {
   ClientProfileForm,
   PageHeader,
@@ -155,6 +159,27 @@ export function AccountTendersPage() {
     runSearch(EMPTY_FILTERS);
   }
 
+  // Computed once so the "does either applied-chip family have anything to
+  // show" check below and AppliedFilterChips' own prop use the exact same
+  // explicit-facets snapshot — duplicating it would risk the two silently
+  // drifting apart.
+  const explicitFilterFacets = {
+    countries: filters.countries,
+    cpvPrefixes: filters.sectors.map(cpvPrefix).filter((p): p is string => Boolean(p)),
+    statuses: filters.statuses,
+    hasValueBounds: Boolean(filters.valueMin || filters.valueMax),
+    hasDeadline: Boolean(filters.deadline),
+  };
+  // The two applied-chip families are independent: a query can resolve a CPV
+  // code with zero applied filters (the common case for a plain free-text
+  // query, e.g. "pulizie uffici"), or vice versa. Neither component renders
+  // its own "Read from your search:" heading (see their doc comments), so it
+  // is rendered exactly once, below, whenever EITHER has something to show —
+  // never twice, never dropped.
+  const hasAppliedCpv = meta.appliedCpv.length > 0;
+  const hasAppliedFilters =
+    appliedFilterEntries(meta.appliedFilters, explicitFilterFacets).length > 0;
+
   return (
     <AccountLayout>
       <PageHeader />
@@ -199,6 +224,9 @@ export function AccountTendersPage() {
           />
           {searched ? (
             <div className="mx-auto w-full max-w-2xl space-y-4">
+              {(hasAppliedCpv || hasAppliedFilters) && (
+                <span className="block text-sm text-ink-500">{t('tenders.applied.label')}</span>
+              )}
               <AppliedCpvChips
                 matches={meta.appliedCpv}
                 onRemove={(code) => {
@@ -210,15 +238,7 @@ export function AccountTendersPage() {
               />
               <AppliedFilterChips
                 applied={meta.appliedFilters}
-                explicit={{
-                  countries: filters.countries,
-                  cpvPrefixes: filters.sectors
-                    .map(cpvPrefix)
-                    .filter((p): p is string => Boolean(p)),
-                  statuses: filters.statuses,
-                  hasValueBounds: Boolean(filters.valueMin || filters.valueMax),
-                  hasDeadline: Boolean(filters.deadline),
-                }}
+                explicit={explicitFilterFacets}
                 locale={i18n.language}
                 onClear={() => {
                   void setQuery('');
