@@ -226,14 +226,190 @@ type Ranking struct {
 	// FreshBoost multiplies a tender published within FreshWithinDays.
 	FreshBoost      float64
 	FreshWithinDays int
+
+	// CPVWeight is the fusion weight of the CPV arm — tenders found because the
+	// query resolved to a CPV code they carry (see cpv.go). It is what makes
+	// cross-language retrieval work: a code is identical in all 24 EU languages.
+	//
+	// It is deliberately LOWER than the two text retrievers. A category label
+	// says what a notice is about; a title match says it is about exactly this.
+	//
+	// Zero means the arm is off, and unlike every other knob in this struct that
+	// is a MEANINGFUL value rather than "unset" — see withDefaults.
+	CPVWeight float64
+
+	// REMOVED FIELD, kept as history: CPVIndexExpanded (and its lexicalSQL-side
+	// twin, LexicalQuery.ExpandCPVLabels) was a THIRD mechanism for the same
+	// CPV signal — index-side label expansion. Migration 0008 put each
+	// tender's CPV labels, in all 24 languages, into search_vector's weight
+	// class C, and the toggle controlled whether the lexical match widened to
+	// include them. Task 16 measured it: it moved NONE of the four target
+	// cross-language cells off 0.0000 and cost real ndcg/mrr on the
+	// same-language diagonal — see DefaultRanking's CPVWeight comment for the
+	// harness numbers. Worse, the toggle's SHIPPED (off) path narrowed the
+	// vector with ts_filter(t.search_vector, …): a function call to the left
+	// of `@@` is not the indexed expression, so
+	// idx_ingested_tenders_search_vector could not be used, and the OR-chain
+	// predicate around it degraded to a sequential scan of the whole table in
+	// production. A mechanism that gained nothing measurable when correctly
+	// wired AND was silently broken in production on its shipped path had no
+	// honest "just retune it" fix, so migration 0009 reverted search_vector to
+	// its pre-0008 shape (cpv_labels stays as a column, just out of the
+	// indexed vector — see 0009's header) and this field, LexicalQuery.
+	// ExpandCPVLabels, and lexicalSQL's toggle were all removed together:
+	// there is no longer anything for a "widen to labels" knob to widen into.
+
+	// CPVBoost is a STRUCTURALLY DIFFERENT way of using the same CPV signal:
+	// instead of retrieving extra candidates (CPVWeight's fourth ranked list),
+	// it multiplies the score of a candidate lexical or dense ALREADY found,
+	// when that candidate's own CPV matches a resolved code's category. See
+	// cpvBoost's doc comment in hybrid.go for the full reasoning — in short,
+	// RRF fuses on rank, and rank inside one CPV category carries no relevance
+	// information, so injecting a rank-ordered category list into fusion (what
+	// CPVWeight does) adds noise; multiplying an already-earned score cannot.
+	//
+	// Like businessBoost's other multipliers this can only RAISE a score, so it
+	// is applied the same way — after fusion, inside businessBoost — and never
+	// touches maxScore.
+	//
+	// CPVBoost <= 1 means off — a multiplier's "off" is 1 (no-op), not 0 (which
+	// would ZERO every score it touched), so unlike a weight, the meaningful
+	// "unset" boundary here is <= 1, not <= 0. Like CPVWeight, this is
+	// deliberately NOT filled in by withDefaults: a bare Ranking{} must leave
+	// it off, not silently turn it on at whatever value DefaultRanking uses.
+	CPVBoost float64
 }
 
 // DefaultRanking is the starting configuration, shared by main.go and the
 // tests so the numbers live in exactly one place.
 func DefaultRanking() Ranking {
 	return Ranking{
-		LexicalWeight:    0.5,
-		DenseWeight:      0.5,
+		LexicalWeight: 0.5,
+		DenseWeight:   0.5,
+		// CPVWeight 0 — the RETRIEVAL ARM (cpv.go, FindByCPVPrefixes) is wired
+		// but OFF, permanently, and Task 15 is why "permanently" is the right
+		// word rather than "still".
+		//
+		// Task 14 measured the arm with three prefix-truncation depths and every
+		// one scored BELOW this baseline (recall@20 0.6315/ndcg 0.4946/mrr
+		// 0.4862): best was ~0.593/0.460/0.439, and the four cross-language
+		// cells the arm exists to fix (it→de, fr→de, nl→de, pl→de) stayed at
+		// exactly 0.0000 in all three. Root cause, confirmed against the eval
+		// DB: FindByCPVPrefixes shared the same small per-page candidate window
+		// every other arm uses (~21 rows for a 20-result page) and ordered its
+		// matches by recency: for "pulizie uffici" → class 9091, 56 tenders in
+		// that class exist and the one judged-relevant German tender ranked
+		// 31st by publish date, so it never entered the candidate window at all.
+		//
+		// Task 15 tried the two structurally different fixes that finding
+		// pointed at, and measured BOTH against the live harness:
+		//
+		//   (A) Minimal fix, keep the arm: order FindByCPVPrefixes by the
+		//       caller's own code rank instead of recency (cpvPrefixRanking in
+		//       tender_search.go), and give the arm its OWN wide budget
+		//       (cpvArmWindow) instead of sharing the ~21-row page window.
+		//       Measured at CPVWeight 0.4 (unchanged from Task 14, to isolate
+		//       these two fixes from a third confound): recall@20 0.5852 / ndcg
+		//       0.4404 / mrr 0.4349 — WORSE than baseline on every metric, and
+		//       the four target cells stayed at 0.0000. This is the deeper
+		//       reason CPVWeight stays 0 even with both fixes applied: RRF
+		//       fuses on RANK, and rank carries no relevance information INSIDE
+		//       one CPV category — reordering the arm's OWN list only fixes
+		//       ties ACROSS the query's resolved codes, not the ties WITHIN one
+		//       code, which is most of what a 56-tender class actually is. A
+		//       widened window just floods fusion with more of that
+		//       arbitrarily-ordered noise. The code fix (cpvPrefixRanking,
+		//       cpvArmWindow) is left in place, switched off by CPVWeight 0 —
+		//       see cpvBoost's doc comment for why a fourth ranked list is the
+		//       wrong shape for this signal, not just an under-tuned one.
+		//
+		//   (B) Structural fix, drop the arm: apply the same resolved-code
+		//       signal as CPVBoost — a post-fusion multiplier on candidates
+		//       lexical/dense ALREADY found (see cpvBoost) — instead of a
+		//       fourth retrieval. Measured at 1.15 and 1.5 to confirm the
+		//       metric responds to the knob at all (it does, modestly: ndcg
+		//       0.5004 at 1.15 vs 0.4988 at 1.5, both above baseline, so 1.15
+		//       was kept — this was a choice between the two brief-specified
+		//       values, not further tuning). At 1.15: recall@20 0.6315 (tied
+		//       with baseline exactly — a pure re-ranking signal moves WHICH
+		//       page-20 window membership rarely changes, so this is expected,
+		//       not suspicious), ndcg 0.5004 (+0.0058), mrr 0.4983 (+0.0121).
+		//       Only 4 regressions beyond tolerance, all confined to the single
+		//       es/es→es scope (~0.02-0.04 each) — a real, small trade-off,
+		//       disclosed rather than hidden. The four target cells (it→de,
+		//       fr→de, nl→de, pl→de) stayed at 0.0000 under CPVBoost too: a
+		//       multiplier can only re-rank a candidate lexical or dense
+		//       already retrieved, and for those four specific cells the
+		//       correct tender was never retrieved by either to begin with — a
+		//       genuinely different, unsolved problem (index-side label
+		//       expansion, Tasks 15/16) that this result does not condemn.
+		//
+		// (B) beat the baseline; (A) did not. CPVBoost 1.15 ships ENABLED.
+		// CPVWeight stays 0 so the retrieval arm — proven twice now to inject
+		// rank noise no amount of ordering or window-widening fixes — never
+		// runs. See task-14-report.md (Task 14 run) and task-14-report.md's
+		// Task 15 section (this decision) for the full harness output.
+		//
+		// Task 16 tried a THIRD mechanism for the same signal: index-side CPV
+		// label expansion. Migration 0008 put each tender's CPV labels, in all
+		// 24 languages, into search_vector's weight class C; a toggle
+		// (Ranking.CPVIndexExpanded, LexicalQuery.ExpandCPVLabels) controlled
+		// whether the lexical match widened to include them, measured against
+		// all four {CPVWeight, CPVIndexExpanded} combinations on the same
+		// 45-query harness:
+		//
+		//   (0,    false) recall@20 0.6315 / ndcg 0.5004 / mrr 0.4983 — baseline.
+		//   (0.4,  false) recall@20 0.5778 / ndcg 0.4412 / mrr 0.4354 — retrieval
+		//                 arm alone, confirming (A) above a third time.
+		//   (0,    true)  recall@20 0.6389 / ndcg 0.4764 / mrr 0.4538 — index
+		//                 expansion alone: finds slightly MORE, ranks WORSE.
+		//   (0.4,  true)  recall@20 0.5981 / ndcg 0.4427 / mrr 0.4275 — both.
+		//
+		// In EVERY combination the four target cells (it→de, fr→de, nl→de,
+		// pl→de) stayed at EXACTLY 0.0000 — index expansion moved zero of them.
+		// Root cause, confirmed against the eval DB: websearch_to_tsquery ANDs
+		// every query word, 'simple' does no stemming or diacritic folding, and
+		// the official CPV taxonomy wording ("Building-cleaning services") is
+		// not worded like a natural query ("pulizie uffici" — "uffici" appears
+		// in no CPV label for that category, in any language). The labels were
+		// genuinely present and correct on the affected tenders (verified
+		// directly against the eval DB); the match strategy simply cannot
+		// exploit them for natural-language input. (0, true) also cost real
+		// ndcg/mrr on the same-language diagonal (it→it, en→en) versus baseline,
+		// for zero target-cell gain — cpv+cpv_labels is a large fraction of each
+		// eval tender's indexed text (no description in this corpus), so it
+		// competed with title matches even where it did nothing cross-language.
+		//
+		// Shipped disabled — and then, in the final whole-branch review,
+		// REMOVED ENTIRELY, not merely retuned. The toggle's off path (the
+		// shipped default) narrowed the match with
+		// ts_filter(t.search_vector, '{a,b,d}') to exclude the labels' weight
+		// class; ts_filter is a function call to the LEFT of `@@`, which is
+		// NOT the indexed expression, so idx_ingested_tenders_search_vector
+		// could not be used and the OR-chain predicate degraded to a
+		// sequential scan of the whole table — measured at 2,987 ms /
+		// 42,330 buffers against the live 13,036-row dev table, versus 88 ms
+		// before. A mechanism that gained nothing measurable when correctly
+		// wired AND was silently broken in production on its shipped path had
+		// no honest "just retune it" fix: migration 0009 reverted
+		// search_vector to its pre-0008 shape (cpv_labels stays as a column,
+		// just out of the indexed vector — see 0009's header for why), and
+		// Ranking.CPVIndexExpanded / LexicalQuery.ExpandCPVLabels / lexicalSQL's
+		// toggle were deleted along with it.
+		CPVWeight: 0,
+		// CPVBoost 1.15 — see the CPVWeight comment above for the full
+		// comparison against the retrieval-arm alternative. Shipped ENABLED:
+		// this is the one CPV-signal knob in this struct whose zero-ish value
+		// (<=1) is the OFF state and whose shipped default is switched on.
+		//
+		// The win is real but small, and smaller than it first looks:
+		// regressionTolerance (eval/harness_test.go) is 0.01, and of the three
+		// gains only mrr (+0.0121) clears that noise floor — ndcg (+0.0058)
+		// sits BELOW the harness's own tolerance and recall is exactly flat,
+		// so this is "one metric above noise, one below it, one unmoved," not
+		// an unqualified win; a future reader should not read the harness
+		// passing as this beating the baseline by a wide margin.
+		CPVBoost:         1.15,
 		RRFK:             60, // the value the RRF paper uses and everyone since
 		ClosedPenalty:    0.5,
 		ExpiredPenalty:   0.35,
@@ -247,6 +423,12 @@ func DefaultRanking() Ranking {
 // withDefaults fills in any unset knob, so a Config built without a Ranking
 // (every existing caller and test) gets sane behaviour rather than a
 // zero-weight ranking that scores everything 0.
+//
+// CPVWeight and CPVBoost are deliberately NOT filled. For them, the zero
+// value is a real setting — "the CPV arm is off", "the boost multiplier is
+// off" — not an absent one, so default-filling would make them impossible to
+// disable and would silently switch the signal on in every test that builds
+// a bare Ranking{}.
 func (r Ranking) withDefaults() Ranking {
 	d := DefaultRanking()
 	if r.LexicalWeight == 0 && r.DenseWeight == 0 {
@@ -282,7 +464,11 @@ func (r Ranking) withDefaults() Ranking {
 // Both retrievers return tenders that have already passed the authoritative
 // Postgres filter — the vector store's own pre-filter narrows the search but
 // never decides what is allowed through.
-func (s *Service) searchHybrid(ctx context.Context, query string, filters Filters, sortBy SortOrder, limit, offset int) (SearchOutput, error) {
+//
+// suppressed are CPV codes the caller does not want inferred (see
+// SearchParams.SuppressedCPV) — passed straight through to cpvCandidates,
+// which is where the actual filtering happens.
+func (s *Service) searchHybrid(ctx context.Context, query string, filters Filters, sortBy SortOrder, limit, offset int, suppressed []string) (SearchOutput, error) {
 	// Retrieve one past the end of the requested page so has_more can be
 	// answered without a second COUNT query.
 	want := offset + limit + 1
@@ -290,8 +476,13 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 		want = maxWindow
 	}
 
-	lexical, lexErr := s.repo.LexicalSearch(ctx, query, filters, want)
+	lexical, lexErr := s.repo.LexicalSearch(ctx, LexicalQuery{Text: query}, filters, want)
 	dense, denseErr := s.denseCandidates(ctx, query, filters, want)
+	// No error return: every CPV failure degrades to an absent signal — see
+	// cpvCandidates. cpvArm is only non-nil when the retrieval arm (CPVWeight)
+	// is on; cpvMatches is used both for AppliedCPV below and, inside fuse, for
+	// the CPVBoost multiplier.
+	cpvArm, cpvMatches := s.cpvCandidates(ctx, query, filters, suppressed)
 
 	mode := ModeHybrid
 	switch {
@@ -307,7 +498,7 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 	}
 
 	now := time.Now()
-	fused := s.fuse(lexical, dense, now)
+	fused := s.fuse(lexical, dense, cpvArm, cpvMatches, now)
 
 	// Facets are counted over the whole ranked window, before paging — they
 	// describe the result set, not the page the caller happens to be on.
@@ -320,6 +511,7 @@ func (s *Service) searchHybrid(ctx context.Context, query string, filters Filter
 	truncated := len(lexical) >= want || len(dense) >= want
 	out := page(fused, limit, offset, truncated, mode)
 	out.Facets = facets
+	out.AppliedCPV = cpvMatches
 	return out, nil
 }
 
@@ -399,14 +591,26 @@ func distinctByBestScore(hits []ScoredChunk) ([]string, map[string]float32) {
 	return ids, best
 }
 
-// fuse merges two ranked lists with Reciprocal Rank Fusion, then applies the
+// fuse merges the ranked lists with Reciprocal Rank Fusion, then applies the
 // business boost, and returns the result ordered best-first.
 //
-// The fused RelevanceScore is normalised so that 1.0 means "top of both
-// lists". It is NOT a cosine similarity any more — FitThresholds compares
+// The fused RelevanceScore is normalised so that 1.0 means "top of both TEXT
+// retrievers". It is NOT a cosine similarity any more — FitThresholds compares
 // against this field (see recommend.go), so those thresholds are calibrated
 // against this scale, not against raw embedding distance.
-func (s *Service) fuse(lexical, dense []ScoredTender, now time.Time) []ScoredTender {
+//
+// The CPV arm is deliberately absent from that normalisation. Adding its weight
+// to the denominator would push every result found by lexical+dense but not CPV
+// down from 1.0 to 0.667 of max, silently reclassifying "strong" fits as
+// "possible" — a regression in a feature this arm has nothing to do with. Left
+// out, the arm can only RAISE a score, so every existing threshold keeps exactly
+// the meaning it had.
+//
+// cpvMatches carries the resolved CPV codes regardless of whether cpv (the
+// retrieval arm's OWN candidate list) is populated — see cpvBoost, which reads
+// cpvMatches directly against lexical/dense candidates that were never part of
+// any CPV retrieval at all.
+func (s *Service) fuse(lexical, dense, cpv []ScoredTender, cpvMatches []CPVMatch, now time.Time) []ScoredTender {
 	r := s.cfg.Ranking.withDefaults()
 
 	type entry struct {
@@ -416,6 +620,14 @@ func (s *Service) fuse(lexical, dense []ScoredTender, now time.Time) []ScoredTen
 	merged := map[string]*entry{}
 
 	contribute := func(list []ScoredTender, weight float64) {
+		// A zero (or negative) weight means this arm is off. Skipping it here —
+		// rather than just contributing 0 — keeps an off arm from inserting its
+		// tenders into merged at all: without this guard, a CPV-only result
+		// would still appear in the output ranked last instead of being absent,
+		// and CPVWeight: 0 would stop being byte-identical to no arm at all.
+		if weight <= 0 {
+			return
+		}
 		for i, t := range list {
 			rrf := weight / (r.RRFK + float64(i+1))
 			e, ok := merged[t.ID]
@@ -428,15 +640,17 @@ func (s *Service) fuse(lexical, dense []ScoredTender, now time.Time) []ScoredTen
 	}
 	contribute(lexical, r.LexicalWeight)
 	contribute(dense, r.DenseWeight)
+	contribute(cpv, r.CPVWeight)
 
-	// The best attainable fused score: rank 1 in both lists.
+	// The best attainable score from the two TEXT retrievers: rank 1 in both.
+	// The CPV arm is deliberately excluded — see the fuse doc comment.
 	maxScore := (r.LexicalWeight + r.DenseWeight) / (r.RRFK + 1)
 
 	out := make([]ScoredTender, 0, len(merged))
 	for _, e := range merged {
 		t := e.tender
 		normalised := e.score / maxScore
-		t.RelevanceScore = normalised * businessBoost(t, r, now)
+		t.RelevanceScore = normalised * businessBoost(t, r, now) * cpvBoost(t, cpvMatches, r)
 		out = append(out, t)
 	}
 
@@ -480,6 +694,46 @@ func businessBoost(t ScoredTender, r Ranking, now time.Time) float64 {
 	}
 
 	return boost
+}
+
+// cpvBoost multiplies in the CPV signal directly against a candidate lexical
+// or dense ALREADY found, instead of injecting it as a fourth ranked list the
+// way CPVWeight's retrieval arm does.
+//
+// Why not a fourth arm: RRF fuses on RANK, and rank carries no relevance
+// information INSIDE one CPV category — one office-cleaning tender is no more
+// "about cleaning" than the next one sharing its class, so a rank-ordered CPV
+// candidate list injects arbitrary noise into fusion. That is the most likely
+// explanation for why CPVWeight regressed cells that used to work (es→de,
+// en→nl) while its own four target cells (it→de, fr→de, nl→de, pl→de) stayed
+// at 0.0000 regardless of ordering or window size — see DefaultRanking's
+// CPVWeight comment and task-14-report.md. A tender lexical or dense already
+// surfaced needs no separate retrieval at all to also carry the CPV signal:
+// its score can only go up, never in by a borrowed, meaningless rank
+// position.
+//
+// Matches on t.CPV (the primary code) only. ScoredTender.Tender does NOT
+// carry CPVSecondary — only TenderDetail does (see detail.go) — so a tender
+// found solely through a secondary CPV code is not boosted here. Widening the
+// search projection to also carry cpv_secondary is a real, scoped follow-up;
+// this is a known, stated limitation, not an oversight.
+//
+// The category prefix (cpvHierarchyPrefix), not the raw leaf, is what's
+// compared — matching on the raw leaf would recreate the exact bug Task 14
+// fixed: an Italian "pulizie uffici" resolves to 90919200, but its German
+// sibling tender carries 90911200, agreeing only on the shared class "9091".
+// Leaf equality would never fire for the cross-language cases this exists to
+// help.
+func cpvBoost(t ScoredTender, matches []CPVMatch, r Ranking) float64 {
+	if r.CPVBoost <= 1 || t.CPV == "" {
+		return 1
+	}
+	for _, m := range matches {
+		if strings.HasPrefix(t.CPV, cpvHierarchyPrefix(m.Code)) {
+			return r.CPVBoost
+		}
+	}
+	return 1
 }
 
 // page slices one page out of a ranked list. truncated carries whether a

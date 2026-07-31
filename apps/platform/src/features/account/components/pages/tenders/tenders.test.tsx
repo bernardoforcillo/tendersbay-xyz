@@ -1,9 +1,10 @@
-import type { TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
+import type { CpvMatch, TenderFilters, TenderResult } from '@tendersbay/proto/tender/v1/tender_pb';
 import { fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NuqsTestingAdapter } from 'nuqs/adapters/testing';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { SearchMeta } from '~/features/account/components/organisms/tender-feed';
 import { useChatStore } from '~/store/chat';
 import { renderWithI18n } from '~/test/utils';
 
@@ -14,14 +15,43 @@ const { searchMock, loadMoreMock, useTenderSearchMock } = vi.hoisted(() => ({
 }));
 
 /** The search metadata shape the hook always returns — see `SearchMeta`. */
-const EMPTY_META = {
+const EMPTY_META: SearchMeta = {
   mode: 'hybrid',
   degraded: false,
   appliedQuery: '',
+  appliedCpv: [],
   countryFacets: [],
   statusFacets: [],
   cpvDivisionFacets: [],
 };
+
+function cpvMatch(overrides: Partial<CpvMatch> = {}): CpvMatch {
+  return {
+    $typeName: 'tender.v1.CpvMatch',
+    code: '90919200',
+    label: 'Servizi di pulizia di uffici',
+    language: 'it',
+    score: 0.9,
+    ...overrides,
+  } as CpvMatch;
+}
+
+function appliedTenderFilters(overrides: Partial<TenderFilters> = {}): TenderFilters {
+  return {
+    $typeName: 'tender.v1.TenderFilters',
+    country: '',
+    cpv: '',
+    status: '',
+    deadlineFrom: '',
+    deadlineTo: '',
+    countries: [],
+    cpvPrefixes: [],
+    statuses: [],
+    nutsPrefixes: [],
+    buyer: '',
+    ...overrides,
+  } as TenderFilters;
+}
 
 const { navigateMock } = vi.hoisted(() => ({ navigateMock: vi.fn() }));
 vi.mock('@tanstack/react-router', () => ({
@@ -415,6 +445,55 @@ describe('AccountTendersPage — search', () => {
     mockHook({ meta: { ...EMPTY_META, mode: 'hybrid', degraded: false } });
     renderTenders('?q=roads');
     expect(screen.queryByText(/Part of the search is unavailable/, { exact: false })).toBeNull();
+  });
+
+  // AppliedCpvChips and AppliedFilterChips are each unit-tested in isolation,
+  // and neither renders its own "Read from your search:" heading any more —
+  // the page renders it once, gated on either family having content. Neither
+  // component's own test suite can see this: a plain free-text query with no
+  // numeric/date/country phrasing (the running example throughout this
+  // effort, "pulizie uffici") resolves a CPV match with ZERO applied
+  // filters, which is exactly the case a naive "let AppliedFilterChips own
+  // the heading" fix would silently drop the heading for.
+  describe('the shared "applied" heading', () => {
+    it('shows it exactly once for a CPV match with no applied filters', async () => {
+      mockHook({
+        meta: {
+          ...EMPTY_META,
+          appliedCpv: [cpvMatch()],
+          appliedFilters: appliedTenderFilters(), // every facet empty
+        },
+      });
+      const user = userEvent.setup();
+      renderTenders();
+      await submit(user, 'pulizie uffici');
+
+      expect(screen.getAllByText('Read from your search:')).toHaveLength(1);
+    });
+
+    it('shows it exactly once when both families have content', async () => {
+      mockHook({
+        meta: {
+          ...EMPTY_META,
+          appliedCpv: [cpvMatch()],
+          appliedFilters: appliedTenderFilters({ valueMax: 100_000n }),
+        },
+      });
+      const user = userEvent.setup();
+      renderTenders();
+      await submit(user, 'pulizie uffici sotto 100k');
+
+      expect(screen.getAllByText('Read from your search:')).toHaveLength(1);
+    });
+
+    it('shows it not at all when neither family has content', async () => {
+      mockHook({ meta: EMPTY_META });
+      const user = userEvent.setup();
+      renderTenders();
+      await submit(user, 'roads');
+
+      expect(screen.queryByText('Read from your search:')).toBeNull();
+    });
   });
 });
 

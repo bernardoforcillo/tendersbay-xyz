@@ -471,7 +471,8 @@
       "valueMax": "līdz {{max}}",
       "valueMin": "no {{min}}",
       "deadlineUntil": "noslēdzas līdz {{date}}",
-      "undo": "Notīrīt"
+      "undo": "Notīrīt",
+      "remove": "Noņemt {{chip}}"
     }
   },
   "today": {

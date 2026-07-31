@@ -6,7 +6,11 @@ import { useQueryState } from 'nuqs';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppliedFilterChips } from '~/features/account/components/molecules';
+import {
+  AppliedCpvChips,
+  AppliedFilterChips,
+  appliedFilterEntries,
+} from '~/features/account/components/molecules';
 import {
   ClientProfileForm,
   PageHeader,
@@ -44,6 +48,9 @@ export function AccountTendersPage() {
   // apart from a brand-new search.
   const lastQueryRef = useRef('');
   const [filters, setFilters] = useState<FilterSelections>(EMPTY_FILTERS);
+  // Codes the user removed from the inferred set. Client-side because the server
+  // re-infers them from the same text on every request.
+  const [suppressedCpv, setSuppressedCpv] = useState<string[]>([]);
   const { results, hasMore, loading, error, meta, search, loadMore } = useTenderSearch();
   const currentWorkspaceId = useWorkspaceStore((s) => s.currentWorkspaceId);
   const shortlist = useClientShortlist(currentWorkspaceId);
@@ -63,7 +70,7 @@ export function AccountTendersPage() {
     });
   }, [shortlist.results, shortlist.needsProfile]);
 
-  const runSearch = (selections: FilterSelections) => {
+  const runSearch = (selections: FilterSelections, suppressed: string[] = suppressedCpv) => {
     const trimmed = query.trim();
     if (!trimmed && !hasActiveFilters(selections)) return;
     // A repeat of the same query with the filters changed is a REFINEMENT, not
@@ -71,21 +78,39 @@ export function AccountTendersPage() {
     // first answer wasn't good enough, which is the signal that says whether
     // ranking changes actually help.
     const refined = lastQueryRef.current === trimmed && searched;
+    // A new query text is a new inference; carrying the previous suppressions
+    // forward would narrow a search the user never narrowed.
+    const carried = refined ? suppressed : [];
     lastQueryRef.current = trimmed;
     setSearched(true);
+    if (carried !== suppressed) setSuppressedCpv(carried);
     posthog?.capture(refined ? 'search_refined' : 'search_performed', {
       location: 'explore',
       has_query: trimmed.length > 0,
       query_length: trimmed.length,
       has_filters: hasActiveFilters(selections),
       sort: selections.sort,
+      suppressed_cpv_count: carried.length,
     });
-    void search(
-      trimmed,
-      toFilterValues(selections, new Date()),
-      currentWorkspaceId ?? undefined,
-      selections.sort,
-    );
+    // The fifth argument is omitted rather than passed as `[]`: the hook only
+    // sends `suppressedCpv` on the wire when there is something to suppress,
+    // and several existing tests assert `search`'s call arguments exactly.
+    if (carried.length > 0) {
+      void search(
+        trimmed,
+        toFilterValues(selections, new Date()),
+        currentWorkspaceId ?? undefined,
+        selections.sort,
+        carried,
+      );
+    } else {
+      void search(
+        trimmed,
+        toFilterValues(selections, new Date()),
+        currentWorkspaceId ?? undefined,
+        selections.sort,
+      );
+    }
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: run once on mount only.
@@ -134,6 +159,27 @@ export function AccountTendersPage() {
     runSearch(EMPTY_FILTERS);
   }
 
+  // Computed once so the "does either applied-chip family have anything to
+  // show" check below and AppliedFilterChips' own prop use the exact same
+  // explicit-facets snapshot — duplicating it would risk the two silently
+  // drifting apart.
+  const explicitFilterFacets = {
+    countries: filters.countries,
+    cpvPrefixes: filters.sectors.map(cpvPrefix).filter((p): p is string => Boolean(p)),
+    statuses: filters.statuses,
+    hasValueBounds: Boolean(filters.valueMin || filters.valueMax),
+    hasDeadline: Boolean(filters.deadline),
+  };
+  // The two applied-chip families are independent: a query can resolve a CPV
+  // code with zero applied filters (the common case for a plain free-text
+  // query, e.g. "pulizie uffici"), or vice versa. Neither component renders
+  // its own "Read from your search:" heading (see their doc comments), so it
+  // is rendered exactly once, below, whenever EITHER has something to show —
+  // never twice, never dropped.
+  const hasAppliedCpv = meta.appliedCpv.length > 0;
+  const hasAppliedFilters =
+    appliedFilterEntries(meta.appliedFilters, explicitFilterFacets).length > 0;
+
   return (
     <AccountLayout>
       <PageHeader />
@@ -178,17 +224,21 @@ export function AccountTendersPage() {
           />
           {searched ? (
             <div className="mx-auto w-full max-w-2xl space-y-4">
+              {(hasAppliedCpv || hasAppliedFilters) && (
+                <span className="block text-sm text-ink-500">{t('tenders.applied.label')}</span>
+              )}
+              <AppliedCpvChips
+                matches={meta.appliedCpv}
+                onRemove={(code) => {
+                  const next = [...suppressedCpv, code];
+                  setSuppressedCpv(next);
+                  posthog?.capture('search_cpv_suppressed', { location: 'explore', code });
+                  runSearch(filters, next);
+                }}
+              />
               <AppliedFilterChips
                 applied={meta.appliedFilters}
-                explicit={{
-                  countries: filters.countries,
-                  cpvPrefixes: filters.sectors
-                    .map(cpvPrefix)
-                    .filter((p): p is string => Boolean(p)),
-                  statuses: filters.statuses,
-                  hasValueBounds: Boolean(filters.valueMin || filters.valueMax),
-                  hasDeadline: Boolean(filters.deadline),
-                }}
+                explicit={explicitFilterFacets}
                 locale={i18n.language}
                 onClear={() => {
                   void setQuery('');

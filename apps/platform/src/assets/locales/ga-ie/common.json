@@ -479,7 +479,8 @@
       "valueMax": "suas go {{max}}",
       "valueMin": "ó {{min}}",
       "deadlineUntil": "dúnann faoi {{date}}",
-      "undo": "Glan"
+      "undo": "Glan",
+      "remove": "Bain {{chip}}"
     }
   },
   "today": {

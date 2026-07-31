@@ -473,7 +473,8 @@
       "valueMax": "legfeljebb {{max}}",
       "valueMin": "legalább {{min}}",
       "deadlineUntil": "határidő: {{date}}",
-      "undo": "Törlés"
+      "undo": "Törlés",
+      "remove": "{{chip}} eltávolítása"
     }
   },
   "today": {

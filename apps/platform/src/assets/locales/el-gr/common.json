@@ -473,7 +473,8 @@
       "valueMax": "έως {{max}}",
       "valueMin": "από {{min}}",
       "deadlineUntil": "λήγει έως {{date}}",
-      "undo": "Καθαρισμός"
+      "undo": "Καθαρισμός",
+      "remove": "Αφαίρεση {{chip}}"
     }
   },
   "today": {

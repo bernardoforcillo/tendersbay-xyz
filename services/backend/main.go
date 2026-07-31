@@ -208,7 +208,12 @@ func main() {
 				SuppliesSubCentralMinor: 21600000,  // €216,000
 			},
 		},
-	).WithEmbeddingCache(embeddingCache)
+	).WithEmbeddingCache(embeddingCache).
+		// The CPV vocabulary is what makes a search typed in one EU language find
+		// notices written in another. Attached unconditionally: a database whose
+		// cpv_terms table has not been seeded yet simply resolves no codes, and
+		// the arm contributes nothing — see cpvCandidates.
+		WithCPVLexicon(postgres.NewCPVLexicon(db))
 	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo)
 
 	// Bid lifecycle (workbench-bando-hub) — consumes workbenchSvc for access

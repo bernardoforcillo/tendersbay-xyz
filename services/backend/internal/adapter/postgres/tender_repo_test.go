@@ -72,6 +72,7 @@ func withPublishedAt(ts time.Time) func(*testTenderRow) {
 	return func(r *testTenderRow) { r.publishedAt = &ts }
 }
 func withNUTS(n string) func(*testTenderRow) { return func(r *testTenderRow) { r.nuts = n } }
+func withCPV(c string) func(*testTenderRow)  { return func(r *testTenderRow) { r.cpv = c } }
 
 func TestSearchByFiltersRanked_FiltersByCountryAndOrdersByPublishedAtDesc(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
@@ -264,6 +265,28 @@ func TestDistinctCountries_ReturnsDedupedNonEmpty(t *testing.T) {
 	}
 }
 
+// LexicalSearch adds a trigram similarity arm (the `%` operator) whenever the
+// query is short enough to be name-shaped (see trigramQueryMaxLen). pg_trgm is
+// installed in the `tenders` schema, not `public` — if the connection's
+// search_path doesn't include `tenders`, Postgres can't resolve the `%`
+// operator at all and every short query errors, silently degrading hybrid
+// search to dense-only for essentially every real user query. This is the
+// regression test for that: before the search_path fix it fails with
+// "could not choose a best candidate operator for `%` operator"; after, it
+// must return without error.
+func TestLexicalSearch_ShortQueryDoesNotErrorOnTrigramOperator(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+	insertTestTender(t, sqlDB, "lexical-trigram-1", withCountry("ITA"))
+
+	// "comune bergam" is 13 runes — well under trigramQueryMaxLen (60) — so
+	// LexicalSearch adds the `t.title % $n` / `t.buyer_name % $n` arm.
+	_, err := repo.LexicalSearch(ctx, tender.LexicalQuery{Text: "comune bergam"}, tender.Filters{}, 10)
+	if err != nil {
+		t.Fatalf("LexicalSearch(short query) error = %v, want nil — the trigram `%%` operator must resolve via search_path", err)
+	}
+}
+
 func TestEnrichTenders_RoundTripsStringIDs(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()
@@ -275,5 +298,53 @@ func TestEnrichTenders_RoundTripsStringIDs(t *testing.T) {
 	}
 	if len(rows) != 1 || rows[0].ID != strconv.FormatInt(id, 10) {
 		t.Errorf("rows = %+v, want exactly one tender with ID %d", rows, id)
+	}
+}
+
+// FindByCPVPrefixes used to order strictly by recency; Task 14/15 found that
+// this discarded the actually-relevant tender whenever its own CPV category
+// held enough rows to push it past the retrieval arm's small candidate
+// window, however precisely the resolved code was truncated. The fix ranks by
+// the CALLER'S code order first (cpvPrefixRanking — see tender_search.go and
+// its SQL-shape unit tests) and recency only breaks a tie within one code.
+// This is the end-to-end check that the database actually orders rows that
+// way, not just that the generated SQL looks right.
+func TestFindByCPVPrefixes_RanksTheCallersBestCodeAboveNewerWeakerMatches(t *testing.T) {
+	repo, sqlDB := testTenderRepo(t)
+	ctx := context.Background()
+
+	// A country code no real ingested data uses, so this test's result set is
+	// isolated from anything already in the database regardless of what other
+	// tenders happen to carry these CPV prefixes.
+	const country = "ZZ"
+	older := time.Now().Add(-72 * time.Hour)
+	newer := time.Now().Add(-1 * time.Hour)
+	newest := time.Now()
+
+	// Both share codes[0] ("9091"), the caller's BEST-ranked resolved code.
+	idOldBest := insertTestTender(t, sqlDB, "cpv-rank-old-best", withCountry(country), withCPV("90911200"), withPublishedAt(older))
+	idNewBest := insertTestTender(t, sqlDB, "cpv-rank-new-best", withCountry(country), withCPV("90912000"), withPublishedAt(newer))
+	// Matches only codes[1] ("4521"), the caller's WEAKER, second-ranked code —
+	// but it is the newest row of the three. Recency-only ordering (the bug
+	// this guards against) would put it first; correct ordering must not.
+	idNewestWeak := insertTestTender(t, sqlDB, "cpv-rank-newest-weak", withCountry(country), withCPV("45210000"), withPublishedAt(newest))
+
+	got, err := repo.FindByCPVPrefixes(ctx, []string{"9091", "4521"}, tender.Filters{Countries: []string{country}}, 10)
+	if err != nil {
+		t.Fatalf("FindByCPVPrefixes: %v", err)
+	}
+	if len(got) != 3 {
+		t.Fatalf("len(got) = %d, want 3", len(got))
+	}
+
+	gotIDs := make([]string, len(got))
+	for i, r := range got {
+		gotIDs[i] = r.ID
+	}
+	want := []string{itoa(idNewBest), itoa(idOldBest), itoa(idNewestWeak)}
+	for i := range want {
+		if gotIDs[i] != want[i] {
+			t.Fatalf("order = %v, want %v — the caller's best code must rank above its weaker code regardless of recency, and recency must still break the tie WITHIN the best code", gotIDs, want)
+		}
 	}
 }

@@ -475,7 +475,8 @@
       "valueMax": "do {{max}}",
       "valueMin": "od {{min}}",
       "deadlineUntil": "zatvara se do {{date}}",
-      "undo": "Očisti"
+      "undo": "Očisti",
+      "remove": "Ukloni {{chip}}"
     }
   },
   "today": {

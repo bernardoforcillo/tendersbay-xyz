@@ -469,7 +469,8 @@
       "valueMax": "upp till {{max}}",
       "valueMin": "från {{min}}",
       "deadlineUntil": "stänger senast {{date}}",
-      "undo": "Rensa"
+      "undo": "Rensa",
+      "remove": "Ta bort {{chip}}"
     }
   },
   "today": {

@@ -469,7 +469,8 @@
       "valueMax": "enintään {{max}}",
       "valueMin": "vähintään {{min}}",
       "deadlineUntil": "päättyy {{date}}",
-      "undo": "Tyhjennä"
+      "undo": "Tyhjennä",
+      "remove": "Poista {{chip}}"
     }
   },
   "today": {

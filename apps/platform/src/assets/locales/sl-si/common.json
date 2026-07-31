@@ -473,7 +473,8 @@
       "valueMax": "do {{max}}",
       "valueMin": "od {{min}}",
       "deadlineUntil": "zapre se do {{date}}",
-      "undo": "Počisti"
+      "undo": "Počisti",
+      "remove": "Odstrani {{chip}}"
     }
   },
   "today": {

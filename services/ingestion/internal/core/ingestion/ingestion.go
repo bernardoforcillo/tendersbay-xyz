@@ -16,6 +16,11 @@ import (
 // maxConcurrentProviders bounds how many providers run Fetch/Save at once.
 const maxConcurrentProviders = 8
 
+// providerTimeout bounds one provider's Fetch+Save. Sized well under the
+// CronJob's activeDeadlineSeconds so a stalled provider fails on its own
+// and the cycle still records every other provider's result.
+const providerTimeout = 20 * time.Minute
+
 // Source is the input port each provider implements. This is the
 // extensibility/scaling seam: TED / national-portal connectors plug in here.
 type Source interface {
@@ -112,12 +117,29 @@ func (s *Service) runSource(ctx context.Context, src Source) ProviderReport {
 	started := time.Now().UTC()
 	report := ProviderReport{Provider: src.Name()}
 
-	tenders, err := src.Fetch(ctx)
+	// Per-provider cap, not a cap on the run: Kubernetes still owns the
+	// overall budget via activeDeadlineSeconds (which is why INGESTION_TIMEOUT
+	// was dropped — see the design doc). What that global cap cannot do is
+	// stop one unresponsive portal from consuming the entire window and
+	// taking every other provider down with it, since the job is killed
+	// outright rather than yielding. Bounding each provider keeps a single
+	// bad upstream to its own slot.
+	//
+	// The audit write below deliberately keeps the *parent* context: a
+	// provider that exhausts its budget leaves fetchCtx cancelled, and
+	// recording the run through that context would fail exactly when the
+	// failure is most worth recording.
+	fetchCtx, cancel := context.WithTimeout(ctx, providerTimeout)
+	defer cancel()
+
+	slog.InfoContext(ctx, "provider run started", "provider", src.Name())
+
+	tenders, err := src.Fetch(fetchCtx)
 	if err != nil {
 		report.Err = err
 	} else {
 		report.Fetched = len(tenders)
-		result, saveErr := s.sink.Save(ctx, tenders)
+		result, saveErr := s.sink.Save(fetchCtx, tenders)
 		if saveErr != nil {
 			report.Err = saveErr
 		} else {
@@ -139,7 +161,17 @@ func (s *Service) runSource(ctx context.Context, src Source) ProviderReport {
 		slog.ErrorContext(ctx, "failed to record ingestion run", "provider", src.Name(), "error", recErr)
 	}
 	if report.Err != nil {
-		slog.ErrorContext(ctx, "provider run failed", "provider", src.Name(), "error", report.Err)
+		slog.ErrorContext(ctx, "provider run failed",
+			"provider", src.Name(),
+			"duration", rec.FinishedAt.Sub(started).String(),
+			"error", report.Err)
+	} else {
+		slog.InfoContext(ctx, "provider run complete",
+			"provider", src.Name(),
+			"duration", rec.FinishedAt.Sub(started).String(),
+			"fetched", report.Fetched,
+			"inserted", report.Inserted,
+			"updated", report.Updated)
 	}
 	return report
 }

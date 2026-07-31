@@ -22,8 +22,25 @@ RUN go mod download
 WORKDIR /workspace/services/ingestion
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /ingestion .
 
+# seed-cpv is a one-off command (loads the CPV vocabulary into
+# tenders.cpv_terms — see cmd/seed-cpv's package doc), not the service
+# entrypoint. It rides along in the same image so it can be invoked with a
+# Kubernetes Job that overrides `command` (see
+# infrastructure/kubernetes/tendersbay-xyz/ingestion/main/seed-cpv-job.yaml)
+# against a distroless, shell-less runtime where there is no other way to
+# run it out-of-band. ENTRYPOINT below stays /ingestion.
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /seed-cpv ./cmd/seed-cpv
+
+# indexer drains the search-indexing backlog. It is a recurring workload, not
+# a one-off like seed-cpv: it has its own CronJob (indexer-cronjob.yaml)
+# overriding `command`, because sharing one job with ingestion let a slow
+# fetch consume the whole deadline and starve indexing entirely.
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /indexer ./cmd/indexer
+
 # ---- Stage 2: minimal runtime ----
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=builder /ingestion /ingestion
+COPY --from=builder /seed-cpv /seed-cpv
+COPY --from=builder /indexer /indexer
 USER nonroot:nonroot
 ENTRYPOINT ["/ingestion"]

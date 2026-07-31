@@ -90,6 +90,7 @@ const REQUIRED_KEYS = [
   'tenders.applied.valueMin',
   'tenders.applied.deadlineUntil',
   'tenders.applied.undo',
+  'tenders.applied.remove',
   'tenders.fit.tier.strong',
   'tenders.fit.tier.possible',
   'tenders.fit.tier.longShot',

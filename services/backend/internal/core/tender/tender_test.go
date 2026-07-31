@@ -33,7 +33,7 @@ type fakeRepo struct {
 	facets       tender.Facets
 }
 
-func (f *fakeRepo) LexicalSearch(_ context.Context, _ string, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
+func (f *fakeRepo) LexicalSearch(_ context.Context, _ tender.LexicalQuery, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
 	f.gotLexLimit = limit
 	f.gotFilters = filters
 	if f.lexicalErr != nil {
@@ -47,6 +47,10 @@ func (f *fakeRepo) LexicalSearch(_ context.Context, _ string, filters tender.Fil
 
 func (f *fakeRepo) FacetCounts(context.Context, tender.Filters) (tender.Facets, error) {
 	return f.facets, nil
+}
+
+func (f *fakeRepo) FindByCPVPrefixes(context.Context, []string, tender.Filters, int) ([]tender.ScoredTender, error) {
+	return nil, nil
 }
 
 func (f *fakeRepo) SearchTenders(_ context.Context, _ tender.Filters, sortBy tender.SortOrder, limit, offset int) ([]tender.Tender, error) {

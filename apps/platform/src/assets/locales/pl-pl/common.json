@@ -477,7 +477,8 @@
       "valueMax": "do {{max}}",
       "valueMin": "od {{min}}",
       "deadlineUntil": "termin do {{date}}",
-      "undo": "Wyczyść"
+      "undo": "Wyczyść",
+      "remove": "Usuń {{chip}}"
     }
   },
   "today": {

@@ -469,7 +469,8 @@
       "valueMax": "fino a {{max}}",
       "valueMin": "da {{min}}",
       "deadlineUntil": "in scadenza entro il {{date}}",
-      "undo": "Cancella"
+      "undo": "Cancella",
+      "remove": "Rimuovi {{chip}}"
     }
   },
   "today": {
