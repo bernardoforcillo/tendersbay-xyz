@@ -1,0 +1,93 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: indexer
+  namespace: tendersbay-xyz
+spec:
+  # Deliberately separate from the `ingestion` CronJob rather than a second
+  # phase inside it. When both shared one process, fetching every provider
+  # regularly outran activeDeadlineSeconds and the job was killed before the
+  # indexing phase started — so indexed_at stayed NULL for every tender and
+  # document extraction never advanced, while the ingestion job itself kept
+  # reporting success. Separate schedules mean a slow fetch cannot starve
+  # indexing.
+  #
+  # Runs four times an hour: the indexer drains in batches and each batch
+  # commits independently, so frequent short runs clear a backlog without any
+  # single run needing a long deadline.
+  schedule: "*/15 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 300
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      # 840s = 14m, leaving headroom before the next 15-minute fire. A
+      # deadline reached mid-drain is not data loss — every completed batch is
+      # already committed and the remainder is picked up by the next run.
+      activeDeadlineSeconds: 840
+      ttlSecondsAfterFinished: 3600
+      template:
+        metadata:
+          labels:
+            app: tendersbay-xyz
+            tier: ingestion-indexer
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            # gcr.io/distroless/static-debian12:nonroot is UID/GID 65532.
+            runAsUser: 65532
+            runAsGroup: 65532
+            runAsNonRoot: true
+            fsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: indexer
+              # Same image as ingestion, different binary — see the service
+              # Dockerfile. The tag is rewritten by the shared Flux image
+              # automation, which scans this whole folder (see update.yaml).
+              image: bernardoforcillo/tendersbay-ingestion:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
+              command: ['/indexer']
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+              # Higher than the ingestion job's: this is the workload that
+              # actually downloads and parses notice PDFs in memory. Still an
+              # estimate rather than a measured ceiling — revisit once the
+              # backlog has drained against production-size documents.
+              resources:
+                limits:
+                  memory: '512Mi'
+                  cpu: '500m'
+                requests:
+                  memory: '256Mi'
+                  cpu: '100m'
+              envFrom:
+                - secretRef:
+                    name: ingestion-secrets
+              env:
+                - name: SERVICE_NAME
+                  value: 'tendersbay-indexer'
+                # PostHog project key is a public client key (phc_…); plaintext is fine.
+                - name: POSTHOG_API_KEY
+                  value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
+                - name: POSTHOG_HOST
+                  value: 'https://eu.i.posthog.com'
+                - name: QDRANT_URL
+                  value: 'http://qdrant-release.qdrant.svc.cluster.local:6333'
+                - name: OLLAMA_BASE_URL
+                  value: 'http://ollama-release.ollama.svc.cluster.local:11434'
+                - name: EMBEDDING_MODEL
+                  value: 'embeddinggemma:latest'
+              imagePullPolicy: Always
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: tmp
+              emptyDir: {}

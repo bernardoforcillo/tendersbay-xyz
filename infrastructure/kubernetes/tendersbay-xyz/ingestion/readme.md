@@ -88,6 +88,40 @@ breaking it into smaller steps (e.g. backfill a new column with batched
 `cmd/backfill-descriptions` already does for description backfill) rather
 than one long rewrite that risks the deadline.
 
+## Two CronJobs: fetching and indexing are scheduled separately, on purpose
+
+`main/cronjob.yaml` (`ingestion`, hourly) fetches from every provider and
+persists. `main/indexer-cronjob.yaml` (`indexer`, every 15 minutes) embeds
+unindexed tenders into Qdrant and extracts the text of their attached
+documents.
+
+They used to be one process — ingestion first, indexing second. Fetching
+regularly outran `activeDeadlineSeconds`, so the job was killed before
+indexing ever started. The failure was near-invisible: the CronJob's own
+history showed the run failing on a deadline, while the real damage was that
+`indexed_at` stayed `NULL` for every tender in the database and document
+extraction never advanced past whatever backlog predated the slowdown. Dense
+search silently degraded to whatever had been indexed months earlier.
+
+Two things follow for anyone changing these:
+
+- **Only `ingestion` applies migrations.** `postgres.New` migrates;
+  `postgres.Connect` does not, and the indexer uses `Connect`. Adding a second
+  migrating binary would put two schedules in a race to apply the same
+  migration.
+- **The indexer's deadline is not a data-loss risk.** It drains in batches and
+  each batch commits independently, so a run cut short by
+  `activeDeadlineSeconds` simply leaves the remainder for the next fire.
+
+To watch a drain, the per-batch progress is on stdout:
+
+```sh
+kubectl logs -n tendersbay-xyz -l tier=ingestion-indexer --tail=50
+```
+
+`indexed_total` climbing across `indexing batch complete` lines means it is
+working; `indexing pass complete` with a low total means the backlog is clear.
+
 ## Seeding the CPV vocabulary — required once per environment, fails silently if skipped
 
 `cmd/seed-cpv` loads the embedded CPV 2008 vocabulary into `tenders.cpv_terms`.
