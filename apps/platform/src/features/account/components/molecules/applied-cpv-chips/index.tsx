@@ -22,6 +22,12 @@ import { useTranslation } from 'react-i18next';
  * The label is NOT translated here — it is the official CPV label the server
  * matched, already in a real language, and re-rendering it through i18n would
  * mean shipping 9.450 codes of app copy to say what the vocabulary already says.
+ *
+ * Deliberately renders with NO leading "Read from your query:" label of its
+ * own, even though AppliedFilterChips (its sibling on the tenders page) does:
+ * the two are stacked together, and both showing that same label would read
+ * as the sentence repeated twice on screen. Each chip already spells out "CPV
+ * {code} — {label}", which carries its own context without one.
  */
 export function AppliedCpvChips({
   matches,
@@ -37,7 +43,6 @@ export function AppliedCpvChips({
 
   return (
     <div className="flex flex-wrap items-center gap-2 text-sm">
-      <span className="text-ink-500">{t('tenders.applied.label')}</span>
       {matches.map((m) => {
         const chip = `${t('tenders.applied.cpv', { code: m.code })} — ${m.label}`;
         return (
