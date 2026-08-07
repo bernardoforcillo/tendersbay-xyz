@@ -48,6 +48,12 @@ func (f *fakeRepo) DocumentsByTenderID(context.Context, int64) ([]tender.Documen
 	return nil, nil
 }
 func (f *fakeRepo) LotsByTenderID(context.Context, int64) ([]tender.Lot, error) { return nil, nil }
+func (f *fakeRepo) CriteriaByTenderID(context.Context, int64) ([]tender.AwardCriterion, error) {
+	return nil, nil
+}
+func (f *fakeRepo) OrganizationsByTenderID(context.Context, int64) ([]tender.Organization, error) {
+	return nil, nil
+}
 func (f *fakeRepo) RecentTenderRefs(context.Context, int) ([]tender.TenderRef, error) {
 	return []tender.TenderRef{{ID: "1", Lastmod: "2026-01-01T00:00:00Z"}}, nil
 }

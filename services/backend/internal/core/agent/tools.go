@@ -4,11 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/buildwithgo/berrygem/providers"
 	"github.com/buildwithgo/berrygem/tools"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 )
@@ -359,4 +362,495 @@ func marshalTenderResultsForHistory(results []tender.ScoredTender) (json.RawMess
 		return nil, err
 	}
 	return json.RawMessage(b), nil
+}
+
+// ── get_tender_criteria ──
+//
+// Everything below returns its payload as the Execute callback's own string
+// return value and nothing else. That is deliberate and it is the load-bearing
+// constraint of this whole feature: berrygem places that string into the live
+// chat's message list as the turn's tool result, so it never passes through
+// chatRepo.InsertMessage and therefore never through
+// dbMessagesToProviderMessages, which rehydrates a persisted row into a
+// provider message by copying Content alone. A "tender_results" row already
+// loses its whole payload that way (it carries its data in the tenders column
+// with an empty content) — these tools must not add a second instance of it.
+//
+// The consequence, stated rather than hidden: after a pod restart the criteria
+// the model saw are gone from its rehydrated context. Unlike a search, that
+// loss is self-healing — get_tender_criteria is deterministic, idempotent,
+// keyed by a stable id and generously rate-limited, so the model simply calls
+// it again.
+
+// tenderCriteriaToolLimit caps how many criterion entries the model sees in
+// one result. A 13-lot notice that restates a 5-criterion grid once per lot
+// yields 65 entries; collapseIdenticalCriteria normally folds those back to 5,
+// and this is the backstop for the notice that varies one field per lot and so
+// does not collapse at all.
+const tenderCriteriaToolLimit = 40
+
+// tenderCriteriaToolLotLimit caps the lot list carried alongside the criteria.
+// A lot entry is cheap on its own (~150 characters) but unbounded in count,
+// and the model needs the list only to map a criterion's lot_refs onto
+// something nameable — not to enumerate a 200-lot framework agreement.
+const tenderCriteriaToolLotLimit = 25
+
+// The get_tender_criteria notices are the prompt-based steering channel, the
+// same mechanism searchTendersEmptyStreakNotice uses and for the same reason:
+// berrygem gives a tool no way to constrain the model except through what it
+// returns. They are what carries "inaccessible is not the same as absent" all
+// the way to the model, per-call, at the moment it would otherwise guess.
+const (
+	tenderCriteriaNoticeNotRead = "This tender's structured notice has NOT been read yet. An empty " +
+		"criteria list here means we have not looked, NOT that the buyer published none. Say exactly " +
+		"that to the user; do not state that this tender has no award criteria."
+	tenderCriteriaNoticeNoGrid = "This notice publishes no weighted scoring grid — at most an award " +
+		"method. The actual grid is in the disciplinare at documents_url, which tendersbay cannot read " +
+		"yet. Tell the user where the grid lives and that we cannot read it; do not estimate weights."
+	tenderCriteriaNoticeSuperseded = "These criteria come from an EARLIER notice for this procurement; " +
+		"a newer one has been published and has not been read yet, so they may be out of date. Say that " +
+		"before quoting any of them, and do not present them as the current award grid."
+	tenderCriteriaNoticeTruncatedFmt = "Only the first %d of %d criterion entries are shown; ask about a " +
+		"specific lot if you need the rest."
+	tenderCriteriaNoticeLotsTruncatedFmt = "Only the first %d of %d lots are shown."
+)
+
+// newGetTenderCriteriaTool builds the "read one tender's published scoring
+// grid" tool. Same callback-reads-current-turnState shape as
+// newSearchTendersTool — see newCreateWorkbenchTool's doc comment for the full
+// stale-closure rationale.
+//
+// This exists because search_tenders returns eight scalars and none of them is
+// a criterion, so a model asked "how is this scored?" after a search has
+// nothing to answer from and will happily invent a plausible 70/30 split. The
+// tool's job is as much to make the ABSENCE of a grid legible as to deliver
+// one when it exists.
+func newGetTenderCriteriaTool(ts *turnState, getCriteria func(tenderID string) (tender.TenderDetail, error)) tools.Tool {
+	return tools.NewFunc(
+		"get_tender_criteria",
+		"Get one tender's award criteria with their published weights, plus the buyer's tender-documents "+
+			"and submission links. Call this before saying anything about how a tender is scored, and use "+
+			"ONLY the weights it returns — never estimate, infer or invent a weight. A criterion whose "+
+			"\"weight\" is null carries NO published weight: that is the common case, it does not mean "+
+			"zero, and it must be reported as \"no weight published\". Read the \"notice\" field if "+
+			"present and follow it exactly: it distinguishes 'this notice publishes no scoring grid' from "+
+			"'we have not read this notice yet', which are different answers and must be reported "+
+			"differently. The tender id comes from search_tenders' results.",
+		map[string]providers.Property{
+			"tender_id": {
+				Type:        "string",
+				Description: "The tender's id, exactly as returned by search_tenders.",
+			},
+		},
+		[]string{"tender_id"},
+		func(_ context.Context, args string) (string, error) {
+			var parsed struct {
+				TenderID string `json:"tender_id"`
+			}
+			if err := json.Unmarshal([]byte(args), &parsed); err != nil {
+				return "", fmt.Errorf("get_tender_criteria: invalid arguments: %w", err)
+			}
+			if parsed.TenderID == "" {
+				return "", fmt.Errorf("get_tender_criteria: tender_id is required")
+			}
+			emitToolCall(ts, "get_tender_criteria", "running")
+			defer emitToolCall(ts, "get_tender_criteria", "done")
+			detail, err := getCriteria(parsed.TenderID)
+			if err != nil {
+				return "", fmt.Errorf("get_tender_criteria: %w", err)
+			}
+			return marshalGetTenderCriteriaResult(detail)
+		},
+	)
+}
+
+// tenderCriterionItem is the compact JSON shape the model sees per criterion —
+// snake_case, matching searchTendersResultItem's convention (the camelCase in
+// tenderResultsCardItem is for the frontend, a different consumer).
+type tenderCriterionItem struct {
+	// LotRefs is empty for a notice-level criterion, which applies to every
+	// lot; it carries several refs when collapseIdenticalCriteria folded an
+	// entry the notice restated identically once per lot.
+	LotRefs     []string `json:"lot_refs,omitempty"`
+	Ordinal     int      `json:"ordinal"`
+	Type        string   `json:"type,omitempty"`
+	Name        string   `json:"name,omitempty"`
+	Description string   `json:"description,omitempty"`
+	// Weight deliberately carries NO omitempty, unlike every other optional
+	// field here: a criterion with no published weight must render as an
+	// explicit "weight": null rather than vanish from the object. An omitted
+	// key is a fact the model has to infer, and the inference it reaches for is
+	// "the field did not apply" — whereas a stated null is a fact it can
+	// report. nil is the common case (roughly a quarter of published entries),
+	// and being able to say "this tender publishes criteria but no weights, so
+	// the real grid is in the disciplinare" is the entire point of this tool.
+	Weight *float64 `json:"weight"`
+	// WeightRaw is the weight exactly as published ("30", "30%", "30,5"), so a
+	// formatting oddity or a failed numeric parse stays visible to the model
+	// rather than silently becoming a null.
+	WeightRaw string `json:"weight_raw,omitempty"`
+}
+
+// tenderCriteriaLotItem is one lot, carried so the model can name what a
+// criterion's lot_refs point at. Deliberately thin: no CPV list, no per-lot
+// document links — those repeat the notice-level values on most real notices
+// and would pay tokens for a duplicate.
+type tenderCriteriaLotItem struct {
+	Ref           string `json:"ref"`
+	Title         string `json:"title,omitempty"`
+	Value         *int64 `json:"value,omitempty"`
+	Currency      string `json:"currency,omitempty"`
+	Deadline      string `json:"deadline,omitempty"` // RFC3339
+	DocumentsURL  string `json:"documents_url,omitempty"`
+	SubmissionURL string `json:"submission_url,omitempty"`
+}
+
+type getTenderCriteriaResult struct {
+	TenderID  string `json:"tender_id"`
+	Title     string `json:"title"`
+	BuyerName string `json:"buyer_name"`
+	Deadline  string `json:"deadline,omitempty"` // RFC3339
+	// GridUsable is a *bool on the wire too, and carries no omitempty for the
+	// same reason Weight does not: JSON null means "the notice has not been
+	// read (or the read is out of date)", which is neither true nor false.
+	// Collapsing it to false is exactly the conflation that makes "criteria
+	// published" read as "criteria usable".
+	GridUsable    *bool                   `json:"grid_usable"`
+	Criteria      []tenderCriterionItem   `json:"criteria"`
+	DocumentsURL  string                  `json:"documents_url,omitempty"`
+	SubmissionURL string                  `json:"submission_url,omitempty"`
+	Lots          []tenderCriteriaLotItem `json:"lots,omitempty"`
+	Notice        string                  `json:"notice,omitempty"`
+}
+
+func marshalGetTenderCriteriaResult(d tender.TenderDetail) (string, error) {
+	criteria := collapseIdenticalCriteria(d.Criteria)
+
+	// EnrichedAt, not GridUsable, is what says the stored detail describes the
+	// notice that is current. The two come apart in a real window: a call for
+	// tenders and its later award notice collapse onto ONE row (source_ref is
+	// the procedure identifier), and re-ingesting the award notice updates the
+	// publication number and re-queues the row while leaving the criteria,
+	// grid_usable and the old xml_status exactly as the superseded notice left
+	// them. EnrichedAt is nil for the whole of that window because it is derived
+	// from the pair (xml_fetched_at, xml_status = ok), and the re-queue clears
+	// the timestamp.
+	//
+	// Branching on GridUsable alone would emit that stale grid with
+	// grid_usable: true and no notice at all — presented to the model as read
+	// and current, which is precisely the "inaccessible is not the same as
+	// absent" failure in its most expensive direction: not a gap, a wrong
+	// answer stated confidently. So grid_usable is nulled whenever the detail
+	// is not from a completed read, and the criteria that survive are labelled
+	// as superseded rather than silently dropped — an out-of-date grid the
+	// model is told is out of date is still useful.
+	gridUsable := d.GridUsable
+	if d.EnrichedAt == nil {
+		gridUsable = nil
+	}
+
+	var notices []string
+	switch {
+	case d.EnrichedAt == nil && len(criteria) > 0:
+		notices = append(notices, tenderCriteriaNoticeSuperseded)
+	case gridUsable == nil:
+		notices = append(notices, tenderCriteriaNoticeNotRead)
+	case !*gridUsable:
+		notices = append(notices, tenderCriteriaNoticeNoGrid)
+	}
+	if len(criteria) > tenderCriteriaToolLimit {
+		notices = append(notices, fmt.Sprintf(tenderCriteriaNoticeTruncatedFmt, tenderCriteriaToolLimit, len(criteria)))
+		criteria = criteria[:tenderCriteriaToolLimit]
+	}
+
+	lots := make([]tenderCriteriaLotItem, 0, len(d.Lots))
+	for _, l := range d.Lots {
+		if len(lots) == tenderCriteriaToolLotLimit {
+			notices = append(notices, fmt.Sprintf(tenderCriteriaNoticeLotsTruncatedFmt, tenderCriteriaToolLotLimit, len(d.Lots)))
+			break
+		}
+		var deadline string
+		if l.Deadline != nil {
+			deadline = l.Deadline.Format(time.RFC3339)
+		}
+		lots = append(lots, tenderCriteriaLotItem{
+			Ref: l.Ref, Title: l.Title, Value: l.Value, Currency: l.Currency,
+			Deadline: deadline, DocumentsURL: l.DocumentsURL, SubmissionURL: l.SubmissionURL,
+		})
+	}
+
+	var deadline string
+	if d.Deadline != nil {
+		deadline = d.Deadline.Format(time.RFC3339)
+	}
+	b, err := json.Marshal(getTenderCriteriaResult{
+		TenderID:      d.ID,
+		Title:         d.Title,
+		BuyerName:     d.BuyerName,
+		Deadline:      deadline,
+		GridUsable:    gridUsable,
+		Criteria:      criteria,
+		DocumentsURL:  d.DocumentsURL,
+		SubmissionURL: d.SubmissionURL,
+		Lots:          lots,
+		Notice:        strings.Join(notices, " "),
+	})
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
+}
+
+// collapseIdenticalCriteria folds criteria that are identical apart from the
+// lot they name into one entry carrying every lot_ref it covers.
+//
+// This is a PRESENTATION-time dedupe, not a parse-time one. A notice that
+// restates the same five-criterion grid once per lot really did publish 65
+// entries, and the ingestion side keeps all of them because that is the fact;
+// showing the model 13 identical copies would cost 13x the tokens for zero
+// information. Doing the same collapse at parse time — as one upstream tool
+// does — would instead destroy the ability to tell a genuinely per-lot grid
+// from a repeated one.
+//
+// A notice-level entry (LotRef "") applies to every lot, which is strictly
+// more general than any list of refs, so a group containing one emits no
+// lot_refs at all and stops collecting them.
+//
+// First-appearance order is preserved, which — since the repository returns
+// criteria sorted by (lot_ref, ordinal) — puts the notice-level grid first and
+// keeps each lot's entries in published order.
+func collapseIdenticalCriteria(in []tender.AwardCriterion) []tenderCriterionItem {
+	// The key is every field EXCEPT LotRef: two entries that agree on all of
+	// them are the same criterion restated, and nothing else about them can
+	// differ. Weight is keyed on its formatted text so that an absent weight
+	// ("") and a published zero ("0") never collapse into each other.
+	type key struct {
+		ordinal                int
+		typ, name, description string
+		weight, weightRaw      string
+	}
+	out := make([]tenderCriterionItem, 0, len(in))
+	at := make(map[key]int, len(in))
+	noticeLevel := make(map[int]bool, len(in))
+	for _, c := range in {
+		var weight string
+		if c.HasWeight() {
+			weight = strconv.FormatFloat(*c.Weight, 'f', -1, 64)
+		}
+		k := key{c.Ordinal, c.Type, c.Name, c.Description, weight, c.WeightRaw}
+		i, seen := at[k]
+		if !seen {
+			i = len(out)
+			at[k] = i
+			out = append(out, tenderCriterionItem{
+				Ordinal: c.Ordinal, Type: c.Type, Name: c.Name,
+				Description: c.Description, Weight: c.Weight, WeightRaw: c.WeightRaw,
+			})
+		}
+		if c.LotRef == "" {
+			noticeLevel[i] = true
+			out[i].LotRefs = nil
+			continue
+		}
+		if noticeLevel[i] {
+			continue
+		}
+		out[i].LotRefs = append(out[i].LotRefs, c.LotRef)
+	}
+	return out
+}
+
+// ── read_tender_documents ──
+
+// The read_tender_documents notices name the gap rather than letting an empty
+// excerpt list read as an answer. In this phase most Italian tenders will hit
+// the body_not_retrieved branch: the buyer publishes a documents_url and
+// nothing follows it yet. That is the honest state of the corpus, and saying
+// so is more useful than answering the question from the notice PDF as if it
+// were the specification.
+const (
+	documentNoticeBodyNotRetrieved = "The specification documents exist and are published at the tender's " +
+		"documents_url, but tendersbay has not retrieved them yet. Say this explicitly — do NOT say the " +
+		"tender has no documents, and do not answer the question from the notice alone as if it were the " +
+		"specification."
+	documentNoticeNoDocumentsPublished = "We read this notice and it publishes no document link at all."
+	documentNoticeNoticeNotRead        = "We have not read this tender's structured notice, so we do not " +
+		"know what it publishes. Do not tell the user the tender has no documents."
+	documentNoticeNotYetExtracted = "This tender's documents are queued for text extraction and have not " +
+		"been processed yet. Say 'not yet', never 'not available' — the next indexing pass resolves it."
+	documentNoticeExtractionFailed = "We hold this tender's documents but extracted no text from them; a " +
+		"scanned PDF with no text layer is the usual cause. Point the user at documents_url rather than " +
+		"answering from nothing."
+	documentNoticeNoMatch = "We hold this tender's extracted text but no passage in it matches that " +
+		"question. That is not the same as the answer not existing — try a narrower or differently " +
+		"worded question, or say we could not find it."
+)
+
+// newReadTenderDocumentsTool builds the "read passages out of one tender's
+// extracted documents" tool. Same callback-reads-current-turnState shape as
+// newSearchTendersTool.
+//
+// The bound on what comes back lives in core/document (MaxExcerpts x
+// MaxExcerptRunes), not here: this tool renders what the domain hands it and
+// cannot widen it. That placement is the point — a 50-150 page disciplinare is
+// 35k-100k tokens, and resent on every one of an 8-turn loop that is a quarter
+// of a workspace-month for a single question.
+func newReadTenderDocumentsTool(ts *turnState, readDocs func(tenderID, question string) (document.ExcerptResult, error)) tools.Tool {
+	return tools.NewFunc(
+		"read_tender_documents",
+		"Search the text tendersbay has extracted from one tender's documents and return the passages "+
+			"most relevant to a question, each with the document it came from. Use it for anything the "+
+			"notice itself does not state — requirements, penalties, technical specifications. Quote or "+
+			"paraphrase ONLY the passages it returns and cite their document_url; never fill a gap from "+
+			"general knowledge of how such tenders usually read. Always read \"coverage\" and \"reason\" "+
+			"before answering: they say how much of this tender we can actually read and why not more, "+
+			"and an empty \"excerpts\" list with a reason is a statement about OUR coverage, not about "+
+			"the tender. Follow the \"notice\" field exactly when it is present.",
+		map[string]providers.Property{
+			"tender_id": {
+				Type:        "string",
+				Description: "The tender's id, exactly as returned by search_tenders.",
+			},
+			"question": {
+				Type: "string",
+				Description: "The specific question to answer, e.g. 'requisiti di capacità tecnica' or " +
+					"'penali per ritardo'. Ask one narrow question per call; this tool returns short " +
+					"passages, never a whole document.",
+			},
+		},
+		[]string{"tender_id", "question"},
+		func(_ context.Context, args string) (string, error) {
+			var parsed struct {
+				TenderID string `json:"tender_id"`
+				Question string `json:"question"`
+			}
+			if err := json.Unmarshal([]byte(args), &parsed); err != nil {
+				return "", fmt.Errorf("read_tender_documents: invalid arguments: %w", err)
+			}
+			if parsed.TenderID == "" {
+				return "", fmt.Errorf("read_tender_documents: tender_id is required")
+			}
+			if strings.TrimSpace(parsed.Question) == "" {
+				return "", fmt.Errorf("read_tender_documents: question is required")
+			}
+			emitToolCall(ts, "read_tender_documents", "running")
+			defer emitToolCall(ts, "read_tender_documents", "done")
+			res, err := readDocs(parsed.TenderID, parsed.Question)
+			if err != nil {
+				return "", fmt.Errorf("read_tender_documents: %w", err)
+			}
+			return marshalReadTenderDocumentsResult(parsed.TenderID, res)
+		},
+	)
+}
+
+// documentExcerptItem is one retrieved passage as the model sees it. The
+// provenance fields below document_url are all optional because the ingestion
+// pass populates page and section metadata going forward only — every document
+// extracted before those columns existed keeps NULL — so this shape has to
+// degrade all the way to the document URL alone.
+type documentExcerptItem struct {
+	Text      string `json:"text"`
+	Truncated bool   `json:"truncated,omitempty"`
+	// DocumentURL is what the model must cite. It is the one piece of
+	// provenance that is always present.
+	DocumentURL  string `json:"document_url"`
+	DocumentType string `json:"document_type,omitempty"`
+	Page         string `json:"page,omitempty"`    // "14" or "14-16"
+	Section      string `json:"section,omitempty"` // "7.2 Requisiti di capacità tecnica"
+	HasTable     bool   `json:"has_table,omitempty"`
+}
+
+// readTenderDocumentsResult carries Coverage and Reason as two separate
+// fields, for the same reason the domain keeps them as two: the model must be
+// able to say "we hold only the notice, because the specification sits behind
+// a link we have not fetched" as one sentence with two facts in it. A single
+// merged enum would force it to choose which half to report.
+type readTenderDocumentsResult struct {
+	TenderID string                `json:"tender_id"`
+	Coverage string                `json:"coverage"` // "full" | "notice_only" | "none"
+	Reason   string                `json:"reason,omitempty"`
+	Excerpts []documentExcerptItem `json:"excerpts"`
+	Notice   string                `json:"notice,omitempty"`
+}
+
+func marshalReadTenderDocumentsResult(tenderID string, res document.ExcerptResult) (string, error) {
+	items := make([]documentExcerptItem, len(res.Excerpts))
+	for i, e := range res.Excerpts {
+		items[i] = documentExcerptItem{
+			Text:         e.Text,
+			Truncated:    e.Truncated,
+			DocumentURL:  e.Citation.DocumentURL,
+			DocumentType: e.Citation.DocumentType,
+			Page:         formatCitationPage(e.Citation),
+			Section:      formatCitationSection(e.Citation),
+			HasTable:     e.Citation.HasTable,
+		}
+	}
+	b, err := json.Marshal(readTenderDocumentsResult{
+		TenderID: tenderID,
+		Coverage: string(res.Availability.Coverage),
+		Reason:   string(res.Availability.Reason),
+		Excerpts: items,
+		Notice:   strings.Join(documentResultNotices(res), " "),
+	})
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
+}
+
+// documentResultNotices picks the steering text for one result. The
+// no-match notice can stack on top of a coverage one: "we hold the notice PDF
+// only" and "nothing in what we hold mentions penalties" are both true at once
+// and the model needs both to answer honestly.
+func documentResultNotices(res document.ExcerptResult) []string {
+	var out []string
+	switch res.Availability.Reason {
+	case document.ReasonBodyNotRetrieved:
+		out = append(out, documentNoticeBodyNotRetrieved)
+	case document.ReasonNoDocumentsPublished:
+		out = append(out, documentNoticeNoDocumentsPublished)
+	case document.ReasonNoticeNotRead:
+		out = append(out, documentNoticeNoticeNotRead)
+	case document.ReasonNotYetExtracted:
+		out = append(out, documentNoticeNotYetExtracted)
+	case document.ReasonExtractionFailed:
+		out = append(out, documentNoticeExtractionFailed)
+	}
+	// Only worth saying when there was something to search: with no extracted
+	// text at all, the reason above has already explained the empty list, and
+	// telling the model to reword its question would send it round a loop that
+	// cannot succeed.
+	if len(res.Excerpts) == 0 && res.Availability.Coverage != document.CoverageNone {
+		out = append(out, documentNoticeNoMatch)
+	}
+	return out
+}
+
+// formatCitationPage renders a page range as "14" or "14-16", and "" when the
+// document was extracted before page metadata was captured. A range whose end
+// does not exceed its start is one page, not a degenerate span.
+func formatCitationPage(c document.Citation) string {
+	if c.PageStart == nil {
+		return ""
+	}
+	if c.PageEnd == nil || *c.PageEnd <= *c.PageStart {
+		return strconv.Itoa(*c.PageStart)
+	}
+	return fmt.Sprintf("%d-%d", *c.PageStart, *c.PageEnd)
+}
+
+// formatCitationSection renders "7.2 Requisiti di capacità tecnica" from the
+// most specific element of the section path plus the section title, degrading
+// to whichever of the two is present and to "" when neither is. The last path
+// element is used rather than the whole chain because it already carries the
+// full dotted number in the corpus's numbering ("7", "7.2"), so joining the
+// chain would repeat it.
+func formatCitationSection(c document.Citation) string {
+	var number string
+	if n := len(c.SectionPath); n > 0 {
+		number = c.SectionPath[n-1]
+	}
+	return strings.TrimSpace(number + " " + c.SectionTitle)
 }

@@ -48,6 +48,49 @@ type Tender struct {
 	SourceRef     string
 	NUTS          string
 	SourceURL     string // the notice document's URL; "" if none is ingested
+
+	// ── The eForms detail, as same-row scalars ──
+	//
+	// Every field below is a scalar column on tenders.ingested_tenders, so it
+	// costs zero extra queries: it rides the one projection every search
+	// already runs (see tenderSelectColumns in the postgres adapter).
+	//
+	// Award criteria, organizations and lots are deliberately NOT here. They
+	// are child tables, and this struct is materialised across a candidate
+	// window bounded at maxWindow (hybrid.go) — one join per search would be
+	// an N+1 on the hot path for data no result card shows. They live on
+	// TenderDetail, whose fetch is already per-tender.
+
+	// Description is the notice's free-text scope of work; "" when the source
+	// exposes none. It is carried in full rather than truncated: the search
+	// projection already reads the head of this column to build its snippet,
+	// so the page is detoasted and the I/O is paid either way, and a silently
+	// truncated field is worse than either extreme — a reader cannot tell a
+	// short description from a clipped one.
+	Description string
+	// PublicationNumber is TED's immutable per-notice id ("545620-2026").
+	// SourceRef is deliberately the procedure-identifier, so that a contract
+	// notice and its later award notice land on ONE row; this is therefore the
+	// only field that says WHICH notice the detail was read from.
+	PublicationNumber string
+	// DocumentsURL is the buyer's own tender-documents page and SubmissionURL
+	// is where offers are submitted, both as published by the notice. They are
+	// stored and shown; nothing follows them — retrieving what is behind a
+	// buyer-portal link carries robots and SSRF obligations this service does
+	// not yet meet.
+	DocumentsURL  string
+	SubmissionURL string
+	// GridUsable is three-valued on purpose and MUST stay a pointer:
+	//
+	//	nil   = the notice's structured detail has not been read
+	//	false = read, and no criterion carries a weight
+	//	true  = read, and at least one does
+	//
+	// Flattening nil to false makes "we have not looked" indistinguishable
+	// from "we looked and there is no grid". That is the conflation that makes
+	// "criteria published" (76% of sampled Italian notices) read as "criteria
+	// usable" (36%) — a ~2x overstatement, reintroduced at the type level.
+	GridUsable *bool
 }
 
 // Filters narrows a search. Zero-value fields are unset, and every list field
@@ -144,6 +187,15 @@ type Repo interface {
 	FindDetailByID(ctx context.Context, id int64) (*TenderDetail, error)
 	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)
 	LotsByTenderID(ctx context.Context, id int64) ([]Lot, error)
+	// CriteriaByTenderID returns every criterion for one tender — the
+	// notice-level ones and every lot's — in ONE query, ordered by
+	// (lot_ref, ordinal). Grouping by lot happens in Go (see
+	// TenderDetail.CriteriaForLot): a query per lot would be an N+1 against a
+	// 13-lot notice, for a set small enough to sort in memory.
+	CriteriaByTenderID(ctx context.Context, id int64) ([]AwardCriterion, error)
+	// OrganizationsByTenderID returns the parties the notice names — the
+	// buyer, and the bodies a bidder needs in order to challenge an award.
+	OrganizationsByTenderID(ctx context.Context, id int64) ([]Organization, error)
 	RecentTenderRefs(ctx context.Context, limit int) ([]TenderRef, error)
 	DistinctCountries(ctx context.Context) ([]string, error)
 }

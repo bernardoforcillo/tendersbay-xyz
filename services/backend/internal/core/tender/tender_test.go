@@ -31,6 +31,11 @@ type fakeRepo struct {
 	gotFilters   tender.Filters
 	gotSort      tender.SortOrder
 	facets       tender.Facets
+	// The eForms child collections GetTender hydrates onto the detail. Kept
+	// settable because "this notice published no grid" and "we have not read
+	// this notice" are answers the detail path has to be able to carry.
+	criteria      []tender.AwardCriterion
+	organizations []tender.Organization
 }
 
 func (f *fakeRepo) LexicalSearch(_ context.Context, _ tender.LexicalQuery, filters tender.Filters, limit int) ([]tender.ScoredTender, error) {
@@ -90,6 +95,12 @@ func (f *fakeRepo) DocumentsByTenderID(context.Context, int64) ([]tender.Documen
 }
 func (f *fakeRepo) LotsByTenderID(context.Context, int64) ([]tender.Lot, error) {
 	return nil, nil
+}
+func (f *fakeRepo) CriteriaByTenderID(context.Context, int64) ([]tender.AwardCriterion, error) {
+	return f.criteria, nil
+}
+func (f *fakeRepo) OrganizationsByTenderID(context.Context, int64) ([]tender.Organization, error) {
+	return f.organizations, nil
 }
 func (f *fakeRepo) RecentTenderRefs(context.Context, int) ([]tender.TenderRef, error) {
 	return f.refs, nil

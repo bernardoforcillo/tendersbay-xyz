@@ -468,6 +468,61 @@ var (
 	TenderLanguage = pg.Add(Tenders, pg.Text("language").NotNull())
 )
 
+// The eForms detail columns, added to ingested_tenders by the ingestion
+// service's 0010 migration. Every one of them is nullable except description,
+// because ingested_tenders is shared with pl-bzp, fr-boamp and es-placsp, none
+// of which publish eForms XML and none of which will ever populate one.
+//
+// TenderGridUsable is the first nullable BOOLEAN this service reads, and it
+// must stay one: it is three-valued (NULL = not yet read, false = read with no
+// weighted criterion, true = read with one). It scans into a *bool by the same
+// mechanism the long-standing nullable TenderValue (*int64) and
+// TenderPublishedAt (*time.Time) already use — database/sql's convertAssign
+// allocates through the extra pointer level for a non-NULL value and zeroes it
+// for NULL. Do NOT "simplify" it to a bool with a false default: that collapse
+// is exactly what makes "we haven't looked" indistinguishable from "we looked
+// and there is no grid".
+var (
+	TenderDescription       = pg.Add(Tenders, pg.Text("description").NotNull())
+	TenderPublicationNumber = pg.Add(Tenders, pg.Text("publication_number")) // nullable
+	TenderDocumentsURL      = pg.Add(Tenders, pg.Text("documents_url"))      // nullable
+	TenderSubmissionURL     = pg.Add(Tenders, pg.Text("submission_url"))     // nullable
+	TenderGridUsable        = pg.Add(Tenders, pg.Boolean("grid_usable"))     // nullable, THREE-valued
+	TenderXMLFetchedAt      = pg.Add(Tenders, pg.Timestamp("xml_fetched_at", true))
+	// TenderXMLStatus is the ingestion FETCHER's own vocabulary —
+	// 'ok' | 'absent' | 'parse_error' | 'unavailable' — and it stops here. It
+	// is read so that this adapter can decide what "successfully read" means
+	// and hand core a plain answer; the string itself never crosses into a
+	// domain type, because a domain that spoke it would make swapping the
+	// fetcher a change to every layer above.
+	TenderXMLStatus = pg.Add(Tenders, pg.Text("xml_status")) // nullable
+)
+
+// xmlStatusOK is the one value of ingested_tenders.xml_status that means the
+// notice was actually read. The other three ('absent', 'parse_error',
+// 'unavailable') all set xml_fetched_at as well — they are terminal outcomes,
+// not pending ones — so the timestamp alone cannot distinguish "we read it"
+// from "we gave up on it", and using it alone would report an unreadable
+// notice as an enriched one.
+const xmlStatusOK = "ok"
+
+// NOTE: tenders.ingested_tender_award_criteria and
+// tenders.ingested_tender_organizations get no drops handles at all, and
+// ingested_tender_lots' three new eForms columns get none either. This is the
+// same constraint the cpv_secondary note above records, hit from two more
+// directions:
+//
+//   - organizations.roles and lots.cpv_secondary are text[], which drops has no
+//     column DSL type for and no scan path to, so both tables are read through
+//     array_to_string in raw SQL (see tender_detail_repo.go);
+//   - award_criteria.weight is `numeric`, which will not scan into a *float64
+//     without an explicit ::float8 projection — again not expressible through
+//     the typed builder.
+//
+// Declaring handles nothing can use would only look like coverage. The raw SQL
+// in tender_detail_repo.go and document_repo.go is the authoritative statement
+// of what this service reads from those tables.
+
 // Read-only child tables of tenders.ingested_tenders (owned by services/ingestion).
 // TenderDocuments (the table itself) is declared above, alongside TDocID/TDocTenderID/
 // TDocURL/TDocType; these are additional column bindings against that same table.
@@ -475,16 +530,14 @@ var (
 	TenderDocTenderID = pg.Add(TenderDocuments, pg.BigInt("tender_id").NotNull())
 	TenderDocURL      = pg.Add(TenderDocuments, pg.Text("url").NotNull())
 	TenderDocType     = pg.Add(TenderDocuments, pg.Text("type").NotNull())
-
-	TenderLots        = pg.NewSchemaTable("tenders", "ingested_tender_lots")
-	TenderLotTenderID = pg.Add(TenderLots, pg.BigInt("tender_id").NotNull())
-	TenderLotRef      = pg.Add(TenderLots, pg.Text("ref").NotNull())
-	TenderLotTitle    = pg.Add(TenderLots, pg.Text("title").NotNull())
-	TenderLotCPV      = pg.Add(TenderLots, pg.Text("cpv").NotNull())
-	TenderLotValue    = pg.Add(TenderLots, pg.BigInt("value"))
-	TenderLotCurrency = pg.Add(TenderLots, pg.Text("currency").NotNull())
-	TenderLotDeadline = pg.Add(TenderLots, pg.Timestamp("deadline", true))
 )
+
+// tenders.ingested_tender_lots deliberately has NO handles here any more. It
+// used to be read through the typed builder, but the lot row now includes
+// cpv_secondary (text[]), which drops can neither declare nor scan — the same
+// constraint recorded on ingested_tenders.cpv_secondary above — so the whole
+// lot read moved to raw SQL in tender_detail_repo.go. Handles for the scalar
+// columns alone would be dead declarations that read like coverage.
 
 // DBTenderDetail scans the scalar detail columns (NOT cpv_secondary — that text[]
 // column is read separately via array_to_string; see the repo).
@@ -505,20 +558,21 @@ type DBTenderDetail struct {
 	Currency      string     `drop:"currency"`
 	PublishedAt   *time.Time `drop:"published_at"`
 	Deadline      *time.Time `drop:"deadline"`
+	// The eForms detail. The pointer fields are nullable columns, not optional
+	// modelling: see the TenderGridUsable note above for why grid_usable in
+	// particular must never be flattened to a plain bool.
+	Description       string     `drop:"description"`
+	PublicationNumber *string    `drop:"publication_number"`
+	DocumentsURL      *string    `drop:"documents_url"`
+	SubmissionURL     *string    `drop:"submission_url"`
+	GridUsable        *bool      `drop:"grid_usable"`
+	XMLFetchedAt      *time.Time `drop:"xml_fetched_at"`
+	XMLStatus         *string    `drop:"xml_status"`
 }
 
 type DBTenderDocument struct {
 	URL  string `drop:"url"`
 	Type string `drop:"type"`
-}
-
-type DBTenderLot struct {
-	Ref      string     `drop:"ref"`
-	Title    string     `drop:"title"`
-	CPV      string     `drop:"cpv"`
-	Value    *int64     `drop:"value"`
-	Currency string     `drop:"currency"`
-	Deadline *time.Time `drop:"deadline"`
 }
 
 // ── Bid tables (workbench bando hub) ────────────────────────────────────────

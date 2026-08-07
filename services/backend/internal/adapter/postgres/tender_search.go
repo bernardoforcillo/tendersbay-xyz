@@ -23,10 +23,20 @@ import (
 // a tender with more than one document of type "notice" would duplicate its
 // row under a join, silently inflating result counts and consuming candidate
 // slots with copies of itself.
+//
+// Everything here is a scalar on ingested_tenders (or the one lateral). That
+// is a hard constraint, not a coincidence: this projection is materialised
+// across a candidate window bounded at maxWindow (core/tender's hybrid.go), so
+// a join to a child table — lots, award criteria, organizations — would be an
+// N+1 over hundreds of rows on every single search. Child collections belong
+// on TenderDetail, whose fetch is already per-tender. Adding a scalar here
+// costs two edits (this list and queryScoredTenders' Scan) because all four
+// search queries share it; adding a child collection would cost the hot path.
 const tenderSelectColumns = `
 	t.id, t.title, t.buyer_name, t.status, t.procedure_type, t.country, t.cpv,
 	t.value, t.currency, t.published_at, t.deadline, t.source, t.source_ref,
-	t.nuts, doc.url`
+	t.nuts, doc.url,
+	t.description, t.publication_number, t.documents_url, t.submission_url, t.grid_usable`
 
 const tenderFromClause = `
 FROM tenders.ingested_tenders t
@@ -450,13 +460,14 @@ func (r *TenderRepo) queryScoredTenders(ctx context.Context, what, sql string, a
 		var (
 			row       TenderResultRow
 			id        int64
-			sourceURL *string
 			relevance float64
 			snippet   string
 		)
 		if err := rows.Scan(&id, &row.Title, &row.BuyerName, &row.Status, &row.ProcedureType,
 			&row.Country, &row.CPV, &row.Value, &row.Currency, &row.PublishedAt, &row.Deadline,
-			&row.Source, &row.SourceRef, &row.NUTS, &sourceURL, &relevance, &snippet); err != nil {
+			&row.Source, &row.SourceRef, &row.NUTS, &row.SourceURL,
+			&row.Description, &row.PublicationNumber, &row.DocumentsURL, &row.SubmissionURL,
+			&row.GridUsable, &relevance, &snippet); err != nil {
 			return nil, fmt.Errorf("postgres: scan %s row: %w", what, err)
 		}
 		t := tender.Tender{
@@ -465,9 +476,16 @@ func (r *TenderRepo) queryScoredTenders(ctx context.Context, what, sql string, a
 			CPV: row.CPV, Value: row.Value, Currency: row.Currency,
 			PublishedAt: row.PublishedAt, Deadline: row.Deadline,
 			Source: row.Source, SourceRef: row.SourceRef, NUTS: row.NUTS,
-		}
-		if sourceURL != nil {
-			t.SourceURL = *sourceURL
+			Description: row.Description,
+			// The nullable URL columns flatten to "": an absent link and an
+			// empty one are the same fact. GridUsable is passed through as a
+			// pointer, because its NULL is a third value — "the notice has not
+			// been read" — that no bool can carry.
+			SourceURL:         derefString(row.SourceURL),
+			PublicationNumber: derefString(row.PublicationNumber),
+			DocumentsURL:      derefString(row.DocumentsURL),
+			SubmissionURL:     derefString(row.SubmissionURL),
+			GridUsable:        row.GridUsable,
 		}
 		out = append(out, tender.ScoredTender{Tender: t, RelevanceScore: relevance, Snippet: snippet})
 	}

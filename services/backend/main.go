@@ -33,6 +33,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
@@ -230,8 +231,14 @@ func main() {
 	agentRegistry := agent.NewRegistry(cfg.FireworksAPIKey)
 	agentRegistry.RegisterDefaults()
 
+	// Document reading for the agent's read_tender_documents tool. Its retrieval
+	// is always scoped to one tender's already-extracted parts, so it needs no
+	// index this service would have to create and no dependency beyond the same
+	// pool everything else here uses.
+	documentSvc := document.NewService(postgres.NewDocumentRepo(db))
+
 	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
-	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, clientProfileSvc)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, documentSvc, clientProfileSvc)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)

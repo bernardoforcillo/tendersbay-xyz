@@ -41,7 +41,14 @@ func (f *fitFakeRepo) FindDetailByID(_ context.Context, _ int64) (*TenderDetail,
 func (f *fitFakeRepo) DocumentsByTenderID(context.Context, int64) ([]Document, error) {
 	return nil, nil
 }
-func (f *fitFakeRepo) LotsByTenderID(context.Context, int64) ([]Lot, error)       { return nil, nil }
+func (f *fitFakeRepo) LotsByTenderID(context.Context, int64) ([]Lot, error) { return nil, nil }
+func (f *fitFakeRepo) CriteriaByTenderID(context.Context, int64) ([]AwardCriterion, error) {
+	return nil, nil
+}
+func (f *fitFakeRepo) OrganizationsByTenderID(context.Context, int64) ([]Organization, error) {
+	return nil, nil
+}
+
 func (f *fitFakeRepo) RecentTenderRefs(context.Context, int) ([]TenderRef, error) { return nil, nil }
 func (f *fitFakeRepo) DistinctCountries(context.Context) ([]string, error)        { return nil, nil }
 

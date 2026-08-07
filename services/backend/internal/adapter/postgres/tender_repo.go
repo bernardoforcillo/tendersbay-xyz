@@ -37,6 +37,14 @@ type TenderResultRow struct {
 	SourceRef     string
 	NUTS          string
 	SourceURL     *string
+	// The eForms detail, as same-row scalars. The pointers are nullable
+	// columns; grid_usable in particular is three-valued and must stay one
+	// (see core/tender.Tender.GridUsable).
+	Description       string
+	PublicationNumber *string
+	DocumentsURL      *string
+	SubmissionURL     *string
+	GridUsable        *bool
 }
 
 type TenderRepo struct{ db *pg.DB }

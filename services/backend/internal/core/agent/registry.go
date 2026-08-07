@@ -90,7 +90,14 @@ func (r *Registry) RegisterDefaults() {
 			"professionale in italiano. Se l'utente ti chiede di creare un workbench, deduci nome e " +
 			"visibilità (privato o condiviso) dalla conversazione e usa il tool ask_choice per farteli " +
 			"confermare o correggere dall'utente PRIMA di chiamare create_workbench. Non chiamare mai " +
-			"create_workbench senza aver prima ottenuto una conferma esplicita tramite ask_choice.",
+			"create_workbench senza aver prima ottenuto una conferma esplicita tramite ask_choice. " +
+			// A standing prior, not a duplicate of get_tender_criteria's own
+			// per-call notice: that notice only reaches the model AFTER it has
+			// decided to call the tool, and the failure being prevented here is
+			// the model answering "come viene valutata?" straight from
+			// search_tenders' eight scalars, which contain no criterion at all.
+			"Non affermare mai come viene valutata una gara senza aver prima chiamato get_tender_criteria " +
+			"per quella gara. Se non ci sono pesi pubblicati, dillo: non stimarli mai.",
 		MaxTurns: 8,
 	})
 }

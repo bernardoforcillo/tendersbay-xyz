@@ -11,6 +11,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -180,10 +181,23 @@ func (f *fakeWorkbenches) AccessibleWorkbenchIDs(_ context.Context, userID, work
 	return out, nil
 }
 
-type fakeTenderSearcher struct{}
+// fakeTenders satisfies the combined Tenders port. Both halves return empty
+// values: no test here drives a tool through berrygem (that needs a live
+// provider), so these exist to let the Service be constructed at all.
+type fakeTenders struct{}
 
-func (fakeTenderSearcher) Search(context.Context, tender.SearchParams) (tender.SearchOutput, error) {
+func (fakeTenders) Search(context.Context, tender.SearchParams) (tender.SearchOutput, error) {
 	return tender.SearchOutput{}, nil
+}
+
+func (fakeTenders) GetTender(context.Context, tender.GetTenderParams) (tender.TenderDetail, error) {
+	return tender.TenderDetail{}, nil
+}
+
+type fakeDocuments struct{}
+
+func (fakeDocuments) Excerpts(context.Context, document.ExcerptQuery) (document.ExcerptResult, error) {
+	return document.ExcerptResult{}, nil
 }
 
 type fakeProfileSource struct {
@@ -197,7 +211,7 @@ func (f fakeProfileSource) Get(context.Context, string, string) (clientprofile.P
 
 func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches Workbenches) *Service {
 	registry := NewRegistry("")
-	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenderSearcher{}, fakeProfileSource{err: clientprofile.ErrProfileNotFound})
+	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenders{}, fakeDocuments{}, fakeProfileSource{err: clientprofile.ErrProfileNotFound})
 }
 
 func TestListChats_RejectsNonMember(t *testing.T) {

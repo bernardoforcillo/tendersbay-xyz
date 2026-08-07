@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"sync"
 
@@ -14,6 +15,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -66,6 +68,35 @@ type TenderSearcher interface {
 	Search(ctx context.Context, p tender.SearchParams) (tender.SearchOutput, error)
 }
 
+// TenderInspector is the narrow port the get_tender_criteria tool needs —
+// satisfied by *tender.Service unchanged. GetTender already rate-limits on its
+// own dedicated tier, so the tool inherits a limit without this package
+// growing one.
+type TenderInspector interface {
+	GetTender(ctx context.Context, p tender.GetTenderParams) (tender.TenderDetail, error)
+}
+
+// Tenders is the combined tender-domain port this service holds — kept as two
+// declared halves rather than one flat interface so each tool's dependency
+// stays legible on its own, mirroring how core/bid splits then combines its
+// ports. *tender.Service satisfies it unchanged.
+type Tenders interface {
+	TenderSearcher
+	TenderInspector
+}
+
+// Documents is the narrow port the read_tender_documents tool needs —
+// satisfied by *document.Service unchanged.
+//
+// Expressed in core/document's own types and never in an adapter's: the
+// postgres import at the top of this file (for the chat row types) is existing
+// debt, and this addition deliberately does not extend it. Because the port
+// speaks only domain vocabulary, the Phase 3 buyer-portal fetcher can be
+// composed behind it without anything in this package changing.
+type Documents interface {
+	Excerpts(ctx context.Context, q document.ExcerptQuery) (document.ExcerptResult, error)
+}
+
 // ProfileSource is the subset of clientprofile.Service the agent needs to
 // enrich the model's context with the client's bid profile — defined here,
 // the consumer, mirroring tender.Service's own ProfileSource. Satisfied by
@@ -114,13 +145,14 @@ type Service struct {
 	creditSvc    *credits.Service
 	members      MemberRepository
 	workbenches  Workbenches
-	tenders      TenderSearcher
+	tenders      Tenders
+	documents    Documents
 	profiles     ProfileSource
 	turnStates   map[string]*turnState
 	turnStatesMu sync.Mutex
 }
 
-func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches Workbenches, tenders TenderSearcher, profiles ProfileSource) *Service {
+func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches Workbenches, tenders Tenders, documents Documents, profiles ProfileSource) *Service {
 	return &Service{
 		registry:    registry,
 		chatRepo:    chatRepo,
@@ -128,6 +160,7 @@ func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.
 		members:     members,
 		workbenches: workbenches,
 		tenders:     tenders,
+		documents:   documents,
 		profiles:    profiles,
 		turnStates:  make(map[string]*turnState),
 	}
@@ -528,11 +561,46 @@ func (s *Service) runTurn(
 		return out.Results, nil
 	}
 
+	// getTenderCriteria deliberately persists nothing and pushes no stream
+	// event: the detail travels back to the model inside the tool's own string
+	// result and nowhere else. A "criteria_results" row would repeat the
+	// tender_results defect — a persisted role whose payload lives outside
+	// content, which dbMessagesToProviderMessages drops on rehydration. If
+	// Phase 4 wants a criteria card it should fetch it over the tender RPC,
+	// keyed by tender id; the data is in Postgres, not in the transcript.
+	getTenderCriteria := func(tenderID string) (tender.TenderDetail, error) {
+		curUserID, _, curCtx, _, _, _, _ := ts.snapshot()
+		return s.tenders.GetTender(curCtx, tender.GetTenderParams{ID: tenderID, RateLimitKey: curUserID})
+	}
+
+	// readTenderDocuments parses the model-supplied id here rather than pushing
+	// a string id into the document domain: core/document keys on the numeric
+	// tender id its Reader queries by, and an id the model garbled is a
+	// not-found, not a malformed query for Postgres to reject.
+	//
+	// Limit is left at MaxExcerpts because the tool exposes no knob for it —
+	// the model cannot ask for more text than the domain's budget allows, which
+	// is the whole reason that budget lives in core/document.
+	readTenderDocuments := func(tenderID, question string) (document.ExcerptResult, error) {
+		_, _, curCtx, _, _, _, _ := ts.snapshot()
+		id, err := strconv.ParseInt(tenderID, 10, 64)
+		if err != nil || id <= 0 {
+			return document.ExcerptResult{}, document.ErrTenderNotFound
+		}
+		return s.documents.Excerpts(curCtx, document.ExcerptQuery{
+			TenderID: id,
+			Question: question,
+			Limit:    document.MaxExcerpts,
+		})
+	}
+
 	ag, err := s.registry.BuildAgent(cfg,
 		bagent.WithTools(
 			newAskChoiceTool(askChoice),
 			newCreateWorkbenchTool(ts, createWorkbench),
 			newSearchTendersTool(ts, searchTenders),
+			newGetTenderCriteriaTool(ts, getTenderCriteria),
+			newReadTenderDocumentsTool(ts, readTenderDocuments),
 		),
 	)
 	if err != nil {
