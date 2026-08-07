@@ -35,8 +35,10 @@ resources:
   - tendersbay-xyz/backend/canary/ingress.yaml
   - tendersbay-xyz/backend/canary/update.yaml
   # ingestion app — CronJobs, main channel only (no canary — see design doc).
-  # Fetching and search-indexing are two CronJobs on purpose: sharing one job
-  # let a slow fetch exhaust the deadline and starve indexing completely.
+  # Fetching, search-indexing and eForms-XML enrichment are three CronJobs on
+  # purpose: sharing one job let a slow fetch exhaust the deadline and starve
+  # indexing completely. All three run the same image, different binaries.
   - tendersbay-xyz/ingestion/main/cronjob.yaml
   - tendersbay-xyz/ingestion/main/indexer-cronjob.yaml
+  - tendersbay-xyz/ingestion/main/enricher-cronjob.yaml
   - tendersbay-xyz/ingestion/main/update.yaml

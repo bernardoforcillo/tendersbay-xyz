@@ -37,10 +37,19 @@ RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /seed-cpv ./
 # fetch consume the whole deadline and starve indexing entirely.
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /indexer ./cmd/indexer
 
+# enricher drains the eForms-XML backlog (xml_fetched_at IS NULL). A third
+# recurring binary rather than a phase of either job above, for the reason the
+# indexer already exists: TED's XML host is paced at 250ms between download
+# starts, so a drain measured in thousands of requests would eat whichever
+# deadline it shared. It gets its own CronJob (enricher-cronjob.yaml)
+# overriding `command`.
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /enricher ./cmd/enricher
+
 # ---- Stage 2: minimal runtime ----
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=builder /ingestion /ingestion
 COPY --from=builder /seed-cpv /seed-cpv
 COPY --from=builder /indexer /indexer
+COPY --from=builder /enricher /enricher
 USER nonroot:nonroot
 ENTRYPOINT ["/ingestion"]
