@@ -147,3 +147,35 @@ func TestMap_SetsSourceFromParameter(t *testing.T) {
 		t.Fatalf("Source = %q, want pl-bzp", got.Source)
 	}
 }
+
+// TestMap_RecoversXMLURLAndPublicationNumber covers the two fields the
+// notice-document enrichment queue is resolvable by. Both were already in every
+// response the ingester stored — tedapi requests `links` for the notice PDF, and
+// publication-number has always been decoded — they were simply thrown away, so
+// recovering them costs no extra request.
+func TestMap_RecoversXMLURLAndPublicationNumber(t *testing.T) {
+	n := loadNotice(t, "testdata/cn_standard.json")
+	got := eforms.Map(n, "ted")
+
+	if want := "472141-2026"; got.PublicationNumber != want {
+		t.Errorf("PublicationNumber = %q, want %q", got.PublicationNumber, want)
+	}
+	if got.PublicationNumber == got.SourceRef {
+		t.Errorf("PublicationNumber == SourceRef (%q); they are deliberately different identifiers", got.SourceRef)
+	}
+	// The eForms XML is one multilingual document, so it is keyed "MUL" rather
+	// than by the notice's own language the way the PDF renderings are.
+	if want := "https://ted.europa.eu/en/notice/472141-2026/xml"; got.XMLURL != want {
+		t.Errorf("XMLURL = %q, want %q", got.XMLURL, want)
+	}
+}
+
+// TestMap_XMLURLAbsent pins the pre-eForms case: notices that publish no
+// machine-readable document at all leave `links.xml` out entirely, and that must
+// read as "nothing to fetch" rather than as a malformed row.
+func TestMap_XMLURLAbsent(t *testing.T) {
+	n := loadNotice(t, "testdata/can_standard.json")
+	if got := eforms.Map(n, "ted"); got.XMLURL != "" {
+		t.Errorf("XMLURL = %q, want \"\" for a notice publishing no xml link", got.XMLURL)
+	}
+}

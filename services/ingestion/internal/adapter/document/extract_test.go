@@ -18,8 +18,26 @@ func TestExtract_ReturnsTextFromRealPDF(t *testing.T) {
 	if len(parts) != 1 {
 		t.Fatalf("len(parts) = %d, want 1", len(parts))
 	}
-	if parts[0] != "Comune di Roma appalto lavori stradali" {
-		t.Errorf("parts[0] = %q, want %q", parts[0], "Comune di Roma appalto lavori stradali")
+	if parts[0].Text != "Comune di Roma appalto lavori stradali" {
+		t.Errorf("parts[0].Text = %q, want %q", parts[0].Text, "Comune di Roma appalto lavori stradali")
+	}
+}
+
+// The page span is the half of a citation that text alone cannot supply, and
+// it is unrecoverable once the PDF is gone — so a regression that silently
+// drops it back to zero has to fail here, not months later when an answer
+// turns out to be uncheckable.
+func TestExtract_CarriesPageProvenance(t *testing.T) {
+	parts, err := document.Extract("testdata/fixture.pdf")
+	if err != nil {
+		t.Fatalf("Extract: %v", err)
+	}
+	if len(parts) != 1 {
+		t.Fatalf("len(parts) = %d, want 1", len(parts))
+	}
+	if parts[0].PageStart != 1 || parts[0].PageEnd != 1 {
+		t.Errorf("parts[0] pages = %d-%d, want 1-1 (the fixture is a one-page PDF)",
+			parts[0].PageStart, parts[0].PageEnd)
 	}
 }
 
@@ -45,7 +63,11 @@ func TestClient_FetchAndExtract(t *testing.T) {
 	if err != nil {
 		t.Fatalf("FetchAndExtract: %v", err)
 	}
-	if len(parts) != 1 || parts[0] != "Comune di Roma appalto lavori stradali" {
-		t.Errorf("parts = %v, want [Comune di Roma appalto lavori stradali]", parts)
+	if len(parts) != 1 || parts[0].Text != "Comune di Roma appalto lavori stradali" {
+		t.Errorf("parts = %+v, want one part reading %q", parts, "Comune di Roma appalto lavori stradali")
+	}
+	if parts[0].PageStart != 1 {
+		t.Errorf("parts[0].PageStart = %d, want 1 — the metadata must survive the fetch path too",
+			parts[0].PageStart)
 	}
 }

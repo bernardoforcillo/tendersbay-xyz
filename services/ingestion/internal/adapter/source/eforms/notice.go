@@ -39,8 +39,20 @@ type Notice struct {
 // "ENG") — a different casing convention than NoticeTitle/BuyerName/
 // TitleLot, which use lowercase keys. This is TED's own inconsistency, not
 // a mistake in this struct.
+//
+// The two formats are keyed on the same convention but mean different
+// things. PDF is a human-readable rendering published once per language, so
+// its map has one entry per official language of the notice. XML is the
+// single machine-readable eForms document, which carries *every* language
+// in one file and is therefore filed under the pseudo-language "MUL" — see
+// pickXMLLink for why that key is tried first.
+//
+// The remaining format TED returns ("html") is still discarded: nothing
+// reads it, and a field decoded but never used is a claim this package does
+// not currently honour.
 type Links struct {
 	PDF map[string]string `json:"pdf"`
+	XML map[string]string `json:"xml"`
 }
 
 // Decode unmarshals one raw notice object into a Notice, retaining the

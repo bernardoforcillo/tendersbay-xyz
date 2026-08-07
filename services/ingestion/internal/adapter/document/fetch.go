@@ -1,5 +1,43 @@
-// Package document downloads and extracts text from a tender's notice
-// document (currently PDF only).
+// Package document is this service's outbound-HTTP capability: it downloads
+// what a tender points at, and extracts text from the attachments it can read
+// (currently PDF only).
+//
+// Two fetchers live here, and they share exactly one thing — the retry,
+// backoff and Retry-After machinery at the bottom of this file. That machinery
+// encodes what is worth retrying against a throttling upstream and, more
+// importantly, what is not: a 404 is never retried, because treating absence
+// as transient is the shortest path to an infinite loop against a service that
+// has already given a final answer. Anything fetching over HTTP from this
+// service should reuse it rather than grow its own.
+//
+// In every other respect the two are deliberately different:
+//
+//   - Fetch downloads a tender attachment (a PDF) from wherever the notice
+//     said it lives, to be extracted for the search index.
+//   - NoticeXMLClient (notice_xml.go) downloads one eForms notice document
+//     from the EU's own register, to be parsed into structured detail.
+//
+// # The scope fence on NoticeXMLClient
+//
+// NoticeXMLClient fetches ted.europa.eu and nothing else, and enforces that
+// rather than merely documenting it: any URL whose scheme+host is not
+// https://ted.europa.eu is rejected before a request is made, and again on
+// every redirect hop. The second half is why that client carries its own
+// *http.Client instead of the one below — Fetch has to follow redirects
+// wherever a buyer's portal sends it, which is the exact policy the fence
+// cannot allow.
+//
+// This matters because the enrichment pass stores buyer-portal links
+// (documents_url, submission_url) that it deliberately does not follow.
+// Following them is a later phase's work and carries obligations this path
+// does not have and is not audited for: this service has no robots.txt
+// handling anywhere in it (the user agent below is politeness, not
+// compliance), and an arbitrary-URL fetcher driven by addresses that arrive
+// from an external feed is an SSRF primitive pointed at whatever network the
+// pod sits in. The allowlist is one comparison today and is the whole
+// difference between a scoped fetcher and an unaudited egress primitive later,
+// so do not relax it to "make the fetcher reusable" — a second scope gets a
+// second fetcher, with its own robots and SSRF story.
 package document
 
 import (
