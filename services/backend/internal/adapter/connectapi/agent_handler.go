@@ -2,6 +2,7 @@ package connectapi
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
 	"connectrpc.com/connect"
@@ -155,9 +156,15 @@ func toProtoTenderResults(tr agent.TenderResults) *agentv1.TenderResults {
 	return &agentv1.TenderResults{Tenders: tenders}
 }
 
-// runAndFinish runs a service-layer turn (ChatStream or SubmitChoice) and,
-// on success, drains its usage, deducts credits, and sends the terminal
-// Done event — the tail shared by both RPCs.
+// abortedTurnBillingTimeout bounds the deduction for a turn that failed. The
+// caller is on its way out with an error and nothing waits on the result, so
+// this exists only to stop a wedged database from holding a request goroutine
+// open after the client has already gone.
+const abortedTurnBillingTimeout = 5 * time.Second
+
+// runAndFinish runs a service-layer turn (ChatStream or SubmitChoice), deducts
+// whatever it reported using, and on success sends the terminal Done event —
+// the tail shared by both RPCs.
 func (h *AgentHandler) runAndFinish(
 	ctx context.Context,
 	uid, workspaceID string,
@@ -166,8 +173,9 @@ func (h *AgentHandler) runAndFinish(
 	run func(usageCh chan<- credits.Usage) error,
 ) error {
 	usageCh := make(chan credits.Usage, 1)
-	if err := run(usageCh); err != nil {
-		return toConnectError(err)
+	if runErr := run(usageCh); runErr != nil {
+		h.billAbortedTurn(ctx, uid, workspaceID, usageCh)
+		return toConnectError(runErr)
 	}
 	usage := <-usageCh
 	usage.WorkspaceID = workspaceID
@@ -189,6 +197,50 @@ func (h *AgentHandler) runAndFinish(
 			CreditsMonthlyMax: allowance,
 		}},
 	})
+}
+
+// billAbortedTurn deducts credits for a turn that failed after it had already
+// reached the provider. Until now this path returned before ever reading
+// usageCh, so a turn the company paid Fireworks for was free to the user —
+// repeatable at will by closing the tab mid-stream, and firing on its own
+// every time a turn outlives the server's WriteTimeout or a rolling deploy's
+// graceful-shutdown window (see main.go). Those two classes of turn are the
+// interesting consequence of this change: they were silently free before and
+// are billed now. Neither timeout is touched here — retuning them needs
+// turn-duration data nobody has yet, and this at least makes their cost
+// visible in token_usage_log.
+//
+// The read is non-blocking on purpose. runTurn now reports usage on every path
+// that reached the provider, but a turn can also fail BEFORE that — an
+// unauthorized session, an unreachable database, a stream that never started —
+// and those genuinely spent nothing. A plain <-usageCh would deadlock the
+// handler on exactly those cases; the default arm is what makes the fix safe
+// rather than a hang.
+//
+// Billing runs on a detached context because the dominant abort IS ctx being
+// cancelled (the client went away), and a deduct issued on a cancelled context
+// fails before it touches the database — which would leave this doing nothing
+// in precisely the case it exists for.
+func (h *AgentHandler) billAbortedTurn(ctx context.Context, uid, workspaceID string, usageCh <-chan credits.Usage) {
+	var usage credits.Usage
+	select {
+	case usage = <-usageCh:
+	default:
+		return
+	}
+	usage.WorkspaceID = workspaceID
+	usage.UserID = uid
+
+	billCtx, cancel := context.WithTimeout(context.WithoutCancel(ctx), abortedTurnBillingTimeout)
+	defer cancel()
+
+	// Logged, not returned: the caller is already returning the failure the
+	// user needs to see, and replacing it with a billing error would hide the
+	// actual fault behind an accounting one.
+	if _, err := h.creditSvc.Deduct(billCtx, usage); err != nil {
+		slog.ErrorContext(billCtx, "failed to bill an aborted agent turn",
+			"workspace_id", workspaceID, "session_id", usage.SessionID, "error", err)
+	}
 }
 
 func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agentv1.ChatStreamRequest], stream *connect.ServerStream[agentv1.ChatStreamResponse]) error {
