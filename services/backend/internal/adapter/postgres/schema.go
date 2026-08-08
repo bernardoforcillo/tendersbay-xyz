@@ -591,9 +591,25 @@ var (
 	BidGoNoGo      = pg.Add(Bids, pg.Text("go_no_go").NotNull().Default("'undecided'"))
 	BidStage       = pg.Add(Bids, pg.Text("stage").NotNull().Default("'shortlisted'"))
 	BidOutcome     = pg.Add(Bids, pg.Text("outcome")) // nullable: NULL = open
-	BidCreatedBy   = pg.Add(Bids, pg.UUID("created_by").NotNull())
-	BidCreatedAt   = pg.Add(Bids, pg.Timestamp("created_at", true).NotNull().Default("now()"))
-	BidUpdatedAt   = pg.Add(Bids, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	// The decision record (0011): the eligibility recommendation the go/no-go
+	// was taken against. Stored on the bid and not derived on read because
+	// company.Assessment is deliberately never persisted — by the time anyone
+	// asks "how often did the user disagree with us", the dossier and the
+	// requirements have both moved and the baseline is gone.
+	//
+	// decision_recommendation is NOT NULL DEFAULT '' rather than nullable: ''
+	// means "no recommendation existed" (the check could not be run), which is a
+	// real, queryable state, and a NULL would additionally have to be
+	// distinguished from a row written before this column existed.
+	BidDecisionRecommendation = pg.Add(Bids, pg.Text("decision_recommendation").NotNull().Default("''"))
+	BidDecisionOverridden     = pg.Add(Bids, pg.Boolean("decision_overridden").NotNull().Default("false"))
+	BidDecisionBlockingGaps   = pg.Add(Bids, pg.BigInt("decision_blocking_gaps").NotNull().Default("0"))
+	BidDecisionRecordedAt     = pg.Add(Bids, pg.Timestamp("decision_recorded_at", true)) // nullable: NULL = still undecided
+
+	BidCreatedBy = pg.Add(Bids, pg.UUID("created_by").NotNull())
+	BidCreatedAt = pg.Add(Bids, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	BidUpdatedAt = pg.Add(Bids, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
 
 	BidChecklistItems = pg.NewTable("bid_checklist_items")
 	BCIID             = pg.Add(BidChecklistItems, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
@@ -608,15 +624,19 @@ var (
 )
 
 type DBBid struct {
-	ID          string    `drop:"id"`
-	WorkbenchID string    `drop:"workbench_id"`
-	TenderID    int64     `drop:"tender_id"`
-	GoNoGo      string    `drop:"go_no_go"`
-	Stage       string    `drop:"stage"`
-	Outcome     *string   `drop:"outcome"` // nullable: nil = open
-	CreatedBy   string    `drop:"created_by"`
-	CreatedAt   time.Time `drop:"created_at"`
-	UpdatedAt   time.Time `drop:"updated_at"`
+	ID                     string     `drop:"id"`
+	WorkbenchID            string     `drop:"workbench_id"`
+	TenderID               int64      `drop:"tender_id"`
+	GoNoGo                 string     `drop:"go_no_go"`
+	Stage                  string     `drop:"stage"`
+	Outcome                *string    `drop:"outcome"` // nullable: nil = open
+	DecisionRecommendation string     `drop:"decision_recommendation"`
+	DecisionOverridden     bool       `drop:"decision_overridden"`
+	DecisionBlockingGaps   int64      `drop:"decision_blocking_gaps"`
+	DecisionRecordedAt     *time.Time `drop:"decision_recorded_at"` // nullable: nil = still undecided
+	CreatedBy              string     `drop:"created_by"`
+	CreatedAt              time.Time  `drop:"created_at"`
+	UpdatedAt              time.Time  `drop:"updated_at"`
 }
 
 type DBChecklistItem struct {

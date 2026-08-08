@@ -9,6 +9,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
@@ -39,6 +40,60 @@ const (
 	OutcomeWithdrawn Outcome = "withdrawn"
 )
 
+// DecisionRecord is the eligibility recommendation a go/no-go was taken
+// against, captured at the moment the human decided.
+//
+// It is STORED, unlike fit and unlike the assessment itself, and the reason is
+// the one thing it is for: "how often does the user disagree with us, and about
+// what" is the trust signal this product lives or dies on, and it is
+// unanswerable after the fact. The assessment is computed fresh on every read
+// (company.Assessment is deliberately never persisted), so by the time anyone
+// asks the question, the dossier has moved, the requirements have moved, and the
+// recommendation that was actually on screen is gone. A client-side analytics
+// event cannot stand in for this: the client would be asserting what we
+// recommended, and a disagreement metric whose baseline the disagreeing party
+// supplies measures nothing.
+//
+// Recording it does NOT gate the decision. The human carries the liability and
+// decides; this records what they decided against, and nothing here can refuse
+// a go on a no_go recommendation — that is the whole point of an override being
+// representable.
+type DecisionRecord struct {
+	// Recommendation is the verdict the eligibility engine produced for this
+	// bid's tender at decision time. "" means NO recommendation existed — the
+	// check could not be run at all — which is a different fact from
+	// company.VerdictInsufficientData ("it ran, and the evidence was too thin"),
+	// and collapsing the two would make the override rate un-interpretable.
+	Recommendation company.Verdict
+	// Overridden reports that the decision CONTRADICTS the recommendation. It is
+	// derived, never taken from a caller.
+	Overridden bool
+	// BlockingGapCount is how many blocking gaps stood at decision time. It is
+	// the size of the disagreement: overriding a no_go that rests on one lapsed
+	// certificate is a different act from overriding one with four blocking gaps.
+	BlockingGapCount int
+	// RecordedAt is when the decision was taken. nil on a bid still undecided.
+	RecordedAt *time.Time
+}
+
+// Overrides reports whether decision d contradicts recommendation v.
+//
+// company.VerdictInsufficientData is deliberately NOT an override, whichever way
+// the user decides. There was no recommendation to contradict — the engine said
+// "we cannot tell" — and counting a decision under acknowledged uncertainty as
+// a disagreement would inflate the override rate with exactly the cases where
+// the product declined to have an opinion.
+func Overrides(v company.Verdict, d GoNoGo) bool {
+	switch v {
+	case company.VerdictNoGo:
+		return d == GoNoGoGo
+	case company.VerdictGo:
+		return d == GoNoGoNoGo
+	default:
+		return false
+	}
+}
+
 // Bid is one tender tracked inside a workbench. Fit and the live tender
 // summary are computed fresh on read (spec §5) and are NOT stored here.
 type Bid struct {
@@ -48,9 +103,12 @@ type Bid struct {
 	GoNoGo      GoNoGo
 	Stage       Stage
 	Outcome     Outcome
-	CreatedBy   string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	// Decision is the eligibility recommendation this bid's go/no-go was taken
+	// against. Zero-valued until SetGoNoGo runs.
+	Decision  DecisionRecord
+	CreatedBy string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 // ChecklistItem is one persisted ESPD/DGUE line for a bid. SectionCode/ItemCode
