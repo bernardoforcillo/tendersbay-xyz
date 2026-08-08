@@ -16,6 +16,7 @@ import (
 	"github.com/bernardoforcillo/drops/pg"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
@@ -206,6 +207,28 @@ func (fakeDocuments) Excerpts(context.Context, document.ExcerptQuery) (document.
 	return document.ExcerptResult{}, nil
 }
 
+// fakeCompanies satisfies the Companies port with an empty dossier and no-op
+// writes. Like fakeTenders and fakeDocuments it exists so the Service can be
+// constructed: no test here drives a company tool through berrygem, which would
+// need a live provider.
+type fakeCompanies struct{}
+
+func (fakeCompanies) GetDossier(context.Context, string, string) (company.Dossier, error) {
+	return company.Dossier{}, company.ErrDossierNotFound
+}
+
+func (fakeCompanies) RecordFact(context.Context, string, string, company.Fact, company.PromptSource, *int64) error {
+	return nil
+}
+
+func (fakeCompanies) RecordRequirements(context.Context, string, string, int64, []company.Requirement) ([]company.Requirement, error) {
+	return nil, nil
+}
+
+func (fakeCompanies) CheckEligibility(context.Context, string, string, int64, string) (company.Assessment, error) {
+	return company.Assessment{}, nil
+}
+
 type fakeProfileSource struct {
 	profile clientprofile.Profile
 	err     error
@@ -217,7 +240,7 @@ func (f fakeProfileSource) Get(context.Context, string, string) (clientprofile.P
 
 func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches Workbenches) *Service {
 	registry := NewRegistry("")
-	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenders{}, fakeDocuments{}, fakeProfileSource{err: clientprofile.ErrProfileNotFound}, "test-pod")
+	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenders{}, fakeDocuments{}, fakeCompanies{}, fakeProfileSource{err: clientprofile.ErrProfileNotFound}, "test-pod")
 }
 
 func TestListChats_RejectsNonMember(t *testing.T) {

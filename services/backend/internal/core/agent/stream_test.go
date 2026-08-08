@@ -87,6 +87,45 @@ func TestConsumeStream_AllChannelsClosedWithoutResultReturnsExplicitError(t *tes
 	}
 }
 
+// TestConsumeStream_DisconnectDuringDrainStillFails pins the half of the
+// select-ordering hazard that outlived the truncation fix. Both `content` and
+// `done` are made ready BEFORE the call, which is the exact state berrygem
+// leaves behind for any reply short enough to fit its 64-slot buffer — so
+// `select` picks between them at random and each run exercises one of the two
+// orderings. A sendToken that always fails is a client that has gone away, and
+// that must propagate on BOTH orderings: the drain used to swallow it, which
+// made a disconnected turn report success roughly half the time, persisting an
+// assistant reply nobody received. Run it under -count to cover both picks.
+func TestConsumeStream_DisconnectDuringDrainStillFails(t *testing.T) {
+	content := make(chan string, 2)
+	errs := make(chan error, 1)
+	done := make(chan *bagent.RunResult, 1)
+
+	content <- "Ho trovato "
+	content <- "tre bandi."
+	close(content)
+	close(errs)
+	done <- &bagent.RunResult{Content: "Ho trovato tre bandi."}
+	close(done)
+
+	disconnected := errors.New("client disconnected")
+	svc := &Service{}
+	fullContent, result, err := svc.consumeStream(context.Background(), content, errs, done,
+		func(string) error { return disconnected })
+
+	if !errors.Is(err, disconnected) {
+		t.Fatalf("err = %v, want the send failure to propagate whichever branch select took", err)
+	}
+	if result != nil {
+		t.Fatalf("result = %+v, want nil so runTurn bills the aborted turn on estimated usage", result)
+	}
+	// Billing reads fullContent: what was generated is owed whether or not it
+	// arrived, so the drain must still accumulate before giving up.
+	if fullContent != "Ho trovato " && fullContent != "Ho trovato tre bandi." {
+		t.Fatalf("fullContent = %q, want whatever was consumed before the failure", fullContent)
+	}
+}
+
 func TestConsumeStream_ReturnsPromptlyOnContextCancellation(t *testing.T) {
 	content := make(chan string)
 	errs := make(chan error)

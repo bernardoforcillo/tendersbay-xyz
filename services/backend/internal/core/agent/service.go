@@ -15,6 +15,7 @@ import (
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
@@ -146,6 +147,23 @@ type Documents interface {
 	Excerpts(ctx context.Context, q document.ExcerptQuery) (document.ExcerptResult, error)
 }
 
+// Companies is the narrow port the four company tools need — satisfied by
+// *company.Service unchanged.
+//
+// Expressed in core/company's own types only, for the same reason Documents is:
+// the postgres import at the top of this file is existing debt and this addition
+// deliberately does not extend it. Note what is NOT here — nothing that would
+// let this package compute a verdict, stamp a provenance, or decide whether an
+// extracted requirement may block. Those live in company.Service and
+// company.Evaluate, and a tool that re-derived them would be free to disagree
+// with the eligibility panel about the same evidence.
+type Companies interface {
+	GetDossier(ctx context.Context, userID, workspaceID string) (company.Dossier, error)
+	RecordFact(ctx context.Context, userID, workspaceID string, f company.Fact, src company.PromptSource, tenderID *int64) error
+	RecordRequirements(ctx context.Context, userID, workspaceID string, tenderID int64, reqs []company.Requirement) ([]company.Requirement, error)
+	CheckEligibility(ctx context.Context, userID, workspaceID string, tenderID int64, lotRef string) (company.Assessment, error)
+}
+
 // ProfileSource is the subset of clientprofile.Service the agent needs to
 // enrich the model's context with the client's bid profile — defined here,
 // the consumer, mirroring tender.Service's own ProfileSource. Satisfied by
@@ -201,6 +219,7 @@ type Service struct {
 	workbenches Workbenches
 	tenders     Tenders
 	documents   Documents
+	companies   Companies
 	profiles    ProfileSource
 	// pod is the process identity stamped into every assistant turn's
 	// metadata. It is passed in rather than read here on purpose: core owns
@@ -229,7 +248,7 @@ type Service struct {
 // NewService wires the agent domain. pod is the process identity recorded on
 // every assistant turn (see Service.pod); pass os.Hostname's result, or "" in a
 // context where the answer is meaningless.
-func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches Workbenches, tenders Tenders, documents Documents, profiles ProfileSource, pod string) *Service {
+func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.Service, members MemberRepository, workbenches Workbenches, tenders Tenders, documents Documents, companies Companies, profiles ProfileSource, pod string) *Service {
 	return &Service{
 		registry:    registry,
 		chatRepo:    chatRepo,
@@ -238,6 +257,7 @@ func NewService(registry *Registry, chatRepo ChatRepository, creditSvc *credits.
 		workbenches: workbenches,
 		tenders:     tenders,
 		documents:   documents,
+		companies:   companies,
 		profiles:    profiles,
 		pod:         pod,
 	}
@@ -550,6 +570,34 @@ func (t *turnState) recordSearchResult(empty bool) int {
 	return t.emptyStreak
 }
 
+// mergeFinancialYear fills the figures a chat answer did not carry from the
+// esercizio already on file, so writing one of them never erases the others.
+//
+// It reads the dossier rather than trusting the model to restate what it did not
+// ask about: the model has no way to know a turnover the user typed into the
+// settings form months ago, and inviting it to guess one would be strictly worse
+// than losing it. A dossier that cannot be read at all fails the write instead of
+// proceeding with a partial row — a silently blanked fatturato is exactly the
+// kind of wrong "go" this domain exists to prevent.
+//
+// company.Service.PutFinancialYear now performs the same merge on the way in, so
+// this is belt-and-braces rather than the only guard. It is kept because the two
+// read the dossier through different doors: this one goes through
+// company.Service.GetDossier, which is membership-checked for the CHAT user, and
+// a merge that silently used the workspace-scoped read instead would be the
+// wrong check on this path. The shared rule itself lives in exactly one place —
+// company.MergeFinancialYear.
+func (s *Service) mergeFinancialYear(ctx context.Context, userID, workspaceID string, in company.FinancialYear) (company.FinancialYear, error) {
+	d, err := s.companies.GetDossier(ctx, userID, workspaceID)
+	if err != nil {
+		if errors.Is(err, company.ErrDossierNotFound) {
+			return in, nil
+		}
+		return company.FinancialYear{}, err
+	}
+	return company.MergeFinancialYear(in, d.FinancialYears), nil
+}
+
 // runTurn drives one berrygem turn-loop invocation: builds the agent with this
 // session's tools, hands it the WHOLE conversation assembled from Postgres,
 // and either persists the assistant's reply and reports full usage, or — if
@@ -715,6 +763,81 @@ func (s *Service) runTurn(
 		})
 	}
 
+	// getCompanyDossier, checkEligibility, recordTenderRequirement and
+	// recordCompanyFact all read the turn's identity off ts for the same reason
+	// every closure above does: the caller, the context and the stream callbacks
+	// belong to one turn, and the tools are built and discarded with it.
+	//
+	// Every one of them is membership- and permission-checked inside
+	// company.Service. Nothing here re-implements that check, and nothing here
+	// can bypass it: the port takes the user id as an argument, so a tool with no
+	// authenticated caller cannot be built at all.
+	getCompanyDossier := func() (company.Dossier, error) {
+		curUserID, curWorkspaceID, curCtx, _, _, _, _ := ts.snapshot()
+		d, err := s.companies.GetDossier(curCtx, curUserID, curWorkspaceID)
+		// An absent dossier is a real product state — "we have never asked" — and
+		// the tool renders it as an empty one with steering attached. Failing the
+		// call instead would replace a question with an outage on every workspace
+		// that has not filled the form yet, which is most of them.
+		if errors.Is(err, company.ErrDossierNotFound) {
+			return company.Dossier{WorkspaceID: curWorkspaceID}, nil
+		}
+		return d, err
+	}
+
+	checkEligibility := func(tenderID int64, lotRef string) (company.Assessment, error) {
+		curUserID, curWorkspaceID, curCtx, _, _, _, _ := ts.snapshot()
+		return s.companies.CheckEligibility(curCtx, curUserID, curWorkspaceID, tenderID, lotRef)
+	}
+
+	recordTenderRequirement := func(tenderID int64, r company.Requirement) error {
+		curUserID, curWorkspaceID, curCtx, _, _, _, _ := ts.snapshot()
+		_, err := s.companies.RecordRequirements(curCtx, curUserID, curWorkspaceID, tenderID, []company.Requirement{r})
+		return err
+	}
+
+	recordCompanyFact := func(field string, v companyFactValueArgs, tenderID *int64) error {
+		curUserID, curWorkspaceID, curCtx, _, _, _, _ := ts.snapshot()
+		fact, err := buildCompanyFact(field, v)
+		if err != nil {
+			return err
+		}
+		// An esercizio is stored as ONE row keyed by (workspace, year) and the
+		// repository writes it as a full replace, so a headcount answer that
+		// carried no turnover would blank a turnover the user had already typed
+		// into the dossier form. The two are separate questions to a user and one
+		// row in the database, and this is where those two facts are reconciled:
+		// fields the model did not answer are carried over from what is already
+		// on file, and only the ones it did answer overwrite anything.
+		if fact.FinancialYear != nil {
+			merged, err := s.mergeFinancialYear(curCtx, curUserID, curWorkspaceID, *fact.FinancialYear)
+			if err != nil {
+				return err
+			}
+			fact.FinancialYear = &merged
+		}
+		note := "risposta dell'utente in chat"
+		if tenderID != nil {
+			note = fmt.Sprintf("risposta dell'utente in chat, gara %d", *tenderID)
+		}
+		// The source note is set here and the PROVENANCE is not: company.Service
+		// derives that from PromptTender plus the authenticated caller, which is
+		// the only reason "a human said this" is worth anything downstream.
+		switch {
+		case fact.SOA != nil:
+			fact.SOA.SourceNote = note
+		case fact.Certification != nil:
+			fact.Certification.SourceNote = note
+		case fact.FinancialYear != nil:
+			fact.FinancialYear.SourceNote = note
+		case fact.PastContract != nil:
+			fact.PastContract.SourceNote = note
+		case fact.Registration != nil:
+			fact.Registration.SourceNote = note
+		}
+		return s.companies.RecordFact(curCtx, curUserID, curWorkspaceID, fact, company.PromptTender, tenderID)
+	}
+
 	opts := append([]bagent.Option{
 		bagent.WithTools(
 			newAskChoiceTool(askChoice),
@@ -722,6 +845,10 @@ func (s *Service) runTurn(
 			newSearchTendersTool(ts, searchTenders),
 			newGetTenderCriteriaTool(ts, getTenderCriteria),
 			newReadTenderDocumentsTool(ts, readTenderDocuments),
+			newGetCompanyProfileTool(ts, getCompanyDossier),
+			newCheckEligibilityTool(ts, checkEligibility),
+			newRecordTenderRequirementTool(ts, recordTenderRequirement),
+			newRecordCompanyFactTool(ts, recordCompanyFact),
 		),
 	}, s.agentOpts...)
 	ag, err := s.registry.BuildAgent(cfg, opts...)
@@ -1250,6 +1377,18 @@ func (s *Service) consumeStream(
 	done <-chan *bagent.RunResult,
 	sendToken StreamToken,
 ) (fullContent string, result *bagent.RunResult, err error) {
+	// A sendToken failure inside the drain is the same fact it is on the
+	// streaming branch below — the client is gone — so it is recorded rather
+	// than discarded. Discarding it left the `done` branch reporting success
+	// for a turn whose tail never reached anyone, and because that branch is
+	// only reached when `select` happens to pick `done` over a ready
+	// `content`, the SAME disconnect was classified as a failure or a success
+	// depending on scheduling. runTurn keys the whole aborted-turn path off
+	// this error (usage reported, no assistant row persisted), so the coin
+	// flip decided whether a disconnected turn left a phantom reply behind.
+	// The first error wins: later chunks of an already-dead stream fail for
+	// the same reason and say nothing new.
+	var drainErr error
 	drainContent := func() {
 		for {
 			select {
@@ -1258,7 +1397,9 @@ func (s *Service) consumeStream(
 					return
 				}
 				fullContent += chunk
-				_ = sendToken(chunk) // best-effort: the result is already decided either way
+				if err := sendToken(chunk); err != nil && drainErr == nil {
+					drainErr = err
+				}
 			default:
 				return
 			}
@@ -1282,6 +1423,9 @@ func (s *Service) consumeStream(
 				errs = nil
 				break
 			}
+			// The provider's own error wins over any drain send failure: it is
+			// the root cause, and a client that vanished while the stream was
+			// already failing adds nothing to the diagnosis.
 			drainContent()
 			return fullContent, nil, e
 
@@ -1291,6 +1435,13 @@ func (s *Service) consumeStream(
 				break
 			}
 			drainContent()
+			if drainErr != nil {
+				// The provider finished, but the tail never reached the
+				// client. That is an aborted turn, not a completed one — and
+				// the nil result routes it to the same estimated-usage billing
+				// the streaming branch's disconnect already gets.
+				return fullContent, nil, drainErr
+			}
 			return fullContent, r, nil
 
 		case <-ctx.Done():
