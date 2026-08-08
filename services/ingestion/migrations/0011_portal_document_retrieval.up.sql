@@ -1,0 +1,197 @@
+-- The bookkeeping for retrieving tender-document bodies from buyers' own
+-- procurement portals: the queue this pass drains, what the last look produced,
+-- and how much of what the buyer published we actually managed to read.
+--
+-- It consumes what 0010 left behind. grid_usable = false is the trigger — a
+-- notice we HAVE enriched, whose award grid carries no weights, and therefore
+-- one whose scoring criteria (if they exist at all) live in a document on the
+-- buyer's portal rather than in the EU register. documents_url is the entry
+-- point, populated by the same enrichment pass.
+--
+-- COST: this migration REWRITES NOTHING, on the same argument 0010 made. Every
+-- ADD COLUMN below is nullable or carries a non-volatile constant default, both
+-- of which are metadata-only in modern Postgres. The partial index is the only
+-- real work, and its predicate IS the queue — so it starts as small as the
+-- backlog and shrinks to nothing as the corpus drains, rather than carrying an
+-- entry per row forever.
+--
+-- There is NO BACKFILL STATEMENT AT ALL, and unlike 0010 that is not a choice.
+-- 0010 could re-read publication_number and xml_url out of `raw`, because the
+-- ingestion client had always fetched them and the decoder had merely thrown
+-- them away. Nothing here is recoverable offline: a portal document has never
+-- been fetched, so backfill is network work, one host at a time, at a rate the
+-- host sets. The pre-existing corpus simply IS this pass's queue at t=0, drained
+-- by the same code at the same paced rate with the same per-row failure
+-- isolation as steady state, and that is why there is no backfill command
+-- either.
+--
+--
+-- WHAT ALREADY SUFFICES, CHECKED BEFORE ANYTHING WAS ADDED
+--
+--   the entry URL         ingested_tenders.documents_url (0010), and the
+--                         per-lot column beside it
+--   retrieved file rows   ingested_tender_documents(tender_id, url, type),
+--                         UNIQUE (tender_id, url), from 0001. Retrieved files
+--                         take type = 'tender-document'; the notice PDF is
+--                         type = 'notice'. The `type` column already
+--                         discriminates, so no origin column is needed.
+--   extracted text        ingested_tender_document_parts, including the
+--                         page/section/has_table provenance 0010 added. Phase 0
+--                         and 0010 already paid for citable extraction; this
+--                         pass writes into it unchanged.
+--
+-- Only the queue bookkeeping was missing, and it is the exact analogue of
+-- 0010's xml_status / xml_attempts / xml_fetched_at trio.
+--
+--
+-- WHY THE QUEUE IS DOWNSTREAM OF THE ENRICHER'S BY CONSTRUCTION, AND WHY
+-- NOBODY MAY "HELPFULLY" ADD `OR grid_usable IS NULL`
+--
+-- grid_usable is three-valued and 0010's header explains at length why NULL must
+-- not collapse into false: NULL means we have not looked. So a row the enricher
+-- has not read CANNOT ENTER THIS QUEUE — the sequencing between the two passes
+-- is enforced by the data itself, not by a scheduler ordering two CronJobs, and
+-- it holds even if the jobs run out of order or one of them is paused for a day.
+--
+-- That is a free correctness property and it is easy to destroy. Widening the
+-- predicate to `grid_usable IS NOT TRUE` or `OR grid_usable IS NULL` would point
+-- this pass at every unenriched row in the corpus, spend third-party requests
+-- discovering documents for notices whose own XML would have answered the
+-- question, and do it against strangers' servers. Keep the predicate exactly as
+-- written.
+--
+--
+-- WHY THERE IS NO docs_coverage ENUM, AND WHY COVERAGE IS TWO COUNTS
+--
+-- The obvious shape is a docs_coverage column reading 'full' | 'partial' |
+-- 'none'. Reject it. "Full" is not observable: nothing on a listing page tells
+-- us whether it showed every document the buyer published, so the enum's best
+-- value would be a claim rather than a measurement — and a claim that reads as a
+-- measurement is worse than no column.
+--
+-- So coverage is two counts and cause is one status, kept orthogonal:
+--
+--   docs_files_found      how many files the listing published, BEFORE the
+--                         per-tender cap. A listing of 300 records 300, so the
+--                         truncation is a SQL fact rather than an inference.
+--   docs_files_extracted  how many of them yielded text we could persist.
+--
+-- The pair (found > 0, extracted = 0) says "we saw them and could not read
+-- them" without any enum having to invent a name for it — which is the answer
+-- for a tender whose documents are all .p7m or all scanned, and which is exactly
+-- the population that decides whether those formats are worth building next.
+--
+-- A COUNT IS WRITTEN ONLY WHEN A LISTING WAS ACTUALLY READ, and that is the
+-- invariant of this whole feature written into the schema rather than into a
+-- comment. A robots-denied tender has no file count because we never saw the
+-- listing; writing 0 there would say the buyer published nothing, which is
+-- precisely the lie this pass exists to stop telling. The same holds for
+-- captcha, auth_required, unreachable, and — the one that is easy to get wrong
+-- — traversal_failed, where an empty result from the generic fallback is a
+-- statement about the fallback rather than about the page.
+--
+-- Which leaves exactly three statuses carrying counts, and each of them is a
+-- measurement of a listing this pass genuinely enumerated:
+--
+--   ok              found >= extracted > 0
+--   no_files        0 / 0, a real measurement because only a NAMED platform
+--                   parser can produce this status at all
+--   extract_failed  found > 0, extracted = 0 — the pair described above, and
+--                   the population that decides whether .p7m and .zip
+--                   unwrapping is worth building
+--
+-- The rule is enforced in one place, retrieve.Outcome.Counts, which hands this
+-- layer a NULL rather than a number; nothing in SQL re-derives it.
+--
+--
+-- docs_status: A CLOSED VOCABULARY OF EIGHT
+--
+--   ok                at least one file's text was extracted and persisted
+--   no_files          a PLATFORM parser read the listing and it publishes none
+--   robots_denied     the host's robots.txt disallows this path for our agent
+--   captcha           a 200 that is a human check, not the document
+--   auth_required     401/403, or a login form served in place of the listing
+--   traversal_failed  the page was fetched but no parser could enumerate it
+--   extract_failed    files were found and fetched but none yielded text
+--   unreachable       transport error, 5xx, 429, or robots.txt unreadable
+--
+-- The four in the middle are the reasons a human is told the documents could not
+-- be reached, so grouping this column by host or platform answers "which portal
+-- should we integrate next" in plain SQL, with no analytics dependency.
+--
+-- no_files VS traversal_failed IS THE WHOLE DESIGN IN TWO VALUES. no_files is a
+-- POSITIVE CLAIM — a parser that understands this platform says the listing is
+-- empty. traversal_failed is an ADMISSION — we could not read the page, so we
+-- know nothing about it. THE GENERIC FALLBACK PARSER CAN NEVER PRODUCE no_files;
+-- only a named platform parser may. A generic parser finding zero links is
+-- evidence about the parser, not about the listing, and collapsing the two would
+-- reintroduce "an inaccessible file mistaken for an absent one" one layer below
+-- where anyone would look for it.
+--
+-- Only 'unreachable' is ever written while the row stays queued. It becomes
+-- terminal once docs_attempts is spent, at which point docs_fetched_at is
+-- stamped and the row is visible as a parked failure rather than as an eternally
+-- pending one — the same shape as 0010's 'unavailable'.
+--
+--
+-- WHY docs_attempts IS SMALLER THAN xml_attempts' BUDGET IN PRACTICE
+--
+-- The column is the same shape; the budget spending it is not, and the reason
+-- belongs here because this is where a future reader will look for it. The
+-- enricher retries five times against ted.europa.eu, one request per attempt,
+-- against an upstream that publishes its own rate limit and recovers in seconds.
+-- This pass retries three times, and each attempt costs a robots fetch plus a
+-- listing fetch plus up to fifteen file downloads — against a comune's server
+-- that may be one VM. The budget here is bounded by politeness, not by work.
+--
+--
+-- PERSONAL DATA: NO NEW POSTURE, AND THE SAME ENFORCEMENT
+--
+-- Tender documents name the RUP and frequently name individuals. That is not new
+-- exposure: es-placsp already puts specification text into
+-- ingested_tender_document_parts today, and these are documents the buyer
+-- published. The rule 0010 recorded carries over unchanged — none of it may ever
+-- reach an analytics payload — and it is enforced by construction rather than by
+-- review: the per-tender observation this pass emits carries counts and
+-- low-cardinality categoricals only, so there is no field a name, an address or
+-- a URL could leak through.
+--
+--
+-- THE FILE BYTES ARE NOT STORED, ANYWHERE, ON PURPOSE
+--
+-- There is no blob column here and no object storage in this design. A retrieved
+-- file exists as one value in memory and, for the length of one extraction, one
+-- temp file; then it is gone. What is persisted is its URL (so a human can open
+-- it) and its extracted text (so it can be cited). Anyone adding a bytea column
+-- to ingested_tender_documents is changing that decision, not implementing it.
+
+ALTER TABLE tenders.ingested_tenders
+    ADD COLUMN IF NOT EXISTS docs_fetched_at      timestamptz,
+    ADD COLUMN IF NOT EXISTS docs_status          text,
+    ADD COLUMN IF NOT EXISTS docs_attempts        smallint NOT NULL DEFAULT 0,
+    ADD COLUMN IF NOT EXISTS docs_platform        text,
+    ADD COLUMN IF NOT EXISTS docs_files_found     smallint,
+    ADD COLUMN IF NOT EXISTS docs_files_extracted smallint;
+
+-- This pass's queue, and the predicate is the whole of it.
+--
+-- Partial for the reason 0010's xml-pending index is partial: the set it serves
+-- shrinks toward empty as the corpus drains, so the index should shrink with it
+-- rather than carry an entry per retrieved row forever. Indexing (id) and
+-- nothing else keeps it a covering lookup for the batch-listing query, which
+-- takes the oldest pending ids and then joins back for the payload.
+--
+-- Every clause is load-bearing:
+--
+--   docs_fetched_at IS NULL   not looked at yet, or looked at and still retrying
+--   grid_usable = false       enriched, and the notice's own XML had no usable
+--                             grid. NOT `IS NOT TRUE` — see the header.
+--   documents_url IS NOT NULL the row has somewhere to start
+--   documents_url <> ''       and it is not the empty string, which is what a
+--                             notice with no documents link decodes to
+CREATE INDEX IF NOT EXISTS idx_ingested_tenders_docs_pending
+    ON tenders.ingested_tenders (id)
+    WHERE docs_fetched_at IS NULL
+      AND grid_usable = false
+      AND documents_url IS NOT NULL
+      AND documents_url <> '';
