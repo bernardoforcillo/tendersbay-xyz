@@ -139,6 +139,181 @@
       "emptyDescription": "Prøv en manuel søgning nedenfor, eller udvid denne kundes profil."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Virksomhedsdossier",
+      "description": "Det, vi ved om din virksomhed. Vi holder det op mod egnethedskravene i hvert udbud.",
+      "save": "Gem",
+      "saving": "Gemmer…",
+      "error": "Vi kunne ikke gemme. Prøv igen.",
+      "identity": {
+        "legalName": "Juridisk navn",
+        "vatNumber": "Momsnummer",
+        "fiscalCode": "Skattenummer",
+        "legalForm": "Selskabsform",
+        "cciaaOffice": "Handelskammer",
+        "cciaaNumber": "Registreringsnummer",
+        "country": "Land",
+        "nuts": "Region (NUTS)",
+        "foundedYear": "Stiftet"
+      },
+      "soa": {
+        "title": "SOA-attester",
+        "category": "Kategori",
+        "classifica": "Classifica",
+        "issuedBy": "Udstedt af",
+        "validUntil": "Gyldig til",
+        "verifiedUntil": "Treårig verifikation gyldig til",
+        "verifiedUntilHint": "Den treårige verifikation udløber tre år før selve attesten. Efter den dato tæller attesten ikke længere.",
+        "add": "Tilføj attest",
+        "remove": "Fjern",
+        "empty": "Ingen SOA-attest er registreret."
+      },
+      "certifications": {
+        "title": "Certificeringer",
+        "standard": "Standard",
+        "standardRaw": "Standard som certificeret",
+        "scope": "Omfang",
+        "issuedBy": "Udstedt af",
+        "validFrom": "Gyldig fra",
+        "validUntil": "Gyldig til",
+        "add": "Tilføj certificering",
+        "remove": "Fjern",
+        "empty": "Ingen certificering er registreret."
+      },
+      "financialYears": {
+        "title": "Regnskabsår",
+        "year": "År",
+        "turnover": "Samlet omsætning",
+        "specificTurnover": "Omsætning inden for det relevante område",
+        "currency": "Valuta",
+        "headcount": "Antal ansatte",
+        "add": "Tilføj regnskabsår",
+        "remove": "Fjern",
+        "empty": "Intet regnskabsår er registreret."
+      },
+      "pastContracts": {
+        "title": "Udførte opgaver",
+        "description": "Hvad der blev leveret",
+        "buyer": "Ordregiver",
+        "cpv": "CPV",
+        "value": "Værdi",
+        "started": "Start",
+        "ended": "Slut",
+        "role": "Rolle",
+        "sharePct": "Din andel",
+        "sharePctHint": "I et konsortium tæller kun din egen andel med i kravet.",
+        "add": "Tilføj opgave",
+        "remove": "Fjern",
+        "empty": "Ingen udført opgave er registreret."
+      },
+      "registrations": {
+        "title": "Registreringer og lister",
+        "kind": "Type",
+        "authority": "Myndighed",
+        "identifier": "Reference",
+        "section": "Afsnit",
+        "validFrom": "Gyldig fra",
+        "validUntil": "Gyldig til",
+        "add": "Tilføj registrering",
+        "remove": "Fjern",
+        "empty": "Ingen registrering er registreret."
+      }
+    },
+    "provenance": {
+      "user_stated": "Du har indtastet dette",
+      "user_confirmed": "Du har bekræftet dette",
+      "agent_inferred": "Udledt af agenten",
+      "imported": "Importeret",
+      "never": "Ikke registreret"
+    },
+    "eligibility": {
+      "title": "Egnethed",
+      "recheck": "Tjek igen",
+      "evaluatedAt": "Tjekket {{when}}",
+      "requirementLabel": "Dette udbud kræver",
+      "heldLabel": "Dit dossier dokumenterer",
+      "changesLabel": "Hvad der ville ændre det",
+      "caveatsLabel": "Læs det sammen med dette",
+      "lead": {
+        "requires": "Dette udbud kræver",
+        "holds": "dit dossier dokumenterer",
+        "noRequirements": "Der er ikke registreret noget krav for dette udbud."
+      },
+      "verdict": {
+        "insufficient_data": "For lidt til at afgøre",
+        "go": "Du ser ud til at opfylde kravene",
+        "no_go": "Du ser ikke ud til at opfylde kravene"
+      },
+      "status": {
+        "met": "Opfyldt",
+        "missing": "Mangler",
+        "shortfall": "Under det krævede niveau",
+        "expiring": "Udløber snart",
+        "expired": "Udløbet",
+        "unknown": "Ikke spurgt endnu"
+      },
+      "remedy": {
+        "provide_fact": "Fortæl os, hvad du har",
+        "renew": "Forny det inden fristen",
+        "upgrade": "Løft det til det krævede niveau",
+        "avvalimento": "Støt ret på en anden enheds kapacitet (avvalimento)",
+        "rti": "Byd som konsortium (RTI)",
+        "subcontract": "Dæk det med en underleverandør"
+      },
+      "caveat": {
+        "no_requirements_captured": "Der blev ikke hentet noget krav for dette udbud, så denne vurdering hviler ikke på noget offentliggjort.",
+        "award_grid_only": "Kun tildelingskriterierne blev hentet — egnethedskravene kan ligge i dokumenter, vi ikke har læst.",
+        "unconfirmed_extraction": "Nogle krav er læst ud af dokumenterne, og du har ikke bekræftet dem endnu.",
+        "open_questions": "Nogle spørgsmål om din virksomhed er stadig ubesvarede.",
+        "documents_unread": "Vi har ikke læst udbudsmaterialet, så der kan mangle krav."
+      },
+      "counts": {
+        "requirements_one": "{{count}} krav",
+        "requirements_other": "{{count}} krav",
+        "authoritative_one": "{{count}} bekræftet",
+        "authoritative_other": "{{count}} bekræftede",
+        "blocking_one": "{{count}} blokerende",
+        "blocking_other": "{{count}} blokerende",
+        "unknown_one": "{{count}} ubesvaret",
+        "unknown_other": "{{count}} ubesvarede"
+      }
+    },
+    "requirements": {
+      "title": "Krav",
+      "empty": "Der er ikke registreret noget krav for dette udbud.",
+      "confirm": "Bekræft",
+      "confirmed": "Bekræftet",
+      "remove": "Fjern",
+      "unconfirmedHint": "Læst ud af dokumenterne — hold det op mod det citerede uddrag, før du stoler på det.",
+      "lotLabel": "Delaftale {{lot}}",
+      "noticeLevel": "Gælder hele udbudsbekendtgørelsen",
+      "askWhy": "Hvorfor?",
+      "source": {
+        "user_stated": "Du har oplyst dette",
+        "document_excerpt": "Fra udbudsmaterialet",
+        "award_criteria": "Fra tildelingskriterierne",
+        "agent_inferred": "Udledt af agenten"
+      }
+    },
+    "capture": {
+      "title": "Ét spørgsmål",
+      "save": "Gem",
+      "saving": "Gemmer…",
+      "notSure": "Ved ikke",
+      "error": "Vi kunne ikke gemme. Prøv igen.",
+      "cannotCheck": "Denne kan vi ikke tjekke automatisk.",
+      "prompt": {
+        "soa": "Hvilken SOA-kategori og classifica har du?",
+        "certification": "Hvilken certificering har du til dette?",
+        "turnover": "Hvilken omsætning havde du?",
+        "past_contracts": "Hvilken af dine opgaver dækker dette?",
+        "headcount": "Hvor mange ansatte havde du?",
+        "registration": "Hvilken registrering eller liste dækker dette?",
+        "other": "Denne kan vi ikke tjekke automatisk — læs den og afgør det selv."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Log ind",
@@ -471,6 +646,56 @@
       "deadlineUntil": "lukker senest {{date}}",
       "undo": "Ryd",
       "remove": "Fjern {{chip}}"
+    },
+    "coverage": {
+      "title": "Hvad vi har læst",
+      "openBuyerDocuments": "Åbn ordregiverens dokumenter",
+      "label": {
+        "full": "Udbudsmaterialet er læst",
+        "notice_only": "Kun bekendtgørelsen",
+        "none": "Intet læst"
+      },
+      "reason": {
+        "no_documents_published": "Ordregiveren offentliggjorde ingen dokumenter sammen med denne bekendtgørelse.",
+        "notice_not_read": "Vi har ikke læst denne bekendtgørelses strukturerede data, så vi ved ikke, hvad den offentliggør.",
+        "body_not_retrieved": "Ordregiveren offentliggør dokumenter, vi endnu ikke har hentet.",
+        "not_yet_extracted": "I kø — endnu ikke læst.",
+        "extraction_failed": "Vi kunne ikke læse teksten i disse dokumenter."
+      },
+      "counts": {
+        "documents_one": "{{count}} dokument læst",
+        "documents_other": "{{count}} dokumenter læst",
+        "parts_one": "{{count}} afsnit udtrukket",
+        "parts_other": "{{count}} afsnit udtrukket",
+        "knownLinks_one": "{{count}} dokument offentliggjort",
+        "knownLinks_other": "{{count}} dokumenter offentliggjort"
+      }
+    },
+    "criteria": {
+      "title": "Hvor pointene ligger",
+      "notEnriched": "Vi har endnu ikke læst denne bekendtgørelses strukturerede data.",
+      "gridUnusable": "Bekendtgørelsen nævner tildelingsmetoden, men offentliggør ingen vægte. Evalueringsmodellen står i udbudsmaterialet.",
+      "weight": "Vægt",
+      "noWeight": "Ingen vægt offentliggjort",
+      "lot": "Delaftale {{lot}}",
+      "appliesToEveryLot": "Gælder alle delaftaler",
+      "showAllLots": "Vis alle delaftaler",
+      "type": {
+        "quality": "Kvalitet",
+        "cost": "Omkostning",
+        "price": "Pris"
+      }
+    },
+    "citation": {
+      "page": "s. {{page}}",
+      "pageRange": "s. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Del {{index}}",
+      "openDocument": "Åbn dokumentet",
+      "expandPassage": "Vis det omkringliggende afsnit",
+      "collapsePassage": "Skjul afsnittet",
+      "passageUnavailable": "Vi kunne ikke hente det omkringliggende afsnit.",
+      "truncated": "Afsnittet er forkortet."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "Generelt",
       "profile": "Kundeprofil",
+      "company": "Virksomhedsdossier",
       "overview": "Oversigt",
       "members": "Medlemmer",
       "roles": "Roller",
@@ -713,6 +939,26 @@
       "duplicate": "Dette udbud findes allerede i det workbench.",
       "unavailable": "Dette udbud er ikke længere tilgængeligt.",
       "generic": "Noget gik galt. Prøv igen."
+    },
+    "scheda": {
+      "coverageTitle": "Hvad vi har læst",
+      "evidenceTitle": "Krav og dokumentation",
+      "pointsTitle": "Hvor pointene ligger",
+      "repairChat": {
+        "title": "Spørg om dette udbud",
+        "open": "Stil et spørgsmål",
+        "close": "Luk",
+        "askWhy": "Hvorfor?",
+        "seedGapQuestion": "Hvorfor kræver dette udbud \"{{requirement}}\"?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Registreret over for: {{recommendation}}",
+      "youDecided": "du valgte {{decision}}",
+      "noRecommendation": "Der var ingen egnethedskontrol tilgængelig, da du traf beslutningen.",
+      "recordedAt": "registreret {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blokerende mangel",
+      "blockingGapsAtDecision_other": "{{count}} blokerende mangler"
     }
   },
   "workbench": {

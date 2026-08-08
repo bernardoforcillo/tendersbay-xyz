@@ -139,6 +139,181 @@
       "emptyDescription": "Probeer hieronder een handmatige zoekopdracht, of verbreed het profiel van deze klant."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Bedrijfsdossier",
+      "description": "Wat wij over je bedrijf weten. We leggen het naast de geschiktheidseisen van elke aanbesteding.",
+      "save": "Opslaan",
+      "saving": "Opslaan…",
+      "error": "We konden dit niet opslaan. Probeer het opnieuw.",
+      "identity": {
+        "legalName": "Statutaire naam",
+        "vatNumber": "Btw-nummer",
+        "fiscalCode": "Fiscaal nummer",
+        "legalForm": "Rechtsvorm",
+        "cciaaOffice": "Kamer van Koophandel",
+        "cciaaNumber": "KvK-nummer",
+        "country": "Land",
+        "nuts": "Regio (NUTS)",
+        "foundedYear": "Opgericht"
+      },
+      "soa": {
+        "title": "SOA-attesten",
+        "category": "Categorie",
+        "classifica": "Classifica",
+        "issuedBy": "Afgegeven door",
+        "validUntil": "Geldig tot",
+        "verifiedUntil": "Driejaarlijkse toetsing geldig tot",
+        "verifiedUntilHint": "De driejaarlijkse toetsing verloopt drie jaar vóór het attest zelf. Daarna telt het attest niet meer mee.",
+        "add": "Attest toevoegen",
+        "remove": "Verwijderen",
+        "empty": "Geen SOA-attest vastgelegd."
+      },
+      "certifications": {
+        "title": "Certificeringen",
+        "standard": "Norm",
+        "standardRaw": "Norm, zoals gecertificeerd",
+        "scope": "Scope",
+        "issuedBy": "Afgegeven door",
+        "validFrom": "Geldig vanaf",
+        "validUntil": "Geldig tot",
+        "add": "Certificering toevoegen",
+        "remove": "Verwijderen",
+        "empty": "Geen certificering vastgelegd."
+      },
+      "financialYears": {
+        "title": "Boekjaren",
+        "year": "Jaar",
+        "turnover": "Totale omzet",
+        "specificTurnover": "Omzet in het betrokken vakgebied",
+        "currency": "Valuta",
+        "headcount": "Medewerkers",
+        "add": "Boekjaar toevoegen",
+        "remove": "Verwijderen",
+        "empty": "Geen boekjaar vastgelegd."
+      },
+      "pastContracts": {
+        "title": "Referentieopdrachten",
+        "description": "Wat er is uitgevoerd",
+        "buyer": "Aanbestedende dienst",
+        "cpv": "CPV",
+        "value": "Waarde",
+        "started": "Start",
+        "ended": "Einde",
+        "role": "Rol",
+        "sharePct": "Jouw aandeel",
+        "sharePctHint": "In een combinatie telt alleen jouw eigen aandeel mee voor een eis.",
+        "add": "Referentie toevoegen",
+        "remove": "Verwijderen",
+        "empty": "Geen referentieopdracht vastgelegd."
+      },
+      "registrations": {
+        "title": "Inschrijvingen en lijsten",
+        "kind": "Soort",
+        "authority": "Instantie",
+        "identifier": "Kenmerk",
+        "section": "Sectie",
+        "validFrom": "Geldig vanaf",
+        "validUntil": "Geldig tot",
+        "add": "Inschrijving toevoegen",
+        "remove": "Verwijderen",
+        "empty": "Geen inschrijving vastgelegd."
+      }
+    },
+    "provenance": {
+      "user_stated": "Door jou ingevoerd",
+      "user_confirmed": "Door jou bevestigd",
+      "agent_inferred": "Afgeleid door de agent",
+      "imported": "Geïmporteerd",
+      "never": "Niet vastgelegd"
+    },
+    "eligibility": {
+      "title": "Geschiktheid",
+      "recheck": "Opnieuw controleren",
+      "evaluatedAt": "Gecontroleerd {{when}}",
+      "requirementLabel": "Deze aanbesteding eist",
+      "heldLabel": "Jouw dossier bevat",
+      "changesLabel": "Wat dit zou veranderen",
+      "caveatsLabel": "Lees dit erbij",
+      "lead": {
+        "requires": "Deze aanbesteding eist",
+        "holds": "jouw dossier bevat",
+        "noRequirements": "Voor deze aanbesteding is geen eis vastgelegd."
+      },
+      "verdict": {
+        "insufficient_data": "Te weinig om te beslissen",
+        "go": "Je lijkt aan de eisen te voldoen",
+        "no_go": "Je lijkt niet aan de eisen te voldoen"
+      },
+      "status": {
+        "met": "Voldaan",
+        "missing": "Ontbreekt",
+        "shortfall": "Onder het geëiste niveau",
+        "expiring": "Verloopt binnenkort",
+        "expired": "Verlopen",
+        "unknown": "Nog niet gevraagd"
+      },
+      "remedy": {
+        "provide_fact": "Vertel ons wat je hebt",
+        "renew": "Vernieuw het vóór de deadline",
+        "upgrade": "Breng het op het geëiste niveau",
+        "avvalimento": "Doe een beroep op een derde (avvalimento)",
+        "rti": "Schrijf in als combinatie (RTI)",
+        "subcontract": "Dek het af met onderaanneming"
+      },
+      "caveat": {
+        "no_requirements_captured": "Voor deze aanbesteding is geen enkele eis vastgelegd — dit oordeel steunt dus op niets gepubliceerds.",
+        "award_grid_only": "Alleen de gunningscriteria zijn vastgelegd — geschiktheidseisen kunnen staan in stukken die we niet gelezen hebben.",
+        "unconfirmed_extraction": "Sommige eisen zijn uit de stukken gelezen en heb je nog niet bevestigd.",
+        "open_questions": "Sommige vragen over je bedrijf zijn nog niet beantwoord.",
+        "documents_unread": "We hebben de aanbestedingsstukken niet gelezen, dus er kunnen eisen ontbreken."
+      },
+      "counts": {
+        "requirements_one": "{{count}} eis",
+        "requirements_other": "{{count}} eisen",
+        "authoritative_one": "{{count}} bevestigd",
+        "authoritative_other": "{{count}} bevestigd",
+        "blocking_one": "{{count}} blokkerend",
+        "blocking_other": "{{count}} blokkerend",
+        "unknown_one": "{{count}} onbeantwoord",
+        "unknown_other": "{{count}} onbeantwoord"
+      }
+    },
+    "requirements": {
+      "title": "Eisen",
+      "empty": "Voor deze aanbesteding is geen eis vastgelegd.",
+      "confirm": "Bevestigen",
+      "confirmed": "Bevestigd",
+      "remove": "Verwijderen",
+      "unconfirmedHint": "Uit de stukken gelezen — leg het naast de geciteerde passage voordat je erop vertrouwt.",
+      "lotLabel": "Perceel {{lot}}",
+      "noticeLevel": "Geldt voor de hele aankondiging",
+      "askWhy": "Waarom?",
+      "source": {
+        "user_stated": "Door jou opgegeven",
+        "document_excerpt": "Uit de aanbestedingsstukken",
+        "award_criteria": "Uit de gunningscriteria",
+        "agent_inferred": "Afgeleid door de agent"
+      }
+    },
+    "capture": {
+      "title": "Eén vraag",
+      "save": "Opslaan",
+      "saving": "Opslaan…",
+      "notSure": "Weet ik niet",
+      "error": "We konden dit niet opslaan. Probeer het opnieuw.",
+      "cannotCheck": "Deze kunnen we niet automatisch controleren.",
+      "prompt": {
+        "soa": "Welke SOA-categorie en classifica heb je?",
+        "certification": "Welke certificering heb je hiervoor?",
+        "turnover": "Welke omzet heb je geboekt?",
+        "past_contracts": "Welke opdracht van jou dekt dit af?",
+        "headcount": "Hoeveel mensen had je in dienst?",
+        "registration": "Welke inschrijving of lijst dekt dit af?",
+        "other": "Deze kunnen we niet automatisch controleren — lees hem en beslis zelf."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Inloggen",
@@ -471,6 +646,56 @@
       "deadlineUntil": "sluit vóór {{date}}",
       "undo": "Wissen",
       "remove": "{{chip}} verwijderen"
+    },
+    "coverage": {
+      "title": "Wat we gelezen hebben",
+      "openBuyerDocuments": "Documenten van de aanbestedende dienst openen",
+      "label": {
+        "full": "Aanbestedingsstukken gelezen",
+        "notice_only": "Alleen de aankondiging",
+        "none": "Niets gelezen"
+      },
+      "reason": {
+        "no_documents_published": "De aanbestedende dienst heeft geen documenten bij deze aankondiging gepubliceerd.",
+        "notice_not_read": "We hebben de gestructureerde gegevens van deze aankondiging niet gelezen, dus we weten niet wat zij publiceert.",
+        "body_not_retrieved": "De aanbestedende dienst publiceert documenten die we nog niet hebben opgehaald.",
+        "not_yet_extracted": "In de wachtrij — nog niet gelezen.",
+        "extraction_failed": "We konden de tekst van deze documenten niet lezen."
+      },
+      "counts": {
+        "documents_one": "{{count}} document gelezen",
+        "documents_other": "{{count}} documenten gelezen",
+        "parts_one": "{{count}} sectie geëxtraheerd",
+        "parts_other": "{{count}} secties geëxtraheerd",
+        "knownLinks_one": "{{count}} document gepubliceerd",
+        "knownLinks_other": "{{count}} documenten gepubliceerd"
+      }
+    },
+    "criteria": {
+      "title": "Waar de punten liggen",
+      "notEnriched": "We hebben de gestructureerde gegevens van deze aankondiging nog niet gelezen.",
+      "gridUnusable": "De aankondiging noemt de gunningsmethode maar publiceert geen wegingen. Het beoordelingskader staat in de aanbestedingsstukken.",
+      "weight": "Weging",
+      "noWeight": "Geen weging gepubliceerd",
+      "lot": "Perceel {{lot}}",
+      "appliesToEveryLot": "Geldt voor alle percelen",
+      "showAllLots": "Alle percelen tonen",
+      "type": {
+        "quality": "Kwaliteit",
+        "cost": "Kosten",
+        "price": "Prijs"
+      }
+    },
+    "citation": {
+      "page": "p. {{page}}",
+      "pageRange": "p. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Deel {{index}}",
+      "openDocument": "Document openen",
+      "expandPassage": "Omliggende passage tonen",
+      "collapsePassage": "Passage verbergen",
+      "passageUnavailable": "We konden de omliggende passage niet ophalen.",
+      "truncated": "Passage ingekort."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "Algemeen",
       "profile": "Klantprofiel",
+      "company": "Bedrijfsdossier",
       "overview": "Overzicht",
       "members": "Leden",
       "roles": "Rollen",
@@ -718,6 +944,26 @@
       "duplicate": "Deze aanbesteding staat al in dat workbench.",
       "unavailable": "Deze aanbesteding is niet meer beschikbaar.",
       "generic": "Er is iets misgegaan. Probeer het opnieuw."
+    },
+    "scheda": {
+      "coverageTitle": "Wat we gelezen hebben",
+      "evidenceTitle": "Eisen en bewijs",
+      "pointsTitle": "Waar de punten liggen",
+      "repairChat": {
+        "title": "Vraag iets over deze aanbesteding",
+        "open": "Stel een vraag",
+        "close": "Sluiten",
+        "askWhy": "Waarom?",
+        "seedGapQuestion": "Waarom eist deze aanbesteding \"{{requirement}}\"?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Vastgelegd tegenover: {{recommendation}}",
+      "youDecided": "jij besloot {{decision}}",
+      "noRecommendation": "Toen je besloot was er geen geschiktheidscontrole beschikbaar.",
+      "recordedAt": "vastgelegd {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blokkerend hiaat",
+      "blockingGapsAtDecision_other": "{{count}} blokkerende hiaten"
     }
   },
   "workbench": {

@@ -139,6 +139,181 @@
       "emptyDescription": "Kokeile manuaalista hakua alla, tai laajenna tämän asiakkaan profiilia."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Yrityksen tiedot",
+      "description": "Se, mitä tiedämme yrityksestäsi. Vertaamme sitä jokaisen hankinnan soveltuvuusvaatimuksiin.",
+      "save": "Tallenna",
+      "saving": "Tallennetaan…",
+      "error": "Tallennus ei onnistunut. Yritä uudelleen.",
+      "identity": {
+        "legalName": "Toiminimi",
+        "vatNumber": "ALV-tunnus",
+        "fiscalCode": "Y-tunnus",
+        "legalForm": "Yhtiömuoto",
+        "cciaaOffice": "Kauppakamari",
+        "cciaaNumber": "Kaupparekisterinumero",
+        "country": "Maa",
+        "nuts": "Alue (NUTS)",
+        "foundedYear": "Perustamisvuosi"
+      },
+      "soa": {
+        "title": "SOA-todistukset",
+        "category": "Luokka",
+        "classifica": "Classifica",
+        "issuedBy": "Myöntäjä",
+        "validUntil": "Voimassa saakka",
+        "verifiedUntil": "Kolmivuotistarkastus voimassa saakka",
+        "verifiedUntilHint": "Kolmivuotistarkastus vanhenee kolme vuotta ennen itse todistusta. Sen jälkeen todistus ei enää kelpaa.",
+        "add": "Lisää todistus",
+        "remove": "Poista",
+        "empty": "SOA-todistuksia ei ole kirjattu."
+      },
+      "certifications": {
+        "title": "Sertifikaatit",
+        "standard": "Standardi",
+        "standardRaw": "Standardi sertifikaatin mukaan",
+        "scope": "Soveltamisala",
+        "issuedBy": "Myöntäjä",
+        "validFrom": "Voimassa alkaen",
+        "validUntil": "Voimassa saakka",
+        "add": "Lisää sertifikaatti",
+        "remove": "Poista",
+        "empty": "Sertifikaatteja ei ole kirjattu."
+      },
+      "financialYears": {
+        "title": "Tilikaudet",
+        "year": "Vuosi",
+        "turnover": "Kokonaisliikevaihto",
+        "specificTurnover": "Liikevaihto kyseisellä alalla",
+        "currency": "Valuutta",
+        "headcount": "Henkilöstömäärä",
+        "add": "Lisää tilikausi",
+        "remove": "Poista",
+        "empty": "Tilikausia ei ole kirjattu."
+      },
+      "pastContracts": {
+        "title": "Toteutetut toimeksiannot",
+        "description": "Mitä toteutettiin",
+        "buyer": "Hankintayksikkö",
+        "cpv": "CPV",
+        "value": "Arvo",
+        "started": "Alkoi",
+        "ended": "Päättyi",
+        "role": "Rooli",
+        "sharePct": "Oma osuutesi",
+        "sharePctHint": "Ryhmittymässä vaatimukseen lasketaan vain oma osuutesi.",
+        "add": "Lisää toimeksianto",
+        "remove": "Poista",
+        "empty": "Toteutettuja toimeksiantoja ei ole kirjattu."
+      },
+      "registrations": {
+        "title": "Rekisteröinnit ja luettelot",
+        "kind": "Tyyppi",
+        "authority": "Viranomainen",
+        "identifier": "Tunnus",
+        "section": "Osasto",
+        "validFrom": "Voimassa alkaen",
+        "validUntil": "Voimassa saakka",
+        "add": "Lisää rekisteröinti",
+        "remove": "Poista",
+        "empty": "Rekisteröintejä ei ole kirjattu."
+      }
+    },
+    "provenance": {
+      "user_stated": "Sinä syötit tämän",
+      "user_confirmed": "Sinä vahvistit tämän",
+      "agent_inferred": "Agentin päättelemä",
+      "imported": "Tuotu",
+      "never": "Ei kirjattu"
+    },
+    "eligibility": {
+      "title": "Soveltuvuusvaatimukset",
+      "recheck": "Tarkista uudelleen",
+      "evaluatedAt": "Tarkistettu {{when}}",
+      "requirementLabel": "Tämä hankinta edellyttää",
+      "heldLabel": "Tiedoissasi on",
+      "changesLabel": "Mikä muuttaisi tilanteen",
+      "caveatsLabel": "Lue tämän rinnalla",
+      "lead": {
+        "requires": "Tämä hankinta edellyttää",
+        "holds": "tiedoissasi on",
+        "noRequirements": "Tälle hankinnalle ei ole kirjattu yhtään vaatimusta."
+      },
+      "verdict": {
+        "insufficient_data": "Liian vähän tietoa päätökseen",
+        "go": "Näytät täyttävän vaatimukset",
+        "no_go": "Et näytä täyttävän vaatimuksia"
+      },
+      "status": {
+        "met": "Täyttyy",
+        "missing": "Puuttuu",
+        "shortfall": "Vaaditun tason alle",
+        "expiring": "Vanhenee pian",
+        "expired": "Vanhentunut",
+        "unknown": "Ei vielä kysytty"
+      },
+      "remedy": {
+        "provide_fact": "Kerro, mitä sinulla on",
+        "renew": "Uusi se ennen määräaikaa",
+        "upgrade": "Nosta vaaditulle tasolle",
+        "avvalimento": "Tukeudu toisen yksikön voimavaroihin (avvalimento)",
+        "rti": "Tarjoa ryhmittymänä (RTI)",
+        "subcontract": "Kata alihankinnalla"
+      },
+      "caveat": {
+        "no_requirements_captured": "Tälle hankinnalle ei poimittu yhtään vaatimusta, joten tämä arvio ei nojaa mihinkään julkaistuun.",
+        "award_grid_only": "Poimittiin vain vertailuperusteet — soveltuvuusvaatimukset voivat olla asiakirjoissa, joita emme ole lukeneet.",
+        "unconfirmed_extraction": "Osa vaatimuksista on luettu asiakirjoista, etkä ole vielä vahvistanut niitä.",
+        "open_questions": "Osa yritystäsi koskevista kysymyksistä on yhä vastaamatta.",
+        "documents_unread": "Emme ole lukeneet tarjouspyyntöasiakirjoja, joten vaatimuksia voi puuttua."
+      },
+      "counts": {
+        "requirements_one": "{{count}} vaatimus",
+        "requirements_other": "{{count}} vaatimusta",
+        "authoritative_one": "{{count}} vahvistettu",
+        "authoritative_other": "{{count}} vahvistettua",
+        "blocking_one": "{{count}} estävä",
+        "blocking_other": "{{count}} estävää",
+        "unknown_one": "{{count}} vastaamatta",
+        "unknown_other": "{{count}} vastaamatta"
+      }
+    },
+    "requirements": {
+      "title": "Vaatimukset",
+      "empty": "Tälle hankinnalle ei ole kirjattu yhtään vaatimusta.",
+      "confirm": "Vahvista",
+      "confirmed": "Vahvistettu",
+      "remove": "Poista",
+      "unconfirmedHint": "Luettu asiakirjoista — vertaa lainattuun kohtaan ennen kuin luotat siihen.",
+      "lotLabel": "Osa {{lot}}",
+      "noticeLevel": "Koskee koko ilmoitusta",
+      "askWhy": "Miksi?",
+      "source": {
+        "user_stated": "Sinun ilmoittamasi",
+        "document_excerpt": "Tarjouspyyntöasiakirjoista",
+        "award_criteria": "Vertailuperusteista",
+        "agent_inferred": "Agentin päättelemä"
+      }
+    },
+    "capture": {
+      "title": "Yksi kysymys",
+      "save": "Tallenna",
+      "saving": "Tallennetaan…",
+      "notSure": "En tiedä",
+      "error": "Tallennus ei onnistunut. Yritä uudelleen.",
+      "cannotCheck": "Tätä emme voi tarkistaa automaattisesti.",
+      "prompt": {
+        "soa": "Mikä SOA-luokka ja classifica sinulla on?",
+        "certification": "Mikä sertifikaatti sinulla on tähän?",
+        "turnover": "Minkä liikevaihdon kirjasit?",
+        "past_contracts": "Mikä toimeksiannoistasi kattaa tämän?",
+        "headcount": "Kuinka monta henkilöä työllistit?",
+        "registration": "Mikä rekisteröinti tai luettelo kattaa tämän?",
+        "other": "Tätä emme voi tarkistaa automaattisesti — lue se ja päätä itse."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Kirjaudu sisään",
@@ -471,6 +646,56 @@
       "deadlineUntil": "päättyy {{date}}",
       "undo": "Tyhjennä",
       "remove": "Poista {{chip}}"
+    },
+    "coverage": {
+      "title": "Mitä olemme lukeneet",
+      "openBuyerDocuments": "Avaa hankintayksikön asiakirjat",
+      "label": {
+        "full": "Tarjouspyyntöasiakirjat luettu",
+        "notice_only": "Vain ilmoitus",
+        "none": "Mitään ei ole luettu"
+      },
+      "reason": {
+        "no_documents_published": "Hankintayksikkö ei julkaissut asiakirjoja tämän ilmoituksen yhteydessä.",
+        "notice_not_read": "Emme ole lukeneet tämän ilmoituksen rakenteista dataa, joten emme tiedä, mitä se julkaisee.",
+        "body_not_retrieved": "Hankintayksikkö julkaisee asiakirjoja, joita emme ole vielä hakeneet.",
+        "not_yet_extracted": "Jonossa — ei vielä luettu.",
+        "extraction_failed": "Emme saaneet luettua näiden asiakirjojen tekstiä."
+      },
+      "counts": {
+        "documents_one": "{{count}} asiakirja luettu",
+        "documents_other": "{{count}} asiakirjaa luettu",
+        "parts_one": "{{count}} osio poimittu",
+        "parts_other": "{{count}} osiota poimittu",
+        "knownLinks_one": "{{count}} asiakirja julkaistu",
+        "knownLinks_other": "{{count}} asiakirjaa julkaistu"
+      }
+    },
+    "criteria": {
+      "title": "Mistä pisteet tulevat",
+      "notEnriched": "Emme ole vielä lukeneet tämän ilmoituksen rakenteista dataa.",
+      "gridUnusable": "Ilmoitus nimeää valintatavan mutta ei julkaise painoarvoja. Pisteytystaulukko on tarjouspyyntöasiakirjoissa.",
+      "weight": "Painoarvo",
+      "noWeight": "Painoarvoa ei ole julkaistu",
+      "lot": "Osa {{lot}}",
+      "appliesToEveryLot": "Koskee kaikkia osia",
+      "showAllLots": "Näytä kaikki osat",
+      "type": {
+        "quality": "Laatu",
+        "cost": "Kustannus",
+        "price": "Hinta"
+      }
+    },
+    "citation": {
+      "page": "s. {{page}}",
+      "pageRange": "s. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Osa {{index}}",
+      "openDocument": "Avaa asiakirja",
+      "expandPassage": "Näytä ympäröivä kohta",
+      "collapsePassage": "Piilota kohta",
+      "passageUnavailable": "Ympäröivää kohtaa ei saatu haettua.",
+      "truncated": "Kohtaa on lyhennetty."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "Yleiset",
       "profile": "Asiakasprofiili",
+      "company": "Yrityksen tiedot",
       "overview": "Yleiskatsaus",
       "members": "Jäsenet",
       "roles": "Roolit",
@@ -713,6 +939,26 @@
       "duplicate": "Tämä hankinta on jo kyseisessä workbenchissä.",
       "unavailable": "Tämä hankinta ei ole enää saatavilla.",
       "generic": "Jokin meni pieleen. Yritä uudelleen."
+    },
+    "scheda": {
+      "coverageTitle": "Mitä olemme lukeneet",
+      "evidenceTitle": "Vaatimukset ja todisteet",
+      "pointsTitle": "Mistä pisteet tulevat",
+      "repairChat": {
+        "title": "Kysy tästä hankinnasta",
+        "open": "Esitä kysymys",
+        "close": "Sulje",
+        "askWhy": "Miksi?",
+        "seedGapQuestion": "Miksi tämä hankinta edellyttää ”{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Kirjattu suhteessa: {{recommendation}}",
+      "youDecided": "sinä päätit {{decision}}",
+      "noRecommendation": "Päättäessäsi soveltuvuustarkistusta ei ollut käytettävissä.",
+      "recordedAt": "kirjattu {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} estävä puute",
+      "blockingGapsAtDecision_other": "{{count}} estävää puutetta"
     }
   },
   "workbench": {

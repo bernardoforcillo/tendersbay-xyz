@@ -139,6 +139,185 @@
       "emptyDescription": "Skúste manuálne vyhľadávanie nižšie, alebo rozšírte profil tohto klienta."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Dokumentácia firmy",
+      "description": "Čo o vašej firme vieme. Porovnávame to s podmienkami účasti každej zákazky.",
+      "save": "Uložiť",
+      "saving": "Ukladanie…",
+      "error": "Uloženie sa nepodarilo. Skúste to znova.",
+      "identity": {
+        "legalName": "Obchodné meno",
+        "vatNumber": "IČ DPH",
+        "fiscalCode": "Daňové identifikačné číslo",
+        "legalForm": "Právna forma",
+        "cciaaOffice": "Obchodná komora",
+        "cciaaNumber": "Číslo v obchodnom registri",
+        "country": "Krajina",
+        "nuts": "Región (NUTS)",
+        "foundedYear": "Rok založenia"
+      },
+      "soa": {
+        "title": "Atestácie SOA",
+        "category": "Kategória",
+        "classifica": "Classifica",
+        "issuedBy": "Vydal",
+        "validUntil": "Platná do",
+        "verifiedUntil": "Trojročné overenie platné do",
+        "verifiedUntilHint": "Trojročné overenie zaniká tri roky pred samotnou atestáciou. Po tomto dátume sa atestácia už neuznáva.",
+        "add": "Pridať atestáciu",
+        "remove": "Odstrániť",
+        "empty": "Nie je zaznamenaná žiadna atestácia SOA."
+      },
+      "certifications": {
+        "title": "Certifikácie",
+        "standard": "Norma",
+        "standardRaw": "Norma podľa certifikátu",
+        "scope": "Rozsah",
+        "issuedBy": "Vydal",
+        "validFrom": "Platná od",
+        "validUntil": "Platná do",
+        "add": "Pridať certifikáciu",
+        "remove": "Odstrániť",
+        "empty": "Nie je zaznamenaná žiadna certifikácia."
+      },
+      "financialYears": {
+        "title": "Účtovné obdobia",
+        "year": "Rok",
+        "turnover": "Celkový obrat",
+        "specificTurnover": "Obrat v danej oblasti",
+        "currency": "Mena",
+        "headcount": "Počet zamestnancov",
+        "add": "Pridať obdobie",
+        "remove": "Odstrániť",
+        "empty": "Nie je zaznamenané žiadne účtovné obdobie."
+      },
+      "pastContracts": {
+        "title": "Realizované zákazky",
+        "description": "Čo bolo realizované",
+        "buyer": "Verejný obstarávateľ",
+        "cpv": "CPV",
+        "value": "Hodnota",
+        "started": "Začiatok",
+        "ended": "Koniec",
+        "role": "Úloha",
+        "sharePct": "Váš podiel",
+        "sharePctHint": "V skupine dodávateľov sa do podmienky započítava len váš vlastný podiel.",
+        "add": "Pridať zákazku",
+        "remove": "Odstrániť",
+        "empty": "Nie je zaznamenaná žiadna realizovaná zákazka."
+      },
+      "registrations": {
+        "title": "Zápisy a zoznamy",
+        "kind": "Druh",
+        "authority": "Orgán",
+        "identifier": "Číslo",
+        "section": "Oddiel",
+        "validFrom": "Platný od",
+        "validUntil": "Platný do",
+        "add": "Pridať zápis",
+        "remove": "Odstrániť",
+        "empty": "Nie je zaznamenaný žiadny zápis."
+      }
+    },
+    "provenance": {
+      "user_stated": "Zadali ste to vy",
+      "user_confirmed": "Potvrdili ste to vy",
+      "agent_inferred": "Odvodil agent",
+      "imported": "Importované",
+      "never": "Nezaznamenané"
+    },
+    "eligibility": {
+      "title": "Podmienky účasti",
+      "recheck": "Overiť znova",
+      "evaluatedAt": "Overené {{when}}",
+      "requirementLabel": "Táto zákazka vyžaduje",
+      "heldLabel": "Vaša dokumentácia obsahuje",
+      "changesLabel": "Čo by to zmenilo",
+      "caveatsLabel": "Čítajte spolu s týmto",
+      "lead": {
+        "requires": "Táto zákazka vyžaduje",
+        "holds": "vaša dokumentácia obsahuje",
+        "noRequirements": "K tejto zákazke nebola zaznamenaná žiadna podmienka."
+      },
+      "verdict": {
+        "insufficient_data": "Príliš málo údajov na rozhodnutie",
+        "go": "Podmienky zrejme spĺňate",
+        "no_go": "Podmienky zrejme nespĺňate"
+      },
+      "status": {
+        "met": "Splnené",
+        "missing": "Chýba",
+        "shortfall": "Pod požadovanou úrovňou",
+        "expiring": "Čoskoro uplynie",
+        "expired": "Uplynulo",
+        "unknown": "Zatiaľ sme sa nepýtali"
+      },
+      "remedy": {
+        "provide_fact": "Povedzte nám, čím disponujete",
+        "renew": "Obnovte to pred uplynutím lehoty",
+        "upgrade": "Zvýšte na požadovanú úroveň",
+        "avvalimento": "Preukážte to prostredníctvom inej osoby (avvalimento)",
+        "rti": "Predložte ponuku v skupine dodávateľov (RTI)",
+        "subcontract": "Pokryte to subdodávkou"
+      },
+      "caveat": {
+        "no_requirements_captured": "K tejto zákazke nebola zachytená žiadna podmienka, takže tento záver nestojí na ničom zverejnenom.",
+        "award_grid_only": "Zachytené boli len kritériá na vyhodnotenie ponúk — podmienky účasti môžu byť v dokumentoch, ktoré sme nečítali.",
+        "unconfirmed_extraction": "Niektoré podmienky boli načítané z dokumentov a zatiaľ ste ich nepotvrdili.",
+        "open_questions": "Niektoré otázky o vašej firme zostávajú bez odpovede.",
+        "documents_unread": "Nečítali sme súťažné podklady, takže niektoré podmienky môžu chýbať."
+      },
+      "counts": {
+        "requirements_one": "{{count}} podmienka",
+        "requirements_few": "{{count}} podmienky",
+        "requirements_other": "{{count}} podmienok",
+        "authoritative_one": "{{count}} potvrdená",
+        "authoritative_few": "{{count}} potvrdené",
+        "authoritative_other": "{{count}} potvrdených",
+        "blocking_one": "{{count}} blokujúca",
+        "blocking_few": "{{count}} blokujúce",
+        "blocking_other": "{{count}} blokujúcich",
+        "unknown_one": "{{count}} bez odpovede",
+        "unknown_few": "{{count}} bez odpovede",
+        "unknown_other": "{{count}} bez odpovede"
+      }
+    },
+    "requirements": {
+      "title": "Podmienky",
+      "empty": "K tejto zákazke nebola zaznamenaná žiadna podmienka.",
+      "confirm": "Potvrdiť",
+      "confirmed": "Potvrdené",
+      "remove": "Odstrániť",
+      "unconfirmedHint": "Načítané z dokumentov — porovnajte to s citovanou pasážou, kým sa na to spoľahnete.",
+      "lotLabel": "Časť {{lot}}",
+      "noticeLevel": "Platí pre celé oznámenie",
+      "askWhy": "Prečo?",
+      "source": {
+        "user_stated": "Uviedli ste to vy",
+        "document_excerpt": "Zo súťažných podkladov",
+        "award_criteria": "Z kritérií na vyhodnotenie ponúk",
+        "agent_inferred": "Odvodil agent"
+      }
+    },
+    "capture": {
+      "title": "Jedna otázka",
+      "save": "Uložiť",
+      "saving": "Ukladanie…",
+      "notSure": "Neviem",
+      "error": "Uloženie sa nepodarilo. Skúste to znova.",
+      "cannotCheck": "Túto podmienku nevieme overiť automaticky.",
+      "prompt": {
+        "soa": "Akú kategóriu a classifica SOA máte?",
+        "certification": "Akú certifikáciu na to máte?",
+        "turnover": "Aký obrat ste vykázali?",
+        "past_contracts": "Ktorá z vašich zákaziek to pokrýva?",
+        "headcount": "Koľko ste mali zamestnancov?",
+        "registration": "Ktorý zápis alebo zoznam to pokrýva?",
+        "other": "Túto podmienku nevieme overiť automaticky — prečítajte si ju a rozhodnite sami."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Prihlásiť sa",
@@ -477,6 +656,59 @@
       "deadlineUntil": "uzávierka do {{date}}",
       "undo": "Vymazať",
       "remove": "Odstrániť {{chip}}"
+    },
+    "coverage": {
+      "title": "Čo sme prečítali",
+      "openBuyerDocuments": "Otvoriť dokumenty obstarávateľa",
+      "label": {
+        "full": "Súťažné podklady prečítané",
+        "notice_only": "Len oznámenie",
+        "none": "Nič neprečítané"
+      },
+      "reason": {
+        "no_documents_published": "Obstarávateľ k tomuto oznámeniu nezverejnil žiadne dokumenty.",
+        "notice_not_read": "Neprečítali sme štruktúrované údaje tohto oznámenia, takže nevieme, čo zverejňuje.",
+        "body_not_retrieved": "Obstarávateľ zverejňuje dokumenty, ktoré sme zatiaľ nestiahli.",
+        "not_yet_extracted": "V poradí — zatiaľ neprečítané.",
+        "extraction_failed": "Text týchto dokumentov sa nám nepodarilo prečítať."
+      },
+      "counts": {
+        "documents_one": "{{count}} prečítaný dokument",
+        "documents_few": "{{count}} prečítané dokumenty",
+        "documents_other": "{{count}} prečítaných dokumentov",
+        "parts_one": "{{count}} extrahovaný oddiel",
+        "parts_few": "{{count}} extrahované oddiely",
+        "parts_other": "{{count}} extrahovaných oddielov",
+        "knownLinks_one": "{{count}} zverejnený dokument",
+        "knownLinks_few": "{{count}} zverejnené dokumenty",
+        "knownLinks_other": "{{count}} zverejnených dokumentov"
+      }
+    },
+    "criteria": {
+      "title": "Kde sa získavajú body",
+      "notEnriched": "Štruktúrované údaje tohto oznámenia sme zatiaľ neprečítali.",
+      "gridUnusable": "Oznámenie uvádza spôsob vyhodnotenia, ale nezverejňuje váhy. Hodnotiaca tabuľka je v súťažných podkladoch.",
+      "weight": "Váha",
+      "noWeight": "Váha nezverejnená",
+      "lot": "Časť {{lot}}",
+      "appliesToEveryLot": "Platí pre všetky časti",
+      "showAllLots": "Zobraziť všetky časti",
+      "type": {
+        "quality": "Kvalita",
+        "cost": "Náklady",
+        "price": "Cena"
+      }
+    },
+    "citation": {
+      "page": "s. {{page}}",
+      "pageRange": "s. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Časť {{index}}",
+      "openDocument": "Otvoriť dokument",
+      "expandPassage": "Zobraziť okolitú pasáž",
+      "collapsePassage": "Skryť pasáž",
+      "passageUnavailable": "Okolitú pasáž sa nepodarilo načítať.",
+      "truncated": "Pasáž skrátená."
     }
   },
   "today": {
@@ -518,6 +750,7 @@
     "nav": {
       "general": "Všeobecné",
       "profile": "Profil klienta",
+      "company": "Dokumentácia firmy",
       "overview": "Prehľad",
       "members": "Členovia",
       "roles": "Roly",
@@ -721,6 +954,27 @@
       "duplicate": "Táto zákazka je už v tomto workbenchi.",
       "unavailable": "Táto zákazka už nie je dostupná.",
       "generic": "Niečo sa pokazilo. Skúste to znova."
+    },
+    "scheda": {
+      "coverageTitle": "Čo sme prečítali",
+      "evidenceTitle": "Podmienky a doklady",
+      "pointsTitle": "Kde sa získavajú body",
+      "repairChat": {
+        "title": "Opýtať sa na túto zákazku",
+        "open": "Položiť otázku",
+        "close": "Zavrieť",
+        "askWhy": "Prečo?",
+        "seedGapQuestion": "Prečo táto zákazka vyžaduje „{{requirement}}“?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Zaznamenané voči: {{recommendation}}",
+      "youDecided": "rozhodli ste {{decision}}",
+      "noRecommendation": "V čase vášho rozhodnutia nebolo overenie podmienok k dispozícii.",
+      "recordedAt": "zaznamenané {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blokujúci nedostatok",
+      "blockingGapsAtDecision_few": "{{count}} blokujúce nedostatky",
+      "blockingGapsAtDecision_other": "{{count}} blokujúcich nedostatkov"
     }
   },
   "workbench": {

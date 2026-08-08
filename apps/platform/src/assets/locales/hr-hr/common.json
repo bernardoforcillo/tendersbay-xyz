@@ -139,6 +139,185 @@
       "emptyDescription": "Isprobajte ručno pretraživanje ispod, ili proširite profil ovog klijenta."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Dosje tvrtke",
+      "description": "Ono što znamo o vašoj tvrtki. Uspoređujemo to s uvjetima sposobnosti svakog natječaja.",
+      "save": "Spremi",
+      "saving": "Spremanje…",
+      "error": "Spremanje nije uspjelo. Pokušajte ponovno.",
+      "identity": {
+        "legalName": "Tvrtka",
+        "vatNumber": "PDV identifikacijski broj",
+        "fiscalCode": "Porezni broj",
+        "legalForm": "Pravni oblik",
+        "cciaaOffice": "Gospodarska komora",
+        "cciaaNumber": "Matični broj subjekta",
+        "country": "Država",
+        "nuts": "Regija (NUTS)",
+        "foundedYear": "Godina osnutka"
+      },
+      "soa": {
+        "title": "Potvrde SOA",
+        "category": "Kategorija",
+        "classifica": "Classifica",
+        "issuedBy": "Izdao",
+        "validUntil": "Vrijedi do",
+        "verifiedUntil": "Trogodišnja provjera vrijedi do",
+        "verifiedUntilHint": "Trogodišnja provjera istječe tri godine prije same potvrde. Nakon tog datuma potvrda više ne vrijedi.",
+        "add": "Dodaj potvrdu",
+        "remove": "Ukloni",
+        "empty": "Nije zabilježena nijedna potvrda SOA."
+      },
+      "certifications": {
+        "title": "Certifikati",
+        "standard": "Norma",
+        "standardRaw": "Norma kako je certificirana",
+        "scope": "Opseg",
+        "issuedBy": "Izdao",
+        "validFrom": "Vrijedi od",
+        "validUntil": "Vrijedi do",
+        "add": "Dodaj certifikat",
+        "remove": "Ukloni",
+        "empty": "Nije zabilježen nijedan certifikat."
+      },
+      "financialYears": {
+        "title": "Poslovne godine",
+        "year": "Godina",
+        "turnover": "Ukupni promet",
+        "specificTurnover": "Promet u predmetnom području",
+        "currency": "Valuta",
+        "headcount": "Broj zaposlenih",
+        "add": "Dodaj godinu",
+        "remove": "Ukloni",
+        "empty": "Nije zabilježena nijedna poslovna godina."
+      },
+      "pastContracts": {
+        "title": "Izvršeni ugovori",
+        "description": "Što je izvedeno",
+        "buyer": "Naručitelj",
+        "cpv": "CPV",
+        "value": "Vrijednost",
+        "started": "Početak",
+        "ended": "Završetak",
+        "role": "Uloga",
+        "sharePct": "Vaš udio",
+        "sharePctHint": "U zajednici ponuditelja za uvjet se računa samo vaš vlastiti udio.",
+        "add": "Dodaj ugovor",
+        "remove": "Ukloni",
+        "empty": "Nije zabilježen nijedan izvršeni ugovor."
+      },
+      "registrations": {
+        "title": "Upisi i popisi",
+        "kind": "Vrsta",
+        "authority": "Tijelo",
+        "identifier": "Broj",
+        "section": "Odjeljak",
+        "validFrom": "Vrijedi od",
+        "validUntil": "Vrijedi do",
+        "add": "Dodaj upis",
+        "remove": "Ukloni",
+        "empty": "Nije zabilježen nijedan upis."
+      }
+    },
+    "provenance": {
+      "user_stated": "Vi ste to unijeli",
+      "user_confirmed": "Vi ste to potvrdili",
+      "agent_inferred": "Zaključio agent",
+      "imported": "Uvezeno",
+      "never": "Nije zabilježeno"
+    },
+    "eligibility": {
+      "title": "Uvjeti sposobnosti",
+      "recheck": "Provjeri ponovno",
+      "evaluatedAt": "Provjereno {{when}}",
+      "requirementLabel": "Ovaj natječaj traži",
+      "heldLabel": "Vaš dosje dokazuje",
+      "changesLabel": "Što bi to promijenilo",
+      "caveatsLabel": "Pročitajte uz ovo",
+      "lead": {
+        "requires": "Ovaj natječaj traži",
+        "holds": "vaš dosje dokazuje",
+        "noRequirements": "Za ovaj natječaj nije zabilježen nijedan uvjet."
+      },
+      "verdict": {
+        "insufficient_data": "Premalo podataka za odluku",
+        "go": "Čini se da ispunjavate uvjete",
+        "no_go": "Čini se da ne ispunjavate uvjete"
+      },
+      "status": {
+        "met": "Ispunjen",
+        "missing": "Nedostaje",
+        "shortfall": "Ispod tražene razine",
+        "expiring": "Uskoro istječe",
+        "expired": "Istekao",
+        "unknown": "Još nismo pitali"
+      },
+      "remedy": {
+        "provide_fact": "Recite nam čime raspolažete",
+        "renew": "Obnovite prije roka",
+        "upgrade": "Podignite na traženu razinu",
+        "avvalimento": "Dokažite oslanjanjem na drugoga (avvalimento)",
+        "rti": "Nastupite u zajednici ponuditelja (RTI)",
+        "subcontract": "Pokrijte podugovaranjem"
+      },
+      "caveat": {
+        "no_requirements_captured": "Za ovaj natječaj nije zabilježen nijedan uvjet, pa ova ocjena ne počiva ni na čemu objavljenom.",
+        "award_grid_only": "Zabilježeni su samo kriteriji za odabir ponude — uvjeti sposobnosti mogu biti u dokumentima koje nismo pročitali.",
+        "unconfirmed_extraction": "Neki su uvjeti pročitani iz dokumenata i još ih niste potvrdili.",
+        "open_questions": "Neka pitanja o vašoj tvrtki još su bez odgovora.",
+        "documents_unread": "Nismo pročitali dokumentaciju o nabavi, pa neki uvjeti mogu nedostajati."
+      },
+      "counts": {
+        "requirements_one": "{{count}} uvjet",
+        "requirements_few": "{{count}} uvjeta",
+        "requirements_other": "{{count}} uvjeta",
+        "authoritative_one": "{{count}} potvrđen",
+        "authoritative_few": "{{count}} potvrđena",
+        "authoritative_other": "{{count}} potvrđenih",
+        "blocking_one": "{{count}} blokirajući",
+        "blocking_few": "{{count}} blokirajuća",
+        "blocking_other": "{{count}} blokirajućih",
+        "unknown_one": "{{count}} bez odgovora",
+        "unknown_few": "{{count}} bez odgovora",
+        "unknown_other": "{{count}} bez odgovora"
+      }
+    },
+    "requirements": {
+      "title": "Uvjeti",
+      "empty": "Za ovaj natječaj nije zabilježen nijedan uvjet.",
+      "confirm": "Potvrdi",
+      "confirmed": "Potvrđeno",
+      "remove": "Ukloni",
+      "unconfirmedHint": "Pročitano iz dokumenata — usporedite s citiranim odlomkom prije nego se na to oslonite.",
+      "lotLabel": "Grupa {{lot}}",
+      "noticeLevel": "Odnosi se na cijelu obavijest",
+      "askWhy": "Zašto?",
+      "source": {
+        "user_stated": "Vi ste to naveli",
+        "document_excerpt": "Iz dokumentacije o nabavi",
+        "award_criteria": "Iz kriterija za odabir ponude",
+        "agent_inferred": "Zaključio agent"
+      }
+    },
+    "capture": {
+      "title": "Jedno pitanje",
+      "save": "Spremi",
+      "saving": "Spremanje…",
+      "notSure": "Ne znam",
+      "error": "Spremanje nije uspjelo. Pokušajte ponovno.",
+      "cannotCheck": "Ovo ne možemo provjeriti automatski.",
+      "prompt": {
+        "soa": "Koju kategoriju i classifica SOA imate?",
+        "certification": "Koji certifikat imate za ovo?",
+        "turnover": "Koji ste promet ostvarili?",
+        "past_contracts": "Koji vaš ugovor ovo pokriva?",
+        "headcount": "Koliko ste zaposlenih imali?",
+        "registration": "Koji upis ili popis ovo pokriva?",
+        "other": "Ovo ne možemo provjeriti automatski — pročitajte i odlučite sami."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Prijava",
@@ -477,6 +656,59 @@
       "deadlineUntil": "zatvara se do {{date}}",
       "undo": "Očisti",
       "remove": "Ukloni {{chip}}"
+    },
+    "coverage": {
+      "title": "Što smo pročitali",
+      "openBuyerDocuments": "Otvori dokumente naručitelja",
+      "label": {
+        "full": "Dokumentacija o nabavi pročitana",
+        "notice_only": "Samo obavijest",
+        "none": "Ništa pročitano"
+      },
+      "reason": {
+        "no_documents_published": "Naručitelj uz ovu obavijest nije objavio nijedan dokument.",
+        "notice_not_read": "Nismo pročitali strukturirane podatke ove obavijesti pa ne znamo što objavljuje.",
+        "body_not_retrieved": "Naručitelj objavljuje dokumente koje još nismo preuzeli.",
+        "not_yet_extracted": "U redu čekanja — još nije pročitano.",
+        "extraction_failed": "Tekst ovih dokumenata nismo uspjeli pročitati."
+      },
+      "counts": {
+        "documents_one": "{{count}} pročitan dokument",
+        "documents_few": "{{count}} pročitana dokumenta",
+        "documents_other": "{{count}} pročitanih dokumenata",
+        "parts_one": "{{count}} izdvojen odjeljak",
+        "parts_few": "{{count}} izdvojena odjeljka",
+        "parts_other": "{{count}} izdvojenih odjeljaka",
+        "knownLinks_one": "{{count}} objavljen dokument",
+        "knownLinks_few": "{{count}} objavljena dokumenta",
+        "knownLinks_other": "{{count}} objavljenih dokumenata"
+      }
+    },
+    "criteria": {
+      "title": "Gdje se osvajaju bodovi",
+      "notEnriched": "Strukturirane podatke ove obavijesti još nismo pročitali.",
+      "gridUnusable": "Obavijest navodi način odabira, ali ne objavljuje pondere. Tablica bodovanja nalazi se u dokumentaciji o nabavi.",
+      "weight": "Ponder",
+      "noWeight": "Ponder nije objavljen",
+      "lot": "Grupa {{lot}}",
+      "appliesToEveryLot": "Odnosi se na sve grupe",
+      "showAllLots": "Prikaži sve grupe",
+      "type": {
+        "quality": "Kvaliteta",
+        "cost": "Trošak",
+        "price": "Cijena"
+      }
+    },
+    "citation": {
+      "page": "str. {{page}}",
+      "pageRange": "str. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Dio {{index}}",
+      "openDocument": "Otvori dokument",
+      "expandPassage": "Prikaži cijeli odlomak",
+      "collapsePassage": "Sakrij odlomak",
+      "passageUnavailable": "Cijeli odlomak nismo uspjeli dohvatiti.",
+      "truncated": "Odlomak skraćen."
     }
   },
   "today": {
@@ -518,6 +750,7 @@
     "nav": {
       "general": "Općenito",
       "profile": "Profil klijenta",
+      "company": "Dosje tvrtke",
       "overview": "Pregled",
       "members": "Članovi",
       "roles": "Uloge",
@@ -721,6 +954,27 @@
       "duplicate": "Ovaj natječaj već je u tom workbenchu.",
       "unavailable": "Ovaj natječaj više nije dostupan.",
       "generic": "Nešto je pošlo po zlu. Pokušajte ponovno."
+    },
+    "scheda": {
+      "coverageTitle": "Što smo pročitali",
+      "evidenceTitle": "Uvjeti i dokazi",
+      "pointsTitle": "Gdje se osvajaju bodovi",
+      "repairChat": {
+        "title": "Pitajte o ovom natječaju",
+        "open": "Postavi pitanje",
+        "close": "Zatvori",
+        "askWhy": "Zašto?",
+        "seedGapQuestion": "Zašto ovaj natječaj traži „{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Zabilježeno u odnosu na: {{recommendation}}",
+      "youDecided": "odlučili ste {{decision}}",
+      "noRecommendation": "U trenutku vaše odluke provjera uvjeta nije bila dostupna.",
+      "recordedAt": "zabilježeno {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blokirajući nedostatak",
+      "blockingGapsAtDecision_few": "{{count}} blokirajuća nedostatka",
+      "blockingGapsAtDecision_other": "{{count}} blokirajućih nedostataka"
     }
   },
   "workbench": {

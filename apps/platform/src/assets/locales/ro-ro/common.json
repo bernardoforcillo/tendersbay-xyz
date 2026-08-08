@@ -139,6 +139,185 @@
       "emptyDescription": "Încercați o căutare manuală mai jos sau extindeți profilul acestui client."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Dosarul firmei",
+      "description": "Ce știm despre firma dumneavoastră. Comparăm aceste date cu criteriile de calificare ale fiecărei licitații.",
+      "save": "Salvați",
+      "saving": "Se salvează…",
+      "error": "Nu am putut salva. Încercați din nou.",
+      "identity": {
+        "legalName": "Denumire",
+        "vatNumber": "Cod de TVA",
+        "fiscalCode": "Cod de identificare fiscală",
+        "legalForm": "Formă juridică",
+        "cciaaOffice": "Camera de comerț",
+        "cciaaNumber": "Număr de ordine în registrul comerțului",
+        "country": "Țară",
+        "nuts": "Regiune (NUTS)",
+        "foundedYear": "Anul înființării"
+      },
+      "soa": {
+        "title": "Atestări SOA",
+        "category": "Categorie",
+        "classifica": "Classifica",
+        "issuedBy": "Emisă de",
+        "validUntil": "Valabilă până la",
+        "verifiedUntil": "Verificarea trienală valabilă până la",
+        "verifiedUntilHint": "Verificarea trienală expiră cu trei ani înaintea atestării propriu-zise. După acea dată atestarea nu mai contează.",
+        "add": "Adăugați o atestare",
+        "remove": "Ștergeți",
+        "empty": "Nu este înregistrată nicio atestare SOA."
+      },
+      "certifications": {
+        "title": "Certificări",
+        "standard": "Standard",
+        "standardRaw": "Standardul, așa cum este certificat",
+        "scope": "Domeniu de aplicare",
+        "issuedBy": "Emisă de",
+        "validFrom": "Valabilă de la",
+        "validUntil": "Valabilă până la",
+        "add": "Adăugați o certificare",
+        "remove": "Ștergeți",
+        "empty": "Nu este înregistrată nicio certificare."
+      },
+      "financialYears": {
+        "title": "Exerciții financiare",
+        "year": "An",
+        "turnover": "Cifra de afaceri totală",
+        "specificTurnover": "Cifra de afaceri în domeniul vizat",
+        "currency": "Monedă",
+        "headcount": "Număr de angajați",
+        "add": "Adăugați un exercițiu",
+        "remove": "Ștergeți",
+        "empty": "Nu este înregistrat niciun exercițiu financiar."
+      },
+      "pastContracts": {
+        "title": "Contracte executate",
+        "description": "Ce a fost executat",
+        "buyer": "Autoritate contractantă",
+        "cpv": "CPV",
+        "value": "Valoare",
+        "started": "Început",
+        "ended": "Sfârșit",
+        "role": "Rol",
+        "sharePct": "Cota dumneavoastră",
+        "sharePctHint": "Într-o asociere, la criteriu contează doar cota executată de dumneavoastră.",
+        "add": "Adăugați un contract",
+        "remove": "Ștergeți",
+        "empty": "Nu este înregistrat niciun contract executat."
+      },
+      "registrations": {
+        "title": "Înscrieri și liste",
+        "kind": "Tip",
+        "authority": "Autoritate",
+        "identifier": "Referință",
+        "section": "Secțiune",
+        "validFrom": "Valabilă de la",
+        "validUntil": "Valabilă până la",
+        "add": "Adăugați o înscriere",
+        "remove": "Ștergeți",
+        "empty": "Nu este înregistrată nicio înscriere."
+      }
+    },
+    "provenance": {
+      "user_stated": "Introdus de dumneavoastră",
+      "user_confirmed": "Confirmat de dumneavoastră",
+      "agent_inferred": "Dedus de agent",
+      "imported": "Importat",
+      "never": "Neînregistrat"
+    },
+    "eligibility": {
+      "title": "Criterii de calificare",
+      "recheck": "Verificați din nou",
+      "evaluatedAt": "Verificat {{when}}",
+      "requirementLabel": "Această licitație cere",
+      "heldLabel": "Dosarul dumneavoastră dovedește",
+      "changesLabel": "Ce ar schimba situația",
+      "caveatsLabel": "Citiți împreună cu aceasta",
+      "lead": {
+        "requires": "Această licitație cere",
+        "holds": "dosarul dumneavoastră dovedește",
+        "noRequirements": "Pentru această licitație nu a fost înregistrat niciun criteriu."
+      },
+      "verdict": {
+        "insufficient_data": "Date insuficiente pentru o decizie",
+        "go": "Se pare că îndepliniți criteriile",
+        "no_go": "Se pare că nu îndepliniți criteriile"
+      },
+      "status": {
+        "met": "Îndeplinit",
+        "missing": "Lipsă",
+        "shortfall": "Sub nivelul cerut",
+        "expiring": "Expiră curând",
+        "expired": "Expirat",
+        "unknown": "Încă nu am întrebat"
+      },
+      "remedy": {
+        "provide_fact": "Spuneți-ne ce dețineți",
+        "renew": "Reînnoiți-l înainte de termen",
+        "upgrade": "Ridicați-l la nivelul cerut",
+        "avvalimento": "Susțineți-vă pe capacitatea unui terț (avvalimento)",
+        "rti": "Participați în asociere (RTI)",
+        "subcontract": "Acoperiți-l prin subcontractare"
+      },
+      "caveat": {
+        "no_requirements_captured": "Pentru această licitație nu a fost preluat niciun criteriu, deci această concluzie nu se sprijină pe nimic publicat.",
+        "award_grid_only": "Au fost preluate doar criteriile de atribuire — criteriile de calificare pot fi în documente pe care nu le-am citit.",
+        "unconfirmed_extraction": "Unele criterii au fost citite din documente și încă nu le-ați confirmat.",
+        "open_questions": "Unele întrebări despre firma dumneavoastră au rămas fără răspuns.",
+        "documents_unread": "Nu am citit documentația de atribuire, deci pot lipsi criterii."
+      },
+      "counts": {
+        "requirements_one": "{{count}} criteriu",
+        "requirements_few": "{{count}} criterii",
+        "requirements_other": "{{count}} de criterii",
+        "authoritative_one": "{{count}} confirmat",
+        "authoritative_few": "{{count}} confirmate",
+        "authoritative_other": "{{count}} confirmate",
+        "blocking_one": "{{count}} blocant",
+        "blocking_few": "{{count}} blocante",
+        "blocking_other": "{{count}} blocante",
+        "unknown_one": "{{count}} fără răspuns",
+        "unknown_few": "{{count}} fără răspuns",
+        "unknown_other": "{{count}} fără răspuns"
+      }
+    },
+    "requirements": {
+      "title": "Criterii",
+      "empty": "Pentru această licitație nu a fost înregistrat niciun criteriu.",
+      "confirm": "Confirmați",
+      "confirmed": "Confirmat",
+      "remove": "Ștergeți",
+      "unconfirmedHint": "Citit din documente — comparați-l cu pasajul citat înainte de a vă baza pe el.",
+      "lotLabel": "Lotul {{lot}}",
+      "noticeLevel": "Se aplică întregului anunț",
+      "askWhy": "De ce?",
+      "source": {
+        "user_stated": "Declarat de dumneavoastră",
+        "document_excerpt": "Din documentația de atribuire",
+        "award_criteria": "Din criteriile de atribuire",
+        "agent_inferred": "Dedus de agent"
+      }
+    },
+    "capture": {
+      "title": "O întrebare",
+      "save": "Salvați",
+      "saving": "Se salvează…",
+      "notSure": "Nu știu",
+      "error": "Nu am putut salva. Încercați din nou.",
+      "cannotCheck": "Pe acesta nu îl putem verifica automat.",
+      "prompt": {
+        "soa": "Ce categorie și ce classifica SOA dețineți?",
+        "certification": "Ce certificare dețineți pentru acest criteriu?",
+        "turnover": "Ce cifră de afaceri ați înregistrat?",
+        "past_contracts": "Care dintre contractele dumneavoastră acoperă acest criteriu?",
+        "headcount": "Câți angajați ați avut?",
+        "registration": "Ce înscriere sau listă acoperă acest criteriu?",
+        "other": "Pe acesta nu îl putem verifica automat — citiți-l și decideți dumneavoastră."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Autentificare",
@@ -473,6 +652,59 @@
       "deadlineUntil": "se închide până la {{date}}",
       "undo": "Șterge",
       "remove": "Elimină {{chip}}"
+    },
+    "coverage": {
+      "title": "Ce am citit",
+      "openBuyerDocuments": "Deschideți documentele autorității contractante",
+      "label": {
+        "full": "Documentația de atribuire citită",
+        "notice_only": "Doar anunțul",
+        "none": "Nimic citit"
+      },
+      "reason": {
+        "no_documents_published": "Autoritatea contractantă nu a publicat niciun document cu acest anunț.",
+        "notice_not_read": "Nu am citit datele structurate ale acestui anunț, deci nu știm ce publică.",
+        "body_not_retrieved": "Autoritatea contractantă publică documente pe care nu le-am descărcat încă.",
+        "not_yet_extracted": "În așteptare — încă necitite.",
+        "extraction_failed": "Nu am putut citi textul acestor documente."
+      },
+      "counts": {
+        "documents_one": "{{count}} document citit",
+        "documents_few": "{{count}} documente citite",
+        "documents_other": "{{count}} de documente citite",
+        "parts_one": "{{count}} secțiune extrasă",
+        "parts_few": "{{count}} secțiuni extrase",
+        "parts_other": "{{count}} de secțiuni extrase",
+        "knownLinks_one": "{{count}} document publicat",
+        "knownLinks_few": "{{count}} documente publicate",
+        "knownLinks_other": "{{count}} de documente publicate"
+      }
+    },
+    "criteria": {
+      "title": "Unde se câștigă punctele",
+      "notEnriched": "Nu am citit încă datele structurate ale acestui anunț.",
+      "gridUnusable": "Anunțul indică metoda de atribuire, dar nu publică ponderi. Grila de punctaj se află în documentația de atribuire.",
+      "weight": "Pondere",
+      "noWeight": "Pondere nepublicată",
+      "lot": "Lotul {{lot}}",
+      "appliesToEveryLot": "Se aplică tuturor loturilor",
+      "showAllLots": "Afișați toate loturile",
+      "type": {
+        "quality": "Calitate",
+        "cost": "Cost",
+        "price": "Preț"
+      }
+    },
+    "citation": {
+      "page": "p. {{page}}",
+      "pageRange": "p. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Partea {{index}}",
+      "openDocument": "Deschideți documentul",
+      "expandPassage": "Afișați pasajul complet",
+      "collapsePassage": "Ascundeți pasajul",
+      "passageUnavailable": "Nu am putut obține pasajul complet.",
+      "truncated": "Pasaj scurtat."
     }
   },
   "today": {
@@ -514,6 +746,7 @@
     "nav": {
       "general": "General",
       "profile": "Profil client",
+      "company": "Dosarul firmei",
       "overview": "Prezentare generală",
       "members": "Membri",
       "roles": "Roluri",
@@ -717,6 +950,27 @@
       "duplicate": "Această licitație este deja în acel workbench.",
       "unavailable": "Această licitație nu mai este disponibilă.",
       "generic": "Ceva nu a funcționat. Încercați din nou."
+    },
+    "scheda": {
+      "coverageTitle": "Ce am citit",
+      "evidenceTitle": "Criterii și dovezi",
+      "pointsTitle": "Unde se câștigă punctele",
+      "repairChat": {
+        "title": "Întrebați despre această licitație",
+        "open": "Puneți o întrebare",
+        "close": "Închideți",
+        "askWhy": "De ce?",
+        "seedGapQuestion": "De ce cere această licitație „{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Înregistrat față de: {{recommendation}}",
+      "youDecided": "ați decis {{decision}}",
+      "noRecommendation": "În momentul deciziei dumneavoastră nu era disponibilă nicio verificare a criteriilor.",
+      "recordedAt": "înregistrat {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} lipsă blocantă",
+      "blockingGapsAtDecision_few": "{{count}} lipsuri blocante",
+      "blockingGapsAtDecision_other": "{{count}} de lipsuri blocante"
     }
   },
   "workbench": {

@@ -139,6 +139,181 @@
       "emptyDescription": "Próbáljon manuális keresést lent, vagy bővítse ki az ügyfél profilját."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Céges dosszié",
+      "description": "Amit a cégéről tudunk. Ezt vetjük össze minden pályázat alkalmassági követelményeivel.",
+      "save": "Mentés",
+      "saving": "Mentés…",
+      "error": "Nem sikerült menteni. Próbálja újra.",
+      "identity": {
+        "legalName": "Cégnév",
+        "vatNumber": "Közösségi adószám",
+        "fiscalCode": "Adószám",
+        "legalForm": "Jogi forma",
+        "cciaaOffice": "Kereskedelmi kamara",
+        "cciaaNumber": "Cégjegyzékszám",
+        "country": "Ország",
+        "nuts": "Régió (NUTS)",
+        "foundedYear": "Alapítás éve"
+      },
+      "soa": {
+        "title": "SOA-tanúsítványok",
+        "category": "Kategória",
+        "classifica": "Classifica",
+        "issuedBy": "Kiállító",
+        "validUntil": "Érvényes eddig",
+        "verifiedUntil": "Hároméves felülvizsgálat érvényes eddig",
+        "verifiedUntilHint": "A hároméves felülvizsgálat három évvel a tanúsítvány előtt jár le. E dátum után a tanúsítvány már nem vehető figyelembe.",
+        "add": "Tanúsítvány hozzáadása",
+        "remove": "Törlés",
+        "empty": "Nincs rögzített SOA-tanúsítvány."
+      },
+      "certifications": {
+        "title": "Tanúsítványok",
+        "standard": "Szabvány",
+        "standardRaw": "Szabvány a tanúsítvány szerint",
+        "scope": "Hatókör",
+        "issuedBy": "Kiállító",
+        "validFrom": "Érvényes ettől",
+        "validUntil": "Érvényes eddig",
+        "add": "Tanúsítvány hozzáadása",
+        "remove": "Törlés",
+        "empty": "Nincs rögzített tanúsítvány."
+      },
+      "financialYears": {
+        "title": "Üzleti évek",
+        "year": "Év",
+        "turnover": "Teljes árbevétel",
+        "specificTurnover": "Az érintett területen elért árbevétel",
+        "currency": "Pénznem",
+        "headcount": "Létszám",
+        "add": "Üzleti év hozzáadása",
+        "remove": "Törlés",
+        "empty": "Nincs rögzített üzleti év."
+      },
+      "pastContracts": {
+        "title": "Teljesített szerződések",
+        "description": "Mit teljesített",
+        "buyer": "Ajánlatkérő",
+        "cpv": "CPV",
+        "value": "Érték",
+        "started": "Kezdet",
+        "ended": "Befejezés",
+        "role": "Szerep",
+        "sharePct": "Az Ön részesedése",
+        "sharePctHint": "Közös ajánlattétel esetén a követelménybe csak a saját részesedése számít be.",
+        "add": "Szerződés hozzáadása",
+        "remove": "Törlés",
+        "empty": "Nincs rögzített teljesített szerződés."
+      },
+      "registrations": {
+        "title": "Nyilvántartások és jegyzékek",
+        "kind": "Típus",
+        "authority": "Hatóság",
+        "identifier": "Azonosító",
+        "section": "Szakasz",
+        "validFrom": "Érvényes ettől",
+        "validUntil": "Érvényes eddig",
+        "add": "Bejegyzés hozzáadása",
+        "remove": "Törlés",
+        "empty": "Nincs rögzített bejegyzés."
+      }
+    },
+    "provenance": {
+      "user_stated": "Ön adta meg",
+      "user_confirmed": "Ön erősítette meg",
+      "agent_inferred": "Az ügynök következtette ki",
+      "imported": "Importálva",
+      "never": "Nincs rögzítve"
+    },
+    "eligibility": {
+      "title": "Alkalmassági követelmények",
+      "recheck": "Ellenőrzés újra",
+      "evaluatedAt": "Ellenőrizve {{when}}",
+      "requirementLabel": "Ez a pályázat ezt követeli meg",
+      "heldLabel": "A dossziéja ezt igazolja",
+      "changesLabel": "Mi változtatna ezen",
+      "caveatsLabel": "Olvassa el ezzel együtt",
+      "lead": {
+        "requires": "Ez a pályázat ezt követeli meg:",
+        "holds": "a dossziéja ezt igazolja:",
+        "noRequirements": "Ehhez a pályázathoz nem rögzítettünk követelményt."
+      },
+      "verdict": {
+        "insufficient_data": "Túl kevés adat a döntéshez",
+        "go": "Úgy tűnik, megfelel a követelményeknek",
+        "no_go": "Úgy tűnik, nem felel meg a követelményeknek"
+      },
+      "status": {
+        "met": "Teljesül",
+        "missing": "Hiányzik",
+        "shortfall": "Az elvárt szint alatt",
+        "expiring": "Hamarosan lejár",
+        "expired": "Lejárt",
+        "unknown": "Még nem kérdeztük"
+      },
+      "remedy": {
+        "provide_fact": "Mondja el, mivel rendelkezik",
+        "renew": "Újítsa meg a határidő előtt",
+        "upgrade": "Emelje az elvárt szintre",
+        "avvalimento": "Vegyen igénybe kapacitást nyújtó szervezetet (avvalimento)",
+        "rti": "Nyújtson be közös ajánlatot (RTI)",
+        "subcontract": "Fedje le alvállalkozó bevonásával"
+      },
+      "caveat": {
+        "no_requirements_captured": "Ehhez a pályázathoz egyetlen követelményt sem rögzítettünk, így ez a megállapítás semmilyen közzétett adaton nem nyugszik.",
+        "award_grid_only": "Csak az értékelési szempontokat rögzítettük — az alkalmassági követelmények olyan dokumentumokban lehetnek, amelyeket nem olvastunk el.",
+        "unconfirmed_extraction": "Néhány követelményt a dokumentumokból olvastunk ki, és Ön még nem erősítette meg őket.",
+        "open_questions": "A cégével kapcsolatos néhány kérdés még megválaszolatlan.",
+        "documents_unread": "Nem olvastuk el a közbeszerzési dokumentumokat, ezért követelmények hiányozhatnak."
+      },
+      "counts": {
+        "requirements_one": "{{count}} követelmény",
+        "requirements_other": "{{count}} követelmény",
+        "authoritative_one": "{{count}} megerősítve",
+        "authoritative_other": "{{count}} megerősítve",
+        "blocking_one": "{{count}} kizáró",
+        "blocking_other": "{{count}} kizáró",
+        "unknown_one": "{{count}} megválaszolatlan",
+        "unknown_other": "{{count}} megválaszolatlan"
+      }
+    },
+    "requirements": {
+      "title": "Követelmények",
+      "empty": "Ehhez a pályázathoz nem rögzítettünk követelményt.",
+      "confirm": "Megerősítés",
+      "confirmed": "Megerősítve",
+      "remove": "Törlés",
+      "unconfirmedHint": "A dokumentumokból kiolvasva — vesse össze az idézett résszel, mielőtt támaszkodik rá.",
+      "lotLabel": "{{lot}}. rész",
+      "noticeLevel": "A teljes hirdetményre vonatkozik",
+      "askWhy": "Miért?",
+      "source": {
+        "user_stated": "Ön nyilatkozta",
+        "document_excerpt": "A közbeszerzési dokumentumokból",
+        "award_criteria": "Az értékelési szempontokból",
+        "agent_inferred": "Az ügynök következtette ki"
+      }
+    },
+    "capture": {
+      "title": "Egy kérdés",
+      "save": "Mentés",
+      "saving": "Mentés…",
+      "notSure": "Nem tudom",
+      "error": "Nem sikerült menteni. Próbálja újra.",
+      "cannotCheck": "Ezt nem tudjuk automatikusan ellenőrizni.",
+      "prompt": {
+        "soa": "Milyen SOA-kategóriával és classificával rendelkezik?",
+        "certification": "Milyen tanúsítványa van erre?",
+        "turnover": "Mekkora árbevételt ért el?",
+        "past_contracts": "Melyik szerződése fedi le ezt?",
+        "headcount": "Hány főt foglalkoztatott?",
+        "registration": "Melyik nyilvántartás vagy jegyzék fedi le ezt?",
+        "other": "Ezt nem tudjuk automatikusan ellenőrizni — olvassa el és döntsön Ön."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Bejelentkezés",
@@ -475,6 +650,56 @@
       "deadlineUntil": "határidő: {{date}}",
       "undo": "Törlés",
       "remove": "{{chip}} eltávolítása"
+    },
+    "coverage": {
+      "title": "Amit elolvastunk",
+      "openBuyerDocuments": "Az ajánlatkérő dokumentumainak megnyitása",
+      "label": {
+        "full": "A közbeszerzési dokumentumok elolvasva",
+        "notice_only": "Csak a hirdetmény",
+        "none": "Semmit nem olvastunk el"
+      },
+      "reason": {
+        "no_documents_published": "Az ajánlatkérő nem tett közzé dokumentumot ehhez a hirdetményhez.",
+        "notice_not_read": "Nem olvastuk el a hirdetmény strukturált adatait, ezért nem tudjuk, mit tesz közzé.",
+        "body_not_retrieved": "Az ajánlatkérő olyan dokumentumokat tesz közzé, amelyeket még nem töltöttünk le.",
+        "not_yet_extracted": "Sorban áll — még nem olvastuk el.",
+        "extraction_failed": "Nem tudtuk elolvasni e dokumentumok szövegét."
+      },
+      "counts": {
+        "documents_one": "{{count}} dokumentum elolvasva",
+        "documents_other": "{{count}} dokumentum elolvasva",
+        "parts_one": "{{count}} szakasz kinyerve",
+        "parts_other": "{{count}} szakasz kinyerve",
+        "knownLinks_one": "{{count}} dokumentum közzétéve",
+        "knownLinks_other": "{{count}} dokumentum közzétéve"
+      }
+    },
+    "criteria": {
+      "title": "Hol szerezhetők a pontok",
+      "notEnriched": "Még nem olvastuk el a hirdetmény strukturált adatait.",
+      "gridUnusable": "A hirdetmény megnevezi az értékelés módszerét, de nem tesz közzé súlyokat. A pontozási táblázat a közbeszerzési dokumentumokban van.",
+      "weight": "Súly",
+      "noWeight": "Nincs közzétett súly",
+      "lot": "{{lot}}. rész",
+      "appliesToEveryLot": "Minden részre vonatkozik",
+      "showAllLots": "Összes rész megjelenítése",
+      "type": {
+        "quality": "Minőség",
+        "cost": "Költség",
+        "price": "Ár"
+      }
+    },
+    "citation": {
+      "page": "{{page}}. o.",
+      "pageRange": "{{start}}–{{end}}. o.",
+      "section": "§ {{section}}",
+      "part": "{{index}}. rész",
+      "openDocument": "Dokumentum megnyitása",
+      "expandPassage": "A teljes szövegrész megjelenítése",
+      "collapsePassage": "Szövegrész elrejtése",
+      "passageUnavailable": "Nem sikerült betölteni a teljes szövegrészt.",
+      "truncated": "A szövegrész rövidítve."
     }
   },
   "today": {
@@ -515,6 +740,7 @@
     "nav": {
       "general": "Általános",
       "profile": "Ügyfélprofil",
+      "company": "Céges dosszié",
       "overview": "Áttekintés",
       "members": "Tagok",
       "roles": "Szerepkörök",
@@ -722,6 +948,26 @@
       "duplicate": "Ez a pályázat már szerepel abban a workbenchben.",
       "unavailable": "Ez a pályázat már nem érhető el.",
       "generic": "Hiba történt. Kérjük, próbálja újra."
+    },
+    "scheda": {
+      "coverageTitle": "Amit elolvastunk",
+      "evidenceTitle": "Követelmények és igazolások",
+      "pointsTitle": "Hol szerezhetők a pontok",
+      "repairChat": {
+        "title": "Kérdezzen erről a pályázatról",
+        "open": "Kérdés feltevése",
+        "close": "Bezárás",
+        "askWhy": "Miért?",
+        "seedGapQuestion": "Miért követeli meg ez a pályázat a következőt: „{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Rögzítve ehhez képest: {{recommendation}}",
+      "youDecided": "Ön így döntött: {{decision}}",
+      "noRecommendation": "A döntése idején nem állt rendelkezésre alkalmassági ellenőrzés.",
+      "recordedAt": "rögzítve {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} kizáró hiányosság",
+      "blockingGapsAtDecision_other": "{{count}} kizáró hiányosság"
     }
   },
   "workbench": {

@@ -139,6 +139,181 @@
       "emptyDescription": "Essayez une recherche manuelle ci-dessous, ou élargissez le profil de ce client."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Dossier entreprise",
+      "description": "Ce que nous savons de votre entreprise. Nous le confrontons aux critères de candidature de chaque marché.",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "error": "Nous n'avons pas pu enregistrer. Réessayez.",
+      "identity": {
+        "legalName": "Raison sociale",
+        "vatNumber": "Numéro de TVA",
+        "fiscalCode": "Identifiant fiscal",
+        "legalForm": "Forme juridique",
+        "cciaaOffice": "Chambre de commerce",
+        "cciaaNumber": "Numéro au registre du commerce",
+        "country": "Pays",
+        "nuts": "Région (NUTS)",
+        "foundedYear": "Année de création"
+      },
+      "soa": {
+        "title": "Attestations SOA",
+        "category": "Catégorie",
+        "classifica": "Classifica",
+        "issuedBy": "Délivrée par",
+        "validUntil": "Valable jusqu'au",
+        "verifiedUntil": "Vérification triennale valable jusqu'au",
+        "verifiedUntilHint": "La vérification triennale expire trois ans avant l'attestation elle-même. Passé ce délai, l'attestation ne compte plus.",
+        "add": "Ajouter une attestation",
+        "remove": "Supprimer",
+        "empty": "Aucune attestation SOA enregistrée."
+      },
+      "certifications": {
+        "title": "Certifications",
+        "standard": "Norme",
+        "standardRaw": "Norme, telle que certifiée",
+        "scope": "Périmètre",
+        "issuedBy": "Délivrée par",
+        "validFrom": "Valable à partir du",
+        "validUntil": "Valable jusqu'au",
+        "add": "Ajouter une certification",
+        "remove": "Supprimer",
+        "empty": "Aucune certification enregistrée."
+      },
+      "financialYears": {
+        "title": "Exercices comptables",
+        "year": "Année",
+        "turnover": "Chiffre d'affaires global",
+        "specificTurnover": "Chiffre d'affaires dans le domaine concerné",
+        "currency": "Devise",
+        "headcount": "Effectif",
+        "add": "Ajouter un exercice",
+        "remove": "Supprimer",
+        "empty": "Aucun exercice comptable enregistré."
+      },
+      "pastContracts": {
+        "title": "Références de marchés",
+        "description": "Ce qui a été réalisé",
+        "buyer": "Acheteur",
+        "cpv": "CPV",
+        "value": "Montant",
+        "started": "Début",
+        "ended": "Fin",
+        "role": "Rôle",
+        "sharePct": "Votre part",
+        "sharePctHint": "En groupement, seule votre propre part compte pour un critère.",
+        "add": "Ajouter une référence",
+        "remove": "Supprimer",
+        "empty": "Aucune référence enregistrée."
+      },
+      "registrations": {
+        "title": "Inscriptions et listes",
+        "kind": "Type",
+        "authority": "Autorité",
+        "identifier": "Référence",
+        "section": "Section",
+        "validFrom": "Valable à partir du",
+        "validUntil": "Valable jusqu'au",
+        "add": "Ajouter une inscription",
+        "remove": "Supprimer",
+        "empty": "Aucune inscription enregistrée."
+      }
+    },
+    "provenance": {
+      "user_stated": "Vous l'avez saisi",
+      "user_confirmed": "Vous l'avez confirmé",
+      "agent_inferred": "Déduit par l'agent",
+      "imported": "Importé",
+      "never": "Non renseigné"
+    },
+    "eligibility": {
+      "title": "Candidature",
+      "recheck": "Vérifier à nouveau",
+      "evaluatedAt": "Vérifié {{when}}",
+      "requirementLabel": "Ce marché exige",
+      "heldLabel": "Votre dossier contient",
+      "changesLabel": "Ce qui changerait la donne",
+      "caveatsLabel": "À lire en parallèle",
+      "lead": {
+        "requires": "Ce marché exige",
+        "holds": "votre dossier contient",
+        "noRequirements": "Aucun critère n'a été enregistré pour ce marché."
+      },
+      "verdict": {
+        "insufficient_data": "Trop peu d'éléments pour décider",
+        "go": "Vous semblez remplir les critères",
+        "no_go": "Vous ne semblez pas remplir les critères"
+      },
+      "status": {
+        "met": "Rempli",
+        "missing": "Absent",
+        "shortfall": "En deçà du niveau exigé",
+        "expiring": "Bientôt expiré",
+        "expired": "Expiré",
+        "unknown": "Pas encore demandé"
+      },
+      "remedy": {
+        "provide_fact": "Dites-nous ce dont vous disposez",
+        "renew": "Le renouveler avant l'échéance",
+        "upgrade": "L'amener au niveau exigé",
+        "avvalimento": "Vous appuyer sur les capacités d'un tiers (avvalimento)",
+        "rti": "Répondre en groupement momentané (RTI)",
+        "subcontract": "Le couvrir par la sous-traitance"
+      },
+      "caveat": {
+        "no_requirements_captured": "Aucun critère n'a été relevé pour ce marché : cette conclusion ne repose sur rien de publié.",
+        "award_grid_only": "Seuls les critères d'attribution ont été relevés — les critères de candidature peuvent figurer dans des documents que nous n'avons pas lus.",
+        "unconfirmed_extraction": "Certains critères ont été lus dans les documents et vous ne les avez pas encore confirmés.",
+        "open_questions": "Certaines questions sur votre entreprise restent sans réponse.",
+        "documents_unread": "Nous n'avons pas lu le dossier de consultation : des critères peuvent manquer."
+      },
+      "counts": {
+        "requirements_one": "{{count}} critère",
+        "requirements_other": "{{count}} critères",
+        "authoritative_one": "{{count}} confirmé",
+        "authoritative_other": "{{count}} confirmés",
+        "blocking_one": "{{count}} bloquant",
+        "blocking_other": "{{count}} bloquants",
+        "unknown_one": "{{count}} sans réponse",
+        "unknown_other": "{{count}} sans réponse"
+      }
+    },
+    "requirements": {
+      "title": "Critères",
+      "empty": "Aucun critère n'a été enregistré pour ce marché.",
+      "confirm": "Confirmer",
+      "confirmed": "Confirmé",
+      "remove": "Supprimer",
+      "unconfirmedHint": "Lu dans les documents — confrontez-le au passage cité avant de vous y fier.",
+      "lotLabel": "Lot {{lot}}",
+      "noticeLevel": "S'applique à tout l'avis",
+      "askWhy": "Pourquoi ?",
+      "source": {
+        "user_stated": "Vous l'avez déclaré",
+        "document_excerpt": "Du dossier de consultation",
+        "award_criteria": "Des critères d'attribution",
+        "agent_inferred": "Déduit par l'agent"
+      }
+    },
+    "capture": {
+      "title": "Une question",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "notSure": "Je ne sais pas",
+      "error": "Nous n'avons pas pu enregistrer. Réessayez.",
+      "cannotCheck": "Celui-ci, nous ne pouvons pas le vérifier automatiquement.",
+      "prompt": {
+        "soa": "Quelle catégorie et quelle classifica SOA détenez-vous ?",
+        "certification": "Quelle certification détenez-vous pour ce point ?",
+        "turnover": "Quel chiffre d'affaires avez-vous réalisé ?",
+        "past_contracts": "Laquelle de vos références couvre ce point ?",
+        "headcount": "Quel était votre effectif ?",
+        "registration": "Quelle inscription ou quelle liste couvre ce point ?",
+        "other": "Celui-ci, nous ne pouvons pas le vérifier automatiquement — lisez-le et décidez vous-même."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Connexion",
@@ -471,6 +646,56 @@
       "deadlineUntil": "clôture avant le {{date}}",
       "undo": "Effacer",
       "remove": "Retirer {{chip}}"
+    },
+    "coverage": {
+      "title": "Ce que nous avons lu",
+      "openBuyerDocuments": "Ouvrir les documents de l'acheteur",
+      "label": {
+        "full": "Dossier de consultation lu",
+        "notice_only": "Avis seulement",
+        "none": "Rien de lu"
+      },
+      "reason": {
+        "no_documents_published": "L'acheteur n'a publié aucun document avec cet avis.",
+        "notice_not_read": "Nous n'avons pas lu les données structurées de cet avis : nous ignorons donc ce qu'il publie.",
+        "body_not_retrieved": "L'acheteur publie des documents que nous n'avons pas encore récupérés.",
+        "not_yet_extracted": "En file d'attente — pas encore lus.",
+        "extraction_failed": "Nous n'avons pas pu lire le texte de ces documents."
+      },
+      "counts": {
+        "documents_one": "{{count}} document lu",
+        "documents_other": "{{count}} documents lus",
+        "parts_one": "{{count}} section extraite",
+        "parts_other": "{{count}} sections extraites",
+        "knownLinks_one": "{{count}} document publié",
+        "knownLinks_other": "{{count}} documents publiés"
+      }
+    },
+    "criteria": {
+      "title": "Où se gagnent les points",
+      "notEnriched": "Nous n'avons pas encore lu les données structurées de cet avis.",
+      "gridUnusable": "L'avis nomme la méthode d'attribution mais ne publie aucune pondération. La grille de notation figure dans le règlement de consultation.",
+      "weight": "Pondération",
+      "noWeight": "Pondération non publiée",
+      "lot": "Lot {{lot}}",
+      "appliesToEveryLot": "S'applique à tous les lots",
+      "showAllLots": "Afficher tous les lots",
+      "type": {
+        "quality": "Qualité",
+        "cost": "Coût",
+        "price": "Prix"
+      }
+    },
+    "citation": {
+      "page": "p. {{page}}",
+      "pageRange": "p. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Partie {{index}}",
+      "openDocument": "Ouvrir le document",
+      "expandPassage": "Afficher le passage complet",
+      "collapsePassage": "Masquer le passage",
+      "passageUnavailable": "Nous n'avons pas pu récupérer le passage complet.",
+      "truncated": "Passage abrégé."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "Général",
       "profile": "Profil client",
+      "company": "Dossier entreprise",
       "overview": "Vue d'ensemble",
       "members": "Membres",
       "roles": "Rôles",
@@ -713,6 +939,26 @@
       "duplicate": "Ce marché figure déjà dans ce workbench.",
       "unavailable": "Ce marché n'est plus disponible.",
       "generic": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "scheda": {
+      "coverageTitle": "Ce que nous avons lu",
+      "evidenceTitle": "Critères et justificatifs",
+      "pointsTitle": "Où se gagnent les points",
+      "repairChat": {
+        "title": "Poser une question sur ce marché",
+        "open": "Poser une question",
+        "close": "Fermer",
+        "askWhy": "Pourquoi ?",
+        "seedGapQuestion": "Pourquoi ce marché exige-t-il « {{requirement}} » ?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Enregistré au regard de : {{recommendation}}",
+      "youDecided": "vous avez décidé {{decision}}",
+      "noRecommendation": "Aucune vérification des critères n'était disponible au moment de votre décision.",
+      "recordedAt": "enregistré {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} manque bloquant",
+      "blockingGapsAtDecision_other": "{{count}} manques bloquants"
     }
   },
   "workbench": {
