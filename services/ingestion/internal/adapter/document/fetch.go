@@ -38,6 +38,17 @@
 // difference between a scoped fetcher and an unaudited egress primitive later,
 // so do not relax it to "make the fetcher reusable" — a second scope gets a
 // second fetcher, with its own robots and SSRF story.
+//
+// That second fetcher now exists: internal/adapter/webdoc reads buyer portals
+// under robots.txt, with per-host pacing and a dial guard. It reuses the retry
+// machinery below through the exported wrappers in retry.go, and nothing else
+// from this package. The obligation runs the other way too, and it is the
+// sharpest constraint either package carries: FETCH MUST NEVER BE POINTED AT A
+// BUYER PORTAL. The indexer reaches for it whenever a document row has no
+// extracted parts (internal/adapter/index), so a portal document persisted
+// without its text would hand this unguarded fetcher a portal URL on every
+// indexing cycle, forever — which is why webdoc extracts text itself rather
+// than merely recording URLs for the indexer to fetch later.
 package document
 
 import (

@@ -1,0 +1,45 @@
+<!doctype html>
+<!--
+  SYNTHETIC FIXTURE — NOT A CAPTURED PAGE.
+
+  A page carrying the TuttoGare fingerprint whose downloads DO NOT match the
+  endpoint shapes in tuttogare.go — the template moved, or the table in that
+  file was a wrong guess in the first place, which given that it has never been
+  checked against a real capture is the likelier of the two.
+
+  This is the registry guard's fixture. The named parser claims the page and
+  enumerates nothing; the fallback reads it on two signals (a document word in
+  the row, a download token in the URL) and finds three files. Reporting this
+  page as "publishes no documents" would be the exact lie the package exists to
+  prevent, so the guard must return the fallback's files instead.
+-->
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gara telematica - Unione dei Comuni</title>
+    <link rel="stylesheet" href="/assets/tuttogare/theme.css" />
+  </head>
+  <body>
+    <nav>
+      <a href="/documenti/carta-servizi.pdf">Carta dei servizi</a>
+    </nav>
+
+    <main>
+      <h1>Procedura negoziata — manutenzione verde pubblico</h1>
+      <table class="elenco">
+        <tr>
+          <td><a href="/asset/estraiFile.do?k=91021">Scarica</a></td>
+          <td>Bando di gara</td>
+        </tr>
+        <tr>
+          <td><a href="/asset/estraiFile.do?k=91022">Scarica</a></td>
+          <td>Disciplinare di gara</td>
+        </tr>
+        <tr>
+          <td><a href="/asset/estraiFile.do?k=91023">Scarica</a></td>
+          <td>Capitolato speciale</td>
+        </tr>
+      </table>
+    </main>
+  </body>
+</html>
