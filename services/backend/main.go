@@ -237,8 +237,19 @@ func main() {
 	// pool everything else here uses.
 	documentSvc := document.NewService(postgres.NewDocumentRepo(db))
 
+	// The pod name every assistant turn is stamped with. Read once, here,
+	// because which process served a turn is a deployment fact and core/agent
+	// must not reach for process identity itself. In Kubernetes this is the
+	// pod name with no manifest edit; an error means the process could not
+	// name itself, which is not a reason to refuse to start — the turns simply
+	// record an empty pod, and the one query that groups by it says so.
+	pod, err := os.Hostname()
+	if err != nil {
+		slog.Warn("could not determine the pod name; agent turns will record an empty pod", "error", err)
+	}
+
 	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
-	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, documentSvc, clientProfileSvc)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, documentSvc, clientProfileSvc, pod)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)

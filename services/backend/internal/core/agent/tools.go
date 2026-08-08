@@ -54,10 +54,10 @@ type ToolCall struct {
 // SendTenderResults. Sending it never ends the turn.
 type SendToolCall func(ToolCall) error
 
-// emitToolCall best-effort pushes a breadcrumb using the CURRENT turn's
-// sendToolCall (read from turnState at call time, not closed over — the tool
-// closures outlive turn 1; see the turnState note in service.go). Nil-safe and
-// error-swallowing: a dropped breadcrumb must never fail a turn.
+// emitToolCall best-effort pushes a breadcrumb using this turn's sendToolCall,
+// read from turnState under its mutex because berrygem executes tools on its
+// own goroutines. Nil-safe and error-swallowing: a dropped breadcrumb must
+// never fail a turn.
 func emitToolCall(ts *turnState, name, status string) {
 	if send := ts.currentSendToolCall(); send != nil {
 		_ = send(ToolCall{Name: name, Status: status})
@@ -123,18 +123,13 @@ func newAskChoiceTool(askChoice func(question string, options []ChoiceOption, al
 }
 
 // newCreateWorkbenchTool builds the "create a workbench" tool. It takes a
-// plain callback rather than a WorkbenchCreator + userID/workspaceID
-// directly: the tool is constructed once per Service.runTurn call, but
-// Registry.GetOrCreateChat only actually uses a freshly-built agent (and
-// its tools) on a session's FIRST turn — every later turn's chat.Chat
-// reuses turn 1's agent, discarding whatever this task's tool construction
-// built for that later call. If this tool closed over userID/workspaceID
-// (or a context) directly, it would silently keep using turn 1's
-// already-stale values forever. Service.runTurn's callback instead reads
-// the current turn's identity from its turnState at call time — see
-// service.go's turnState doc comment (added in this task's Step 4) for the
-// full explanation. This mirrors ask_choice's existing callback shape
-// exactly (Task 2) — same reasoning, same fix.
+// plain callback rather than a WorkbenchCreator plus userID/workspaceID: the
+// caller's identity, the turn's context and the stream callbacks all belong to
+// one turn, and Service.runTurn keeps them together in that turn's turnState
+// rather than baking them into the tool. The tool and its turnState are both
+// built and discarded per turn, so this is now a plain "pass the turn's
+// collaborators through one struct" arrangement — it mirrors ask_choice's
+// callback shape for the same reason.
 func newCreateWorkbenchTool(ts *turnState, createWorkbench func(name, description string, visibility workbench.Visibility) (workbench.Workbench, error)) tools.Tool {
 	return tools.NewFunc(
 		"create_workbench",
@@ -213,19 +208,16 @@ const searchTendersEmptyStreakNotice = "You have searched 5 times with zero resu
 // newSearchTendersTool builds the "search live EU tenders" tool — a plain,
 // client-agnostic search on model-provided terms (v1.0 does not auto-scope
 // this to a ClientProfile; see the design spec's architecture section for
-// why). Same callback-reads-current-turnState shape as
-// newCreateWorkbenchTool — see that function's doc comment for the full
-// stale-closure rationale.
+// why). Same reads-the-turn's-turnState shape as newCreateWorkbenchTool — see
+// that function's doc comment for why the turn's identity, context and
+// callbacks travel through ts rather than being baked into the closure.
 //
-// The consecutive-empty-search streak is tracked on ts (turnState), NOT a
-// closure-local variable: Registry.GetOrCreateChat discards the freshly-built
-// agent/tools on every runTurn call after a session's first turn, so
-// berrygem only ever invokes turn 1's original closure for the session's
-// whole lifetime. A closure-local counter would therefore count empty
-// searches across the ENTIRE session instead of resetting every turn.
-// turnState.recordSearchResult (service.go) is reset at the start of every
-// runTurn call, so reading the streak through ts gives each turn a fresh
-// count regardless of which turn's closure berrygem actually calls.
+// The consecutive-empty-search streak is tracked on ts (turnState) rather than
+// in a closure variable so the count is well-defined when berrygem executes
+// several search_tenders calls concurrently within one turn —
+// turnState.recordSearchResult (service.go) does the increment under a mutex.
+// The streak is per-turn because the turnState is: runTurn allocates a fresh
+// one for every turn.
 func newSearchTendersTool(ts *turnState, search func(query, country, cpv, status string) ([]tender.ScoredTender, error)) tools.Tool {
 	return tools.NewFunc(
 		"search_tenders",
@@ -367,20 +359,21 @@ func marshalTenderResultsForHistory(results []tender.ScoredTender) (json.RawMess
 // ── get_tender_criteria ──
 //
 // Everything below returns its payload as the Execute callback's own string
-// return value and nothing else. That is deliberate and it is the load-bearing
-// constraint of this whole feature: berrygem places that string into the live
-// chat's message list as the turn's tool result, so it never passes through
-// chatRepo.InsertMessage and therefore never through
-// dbMessagesToProviderMessages, which rehydrates a persisted row into a
-// provider message by copying Content alone. A "tender_results" row already
-// loses its whole payload that way (it carries its data in the tenders column
-// with an empty content) — these tools must not add a second instance of it.
+// return value and nothing else: berrygem places that string into the turn's
+// message list as a tool result, and nothing here is persisted.
 //
-// The consequence, stated rather than hidden: after a pod restart the criteria
-// the model saw are gone from its rehydrated context. Unlike a search, that
-// loss is self-healing — get_tender_criteria is deterministic, idempotent,
-// keyed by a stable id and generously rate-limited, so the model simply calls
-// it again.
+// The consequence, stated rather than hidden: a criteria grid the model read
+// on one turn is not in the next turn's context, because that context is
+// assembled from the persisted rows (conversationForTurn, service.go) and no
+// row was written. Unlike a search, the loss is self-healing —
+// get_tender_criteria is deterministic, idempotent, keyed by a stable id and
+// generously rate-limited, so the model simply calls it again.
+//
+// Persisting these results is a real option now that conversationForTurn can
+// carry a role whose payload lives outside `content` (tender_results already
+// does). It is Phase 1b's decision, not a workaround being preserved: it needs
+// a new chatRole plus a mapper case, and a judgement about how much of a
+// criteria grid is worth re-sending on every subsequent turn.
 
 // tenderCriteriaToolLimit caps how many criterion entries the model sees in
 // one result. A 13-lot notice that restates a 5-criterion grid once per lot
@@ -416,9 +409,10 @@ const (
 )
 
 // newGetTenderCriteriaTool builds the "read one tender's published scoring
-// grid" tool. Same callback-reads-current-turnState shape as
-// newSearchTendersTool — see newCreateWorkbenchTool's doc comment for the full
-// stale-closure rationale.
+// grid" tool. Same reads-the-turn's-turnState shape as newSearchTendersTool —
+// see newCreateWorkbenchTool's doc comment for why the turn's identity,
+// context and callbacks travel through ts rather than being baked into the
+// closure.
 //
 // This exists because search_tenders returns eight scalars and none of them is
 // a criterion, so a model asked "how is this scored?" after a search has

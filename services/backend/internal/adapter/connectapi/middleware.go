@@ -211,6 +211,8 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeResourceExhausted, err)
 	case errors.Is(err, agent.ErrChoiceNotPending):
 		return connect.NewError(connect.CodeFailedPrecondition, err)
+	case errors.Is(err, agent.ErrEmptyMessage):
+		return connect.NewError(connect.CodeInvalidArgument, err)
 
 	// ── tender ──
 	case errors.Is(err, tender.ErrRateLimited):

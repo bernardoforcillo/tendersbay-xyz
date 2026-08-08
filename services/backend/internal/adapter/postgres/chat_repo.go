@@ -97,11 +97,23 @@ func (r *ChatRepo) InsertMessage(ctx context.Context, sessionID, role, content s
 	return row, err
 }
 
+// ListMessagesBySession returns a session's messages in conversation order.
+//
+// The id tiebreaker is load-bearing, not decoration. created_at defaults to
+// now(), which Postgres evaluates as transaction-start time, so two rows
+// written inside one transaction — or inside the same microsecond — carry the
+// same timestamp and an ORDER BY on that column alone leaves their relative
+// order undefined. Every turn's prompt is now assembled from this ordering,
+// and GetChatForChoice additionally requires the choice prompt to be strictly
+// the last row, so an undefined tie is a wrong prompt or a spuriously
+// unanswerable choice. The id is a random uuid, so it makes the ordering total
+// without making it meaningful; the honest key is a bigserial sequence column,
+// which needs a migration and a backfill and is deferred.
 func (r *ChatRepo) ListMessagesBySession(ctx context.Context, sessionID string) ([]DBChatMessage, error) {
 	var rows []DBChatMessage
 	err := r.db.Select().From(ChatMessages).
 		Where(ChatMessageSessionID.Eq(sessionID)).
-		OrderBy(ChatMessageCreatedAt.Asc()).
+		OrderBy(ChatMessageCreatedAt.Asc(), ChatMessageID.Asc()).
 		All(ctx, &rows)
 	return rows, err
 }
