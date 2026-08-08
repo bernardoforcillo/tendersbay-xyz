@@ -3,6 +3,8 @@ package connectapi
 import (
 	"context"
 	"errors"
+	"fmt"
+	"strconv"
 	"time"
 
 	"connectrpc.com/connect"
@@ -10,6 +12,7 @@ import (
 	tenderv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
@@ -34,19 +37,32 @@ type MemberRepository interface {
 	LoadMembership(ctx context.Context, workspaceID, userID string) (workspace.Membership, error)
 }
 
+// DocumentReader is the minimal document port GetTenderPassages needs,
+// satisfied by *document.Service unchanged.
+//
+// One method, not two: core/document answers availability through the SAME call
+// when the question is blank (see document.Service.Excerpts), and that pairing is
+// deliberate there — it is what stops a caller ever obtaining passages without
+// the coverage that qualifies them. Declaring a separate Availability method
+// here would hand this handler exactly the seam that pairing exists to close.
+type DocumentReader interface {
+	Excerpts(ctx context.Context, q document.ExcerptQuery) (document.ExcerptResult, error)
+}
+
 // TenderHandler serves TenderService. Unlike every other handler in this
 // package, SearchTenders works for unauthenticated callers by design —
 // see UserIDFromContext below, used directly instead of requireUser.
 type TenderHandler struct {
 	svc     *tender.Service
 	members MemberRepository
+	docs    DocumentReader
 }
 
 var _ tenderv1connect.TenderServiceHandler = (*TenderHandler)(nil)
 
 // NewTenderHandler builds a TenderHandler.
-func NewTenderHandler(svc *tender.Service, members MemberRepository) *TenderHandler {
-	return &TenderHandler{svc: svc, members: members}
+func NewTenderHandler(svc *tender.Service, members MemberRepository, docs DocumentReader) *TenderHandler {
+	return &TenderHandler{svc: svc, members: members, docs: docs}
 }
 
 func (h *TenderHandler) SearchTenders(ctx context.Context, req *connect.Request[tenderv1.SearchTendersRequest]) (*connect.Response[tenderv1.SearchTendersResponse], error) {
@@ -369,6 +385,90 @@ func (h *TenderHandler) ListTenderSitemap(ctx context.Context, req *connect.Requ
 	return connect.NewResponse(&tenderv1.ListTenderSitemapResponse{Refs: out}), nil
 }
 
+// GetTenderPassages answers one question against one tender's extracted text,
+// always alongside what we hold of that tender at all.
+//
+// Authenticated, unlike the GetTender it sits beside. Retrieval runs a full-text
+// query per call, which is a materially more expensive read than serving an
+// already-materialised notice, and the surface that consumes it — the scheda
+// gara — is behind auth anyway. The public tender page renders its coverage
+// strip only when a route hands it one, and the public route deliberately does
+// not.
+//
+// The retrieval bound is NOT enforced here: core/document clamps both the
+// passage count and each passage's length itself, precisely so that adding a
+// second transport cannot widen a budget the transport does not own — so
+// req.Msg.Limit is passed through as the hint it is documented to be.
+func (h *TenderHandler) GetTenderPassages(ctx context.Context, req *connect.Request[tenderv1.GetTenderPassagesRequest]) (*connect.Response[tenderv1.GetTenderPassagesResponse], error) {
+	if _, err := requireUser(ctx); err != nil {
+		return nil, err
+	}
+	id, err := strconv.ParseInt(req.Msg.Id, 10, 64)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInvalidArgument,
+			fmt.Errorf("tender id must be an integer: %w", err))
+	}
+	out, err := h.docs.Excerpts(ctx, document.ExcerptQuery{
+		TenderID: id,
+		Question: req.Msg.Question,
+		Limit:    int(req.Msg.Limit),
+	})
+	if err != nil {
+		return nil, toConnectError(err)
+	}
+	passages := make([]*tenderv1.Passage, len(out.Excerpts))
+	for i, e := range out.Excerpts {
+		passages[i] = &tenderv1.Passage{
+			Text:           e.Text,
+			Truncated:      e.Truncated,
+			RelevanceScore: e.RelevanceScore,
+			Citation:       citationToProto(e.Citation),
+		}
+	}
+	return connect.NewResponse(&tenderv1.GetTenderPassagesResponse{
+		Availability: availabilityToProto(out.Availability),
+		Passages:     passages,
+	}), nil
+}
+
+// availabilityToProto carries the evidence counts across, not just the verdict:
+// core/document.Availability.Consistent is only checkable because they travel
+// with the answer, and an availability that has forgotten why it says what it
+// says cannot be audited by anything except the code that built it.
+func availabilityToProto(a document.Availability) *tenderv1.DocumentAvailability {
+	return &tenderv1.DocumentAvailability{
+		Coverage:           string(a.Coverage),
+		Reason:             string(a.Reason),
+		NoticeRead:         a.NoticeRead,
+		KnownDocumentLinks: int32(a.KnownDocumentLinks),
+		ExtractedDocuments: int32(a.ExtractedDocuments),
+		ExtractedParts:     int32(a.ExtractedParts),
+	}
+}
+
+// citationToProto maps provenance onto the wire, keeping the page bounds'
+// present/absent distinction as explicit *_set flags — a nil PageStart and a
+// page zero are both 0 on the wire, and only one of them may be rendered.
+func citationToProto(c document.Citation) *tenderv1.DocumentCitation {
+	out := &tenderv1.DocumentCitation{
+		DocumentUrl:  c.DocumentURL,
+		DocumentType: c.DocumentType,
+		PartIndex:    int32(c.PartIndex),
+		SectionPath:  c.SectionPath,
+		SectionTitle: c.SectionTitle,
+		HasTable:     c.HasTable,
+	}
+	if c.PageStart != nil {
+		out.PageStart = int32(*c.PageStart)
+		out.PageStartSet = true
+	}
+	if c.PageEnd != nil {
+		out.PageEnd = int32(*c.PageEnd)
+		out.PageEndSet = true
+	}
+	return out
+}
+
 // rateLimitKey is the user ID for authenticated callers, else the client IP —
 // the same rule SearchTenders uses.
 func rateLimitKey(ctx context.Context) string {
@@ -398,13 +498,51 @@ func tenderDetailToProto(d tender.TenderDetail) *tenderv1.TenderDetail {
 	for i, lot := range d.Lots {
 		lots[i] = tenderLotToProto(lot)
 	}
-	return &tenderv1.TenderDetail{
+	criteria := make([]*tenderv1.AwardCriterion, len(d.Criteria))
+	for i, c := range d.Criteria {
+		criteria[i] = awardCriterionToProto(c)
+	}
+	out := &tenderv1.TenderDetail{
 		Id: d.ID, Title: d.Title, BuyerName: d.BuyerName, BuyerId: d.BuyerID, Status: d.Status,
 		ProcedureType: d.ProcedureType, Country: d.Country, Nuts: d.NUTS, Language: d.Language,
 		Cpv: d.CPV, CpvSecondary: d.CPVSecondary, Value: value, Currency: d.Currency,
 		PublishedAt: publishedAt, Deadline: deadline, Source: d.Source, SourceRef: d.SourceRef,
 		SourceUrl: d.SourceURL, Documents: docs, Lots: lots,
+		Criteria: criteria, DocumentsUrl: d.DocumentsURL,
 	}
+	// Both three-valued fields keep "never enriched" expressible. Coalescing
+	// either to its zero would report ignorance as a finding: a grid_usable
+	// false means "this notice publishes no usable grid", which is a claim about
+	// the buyer, and it is indefensible for a notice nobody has read.
+	if d.GridUsable != nil {
+		out.GridUsable = *d.GridUsable
+		out.GridUsableSet = true
+	}
+	if d.EnrichedAt != nil {
+		out.EnrichedAt = d.EnrichedAt.Format(time.RFC3339)
+	}
+	return out
+}
+
+// awardCriterionToProto maps one published criterion. Weight travels with its
+// own presence flag for the same reason core/tender models it as a pointer: a
+// zero weight and an absent weight are different published facts, and a notice
+// naming an award method with nothing attached to it is the COMMON case.
+func awardCriterionToProto(c tender.AwardCriterion) *tenderv1.AwardCriterion {
+	out := &tenderv1.AwardCriterion{
+		LotRef:      c.LotRef,
+		Ordinal:     int32(c.Ordinal),
+		Type:        c.Type,
+		Name:        c.Name,
+		Description: c.Description,
+		WeightRaw:   c.WeightRaw,
+		Lang:        c.Lang,
+	}
+	if c.Weight != nil {
+		out.Weight = *c.Weight
+		out.WeightSet = true
+	}
+	return out
 }
 
 func tenderLotToProto(l tender.Lot) *tenderv1.TenderLot {

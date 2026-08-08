@@ -11,6 +11,7 @@ import (
 	tenderv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
@@ -18,6 +19,9 @@ import (
 type fakeRepo struct {
 	results   []tender.Tender
 	countries []string
+	// detail overrides FindDetailByID's canned answer, for the tests that
+	// exercise the eForms fields the criteria surface reads.
+	detail *tender.TenderDetail
 }
 
 func (f *fakeRepo) FacetCounts(context.Context, tender.Filters) (tender.Facets, error) {
@@ -41,6 +45,9 @@ func (f *fakeRepo) EnrichTenders(context.Context, []string, tender.Filters) ([]t
 	return nil, nil
 }
 func (f *fakeRepo) FindDetailByID(context.Context, int64) (*tender.TenderDetail, error) {
+	if f.detail != nil {
+		return f.detail, nil
+	}
 	return &tender.TenderDetail{ID: "1", Title: "Lavori stradali", Source: "ted", SourceRef: "P1",
 		Documents: []tender.Document{{URL: "https://x/notice.pdf", Type: "notice"}}}, nil
 }
@@ -137,7 +144,7 @@ func testTenderHandler(t *testing.T) *connectapi.TenderHandler {
 		GetTenderTier: tender.Tier{MaxResults: 20, RateLimit: 600, RateWindow: time.Minute},
 	}
 	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSource{}, cfg)
-	return connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+	return connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{})
 }
 
 func TestSearchTenders_WorksWithoutAuth(t *testing.T) {
@@ -182,7 +189,7 @@ func TestSearchTenders_ReportsAppliedCPVToTheClient(t *testing.T) {
 	}).WithCPVLexicon(fakeLexicon{matches: []tender.CPVMatch{
 		{Code: "90919200", Lang: "it", Label: "Servizi di pulizia di uffici", Score: 0.9},
 	}})
-	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{})
 
 	res, err := h.SearchTenders(context.Background(), connect.NewRequest(&tenderv1.SearchTendersRequest{
 		Query: "pulizie uffici", Limit: 10,
@@ -209,7 +216,7 @@ func TestSearchTenders_AppliedCPVIsEmptyNotNilWithoutALexicon(t *testing.T) {
 		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 100, RateWindow: time.Minute},
 		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 100, RateWindow: time.Minute},
 	})
-	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{})
 
 	res, err := h.SearchTenders(context.Background(), connect.NewRequest(&tenderv1.SearchTendersRequest{
 		Query: "pulizie", Limit: 10,
@@ -289,7 +296,7 @@ func TestSearchTenders_AnnotatesWhenWorkspaceIdSetAndMember(t *testing.T) {
 	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSourceWithProfile{profile: profile}, testAnnotatedTenderConfig())
 	members := newFakeMemberRepo()
 	members.allow("ws-1", "user-1")
-	h := connectapi.NewTenderHandler(svc, members)
+	h := connectapi.NewTenderHandler(svc, members, &fakeDocReader{})
 
 	ctx := connectapi.ContextWithUserID(context.Background(), "user-1")
 	req := connect.NewRequest(&tenderv1.SearchTendersRequest{Limit: 5, WorkspaceId: "ws-1"})
@@ -321,7 +328,7 @@ func TestSearchTenders_NoProfileYetLeavesFitFieldsUnset(t *testing.T) {
 	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSourceWithProfile{err: clientprofile.ErrProfileNotFound}, testAnnotatedTenderConfig())
 	members := newFakeMemberRepo()
 	members.allow("ws-1", "user-1")
-	h := connectapi.NewTenderHandler(svc, members)
+	h := connectapi.NewTenderHandler(svc, members, &fakeDocReader{})
 
 	ctx := connectapi.ContextWithUserID(context.Background(), "user-1")
 	req := connect.NewRequest(&tenderv1.SearchTendersRequest{Limit: 5, WorkspaceId: "ws-1"})
@@ -346,7 +353,7 @@ func TestSearchTenders_NoProfileYetLeavesFitFieldsUnset(t *testing.T) {
 func TestSearchTenders_NonMemberWorkspaceIdReturnsPermissionDenied(t *testing.T) {
 	repo := &fakeRepo{results: []tender.Tender{{ID: "1"}}}
 	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSourceWithProfile{err: workspace.ErrNotMember}, testAnnotatedTenderConfig())
-	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo()) // deny-all, unused by SearchTenders now
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{}) // deny-all, unused by SearchTenders now
 
 	ctx := connectapi.ContextWithUserID(context.Background(), "user-1")
 	req := connect.NewRequest(&tenderv1.SearchTendersRequest{Limit: 5, WorkspaceId: "ws-1"})
@@ -373,7 +380,7 @@ func TestRecommendTendersForClient_ReturnsNeedsProfileWhenNoneStored(t *testing.
 		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
 	}
 	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSourceWithProfile{err: clientprofile.ErrProfileNotFound}, cfg)
-	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{})
 	ctx := connectapi.ContextWithUserID(context.Background(), "user-1")
 
 	resp, err := h.RecommendTendersForClient(ctx, connect.NewRequest(&tenderv1.RecommendTendersForClientRequest{WorkspaceId: "ws-1"}))
@@ -397,7 +404,7 @@ func TestGetCoverage_ReturnsCountriesAnonymously(t *testing.T) {
 		AuthedTier: tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
 	}
 	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSource{}, cfg)
-	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{})
 
 	// No UserIDFromContext value — an anonymous request must still succeed.
 	resp, err := h.GetCoverage(context.Background(), connect.NewRequest(&tenderv1.GetCoverageRequest{}))
@@ -443,7 +450,7 @@ func TestTenderResultToProto_SetsEuThreshold(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			repo := &fakeRepo{results: []tender.Tender{{ID: "1", CPV: "45210000", Value: c.value}}}
 			svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSource{}, euThresholdTenderConfig())
-			h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+			h := connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{})
 
 			resp, err := h.SearchTenders(context.Background(), connect.NewRequest(&tenderv1.SearchTendersRequest{Limit: 5}))
 			if err != nil {
@@ -489,7 +496,7 @@ func TestRecommendTendersForClient_MapsFitTierAndReason(t *testing.T) {
 		ValueMin: i64(100), ValueMax: i64(200),
 	}
 	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSourceWithProfile{profile: profile}, cfg)
-	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo())
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{})
 	ctx := connectapi.ContextWithUserID(context.Background(), "user-1")
 
 	resp, err := h.RecommendTendersForClient(ctx, connect.NewRequest(&tenderv1.RecommendTendersForClientRequest{WorkspaceId: "ws-1", Limit: 3}))
@@ -523,5 +530,194 @@ func TestRecommendTendersForClient_MapsFitTierAndReason(t *testing.T) {
 	}
 	if got.Tender.Id != "1" {
 		t.Fatalf("Tender.Id = %q, want 1", got.Tender.Id)
+	}
+}
+
+// ── GetTenderPassages ───────────────────────────────────────────────────────
+
+// fakeDocReader stands in for *document.Service. It records the query it was
+// handed so the tests can assert the handler passes the caller's question and
+// limit through UNCHANGED — clamping is core/document's job, and a transport
+// that pre-clamped would be owning a bound it does not own.
+type fakeDocReader struct {
+	got    document.ExcerptQuery
+	result document.ExcerptResult
+	err    error
+}
+
+func (f *fakeDocReader) Excerpts(_ context.Context, q document.ExcerptQuery) (document.ExcerptResult, error) {
+	f.got = q
+	if f.err != nil {
+		return document.ExcerptResult{}, f.err
+	}
+	return f.result, nil
+}
+
+func passagesHandler(t *testing.T, docs *fakeDocReader) *connectapi.TenderHandler {
+	t.Helper()
+	svc := tender.NewService(&fakeRepo{}, fakeKB{}, fakeRL{}, fakeProfileSource{}, tender.Config{
+		AnonTier:      tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},
+		AuthedTier:    tender.Tier{MaxResults: 50, RateLimit: 300, RateWindow: 5 * time.Minute},
+		GetTenderTier: tender.Tier{MaxResults: 20, RateLimit: 600, RateWindow: time.Minute},
+	})
+	return connectapi.NewTenderHandler(svc, newFakeMemberRepo(), docs)
+}
+
+func TestGetTenderPassages_RequiresAuth(t *testing.T) {
+	h := passagesHandler(t, &fakeDocReader{})
+	_, err := h.GetTenderPassages(context.Background(),
+		connect.NewRequest(&tenderv1.GetTenderPassagesRequest{Id: "1"}))
+	var connectErr *connect.Error
+	if !errors.As(err, &connectErr) || connectErr.Code() != connect.CodeUnauthenticated {
+		t.Errorf("error = %v, want Unauthenticated — retrieval is a metered read", err)
+	}
+}
+
+func TestGetTenderPassages_RejectsANonNumericID(t *testing.T) {
+	h := passagesHandler(t, &fakeDocReader{})
+	ctx := connectapi.ContextWithUserID(context.Background(), "u1")
+	_, err := h.GetTenderPassages(ctx,
+		connect.NewRequest(&tenderv1.GetTenderPassagesRequest{Id: "not-a-number"}))
+	var connectErr *connect.Error
+	if !errors.As(err, &connectErr) || connectErr.Code() != connect.CodeInvalidArgument {
+		t.Errorf("error = %v, want InvalidArgument", err)
+	}
+}
+
+// TestGetTenderPassages_AnswersAvailabilityWithoutAQuestion pins the pairing the
+// whole RPC exists for: an empty question is availability alone, and the cause
+// travels with it. A client that learned "zero passages" without learning why
+// cannot tell "nothing matched" from "we hold nothing but the notice".
+func TestGetTenderPassages_AnswersAvailabilityWithoutAQuestion(t *testing.T) {
+	docs := &fakeDocReader{result: document.ExcerptResult{Availability: document.Availability{
+		TenderID:           7,
+		Coverage:           document.CoverageNotice,
+		Reason:             document.ReasonBodyNotRetrieved,
+		NoticeRead:         true,
+		KnownDocumentLinks: 3,
+	}}}
+	h := passagesHandler(t, docs)
+	ctx := connectapi.ContextWithUserID(context.Background(), "u1")
+
+	res, err := h.GetTenderPassages(ctx,
+		connect.NewRequest(&tenderv1.GetTenderPassagesRequest{Id: "7", Question: "", Limit: 0}))
+	if err != nil {
+		t.Fatalf("GetTenderPassages: %v", err)
+	}
+	if docs.got.TenderID != 7 || docs.got.Question != "" || docs.got.Limit != 0 {
+		t.Errorf("query = %+v, want the caller's id/question/limit passed through unchanged", docs.got)
+	}
+	av := res.Msg.Availability
+	if av == nil {
+		t.Fatal("availability is nil — an empty passage list with no cause is the conflation this RPC exists to prevent")
+	}
+	if av.Coverage != "notice_only" || av.Reason != "body_not_retrieved" {
+		t.Errorf("availability = %+v, want notice_only/body_not_retrieved", av)
+	}
+	if av.KnownDocumentLinks != 3 || !av.NoticeRead {
+		t.Errorf("availability evidence = %+v, want the counts that make the answer auditable", av)
+	}
+	if len(res.Msg.Passages) != 0 {
+		t.Errorf("passages = %+v, want none for an empty question", res.Msg.Passages)
+	}
+}
+
+// TestGetTenderPassages_KeepsAbsentPageBoundsAbsent is the one mapping detail
+// that cannot be got wrong quietly: page 0 and "we never learned the page" are
+// both 0 on the wire, and rendering "p. 0" under a verbatim legal quote would
+// undermine the affordance the citation exists for.
+func TestGetTenderPassages_KeepsAbsentPageBoundsAbsent(t *testing.T) {
+	page := 14
+	docs := &fakeDocReader{result: document.ExcerptResult{
+		Availability: document.Availability{Coverage: document.CoverageFull},
+		Excerpts: []document.Excerpt{
+			{Text: "con pagina", Truncated: true, Citation: document.Citation{
+				DocumentURL: "https://x/disciplinare.pdf", DocumentType: "spec",
+				PartIndex: 4, PageStart: &page, SectionPath: []string{"7", "7.2"},
+			}},
+			{Text: "senza pagina", Citation: document.Citation{DocumentURL: "https://x/notice.pdf"}},
+		},
+	}}
+	h := passagesHandler(t, docs)
+	ctx := connectapi.ContextWithUserID(context.Background(), "u1")
+
+	res, err := h.GetTenderPassages(ctx,
+		connect.NewRequest(&tenderv1.GetTenderPassagesRequest{Id: "7", Question: "penali", Limit: 3}))
+	if err != nil {
+		t.Fatalf("GetTenderPassages: %v", err)
+	}
+	if docs.got.Question != "penali" || docs.got.Limit != 3 {
+		t.Errorf("query = %+v, want the question and limit passed through", docs.got)
+	}
+	if len(res.Msg.Passages) != 2 {
+		t.Fatalf("len(passages) = %d, want 2", len(res.Msg.Passages))
+	}
+
+	withPage := res.Msg.Passages[0]
+	if !withPage.Truncated {
+		t.Error("truncated = false, want true — a passage that stops mid-clause must say so")
+	}
+	if c := withPage.Citation; c == nil || !c.PageStartSet || c.PageStart != 14 {
+		t.Errorf("citation = %+v, want page 14 marked present", c)
+	}
+	if c := withPage.Citation; c.PageEndSet {
+		t.Error("page_end_set = true, want false — only page_start was published")
+	}
+	if got := withPage.Citation.SectionPath; len(got) != 2 || got[1] != "7.2" {
+		t.Errorf("section_path = %v, want the hierarchical numbering", got)
+	}
+
+	bare := res.Msg.Passages[1].Citation
+	if bare == nil || bare.PageStartSet || bare.PageEndSet {
+		t.Errorf("citation = %+v, want both page bounds absent — a renderer must degrade to the URL alone", bare)
+	}
+}
+
+// TestGetTenderDetail_CarriesTheAwardGridAndItsThirdState pins the two
+// three-valued fields the criteria surface reads. Absent is a state, and a
+// notice nobody has read must not report "publishes no usable grid" — that is a
+// claim about the buyer.
+func TestGetTenderDetail_CarriesTheAwardGridAndItsThirdState(t *testing.T) {
+	weight := 70.0
+	enriched := time.Date(2026, 3, 1, 9, 0, 0, 0, time.UTC)
+	usable := true
+	repo := &fakeRepo{detail: &tender.TenderDetail{
+		ID: "5", Title: "Lavori", DocumentsURL: "https://buyer/docs",
+		GridUsable: &usable, EnrichedAt: &enriched,
+		Criteria: []tender.AwardCriterion{
+			{LotRef: "", Ordinal: 1, Type: "quality", Name: "Offerta tecnica", Weight: &weight, WeightRaw: "70", Lang: "ITA"},
+			{LotRef: "", Ordinal: 2, Type: "price", Name: "Offerta economica", WeightRaw: "OEPV"},
+		},
+	}}
+	svc := tender.NewService(repo, fakeKB{}, fakeRL{}, fakeProfileSource{}, tender.Config{
+		GetTenderTier: tender.Tier{MaxResults: 20, RateLimit: 600, RateWindow: time.Minute},
+	})
+	h := connectapi.NewTenderHandler(svc, newFakeMemberRepo(), &fakeDocReader{})
+
+	res, err := h.GetTender(context.Background(), connect.NewRequest(&tenderv1.GetTenderRequest{Id: "5"}))
+	if err != nil {
+		t.Fatalf("GetTender: %v", err)
+	}
+	got := res.Msg.Tender
+	if got.DocumentsUrl != "https://buyer/docs" {
+		t.Errorf("documents_url = %q — it is the only affordance a body_not_retrieved coverage can offer", got.DocumentsUrl)
+	}
+	if !got.GridUsableSet || !got.GridUsable {
+		t.Errorf("grid_usable = %v/%v, want true marked present", got.GridUsable, got.GridUsableSet)
+	}
+	if got.EnrichedAt == "" {
+		t.Error("enriched_at is empty — the client cannot date an answer it was never given")
+	}
+	if len(got.Criteria) != 2 {
+		t.Fatalf("len(criteria) = %d, want 2", len(got.Criteria))
+	}
+	if !got.Criteria[0].WeightSet || got.Criteria[0].Weight != 70 {
+		t.Errorf("criteria[0] weight = %v/%v, want 70 marked present", got.Criteria[0].Weight, got.Criteria[0].WeightSet)
+	}
+	if got.Criteria[1].WeightSet {
+		t.Error("criteria[1] weight_set = true, want false — an absent weight is not a zero weight")
+	}
+	if got.Criteria[1].WeightRaw != "OEPV" {
+		t.Errorf("criteria[1] weight_raw = %q, want the published text kept even when it does not parse", got.Criteria[1].WeightRaw)
 	}
 }

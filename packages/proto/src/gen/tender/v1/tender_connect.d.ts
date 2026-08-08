@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { GetCoverageRequest, GetCoverageResponse, GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, RecommendTendersForClientRequest, RecommendTendersForClientResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
+import { GetCoverageRequest, GetCoverageResponse, GetRelatedTendersRequest, GetRelatedTendersResponse, GetTenderPassagesRequest, GetTenderPassagesResponse, GetTenderRequest, GetTenderResponse, ListTenderSitemapRequest, ListTenderSitemapResponse, RecommendTendersForClientRequest, RecommendTendersForClientResponse, SearchTendersRequest, SearchTendersResponse } from "./tender_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -80,6 +80,33 @@ export declare const TenderService: {
       readonly name: "GetCoverage",
       readonly I: typeof GetCoverageRequest,
       readonly O: typeof GetCoverageResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * Passages of one tender's extracted documents around one question, together
+     * with what we hold of that tender at all.
+     *
+     * Availability and passages are ONE answer and travel on one RPC by design.
+     * Splitting them would eventually let a caller obtain passages without the
+     * coverage that qualifies them, and an empty passage list with no cause
+     * conflates "no passage matched your question" with "we hold nothing but the
+     * notice PDF" — the exact conflation core/document exists to prevent.
+     *
+     * An empty question is valid and means "availability only": the server skips
+     * retrieval entirely rather than paying for a query that cannot match. That
+     * is what the public tender page's coverage strip calls.
+     *
+     * Anonymous-safe and rate-limited like GetTender, which it sits beside on the
+     * public tender page. The retrieval bound is not an auth matter: core/document
+     * clamps both the passage count and each passage's length itself, so no caller
+     * — authenticated or not — can widen a bound it does not own.
+     *
+     * @generated from rpc tender.v1.TenderService.GetTenderPassages
+     */
+    readonly getTenderPassages: {
+      readonly name: "GetTenderPassages",
+      readonly I: typeof GetTenderPassagesRequest,
+      readonly O: typeof GetTenderPassagesResponse,
       readonly kind: MethodKind.Unary,
     },
   }
