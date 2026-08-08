@@ -13,6 +13,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/core/enrich"
 	coreingestion "github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/core/ingestion"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/core/retrieve"
 )
 
 // The enrichment pass wires this repository in through the port the core owns,
@@ -20,6 +21,13 @@ import (
 // and unlike every test in this file, it holds whether or not a database is
 // reachable.
 var _ enrich.Repo = (*postgres.TenderRepo)(nil)
+
+// The portal-document retrieval pass wires the same repository in through its
+// own port, for the same reason and with the same guarantee. Both assertions
+// are also the only mechanical statement of the house dependency rule at this
+// boundary: the interface is declared in core and satisfied here, never the
+// other way round.
+var _ retrieve.Repo = (*postgres.TenderRepo)(nil)
 
 func testRepo(t *testing.T) (*postgres.TenderRepo, *sql.DB) {
 	t.Helper()
