@@ -63,18 +63,16 @@ export declare type SearchTendersRequest = Message<"tender.v1.SearchTendersReque
   sort: string;
 
   /**
-   * ISO 639-1 language of the query text ("it", "de"), taken from the caller's
-   * UI locale. Used to pick the stemming configuration for the keyword
-   * retriever. Empty is valid and means "match unstemmed only", which is
-   * today's behaviour for every caller.
+   * ISO 639-1 language of the query text ("it", "de"). Intended to be taken
+   * from the caller's UI locale (i18n.language's leading subtag) and used to
+   * pick the stemming configuration for the keyword retriever, so the server
+   * would ignore any value it has no configuration for rather than failing —
+   * an unknown language is a client bug, and losing the whole search over it
+   * would be a worse answer than an unstemmed match. Empty is valid and means
+   * "match unstemmed only", which is every caller's behaviour today.
    *
-   * Populated by the frontend from i18n.language's leading subtag; the server
-   * ignores any value it has no configuration for rather than failing, since an
-   * unknown language is a client bug and losing the whole search over it would
-   * be a worse answer than an unstemmed match.
-   *
-   * Forward declaration: Phase 2 threads this into SearchParams. Nothing reads
-   * it yet.
+   * Forward declaration: no caller populates this field yet, and nothing on
+   * the server reads it. Phase 2 threads this into SearchParams.
    *
    * @generated from field: string language = 7;
    */
@@ -906,6 +904,84 @@ export declare type TenderLot = Message<"tender.v1.TenderLot"> & {
 export declare const TenderLotSchema: GenMessage<TenderLot>;
 
 /**
+ * AwardCriterion is one criterion of a notice's award grid, as published.
+ *
+ * weight is meaningful ONLY when weight_set. A zero weight and an absent weight
+ * are different published facts: notices routinely publish a lone entry naming
+ * the award method ("offerta economicamente più vantaggiosa") with nothing
+ * attached to it. Coalescing absent to 0 makes "criteria published" read as
+ * "grid recoverable", which overstates real coverage by roughly 2x on Italian
+ * notices — see core/tender.AwardCriterion.Weight.
+ *
+ * @generated from message tender.v1.AwardCriterion
+ */
+export declare type AwardCriterion = Message<"tender.v1.AwardCriterion"> & {
+  /**
+   * "" = notice-level, applies to every lot
+   *
+   * @generated from field: string lot_ref = 1;
+   */
+  lotRef: string;
+
+  /**
+   * position as published, within its lot_ref
+   *
+   * @generated from field: int32 ordinal = 2;
+   */
+  ordinal: number;
+
+  /**
+   * "quality" | "cost" | "price", as declared
+   *
+   * @generated from field: string type = 3;
+   */
+  type: string;
+
+  /**
+   * @generated from field: string name = 4;
+   */
+  name: string;
+
+  /**
+   * @generated from field: string description = 5;
+   */
+  description: string;
+
+  /**
+   * @generated from field: double weight = 6;
+   */
+  weight: number;
+
+  /**
+   * @generated from field: bool weight_set = 7;
+   */
+  weightSet: boolean;
+
+  /**
+   * weight_raw is the weight exactly as published ("30", "30%", "30,5"), so a
+   * numeric parse failure loses comparability rather than the datum.
+   *
+   * @generated from field: string weight_raw = 8;
+   */
+  weightRaw: string;
+
+  /**
+   * ISO 639-2/T ("ITA", "ENG"). Multilingual notices repeat every text field
+   * once per language, so without it a reader cannot tell a deliberate language
+   * choice from a parser accident.
+   *
+   * @generated from field: string lang = 9;
+   */
+  lang: string;
+};
+
+/**
+ * Describes the message tender.v1.AwardCriterion.
+ * Use `create(AwardCriterionSchema)` to create a new message.
+ */
+export declare const AwardCriterionSchema: GenMessage<AwardCriterion>;
+
+/**
  * @generated from message tender.v1.TenderDetail
  */
 export declare type TenderDetail = Message<"tender.v1.TenderDetail"> & {
@@ -1014,6 +1090,53 @@ export declare type TenderDetail = Message<"tender.v1.TenderDetail"> & {
    * @generated from field: repeated tender.v1.TenderLot lots = 20;
    */
   lots: TenderLot[];
+
+  /**
+   * ── The eForms detail ───────────────────────────────────────────────────
+   *
+   * criteria holds the notice-level and every lot's criteria in ONE flat list
+   * sorted by (lot_ref, ordinal); a criterion may name a lot that was never
+   * ingested, so nesting them inside TenderLot would silently drop those.
+   *
+   * @generated from field: repeated tender.v1.AwardCriterion criteria = 21;
+   */
+  criteria: AwardCriterion[];
+
+  /**
+   * grid_usable is meaningful only when grid_usable_set. Unset is a THIRD state
+   * — the notice's structured data was never read — and it is what lets a
+   * reader tell "this notice publishes no usable grid" from "we have not looked
+   * at this notice". A plain bool would record ignorance as a finding.
+   *
+   * @generated from field: bool grid_usable = 22;
+   */
+  gridUsable: boolean;
+
+  /**
+   * @generated from field: bool grid_usable_set = 23;
+   */
+  gridUsableSet: boolean;
+
+  /**
+   * enriched_at is when the structured notice was successfully read; "" means
+   * never, or read unsuccessfully. It carries the same distinction
+   * grid_usable_set does and additionally dates the answer.
+   *
+   * RFC3339
+   *
+   * @generated from field: string enriched_at = 24;
+   */
+  enrichedAt: string;
+
+  /**
+   * documents_url is the buyer's own document page. It is the single actionable
+   * affordance behind a body_not_retrieved coverage — we hold the link and not
+   * what is behind it — so a coverage strip that could not offer it would be
+   * telling the reader about a gap it gives them no way to close.
+   *
+   * @generated from field: string documents_url = 25;
+   */
+  documentsUrl: string;
 };
 
 /**
@@ -1021,6 +1144,230 @@ export declare type TenderDetail = Message<"tender.v1.TenderDetail"> & {
  * Use `create(TenderDetailSchema)` to create a new message.
  */
 export declare const TenderDetailSchema: GenMessage<TenderDetail>;
+
+/**
+ * DocumentAvailability is what we hold of one tender's documents: the quantity
+ * and the CAUSE, which are orthogonal axes.
+ *
+ * notice_only because the buyer published nothing else and notice_only because
+ * we have not fetched what they did publish are the same quantity and opposite
+ * facts. The evidence counts travel with the answer so a consumer can audit it
+ * rather than trusting it — see core/document.Availability.Consistent, which is
+ * what makes "no_documents_published" defensible only while
+ * known_document_links is zero.
+ *
+ * @generated from message tender.v1.DocumentAvailability
+ */
+export declare type DocumentAvailability = Message<"tender.v1.DocumentAvailability"> & {
+  /**
+   * full | notice_only | none
+   *
+   * @generated from field: string coverage = 1;
+   */
+  coverage: string;
+
+  /**
+   * "" | no_documents_published | notice_not_read |
+   *
+   * @generated from field: string reason = 2;
+   */
+  reason: string;
+
+  /**
+   * body_not_retrieved | not_yet_extracted | extraction_failed
+   *
+   * true only when the notice was read SUCCESSFULLY
+   *
+   * @generated from field: bool notice_read = 3;
+   */
+  noticeRead: boolean;
+
+  /**
+   * buyer links we hold but have not retrieved
+   *
+   * @generated from field: int32 known_document_links = 4;
+   */
+  knownDocumentLinks: number;
+
+  /**
+   * @generated from field: int32 extracted_documents = 5;
+   */
+  extractedDocuments: number;
+
+  /**
+   * @generated from field: int32 extracted_parts = 6;
+   */
+  extractedParts: number;
+};
+
+/**
+ * Describes the message tender.v1.DocumentAvailability.
+ * Use `create(DocumentAvailabilitySchema)` to create a new message.
+ */
+export declare const DocumentAvailabilitySchema: GenMessage<DocumentAvailability>;
+
+/**
+ * DocumentCitation is where a quoted passage came from.
+ *
+ * Every field below document_url is optional, and that is a fact about the
+ * corpus rather than a modelling preference: page and section metadata are
+ * populated GOING FORWARD ONLY, so documents extracted before those columns
+ * existed carry none. A renderer must degrade all the way to the URL alone.
+ *
+ * page_start_set/page_end_set exist because page 0 and "we never learned the
+ * page" are both 0 on the wire, and rendering "p. 0" under a verbatim legal
+ * quote would undermine the one affordance this feature rests on. part_index is
+ * the exception that never degrades — it is the part's own key.
+ *
+ * @generated from message tender.v1.DocumentCitation
+ */
+export declare type DocumentCitation = Message<"tender.v1.DocumentCitation"> & {
+  /**
+   * @generated from field: string document_url = 1;
+   */
+  documentUrl: string;
+
+  /**
+   * "notice" | "spec" | "corrigendum" | ... — published label
+   *
+   * @generated from field: string document_type = 2;
+   */
+  documentType: string;
+
+  /**
+   * @generated from field: int32 part_index = 3;
+   */
+  partIndex: number;
+
+  /**
+   * @generated from field: int32 page_start = 4;
+   */
+  pageStart: number;
+
+  /**
+   * @generated from field: bool page_start_set = 5;
+   */
+  pageStartSet: boolean;
+
+  /**
+   * @generated from field: int32 page_end = 6;
+   */
+  pageEnd: number;
+
+  /**
+   * @generated from field: bool page_end_set = 7;
+   */
+  pageEndSet: boolean;
+
+  /**
+   * e.g. ["7", "7.2"]; empty when unknown
+   *
+   * @generated from field: repeated string section_path = 8;
+   */
+  sectionPath: string[];
+
+  /**
+   * @generated from field: string section_title = 9;
+   */
+  sectionTitle: string;
+
+  /**
+   * @generated from field: bool has_table = 10;
+   */
+  hasTable: boolean;
+};
+
+/**
+ * Describes the message tender.v1.DocumentCitation.
+ * Use `create(DocumentCitationSchema)` to create a new message.
+ */
+export declare const DocumentCitationSchema: GenMessage<DocumentCitation>;
+
+/**
+ * Passage is one retrieved span of a tender document. text is already clamped
+ * server-side; truncated reports that it was, so a consumer can say "the passage
+ * continues" instead of presenting a sentence that stops mid-clause.
+ *
+ * @generated from message tender.v1.Passage
+ */
+export declare type Passage = Message<"tender.v1.Passage"> & {
+  /**
+   * @generated from field: string text = 1;
+   */
+  text: string;
+
+  /**
+   * @generated from field: bool truncated = 2;
+   */
+  truncated: boolean;
+
+  /**
+   * @generated from field: double relevance_score = 3;
+   */
+  relevanceScore: number;
+
+  /**
+   * @generated from field: tender.v1.DocumentCitation citation = 4;
+   */
+  citation?: DocumentCitation | undefined;
+};
+
+/**
+ * Describes the message tender.v1.Passage.
+ * Use `create(PassageSchema)` to create a new message.
+ */
+export declare const PassageSchema: GenMessage<Passage>;
+
+/**
+ * @generated from message tender.v1.GetTenderPassagesRequest
+ */
+export declare type GetTenderPassagesRequest = Message<"tender.v1.GetTenderPassagesRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * Empty is valid and means "availability only" — the server skips retrieval.
+   *
+   * @generated from field: string question = 2;
+   */
+  question: string;
+
+  /**
+   * A hint the server may only NARROW. The real bound lives in core/document.
+   *
+   * @generated from field: int32 limit = 3;
+   */
+  limit: number;
+};
+
+/**
+ * Describes the message tender.v1.GetTenderPassagesRequest.
+ * Use `create(GetTenderPassagesRequestSchema)` to create a new message.
+ */
+export declare const GetTenderPassagesRequestSchema: GenMessage<GetTenderPassagesRequest>;
+
+/**
+ * @generated from message tender.v1.GetTenderPassagesResponse
+ */
+export declare type GetTenderPassagesResponse = Message<"tender.v1.GetTenderPassagesResponse"> & {
+  /**
+   * @generated from field: tender.v1.DocumentAvailability availability = 1;
+   */
+  availability?: DocumentAvailability | undefined;
+
+  /**
+   * @generated from field: repeated tender.v1.Passage passages = 2;
+   */
+  passages: Passage[];
+};
+
+/**
+ * Describes the message tender.v1.GetTenderPassagesResponse.
+ * Use `create(GetTenderPassagesResponseSchema)` to create a new message.
+ */
+export declare const GetTenderPassagesResponseSchema: GenMessage<GetTenderPassagesResponse>;
 
 /**
  * TenderService serves the direct tender search endpoint behind the
@@ -1089,6 +1436,32 @@ export declare const TenderService: GenService<{
     methodKind: "unary";
     input: typeof GetCoverageRequestSchema;
     output: typeof GetCoverageResponseSchema;
+  },
+  /**
+   * Passages of one tender's extracted documents around one question, together
+   * with what we hold of that tender at all.
+   *
+   * Availability and passages are ONE answer and travel on one RPC by design.
+   * Splitting them would eventually let a caller obtain passages without the
+   * coverage that qualifies them, and an empty passage list with no cause
+   * conflates "no passage matched your question" with "we hold nothing but the
+   * notice PDF" — the exact conflation core/document exists to prevent.
+   *
+   * An empty question is valid and means "availability only": the server skips
+   * retrieval entirely rather than paying for a query that cannot match. That
+   * is what the public tender page's coverage strip calls.
+   *
+   * Anonymous-safe and rate-limited like GetTender, which it sits beside on the
+   * public tender page. The retrieval bound is not an auth matter: core/document
+   * clamps both the passage count and each passage's length itself, so no caller
+   * — authenticated or not — can widen a bound it does not own.
+   *
+   * @generated from rpc tender.v1.TenderService.GetTenderPassages
+   */
+  getTenderPassages: {
+    methodKind: "unary";
+    input: typeof GetTenderPassagesRequestSchema;
+    output: typeof GetTenderPassagesResponseSchema;
   },
 }>;
 

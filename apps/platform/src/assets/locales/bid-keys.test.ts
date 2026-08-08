@@ -50,6 +50,18 @@ const REQUIRED_KEYS = [
   'bid.fit.needsProfile',
   'bid.errors.duplicate',
   'bid.errors.generic',
+  'bid.scheda.coverageTitle',
+  'bid.scheda.evidenceTitle',
+  'bid.scheda.pointsTitle',
+  'bid.scheda.repairChat.title',
+  'bid.scheda.repairChat.open',
+  'bid.scheda.repairChat.close',
+  'bid.scheda.repairChat.askWhy',
+  'bid.scheda.repairChat.seedGapQuestion',
+  'bid.decision.recordedAgainst',
+  'bid.decision.youDecided',
+  'bid.decision.noRecommendation',
+  'bid.decision.recordedAt',
 ] as const;
 
 const CHECKLIST_SECTIONS = ['part_ii', 'part_iii', 'part_iv', 'conclusion'] as const;
@@ -96,5 +108,34 @@ describe('bid locale keys', () => {
     const progress = get(mod.default, 'bid.checklist.progress');
     expect(progress, 'checklist.progress').toContain('{{done}}');
     expect(progress, 'checklist.progress').toContain('{{total}}');
+  });
+
+  // The recorded go/no-go baseline is three separate facts — the recommendation
+  // it was recorded against, the decision the user actually made, and when.
+  // Dropping an interpolation collapses them into an unreadable line.
+  it.each(entries)('%s keeps the decision interpolations', (_path, mod) => {
+    expect(get(mod.default, 'bid.decision.recordedAgainst'), 'recordedAgainst').toContain(
+      '{{recommendation}}',
+    );
+    expect(get(mod.default, 'bid.decision.youDecided'), 'youDecided').toContain('{{decision}}');
+    expect(get(mod.default, 'bid.decision.recordedAt'), 'recordedAt').toContain('{{when}}');
+    expect(get(mod.default, 'bid.scheda.repairChat.seedGapQuestion'), 'seedGapQuestion').toContain(
+      '{{requirement}}',
+    );
+  });
+
+  it.each(entries)('%s defines the blocking-gap plural forms', (_path, mod) => {
+    const stem = 'bid.decision.blockingGapsAtDecision';
+    for (const suffix of ['one', 'other'] as const) {
+      const form = get(mod.default, `${stem}_${suffix}`);
+      expect(form, `${stem}_${suffix}`).toBeTruthy();
+      expect(form, `${stem}_${suffix}`).toContain('{{count}}');
+    }
+    for (const suffix of ['two', 'few', 'many', 'zero'] as const) {
+      const form = get(mod.default, `${stem}_${suffix}`);
+      if (form !== undefined) {
+        expect(form, `${stem}_${suffix}`).toContain('{{count}}');
+      }
+    }
   });
 });

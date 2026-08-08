@@ -468,6 +468,61 @@ var (
 	TenderLanguage = pg.Add(Tenders, pg.Text("language").NotNull())
 )
 
+// The eForms detail columns, added to ingested_tenders by the ingestion
+// service's 0010 migration. Every one of them is nullable except description,
+// because ingested_tenders is shared with pl-bzp, fr-boamp and es-placsp, none
+// of which publish eForms XML and none of which will ever populate one.
+//
+// TenderGridUsable is the first nullable BOOLEAN this service reads, and it
+// must stay one: it is three-valued (NULL = not yet read, false = read with no
+// weighted criterion, true = read with one). It scans into a *bool by the same
+// mechanism the long-standing nullable TenderValue (*int64) and
+// TenderPublishedAt (*time.Time) already use — database/sql's convertAssign
+// allocates through the extra pointer level for a non-NULL value and zeroes it
+// for NULL. Do NOT "simplify" it to a bool with a false default: that collapse
+// is exactly what makes "we haven't looked" indistinguishable from "we looked
+// and there is no grid".
+var (
+	TenderDescription       = pg.Add(Tenders, pg.Text("description").NotNull())
+	TenderPublicationNumber = pg.Add(Tenders, pg.Text("publication_number")) // nullable
+	TenderDocumentsURL      = pg.Add(Tenders, pg.Text("documents_url"))      // nullable
+	TenderSubmissionURL     = pg.Add(Tenders, pg.Text("submission_url"))     // nullable
+	TenderGridUsable        = pg.Add(Tenders, pg.Boolean("grid_usable"))     // nullable, THREE-valued
+	TenderXMLFetchedAt      = pg.Add(Tenders, pg.Timestamp("xml_fetched_at", true))
+	// TenderXMLStatus is the ingestion FETCHER's own vocabulary —
+	// 'ok' | 'absent' | 'parse_error' | 'unavailable' — and it stops here. It
+	// is read so that this adapter can decide what "successfully read" means
+	// and hand core a plain answer; the string itself never crosses into a
+	// domain type, because a domain that spoke it would make swapping the
+	// fetcher a change to every layer above.
+	TenderXMLStatus = pg.Add(Tenders, pg.Text("xml_status")) // nullable
+)
+
+// xmlStatusOK is the one value of ingested_tenders.xml_status that means the
+// notice was actually read. The other three ('absent', 'parse_error',
+// 'unavailable') all set xml_fetched_at as well — they are terminal outcomes,
+// not pending ones — so the timestamp alone cannot distinguish "we read it"
+// from "we gave up on it", and using it alone would report an unreadable
+// notice as an enriched one.
+const xmlStatusOK = "ok"
+
+// NOTE: tenders.ingested_tender_award_criteria and
+// tenders.ingested_tender_organizations get no drops handles at all, and
+// ingested_tender_lots' three new eForms columns get none either. This is the
+// same constraint the cpv_secondary note above records, hit from two more
+// directions:
+//
+//   - organizations.roles and lots.cpv_secondary are text[], which drops has no
+//     column DSL type for and no scan path to, so both tables are read through
+//     array_to_string in raw SQL (see tender_detail_repo.go);
+//   - award_criteria.weight is `numeric`, which will not scan into a *float64
+//     without an explicit ::float8 projection — again not expressible through
+//     the typed builder.
+//
+// Declaring handles nothing can use would only look like coverage. The raw SQL
+// in tender_detail_repo.go and document_repo.go is the authoritative statement
+// of what this service reads from those tables.
+
 // Read-only child tables of tenders.ingested_tenders (owned by services/ingestion).
 // TenderDocuments (the table itself) is declared above, alongside TDocID/TDocTenderID/
 // TDocURL/TDocType; these are additional column bindings against that same table.
@@ -475,16 +530,14 @@ var (
 	TenderDocTenderID = pg.Add(TenderDocuments, pg.BigInt("tender_id").NotNull())
 	TenderDocURL      = pg.Add(TenderDocuments, pg.Text("url").NotNull())
 	TenderDocType     = pg.Add(TenderDocuments, pg.Text("type").NotNull())
-
-	TenderLots        = pg.NewSchemaTable("tenders", "ingested_tender_lots")
-	TenderLotTenderID = pg.Add(TenderLots, pg.BigInt("tender_id").NotNull())
-	TenderLotRef      = pg.Add(TenderLots, pg.Text("ref").NotNull())
-	TenderLotTitle    = pg.Add(TenderLots, pg.Text("title").NotNull())
-	TenderLotCPV      = pg.Add(TenderLots, pg.Text("cpv").NotNull())
-	TenderLotValue    = pg.Add(TenderLots, pg.BigInt("value"))
-	TenderLotCurrency = pg.Add(TenderLots, pg.Text("currency").NotNull())
-	TenderLotDeadline = pg.Add(TenderLots, pg.Timestamp("deadline", true))
 )
+
+// tenders.ingested_tender_lots deliberately has NO handles here any more. It
+// used to be read through the typed builder, but the lot row now includes
+// cpv_secondary (text[]), which drops can neither declare nor scan — the same
+// constraint recorded on ingested_tenders.cpv_secondary above — so the whole
+// lot read moved to raw SQL in tender_detail_repo.go. Handles for the scalar
+// columns alone would be dead declarations that read like coverage.
 
 // DBTenderDetail scans the scalar detail columns (NOT cpv_secondary — that text[]
 // column is read separately via array_to_string; see the repo).
@@ -505,20 +558,21 @@ type DBTenderDetail struct {
 	Currency      string     `drop:"currency"`
 	PublishedAt   *time.Time `drop:"published_at"`
 	Deadline      *time.Time `drop:"deadline"`
+	// The eForms detail. The pointer fields are nullable columns, not optional
+	// modelling: see the TenderGridUsable note above for why grid_usable in
+	// particular must never be flattened to a plain bool.
+	Description       string     `drop:"description"`
+	PublicationNumber *string    `drop:"publication_number"`
+	DocumentsURL      *string    `drop:"documents_url"`
+	SubmissionURL     *string    `drop:"submission_url"`
+	GridUsable        *bool      `drop:"grid_usable"`
+	XMLFetchedAt      *time.Time `drop:"xml_fetched_at"`
+	XMLStatus         *string    `drop:"xml_status"`
 }
 
 type DBTenderDocument struct {
 	URL  string `drop:"url"`
 	Type string `drop:"type"`
-}
-
-type DBTenderLot struct {
-	Ref      string     `drop:"ref"`
-	Title    string     `drop:"title"`
-	CPV      string     `drop:"cpv"`
-	Value    *int64     `drop:"value"`
-	Currency string     `drop:"currency"`
-	Deadline *time.Time `drop:"deadline"`
 }
 
 // ── Bid tables (workbench bando hub) ────────────────────────────────────────
@@ -537,9 +591,25 @@ var (
 	BidGoNoGo      = pg.Add(Bids, pg.Text("go_no_go").NotNull().Default("'undecided'"))
 	BidStage       = pg.Add(Bids, pg.Text("stage").NotNull().Default("'shortlisted'"))
 	BidOutcome     = pg.Add(Bids, pg.Text("outcome")) // nullable: NULL = open
-	BidCreatedBy   = pg.Add(Bids, pg.UUID("created_by").NotNull())
-	BidCreatedAt   = pg.Add(Bids, pg.Timestamp("created_at", true).NotNull().Default("now()"))
-	BidUpdatedAt   = pg.Add(Bids, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	// The decision record (0011): the eligibility recommendation the go/no-go
+	// was taken against. Stored on the bid and not derived on read because
+	// company.Assessment is deliberately never persisted — by the time anyone
+	// asks "how often did the user disagree with us", the dossier and the
+	// requirements have both moved and the baseline is gone.
+	//
+	// decision_recommendation is NOT NULL DEFAULT '' rather than nullable: ''
+	// means "no recommendation existed" (the check could not be run), which is a
+	// real, queryable state, and a NULL would additionally have to be
+	// distinguished from a row written before this column existed.
+	BidDecisionRecommendation = pg.Add(Bids, pg.Text("decision_recommendation").NotNull().Default("''"))
+	BidDecisionOverridden     = pg.Add(Bids, pg.Boolean("decision_overridden").NotNull().Default("false"))
+	BidDecisionBlockingGaps   = pg.Add(Bids, pg.BigInt("decision_blocking_gaps").NotNull().Default("0"))
+	BidDecisionRecordedAt     = pg.Add(Bids, pg.Timestamp("decision_recorded_at", true)) // nullable: NULL = still undecided
+
+	BidCreatedBy = pg.Add(Bids, pg.UUID("created_by").NotNull())
+	BidCreatedAt = pg.Add(Bids, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	BidUpdatedAt = pg.Add(Bids, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
 
 	BidChecklistItems = pg.NewTable("bid_checklist_items")
 	BCIID             = pg.Add(BidChecklistItems, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
@@ -554,15 +624,19 @@ var (
 )
 
 type DBBid struct {
-	ID          string    `drop:"id"`
-	WorkbenchID string    `drop:"workbench_id"`
-	TenderID    int64     `drop:"tender_id"`
-	GoNoGo      string    `drop:"go_no_go"`
-	Stage       string    `drop:"stage"`
-	Outcome     *string   `drop:"outcome"` // nullable: nil = open
-	CreatedBy   string    `drop:"created_by"`
-	CreatedAt   time.Time `drop:"created_at"`
-	UpdatedAt   time.Time `drop:"updated_at"`
+	ID                     string     `drop:"id"`
+	WorkbenchID            string     `drop:"workbench_id"`
+	TenderID               int64      `drop:"tender_id"`
+	GoNoGo                 string     `drop:"go_no_go"`
+	Stage                  string     `drop:"stage"`
+	Outcome                *string    `drop:"outcome"` // nullable: nil = open
+	DecisionRecommendation string     `drop:"decision_recommendation"`
+	DecisionOverridden     bool       `drop:"decision_overridden"`
+	DecisionBlockingGaps   int64      `drop:"decision_blocking_gaps"`
+	DecisionRecordedAt     *time.Time `drop:"decision_recorded_at"` // nullable: nil = still undecided
+	CreatedBy              string     `drop:"created_by"`
+	CreatedAt              time.Time  `drop:"created_at"`
+	UpdatedAt              time.Time  `drop:"updated_at"`
 }
 
 type DBChecklistItem struct {
@@ -575,4 +649,292 @@ type DBChecklistItem struct {
 	Required    bool      `drop:"required"`
 	Position    int64     `drop:"position"`
 	UpdatedAt   time.Time `drop:"updated_at"`
+}
+
+// ── Company dossier tables (Phase 2) ────────────────────────────────────────
+//
+// One company per workspace, enforced in the SCHEMA and not only in code:
+// workspace_companies' primary key IS the foreign key to workspaces.id, exactly
+// as workspace_client_profiles does one block up. There is deliberately no
+// company id anywhere — the workspace IS the company, so a second company in a
+// workspace is not merely disallowed, it is unrepresentable.
+//
+// Every child table references workspaces.id DIRECTLY rather than
+// workspace_companies.workspace_id. That is a real consequence of just-in-time
+// capture: the first thing ever written may be a SOA category answered in chat,
+// months before anyone types a VAT number, and a foreign key routed through the
+// identity row would force an empty parent insert on that write path.
+//
+// The seven attribution columns repeat verbatim on all six child tables. They
+// are columns rather than a single JSONB blob because provenance is queried and
+// filtered ("show me everything the agent captured"), and because a NOT NULL
+// provenance column makes an un-attributed fact impossible to insert — a
+// constraint a JSON key cannot express.
+var (
+	WorkspaceCompanies = pg.NewTable("workspace_companies")
+	CoWorkspaceID      = pg.Add(WorkspaceCompanies, pg.UUID("workspace_id").PrimaryKey().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	CoLegalName        = pg.Add(WorkspaceCompanies, pg.Text("legal_name").NotNull().Default("''"))
+	CoVATNumber        = pg.Add(WorkspaceCompanies, pg.Text("vat_number").NotNull().Default("''"))
+	CoFiscalCode       = pg.Add(WorkspaceCompanies, pg.Text("fiscal_code").NotNull().Default("''"))
+	CoLegalForm        = pg.Add(WorkspaceCompanies, pg.Text("legal_form").NotNull().Default("''"))
+	CoCCIAAOffice      = pg.Add(WorkspaceCompanies, pg.Text("cciaa_office").NotNull().Default("''"))
+	CoCCIAANumber      = pg.Add(WorkspaceCompanies, pg.Text("cciaa_number").NotNull().Default("''"))
+	CoCountry          = pg.Add(WorkspaceCompanies, pg.Text("country").NotNull().Default("''"))
+	CoNUTS             = pg.Add(WorkspaceCompanies, pg.Text("nuts").NotNull().Default("''"))
+	CoFoundedYear      = pg.Add(WorkspaceCompanies, pg.Integer("founded_year")) // nullable
+	// CoAttribution is the per-FIELD provenance map, keyed by company.FieldKey.
+	// It is JSONB rather than seven more column groups because the identity is a
+	// fixed set of scalars whose provenance is read as a whole by the dossier UI
+	// and never filtered on individually.
+	CoAttribution = pg.Add(WorkspaceCompanies, pg.JSONB("attribution").NotNull().Default("'{}'::jsonb"))
+	CoUpdatedAt   = pg.Add(WorkspaceCompanies, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	CompanySOACategories = pg.NewTable("company_soa_categories")
+	SOAID                = pg.Add(CompanySOACategories, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	SOAWorkspaceID       = pg.Add(CompanySOACategories, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	SOACategoryCol       = pg.Add(CompanySOACategories, pg.Text("category").NotNull())
+	SOAClassifica        = pg.Add(CompanySOACategories, pg.SmallInt("classifica").NotNull())
+	SOAIssuedBy          = pg.Add(CompanySOACategories, pg.Text("issued_by").NotNull().Default("''"))
+	SOAValidUntil        = pg.Add(CompanySOACategories, pg.Timestamp("valid_until", true)) // nullable
+	// SOAVerifiedUntil is the triennial verification deadline. It lapses THREE
+	// YEARS before valid_until and invalidates the attestation on its own, so a
+	// schema that carried only valid_until would report a lapsed attestation as
+	// valid for two more years.
+	SOAVerifiedUntil      = pg.Add(CompanySOACategories, pg.Timestamp("verified_until", true)) // nullable
+	SOAProvenance         = pg.Add(CompanySOACategories, pg.Text("provenance").NotNull())
+	SOAConfidence         = pg.Add(CompanySOACategories, pg.DoublePrecision("confidence")) // nullable
+	SOAStatedBy           = pg.Add(CompanySOACategories, pg.UUID("stated_by"))             // nullable
+	SOAStatedAt           = pg.Add(CompanySOACategories, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	SOAPromptedBy         = pg.Add(CompanySOACategories, pg.Text("prompted_by").NotNull().Default("''"))
+	SOAPromptedByTenderID = pg.Add(CompanySOACategories, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	SOASourceNote         = pg.Add(CompanySOACategories, pg.Text("source_note").NotNull().Default("''"))
+
+	CompanyCertifications = pg.NewTable("company_certifications")
+	CertID                = pg.Add(CompanyCertifications, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	CertWorkspaceID       = pg.Add(CompanyCertifications, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	CertStandard          = pg.Add(CompanyCertifications, pg.Text("standard").NotNull())
+	CertStandardRaw       = pg.Add(CompanyCertifications, pg.Text("standard_raw").NotNull().Default("''"))
+	CertScope             = pg.Add(CompanyCertifications, pg.Text("scope").NotNull().Default("''"))
+	CertIssuedBy          = pg.Add(CompanyCertifications, pg.Text("issued_by").NotNull().Default("''"))
+	CertValidFrom         = pg.Add(CompanyCertifications, pg.Timestamp("valid_from", true))  // nullable
+	CertValidUntil        = pg.Add(CompanyCertifications, pg.Timestamp("valid_until", true)) // nullable
+	CertProvenance        = pg.Add(CompanyCertifications, pg.Text("provenance").NotNull())
+	CertConfidence        = pg.Add(CompanyCertifications, pg.DoublePrecision("confidence")) // nullable
+	CertStatedBy          = pg.Add(CompanyCertifications, pg.UUID("stated_by"))             // nullable
+	CertStatedAt          = pg.Add(CompanyCertifications, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	CertPromptedBy        = pg.Add(CompanyCertifications, pg.Text("prompted_by").NotNull().Default("''"))
+	CertPromptedByTender  = pg.Add(CompanyCertifications, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	CertSourceNote        = pg.Add(CompanyCertifications, pg.Text("source_note").NotNull().Default("''"))
+
+	CompanyFinancialYears = pg.NewTable("company_financial_years")
+	FYID                  = pg.Add(CompanyFinancialYears, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	FYWorkspaceID         = pg.Add(CompanyFinancialYears, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	FYYear                = pg.Add(CompanyFinancialYears, pg.SmallInt("year").NotNull())
+	FYTurnoverMinor       = pg.Add(CompanyFinancialYears, pg.BigInt("turnover_minor"))          // nullable
+	FYSpecificTurnover    = pg.Add(CompanyFinancialYears, pg.BigInt("specific_turnover_minor")) // nullable
+	FYCurrency            = pg.Add(CompanyFinancialYears, pg.Text("currency").NotNull().Default("'EUR'"))
+	FYHeadcount           = pg.Add(CompanyFinancialYears, pg.Integer("headcount")) // nullable
+	FYProvenance          = pg.Add(CompanyFinancialYears, pg.Text("provenance").NotNull())
+	FYConfidence          = pg.Add(CompanyFinancialYears, pg.DoublePrecision("confidence")) // nullable
+	FYStatedBy            = pg.Add(CompanyFinancialYears, pg.UUID("stated_by"))             // nullable
+	FYStatedAt            = pg.Add(CompanyFinancialYears, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	FYPromptedBy          = pg.Add(CompanyFinancialYears, pg.Text("prompted_by").NotNull().Default("''"))
+	FYPromptedByTender    = pg.Add(CompanyFinancialYears, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	FYSourceNote          = pg.Add(CompanyFinancialYears, pg.Text("source_note").NotNull().Default("''"))
+
+	CompanyPastContracts = pg.NewTable("company_past_contracts")
+	PCID                 = pg.Add(CompanyPastContracts, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	PCWorkspaceID        = pg.Add(CompanyPastContracts, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	PCDescription        = pg.Add(CompanyPastContracts, pg.Text("description").NotNull().Default("''"))
+	PCBuyerName          = pg.Add(CompanyPastContracts, pg.Text("buyer_name").NotNull().Default("''"))
+	PCCPV                = pg.Add(CompanyPastContracts, pg.Text("cpv").NotNull().Default("''"))
+	PCValueMinor         = pg.Add(CompanyPastContracts, pg.BigInt("value_minor")) // nullable
+	PCCurrency           = pg.Add(CompanyPastContracts, pg.Text("currency").NotNull().Default("'EUR'"))
+	PCStartedOn          = pg.Add(CompanyPastContracts, pg.Timestamp("started_on", true)) // nullable
+	PCEndedOn            = pg.Add(CompanyPastContracts, pg.Timestamp("ended_on", true))   // nullable
+	PCRole               = pg.Add(CompanyPastContracts, pg.Text("role").NotNull())
+	// PCSharePct is the company's own share of an RTI/subcontracted contract. It
+	// is nullable and NOT defaulted to 100: a shared role with no stated share
+	// counts for nothing in the engine, which is the direction that stops a
+	// dossier overstating its own track record.
+	PCSharePct         = pg.Add(CompanyPastContracts, pg.DoublePrecision("share_pct")) // nullable
+	PCProvenance       = pg.Add(CompanyPastContracts, pg.Text("provenance").NotNull())
+	PCConfidence       = pg.Add(CompanyPastContracts, pg.DoublePrecision("confidence")) // nullable
+	PCStatedBy         = pg.Add(CompanyPastContracts, pg.UUID("stated_by"))             // nullable
+	PCStatedAt         = pg.Add(CompanyPastContracts, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	PCPromptedBy       = pg.Add(CompanyPastContracts, pg.Text("prompted_by").NotNull().Default("''"))
+	PCPromptedByTender = pg.Add(CompanyPastContracts, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	PCSourceNote       = pg.Add(CompanyPastContracts, pg.Text("source_note").NotNull().Default("''"))
+
+	CompanyRegistrations = pg.NewTable("company_registrations")
+	RegID                = pg.Add(CompanyRegistrations, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	RegWorkspaceID       = pg.Add(CompanyRegistrations, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	RegKind              = pg.Add(CompanyRegistrations, pg.Text("kind").NotNull())
+	RegAuthority         = pg.Add(CompanyRegistrations, pg.Text("authority").NotNull().Default("''"))
+	RegIdentifier        = pg.Add(CompanyRegistrations, pg.Text("identifier").NotNull().Default("''"))
+	RegSection           = pg.Add(CompanyRegistrations, pg.Text("section").NotNull().Default("''"))
+	RegValidFrom         = pg.Add(CompanyRegistrations, pg.Timestamp("valid_from", true))  // nullable
+	RegValidUntil        = pg.Add(CompanyRegistrations, pg.Timestamp("valid_until", true)) // nullable
+	RegProvenance        = pg.Add(CompanyRegistrations, pg.Text("provenance").NotNull())
+	RegConfidence        = pg.Add(CompanyRegistrations, pg.DoublePrecision("confidence")) // nullable
+	RegStatedBy          = pg.Add(CompanyRegistrations, pg.UUID("stated_by"))             // nullable
+	RegStatedAt          = pg.Add(CompanyRegistrations, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	RegPromptedBy        = pg.Add(CompanyRegistrations, pg.Text("prompted_by").NotNull().Default("''"))
+	RegPromptedByTender  = pg.Add(CompanyRegistrations, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	RegSourceNote        = pg.Add(CompanyRegistrations, pg.Text("source_note").NotNull().Default("''"))
+
+	// TenderRequirements holds participation requirements captured BY ONE
+	// WORKSPACE for one tender — deliberately not corpus-shared. One workspace's
+	// mis-extraction must not decide another workspace's go/no-go, and a
+	// cross-tenant write path into shared tender data is a much larger security
+	// surface than a duplicated extraction is a cost.
+	TenderRequirements = pg.NewTable("tender_requirements")
+	TReqID             = pg.Add(TenderRequirements, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	TReqWorkspaceID    = pg.Add(TenderRequirements, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	// TReqTenderID carries NO foreign key: tenders.ingested_tenders is owned and
+	// migrated by services/ingestion, the same rule bids.tender_id follows.
+	TReqTenderID = pg.Add(TenderRequirements, pg.BigInt("tender_id").NotNull())
+	// TReqLotRef is NOT NULL DEFAULT '' rather than nullable, for the reason the
+	// ingestion service's 0010 migration records for
+	// ingested_tender_award_criteria.lot_ref: PostgreSQL NULLs do not conflict in
+	// a unique key, so a nullable column would permit unlimited duplicate
+	// notice-level rows.
+	TReqLotRef      = pg.Add(TenderRequirements, pg.Text("lot_ref").NotNull().Default("''"))
+	TReqKind        = pg.Add(TenderRequirements, pg.Text("kind").NotNull())
+	TReqPayload     = pg.Add(TenderRequirements, pg.JSONB("payload").NotNull().Default("'{}'::jsonb"))
+	TReqText        = pg.Add(TenderRequirements, pg.Text("requirement_text").NotNull())
+	TReqBlocking    = pg.Add(TenderRequirements, pg.Boolean("blocking").NotNull().Default("true"))
+	TReqSource      = pg.Add(TenderRequirements, pg.Text("source").NotNull())
+	TReqExcerpt     = pg.Add(TenderRequirements, pg.Text("excerpt").NotNull().Default("''"))
+	TReqCitation    = pg.Add(TenderRequirements, pg.JSONB("citation")) // nullable
+	TReqDedupeKey   = pg.Add(TenderRequirements, pg.Text("dedupe_key").NotNull())
+	TReqConfirmedBy = pg.Add(TenderRequirements, pg.UUID("confirmed_by"))            // nullable: NULL = unconfirmed
+	TReqConfirmedAt = pg.Add(TenderRequirements, pg.Timestamp("confirmed_at", true)) // nullable
+	TReqCreatedAt   = pg.Add(TenderRequirements, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	TReqUpdatedAt   = pg.Add(TenderRequirements, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+)
+
+type DBCompany struct {
+	WorkspaceID string          `drop:"workspace_id"`
+	LegalName   string          `drop:"legal_name"`
+	VATNumber   string          `drop:"vat_number"`
+	FiscalCode  string          `drop:"fiscal_code"`
+	LegalForm   string          `drop:"legal_form"`
+	CCIAAOffice string          `drop:"cciaa_office"`
+	CCIAANumber string          `drop:"cciaa_number"`
+	Country     string          `drop:"country"`
+	NUTS        string          `drop:"nuts"`
+	FoundedYear *int32          `drop:"founded_year"`
+	Attribution json.RawMessage `drop:"attribution"`
+	UpdatedAt   time.Time       `drop:"updated_at"`
+}
+
+type DBSOACategory struct {
+	ID                 string     `drop:"id"`
+	WorkspaceID        string     `drop:"workspace_id"`
+	Category           string     `drop:"category"`
+	Classifica         int16      `drop:"classifica"`
+	IssuedBy           string     `drop:"issued_by"`
+	ValidUntil         *time.Time `drop:"valid_until"`
+	VerifiedUntil      *time.Time `drop:"verified_until"`
+	Provenance         string     `drop:"provenance"`
+	Confidence         *float64   `drop:"confidence"`
+	StatedBy           *string    `drop:"stated_by"`
+	StatedAt           time.Time  `drop:"stated_at"`
+	PromptedBy         string     `drop:"prompted_by"`
+	PromptedByTenderID *int64     `drop:"prompted_by_tender_id"`
+	SourceNote         string     `drop:"source_note"`
+}
+
+type DBCertification struct {
+	ID                 string     `drop:"id"`
+	WorkspaceID        string     `drop:"workspace_id"`
+	Standard           string     `drop:"standard"`
+	StandardRaw        string     `drop:"standard_raw"`
+	Scope              string     `drop:"scope"`
+	IssuedBy           string     `drop:"issued_by"`
+	ValidFrom          *time.Time `drop:"valid_from"`
+	ValidUntil         *time.Time `drop:"valid_until"`
+	Provenance         string     `drop:"provenance"`
+	Confidence         *float64   `drop:"confidence"`
+	StatedBy           *string    `drop:"stated_by"`
+	StatedAt           time.Time  `drop:"stated_at"`
+	PromptedBy         string     `drop:"prompted_by"`
+	PromptedByTenderID *int64     `drop:"prompted_by_tender_id"`
+	SourceNote         string     `drop:"source_note"`
+}
+
+type DBFinancialYear struct {
+	ID                 string    `drop:"id"`
+	WorkspaceID        string    `drop:"workspace_id"`
+	Year               int16     `drop:"year"`
+	TurnoverMinor      *int64    `drop:"turnover_minor"`
+	SpecificTurnover   *int64    `drop:"specific_turnover_minor"`
+	Currency           string    `drop:"currency"`
+	Headcount          *int32    `drop:"headcount"`
+	Provenance         string    `drop:"provenance"`
+	Confidence         *float64  `drop:"confidence"`
+	StatedBy           *string   `drop:"stated_by"`
+	StatedAt           time.Time `drop:"stated_at"`
+	PromptedBy         string    `drop:"prompted_by"`
+	PromptedByTenderID *int64    `drop:"prompted_by_tender_id"`
+	SourceNote         string    `drop:"source_note"`
+}
+
+type DBPastContract struct {
+	ID                 string     `drop:"id"`
+	WorkspaceID        string     `drop:"workspace_id"`
+	Description        string     `drop:"description"`
+	BuyerName          string     `drop:"buyer_name"`
+	CPV                string     `drop:"cpv"`
+	ValueMinor         *int64     `drop:"value_minor"`
+	Currency           string     `drop:"currency"`
+	StartedOn          *time.Time `drop:"started_on"`
+	EndedOn            *time.Time `drop:"ended_on"`
+	Role               string     `drop:"role"`
+	SharePct           *float64   `drop:"share_pct"`
+	Provenance         string     `drop:"provenance"`
+	Confidence         *float64   `drop:"confidence"`
+	StatedBy           *string    `drop:"stated_by"`
+	StatedAt           time.Time  `drop:"stated_at"`
+	PromptedBy         string     `drop:"prompted_by"`
+	PromptedByTenderID *int64     `drop:"prompted_by_tender_id"`
+	SourceNote         string     `drop:"source_note"`
+}
+
+type DBRegistration struct {
+	ID                 string     `drop:"id"`
+	WorkspaceID        string     `drop:"workspace_id"`
+	Kind               string     `drop:"kind"`
+	Authority          string     `drop:"authority"`
+	Identifier         string     `drop:"identifier"`
+	Section            string     `drop:"section"`
+	ValidFrom          *time.Time `drop:"valid_from"`
+	ValidUntil         *time.Time `drop:"valid_until"`
+	Provenance         string     `drop:"provenance"`
+	Confidence         *float64   `drop:"confidence"`
+	StatedBy           *string    `drop:"stated_by"`
+	StatedAt           time.Time  `drop:"stated_at"`
+	PromptedBy         string     `drop:"prompted_by"`
+	PromptedByTenderID *int64     `drop:"prompted_by_tender_id"`
+	SourceNote         string     `drop:"source_note"`
+}
+
+type DBTenderRequirement struct {
+	ID          string           `drop:"id"`
+	WorkspaceID string           `drop:"workspace_id"`
+	TenderID    int64            `drop:"tender_id"`
+	LotRef      string           `drop:"lot_ref"`
+	Kind        string           `drop:"kind"`
+	Payload     json.RawMessage  `drop:"payload"`
+	Text        string           `drop:"requirement_text"`
+	Blocking    bool             `drop:"blocking"`
+	Source      string           `drop:"source"`
+	Excerpt     string           `drop:"excerpt"`
+	Citation    *json.RawMessage `drop:"citation"`
+	DedupeKey   string           `drop:"dedupe_key"`
+	ConfirmedBy *string          `drop:"confirmed_by"`
+	ConfirmedAt *time.Time       `drop:"confirmed_at"`
+	CreatedAt   time.Time        `drop:"created_at"`
+	UpdatedAt   time.Time        `drop:"updated_at"`
 }

@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  SYNTHETIC FIXTURE — NOT A CAPTURED PAGE.
+
+  The failure the fallback is honest about: a procedure page whose file table
+  arrives by XHR after load. The markup names the documents in a script literal,
+  which is not an anchor and is not enumerable without a browser this design
+  does not have. eSOP/i-Faber, 8 notices in the measured sample, is this shape.
+
+  It must yield ZERO files, and — this is the point of the fixture — the caller
+  must be able to tell that from a page that genuinely publishes none. Only a
+  named platform parser can make the second claim; the fallback finding nothing
+  here means the fallback could not read the page.
+-->
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dettaglio procedura</title>
+  </head>
+  <body>
+    <nav>
+      <a href="/static/manuale.pdf">Manuale</a>
+    </nav>
+
+    <main>
+      <h1>Procedura aperta — servizi informatici</h1>
+      <div id="documenti-gara" data-endpoint="/api/procedure/44120/documenti">
+        <p>Caricamento della documentazione in corso…</p>
+      </div>
+      <script>
+        window.__DOCS__ = [
+          { nome: "Disciplinare_di_gara.pdf", url: "/api/download/1" },
+          { nome: "Capitolato.pdf", url: "/api/download/2" }
+        ];
+      </script>
+    </main>
+
+    <footer>
+      <a href="/static/note-legali.pdf">Note legali</a>
+    </footer>
+  </body>
+</html>

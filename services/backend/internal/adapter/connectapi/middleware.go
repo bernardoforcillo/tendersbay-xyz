@@ -12,6 +12,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -211,6 +212,8 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeResourceExhausted, err)
 	case errors.Is(err, agent.ErrChoiceNotPending):
 		return connect.NewError(connect.CodeFailedPrecondition, err)
+	case errors.Is(err, agent.ErrEmptyMessage):
+		return connect.NewError(connect.CodeInvalidArgument, err)
 
 	// ── tender ──
 	case errors.Is(err, tender.ErrRateLimited):
@@ -219,6 +222,24 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeInvalidArgument, err)
 	case errors.Is(err, tender.ErrRateLimiterUnavailable):
 		return connect.NewError(connect.CodeUnavailable, err)
+
+	// ── company dossier & eligibility ──
+	//
+	// Membership and permission failures are NOT listed here: company.Service
+	// propagates workspace.ErrNotMember / workspace.ErrForbidden unchanged from
+	// its MemberRepository port, and the workspace block above already maps
+	// them. What is listed is every sentinel this domain owns, because
+	// toConnectError's default is CodeInternal — an unmapped sentinel 500s, and
+	// "the classifica you sent does not exist" is a client error the caller must
+	// be able to act on, not an outage.
+	case errors.Is(err, company.ErrDossierNotFound),
+		errors.Is(err, company.ErrRecordNotFound):
+		return connect.NewError(connect.CodeNotFound, err)
+	case errors.Is(err, company.ErrInvalidArgument),
+		errors.Is(err, company.ErrUnknownFieldKey),
+		errors.Is(err, company.ErrInvalidSOACategory),
+		errors.Is(err, company.ErrInvalidClassifica):
+		return connect.NewError(connect.CodeInvalidArgument, err)
 
 	// ── client profile ──
 	case errors.Is(err, clientprofile.ErrInvalidSector),

@@ -10,14 +10,15 @@ import (
 	"github.com/buildwithgo/berrygem/rag"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/index"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/postgres"
 )
 
 type fakeRepo struct {
 	unindexed      []postgres.UnindexedTender
-	parts          map[int64][]string // documentID -> parts
-	savedParts     map[int64][]string
+	parts          map[int64][]tender.DocumentPart // documentID -> parts
+	savedParts     map[int64][]tender.DocumentPart
 	indexedIDs     []int64
 	markIndexedErr error
 }
@@ -29,13 +30,13 @@ func (f *fakeRepo) ListUnindexed(_ context.Context, limit int) ([]postgres.Unind
 	return f.unindexed, nil
 }
 
-func (f *fakeRepo) DocumentParts(_ context.Context, documentID int64) ([]string, error) {
+func (f *fakeRepo) DocumentParts(_ context.Context, documentID int64) ([]tender.DocumentPart, error) {
 	return f.parts[documentID], nil
 }
 
-func (f *fakeRepo) SaveDocumentParts(_ context.Context, documentID int64, parts []string) error {
+func (f *fakeRepo) SaveDocumentParts(_ context.Context, documentID int64, parts []tender.DocumentPart) error {
 	if f.savedParts == nil {
-		f.savedParts = map[int64][]string{}
+		f.savedParts = map[int64][]tender.DocumentPart{}
 	}
 	f.savedParts[documentID] = parts
 	return nil
@@ -65,11 +66,11 @@ func (f *fakeKnowledgeBase) IngestWithAttributes(_ context.Context, doc *rag.Doc
 }
 
 type fakeFetcher struct {
-	partsByURL map[string][]string
+	partsByURL map[string][]tender.DocumentPart
 	err        error
 }
 
-func (f *fakeFetcher) FetchAndExtract(_ context.Context, url string) ([]string, error) {
+func (f *fakeFetcher) FetchAndExtract(_ context.Context, url string) ([]tender.DocumentPart, error) {
 	if f.err != nil {
 		return nil, f.err
 	}
@@ -197,11 +198,14 @@ func TestRunOnce_DownloadsAndPersistsDocumentPartsWhenNotAlreadySaved(t *testing
 		unindexed: []postgres.UnindexedTender{
 			{ID: 1, Title: "T", Documents: []postgres.UnindexedDocument{{ID: 100, URL: "https://example.org/a.pdf"}}},
 		},
-		parts: map[int64][]string{}, // nothing saved yet for document 100
+		parts: map[int64][]tender.DocumentPart{}, // nothing saved yet for document 100
 	}
 	kb := &fakeKnowledgeBase{}
-	fetcher := &fakeFetcher{partsByURL: map[string][]string{
-		"https://example.org/a.pdf": {"extracted part one", "extracted part two"},
+	fetcher := &fakeFetcher{partsByURL: map[string][]tender.DocumentPart{
+		"https://example.org/a.pdf": {
+			{Text: "extracted part one", PageStart: 1, PageEnd: 1, SectionTitle: "Oggetto"},
+			{Text: "extracted part two", PageStart: 2, PageEnd: 3, SectionPath: []string{"Capo 1", "Criteri"}, HasTable: true},
+		},
 	}}
 
 	idx := index.New(repo, kb, fetcher)
@@ -209,8 +213,17 @@ func TestRunOnce_DownloadsAndPersistsDocumentPartsWhenNotAlreadySaved(t *testing
 		t.Fatalf("RunOnce: %v", err)
 	}
 
-	if got := repo.savedParts[100]; len(got) != 2 || got[0] != "extracted part one" {
-		t.Errorf("repo.savedParts[100] = %v, want the fetched parts persisted", got)
+	if got := repo.savedParts[100]; len(got) != 2 || got[0].Text != "extracted part one" {
+		t.Errorf("repo.savedParts[100] = %+v, want the fetched parts persisted", got)
+	}
+	// The provenance has to reach the repo intact: the indexer embeds only
+	// Text, so a lossy hand-off here would go unnoticed until a citation was
+	// asked for and the page was gone.
+	if got := repo.savedParts[100]; len(got) == 2 {
+		if got[1].PageStart != 2 || got[1].PageEnd != 3 || !got[1].HasTable ||
+			len(got[1].SectionPath) != 2 || got[1].SectionTitle != "" {
+			t.Errorf("repo.savedParts[100][1] = %+v, want the extractor's page/section metadata unchanged", got[1])
+		}
 	}
 	doc := kb.ingested[0]
 	if len(doc.Chunks) != 3 { // summary + 2 document parts
@@ -228,14 +241,14 @@ func TestRunOnce_SkipsRedownloadWhenPartsAlreadyExist(t *testing.T) {
 		unindexed: []postgres.UnindexedTender{
 			{ID: 1, Title: "T", Documents: []postgres.UnindexedDocument{{ID: 100, URL: "https://example.org/a.pdf"}}},
 		},
-		parts: map[int64][]string{100: {"already extracted"}},
+		parts: map[int64][]tender.DocumentPart{100: {{Text: "already extracted", PageStart: 4, PageEnd: 4}}},
 	}
 	kb := &fakeKnowledgeBase{}
-	fetcher := &fakeFetcher{partsByURL: map[string][]string{
-		"https://example.org/a.pdf": {"should not be called"},
+	fetcher := &fakeFetcher{partsByURL: map[string][]tender.DocumentPart{
+		"https://example.org/a.pdf": {{Text: "should not be called"}},
 	}}
 
-	idx := index.New(repo, kb, testFetcherFunc(func(ctx context.Context, url string) ([]string, error) {
+	idx := index.New(repo, kb, testFetcherFunc(func(ctx context.Context, url string) ([]tender.DocumentPart, error) {
 		fetchCalled = true
 		return fetcher.FetchAndExtract(ctx, url)
 	}))
@@ -251,9 +264,9 @@ func TestRunOnce_SkipsRedownloadWhenPartsAlreadyExist(t *testing.T) {
 	}
 }
 
-type testFetcherFunc func(ctx context.Context, url string) ([]string, error)
+type testFetcherFunc func(ctx context.Context, url string) ([]tender.DocumentPart, error)
 
-func (f testFetcherFunc) FetchAndExtract(ctx context.Context, url string) ([]string, error) {
+func (f testFetcherFunc) FetchAndExtract(ctx context.Context, url string) ([]tender.DocumentPart, error) {
 	return f(ctx, url)
 }
 
@@ -282,9 +295,9 @@ func TestRunOnce_ChunkIndexContinuesAcrossMultipleDocuments(t *testing.T) {
 				{ID: 200, URL: "https://example.org/b.pdf"},
 			}},
 		},
-		parts: map[int64][]string{
-			100: {"doc one part"},
-			200: {"doc two part a", "doc two part b"},
+		parts: map[int64][]tender.DocumentPart{
+			100: {{Text: "doc one part"}},
+			200: {{Text: "doc two part a"}, {Text: "doc two part b"}},
 		},
 	}
 	kb := &fakeKnowledgeBase{}
@@ -346,9 +359,13 @@ func (d *drainRepo) ListUnindexed(_ context.Context, limit int) ([]postgres.Unin
 	return batch, nil
 }
 
-func (d *drainRepo) DocumentParts(_ context.Context, _ int64) ([]string, error) { return nil, nil }
+func (d *drainRepo) DocumentParts(_ context.Context, _ int64) ([]tender.DocumentPart, error) {
+	return nil, nil
+}
 
-func (d *drainRepo) SaveDocumentParts(_ context.Context, _ int64, _ []string) error { return nil }
+func (d *drainRepo) SaveDocumentParts(_ context.Context, _ int64, _ []tender.DocumentPart) error {
+	return nil
+}
 
 func (d *drainRepo) MarkIndexed(_ context.Context, tenderID int64) error {
 	for i, t := range d.remaining {

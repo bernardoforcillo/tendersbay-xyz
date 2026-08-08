@@ -139,6 +139,189 @@
       "emptyDescription": "Wypróbuj wyszukiwanie ręczne poniżej lub rozszerz profil tego klienta."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Dossier firmy",
+      "description": "To, co wiemy o Twojej firmie. Zestawiamy to z warunkami udziału w każdym postępowaniu.",
+      "save": "Zapisz",
+      "saving": "Zapisywanie…",
+      "error": "Nie udało się zapisać. Spróbuj ponownie.",
+      "identity": {
+        "legalName": "Nazwa firmy",
+        "vatNumber": "NIP",
+        "fiscalCode": "Identyfikator podatkowy",
+        "legalForm": "Forma prawna",
+        "cciaaOffice": "Izba handlowa",
+        "cciaaNumber": "Numer w rejestrze przedsiębiorców",
+        "country": "Kraj",
+        "nuts": "Region (NUTS)",
+        "foundedYear": "Rok założenia"
+      },
+      "soa": {
+        "title": "Atestacje SOA",
+        "category": "Kategoria",
+        "classifica": "Classifica",
+        "issuedBy": "Wystawiona przez",
+        "validUntil": "Ważna do",
+        "verifiedUntil": "Weryfikacja trzyletnia ważna do",
+        "verifiedUntilHint": "Weryfikacja trzyletnia wygasa trzy lata przed samą atestacją. Po tej dacie atestacja przestaje się liczyć.",
+        "add": "Dodaj atestację",
+        "remove": "Usuń",
+        "empty": "Nie zapisano żadnej atestacji SOA."
+      },
+      "certifications": {
+        "title": "Certyfikaty",
+        "standard": "Norma",
+        "standardRaw": "Norma zgodnie z certyfikatem",
+        "scope": "Zakres",
+        "issuedBy": "Wystawiony przez",
+        "validFrom": "Ważny od",
+        "validUntil": "Ważny do",
+        "add": "Dodaj certyfikat",
+        "remove": "Usuń",
+        "empty": "Nie zapisano żadnego certyfikatu."
+      },
+      "financialYears": {
+        "title": "Lata obrotowe",
+        "year": "Rok",
+        "turnover": "Obrót całkowity",
+        "specificTurnover": "Obrót w danym zakresie",
+        "currency": "Waluta",
+        "headcount": "Zatrudnienie",
+        "add": "Dodaj rok",
+        "remove": "Usuń",
+        "empty": "Nie zapisano żadnego roku obrotowego."
+      },
+      "pastContracts": {
+        "title": "Zrealizowane zamówienia",
+        "description": "Co zostało wykonane",
+        "buyer": "Zamawiający",
+        "cpv": "CPV",
+        "value": "Wartość",
+        "started": "Początek",
+        "ended": "Koniec",
+        "role": "Rola",
+        "sharePct": "Twój udział",
+        "sharePctHint": "W konsorcjum do warunku liczy się wyłącznie Twój własny udział.",
+        "add": "Dodaj zamówienie",
+        "remove": "Usuń",
+        "empty": "Nie zapisano żadnego zrealizowanego zamówienia."
+      },
+      "registrations": {
+        "title": "Wpisy i rejestry",
+        "kind": "Rodzaj",
+        "authority": "Organ",
+        "identifier": "Numer",
+        "section": "Sekcja",
+        "validFrom": "Ważny od",
+        "validUntil": "Ważny do",
+        "add": "Dodaj wpis",
+        "remove": "Usuń",
+        "empty": "Nie zapisano żadnego wpisu."
+      }
+    },
+    "provenance": {
+      "user_stated": "Wprowadzone przez Ciebie",
+      "user_confirmed": "Potwierdzone przez Ciebie",
+      "agent_inferred": "Wywnioskowane przez agenta",
+      "imported": "Zaimportowane",
+      "never": "Nieodnotowane"
+    },
+    "eligibility": {
+      "title": "Warunki udziału",
+      "recheck": "Sprawdź ponownie",
+      "evaluatedAt": "Sprawdzono {{when}}",
+      "requirementLabel": "To postępowanie wymaga",
+      "heldLabel": "Twoje dossier zawiera",
+      "changesLabel": "Co by to zmieniło",
+      "caveatsLabel": "Przeczytaj to razem z tym",
+      "lead": {
+        "requires": "To postępowanie wymaga",
+        "holds": "Twoje dossier zawiera",
+        "noRequirements": "Dla tego postępowania nie zapisano żadnego warunku."
+      },
+      "verdict": {
+        "insufficient_data": "Za mało danych, by rozstrzygnąć",
+        "go": "Wygląda na to, że spełniasz warunki",
+        "no_go": "Wygląda na to, że nie spełniasz warunków"
+      },
+      "status": {
+        "met": "Spełniony",
+        "missing": "Brak",
+        "shortfall": "Poniżej wymaganego poziomu",
+        "expiring": "Wygasa",
+        "expired": "Wygasł",
+        "unknown": "Jeszcze nie pytaliśmy"
+      },
+      "remedy": {
+        "provide_fact": "Powiedz nam, czym dysponujesz",
+        "renew": "Odnów to przed terminem",
+        "upgrade": "Podnieś do wymaganego poziomu",
+        "avvalimento": "Oprzyj się na zasobach podmiotu trzeciego (avvalimento)",
+        "rti": "Złóż ofertę w konsorcjum (RTI)",
+        "subcontract": "Pokryj to podwykonawstwem"
+      },
+      "caveat": {
+        "no_requirements_captured": "Dla tego postępowania nie pozyskano żadnego warunku, więc ta ocena nie opiera się na niczym opublikowanym.",
+        "award_grid_only": "Pozyskano wyłącznie kryteria oceny ofert — warunki udziału mogą znajdować się w dokumentach, których nie przeczytaliśmy.",
+        "unconfirmed_extraction": "Część warunków odczytano z dokumentów i nie zostały jeszcze przez Ciebie potwierdzone.",
+        "open_questions": "Część pytań o Twoją firmę wciąż pozostaje bez odpowiedzi.",
+        "documents_unread": "Nie przeczytaliśmy dokumentacji postępowania, więc niektórych warunków może brakować."
+      },
+      "counts": {
+        "requirements_one": "{{count}} warunek",
+        "requirements_few": "{{count}} warunki",
+        "requirements_many": "{{count}} warunków",
+        "requirements_other": "{{count}} warunku",
+        "authoritative_one": "{{count}} potwierdzony",
+        "authoritative_few": "{{count}} potwierdzone",
+        "authoritative_many": "{{count}} potwierdzonych",
+        "authoritative_other": "{{count}} potwierdzonego",
+        "blocking_one": "{{count}} blokujący",
+        "blocking_few": "{{count}} blokujące",
+        "blocking_many": "{{count}} blokujących",
+        "blocking_other": "{{count}} blokującego",
+        "unknown_one": "{{count}} bez odpowiedzi",
+        "unknown_few": "{{count}} bez odpowiedzi",
+        "unknown_many": "{{count}} bez odpowiedzi",
+        "unknown_other": "{{count}} bez odpowiedzi"
+      }
+    },
+    "requirements": {
+      "title": "Warunki",
+      "empty": "Dla tego postępowania nie zapisano żadnego warunku.",
+      "confirm": "Potwierdź",
+      "confirmed": "Potwierdzony",
+      "remove": "Usuń",
+      "unconfirmedHint": "Odczytane z dokumentów — zestaw to z cytowanym fragmentem, zanim na tym polegniesz.",
+      "lotLabel": "Część {{lot}}",
+      "noticeLevel": "Dotyczy całego ogłoszenia",
+      "askWhy": "Dlaczego?",
+      "source": {
+        "user_stated": "Zadeklarowane przez Ciebie",
+        "document_excerpt": "Z dokumentacji postępowania",
+        "award_criteria": "Z kryteriów oceny ofert",
+        "agent_inferred": "Wywnioskowane przez agenta"
+      }
+    },
+    "capture": {
+      "title": "Jedno pytanie",
+      "save": "Zapisz",
+      "saving": "Zapisywanie…",
+      "notSure": "Nie wiem",
+      "error": "Nie udało się zapisać. Spróbuj ponownie.",
+      "cannotCheck": "Tego nie sprawdzimy automatycznie.",
+      "prompt": {
+        "soa": "Jaką kategorię i classifica SOA posiadasz?",
+        "certification": "Jaki certyfikat posiadasz w tym zakresie?",
+        "turnover": "Jaki obrót odnotowałeś?",
+        "past_contracts": "Które z Twoich zamówień to pokrywa?",
+        "headcount": "Ilu miałeś pracowników?",
+        "registration": "Jaki wpis lub rejestr to pokrywa?",
+        "other": "Tego nie sprawdzimy automatycznie — przeczytaj i zdecyduj sam."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Zaloguj się",
@@ -479,6 +662,62 @@
       "deadlineUntil": "termin do {{date}}",
       "undo": "Wyczyść",
       "remove": "Usuń {{chip}}"
+    },
+    "coverage": {
+      "title": "Co przeczytaliśmy",
+      "openBuyerDocuments": "Otwórz dokumenty zamawiającego",
+      "label": {
+        "full": "Dokumentacja przeczytana",
+        "notice_only": "Tylko ogłoszenie",
+        "none": "Nic nie przeczytano"
+      },
+      "reason": {
+        "no_documents_published": "Zamawiający nie opublikował żadnych dokumentów wraz z tym ogłoszeniem.",
+        "notice_not_read": "Nie odczytaliśmy danych strukturalnych tego ogłoszenia, więc nie wiemy, co publikuje.",
+        "body_not_retrieved": "Zamawiający publikuje dokumenty, których jeszcze nie pobraliśmy.",
+        "not_yet_extracted": "W kolejce — jeszcze nieprzeczytane.",
+        "extraction_failed": "Nie udało nam się odczytać treści tych dokumentów."
+      },
+      "counts": {
+        "documents_one": "przeczytano {{count}} dokument",
+        "documents_few": "przeczytano {{count}} dokumenty",
+        "documents_many": "przeczytano {{count}} dokumentów",
+        "documents_other": "przeczytano {{count}} dokumentu",
+        "parts_one": "wyodrębniono {{count}} sekcję",
+        "parts_few": "wyodrębniono {{count}} sekcje",
+        "parts_many": "wyodrębniono {{count}} sekcji",
+        "parts_other": "wyodrębniono {{count}} sekcji",
+        "knownLinks_one": "opublikowano {{count}} dokument",
+        "knownLinks_few": "opublikowano {{count}} dokumenty",
+        "knownLinks_many": "opublikowano {{count}} dokumentów",
+        "knownLinks_other": "opublikowano {{count}} dokumentu"
+      }
+    },
+    "criteria": {
+      "title": "Gdzie zdobywa się punkty",
+      "notEnriched": "Nie odczytaliśmy jeszcze danych strukturalnych tego ogłoszenia.",
+      "gridUnusable": "Ogłoszenie wskazuje sposób oceny ofert, ale nie publikuje wag. Karta oceny znajduje się w dokumentacji postępowania.",
+      "weight": "Waga",
+      "noWeight": "Nie opublikowano wagi",
+      "lot": "Część {{lot}}",
+      "appliesToEveryLot": "Dotyczy wszystkich części",
+      "showAllLots": "Pokaż wszystkie części",
+      "type": {
+        "quality": "Jakość",
+        "cost": "Koszt",
+        "price": "Cena"
+      }
+    },
+    "citation": {
+      "page": "s. {{page}}",
+      "pageRange": "s. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Część {{index}}",
+      "openDocument": "Otwórz dokument",
+      "expandPassage": "Pokaż otaczający fragment",
+      "collapsePassage": "Ukryj fragment",
+      "passageUnavailable": "Nie udało się pobrać otaczającego fragmentu.",
+      "truncated": "Fragment skrócony."
     }
   },
   "today": {
@@ -521,6 +760,7 @@
     "nav": {
       "general": "Ogólne",
       "profile": "Profil klienta",
+      "company": "Dossier firmy",
       "overview": "Przegląd",
       "members": "Członkowie",
       "roles": "Role",
@@ -724,6 +964,28 @@
       "duplicate": "Ten przetarg jest już w tym workbenchu.",
       "unavailable": "Ten przetarg nie jest już dostępny.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie."
+    },
+    "scheda": {
+      "coverageTitle": "Co przeczytaliśmy",
+      "evidenceTitle": "Warunki i dowody",
+      "pointsTitle": "Gdzie zdobywa się punkty",
+      "repairChat": {
+        "title": "Zapytaj o to postępowanie",
+        "open": "Zadaj pytanie",
+        "close": "Zamknij",
+        "askWhy": "Dlaczego?",
+        "seedGapQuestion": "Dlaczego to postępowanie wymaga „{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Zapisano wobec: {{recommendation}}",
+      "youDecided": "Twoja decyzja: {{decision}}",
+      "noRecommendation": "W chwili Twojej decyzji nie było dostępnej weryfikacji warunków.",
+      "recordedAt": "zapisano {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} brak blokujący",
+      "blockingGapsAtDecision_few": "{{count}} braki blokujące",
+      "blockingGapsAtDecision_many": "{{count}} braków blokujących",
+      "blockingGapsAtDecision_other": "{{count}} braku blokującego"
     }
   },
   "workbench": {

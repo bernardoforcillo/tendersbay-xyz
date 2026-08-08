@@ -139,6 +139,181 @@
       "emptyDescription": "Prova una ricerca manuale qui sotto, oppure amplia il profilo di questo cliente."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Fascicolo d’impresa",
+      "description": "Quello che sappiamo della tua impresa. Lo confrontiamo con i requisiti di partecipazione di ogni bando.",
+      "save": "Salva",
+      "saving": "Salvataggio…",
+      "error": "Non siamo riusciti a salvare. Riprova.",
+      "identity": {
+        "legalName": "Ragione sociale",
+        "vatNumber": "Partita IVA",
+        "fiscalCode": "Codice fiscale",
+        "legalForm": "Forma giuridica",
+        "cciaaOffice": "Ufficio CCIAA",
+        "cciaaNumber": "Numero REA",
+        "country": "Paese",
+        "nuts": "Regione (NUTS)",
+        "foundedYear": "Anno di costituzione"
+      },
+      "soa": {
+        "title": "Attestazioni SOA",
+        "category": "Categoria",
+        "classifica": "Classifica",
+        "issuedBy": "Organismo di attestazione",
+        "validUntil": "Valida fino al",
+        "verifiedUntil": "Verifica triennale fino al",
+        "verifiedUntilHint": "La verifica triennale scade tre anni prima dell’attestazione. Superata quella data l’attestazione non è più spendibile.",
+        "add": "Aggiungi attestazione",
+        "remove": "Rimuovi",
+        "empty": "Nessuna attestazione SOA registrata."
+      },
+      "certifications": {
+        "title": "Certificazioni",
+        "standard": "Norma",
+        "standardRaw": "Norma, come certificata",
+        "scope": "Campo di applicazione",
+        "issuedBy": "Ente certificatore",
+        "validFrom": "Valida dal",
+        "validUntil": "Valida fino al",
+        "add": "Aggiungi certificazione",
+        "remove": "Rimuovi",
+        "empty": "Nessuna certificazione registrata."
+      },
+      "financialYears": {
+        "title": "Esercizi finanziari",
+        "year": "Anno",
+        "turnover": "Fatturato globale",
+        "specificTurnover": "Fatturato specifico di settore",
+        "currency": "Valuta",
+        "headcount": "Dipendenti",
+        "add": "Aggiungi esercizio",
+        "remove": "Rimuovi",
+        "empty": "Nessun esercizio finanziario registrato."
+      },
+      "pastContracts": {
+        "title": "Contratti eseguiti",
+        "description": "Che cosa hai eseguito",
+        "buyer": "Stazione appaltante",
+        "cpv": "CPV",
+        "value": "Importo",
+        "started": "Inizio",
+        "ended": "Fine",
+        "role": "Ruolo",
+        "sharePct": "La tua quota",
+        "sharePctHint": "In raggruppamento vale solo la quota effettivamente eseguita da te.",
+        "add": "Aggiungi contratto",
+        "remove": "Rimuovi",
+        "empty": "Nessun contratto eseguito registrato."
+      },
+      "registrations": {
+        "title": "Iscrizioni ed elenchi",
+        "kind": "Tipo",
+        "authority": "Ente",
+        "identifier": "Riferimento",
+        "section": "Sezione",
+        "validFrom": "Valida dal",
+        "validUntil": "Valida fino al",
+        "add": "Aggiungi iscrizione",
+        "remove": "Rimuovi",
+        "empty": "Nessuna iscrizione registrata."
+      }
+    },
+    "provenance": {
+      "user_stated": "L’hai inserito tu",
+      "user_confirmed": "L’hai confermato tu",
+      "agent_inferred": "Dedotto dall’agente",
+      "imported": "Importato",
+      "never": "Non registrato"
+    },
+    "eligibility": {
+      "title": "Requisiti di partecipazione",
+      "recheck": "Verifica di nuovo",
+      "evaluatedAt": "Verificato {{when}}",
+      "requirementLabel": "Questo bando richiede",
+      "heldLabel": "Il tuo fascicolo contiene",
+      "changesLabel": "Che cosa cambierebbe la situazione",
+      "caveatsLabel": "Da leggere insieme a questo",
+      "lead": {
+        "requires": "Questo bando richiede",
+        "holds": "il tuo fascicolo contiene",
+        "noRequirements": "Per questo bando non è stato registrato alcun requisito."
+      },
+      "verdict": {
+        "insufficient_data": "Dati insufficienti per decidere",
+        "go": "Risulti in possesso dei requisiti",
+        "no_go": "Non risulti in possesso dei requisiti"
+      },
+      "status": {
+        "met": "Soddisfatto",
+        "missing": "Mancante",
+        "shortfall": "Sotto il livello richiesto",
+        "expiring": "In scadenza",
+        "expired": "Scaduto",
+        "unknown": "Non ancora chiesto"
+      },
+      "remedy": {
+        "provide_fact": "Dicci che cosa possiedi",
+        "renew": "Rinnovalo prima del termine",
+        "upgrade": "Portalo al livello richiesto",
+        "avvalimento": "Acquisiscilo con l’avvalimento",
+        "rti": "Partecipa in RTI",
+        "subcontract": "Coprilo con il subappalto"
+      },
+      "caveat": {
+        "no_requirements_captured": "Per questo bando non è stato acquisito alcun requisito: questo giudizio non poggia su nulla di pubblicato.",
+        "award_grid_only": "Sono stati acquisiti solo i criteri di aggiudicazione: i requisiti di partecipazione possono trovarsi in documenti che non abbiamo letto.",
+        "unconfirmed_extraction": "Alcuni requisiti sono stati letti dai documenti e non li hai ancora confermati.",
+        "open_questions": "Alcune domande sulla tua impresa sono ancora senza risposta.",
+        "documents_unread": "Non abbiamo letto i documenti di gara: potrebbero mancare dei requisiti."
+      },
+      "counts": {
+        "requirements_one": "{{count}} requisito",
+        "requirements_other": "{{count}} requisiti",
+        "authoritative_one": "{{count}} confermato",
+        "authoritative_other": "{{count}} confermati",
+        "blocking_one": "{{count}} bloccante",
+        "blocking_other": "{{count}} bloccanti",
+        "unknown_one": "{{count}} senza risposta",
+        "unknown_other": "{{count}} senza risposta"
+      }
+    },
+    "requirements": {
+      "title": "Requisiti",
+      "empty": "Per questo bando non è stato registrato alcun requisito.",
+      "confirm": "Conferma",
+      "confirmed": "Confermato",
+      "remove": "Rimuovi",
+      "unconfirmedHint": "Letto dai documenti: confrontalo con il passo citato prima di farci affidamento.",
+      "lotLabel": "Lotto {{lot}}",
+      "noticeLevel": "Vale per l’intero bando",
+      "askWhy": "Perché?",
+      "source": {
+        "user_stated": "L’hai dichiarato tu",
+        "document_excerpt": "Dai documenti di gara",
+        "award_criteria": "Dai criteri di aggiudicazione",
+        "agent_inferred": "Dedotto dall’agente"
+      }
+    },
+    "capture": {
+      "title": "Una domanda",
+      "save": "Salva",
+      "saving": "Salvataggio…",
+      "notSure": "Non lo so",
+      "error": "Non siamo riusciti a salvare. Riprova.",
+      "cannotCheck": "Questo non possiamo verificarlo in automatico.",
+      "prompt": {
+        "soa": "Quale categoria e classifica SOA possiedi?",
+        "certification": "Quale certificazione possiedi per questo requisito?",
+        "turnover": "Quale fatturato hai registrato?",
+        "past_contracts": "Quale tuo contratto copre questo requisito?",
+        "headcount": "Quanti dipendenti avevi?",
+        "registration": "Quale iscrizione o elenco copre questo requisito?",
+        "other": "Questo non possiamo verificarlo in automatico: leggilo e decidi tu."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Accedi",
@@ -471,6 +646,56 @@
       "deadlineUntil": "in scadenza entro il {{date}}",
       "undo": "Cancella",
       "remove": "Rimuovi {{chip}}"
+    },
+    "coverage": {
+      "title": "Che cosa abbiamo letto",
+      "openBuyerDocuments": "Apri i documenti della stazione appaltante",
+      "label": {
+        "full": "Documenti di gara letti",
+        "notice_only": "Solo il bando",
+        "none": "Nulla di letto"
+      },
+      "reason": {
+        "no_documents_published": "La stazione appaltante non ha pubblicato documenti insieme a questo bando.",
+        "notice_not_read": "Non abbiamo letto i dati strutturati di questo bando, quindi non sappiamo che cosa pubblichi.",
+        "body_not_retrieved": "La stazione appaltante pubblica documenti che non abbiamo ancora recuperato.",
+        "not_yet_extracted": "In coda: non ancora letti.",
+        "extraction_failed": "Non siamo riusciti a leggere il testo di questi documenti."
+      },
+      "counts": {
+        "documents_one": "{{count}} documento letto",
+        "documents_other": "{{count}} documenti letti",
+        "parts_one": "{{count}} sezione estratta",
+        "parts_other": "{{count}} sezioni estratte",
+        "knownLinks_one": "{{count}} documento pubblicato",
+        "knownLinks_other": "{{count}} documenti pubblicati"
+      }
+    },
+    "criteria": {
+      "title": "Dove si prendono i punti",
+      "notEnriched": "Non abbiamo ancora letto i dati strutturati di questo bando.",
+      "gridUnusable": "Il bando indica il criterio di aggiudicazione ma non pubblica i pesi. La griglia di punteggio è nel disciplinare di gara.",
+      "weight": "Peso",
+      "noWeight": "Peso non pubblicato",
+      "lot": "Lotto {{lot}}",
+      "appliesToEveryLot": "Vale per tutti i lotti",
+      "showAllLots": "Mostra tutti i lotti",
+      "type": {
+        "quality": "Qualità",
+        "cost": "Costo",
+        "price": "Prezzo"
+      }
+    },
+    "citation": {
+      "page": "p. {{page}}",
+      "pageRange": "pp. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Parte {{index}}",
+      "openDocument": "Apri il documento",
+      "expandPassage": "Mostra il passo completo",
+      "collapsePassage": "Nascondi il passo",
+      "passageUnavailable": "Non siamo riusciti a recuperare il passo completo.",
+      "truncated": "Passo abbreviato."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "Generale",
       "profile": "Profilo cliente",
+      "company": "Fascicolo d’impresa",
       "overview": "Panoramica",
       "members": "Membri",
       "roles": "Ruoli",
@@ -713,6 +939,26 @@
       "duplicate": "Questo bando è già in quel workbench.",
       "unavailable": "Questo bando non è più disponibile.",
       "generic": "Qualcosa è andato storto. Riprova."
+    },
+    "scheda": {
+      "coverageTitle": "Che cosa abbiamo letto",
+      "evidenceTitle": "Requisiti e riscontri",
+      "pointsTitle": "Dove si prendono i punti",
+      "repairChat": {
+        "title": "Chiedi di questo bando",
+        "open": "Fai una domanda",
+        "close": "Chiudi",
+        "askWhy": "Perché?",
+        "seedGapQuestion": "Perché questo bando richiede «{{requirement}}»?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Registrato a fronte di: {{recommendation}}",
+      "youDecided": "hai deciso {{decision}}",
+      "noRecommendation": "Quando hai deciso non era disponibile alcuna verifica dei requisiti.",
+      "recordedAt": "registrato {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} carenza bloccante",
+      "blockingGapsAtDecision_other": "{{count}} carenze bloccanti"
     }
   },
   "workbench": {

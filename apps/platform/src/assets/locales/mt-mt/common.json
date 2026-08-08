@@ -139,6 +139,189 @@
       "emptyDescription": "Ipprova tfittxija manwali hawn taħt, jew wessa' l-profil ta' dan il-klijent."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Dossier tal-kumpanija",
+      "description": "Dak li nafu dwar il-kumpanija tiegħek. Inqabbluh mal-kriterji tal-għażla ta' kull sejħa.",
+      "save": "Issejvja",
+      "saving": "Qed jissejvja…",
+      "error": "Ma stajniex insejvjaw. Erġa' pprova.",
+      "identity": {
+        "legalName": "Isem legali",
+        "vatNumber": "Numru tal-VAT",
+        "fiscalCode": "Numru tat-taxxa",
+        "legalForm": "Forma legali",
+        "cciaaOffice": "Kamra tal-kummerċ",
+        "cciaaNumber": "Numru tar-reġistrazzjoni tal-kumpanija",
+        "country": "Pajjiż",
+        "nuts": "Reġjun (NUTS)",
+        "foundedYear": "Imwaqqfa fis-sena"
+      },
+      "soa": {
+        "title": "Attestazzjonijiet SOA",
+        "category": "Kategorija",
+        "classifica": "Classifica",
+        "issuedBy": "Maħruġa minn",
+        "validUntil": "Valida sa",
+        "verifiedUntil": "Verifika ta' kull tliet snin valida sa",
+        "verifiedUntilHint": "Il-verifika ta' kull tliet snin tiskadi tliet snin qabel l-attestazzjoni nnifisha. Wara dik id-data l-attestazzjoni ma tgħoddx aktar.",
+        "add": "Żid attestazzjoni",
+        "remove": "Neħħi",
+        "empty": "L-ebda attestazzjoni SOA mhi rreġistrata."
+      },
+      "certifications": {
+        "title": "Ċertifikazzjonijiet",
+        "standard": "Standard",
+        "standardRaw": "L-istandard kif iċċertifikat",
+        "scope": "Ambitu",
+        "issuedBy": "Maħruġa minn",
+        "validFrom": "Valida minn",
+        "validUntil": "Valida sa",
+        "add": "Żid ċertifikazzjoni",
+        "remove": "Neħħi",
+        "empty": "L-ebda ċertifikazzjoni mhi rreġistrata."
+      },
+      "financialYears": {
+        "title": "Snin finanzjarji",
+        "year": "Sena",
+        "turnover": "Fatturat totali",
+        "specificTurnover": "Fatturat fil-qasam rilevanti",
+        "currency": "Munita",
+        "headcount": "Numru ta' impjegati",
+        "add": "Żid sena",
+        "remove": "Neħħi",
+        "empty": "L-ebda sena finanzjarja mhi rreġistrata."
+      },
+      "pastContracts": {
+        "title": "Kuntratti mwettqa",
+        "description": "X'twettaq",
+        "buyer": "Awtorità kontraenti",
+        "cpv": "CPV",
+        "value": "Valur",
+        "started": "Bidu",
+        "ended": "Tmiem",
+        "role": "Rwol",
+        "sharePct": "Is-sehem tiegħek",
+        "sharePctHint": "F'konsorzju, għar-rekwiżit jgħodd biss is-sehem tiegħek stess.",
+        "add": "Żid kuntratt",
+        "remove": "Neħħi",
+        "empty": "L-ebda kuntratt imwettaq mhu rreġistrat."
+      },
+      "registrations": {
+        "title": "Reġistrazzjonijiet u listi",
+        "kind": "Tip",
+        "authority": "Awtorità",
+        "identifier": "Referenza",
+        "section": "Taqsima",
+        "validFrom": "Valida minn",
+        "validUntil": "Valida sa",
+        "add": "Żid reġistrazzjoni",
+        "remove": "Neħħi",
+        "empty": "L-ebda reġistrazzjoni mhi rreġistrata."
+      }
+    },
+    "provenance": {
+      "user_stated": "Daħħaltha int",
+      "user_confirmed": "Ikkonfermajtha int",
+      "agent_inferred": "Dedotta mill-aġent",
+      "imported": "Importata",
+      "never": "Mhux irreġistrata"
+    },
+    "eligibility": {
+      "title": "Kriterji tal-għażla",
+      "recheck": "Iċċekkja mill-ġdid",
+      "evaluatedAt": "Iċċekkjat {{when}}",
+      "requirementLabel": "Din is-sejħa titlob",
+      "heldLabel": "Id-dossier tiegħek juri",
+      "changesLabel": "X'jista' jibdel dan",
+      "caveatsLabel": "Aqra dan flimkien",
+      "lead": {
+        "requires": "Din is-sejħa titlob",
+        "holds": "id-dossier tiegħek juri",
+        "noRequirements": "L-ebda rekwiżit ma ġie rreġistrat għal din is-sejħa."
+      },
+      "verdict": {
+        "insufficient_data": "Informazzjoni insuffiċjenti biex tiddeċiedi",
+        "go": "Jidher li tissodisfa r-rekwiżiti",
+        "no_go": "Jidher li ma tissodisfax ir-rekwiżiti"
+      },
+      "status": {
+        "met": "Issodisfat",
+        "missing": "Nieqes",
+        "shortfall": "Taħt il-livell mitlub",
+        "expiring": "Ser jiskadi",
+        "expired": "Skadut",
+        "unknown": "Għadna ma staqsejniex"
+      },
+      "remedy": {
+        "provide_fact": "Għidilna x'għandek",
+        "renew": "Ġeddu qabel l-iskadenza",
+        "upgrade": "Għollih għal-livell mitlub",
+        "avvalimento": "Straħ fuq il-kapaċità ta' terz (avvalimento)",
+        "rti": "Applika bħala konsorzju (RTI)",
+        "subcontract": "Kopri b'sottokuntrattar"
+      },
+      "caveat": {
+        "no_requirements_captured": "L-ebda rekwiżit ma nġabar għal din is-sejħa, għalhekk din il-konklużjoni ma tistrieħ fuq xejn ippubblikat.",
+        "award_grid_only": "Inġabru biss il-kriterji tal-għoti — il-kriterji tal-għażla jistgħu jkunu f'dokumenti li ma qrajniex.",
+        "unconfirmed_extraction": "Xi rekwiżiti nqraw mid-dokumenti u għadek ma kkonfermajthomx.",
+        "open_questions": "Xi mistoqsijiet dwar il-kumpanija tiegħek għadhom bla tweġiba.",
+        "documents_unread": "Ma qrajniex id-dokumenti tas-sejħa, għalhekk jista' jkun hemm rekwiżiti neqsin."
+      },
+      "counts": {
+        "requirements_one": "{{count}} rekwiżit",
+        "requirements_few": "{{count}} rekwiżiti",
+        "requirements_many": "{{count}}-il rekwiżit",
+        "requirements_other": "{{count}} rekwiżit",
+        "authoritative_one": "{{count}} ikkonfermat",
+        "authoritative_few": "{{count}} ikkonfermati",
+        "authoritative_many": "{{count}}-il ikkonfermat",
+        "authoritative_other": "{{count}} ikkonfermat",
+        "blocking_one": "{{count}} li jimblokka",
+        "blocking_few": "{{count}} li jimblokkaw",
+        "blocking_many": "{{count}}-il wieħed li jimblokka",
+        "blocking_other": "{{count}} li jimblokka",
+        "unknown_one": "{{count}} bla tweġiba",
+        "unknown_few": "{{count}} bla tweġiba",
+        "unknown_many": "{{count}}-il wieħed bla tweġiba",
+        "unknown_other": "{{count}} bla tweġiba"
+      }
+    },
+    "requirements": {
+      "title": "Rekwiżiti",
+      "empty": "L-ebda rekwiżit ma ġie rreġistrat għal din is-sejħa.",
+      "confirm": "Ikkonferma",
+      "confirmed": "Ikkonfermat",
+      "remove": "Neħħi",
+      "unconfirmedHint": "Maqru mid-dokumenti — qabblu mas-silta kkwotata qabel toqgħod fuqu.",
+      "lotLabel": "Lott {{lot}}",
+      "noticeLevel": "Japplika għall-avviż kollu",
+      "askWhy": "Għaliex?",
+      "source": {
+        "user_stated": "Iddikjarajtu int",
+        "document_excerpt": "Mid-dokumenti tas-sejħa",
+        "award_criteria": "Mill-kriterji tal-għoti",
+        "agent_inferred": "Dedott mill-aġent"
+      }
+    },
+    "capture": {
+      "title": "Mistoqsija waħda",
+      "save": "Issejvja",
+      "saving": "Qed jissejvja…",
+      "notSure": "Ma nafx",
+      "error": "Ma stajniex insejvjaw. Erġa' pprova.",
+      "cannotCheck": "Dan ma nistgħux niċċekkjawh awtomatikament.",
+      "prompt": {
+        "soa": "Liema kategorija u liema classifica SOA għandek?",
+        "certification": "Liema ċertifikazzjoni għandek għal dan?",
+        "turnover": "Liema fatturat irreġistrajt?",
+        "past_contracts": "Liema kuntratt tiegħek ikopri dan?",
+        "headcount": "Kemm kellek impjegati?",
+        "registration": "Liema reġistrazzjoni jew lista tkopri dan?",
+        "other": "Dan ma nistgħux niċċekkjawh awtomatikament — aqrah u iddeċiedi int."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Idħol",
@@ -475,6 +658,62 @@
       "deadlineUntil": "tagħlaq sa {{date}}",
       "undo": "Naddaf",
       "remove": "Neħħi {{chip}}"
+    },
+    "coverage": {
+      "title": "X'qrajna",
+      "openBuyerDocuments": "Iftaħ id-dokumenti tal-awtorità kontraenti",
+      "label": {
+        "full": "Id-dokumenti tas-sejħa nqraw",
+        "notice_only": "L-avviż biss",
+        "none": "Xejn ma nqara"
+      },
+      "reason": {
+        "no_documents_published": "L-awtorità kontraenti ma ppubblikat l-ebda dokument ma' dan l-avviż.",
+        "notice_not_read": "Ma qrajniex id-data strutturata ta' dan l-avviż, għalhekk ma nafux x'jippubblika.",
+        "body_not_retrieved": "L-awtorità kontraenti tippubblika dokumenti li għadna ma ġibniex.",
+        "not_yet_extracted": "Fil-kju — għadhom ma nqrawx.",
+        "extraction_failed": "Ma stajniex naqraw it-test ta' dawn id-dokumenti."
+      },
+      "counts": {
+        "documents_one": "{{count}} dokument moqri",
+        "documents_few": "{{count}} dokumenti moqrija",
+        "documents_many": "{{count}}-il dokument moqri",
+        "documents_other": "{{count}} dokument moqri",
+        "parts_one": "{{count}} taqsima estratta",
+        "parts_few": "{{count}} taqsimiet estratti",
+        "parts_many": "{{count}}-il taqsima estratta",
+        "parts_other": "{{count}} taqsima estratta",
+        "knownLinks_one": "{{count}} dokument ippubblikat",
+        "knownLinks_few": "{{count}} dokumenti ppubblikati",
+        "knownLinks_many": "{{count}}-il dokument ippubblikat",
+        "knownLinks_other": "{{count}} dokument ippubblikat"
+      }
+    },
+    "criteria": {
+      "title": "Fejn jinkisbu l-punti",
+      "notEnriched": "Għadna ma qrajniex id-data strutturata ta' dan l-avviż.",
+      "gridUnusable": "L-avviż isemmi l-metodu tal-għoti iżda ma jippubblikax il-piżijiet. Il-gradilja tal-punteġġ tinsab fid-dokumenti tas-sejħa.",
+      "weight": "Piż",
+      "noWeight": "L-ebda piż ippubblikat",
+      "lot": "Lott {{lot}}",
+      "appliesToEveryLot": "Japplika għal-lottijiet kollha",
+      "showAllLots": "Uri l-lottijiet kollha",
+      "type": {
+        "quality": "Kwalità",
+        "cost": "Spiża",
+        "price": "Prezz"
+      }
+    },
+    "citation": {
+      "page": "p. {{page}}",
+      "pageRange": "pp. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Parti {{index}}",
+      "openDocument": "Iftaħ id-dokument",
+      "expandPassage": "Uri s-silta sħiħa",
+      "collapsePassage": "Aħbi s-silta",
+      "passageUnavailable": "Ma stajniex nġibu s-silta sħiħa.",
+      "truncated": "Silta mqassra."
     }
   },
   "today": {
@@ -517,6 +756,7 @@
     "nav": {
       "general": "Ġenerali",
       "profile": "Profil tal-klijent",
+      "company": "Dossier tal-kumpanija",
       "overview": "Ħarsa ġenerali",
       "members": "Membri",
       "roles": "Rwoli",
@@ -723,6 +963,28 @@
       "duplicate": "Din is-sejħa diġà tinsab f'dak il-workbench.",
       "unavailable": "Din is-sejħa m'għadhiex disponibbli.",
       "generic": "Xi ħaġa marret ħażin. Jekk jogħġbok erġa' pprova."
+    },
+    "scheda": {
+      "coverageTitle": "X'qrajna",
+      "evidenceTitle": "Rekwiżiti u evidenza",
+      "pointsTitle": "Fejn jinkisbu l-punti",
+      "repairChat": {
+        "title": "Staqsi dwar din is-sejħa",
+        "open": "Agħmel mistoqsija",
+        "close": "Agħlaq",
+        "askWhy": "Għaliex?",
+        "seedGapQuestion": "Għaliex din is-sejħa titlob „{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Irreġistrat kontra: {{recommendation}}",
+      "youDecided": "int iddeċidejt {{decision}}",
+      "noRecommendation": "Meta ddeċidejt ma kienet disponibbli l-ebda verifika tal-kriterji.",
+      "recordedAt": "irreġistrat {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} lakuna li timblokka",
+      "blockingGapsAtDecision_few": "{{count}} lakuni li jimblokkaw",
+      "blockingGapsAtDecision_many": "{{count}}-il lakuna li timblokka",
+      "blockingGapsAtDecision_other": "{{count}} lakuna li timblokka"
     }
   },
   "workbench": {

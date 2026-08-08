@@ -49,8 +49,32 @@ type Bid struct {
 	// Checklist progress for the portfolio card.
 	ChecklistDone  int32 `protobuf:"varint,21,opt,name=checklist_done,json=checklistDone,proto3" json:"checklist_done,omitempty"`
 	ChecklistTotal int32 `protobuf:"varint,22,opt,name=checklist_total,json=checklistTotal,proto3" json:"checklist_total,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// ── The decision record ─────────────────────────────────────────────────
+	//
+	// What the eligibility engine recommended at the moment this bid's go/no-go
+	// was taken, carried on the wire so the client can report whether the human
+	// agreed. Override rate is the number the whole scheda gara is measured by,
+	// and it is not derivable from anything else here: the assessment is computed
+	// fresh on every read, so re-running it later answers a different question
+	// than "what did they decide against".
+	//
+	// "" means NO recommendation existed — the check could not be run at all —
+	// which is a DIFFERENT fact from "insufficient_data" ("it ran, and the
+	// evidence was too thin"). Collapsing the two would make the override rate
+	// un-interpretable, so they stay distinguishable on the wire too.
+	DecisionRecommendation string `protobuf:"bytes,23,opt,name=decision_recommendation,json=decisionRecommendation,proto3" json:"decision_recommendation,omitempty"` // "" | insufficient_data | go | no_go
+	// Whether the decision CONTRADICTS the recommendation. Derived server-side,
+	// never taken from a caller. insufficient_data is deliberately never an
+	// override: there was no opinion to contradict.
+	DecisionOverridden bool `protobuf:"varint,24,opt,name=decision_overridden,json=decisionOverridden,proto3" json:"decision_overridden,omitempty"`
+	// How many blocking gaps stood at decision time — the SIZE of the
+	// disagreement. Overriding a no_go resting on one lapsed certificate is a
+	// different act from overriding one with four blocking gaps.
+	DecisionBlockingGapCount int32 `protobuf:"varint,25,opt,name=decision_blocking_gap_count,json=decisionBlockingGapCount,proto3" json:"decision_blocking_gap_count,omitempty"`
+	// RFC3339; "" on a bid still undecided.
+	DecisionRecordedAt string `protobuf:"bytes,26,opt,name=decision_recorded_at,json=decisionRecordedAt,proto3" json:"decision_recorded_at,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
 }
 
 func (x *Bid) Reset() {
@@ -235,6 +259,34 @@ func (x *Bid) GetChecklistTotal() int32 {
 		return x.ChecklistTotal
 	}
 	return 0
+}
+
+func (x *Bid) GetDecisionRecommendation() string {
+	if x != nil {
+		return x.DecisionRecommendation
+	}
+	return ""
+}
+
+func (x *Bid) GetDecisionOverridden() bool {
+	if x != nil {
+		return x.DecisionOverridden
+	}
+	return false
+}
+
+func (x *Bid) GetDecisionBlockingGapCount() int32 {
+	if x != nil {
+		return x.DecisionBlockingGapCount
+	}
+	return 0
+}
+
+func (x *Bid) GetDecisionRecordedAt() string {
+	if x != nil {
+		return x.DecisionRecordedAt
+	}
+	return ""
 }
 
 type ChecklistItem struct {
@@ -1221,7 +1273,7 @@ var File_bid_v1_bid_proto protoreflect.FileDescriptor
 
 const file_bid_v1_bid_proto_rawDesc = "" +
 	"\n" +
-	"\x10bid/v1/bid.proto\x12\x06bid.v1\x1a\x16tender/v1/tender.proto\"\xf9\x05\n" +
+	"\x10bid/v1/bid.proto\x12\x06bid.v1\x1a\x16tender/v1/tender.proto\"\xd4\a\n" +
 	"\x03Bid\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
 	"\fworkbench_id\x18\x02 \x01(\tR\vworkbenchId\x12\x1b\n" +
@@ -1248,7 +1300,11 @@ const file_bid_v1_bid_proto_rawDesc = "" +
 	"\bfit_tier\x18\x13 \x01(\tR\afitTier\x120\n" +
 	"\x06reason\x18\x14 \x01(\v2\x18.tender.v1.ReasonSignalsR\x06reason\x12%\n" +
 	"\x0echecklist_done\x18\x15 \x01(\x05R\rchecklistDone\x12'\n" +
-	"\x0fchecklist_total\x18\x16 \x01(\x05R\x0echecklistTotal\"\xc3\x01\n" +
+	"\x0fchecklist_total\x18\x16 \x01(\x05R\x0echecklistTotal\x127\n" +
+	"\x17decision_recommendation\x18\x17 \x01(\tR\x16decisionRecommendation\x12/\n" +
+	"\x13decision_overridden\x18\x18 \x01(\bR\x12decisionOverridden\x12=\n" +
+	"\x1bdecision_blocking_gap_count\x18\x19 \x01(\x05R\x18decisionBlockingGapCount\x120\n" +
+	"\x14decision_recorded_at\x18\x1a \x01(\tR\x12decisionRecordedAt\"\xc3\x01\n" +
 	"\rChecklistItem\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
 	"\fsection_code\x18\x02 \x01(\tR\vsectionCode\x12\x1b\n" +

@@ -4,7 +4,15 @@ import type { CreditsData } from '~/features/account/components/molecules/credit
 import { agentClient } from '~/lib/api/client';
 import { useChatStore } from '~/store/chat';
 
-export function useChatStream(location: 'explore' | 'workbench' = 'explore') {
+export type ChatSurface = 'explore' | 'workbench' | 'bid_detail';
+
+/**
+ * `location` is the analytics surface every chat event is tagged with. 'bid_detail'
+ * joined the union in Phase 4: the scheda gara mounts the same ChatWindow as a
+ * collapsed repair panel, and folding its events into 'workbench' would make the
+ * "chat demoted on the decision surface" hypothesis unmeasurable.
+ */
+export function useChatStream(location: ChatSurface = 'explore') {
   const abortRef = useRef<AbortController | null>(null);
   const posthog = usePostHog();
 

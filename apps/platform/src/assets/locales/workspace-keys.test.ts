@@ -40,6 +40,11 @@ describe('workspace locale keys', () => {
     expect(ws?.accept?.body, 'accept.body').toBeTruthy();
     expect(ws?.nav?.general, 'nav.general').toBeTruthy();
     expect(ws?.nav?.profile, 'nav.profile').toBeTruthy();
+    // The dossier tab is the ONLY route to the up-front-capture arm of the
+    // PRD's central hypothesis: without it, `prompted_by: 'settings'` has no
+    // producer and just-in-time capture has nothing to be compared against. A
+    // tab whose label is missing in one locale is a tab that locale cannot use.
+    expect(ws?.nav?.company, 'nav.company').toBeTruthy();
     expect(ws?.firstRun?.skip, 'firstRun.skip').toBeTruthy();
   });
 });

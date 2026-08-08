@@ -17,6 +17,7 @@ import (
 	agentv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
 	bidv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1/bidv1connect"
+	companyv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/company/v1/companyv1connect"
 	tenderv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
@@ -32,7 +33,9 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
@@ -214,12 +217,34 @@ func main() {
 		// cpv_terms table has not been seeded yet simply resolves no codes, and
 		// the arm contributes nothing — see cpvCandidates.
 		WithCPVLexicon(postgres.NewCPVLexicon(db))
-	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo)
+
+	// Document reading. Constructed here, above the two services that consume
+	// it (company for eligibility coverage, agent for read_tender_documents),
+	// rather than beside the agent alone. Its retrieval is always scoped to one
+	// tender's already-extracted parts, so it needs no index this service would
+	// have to create and no dependency beyond the same pool everything else uses.
+	documentSvc := document.NewService(postgres.NewDocumentRepo(db))
+
+	// The tender transport is built AFTER documentSvc because GetTenderPassages
+	// serves the scheda gara's coverage strip and passage reads from it. The two
+	// belong on one service for the client: a passage without the coverage that
+	// qualifies it is exactly the pairing core/document refuses to break.
+	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo, documentSvc)
+
+	// Company dossier + eligibility. tenderSvc supplies the submission deadline
+	// (without it an expiring attestation reads as met) and documentSvc supplies
+	// the coverage the assessment carries, so ignorance is reported as ignorance
+	// rather than as a clean bill of health.
+	companySvc := company.NewService(
+		postgres.NewCompanyRepo(db), postgres.NewRequirementRepo(db),
+		memberRepo, tenderSvc, documentSvc,
+	)
 
 	// Bid lifecycle (workbench-bando-hub) — consumes workbenchSvc for access
-	// checks and tenderSvc for fresh fit + tender summaries.
+	// checks, tenderSvc for fresh fit + tender summaries, and companySvc for the
+	// eligibility recommendation each go/no-go is recorded against.
 	bidRepo := postgres.NewBidRepo(db)
-	bidSvc := bid.NewService(bidRepo, workbenchSvc, tenderSvc)
+	bidSvc := bid.NewService(bidRepo, workbenchSvc, tenderSvc, companySvc)
 
 	// Agent / chat service
 	chatRepo := postgres.NewChatRepo(db)
@@ -230,8 +255,19 @@ func main() {
 	agentRegistry := agent.NewRegistry(cfg.FireworksAPIKey)
 	agentRegistry.RegisterDefaults()
 
+	// The pod name every assistant turn is stamped with. Read once, here,
+	// because which process served a turn is a deployment fact and core/agent
+	// must not reach for process identity itself. In Kubernetes this is the
+	// pod name with no manifest edit; an error means the process could not
+	// name itself, which is not a reason to refuse to start — the turns simply
+	// record an empty pod, and the one query that groups by it says so.
+	pod, err := os.Hostname()
+	if err != nil {
+		slog.Warn("could not determine the pod name; agent turns will record an empty pod", "error", err)
+	}
+
 	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
-	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, clientProfileSvc)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, documentSvc, companySvc, clientProfileSvc, pod)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
@@ -239,6 +275,7 @@ func main() {
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
 	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, memberRepo)
 	bidHandler := connectapi.NewBidHandler(bidSvc)
+	companyHandler := connectapi.NewCompanyHandler(companySvc)
 
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
@@ -247,6 +284,7 @@ func main() {
 	agentPath, agentRPC := agentv1connect.NewAgentServiceHandler(agentHandler)
 	tenderPath, tenderRPC := tenderv1connect.NewTenderServiceHandler(tenderHandler)
 	bidPath, bidRPC := bidv1connect.NewBidServiceHandler(bidHandler)
+	companyPath, companyRPC := companyv1connect.NewCompanyServiceHandler(companyHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
@@ -258,6 +296,7 @@ func main() {
 	mux.Handle(agentPath, agentRPC)
 	mux.Handle(tenderPath, tenderRPC)
 	mux.Handle(bidPath, bidRPC)
+	mux.Handle(companyPath, companyRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
 	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(connectapi.ClientIPMiddleware(mux)))

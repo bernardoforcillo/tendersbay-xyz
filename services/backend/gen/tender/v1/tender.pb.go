@@ -35,18 +35,16 @@ type SearchTendersRequest struct {
 	// actionable first), "published" (newest first), "value" (largest first).
 	// "relevance" is meaningless without a query and falls back to "published".
 	Sort string `protobuf:"bytes,6,opt,name=sort,proto3" json:"sort,omitempty"`
-	// ISO 639-1 language of the query text ("it", "de"), taken from the caller's
-	// UI locale. Used to pick the stemming configuration for the keyword
-	// retriever. Empty is valid and means "match unstemmed only", which is
-	// today's behaviour for every caller.
+	// ISO 639-1 language of the query text ("it", "de"). Intended to be taken
+	// from the caller's UI locale (i18n.language's leading subtag) and used to
+	// pick the stemming configuration for the keyword retriever, so the server
+	// would ignore any value it has no configuration for rather than failing —
+	// an unknown language is a client bug, and losing the whole search over it
+	// would be a worse answer than an unstemmed match. Empty is valid and means
+	// "match unstemmed only", which is every caller's behaviour today.
 	//
-	// Populated by the frontend from i18n.language's leading subtag; the server
-	// ignores any value it has no configuration for rather than failing, since an
-	// unknown language is a client bug and losing the whole search over it would
-	// be a worse answer than an unstemmed match.
-	//
-	// Forward declaration: Phase 2 threads this into SearchParams. Nothing reads
-	// it yet.
+	// Forward declaration: no caller populates this field yet, and nothing on
+	// the server reads it. Phase 2 threads this into SearchParams.
 	Language string `protobuf:"bytes,7,opt,name=language,proto3" json:"language,omitempty"`
 	// CPV codes the client does not want inferred from this query.
 	//
@@ -1644,6 +1642,127 @@ func (x *TenderLot) GetDeadline() string {
 	return ""
 }
 
+// AwardCriterion is one criterion of a notice's award grid, as published.
+//
+// weight is meaningful ONLY when weight_set. A zero weight and an absent weight
+// are different published facts: notices routinely publish a lone entry naming
+// the award method ("offerta economicamente più vantaggiosa") with nothing
+// attached to it. Coalescing absent to 0 makes "criteria published" read as
+// "grid recoverable", which overstates real coverage by roughly 2x on Italian
+// notices — see core/tender.AwardCriterion.Weight.
+type AwardCriterion struct {
+	state       protoimpl.MessageState `protogen:"open.v1"`
+	LotRef      string                 `protobuf:"bytes,1,opt,name=lot_ref,json=lotRef,proto3" json:"lot_ref,omitempty"` // "" = notice-level, applies to every lot
+	Ordinal     int32                  `protobuf:"varint,2,opt,name=ordinal,proto3" json:"ordinal,omitempty"`            // position as published, within its lot_ref
+	Type        string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                   // "quality" | "cost" | "price", as declared
+	Name        string                 `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Description string                 `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Weight      float64                `protobuf:"fixed64,6,opt,name=weight,proto3" json:"weight,omitempty"`
+	WeightSet   bool                   `protobuf:"varint,7,opt,name=weight_set,json=weightSet,proto3" json:"weight_set,omitempty"`
+	// weight_raw is the weight exactly as published ("30", "30%", "30,5"), so a
+	// numeric parse failure loses comparability rather than the datum.
+	WeightRaw string `protobuf:"bytes,8,opt,name=weight_raw,json=weightRaw,proto3" json:"weight_raw,omitempty"`
+	// ISO 639-2/T ("ITA", "ENG"). Multilingual notices repeat every text field
+	// once per language, so without it a reader cannot tell a deliberate language
+	// choice from a parser accident.
+	Lang          string `protobuf:"bytes,9,opt,name=lang,proto3" json:"lang,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AwardCriterion) Reset() {
+	*x = AwardCriterion{}
+	mi := &file_tender_v1_tender_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AwardCriterion) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AwardCriterion) ProtoMessage() {}
+
+func (x *AwardCriterion) ProtoReflect() protoreflect.Message {
+	mi := &file_tender_v1_tender_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AwardCriterion.ProtoReflect.Descriptor instead.
+func (*AwardCriterion) Descriptor() ([]byte, []int) {
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *AwardCriterion) GetLotRef() string {
+	if x != nil {
+		return x.LotRef
+	}
+	return ""
+}
+
+func (x *AwardCriterion) GetOrdinal() int32 {
+	if x != nil {
+		return x.Ordinal
+	}
+	return 0
+}
+
+func (x *AwardCriterion) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *AwardCriterion) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *AwardCriterion) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *AwardCriterion) GetWeight() float64 {
+	if x != nil {
+		return x.Weight
+	}
+	return 0
+}
+
+func (x *AwardCriterion) GetWeightSet() bool {
+	if x != nil {
+		return x.WeightSet
+	}
+	return false
+}
+
+func (x *AwardCriterion) GetWeightRaw() string {
+	if x != nil {
+		return x.WeightRaw
+	}
+	return ""
+}
+
+func (x *AwardCriterion) GetLang() string {
+	if x != nil {
+		return x.Lang
+	}
+	return ""
+}
+
 type TenderDetail struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -1666,13 +1785,34 @@ type TenderDetail struct {
 	SourceUrl     string                 `protobuf:"bytes,18,opt,name=source_url,json=sourceUrl,proto3" json:"source_url,omitempty"` // best-effort; may be empty
 	Documents     []*TenderDocument      `protobuf:"bytes,19,rep,name=documents,proto3" json:"documents,omitempty"`
 	Lots          []*TenderLot           `protobuf:"bytes,20,rep,name=lots,proto3" json:"lots,omitempty"`
+	// ── The eForms detail ───────────────────────────────────────────────────
+	//
+	// criteria holds the notice-level and every lot's criteria in ONE flat list
+	// sorted by (lot_ref, ordinal); a criterion may name a lot that was never
+	// ingested, so nesting them inside TenderLot would silently drop those.
+	Criteria []*AwardCriterion `protobuf:"bytes,21,rep,name=criteria,proto3" json:"criteria,omitempty"`
+	// grid_usable is meaningful only when grid_usable_set. Unset is a THIRD state
+	// — the notice's structured data was never read — and it is what lets a
+	// reader tell "this notice publishes no usable grid" from "we have not looked
+	// at this notice". A plain bool would record ignorance as a finding.
+	GridUsable    bool `protobuf:"varint,22,opt,name=grid_usable,json=gridUsable,proto3" json:"grid_usable,omitempty"`
+	GridUsableSet bool `protobuf:"varint,23,opt,name=grid_usable_set,json=gridUsableSet,proto3" json:"grid_usable_set,omitempty"`
+	// enriched_at is when the structured notice was successfully read; "" means
+	// never, or read unsuccessfully. It carries the same distinction
+	// grid_usable_set does and additionally dates the answer.
+	EnrichedAt string `protobuf:"bytes,24,opt,name=enriched_at,json=enrichedAt,proto3" json:"enriched_at,omitempty"` // RFC3339
+	// documents_url is the buyer's own document page. It is the single actionable
+	// affordance behind a body_not_retrieved coverage — we hold the link and not
+	// what is behind it — so a coverage strip that could not offer it would be
+	// telling the reader about a gap it gives them no way to close.
+	DocumentsUrl  string `protobuf:"bytes,25,opt,name=documents_url,json=documentsUrl,proto3" json:"documents_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TenderDetail) Reset() {
 	*x = TenderDetail{}
-	mi := &file_tender_v1_tender_proto_msgTypes[22]
+	mi := &file_tender_v1_tender_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1684,7 +1824,7 @@ func (x *TenderDetail) String() string {
 func (*TenderDetail) ProtoMessage() {}
 
 func (x *TenderDetail) ProtoReflect() protoreflect.Message {
-	mi := &file_tender_v1_tender_proto_msgTypes[22]
+	mi := &file_tender_v1_tender_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1697,7 +1837,7 @@ func (x *TenderDetail) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TenderDetail.ProtoReflect.Descriptor instead.
 func (*TenderDetail) Descriptor() ([]byte, []int) {
-	return file_tender_v1_tender_proto_rawDescGZIP(), []int{22}
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *TenderDetail) GetId() string {
@@ -1840,6 +1980,447 @@ func (x *TenderDetail) GetLots() []*TenderLot {
 	return nil
 }
 
+func (x *TenderDetail) GetCriteria() []*AwardCriterion {
+	if x != nil {
+		return x.Criteria
+	}
+	return nil
+}
+
+func (x *TenderDetail) GetGridUsable() bool {
+	if x != nil {
+		return x.GridUsable
+	}
+	return false
+}
+
+func (x *TenderDetail) GetGridUsableSet() bool {
+	if x != nil {
+		return x.GridUsableSet
+	}
+	return false
+}
+
+func (x *TenderDetail) GetEnrichedAt() string {
+	if x != nil {
+		return x.EnrichedAt
+	}
+	return ""
+}
+
+func (x *TenderDetail) GetDocumentsUrl() string {
+	if x != nil {
+		return x.DocumentsUrl
+	}
+	return ""
+}
+
+// DocumentAvailability is what we hold of one tender's documents: the quantity
+// and the CAUSE, which are orthogonal axes.
+//
+// notice_only because the buyer published nothing else and notice_only because
+// we have not fetched what they did publish are the same quantity and opposite
+// facts. The evidence counts travel with the answer so a consumer can audit it
+// rather than trusting it — see core/document.Availability.Consistent, which is
+// what makes "no_documents_published" defensible only while
+// known_document_links is zero.
+type DocumentAvailability struct {
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Coverage string                 `protobuf:"bytes,1,opt,name=coverage,proto3" json:"coverage,omitempty"` // full | notice_only | none
+	Reason   string                 `protobuf:"bytes,2,opt,name=reason,proto3" json:"reason,omitempty"`     // "" | no_documents_published | notice_not_read |
+	// body_not_retrieved | not_yet_extracted | extraction_failed
+	NoticeRead         bool  `protobuf:"varint,3,opt,name=notice_read,json=noticeRead,proto3" json:"notice_read,omitempty"`                           // true only when the notice was read SUCCESSFULLY
+	KnownDocumentLinks int32 `protobuf:"varint,4,opt,name=known_document_links,json=knownDocumentLinks,proto3" json:"known_document_links,omitempty"` // buyer links we hold but have not retrieved
+	ExtractedDocuments int32 `protobuf:"varint,5,opt,name=extracted_documents,json=extractedDocuments,proto3" json:"extracted_documents,omitempty"`
+	ExtractedParts     int32 `protobuf:"varint,6,opt,name=extracted_parts,json=extractedParts,proto3" json:"extracted_parts,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *DocumentAvailability) Reset() {
+	*x = DocumentAvailability{}
+	mi := &file_tender_v1_tender_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DocumentAvailability) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DocumentAvailability) ProtoMessage() {}
+
+func (x *DocumentAvailability) ProtoReflect() protoreflect.Message {
+	mi := &file_tender_v1_tender_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DocumentAvailability.ProtoReflect.Descriptor instead.
+func (*DocumentAvailability) Descriptor() ([]byte, []int) {
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *DocumentAvailability) GetCoverage() string {
+	if x != nil {
+		return x.Coverage
+	}
+	return ""
+}
+
+func (x *DocumentAvailability) GetReason() string {
+	if x != nil {
+		return x.Reason
+	}
+	return ""
+}
+
+func (x *DocumentAvailability) GetNoticeRead() bool {
+	if x != nil {
+		return x.NoticeRead
+	}
+	return false
+}
+
+func (x *DocumentAvailability) GetKnownDocumentLinks() int32 {
+	if x != nil {
+		return x.KnownDocumentLinks
+	}
+	return 0
+}
+
+func (x *DocumentAvailability) GetExtractedDocuments() int32 {
+	if x != nil {
+		return x.ExtractedDocuments
+	}
+	return 0
+}
+
+func (x *DocumentAvailability) GetExtractedParts() int32 {
+	if x != nil {
+		return x.ExtractedParts
+	}
+	return 0
+}
+
+// DocumentCitation is where a quoted passage came from.
+//
+// Every field below document_url is optional, and that is a fact about the
+// corpus rather than a modelling preference: page and section metadata are
+// populated GOING FORWARD ONLY, so documents extracted before those columns
+// existed carry none. A renderer must degrade all the way to the URL alone.
+//
+// page_start_set/page_end_set exist because page 0 and "we never learned the
+// page" are both 0 on the wire, and rendering "p. 0" under a verbatim legal
+// quote would undermine the one affordance this feature rests on. part_index is
+// the exception that never degrades — it is the part's own key.
+type DocumentCitation struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DocumentUrl   string                 `protobuf:"bytes,1,opt,name=document_url,json=documentUrl,proto3" json:"document_url,omitempty"`
+	DocumentType  string                 `protobuf:"bytes,2,opt,name=document_type,json=documentType,proto3" json:"document_type,omitempty"` // "notice" | "spec" | "corrigendum" | ... — published label
+	PartIndex     int32                  `protobuf:"varint,3,opt,name=part_index,json=partIndex,proto3" json:"part_index,omitempty"`
+	PageStart     int32                  `protobuf:"varint,4,opt,name=page_start,json=pageStart,proto3" json:"page_start,omitempty"`
+	PageStartSet  bool                   `protobuf:"varint,5,opt,name=page_start_set,json=pageStartSet,proto3" json:"page_start_set,omitempty"`
+	PageEnd       int32                  `protobuf:"varint,6,opt,name=page_end,json=pageEnd,proto3" json:"page_end,omitempty"`
+	PageEndSet    bool                   `protobuf:"varint,7,opt,name=page_end_set,json=pageEndSet,proto3" json:"page_end_set,omitempty"`
+	SectionPath   []string               `protobuf:"bytes,8,rep,name=section_path,json=sectionPath,proto3" json:"section_path,omitempty"` // e.g. ["7", "7.2"]; empty when unknown
+	SectionTitle  string                 `protobuf:"bytes,9,opt,name=section_title,json=sectionTitle,proto3" json:"section_title,omitempty"`
+	HasTable      bool                   `protobuf:"varint,10,opt,name=has_table,json=hasTable,proto3" json:"has_table,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DocumentCitation) Reset() {
+	*x = DocumentCitation{}
+	mi := &file_tender_v1_tender_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DocumentCitation) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DocumentCitation) ProtoMessage() {}
+
+func (x *DocumentCitation) ProtoReflect() protoreflect.Message {
+	mi := &file_tender_v1_tender_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DocumentCitation.ProtoReflect.Descriptor instead.
+func (*DocumentCitation) Descriptor() ([]byte, []int) {
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *DocumentCitation) GetDocumentUrl() string {
+	if x != nil {
+		return x.DocumentUrl
+	}
+	return ""
+}
+
+func (x *DocumentCitation) GetDocumentType() string {
+	if x != nil {
+		return x.DocumentType
+	}
+	return ""
+}
+
+func (x *DocumentCitation) GetPartIndex() int32 {
+	if x != nil {
+		return x.PartIndex
+	}
+	return 0
+}
+
+func (x *DocumentCitation) GetPageStart() int32 {
+	if x != nil {
+		return x.PageStart
+	}
+	return 0
+}
+
+func (x *DocumentCitation) GetPageStartSet() bool {
+	if x != nil {
+		return x.PageStartSet
+	}
+	return false
+}
+
+func (x *DocumentCitation) GetPageEnd() int32 {
+	if x != nil {
+		return x.PageEnd
+	}
+	return 0
+}
+
+func (x *DocumentCitation) GetPageEndSet() bool {
+	if x != nil {
+		return x.PageEndSet
+	}
+	return false
+}
+
+func (x *DocumentCitation) GetSectionPath() []string {
+	if x != nil {
+		return x.SectionPath
+	}
+	return nil
+}
+
+func (x *DocumentCitation) GetSectionTitle() string {
+	if x != nil {
+		return x.SectionTitle
+	}
+	return ""
+}
+
+func (x *DocumentCitation) GetHasTable() bool {
+	if x != nil {
+		return x.HasTable
+	}
+	return false
+}
+
+// Passage is one retrieved span of a tender document. text is already clamped
+// server-side; truncated reports that it was, so a consumer can say "the passage
+// continues" instead of presenting a sentence that stops mid-clause.
+type Passage struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Text           string                 `protobuf:"bytes,1,opt,name=text,proto3" json:"text,omitempty"`
+	Truncated      bool                   `protobuf:"varint,2,opt,name=truncated,proto3" json:"truncated,omitempty"`
+	RelevanceScore float64                `protobuf:"fixed64,3,opt,name=relevance_score,json=relevanceScore,proto3" json:"relevance_score,omitempty"`
+	Citation       *DocumentCitation      `protobuf:"bytes,4,opt,name=citation,proto3" json:"citation,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *Passage) Reset() {
+	*x = Passage{}
+	mi := &file_tender_v1_tender_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Passage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Passage) ProtoMessage() {}
+
+func (x *Passage) ProtoReflect() protoreflect.Message {
+	mi := &file_tender_v1_tender_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Passage.ProtoReflect.Descriptor instead.
+func (*Passage) Descriptor() ([]byte, []int) {
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *Passage) GetText() string {
+	if x != nil {
+		return x.Text
+	}
+	return ""
+}
+
+func (x *Passage) GetTruncated() bool {
+	if x != nil {
+		return x.Truncated
+	}
+	return false
+}
+
+func (x *Passage) GetRelevanceScore() float64 {
+	if x != nil {
+		return x.RelevanceScore
+	}
+	return 0
+}
+
+func (x *Passage) GetCitation() *DocumentCitation {
+	if x != nil {
+		return x.Citation
+	}
+	return nil
+}
+
+type GetTenderPassagesRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Empty is valid and means "availability only" — the server skips retrieval.
+	Question string `protobuf:"bytes,2,opt,name=question,proto3" json:"question,omitempty"`
+	// A hint the server may only NARROW. The real bound lives in core/document.
+	Limit         int32 `protobuf:"varint,3,opt,name=limit,proto3" json:"limit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTenderPassagesRequest) Reset() {
+	*x = GetTenderPassagesRequest{}
+	mi := &file_tender_v1_tender_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTenderPassagesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTenderPassagesRequest) ProtoMessage() {}
+
+func (x *GetTenderPassagesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_tender_v1_tender_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTenderPassagesRequest.ProtoReflect.Descriptor instead.
+func (*GetTenderPassagesRequest) Descriptor() ([]byte, []int) {
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *GetTenderPassagesRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *GetTenderPassagesRequest) GetQuestion() string {
+	if x != nil {
+		return x.Question
+	}
+	return ""
+}
+
+func (x *GetTenderPassagesRequest) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+type GetTenderPassagesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Availability  *DocumentAvailability  `protobuf:"bytes,1,opt,name=availability,proto3" json:"availability,omitempty"`
+	Passages      []*Passage             `protobuf:"bytes,2,rep,name=passages,proto3" json:"passages,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetTenderPassagesResponse) Reset() {
+	*x = GetTenderPassagesResponse{}
+	mi := &file_tender_v1_tender_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetTenderPassagesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetTenderPassagesResponse) ProtoMessage() {}
+
+func (x *GetTenderPassagesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_tender_v1_tender_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetTenderPassagesResponse.ProtoReflect.Descriptor instead.
+func (*GetTenderPassagesResponse) Descriptor() ([]byte, []int) {
+	return file_tender_v1_tender_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *GetTenderPassagesResponse) GetAvailability() *DocumentAvailability {
+	if x != nil {
+		return x.Availability
+	}
+	return nil
+}
+
+func (x *GetTenderPassagesResponse) GetPassages() []*Passage {
+	if x != nil {
+		return x.Passages
+	}
+	return nil
+}
+
 var File_tender_v1_tender_proto protoreflect.FileDescriptor
 
 const file_tender_v1_tender_proto_rawDesc = "" +
@@ -1971,7 +2552,19 @@ const file_tender_v1_tender_proto_rawDesc = "" +
 	"\x03cpv\x18\x03 \x01(\tR\x03cpv\x12\x14\n" +
 	"\x05value\x18\x04 \x01(\x03R\x05value\x12\x1a\n" +
 	"\bcurrency\x18\x05 \x01(\tR\bcurrency\x12\x1a\n" +
-	"\bdeadline\x18\x06 \x01(\tR\bdeadline\"\xd8\x04\n" +
+	"\bdeadline\x18\x06 \x01(\tR\bdeadline\"\xf7\x01\n" +
+	"\x0eAwardCriterion\x12\x17\n" +
+	"\alot_ref\x18\x01 \x01(\tR\x06lotRef\x12\x18\n" +
+	"\aordinal\x18\x02 \x01(\x05R\aordinal\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x12\x12\n" +
+	"\x04name\x18\x04 \x01(\tR\x04name\x12 \n" +
+	"\vdescription\x18\x05 \x01(\tR\vdescription\x12\x16\n" +
+	"\x06weight\x18\x06 \x01(\x01R\x06weight\x12\x1d\n" +
+	"\n" +
+	"weight_set\x18\a \x01(\bR\tweightSet\x12\x1d\n" +
+	"\n" +
+	"weight_raw\x18\b \x01(\tR\tweightRaw\x12\x12\n" +
+	"\x04lang\x18\t \x01(\tR\x04lang\"\x9e\x06\n" +
 	"\fTenderDetail\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12\x1d\n" +
@@ -1996,14 +2589,57 @@ const file_tender_v1_tender_proto_rawDesc = "" +
 	"\n" +
 	"source_url\x18\x12 \x01(\tR\tsourceUrl\x127\n" +
 	"\tdocuments\x18\x13 \x03(\v2\x19.tender.v1.TenderDocumentR\tdocuments\x12(\n" +
-	"\x04lots\x18\x14 \x03(\v2\x14.tender.v1.TenderLotR\x04lots2\xb1\x04\n" +
+	"\x04lots\x18\x14 \x03(\v2\x14.tender.v1.TenderLotR\x04lots\x125\n" +
+	"\bcriteria\x18\x15 \x03(\v2\x19.tender.v1.AwardCriterionR\bcriteria\x12\x1f\n" +
+	"\vgrid_usable\x18\x16 \x01(\bR\n" +
+	"gridUsable\x12&\n" +
+	"\x0fgrid_usable_set\x18\x17 \x01(\bR\rgridUsableSet\x12\x1f\n" +
+	"\venriched_at\x18\x18 \x01(\tR\n" +
+	"enrichedAt\x12#\n" +
+	"\rdocuments_url\x18\x19 \x01(\tR\fdocumentsUrl\"\xf7\x01\n" +
+	"\x14DocumentAvailability\x12\x1a\n" +
+	"\bcoverage\x18\x01 \x01(\tR\bcoverage\x12\x16\n" +
+	"\x06reason\x18\x02 \x01(\tR\x06reason\x12\x1f\n" +
+	"\vnotice_read\x18\x03 \x01(\bR\n" +
+	"noticeRead\x120\n" +
+	"\x14known_document_links\x18\x04 \x01(\x05R\x12knownDocumentLinks\x12/\n" +
+	"\x13extracted_documents\x18\x05 \x01(\x05R\x12extractedDocuments\x12'\n" +
+	"\x0fextracted_parts\x18\x06 \x01(\x05R\x0eextractedParts\"\xe0\x02\n" +
+	"\x10DocumentCitation\x12!\n" +
+	"\fdocument_url\x18\x01 \x01(\tR\vdocumentUrl\x12#\n" +
+	"\rdocument_type\x18\x02 \x01(\tR\fdocumentType\x12\x1d\n" +
+	"\n" +
+	"part_index\x18\x03 \x01(\x05R\tpartIndex\x12\x1d\n" +
+	"\n" +
+	"page_start\x18\x04 \x01(\x05R\tpageStart\x12$\n" +
+	"\x0epage_start_set\x18\x05 \x01(\bR\fpageStartSet\x12\x19\n" +
+	"\bpage_end\x18\x06 \x01(\x05R\apageEnd\x12 \n" +
+	"\fpage_end_set\x18\a \x01(\bR\n" +
+	"pageEndSet\x12!\n" +
+	"\fsection_path\x18\b \x03(\tR\vsectionPath\x12#\n" +
+	"\rsection_title\x18\t \x01(\tR\fsectionTitle\x12\x1b\n" +
+	"\thas_table\x18\n" +
+	" \x01(\bR\bhasTable\"\x9d\x01\n" +
+	"\aPassage\x12\x12\n" +
+	"\x04text\x18\x01 \x01(\tR\x04text\x12\x1c\n" +
+	"\ttruncated\x18\x02 \x01(\bR\ttruncated\x12'\n" +
+	"\x0frelevance_score\x18\x03 \x01(\x01R\x0erelevanceScore\x127\n" +
+	"\bcitation\x18\x04 \x01(\v2\x1b.tender.v1.DocumentCitationR\bcitation\"\\\n" +
+	"\x18GetTenderPassagesRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
+	"\bquestion\x18\x02 \x01(\tR\bquestion\x12\x14\n" +
+	"\x05limit\x18\x03 \x01(\x05R\x05limit\"\x90\x01\n" +
+	"\x19GetTenderPassagesResponse\x12C\n" +
+	"\favailability\x18\x01 \x01(\v2\x1f.tender.v1.DocumentAvailabilityR\favailability\x12.\n" +
+	"\bpassages\x18\x02 \x03(\v2\x12.tender.v1.PassageR\bpassages2\x91\x05\n" +
 	"\rTenderService\x12R\n" +
 	"\rSearchTenders\x12\x1f.tender.v1.SearchTendersRequest\x1a .tender.v1.SearchTendersResponse\x12F\n" +
 	"\tGetTender\x12\x1b.tender.v1.GetTenderRequest\x1a\x1c.tender.v1.GetTenderResponse\x12^\n" +
 	"\x11GetRelatedTenders\x12#.tender.v1.GetRelatedTendersRequest\x1a$.tender.v1.GetRelatedTendersResponse\x12^\n" +
 	"\x11ListTenderSitemap\x12#.tender.v1.ListTenderSitemapRequest\x1a$.tender.v1.ListTenderSitemapResponse\x12v\n" +
 	"\x19RecommendTendersForClient\x12+.tender.v1.RecommendTendersForClientRequest\x1a,.tender.v1.RecommendTendersForClientResponse\x12L\n" +
-	"\vGetCoverage\x12\x1d.tender.v1.GetCoverageRequest\x1a\x1e.tender.v1.GetCoverageResponseBTZRgithub.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1;tenderv1b\x06proto3"
+	"\vGetCoverage\x12\x1d.tender.v1.GetCoverageRequest\x1a\x1e.tender.v1.GetCoverageResponse\x12^\n" +
+	"\x11GetTenderPassages\x12#.tender.v1.GetTenderPassagesRequest\x1a$.tender.v1.GetTenderPassagesResponseBTZRgithub.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1;tenderv1b\x06proto3"
 
 var (
 	file_tender_v1_tender_proto_rawDescOnce sync.Once
@@ -2017,7 +2653,7 @@ func file_tender_v1_tender_proto_rawDescGZIP() []byte {
 	return file_tender_v1_tender_proto_rawDescData
 }
 
-var file_tender_v1_tender_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_tender_v1_tender_proto_msgTypes = make([]protoimpl.MessageInfo, 29)
 var file_tender_v1_tender_proto_goTypes = []any{
 	(*SearchTendersRequest)(nil),              // 0: tender.v1.SearchTendersRequest
 	(*TenderFilters)(nil),                     // 1: tender.v1.TenderFilters
@@ -2041,7 +2677,13 @@ var file_tender_v1_tender_proto_goTypes = []any{
 	(*TenderRef)(nil),                         // 19: tender.v1.TenderRef
 	(*TenderDocument)(nil),                    // 20: tender.v1.TenderDocument
 	(*TenderLot)(nil),                         // 21: tender.v1.TenderLot
-	(*TenderDetail)(nil),                      // 22: tender.v1.TenderDetail
+	(*AwardCriterion)(nil),                    // 22: tender.v1.AwardCriterion
+	(*TenderDetail)(nil),                      // 23: tender.v1.TenderDetail
+	(*DocumentAvailability)(nil),              // 24: tender.v1.DocumentAvailability
+	(*DocumentCitation)(nil),                  // 25: tender.v1.DocumentCitation
+	(*Passage)(nil),                           // 26: tender.v1.Passage
+	(*GetTenderPassagesRequest)(nil),          // 27: tender.v1.GetTenderPassagesRequest
+	(*GetTenderPassagesResponse)(nil),         // 28: tender.v1.GetTenderPassagesResponse
 }
 var file_tender_v1_tender_proto_depIdxs = []int32{
 	1,  // 0: tender.v1.SearchTendersRequest.filters:type_name -> tender.v1.TenderFilters
@@ -2056,28 +2698,34 @@ var file_tender_v1_tender_proto_depIdxs = []int32{
 	6,  // 9: tender.v1.RecommendedTenderResult.tender:type_name -> tender.v1.TenderResult
 	8,  // 10: tender.v1.RecommendedTenderResult.reason:type_name -> tender.v1.ReasonSignals
 	9,  // 11: tender.v1.RecommendTendersForClientResponse.results:type_name -> tender.v1.RecommendedTenderResult
-	22, // 12: tender.v1.GetTenderResponse.tender:type_name -> tender.v1.TenderDetail
+	23, // 12: tender.v1.GetTenderResponse.tender:type_name -> tender.v1.TenderDetail
 	6,  // 13: tender.v1.GetRelatedTendersResponse.results:type_name -> tender.v1.TenderResult
 	19, // 14: tender.v1.ListTenderSitemapResponse.refs:type_name -> tender.v1.TenderRef
 	20, // 15: tender.v1.TenderDetail.documents:type_name -> tender.v1.TenderDocument
 	21, // 16: tender.v1.TenderDetail.lots:type_name -> tender.v1.TenderLot
-	0,  // 17: tender.v1.TenderService.SearchTenders:input_type -> tender.v1.SearchTendersRequest
-	13, // 18: tender.v1.TenderService.GetTender:input_type -> tender.v1.GetTenderRequest
-	15, // 19: tender.v1.TenderService.GetRelatedTenders:input_type -> tender.v1.GetRelatedTendersRequest
-	17, // 20: tender.v1.TenderService.ListTenderSitemap:input_type -> tender.v1.ListTenderSitemapRequest
-	7,  // 21: tender.v1.TenderService.RecommendTendersForClient:input_type -> tender.v1.RecommendTendersForClientRequest
-	11, // 22: tender.v1.TenderService.GetCoverage:input_type -> tender.v1.GetCoverageRequest
-	2,  // 23: tender.v1.TenderService.SearchTenders:output_type -> tender.v1.SearchTendersResponse
-	14, // 24: tender.v1.TenderService.GetTender:output_type -> tender.v1.GetTenderResponse
-	16, // 25: tender.v1.TenderService.GetRelatedTenders:output_type -> tender.v1.GetRelatedTendersResponse
-	18, // 26: tender.v1.TenderService.ListTenderSitemap:output_type -> tender.v1.ListTenderSitemapResponse
-	10, // 27: tender.v1.TenderService.RecommendTendersForClient:output_type -> tender.v1.RecommendTendersForClientResponse
-	12, // 28: tender.v1.TenderService.GetCoverage:output_type -> tender.v1.GetCoverageResponse
-	23, // [23:29] is the sub-list for method output_type
-	17, // [17:23] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	22, // 17: tender.v1.TenderDetail.criteria:type_name -> tender.v1.AwardCriterion
+	25, // 18: tender.v1.Passage.citation:type_name -> tender.v1.DocumentCitation
+	24, // 19: tender.v1.GetTenderPassagesResponse.availability:type_name -> tender.v1.DocumentAvailability
+	26, // 20: tender.v1.GetTenderPassagesResponse.passages:type_name -> tender.v1.Passage
+	0,  // 21: tender.v1.TenderService.SearchTenders:input_type -> tender.v1.SearchTendersRequest
+	13, // 22: tender.v1.TenderService.GetTender:input_type -> tender.v1.GetTenderRequest
+	15, // 23: tender.v1.TenderService.GetRelatedTenders:input_type -> tender.v1.GetRelatedTendersRequest
+	17, // 24: tender.v1.TenderService.ListTenderSitemap:input_type -> tender.v1.ListTenderSitemapRequest
+	7,  // 25: tender.v1.TenderService.RecommendTendersForClient:input_type -> tender.v1.RecommendTendersForClientRequest
+	11, // 26: tender.v1.TenderService.GetCoverage:input_type -> tender.v1.GetCoverageRequest
+	27, // 27: tender.v1.TenderService.GetTenderPassages:input_type -> tender.v1.GetTenderPassagesRequest
+	2,  // 28: tender.v1.TenderService.SearchTenders:output_type -> tender.v1.SearchTendersResponse
+	14, // 29: tender.v1.TenderService.GetTender:output_type -> tender.v1.GetTenderResponse
+	16, // 30: tender.v1.TenderService.GetRelatedTenders:output_type -> tender.v1.GetRelatedTendersResponse
+	18, // 31: tender.v1.TenderService.ListTenderSitemap:output_type -> tender.v1.ListTenderSitemapResponse
+	10, // 32: tender.v1.TenderService.RecommendTendersForClient:output_type -> tender.v1.RecommendTendersForClientResponse
+	12, // 33: tender.v1.TenderService.GetCoverage:output_type -> tender.v1.GetCoverageResponse
+	28, // 34: tender.v1.TenderService.GetTenderPassages:output_type -> tender.v1.GetTenderPassagesResponse
+	28, // [28:35] is the sub-list for method output_type
+	21, // [21:28] is the sub-list for method input_type
+	21, // [21:21] is the sub-list for extension type_name
+	21, // [21:21] is the sub-list for extension extendee
+	0,  // [0:21] is the sub-list for field type_name
 }
 
 func init() { file_tender_v1_tender_proto_init() }
@@ -2092,7 +2740,7 @@ func file_tender_v1_tender_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_tender_v1_tender_proto_rawDesc), len(file_tender_v1_tender_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   23,
+			NumMessages:   29,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

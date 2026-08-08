@@ -1,0 +1,121 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: retriever
+  namespace: tendersbay-xyz
+spec:
+  # A fourth CronJob, for the reason `indexer` is a second one and `enricher` a
+  # third, and the argument is strongest here. This pass reads buyers' OWN
+  # procurement portals — hundreds of different third-party hosts, many of them
+  # a single VM run by a comune — so every request is paced at two seconds per
+  # host and serialised one at a time against that host. One tender is a robots
+  # fetch, a listing fetch and up to fifteen file downloads: minutes, where the
+  # enricher's unit of work is one TED document in well under a second.
+  #
+  # Folded into the enricher, that would make every one of its constants wrong
+  # at once and starve the very pass this one depends on (grid_usable comes from
+  # enrichment). Folded into the indexer, it would point the indexer's fetcher —
+  # which has no robots handling, no per-host pacing and no dial guard — at
+  # buyer portals. See ../readme.md.
+  #
+  # Runs twice an hour at :10 and :40, the only slots that collide with nothing:
+  # `ingestion` is hourly at :00, `indexer` is */15, `enricher` is 5,20,35,50.
+  # Four jobs never start into the same instant and contend for the same
+  # database connections. The offset is a judgement call, not a house rule.
+  schedule: "10,40 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 300
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      # 1500s = 25m, leaving five minutes of headroom before the next fire.
+      # Longer than the enricher's 840s because a tender here is minutes rather
+      # than seconds: a fourteen-minute window would finish a handful of tenders
+      # per fire, which is a scheduling accident rather than a design.
+      #
+      # A deadline reached mid-drain is not data loss, and it is not even
+      # partial data loss: every retrieved file commits on its own, and a tender
+      # whose docs_fetched_at is still NULL is simply re-listed by the next run.
+      # The counts are written only when a tender finishes, so a run cut short
+      # never reports a coverage number it did not finish measuring.
+      activeDeadlineSeconds: 1500
+      ttlSecondsAfterFinished: 3600
+      template:
+        metadata:
+          labels:
+            app: tendersbay-xyz
+            tier: ingestion-retriever
+        spec:
+          restartPolicy: OnFailure
+          securityContext:
+            # gcr.io/distroless/static-debian12:nonroot is UID/GID 65532.
+            runAsUser: 65532
+            runAsGroup: 65532
+            runAsNonRoot: true
+            fsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: retriever
+              # Same image as ingestion, different binary — see the service
+              # Dockerfile. The tag is rewritten by the shared Flux image
+              # automation, which scans this whole folder (see update.yaml).
+              image: bernardoforcillo/tendersbay-ingestion:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
+              command: ['/retriever']
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+              # Raised above the indexer's and enricher's 512Mi/500m, and this
+              # is the one place this feature scales vertically rather than
+              # horizontally: PDF extraction is genuinely CPU- and memory-bound
+              # in a way replicas cannot parallelise, which is the stated
+              # exception in .claude/rules/system-design.md. Throughput is NOT
+              # raised — it is deliberately capped by politeness, not by pod
+              # size.
+              #
+              # Arithmetic: four tenders in flight, one response in memory each,
+              # bounded at 20 MiB per response, so roughly 80 MiB of bodies at
+              # peak; the real consumer is four concurrent tabula extractions on
+              # documents that can run to 150 pages. An estimate, not a
+              # measurement — instrument on the first production run.
+              resources:
+                limits:
+                  memory: '1Gi'
+                  cpu: '1000m'
+                requests:
+                  memory: '512Mi'
+                  cpu: '250m'
+              envFrom:
+                - secretRef:
+                    name: ingestion-secrets
+              env:
+                - name: SERVICE_NAME
+                  value: 'tendersbay-retriever'
+                # PostHog project key is a public client key (phc_…); plaintext is fine.
+                - name: POSTHOG_API_KEY
+                  value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
+                - name: POSTHOG_HOST
+                  value: 'https://eu.i.posthog.com'
+                # No QDRANT_URL / OLLAMA_BASE_URL / EMBEDDING_MODEL here: this
+                # job extracts text and persists it, then resets indexed_at on
+                # the tenders whose corpus actually changed. The embedding work
+                # it creates is done by the `indexer` CronJob, which owns those
+                # settings.
+              imagePullPolicy: Always
+              # Mandatory rather than optional, given readOnlyRootFilesystem:
+              # every extraction writes the retrieved bytes to a temp file
+              # because tabula opens a path, and removes it before returning.
+              # That temp file is the ONLY place a retrieved document ever
+              # touches disk — there is no object storage in this design and no
+              # blob column anywhere.
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: tmp
+              emptyDir: {}

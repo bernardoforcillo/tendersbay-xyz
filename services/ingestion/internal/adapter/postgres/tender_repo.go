@@ -2,13 +2,16 @@ package postgres
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
 	"github.com/bernardoforcillo/drops/pg"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/tender"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/core/enrich"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/core/ingestion"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/core/retrieve"
 )
 
 // TenderRepo implements ingestion.Sink against the `tenders` schema.
@@ -58,10 +61,12 @@ const upsertTenderSQL = `
 INSERT INTO tenders.ingested_tenders (
 	source, source_ref, title, description, buyer_name, buyer_id, status, procedure_type,
 	language, country, nuts, cpv, cpv_secondary, value, currency,
-	published_at, deadline, raw, version, history, first_seen_at, last_seen_at,
+	published_at, deadline, raw, publication_number, xml_url,
+	version, history, first_seen_at, last_seen_at,
 	cpv_labels
 ) VALUES (
 	$1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13::text[], $14, $15, $16, $17, $18::jsonb,
+	$19, $20,
 	1, '[]'::jsonb, now(), now(),
 	-- Derived from the vocabulary rather than passed in: it consumes no
 	-- placeholder, so nothing after it renumbers, and it cannot drift out of step
@@ -92,6 +97,68 @@ ON CONFLICT (source, source_ref) DO UPDATE SET
 	published_at = EXCLUDED.published_at,
 	deadline = EXCLUDED.deadline,
 	raw = EXCLUDED.raw,
+	-- The notice-document enrichment queue is xml_fetched_at IS NULL, and this
+	-- CASE is the only thing that ever clears it again. TED republishes a
+	-- corrected notice under a NEW publication number rather than editing the
+	-- old one, so an unchanged number is proof the document we already read
+	-- cannot have changed — which is what makes "an unchanged notice is never
+	-- re-fetched" true, without an expiry heuristic and without a conditional
+	-- request per notice.
+	--
+	-- It still re-fetches exactly when it should. source_ref is deliberately the
+	-- procedure identifier, so a contract notice and its later award notice land
+	-- on THIS SAME ROW (see eforms.Map) — and those two carry different
+	-- publication numbers, so the CN→CAN transition clears xml_fetched_at and
+	-- the award notice's detail is read over the call's. Steady-state re-ingest
+	-- of an unchanged notice moves neither column.
+	--
+	-- xml_attempts resets on the same condition: a row parked after exhausting
+	-- its attempt budget against a struggling upstream must get a fresh budget
+	-- when a NEW document appears, rather than inheriting a count earned by a
+	-- document that no longer exists. xml_status is deliberately left alone —
+	-- it describes the last look that was actually taken, and it is overwritten
+	-- by the next one; clearing it here would erase why the previous notice
+	-- failed while its replacement is still unread.
+	--
+	-- Every right-hand side in a SET list reads the PRE-UPDATE row, so assigning
+	-- publication_number below does not disturb the two comparisons above it,
+	-- despite how the order reads.
+	--
+	-- Sources that publish no notice document write '' into both columns. Their
+	-- first upsert after these columns existed compares NULL against '', finds
+	-- them distinct, and clears an xml_fetched_at that was never set — harmless,
+	-- and those rows never reach the queue regardless, which filters on
+	-- source = 'ted'.
+	xml_fetched_at = CASE WHEN tenders.ingested_tenders.publication_number
+	                        IS DISTINCT FROM EXCLUDED.publication_number
+	                      THEN NULL
+	                      ELSE tenders.ingested_tenders.xml_fetched_at END,
+	xml_attempts = CASE WHEN tenders.ingested_tenders.publication_number
+	                      IS DISTINCT FROM EXCLUDED.publication_number
+	                    THEN 0
+	                    ELSE tenders.ingested_tenders.xml_attempts END,
+	-- The portal-document queue is cleared on exactly the same condition, and
+	-- for exactly the same reason one step further out: a corrected notice is
+	-- published under a new number and may point at a NEW documents_url, so the
+	-- portal we read last time is no longer the portal this notice names. The
+	-- enricher rewrites documents_url from the new document; this clears the
+	-- bookkeeping that said we had already looked at the old one.
+	--
+	-- docs_status, docs_platform and the two counts are deliberately left alone,
+	-- for the reason xml_status is: they describe the last look actually taken,
+	-- and erasing them while the replacement is still unread destroys the only
+	-- record of why the previous one failed. They are overwritten by the next
+	-- look, which is the only thing entitled to change them.
+	docs_fetched_at = CASE WHEN tenders.ingested_tenders.publication_number
+	                         IS DISTINCT FROM EXCLUDED.publication_number
+	                       THEN NULL
+	                       ELSE tenders.ingested_tenders.docs_fetched_at END,
+	docs_attempts = CASE WHEN tenders.ingested_tenders.publication_number
+	                       IS DISTINCT FROM EXCLUDED.publication_number
+	                     THEN 0
+	                     ELSE tenders.ingested_tenders.docs_attempts END,
+	publication_number = EXCLUDED.publication_number,
+	xml_url = EXCLUDED.xml_url,
 	version = CASE WHEN tenders.ingested_tenders.status IS DISTINCT FROM EXCLUDED.status
 	               THEN tenders.ingested_tenders.version + 1
 	               ELSE tenders.ingested_tenders.version END,
@@ -123,15 +190,40 @@ VALUES ($1, $2, $3)
 ON CONFLICT (tender_id, url) DO UPDATE SET type = EXCLUDED.type
 `
 
+// The search-payload lot upsert. Its conflict branch never overwrites a value
+// it does not itself have, and that single rule is what makes per-lot detail
+// storable at all.
+//
+// Two writers share this table: this one, from the hourly search pass, and the
+// enricher's upsertLotEnrichmentSQL, from the notice document. Only the second
+// one ever learns a lot's value, CPV, currency or deadline — buildLots leaves
+// all four at their zero value on purpose, because the search payload's
+// classification-cpv array does not align 1:1 with its identifier-lot array and
+// an index match would assign the wrong CPV to the wrong lot. An unconditional
+// `value = EXCLUDED.value` therefore did not mean "refresh the value", it meant
+// "erase whatever the notice said, within the hour, every hour", leaving the
+// column flapping between the XML's figure and NULL depending on which writer
+// ran last. Per-lot value is the headline finding of reading the notice
+// document (13 lots, 13 distinct values on one verified €402M notice); it was
+// unstorable until this coalesce.
+//
+// This changes no other source's observable behaviour: eforms.buildLots is the
+// only producer of lot rows in the service, and es/fr/pl publish no lots at all,
+// so nothing has ever written a non-NULL value here to be preserved. cpv is
+// coalesced through nullif because the column is text NOT NULL with an
+// empty-string default rather than nullable, so "" is its absent value.
+//
+// title stays unconditional: it is the one field the search payload does carry
+// for every lot, so it is authoritative there.
 const upsertLotSQL = `
 INSERT INTO tenders.ingested_tender_lots (tender_id, ref, title, cpv, value, currency, deadline)
 VALUES ($1, $2, $3, $4, $5, $6, $7)
 ON CONFLICT (tender_id, ref) DO UPDATE SET
 	title = EXCLUDED.title,
-	cpv = EXCLUDED.cpv,
-	value = EXCLUDED.value,
-	currency = EXCLUDED.currency,
-	deadline = EXCLUDED.deadline
+	cpv = coalesce(nullif(EXCLUDED.cpv, ''), tenders.ingested_tender_lots.cpv),
+	value = coalesce(EXCLUDED.value, tenders.ingested_tender_lots.value),
+	currency = coalesce(nullif(EXCLUDED.currency, ''), tenders.ingested_tender_lots.currency),
+	deadline = coalesce(EXCLUDED.deadline, tenders.ingested_tender_lots.deadline)
 `
 
 const insertRunSQL = `
@@ -139,14 +231,48 @@ INSERT INTO tenders.ingestion_runs (source, started_at, finished_at, fetched, in
 VALUES ($1, $2, $3, $4, $5, $6, $7)
 `
 
+// The page/section columns land alongside the text rather than in a side
+// table because they are properties of the chunk itself: a part is only ever
+// read together with them, and a citation that cannot name its page is not a
+// citation. They are written on every upsert, including the conflict branch —
+// a re-extraction that produced different text almost certainly produced a
+// different page span too, so refreshing content while leaving stale
+// provenance behind would be worse than not storing it at all.
 const upsertDocumentPartSQL = `
-INSERT INTO tenders.ingested_tender_document_parts (document_id, index, content)
-VALUES ($1, $2, $3)
-ON CONFLICT (document_id, index) DO UPDATE SET content = EXCLUDED.content
+INSERT INTO tenders.ingested_tender_document_parts (
+	document_id, index, content, page_start, page_end, section_path, section_title, has_table
+)
+VALUES ($1, $2, $3, $4, $5, $6::text[], $7, $8)
+ON CONFLICT (document_id, index) DO UPDATE SET
+	content = EXCLUDED.content,
+	page_start = EXCLUDED.page_start,
+	page_end = EXCLUDED.page_end,
+	section_path = EXCLUDED.section_path,
+	section_title = EXCLUDED.section_title,
+	has_table = EXCLUDED.has_table
 `
 
+// Every page/section column is coalesced to its Go zero value here because
+// rows extracted before migration 0010 hold NULL in all of them and are NOT
+// backfilled — recovering the metadata for an already-extracted document means
+// re-fetching and re-extracting its PDF, a corpus-wide network cost that is a
+// separate, explicitly-costed decision. Going forward only. A caller reading 0
+// pages or an empty section path is therefore reading "extracted before this
+// existed", not "the chunk has no page"; tender.DocumentPart documents that
+// same distinction on the type.
+//
+// section_path is read as JSON, not via array_to_string like cpv_secondary:
+// a CPV code cannot contain a comma but a document heading routinely can
+// ("Capo 1, Disposizioni generali"), and comma-joining would silently split
+// one heading into two path elements.
 const selectDocumentPartsSQL = `
-SELECT content FROM tenders.ingested_tender_document_parts
+SELECT content,
+       coalesce(page_start, 0),
+       coalesce(page_end, 0),
+       coalesce(to_jsonb(section_path)::text, ''),
+       coalesce(section_title, ''),
+       coalesce(has_table, false)
+FROM tenders.ingested_tender_document_parts
 WHERE document_id = $1 ORDER BY index
 `
 
@@ -171,6 +297,346 @@ SELECT id, url FROM tenders.ingested_tender_documents WHERE tender_id = $1 ORDER
 
 const markIndexedSQL = `
 UPDATE tenders.ingested_tenders SET indexed_at = now() WHERE id = $1
+`
+
+// The notice-enrichment queue. Three predicates, each load-bearing:
+//
+//   - source = 'ted' because it is the only source that publishes a
+//     machine-readable notice document; the other three (pl-bzp, fr-boamp,
+//     es-placsp) share these tables and would otherwise be listed forever with
+//     nothing to fetch.
+//   - xml_fetched_at IS NULL is the queue itself, and is what makes backfill and
+//     steady state the same mechanism: the pre-existing corpus is simply the
+//     queue's state at t=0. It is served by the partial index
+//     idx_ingested_tenders_xml_pending, which shrinks as the corpus drains.
+//   - the empty-string test on xml_url excludes rows with nothing to fetch. Note
+//     that it ALSO excludes NULL, since comparing NULL to anything yields NULL
+//     rather than true — deliberate, and the reason no explicit IS NOT NULL is
+//     written here.
+//
+// That last predicate is a real decision, not a tidy-up. A row with no document
+// URL can never advance, so listing it would burn a batch slot every pass to
+// re-derive the same answer; filtering it out costs nothing and keeps the batch
+// full of rows that can actually make progress. The consequence is that such
+// rows stay at xml_fetched_at IS NULL forever, so the "nothing is stuck" check
+// has to repeat the same empty-string test on xml_url, or it will count rows
+// that are not stuck, merely unfetchable. The orchestrator's own empty-URL guard
+// stays as defence in depth for any Repo implementation that does list them.
+//
+// ORDER BY id is stable and starvation-free: ids only ascend, and a row leaves
+// the queue permanently once it is enriched or parked, so the head of the queue
+// always moves.
+//
+// country and notice-type are selected for the observation the pass emits, not
+// for any decision it makes. The notice type comes out of `raw` because it has
+// never been promoted to a column: Map derives the tender's status from it and
+// keeps the code itself only in the stored payload, and a whole migration to
+// denormalise a value read 200 rows at a time is not worth it. Both are
+// low-cardinality categoricals; nothing identifying is read here.
+const selectPendingXMLSQL = `
+SELECT id, coalesce(publication_number, ''), xml_url, xml_attempts,
+       country, coalesce(raw->>'notice-type', '')
+FROM tenders.ingested_tenders
+WHERE source = 'ted'
+  AND xml_fetched_at IS NULL
+  AND xml_url <> ''
+ORDER BY id
+LIMIT $1
+`
+
+// A criteria set is a SET, not an accumulating log, so it is REPLACED rather
+// than upserted on (tender_id, lot_ref, ordinal). Upserting would leave stale
+// rows behind whenever a corrected notice publishes FEWER criteria than the one
+// it supersedes: the stored count could only ever grow, and a criterion the
+// buyer withdrew would outlive the notice that withdrew it — silently, since
+// nothing about a leftover row looks wrong on its own. The same argument, and
+// the same delete-then-insert, applies to the organizations.
+//
+// (ingested_tender_documents and ingested_tender_lots have exactly this bug
+// today, upserting with no delete. It is pre-existing and deliberately not
+// fixed here: those tables are written by four sources, so changing their
+// replace semantics changes three other providers' behaviour in a change that
+// is about a fifth one.)
+const deleteAwardCriteriaSQL = `
+DELETE FROM tenders.ingested_tender_award_criteria WHERE tender_id = $1
+`
+
+const insertAwardCriterionSQL = `
+INSERT INTO tenders.ingested_tender_award_criteria (
+	tender_id, lot_ref, ordinal, type, name, description, weight, weight_raw, lang
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+`
+
+const deleteOrganizationsSQL = `
+DELETE FROM tenders.ingested_tender_organizations WHERE tender_id = $1
+`
+
+const insertOrganizationSQL = `
+INSERT INTO tenders.ingested_tender_organizations (
+	tender_id, org_ref, name, company_id, roles, email, phone, website, city, country
+) VALUES ($1, $2, $3, $4, $5::text[], $6, $7, $8, $9, $10)
+`
+
+// Lot enrichment: everything the notice document says about one lot that the
+// search payload cannot say.
+//
+// It writes value/currency/cpv/deadline as well as the three columns migration
+// 0010 added, which is only sound because upsertLotSQL's conflict branch was
+// made coalescing — see the long note there for why an enricher-written value
+// used to be erased within the hour, and why per-lot value is the whole point
+// of reading the XML at all. On a real 13-lot notice the values are 13 distinct
+// figures spanning €22M to €50M while every other lot-scoped field is identical
+// across the lots, so this column carries essentially all of the per-lot
+// information there is.
+//
+// The conflict branch is coalescing in the same direction and for the same
+// reason, mirrored: a notice that omits a lot's value must not erase one the
+// search payload happened to supply. Neither writer can clear a field, which is
+// the deliberate trade — a value withdrawn by a corrected notice outlives the
+// withdrawal, and that is the lesser of the two failure modes because the
+// alternative is a column that is NULL most of the hour.
+//
+// title is carried on the INSERT branch only, because that branch fires only
+// for a lot the search payload never listed (nothing else will ever populate
+// that row) while on conflict the search payload's title is authoritative.
+const upsertLotEnrichmentSQL = `
+INSERT INTO tenders.ingested_tender_lots (
+	tender_id, ref, title, cpv, cpv_secondary, value, currency, deadline,
+	documents_url, submission_url
+) VALUES ($1, $2, $3, $4, $5::text[], $6, $7, $8, $9, $10)
+ON CONFLICT (tender_id, ref) DO UPDATE SET
+	cpv = coalesce(nullif(EXCLUDED.cpv, ''), tenders.ingested_tender_lots.cpv),
+	cpv_secondary = EXCLUDED.cpv_secondary,
+	value = coalesce(EXCLUDED.value, tenders.ingested_tender_lots.value),
+	currency = coalesce(nullif(EXCLUDED.currency, ''), tenders.ingested_tender_lots.currency),
+	deadline = coalesce(EXCLUDED.deadline, tenders.ingested_tender_lots.deadline),
+	documents_url = EXCLUDED.documents_url,
+	submission_url = EXCLUDED.submission_url
+`
+
+// The statement that takes an enriched row out of the queue. It runs in the same
+// transaction as the child rows above, which is what makes grid_usable safe to
+// store at all: the flag summarises the criteria rows, and no reader may ever
+// observe one without the other. Recomputing the flag from the child rows and
+// asserting zero mismatches is a standing acceptance check, and it only holds
+// because these writes commit together.
+//
+// indexed_at = NULL is not bookkeeping — it is the handoff to the indexer.
+// Enrichment changes the text a tender is searched by, but the indexer's
+// dirty-check (see upsertTenderSQL) compares only the fields the search payload
+// carries and cannot see that the detail changed underneath it. Without this
+// reset an enriched tender keeps the embedding it was indexed with before the
+// notice was ever read, forever. The indexer's backlog spikes once as the
+// enricher drains the corpus; that is expected and absorbed by its own
+// batch-and-commit loop.
+//
+// The notice-level deadline and language are deliberately NOT written, even
+// though the parse produces both. Unlike per-lot value — which only the notice
+// document knows, and which the coalescing lot upsert now protects — the tender
+// row's deadline and language are fields the search payload already carries for
+// every TED notice on every cycle. Writing a second real value into a column
+// another writer also writes a real value into is the flap this file spends the
+// upsertLotSQL note avoiding, in the one shape coalesce cannot fix: with both
+// sides populated there is no NULL to fall back to, so the column would simply
+// alternate between two sources of truth. The parsed values are not wasted —
+// the deadline is what lets a notice with no notice-level period inherit one
+// from its lots, and the language drives every text selection in the parse —
+// they are just parse-time inputs rather than persisted output.
+//
+// version and history are deliberately NOT touched. They track status
+// transitions only: history is an unbounded jsonb on a row read on every fetch,
+// and "the criteria changed between a call for tenders and its award notice" is
+// the expected consequence of collapsing both onto one row, not an event worth
+// recording. xml_fetched_at, xml_status and publication_number already say when
+// we looked, what we got and which notice it came from.
+const markXMLEnrichedSQL = `
+UPDATE tenders.ingested_tenders
+SET documents_url = $2,
+    submission_url = $3,
+    grid_usable = $4,
+    xml_status = $5,
+    xml_fetched_at = now(),
+    indexed_at = NULL
+WHERE id = $1
+`
+
+// A failed attempt. The counter always advances; xml_fetched_at advances only
+// when the failure is permanent, and that asymmetry is the whole retry policy.
+//
+// Leaving xml_fetched_at NULL is what makes the queue self-healing — the row is
+// simply listed again next pass, with no separate retry table and no scheduler —
+// and incrementing xml_attempts on every attempt is what stops "again next pass"
+// from meaning "forever". Without the counter, a throttling upstream would have
+// the drain spin against the same batch for a whole run.
+const markXMLFailedSQL = `
+UPDATE tenders.ingested_tenders
+SET xml_attempts = xml_attempts + 1,
+    xml_status = $2,
+    xml_fetched_at = CASE WHEN $3::boolean THEN now() ELSE xml_fetched_at END
+WHERE id = $1
+`
+
+// documentTypeTenderDocument is the `type` a file retrieved from a buyer's own
+// portal takes in ingested_tender_documents.
+//
+// It is what discriminates this pass's rows from the notice PDF the eForms
+// mapper writes as 'notice', which is why migration 0011 needed no origin
+// column: the type column already carried the distinction. Every statement
+// below that deletes is scoped to it, so this pass can own replace semantics
+// for its own rows without touching the four sources that write the others.
+const documentTypeTenderDocument = "tender-document"
+
+// The portal-document retrieval queue. Every predicate is load-bearing and the
+// set matches idx_ingested_tenders_docs_pending exactly, so the partial index
+// serves this query rather than being stepped around by a clause the planner
+// cannot prove implies it.
+//
+//   - docs_fetched_at IS NULL is the queue itself, which is what makes backfill
+//     and steady state the same mechanism: the pre-existing corpus is simply the
+//     queue's state at t=0, and there is no backfill command.
+//   - grid_usable = false is the trigger: a notice we HAVE read whose own award
+//     grid carries no weights. NOT `IS NOT TRUE`. grid_usable is three-valued
+//     and NULL means the enricher has not looked yet, so this predicate is what
+//     sequences the two passes through the DATA rather than through a scheduler
+//     — it holds even if the jobs run out of order or one is paused for a day.
+//     Widening it would point this pass at every unenriched row in the corpus
+//     and spend third-party requests discovering documents for notices whose own
+//     XML would have answered the question.
+//   - the documents_url tests exclude rows with nowhere to start. The
+//     empty-string test would exclude NULL on its own, since comparing NULL to
+//     anything yields NULL rather than true; the explicit IS NOT NULL is written
+//     anyway because the index predicate carries it, and a query that states the
+//     index's predicate verbatim is one nobody has to reason about.
+//
+// ORDER BY id is stable and starvation-free: ids only ascend, and a row leaves
+// the queue permanently once it is retrieved or parked, so the head always
+// moves.
+//
+// country is selected for the observation the pass emits, not for any decision
+// it makes. Nothing identifying is read here: not the buyer, and not the URL
+// beyond the one the pass has to fetch.
+const selectPendingDocumentsSQL = `
+SELECT id, documents_url, country, docs_attempts
+FROM tenders.ingested_tenders
+WHERE docs_fetched_at IS NULL
+  AND grid_usable = false
+  AND documents_url IS NOT NULL
+  AND documents_url <> ''
+ORDER BY id
+LIMIT $1
+`
+
+// One retrieved file's row. The conflict branch exists because a re-run after a
+// corrected notice re-fetches the same addresses, and RETURNING id on both
+// branches is what lets the parts be written in the same transaction without a
+// second round trip to find the row we just wrote.
+const insertRetrievedDocumentSQL = `
+INSERT INTO tenders.ingested_tender_documents (tender_id, url, type)
+VALUES ($1, $2, '` + documentTypeTenderDocument + `')
+ON CONFLICT (tender_id, url) DO UPDATE SET type = EXCLUDED.type
+RETURNING id
+`
+
+// Parts beyond the ones just written are deleted, because a re-extraction can
+// legitimately produce FEWER of them — a portal that replaced a 40-page
+// disciplinare with a 12-page corrigendum, or an extractor improvement that
+// chunks differently. upsertDocumentPartSQL only ever writes indexes 0..n-1, so
+// without this the tail of the previous extraction survives and is served as
+// citable text that is no longer in the document.
+//
+// It is scoped to this pass's own documents by being called only from
+// SaveRetrievedDocument. The identical latent bug on the indexer's path is
+// pre-existing and deliberately not fixed here: that path is shared with four
+// providers, and changing their replace semantics in a change about a fifth one
+// is exactly what the repository's other delete comments warn against.
+const deleteStalePartsSQL = `
+DELETE FROM tenders.ingested_tender_document_parts
+WHERE document_id = $1 AND index >= $2
+`
+
+// Documents this pass did NOT keep, removed.
+//
+// Scoped to type='tender-document' on purpose. It gives the retrieval pass
+// replace semantics over its own rows — a corrected notice's superseded
+// attachments do not outlive it — without changing the upsert-only behaviour of
+// the four sources that write the other types.
+//
+// The parts go with them: ingested_tender_document_parts references
+// ingested_tender_documents ON DELETE CASCADE, so removing a document removes
+// its text in the same statement rather than leaving orphans that would still
+// be embedded.
+//
+// An empty kept-set deletes every one of this pass's rows for the tender, which
+// is correct rather than a degenerate case: a tender whose portal now publishes
+// nothing readable must not keep serving text from a listing that no longer
+// exists.
+const deleteUnkeptDocumentsSQL = `
+DELETE FROM tenders.ingested_tender_documents
+WHERE tender_id = $1
+  AND type = '` + documentTypeTenderDocument + `'
+  AND url <> ALL($2::text[])
+`
+
+// The row leaving the queue. Both counts arrive as nullable parameters because
+// NULL and 0 are different claims here — see retrieve.Outcome.Counts, which owns
+// that rule; this statement only writes what it is given.
+//
+// indexed_at is reset CONDITIONALLY, and the condition matters. Retrieved text
+// is new corpus and the indexer's dirty-check compares only the description, so
+// without a reset the retrieved disciplinare never reaches the vector store and
+// the whole pass is invisible to search. But an unconditional reset would also
+// re-embed every tender whose portal merely refused us — thousands of rows, no
+// new text — turning each drain into an indexing wave that starves the queue it
+// shares nothing with. So the caller resets exactly when this tender's persisted
+// text actually changed: a file was written, or a stale one was deleted.
+const markDocumentsRetrievedSQL = `
+UPDATE tenders.ingested_tenders
+SET docs_status = $2,
+    docs_platform = $3,
+    docs_files_found = $4,
+    docs_files_extracted = $5,
+    docs_fetched_at = now(),
+    indexed_at = CASE WHEN $6::boolean THEN NULL ELSE indexed_at END
+WHERE id = $1
+`
+
+// A failed retrieval attempt, the exact analogue of markXMLFailedSQL: the
+// counter always advances, docs_fetched_at advances only when the failure is
+// permanent, and that asymmetry is the whole retry policy.
+//
+// The three NULLs are the part that is not obvious, and leaving them out was a
+// real defect. A failure reaches this statement without an Outcome, so it has
+// no coverage measurement and no enumerator to attribute — but the columns are
+// not empty, they hold whatever the LAST look at this tender found. Rows are
+// re-queued in place (upsertTenderSQL resets docs_fetched_at and docs_attempts
+// on a re-ingested notice while deliberately leaving status, platform and
+// counts alone), so a tender that read cleanly as tuttogare with 5/3 and whose
+// corrected documents_url is then robots-denied would persist as
+// robots_denied WITH 5 files found, 3 extracted and tuttogare as the parser.
+// Every one of those three facts is about a URL nobody looked at again.
+//
+// That row is exactly what migration 0011's header forbids — "a robots-denied
+// tender has no file count because we never saw the listing" — and it is the
+// unreadable-versus-absent conflation this whole pass exists to remove,
+// surviving inside a single row instead of across two. It also poisons the one
+// query the platform column was added for: GROUP BY (docs_platform,
+// docs_status) would file the refusal under a parser that never ran on that
+// address, which is the ranked list of what to integrate next reading a number
+// it invented.
+//
+// Clearing them says the true thing instead: this pass did not read a listing,
+// so it has no count and no platform. It is the same rule retrieve.Outcome.
+// Counts already applies on the success path, evaluated on the only other path
+// a row can be written by.
+const markDocumentsFailedSQL = `
+UPDATE tenders.ingested_tenders
+SET docs_attempts = docs_attempts + 1,
+    docs_status = $2,
+    docs_platform = NULL,
+    docs_files_found = NULL,
+    docs_files_extracted = NULL,
+    docs_fetched_at = CASE WHEN $3::boolean THEN now() ELSE docs_fetched_at END
+WHERE id = $1
 `
 
 // pgTextArray renders a Go string slice as a PostgreSQL array literal, e.g.
@@ -206,6 +672,25 @@ func splitTextArray(joined string) []string {
 	return out
 }
 
+// jsonTextArray decodes the JSON rendering of a text[] column (produced by
+// to_jsonb, see selectDocumentPartsSQL) back into a slice, mapping both a NULL
+// column and an empty array onto nil so callers get one representation of
+// "nothing here". Unlike splitTextArray it is lossless for values containing
+// the delimiter, which is why section_path uses it.
+func jsonTextArray(encoded string) ([]string, error) {
+	if encoded == "" || encoded == "null" {
+		return nil, nil
+	}
+	var out []string
+	if err := json.Unmarshal([]byte(encoded), &out); err != nil {
+		return nil, err
+	}
+	if len(out) == 0 {
+		return nil, nil
+	}
+	return out, nil
+}
+
 // Save upserts each tender (and its documents/lots) in its own transaction,
 // so a failure on one tender doesn't roll back its siblings' rows.
 func (r *TenderRepo) Save(ctx context.Context, tenders []tender.Tender) (ingestion.SaveResult, error) {
@@ -231,6 +716,7 @@ func (r *TenderRepo) saveOne(ctx context.Context, t tender.Tender) (inserted boo
 			t.ProcedureType, t.Language, t.Country, t.NUTS, t.CPV,
 			pgTextArray(t.CPVSecondary), t.Value, t.Currency,
 			t.PublishedAt, t.Deadline, []byte(t.Raw),
+			t.PublicationNumber, t.XMLURL,
 		)
 		if qErr != nil {
 			return qErr
@@ -276,40 +762,70 @@ func (r *TenderRepo) RecordRun(ctx context.Context, rec ingestion.RunRecord) err
 	return err
 }
 
-// SaveDocumentParts upserts the extracted text parts of one document,
-// keyed by (document_id, index) — idempotent, so re-extracting the same
-// document updates content in place rather than duplicating rows. All
-// parts are saved in a single transaction so a mid-loop failure can't
-// commit a partial set of parts: a partial commit would look
-// indistinguishable from a complete one to indexOne's len(parts) == 0
-// reuse-gate check on the next cycle, causing it to skip re-fetching and
-// index the tender with incomplete text.
-func (r *TenderRepo) SaveDocumentParts(ctx context.Context, documentID int64, parts []string) error {
-	err := r.db.InTx(ctx, func(tx *pg.DB) error {
-		for i, p := range parts {
-			if _, err := tx.Exec(ctx, upsertDocumentPartSQL, documentID, i, p); err != nil {
-				return fmt.Errorf("postgres: save document part %d for document %d: %w", i, documentID, err)
-			}
-		}
-		return nil
+// SaveDocumentParts upserts the extracted parts of one document — their text
+// plus the page/section provenance the extractor reported — keyed by
+// (document_id, index). Idempotent, so re-extracting the same document updates
+// each row in place rather than duplicating it. All parts are saved in a
+// single transaction so a mid-loop failure can't commit a partial set of
+// parts: a partial commit would look indistinguishable from a complete one to
+// indexOne's len(parts) == 0 reuse-gate check on the next cycle, causing it to
+// skip re-fetching and index the tender with incomplete text. Widening the row
+// does not weaken that — the extra columns ride along inside the same
+// transaction, and a failure on any one of them still rolls the whole document
+// back to "nothing saved", which is the only state the reuse gate reads
+// correctly.
+func (r *TenderRepo) SaveDocumentParts(ctx context.Context, documentID int64, parts []tender.DocumentPart) error {
+	return r.db.InTx(ctx, func(tx *pg.DB) error {
+		return saveDocumentParts(ctx, tx, documentID, parts)
 	})
-	return err
 }
 
-// DocumentParts returns the previously-extracted text parts of one
-// document, in order — an empty slice if none have been saved yet.
-func (r *TenderRepo) DocumentParts(ctx context.Context, documentID int64) ([]string, error) {
+// saveDocumentParts writes one document's parts inside a transaction the caller
+// already owns. It is the shared body of SaveDocumentParts and of the portal
+// retrieval pass's SaveRetrievedDocument, which needs the same rows written
+// inside a LARGER transaction — one that also creates the document row itself.
+//
+// Factored out rather than duplicated because the all-or-nothing guarantee
+// documented on SaveDocumentParts is the point of the whole method, and a second
+// copy of the loop is a second place for it to be weakened. It takes tx rather
+// than opening its own, since pg's transactions do not nest.
+func saveDocumentParts(ctx context.Context, tx *pg.DB, documentID int64, parts []tender.DocumentPart) error {
+	for i, p := range parts {
+		if _, err := tx.Exec(ctx, upsertDocumentPartSQL,
+			documentID, i, p.Text,
+			p.PageStart, p.PageEnd, pgTextArray(p.SectionPath), p.SectionTitle, p.HasTable,
+		); err != nil {
+			return fmt.Errorf("postgres: save document part %d for document %d: %w", i, documentID, err)
+		}
+	}
+	return nil
+}
+
+// DocumentParts returns the previously-extracted parts of one document, in
+// order — an empty slice if none have been saved yet, which is what tells the
+// indexer to fetch and extract the document rather than reuse it.
+//
+// Parts written before migration 0010 carry no page/section metadata and are
+// not backfilled (see selectDocumentPartsSQL); they come back with zero pages,
+// a nil section path and HasTable false.
+func (r *TenderRepo) DocumentParts(ctx context.Context, documentID int64) ([]tender.DocumentPart, error) {
 	rows, err := r.db.Query(ctx, selectDocumentPartsSQL, documentID)
 	if err != nil {
 		return nil, fmt.Errorf("postgres: document parts for document %d: %w", documentID, err)
 	}
 	defer rows.Close()
 
-	var parts []string
+	var parts []tender.DocumentPart
 	for rows.Next() {
-		var p string
-		if err := rows.Scan(&p); err != nil {
+		var (
+			p           tender.DocumentPart
+			sectionPath string
+		)
+		if err := rows.Scan(&p.Text, &p.PageStart, &p.PageEnd, &sectionPath, &p.SectionTitle, &p.HasTable); err != nil {
 			return nil, fmt.Errorf("postgres: scan document part for document %d: %w", documentID, err)
+		}
+		if p.SectionPath, err = jsonTextArray(sectionPath); err != nil {
+			return nil, fmt.Errorf("postgres: decode section path for document %d: %w", documentID, err)
 		}
 		parts = append(parts, p)
 	}
@@ -376,4 +892,256 @@ func (r *TenderRepo) MarkIndexed(ctx context.Context, tenderID int64) error {
 		return fmt.Errorf("postgres: mark tender %d indexed: %w", tenderID, err)
 	}
 	return nil
+}
+
+// ListPendingXML returns up to limit tenders whose notice document has not been
+// read yet and that have a document to read — see selectPendingXMLSQL for what
+// each part of that queue definition is doing and why rows with no URL are left
+// out rather than listed and parked.
+func (r *TenderRepo) ListPendingXML(ctx context.Context, limit int) ([]enrich.PendingNotice, error) {
+	rows, err := r.db.Query(ctx, selectPendingXMLSQL, limit)
+	if err != nil {
+		return nil, fmt.Errorf("postgres: list pending xml: %w", err)
+	}
+	defer rows.Close()
+
+	var pending []enrich.PendingNotice
+	for rows.Next() {
+		var n enrich.PendingNotice
+		if err := rows.Scan(&n.ID, &n.PublicationNumber, &n.XMLURL, &n.Attempts,
+			&n.Country, &n.NoticeType); err != nil {
+			return nil, fmt.Errorf("postgres: scan pending xml row: %w", err)
+		}
+		pending = append(pending, n)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("postgres: list pending xml: %w", err)
+	}
+	return pending, nil
+}
+
+// SaveDetail persists one notice's parsed detail and takes its row out of the
+// enrichment queue, in a single transaction.
+//
+// Everything here commits together on purpose. grid_usable is a stored
+// denormalisation of the criteria rows written a few statements earlier, so a
+// partial commit would leave the flag disagreeing with the rows it summarises —
+// and since the flag is the predicate a later phase's backlog query is built on,
+// a disagreement is not a cosmetic drift but a wrong answer to "which notices
+// still need work". The indexed_at reset rides in the same transaction for the
+// mirror-image reason: a committed detail change with no re-index queued is an
+// enriched tender that is searched by its pre-enrichment text forever.
+//
+// The criteria and organizations are replaced wholesale rather than upserted;
+// deleteAwardCriteriaSQL explains why that is a correctness requirement and not
+// a simplification.
+func (r *TenderRepo) SaveDetail(ctx context.Context, tenderID int64, d tender.NoticeDetail) error {
+	err := r.db.InTx(ctx, func(tx *pg.DB) error {
+		if _, err := tx.Exec(ctx, deleteAwardCriteriaSQL, tenderID); err != nil {
+			return fmt.Errorf("postgres: delete award criteria for tender %d: %w", tenderID, err)
+		}
+		// AllCriteria is the single definition of "every criterion in this
+		// notice" — the notice-level entries plus each lot's, which partition
+		// the set and never overlap. Deriving both these rows and the
+		// grid_usable flag below from that one method is what keeps the stored
+		// aggregate and the child rows in agreement by construction rather than
+		// by two call sites happening to apply the same rule.
+		//
+		// Weight is passed as the *float64 it is: database/sql maps a nil
+		// pointer onto NULL, which is the point. A weightless criterion is the
+		// common case, and flattening it to 0 here would make "criteria
+		// published" read as "grid recoverable" — an overstatement of roughly 2x,
+		// reintroduced one layer below where anyone would look for it.
+		for _, c := range d.AllCriteria() {
+			if _, err := tx.Exec(ctx, insertAwardCriterionSQL,
+				tenderID, c.LotRef, c.Ordinal, c.Type, c.Name, c.Description,
+				c.Weight, c.WeightRaw, c.Lang,
+			); err != nil {
+				return fmt.Errorf("postgres: insert award criterion %s/%d for tender %d: %w",
+					c.LotRef, c.Ordinal, tenderID, err)
+			}
+		}
+
+		if _, err := tx.Exec(ctx, deleteOrganizationsSQL, tenderID); err != nil {
+			return fmt.Errorf("postgres: delete organizations for tender %d: %w", tenderID, err)
+		}
+		for _, o := range d.Organizations {
+			if _, err := tx.Exec(ctx, insertOrganizationSQL,
+				tenderID, o.Ref, o.Name, o.CompanyID, pgTextArray(o.Roles),
+				o.Email, o.Phone, o.Website, o.City, o.Country,
+			); err != nil {
+				return fmt.Errorf("postgres: insert organization %s for tender %d: %w", o.Ref, tenderID, err)
+			}
+		}
+
+		for _, l := range d.Lots {
+			if _, err := tx.Exec(ctx, upsertLotEnrichmentSQL,
+				tenderID, l.Ref, l.Title, l.CPV, pgTextArray(l.CPVSecondary),
+				l.Value, l.Currency, l.Deadline, l.DocumentsURL, l.SubmissionURL,
+			); err != nil {
+				return fmt.Errorf("postgres: enrich lot %s for tender %d: %w", l.Ref, tenderID, err)
+			}
+		}
+
+		if _, err := tx.Exec(ctx, markXMLEnrichedSQL,
+			tenderID, d.DocumentsURL, d.SubmissionURL, d.GridUsable(), enrich.StatusOK,
+		); err != nil {
+			return fmt.Errorf("postgres: mark tender %d xml-enriched: %w", tenderID, err)
+		}
+		return nil
+	})
+	return err
+}
+
+// MarkXMLFailed records one failed enrichment attempt against a tender. A
+// permanent failure additionally stamps xml_fetched_at, which is what removes
+// the row from the queue for good; a transient one leaves it NULL so the row is
+// attempted again next pass, having spent one of its attempts.
+//
+// status is one of the enrich package's four values. It is passed through rather
+// than derived here because which failure is permanent is a policy the core
+// owns — the adapter only knows how to write the two columns that encode it.
+func (r *TenderRepo) MarkXMLFailed(ctx context.Context, tenderID int64, status string, permanent bool) error {
+	if _, err := r.db.Exec(ctx, markXMLFailedSQL, tenderID, status, permanent); err != nil {
+		return fmt.Errorf("postgres: mark tender %d xml failed (%s): %w", tenderID, status, err)
+	}
+	return nil
+}
+
+// ListPendingDocuments returns up to limit tenders whose buyer-portal documents
+// have not been retrieved yet — see selectPendingDocumentsSQL for what each part
+// of that queue definition is doing, and in particular why grid_usable = false
+// must not be widened.
+func (r *TenderRepo) ListPendingDocuments(ctx context.Context, limit int) ([]retrieve.PendingTender, error) {
+	rows, err := r.db.Query(ctx, selectPendingDocumentsSQL, limit)
+	if err != nil {
+		return nil, fmt.Errorf("postgres: list pending documents: %w", err)
+	}
+	defer rows.Close()
+
+	var pending []retrieve.PendingTender
+	for rows.Next() {
+		var t retrieve.PendingTender
+		if err := rows.Scan(&t.ID, &t.DocumentsURL, &t.Country, &t.Attempts); err != nil {
+			return nil, fmt.Errorf("postgres: scan pending document row: %w", err)
+		}
+		pending = append(pending, t)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("postgres: list pending documents: %w", err)
+	}
+	return pending, nil
+}
+
+// SaveRetrievedDocument persists one file retrieved from a buyer portal — its
+// document row and all of its extracted parts — in a single transaction.
+//
+// Per file rather than per tender, deliberately. A run killed at its deadline
+// mid-tender keeps every file it had already read, and those are third-party
+// requests against someone else's server that must not be spent twice. The
+// tender itself stays queued regardless, because only FinishRetrieval stamps
+// docs_fetched_at, so the surviving files are simply re-fetched idempotently on
+// the next pass — wasteful, bounded, and correct.
+//
+// The document's BYTES are not a parameter and never reach this layer's storage:
+// doc carries the URL and the content type for the row, the parts carry the
+// text, and the response body is dropped by the caller. There is no blob column
+// here and adding one would be changing that decision, not implementing it.
+func (r *TenderRepo) SaveRetrievedDocument(
+	ctx context.Context, tenderID int64, doc retrieve.Document, parts []tender.DocumentPart,
+) error {
+	return r.db.InTx(ctx, func(tx *pg.DB) error {
+		rows, err := tx.Query(ctx, insertRetrievedDocumentSQL, tenderID, doc.URL)
+		if err != nil {
+			return fmt.Errorf("postgres: save retrieved document for tender %d: %w", tenderID, err)
+		}
+		var documentID int64
+		if rows.Next() {
+			if err := rows.Scan(&documentID); err != nil {
+				rows.Close()
+				return fmt.Errorf("postgres: scan retrieved document id for tender %d: %w", tenderID, err)
+			}
+		}
+		if err := rows.Err(); err != nil {
+			rows.Close()
+			return fmt.Errorf("postgres: save retrieved document for tender %d: %w", tenderID, err)
+		}
+		rows.Close()
+
+		if err := saveDocumentParts(ctx, tx, documentID, parts); err != nil {
+			return err
+		}
+		if _, err := tx.Exec(ctx, deleteStalePartsSQL, documentID, len(parts)); err != nil {
+			return fmt.Errorf("postgres: delete stale parts of document %d: %w", documentID, err)
+		}
+		return nil
+	})
+}
+
+// FinishRetrieval takes a tender out of the retrieval queue, in one transaction:
+// the documents this pass did not keep are deleted, the outcome is written, and
+// the row is re-queued for indexing if and only if its persisted text changed.
+//
+// Everything commits together for the reason SaveDetail's transaction does. The
+// counts are a summary of the document rows written a few statements earlier, so
+// a partial commit would leave the summary disagreeing with the rows it
+// summarises — and since docs_status and those counts are the predicate every
+// coverage query in this phase is built on, a disagreement is a wrong answer to
+// "how much of this corpus can we actually read", not a cosmetic drift.
+func (r *TenderRepo) FinishRetrieval(ctx context.Context, tenderID int64, o retrieve.Outcome) error {
+	found, extracted := o.Counts()
+	kept := pgTextArray(o.KeptURLs)
+
+	return r.db.InTx(ctx, func(tx *pg.DB) error {
+		res, err := tx.Exec(ctx, deleteUnkeptDocumentsSQL, tenderID, kept)
+		if err != nil {
+			return fmt.Errorf("postgres: delete superseded documents of tender %d: %w", tenderID, err)
+		}
+		// A failure to report the row count is not a failure to delete, and the
+		// count only decides whether to re-index. Treating "unknown" as
+		// "something changed" costs one redundant embedding and never loses
+		// text, which is the right way round for a signal this cheap.
+		deleted, err := res.RowsAffected()
+		if err != nil {
+			deleted = 1
+		}
+
+		reindex := o.FilesExtracted > 0 || deleted > 0
+		if _, err := tx.Exec(ctx, markDocumentsRetrievedSQL,
+			tenderID, o.Status, nullIfEmpty(o.Platform), found, extracted, reindex,
+		); err != nil {
+			return fmt.Errorf("postgres: mark tender %d documents retrieved (%s): %w", tenderID, o.Status, err)
+		}
+		return nil
+	})
+}
+
+// MarkDocumentsFailed records one failed retrieval attempt against a tender. A
+// permanent failure additionally stamps docs_fetched_at, which is what removes
+// the row from the queue for good; a transient one leaves it NULL so the row is
+// attempted again next pass, having spent one of its attempts.
+//
+// status is one of the retrieve package's eight values, and which failure is
+// permanent is passed through rather than derived here for the same reason
+// MarkXMLFailed passes it through: that is a policy about what a human is told,
+// which the core owns. This layer only knows how to write the two columns that
+// encode it.
+func (r *TenderRepo) MarkDocumentsFailed(ctx context.Context, tenderID int64, status string, permanent bool) error {
+	if _, err := r.db.Exec(ctx, markDocumentsFailedSQL, tenderID, status, permanent); err != nil {
+		return fmt.Errorf("postgres: mark tender %d documents failed (%s): %w", tenderID, status, err)
+	}
+	return nil
+}
+
+// nullIfEmpty maps an empty string onto a NULL column.
+//
+// docs_platform is the one column where the distinction is worth the pointer:
+// ” would be a platform name of its own in every GROUP BY, sitting beside
+// 'generic' and 'tuttogare' as though an enumerator called "" had read the page,
+// when what it means is that no page was ever parsed.
+func nullIfEmpty(s string) *string {
+	if s == "" {
+		return nil
+	}
+	return &s
 }

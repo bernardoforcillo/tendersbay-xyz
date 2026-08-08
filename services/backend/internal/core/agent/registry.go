@@ -4,7 +4,6 @@ import (
 	"sync"
 
 	"github.com/buildwithgo/berrygem/agent"
-	"github.com/buildwithgo/berrygem/chat"
 	"github.com/buildwithgo/berrygem/providers/fireworks"
 )
 
@@ -19,18 +18,24 @@ type AgentConfig struct {
 	MaxTurns     int
 }
 
+// Registry holds the agent configurations and knows how to build a berrygem
+// agent from one. It deliberately holds NO per-session state: the conversation
+// lives in Postgres and nowhere else, so every pod assembles the same context
+// for a session regardless of which pod served the previous turn. Keeping a
+// map[sessionID]*chat.Chat here is what made the service stateful in
+// contradiction of its own readiness probe (probe.Ready's "a stateless service
+// is ready as soon as it can serve") and made a session's context depend on
+// which replica Traefik happened to route the request to.
 type Registry struct {
-	mu           sync.RWMutex
-	configs      map[AgentType]AgentConfig
-	apiKey       string
-	chatSessions map[string]*chat.Chat
+	mu      sync.RWMutex
+	configs map[AgentType]AgentConfig
+	apiKey  string
 }
 
 func NewRegistry(apiKey string) *Registry {
 	return &Registry{
-		configs:      make(map[AgentType]AgentConfig),
-		apiKey:       apiKey,
-		chatSessions: make(map[string]*chat.Chat),
+		configs: make(map[AgentType]AgentConfig),
+		apiKey:  apiKey,
 	}
 }
 
@@ -63,23 +68,6 @@ func (r *Registry) BuildAgent(cfg AgentConfig, tools ...agent.Option) (*agent.Ag
 	return agent.New(opts...)
 }
 
-func (r *Registry) GetOrCreateChat(sessionID string, ag *agent.Agent) (*chat.Chat, bool) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	if c, ok := r.chatSessions[sessionID]; ok {
-		return c, false
-	}
-	c := chat.New(ag)
-	r.chatSessions[sessionID] = c
-	return c, true
-}
-
-func (r *Registry) RemoveChat(sessionID string) {
-	r.mu.Lock()
-	defer r.mu.Unlock()
-	delete(r.chatSessions, sessionID)
-}
-
 // RegisterDefaults sets up the built-in agent configurations.
 // API key resolution: if empty, Berrygem reads from the env.
 func (r *Registry) RegisterDefaults() {
@@ -90,7 +78,14 @@ func (r *Registry) RegisterDefaults() {
 			"professionale in italiano. Se l'utente ti chiede di creare un workbench, deduci nome e " +
 			"visibilità (privato o condiviso) dalla conversazione e usa il tool ask_choice per farteli " +
 			"confermare o correggere dall'utente PRIMA di chiamare create_workbench. Non chiamare mai " +
-			"create_workbench senza aver prima ottenuto una conferma esplicita tramite ask_choice.",
+			"create_workbench senza aver prima ottenuto una conferma esplicita tramite ask_choice. " +
+			// A standing prior, not a duplicate of get_tender_criteria's own
+			// per-call notice: that notice only reaches the model AFTER it has
+			// decided to call the tool, and the failure being prevented here is
+			// the model answering "come viene valutata?" straight from
+			// search_tenders' eight scalars, which contain no criterion at all.
+			"Non affermare mai come viene valutata una gara senza aver prima chiamato get_tender_criteria " +
+			"per quella gara. Se non ci sono pesi pubblicati, dillo: non stimarli mai.",
 		MaxTurns: 8,
 	})
 }

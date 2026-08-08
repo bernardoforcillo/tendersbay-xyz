@@ -1,40 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
+import { useAsync } from '~/hooks';
 import { workspaceClient } from '~/lib/api/client';
 
-/**
- * Minimal load-on-mount data hook over a stable async function, matching the
- * app's direct-RPC + local-state convention (no tanstack-query). Callers wrap
- * their RPC call in `useCallback` so identity is stable; `refetch` re-runs it.
- */
-export function useAsync<T>(fn: () => Promise<T>) {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [tick, setTick] = useState(0);
-  const refetch = useCallback(() => setTick((n) => n + 1), []);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `tick` is a manual refetch trigger
-  useEffect(() => {
-    let active = true;
-    setLoading(true);
-    setError(null);
-    fn()
-      .then((res) => {
-        if (active) setData(res);
-      })
-      .catch((e: unknown) => {
-        if (active) setError(e instanceof Error ? e.message : 'Something went wrong');
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [fn, tick]);
-
-  return { data, loading, error, refetch };
-}
+// Re-exported so the two pages already importing it from here keep one import
+// path. The hook itself is app-wide infra, not a workspace concern — see
+// `~/hooks/use-async`.
+export { useAsync };
 
 export function useMyWorkspaces() {
   const fn = useCallback(() => workspaceClient.listMyWorkspaces({}).then((r) => r.workspaces), []);

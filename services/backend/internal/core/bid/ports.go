@@ -3,6 +3,7 @@ package bid
 import (
 	"context"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
@@ -33,13 +34,38 @@ type Tenders interface {
 	TenderSummaries
 }
 
+// Eligibility is the narrow company-domain port the decision needs: the
+// recommendation a go/no-go is recorded against. Satisfied by *company.Service
+// unchanged.
+//
+// The dependency direction is one-way and stays that way: bid consumes the
+// assessment, company knows nothing about bids. Eligibility is a pure function
+// of (requirements × dossier); the DECISION is GoNoGo and lives here. Inverting
+// this — letting company reach for the decision — would let a recommendation
+// depend on what the user already chose, which is how an "assistant" quietly
+// becomes a mirror.
+//
+// The service calls this rather than accepting a recommendation as a parameter
+// so that the recorded baseline is the one the system actually computed. A
+// transport layer that could pass its own would be asserting what we
+// recommended, and the override rate would then measure the client's memory
+// rather than our advice.
+type Eligibility interface {
+	CheckEligibility(ctx context.Context, userID, workspaceID string, tenderID int64, lotRef string) (company.Assessment, error)
+}
+
 // Repository persists bids and their checklist items. Implemented by the
 // postgres adapter (Phase 1); faked in tests.
 type Repository interface {
 	CreateBid(ctx context.Context, b Bid) (Bid, error)
 	FindBidByID(ctx context.Context, workbenchID, bidID string) (Bid, error)
 	ListBidsByWorkbench(ctx context.Context, workbenchID string) ([]Bid, error)
-	UpdateGoNoGo(ctx context.Context, bidID string, d GoNoGo) (Bid, error)
+	// UpdateGoNoGo writes the decision AND the recommendation it was taken
+	// against in one statement. They are one write and not two because a
+	// decision stored without its baseline is an override rate nobody can
+	// reconstruct — the assessment is never persisted, so a second failed
+	// statement loses the baseline permanently.
+	UpdateGoNoGo(ctx context.Context, bidID string, d GoNoGo, rec DecisionRecord) (Bid, error)
 	UpdateStage(ctx context.Context, bidID string, s Stage) (Bid, error)
 	UpdateOutcome(ctx context.Context, bidID string, o Outcome) (Bid, error)
 	DeleteBid(ctx context.Context, bidID string) error

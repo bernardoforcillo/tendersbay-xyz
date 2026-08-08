@@ -139,6 +139,185 @@
       "emptyDescription": "Išbandykite rankinę paiešką žemiau arba išplėskite šio kliento profilį."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Įmonės byla",
+      "description": "Tai, ką žinome apie jūsų įmonę. Lyginame tai su kiekvieno pirkimo kvalifikacijos reikalavimais.",
+      "save": "Išsaugoti",
+      "saving": "Išsaugoma…",
+      "error": "Nepavyko išsaugoti. Bandykite dar kartą.",
+      "identity": {
+        "legalName": "Pavadinimas",
+        "vatNumber": "PVM mokėtojo kodas",
+        "fiscalCode": "Mokesčių mokėtojo kodas",
+        "legalForm": "Teisinė forma",
+        "cciaaOffice": "Prekybos rūmai",
+        "cciaaNumber": "Juridinio asmens kodas",
+        "country": "Šalis",
+        "nuts": "Regionas (NUTS)",
+        "foundedYear": "Įsteigimo metai"
+      },
+      "soa": {
+        "title": "SOA atestatai",
+        "category": "Kategorija",
+        "classifica": "Classifica",
+        "issuedBy": "Išdavė",
+        "validUntil": "Galioja iki",
+        "verifiedUntil": "Trejų metų patikra galioja iki",
+        "verifiedUntilHint": "Trejų metų patikra baigiasi trejais metais anksčiau nei pats atestatas. Po šios datos atestatas nebegalioja.",
+        "add": "Pridėti atestatą",
+        "remove": "Pašalinti",
+        "empty": "Neįrašytas nė vienas SOA atestatas."
+      },
+      "certifications": {
+        "title": "Sertifikatai",
+        "standard": "Standartas",
+        "standardRaw": "Standartas, kaip nurodyta sertifikate",
+        "scope": "Taikymo sritis",
+        "issuedBy": "Išdavė",
+        "validFrom": "Galioja nuo",
+        "validUntil": "Galioja iki",
+        "add": "Pridėti sertifikatą",
+        "remove": "Pašalinti",
+        "empty": "Neįrašytas nė vienas sertifikatas."
+      },
+      "financialYears": {
+        "title": "Finansiniai metai",
+        "year": "Metai",
+        "turnover": "Bendra apyvarta",
+        "specificTurnover": "Apyvarta atitinkamoje srityje",
+        "currency": "Valiuta",
+        "headcount": "Darbuotojų skaičius",
+        "add": "Pridėti metus",
+        "remove": "Pašalinti",
+        "empty": "Neįrašyti jokie finansiniai metai."
+      },
+      "pastContracts": {
+        "title": "Įvykdytos sutartys",
+        "description": "Kas buvo įvykdyta",
+        "buyer": "Perkančioji organizacija",
+        "cpv": "CPV",
+        "value": "Vertė",
+        "started": "Pradžia",
+        "ended": "Pabaiga",
+        "role": "Vaidmuo",
+        "sharePct": "Jūsų dalis",
+        "sharePctHint": "Jungtinės veiklos atveju į reikalavimą įskaitoma tik jūsų pačių dalis.",
+        "add": "Pridėti sutartį",
+        "remove": "Pašalinti",
+        "empty": "Neįrašyta nė viena įvykdyta sutartis."
+      },
+      "registrations": {
+        "title": "Registracijos ir sąrašai",
+        "kind": "Rūšis",
+        "authority": "Institucija",
+        "identifier": "Numeris",
+        "section": "Skyrius",
+        "validFrom": "Galioja nuo",
+        "validUntil": "Galioja iki",
+        "add": "Pridėti registraciją",
+        "remove": "Pašalinti",
+        "empty": "Neįrašyta nė viena registracija."
+      }
+    },
+    "provenance": {
+      "user_stated": "Jūs tai įvedėte",
+      "user_confirmed": "Jūs tai patvirtinote",
+      "agent_inferred": "Agento nustatyta",
+      "imported": "Importuota",
+      "never": "Neįrašyta"
+    },
+    "eligibility": {
+      "title": "Kvalifikacijos reikalavimai",
+      "recheck": "Tikrinti iš naujo",
+      "evaluatedAt": "Patikrinta {{when}}",
+      "requirementLabel": "Šis pirkimas reikalauja",
+      "heldLabel": "Jūsų byloje yra",
+      "changesLabel": "Kas tai pakeistų",
+      "caveatsLabel": "Skaitykite kartu su tuo",
+      "lead": {
+        "requires": "Šis pirkimas reikalauja",
+        "holds": "jūsų byloje yra",
+        "noRequirements": "Šiam pirkimui neįrašytas nė vienas reikalavimas."
+      },
+      "verdict": {
+        "insufficient_data": "Per mažai duomenų sprendimui",
+        "go": "Panašu, kad atitinkate reikalavimus",
+        "no_go": "Panašu, kad neatitinkate reikalavimų"
+      },
+      "status": {
+        "met": "Įvykdytas",
+        "missing": "Trūksta",
+        "shortfall": "Žemiau reikalaujamo lygio",
+        "expiring": "Netrukus baigsis",
+        "expired": "Nebegalioja",
+        "unknown": "Dar neklausėme"
+      },
+      "remedy": {
+        "provide_fact": "Pasakykite mums, ką turite",
+        "renew": "Atnaujinkite iki termino",
+        "upgrade": "Pakelkite iki reikalaujamo lygio",
+        "avvalimento": "Remkitės trečiojo asmens pajėgumais (avvalimento)",
+        "rti": "Dalyvaukite jungtinėje veikloje (RTI)",
+        "subcontract": "Padenkite subranga"
+      },
+      "caveat": {
+        "no_requirements_captured": "Šiam pirkimui nebuvo išgautas nė vienas reikalavimas, todėl ši išvada nesiremia niekuo paskelbtu.",
+        "award_grid_only": "Išgauti tik pasiūlymų vertinimo kriterijai — kvalifikacijos reikalavimai gali būti dokumentuose, kurių neskaitėme.",
+        "unconfirmed_extraction": "Dalis reikalavimų perskaityta iš dokumentų ir jūs jų dar nepatvirtinote.",
+        "open_questions": "Kai kurie klausimai apie jūsų įmonę tebėra be atsakymo.",
+        "documents_unread": "Neskaitėme pirkimo dokumentų, todėl kai kurių reikalavimų gali trūkti."
+      },
+      "counts": {
+        "requirements_one": "{{count}} reikalavimas",
+        "requirements_few": "{{count}} reikalavimai",
+        "requirements_other": "{{count}} reikalavimų",
+        "authoritative_one": "{{count}} patvirtintas",
+        "authoritative_few": "{{count}} patvirtinti",
+        "authoritative_other": "{{count}} patvirtintų",
+        "blocking_one": "{{count}} blokuojantis",
+        "blocking_few": "{{count}} blokuojantys",
+        "blocking_other": "{{count}} blokuojančių",
+        "unknown_one": "{{count}} be atsakymo",
+        "unknown_few": "{{count}} be atsakymo",
+        "unknown_other": "{{count}} be atsakymo"
+      }
+    },
+    "requirements": {
+      "title": "Reikalavimai",
+      "empty": "Šiam pirkimui neįrašytas nė vienas reikalavimas.",
+      "confirm": "Patvirtinti",
+      "confirmed": "Patvirtinta",
+      "remove": "Pašalinti",
+      "unconfirmedHint": "Perskaityta iš dokumentų — palyginkite su cituojama ištrauka, prieš tuo remdamiesi.",
+      "lotLabel": "{{lot}} dalis",
+      "noticeLevel": "Taikoma visam skelbimui",
+      "askWhy": "Kodėl?",
+      "source": {
+        "user_stated": "Jūs tai nurodėte",
+        "document_excerpt": "Iš pirkimo dokumentų",
+        "award_criteria": "Iš pasiūlymų vertinimo kriterijų",
+        "agent_inferred": "Agento nustatyta"
+      }
+    },
+    "capture": {
+      "title": "Vienas klausimas",
+      "save": "Išsaugoti",
+      "saving": "Išsaugoma…",
+      "notSure": "Nežinau",
+      "error": "Nepavyko išsaugoti. Bandykite dar kartą.",
+      "cannotCheck": "Šito automatiškai patikrinti negalime.",
+      "prompt": {
+        "soa": "Kokią SOA kategoriją ir classifica turite?",
+        "certification": "Kokį sertifikatą tam turite?",
+        "turnover": "Kokią apyvartą pasiekėte?",
+        "past_contracts": "Kuri jūsų sutartis tai apima?",
+        "headcount": "Kiek darbuotojų turėjote?",
+        "registration": "Kuri registracija ar sąrašas tai apima?",
+        "other": "Šito automatiškai patikrinti negalime — perskaitykite ir nuspręskite patys."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Prisijungti",
@@ -477,6 +656,59 @@
       "deadlineUntil": "baigiasi iki {{date}}",
       "undo": "Išvalyti",
       "remove": "Pašalinti {{chip}}"
+    },
+    "coverage": {
+      "title": "Ką perskaitėme",
+      "openBuyerDocuments": "Atverti perkančiosios organizacijos dokumentus",
+      "label": {
+        "full": "Pirkimo dokumentai perskaityti",
+        "notice_only": "Tik skelbimas",
+        "none": "Nieko neperskaityta"
+      },
+      "reason": {
+        "no_documents_published": "Perkančioji organizacija su šiuo skelbimu nepaskelbė jokių dokumentų.",
+        "notice_not_read": "Neperskaitėme šio skelbimo struktūrinių duomenų, todėl nežinome, ką jis skelbia.",
+        "body_not_retrieved": "Perkančioji organizacija skelbia dokumentus, kurių dar neatsisiuntėme.",
+        "not_yet_extracted": "Eilėje — dar neperskaityta.",
+        "extraction_failed": "Nepavyko perskaityti šių dokumentų teksto."
+      },
+      "counts": {
+        "documents_one": "perskaitytas {{count}} dokumentas",
+        "documents_few": "perskaityti {{count}} dokumentai",
+        "documents_other": "perskaityta {{count}} dokumentų",
+        "parts_one": "išgauta {{count}} dalis",
+        "parts_few": "išgautos {{count}} dalys",
+        "parts_other": "išgauta {{count}} dalių",
+        "knownLinks_one": "paskelbtas {{count}} dokumentas",
+        "knownLinks_few": "paskelbti {{count}} dokumentai",
+        "knownLinks_other": "paskelbta {{count}} dokumentų"
+      }
+    },
+    "criteria": {
+      "title": "Kur surenkami balai",
+      "notEnriched": "Dar neperskaitėme šio skelbimo struktūrinių duomenų.",
+      "gridUnusable": "Skelbime nurodytas pasiūlymų vertinimo būdas, bet nepaskelbti lyginamieji svoriai. Vertinimo lentelė yra pirkimo dokumentuose.",
+      "weight": "Lyginamasis svoris",
+      "noWeight": "Svoris nepaskelbtas",
+      "lot": "{{lot}} dalis",
+      "appliesToEveryLot": "Taikoma visoms dalims",
+      "showAllLots": "Rodyti visas dalis",
+      "type": {
+        "quality": "Kokybė",
+        "cost": "Sąnaudos",
+        "price": "Kaina"
+      }
+    },
+    "citation": {
+      "page": "p. {{page}}",
+      "pageRange": "p. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "{{index}} dalis",
+      "openDocument": "Atverti dokumentą",
+      "expandPassage": "Rodyti visą ištrauką",
+      "collapsePassage": "Slėpti ištrauką",
+      "passageUnavailable": "Nepavyko gauti visos ištraukos.",
+      "truncated": "Ištrauka sutrumpinta."
     }
   },
   "today": {
@@ -518,6 +750,7 @@
     "nav": {
       "general": "Bendra",
       "profile": "Kliento profilis",
+      "company": "Įmonės byla",
       "overview": "Apžvalga",
       "members": "Nariai",
       "roles": "Vaidmenys",
@@ -721,6 +954,27 @@
       "duplicate": "Šis pirkimas jau yra tame workbenche.",
       "unavailable": "Šis pirkimas nebeprieinamas.",
       "generic": "Kažkas nutiko ne taip. Bandykite dar kartą."
+    },
+    "scheda": {
+      "coverageTitle": "Ką perskaitėme",
+      "evidenceTitle": "Reikalavimai ir įrodymai",
+      "pointsTitle": "Kur surenkami balai",
+      "repairChat": {
+        "title": "Klauskite apie šį pirkimą",
+        "open": "Užduoti klausimą",
+        "close": "Uždaryti",
+        "askWhy": "Kodėl?",
+        "seedGapQuestion": "Kodėl šis pirkimas reikalauja „{{requirement}}“?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Užfiksuota atsižvelgiant į: {{recommendation}}",
+      "youDecided": "jūs nusprendėte {{decision}}",
+      "noRecommendation": "Jums priimant sprendimą kvalifikacijos patikra nebuvo prieinama.",
+      "recordedAt": "užfiksuota {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blokuojantis trūkumas",
+      "blockingGapsAtDecision_few": "{{count}} blokuojantys trūkumai",
+      "blockingGapsAtDecision_other": "{{count}} blokuojančių trūkumų"
     }
   },
   "workbench": {
