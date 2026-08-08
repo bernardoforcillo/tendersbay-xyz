@@ -107,15 +107,36 @@ func TestArrayColumnsCrossTheBoundaryJoined(t *testing.T) {
 // compile-time one. Pinning the count is what makes adding a column here fail
 // loudly if the Scan is not updated with it.
 func TestTenderSelectColumns_ProjectsExactlyWhatIsScanned(t *testing.T) {
-	const wantColumns = 20 // + relevance + snippet, appended by each query
+	const wantColumns = 16 // + relevance + snippet, appended by each query
 	if got := strings.Count(tenderSelectColumns, ",") + 1; got != wantColumns {
 		t.Fatalf("tenderSelectColumns projects %d columns, want %d — queryScoredTenders' Scan must match", got, wantColumns)
 	}
-	for _, col := range []string{
-		"t.description", "t.publication_number", "t.documents_url", "t.submission_url", "t.grid_usable",
-	} {
+	for _, col := range []string{"t.description"} {
 		if !strings.Contains(tenderSelectColumns, col) {
 			t.Errorf("tenderSelectColumns is missing %s", col)
+		}
+	}
+}
+
+// TestTenderSelectColumns_OmitsIngestion0010Columns pins the production
+// incident that removed them. publication_number, documents_url,
+// submission_url and grid_usable are created by services/ingestion's migration
+// 0010. The backend does not migrate the tenders schema and deploys on its own
+// image tag, so naming them here took every search down with SQLSTATE 42703
+// in the window before ingestion rolled out — both arms at once, because the
+// lexical and semantic paths share this projection.
+//
+// Nothing downstream ever read them from a search result: the proto carries
+// them on TenderDetail alone. They belong on the per-tender fetch, and this
+// test is what stops a future change from moving them back onto the hot path.
+func TestTenderSelectColumns_OmitsIngestion0010Columns(t *testing.T) {
+	for _, col := range []string{
+		"publication_number", "documents_url", "submission_url", "grid_usable",
+	} {
+		if strings.Contains(tenderSelectColumns, col) {
+			t.Errorf("tenderSelectColumns names %s — that column is owned by services/ingestion's "+
+				"migration 0010 and is not guaranteed to exist when this service deploys; "+
+				"detail-only fields belong on TenderDetail", col)
 		}
 	}
 }

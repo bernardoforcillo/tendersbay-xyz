@@ -321,9 +321,19 @@ func TestFindDetailByID_EnrichedAtIgnoresTerminalFailures(t *testing.T) {
 	}
 }
 
-// The five scalars ride the search projection, so a result card can show them
-// without a second query — and grid_usable must stay three-valued there too.
-func TestSearchProjection_CarriesTheEFormsScalars(t *testing.T) {
+// The eForms scalars deliberately do NOT ride the search projection: they are
+// created by services/ingestion's migration 0010, and naming them in the
+// projection this service shares across all four search queries took every
+// search down with SQLSTATE 42703 during the window before ingestion deployed.
+//
+// What search still carries is description (migration 0004, long settled). The
+// eForms scalars are read per-tender by TenderDetail, which is what the proto
+// exposes them on and what the tender-detail page and the agent tools use.
+//
+// This test now pins the ABSENCE, because the failure it guards against is a
+// well-meaning future change moving them back onto the hot path for one fewer
+// round trip. Search must survive a backend that is ahead of ingestion.
+func TestSearchProjection_OmitsTheEFormsScalarsButKeepsDescription(t *testing.T) {
 	repo, sqlDB := testTenderRepo(t)
 	ctx := context.Background()
 
@@ -331,37 +341,37 @@ func TestSearchProjection_CarriesTheEFormsScalars(t *testing.T) {
 	no := false
 	setTenderEForms(t, sqlDB, id, "Descrizione della gara.", "545620-2026",
 		"https://buyer.example/documenti", "https://buyer.example/offerte", &no)
-	unread := insertTestTender(t, sqlDB, "search-eforms-unread", withCountry("PRT"))
 
 	rows, err := repo.SearchByFiltersRanked(ctx, tender.Filters{Countries: []string{"PRT"}}, tender.SortPublished, 10, 0)
 	if err != nil {
 		t.Fatalf("SearchByFiltersRanked: %v", err)
 	}
-	var enriched, plain *tender.ScoredTender
+	var enriched *tender.ScoredTender
 	for i := range rows {
-		switch rows[i].ID {
-		case itoa(id):
+		if rows[i].ID == itoa(id) {
 			enriched = &rows[i]
-		case itoa(unread):
-			plain = &rows[i]
 		}
 	}
-	if enriched == nil || plain == nil {
-		t.Fatalf("expected both seeded rows in results, got %d rows", len(rows))
+	if enriched == nil {
+		t.Fatalf("expected the seeded row in results, got %d rows", len(rows))
 	}
-	if enriched.Description != "Descrizione della gara." || enriched.PublicationNumber != "545620-2026" {
-		t.Errorf("enriched scalars = %+v, want the seeded values", enriched.Tender)
+	if enriched.Description != "Descrizione della gara." {
+		t.Errorf("Description = %q, want the seeded value — description DOES ride the projection",
+			enriched.Description)
 	}
-	if enriched.DocumentsURL == "" || enriched.SubmissionURL == "" {
-		t.Errorf("buyer links = (%q, %q), want both", enriched.DocumentsURL, enriched.SubmissionURL)
+
+	// The eForms scalars reach a caller through the detail fetch, not search.
+	d, err := repo.FindDetailByID(ctx, id)
+	if err != nil {
+		t.Fatalf("FindDetailByID: %v", err)
 	}
-	if enriched.GridUsable == nil || *enriched.GridUsable {
-		t.Errorf("GridUsable = %v, want a non-nil false", enriched.GridUsable)
+	if d.PublicationNumber != "545620-2026" {
+		t.Errorf("detail PublicationNumber = %q, want the seeded value", d.PublicationNumber)
 	}
-	if plain.GridUsable != nil {
-		t.Errorf("GridUsable = %v on an unenriched row, want nil", *plain.GridUsable)
+	if d.DocumentsURL == "" || d.SubmissionURL == "" {
+		t.Errorf("detail buyer links = (%q, %q), want both", d.DocumentsURL, d.SubmissionURL)
 	}
-	if plain.DocumentsURL != "" || plain.PublicationNumber != "" {
-		t.Errorf("unenriched row = %+v, want empty eForms scalars", plain.Tender)
+	if d.GridUsable == nil || *d.GridUsable {
+		t.Errorf("detail GridUsable = %v, want a non-nil false", d.GridUsable)
 	}
 }
