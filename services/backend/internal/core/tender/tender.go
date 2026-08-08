@@ -68,29 +68,22 @@ type Tender struct {
 	// truncated field is worse than either extreme — a reader cannot tell a
 	// short description from a clipped one.
 	Description string
-	// PublicationNumber is TED's immutable per-notice id ("545620-2026").
-	// SourceRef is deliberately the procedure-identifier, so that a contract
-	// notice and its later award notice land on ONE row; this is therefore the
-	// only field that says WHICH notice the detail was read from.
-	PublicationNumber string
-	// DocumentsURL is the buyer's own tender-documents page and SubmissionURL
-	// is where offers are submitted, both as published by the notice. They are
-	// stored and shown; nothing follows them — retrieving what is behind a
-	// buyer-portal link carries robots and SSRF obligations this service does
-	// not yet meet.
-	DocumentsURL  string
-	SubmissionURL string
-	// GridUsable is three-valued on purpose and MUST stay a pointer:
+
+	// PublicationNumber, DocumentsURL, SubmissionURL and GridUsable are
+	// DELIBERATELY ABSENT from this type. They live on TenderDetail only.
 	//
-	//	nil   = the notice's structured detail has not been read
-	//	false = read, and no criterion carries a weight
-	//	true  = read, and at least one does
+	// They were briefly here, populated from the shared search projection, and
+	// that took every search down in production: those columns are created by
+	// services/ingestion's migration 0010, this service does not migrate the
+	// tenders schema, and the two deploy on independent image tags — so the
+	// backend asked for a column that did not exist yet and every query failed
+	// with SQLSTATE 42703, on both the lexical and the semantic arm.
 	//
-	// Flattening nil to false makes "we have not looked" indistinguishable
-	// from "we looked and there is no grid". That is the conflation that makes
-	// "criteria published" (76% of sampled Italian notices) read as "criteria
-	// usable" (36%) — a ~2x overstatement, reintroduced at the type level.
-	GridUsable *bool
+	// Nothing had ever read them from a search result; the proto carries them
+	// on TenderDetail alone. Two rules follow, and postgres.TenderSelectColumns'
+	// guard tests enforce them: a field only the detail view consumes never
+	// joins the hot projection, and this type never names a column from a
+	// migration younger than one full release cycle.
 }
 
 // Filters narrows a search. Zero-value fields are unset, and every list field
