@@ -2,7 +2,7 @@ import { Banner, Button, Select } from '@tendersbay/components/core';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useWorkbenchContext } from '~/features/workbench/context';
-import { useAsync } from '~/features/workbench/hooks';
+import { useAsync } from '~/hooks';
 import { workbenchClient, workspaceClient } from '~/lib/api/client';
 
 export function MemberAdd({

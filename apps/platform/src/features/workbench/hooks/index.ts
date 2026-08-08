@@ -1,36 +1,7 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useWorkbenchContext } from '~/features/workbench/context';
+import { useAsync } from '~/hooks';
 import { bidClient, workbenchClient } from '~/lib/api/client';
-
-export function useAsync<T>(fn: () => Promise<T>) {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [tick, setTick] = useState(0);
-  const refetch = useCallback(() => setTick((n) => n + 1), []);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `tick` is a manual refetch trigger
-  useEffect(() => {
-    let active = true;
-    setLoading(true);
-    setError(null);
-    fn()
-      .then((res) => {
-        if (active) setData(res);
-      })
-      .catch((e: unknown) => {
-        if (active) setError(e instanceof Error ? e.message : 'Something went wrong');
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [fn, tick]);
-
-  return { data, loading, error, refetch };
-}
 
 export function useWorkbenches(workspaceId: string) {
   const fn = useCallback(
