@@ -88,12 +88,17 @@ breaking it into smaller steps (e.g. backfill a new column with batched
 `cmd/backfill-descriptions` already does for description backfill) rather
 than one long rewrite that risks the deadline.
 
-## Two CronJobs: fetching and indexing are scheduled separately, on purpose
+## Four CronJobs: each phase is scheduled separately, on purpose
 
-`main/cronjob.yaml` (`ingestion`, hourly) fetches from every provider and
-persists. `main/indexer-cronjob.yaml` (`indexer`, every 15 minutes) embeds
-unindexed tenders into Qdrant and extracts the text of their attached
-documents.
+| Job | File | Schedule | Deadline | Queue it drains |
+| --- | --- | --- | --- | --- |
+| `ingestion` | `main/cronjob.yaml` | `0 * * * *` | 50m | every provider, every hour |
+| `indexer` | `main/indexer-cronjob.yaml` | `*/15 * * * *` | 14m | `indexed_at IS NULL` |
+| `enricher` | `main/enricher-cronjob.yaml` | `5,20,35,50 * * * *` | 14m | `xml_fetched_at IS NULL` |
+| `retriever` | `main/retriever-cronjob.yaml` | `10,40 * * * *` | 25m | `grid_usable = false AND docs_fetched_at IS NULL` |
+
+No two of them start into the same instant, so they never contend for the same
+database connections at the same moment.
 
 They used to be one process — ingestion first, indexing second. Fetching
 regularly outran `activeDeadlineSeconds`, so the job was killed before
@@ -103,24 +108,51 @@ history showed the run failing on a deadline, while the real damage was that
 extraction never advanced past whatever backlog predated the slowdown. Dense
 search silently degraded to whatever had been indexed months earlier.
 
-Two things follow for anyone changing these:
+That incident is why each later phase got its own job rather than a stage in an
+existing one. The `enricher` is paced by TED; the `retriever` is paced by
+hundreds of different buyers' portals at two seconds per host, which makes one
+tender minutes of work where one notice is under a second. Any two of those
+sharing a window means the slower one silently starves the faster one while the
+job keeps reporting success.
+
+Three things follow for anyone changing these:
 
 - **Only `ingestion` applies migrations.** `postgres.New` migrates;
-  `postgres.Connect` does not, and the indexer uses `Connect`. Adding a second
-  migrating binary would put two schedules in a race to apply the same
-  migration.
-- **The indexer's deadline is not a data-loss risk.** It drains in batches and
-  each batch commits independently, so a run cut short by
-  `activeDeadlineSeconds` simply leaves the remainder for the next fire.
+  `postgres.Connect` does not, and the indexer, enricher and retriever all use
+  `Connect`. Adding a second migrating binary would put two schedules in a race
+  to apply the same migration.
+- **No deadline here is a data-loss risk.** Every job drains in batches (the
+  retriever commits per retrieved *file*), so a run cut short by
+  `activeDeadlineSeconds` simply leaves the remainder for the next fire. The
+  queue is the state.
+- **The `indexer` must never touch a buyer portal.** Its fetcher
+  (`internal/adapter/document`) has no robots handling, no per-host pacing and
+  no dial guard — deliberately, because it reads TED and nothing else. The
+  indexer fetches a document itself whenever that document has no extracted
+  parts, so a portal document persisted *without* its text would hand that
+  unguarded fetcher a buyer's URL on every indexing cycle, forever. The
+  retriever therefore extracts text itself and writes a
+  `type='tender-document'` row **if and only if** the extraction succeeded. Do
+  not "optimise" it into enqueueing URLs for the indexer.
 
 To watch a drain, the per-batch progress is on stdout:
 
 ```sh
 kubectl logs -n tendersbay-xyz -l tier=ingestion-indexer --tail=50
+kubectl logs -n tendersbay-xyz -l tier=ingestion-retriever --tail=50
 ```
 
 `indexed_total` climbing across `indexing batch complete` lines means it is
 working; `indexing pass complete` with a low total means the backlog is clear.
+The retriever's equivalent is `retrieved_total` on `portal retrieval batch
+complete`, plus one `tender_documents_retrieved` line per tender that left the
+queue — that line carries the status, the platform, and both file counts, and
+it is what the coverage queries are read against. It carries no URL, no host
+and no buyer name, by construction.
+
+A `portal retrieval circuit breaker tripped` warning naming one host is a
+portal being down, and is expected; the same warning with
+`global_failure_limit` reached across many hosts means the pod has no egress.
 
 ## Seeding the CPV vocabulary — required once per environment, fails silently if skipped
 

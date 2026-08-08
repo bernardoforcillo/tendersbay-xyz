@@ -45,11 +45,27 @@ RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /indexer ./c
 # overriding `command`.
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /enricher ./cmd/enricher
 
+# retriever drains the portal-document backlog (grid_usable = false AND
+# docs_fetched_at IS NULL): it follows the buyer's own documents link, reads
+# the listing, and extracts the text of the files it publishes. A fourth
+# recurring binary, and the split matters more here than for any of the three
+# above — this is the only pass whose pace is set by hundreds of DIFFERENT
+# third-party hosts, most of them small municipal portals, so its per-host
+# politeness bounds make it minutes per tender where the enricher is seconds
+# per notice. Sharing a deadline with any of them would starve one of the two.
+# It gets its own CronJob (retriever-cronjob.yaml) overriding `command`.
+#
+# Note CGO_ENABLED=0 here as everywhere: gosseract (OCR) needs cgo and is
+# therefore unreachable, which is why a scanned PDF yields no text and the
+# retrieval pass measures that gap rather than trying to close it.
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /retriever ./cmd/retriever
+
 # ---- Stage 2: minimal runtime ----
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=builder /ingestion /ingestion
 COPY --from=builder /seed-cpv /seed-cpv
 COPY --from=builder /indexer /indexer
 COPY --from=builder /enricher /enricher
+COPY --from=builder /retriever /retriever
 USER nonroot:nonroot
 ENTRYPOINT ["/ingestion"]
