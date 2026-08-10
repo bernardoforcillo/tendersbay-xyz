@@ -483,7 +483,7 @@ func TestRecommendTendersForClient_RejectsUnauthenticated(t *testing.T) {
 func TestRecommendTendersForClient_MapsFitTierAndReason(t *testing.T) {
 	repo := &fakeRepo{results: []tender.Tender{{
 		ID: "1", Title: "Lavori stradali", CPV: "45210000", Country: "ITA",
-		NUTS: "ITC4C", ProcedureType: "open", Value: i64(150),
+		NUTS: "ITC4C", ProcedureType: "open", Value: i64(150_00), // minor units, against the profile's whole-unit [100, 200] band
 	}}}
 	cfg := tender.Config{
 		AnonTier:   tender.Tier{MaxResults: 10, RateLimit: 30, RateWindow: 5 * time.Minute},

@@ -46,12 +46,15 @@ func TestParseQuery_IgnoresNonEightDigitNumbers(t *testing.T) {
 }
 
 func TestParseQuery_ExtractsUpperBound(t *testing.T) {
+	// Wanted values are MINOR units, written with a trailing _00 so the euro
+	// figure the query names stays readable — the same notation core/company
+	// uses for money. "sotto 100k" is €100,000, i.e. 100_000_00 cents.
 	tests := map[string]int64{
-		"pulizie sotto 100k":          100_000,
-		"cleaning under 100k":         100_000,
-		"nettoyage moins de 250000 €": 250_000,
-		"reinigung unter 1 mln":       1_000_000,
-		"limpieza hasta 50.000 euro":  50_000,
+		"pulizie sotto 100k":          100_000_00,
+		"cleaning under 100k":         100_000_00,
+		"nettoyage moins de 250000 €": 250_000_00,
+		"reinigung unter 1 mln":       1_000_000_00,
+		"limpieza hasta 50.000 euro":  50_000_00,
 	}
 	for query, want := range tests {
 		got := ParseQuery(query, parseNow)
@@ -67,8 +70,8 @@ func TestParseQuery_ExtractsUpperBound(t *testing.T) {
 
 func TestParseQuery_ExtractsLowerBound(t *testing.T) {
 	got := ParseQuery("lavori oltre 500k", parseNow)
-	if got.Filters.ValueMin == nil || *got.Filters.ValueMin != 500_000 {
-		t.Errorf("ValueMin = %v, want 500000", got.Filters.ValueMin)
+	if got.Filters.ValueMin == nil || *got.Filters.ValueMin != 500_000_00 {
+		t.Errorf("ValueMin = %v, want 500000_00 minor units", got.Filters.ValueMin)
 	}
 	if got.Filters.ValueMax != nil {
 		t.Errorf("ValueMax = %v, want nil for a one-sided bound", *got.Filters.ValueMax)
@@ -80,14 +83,14 @@ func TestParseQuery_ExtractsRange(t *testing.T) {
 	if got.Filters.ValueMin == nil || got.Filters.ValueMax == nil {
 		t.Fatalf("range = [%v %v], want both bounds", got.Filters.ValueMin, got.Filters.ValueMax)
 	}
-	if *got.Filters.ValueMin != 50_000 || *got.Filters.ValueMax != 200_000 {
-		t.Errorf("range = [%d %d], want [50000 200000]", *got.Filters.ValueMin, *got.Filters.ValueMax)
+	if *got.Filters.ValueMin != 50_000_00 || *got.Filters.ValueMax != 200_000_00 {
+		t.Errorf("range = [%d %d], want [50000_00 200000_00] minor units", *got.Filters.ValueMin, *got.Filters.ValueMax)
 	}
 }
 
 func TestParseQuery_NormalisesAnInvertedRange(t *testing.T) {
 	got := ParseQuery("between 200k and 50k", parseNow)
-	if *got.Filters.ValueMin != 50_000 || *got.Filters.ValueMax != 200_000 {
+	if *got.Filters.ValueMin != 50_000_00 || *got.Filters.ValueMax != 200_000_00 {
 		t.Errorf("range = [%d %d], want the bounds swapped into order", *got.Filters.ValueMin, *got.Filters.ValueMax)
 	}
 }
@@ -184,8 +187,8 @@ func TestParseQuery_CombinesEveryFacetInOneLine(t *testing.T) {
 	if len(got.Filters.Statuses) != 1 || got.Filters.Statuses[0] != "open" {
 		t.Errorf("Statuses = %v, want [open]", got.Filters.Statuses)
 	}
-	if got.Filters.ValueMax == nil || *got.Filters.ValueMax != 100_000 {
-		t.Errorf("ValueMax = %v, want 100000", got.Filters.ValueMax)
+	if got.Filters.ValueMax == nil || *got.Filters.ValueMax != 100_000_00 {
+		t.Errorf("ValueMax = %v, want 100000_00 minor units", got.Filters.ValueMax)
 	}
 	if got.Filters.DeadlineTo == nil {
 		t.Error("DeadlineTo = nil, want the 30-day window")
@@ -274,8 +277,8 @@ func TestMergeParsedFilters_TreatsAValueRangeAsOneFacet(t *testing.T) {
 // factor-of-1000 error on the budget filter.
 func TestParseQuery_ItalianThousandsSuffixNotShadowedByBareM(t *testing.T) {
 	got := ParseQuery("pulizie sotto 100 mila", parseNow)
-	if got.Filters.ValueMax == nil || *got.Filters.ValueMax != 100_000 {
-		t.Errorf("ValueMax = %v, want 100000 — \"mila\" must not be read as \"m\" (1000x too large)", got.Filters.ValueMax)
+	if got.Filters.ValueMax == nil || *got.Filters.ValueMax != 100_000_00 {
+		t.Errorf("ValueMax = %v, want 100000_00 — \"mila\" must not be read as \"m\" (1000x too large)", got.Filters.ValueMax)
 	}
 	// "m" shadowing "mila" also leaves "ila" behind as unconsumed query text,
 	// polluting what gets handed to the retrievers.
@@ -292,8 +295,8 @@ func TestParseQuery_ItalianThousandsSuffixNotShadowedByBareM(t *testing.T) {
 // above catches the value half.
 func TestParseQuery_ItalianMillionsLeavesNoResidualSuffix(t *testing.T) {
 	got := ParseQuery("sotto 5 milioni", parseNow)
-	if got.Filters.ValueMax == nil || *got.Filters.ValueMax != 5_000_000 {
-		t.Errorf("ValueMax = %v, want 5000000", got.Filters.ValueMax)
+	if got.Filters.ValueMax == nil || *got.Filters.ValueMax != 5_000_000_00 {
+		t.Errorf("ValueMax = %v, want 5000000_00 minor units", got.Filters.ValueMax)
 	}
 	if strings.Contains(got.Text, "ilioni") {
 		t.Errorf("Text = %q, want \"milioni\" consumed whole, not shadowed down to \"m\"", got.Text)
@@ -303,8 +306,8 @@ func TestParseQuery_ItalianMillionsLeavesNoResidualSuffix(t *testing.T) {
 // Same residual-text hazard as the Italian case above, for the French form.
 func TestParseQuery_FrenchMillionsLeavesNoResidualSuffix(t *testing.T) {
 	got := ParseQuery("plus de 50 millions", parseNow)
-	if got.Filters.ValueMin == nil || *got.Filters.ValueMin != 50_000_000 {
-		t.Errorf("ValueMin = %v, want 50000000", got.Filters.ValueMin)
+	if got.Filters.ValueMin == nil || *got.Filters.ValueMin != 50_000_000_00 {
+		t.Errorf("ValueMin = %v, want 50000000_00 minor units", got.Filters.ValueMin)
 	}
 	if strings.Contains(got.Text, "illions") {
 		t.Errorf("Text = %q, want \"millions\" consumed whole, not shadowed down to \"m\"", got.Text)
@@ -317,10 +320,20 @@ func TestParseAmount_RejectsOverflow(t *testing.T) {
 	}
 }
 
+// The scale to minor units is a second multiply, and it needs the same guard
+// as the magnitude one: this number parses, carries no magnitude, and would
+// wrap past int64 on the x100 alone — turning an absurd ceiling into a small
+// or negative one, which silently filters everything out instead of nothing.
+func TestParseAmount_RejectsOverflowOnTheMinorUnitScale(t *testing.T) {
+	if got, ok := parseAmount("99999999999999999", "", "€"); ok {
+		t.Errorf("parseAmount = (%d, true), want rejected before the x100 wraps", got)
+	}
+}
+
 func TestParseAmount_StripsThousandsSeparators(t *testing.T) {
 	got, ok := parseAmount("1.250.000", "", "€")
-	if !ok || got != 1_250_000 {
-		t.Errorf("parseAmount = (%d, %v), want (1250000, true)", got, ok)
+	if !ok || got != 1_250_000_00 {
+		t.Errorf("parseAmount = (%d, %v), want (1250000_00, true)", got, ok)
 	}
 }
 
@@ -372,8 +385,8 @@ func TestSearch_DoesNotParseConstraintsUnlessAsked(t *testing.T) {
 	}); err != nil {
 		t.Fatalf("Search: %v", err)
 	}
-	if repo.gotFilters.ValueMin == nil || *repo.gotFilters.ValueMin != 5_000_000 {
-		t.Errorf("ValueMin = %v, want 5000000 once parsing is opted into", repo.gotFilters.ValueMin)
+	if repo.gotFilters.ValueMin == nil || *repo.gotFilters.ValueMin != 5_000_000_00 {
+		t.Errorf("ValueMin = %v, want 5000000_00 minor units once parsing is opted into", repo.gotFilters.ValueMin)
 	}
 }
 

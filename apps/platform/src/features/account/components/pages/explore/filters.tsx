@@ -74,11 +74,19 @@ export function hasActiveFilters(s: FilterSelections): boolean {
   );
 }
 
-/** Parses a money input, returning undefined for anything that isn't a number. */
+/**
+ * Parses a money input into MINOR units, returning undefined for anything that
+ * isn't a number.
+ *
+ * The input is whole euros — that is what the field asks for and what the user
+ * types — while `value_min`/`value_max` are compared against a minor-unit
+ * column server-side, so the bound is scaled here at the edge. Sending the
+ * typed number unscaled capped a "100000" search at €1,000.
+ */
 function parseMoney(raw: string): bigint | undefined {
   const cleaned = raw.replace(/[^\d]/g, '');
   if (!cleaned) return undefined;
-  return BigInt(cleaned);
+  return BigInt(cleaned) * 100n;
 }
 
 /**

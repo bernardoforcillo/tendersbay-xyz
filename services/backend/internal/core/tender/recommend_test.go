@@ -11,6 +11,11 @@ import (
 
 func i64(v int64) *int64 { return &v }
 
+// The two sides carry different units on purpose — `value` is minor units
+// (Tender.Value), the band is whole units (clientprofile.Profile) — so every
+// case here states the band as 100/200 euros and the value in cents against it.
+// A band of [€100, €200] admits €1.50 and rejects €2.50; before the scale was
+// applied it rejected everything above two cents.
 func TestValueFit(t *testing.T) {
 	cases := []struct {
 		name            string
@@ -18,16 +23,16 @@ func TestValueFit(t *testing.T) {
 		want            string
 	}{
 		{"no value", nil, i64(100), i64(200), "unknown"},
-		{"no band at all", i64(150), nil, nil, "unknown"},
-		{"below min", i64(50), i64(100), i64(200), "below"},
-		{"above max", i64(250), i64(100), i64(200), "above"},
-		{"in band", i64(150), i64(100), i64(200), "in_band"},
-		{"at min boundary", i64(100), i64(100), i64(200), "in_band"},
-		{"at max boundary", i64(200), i64(100), i64(200), "in_band"},
-		{"only min set, above it", i64(150), i64(100), nil, "in_band"},
-		{"only min set, below it", i64(50), i64(100), nil, "below"},
-		{"only max set, below it", i64(150), nil, i64(200), "in_band"},
-		{"only max set, above it", i64(250), nil, i64(200), "above"},
+		{"no band at all", i64(150_00), nil, nil, "unknown"},
+		{"below min", i64(50_00), i64(100), i64(200), "below"},
+		{"above max", i64(250_00), i64(100), i64(200), "above"},
+		{"in band", i64(150_00), i64(100), i64(200), "in_band"},
+		{"at min boundary", i64(100_00), i64(100), i64(200), "in_band"},
+		{"at max boundary", i64(200_00), i64(100), i64(200), "in_band"},
+		{"only min set, above it", i64(150_00), i64(100), nil, "in_band"},
+		{"only min set, below it", i64(50_00), i64(100), nil, "below"},
+		{"only max set, below it", i64(150_00), nil, i64(200), "in_band"},
+		{"only max set, above it", i64(250_00), nil, i64(200), "above"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -158,7 +163,7 @@ func TestComputeReasonSignals(t *testing.T) {
 		Country:       "ITA",
 		NUTS:          "ITC4",
 		ProcedureType: "open",
-		Value:         i64(150),
+		Value:         i64(150_00),
 		Deadline:      &deadline,
 	}
 
@@ -336,8 +341,8 @@ func TestRecommendForClient_ScoresAndSortsByTierThenRelevance(t *testing.T) {
 		ValueMin: min, ValueMax: max,
 	}
 	repo := &recommendFakeRepo{results: []Tender{
-		{ID: "1", CPV: "45210000", Country: "ITA", Value: i64(150)}, // in-band, sector+country match
-		{ID: "2", CPV: "99000000", Country: "FRA", Value: i64(999)}, // no match, value above band
+		{ID: "1", CPV: "45210000", Country: "ITA", Value: i64(150_00)}, // in-band, sector+country match
+		{ID: "2", CPV: "99000000", Country: "FRA", Value: i64(999_00)}, // no match, value above band
 	}}
 	svc := NewService(repo, nil, recommendFakeRateLimiter{}, &fakeProfileSource{profile: profile}, testFitConfig())
 
@@ -450,8 +455,8 @@ func TestAnnotateForClient_NeverReorders(t *testing.T) {
 	svc := NewService(&recommendFakeRepo{}, nil, recommendFakeRateLimiter{}, &fakeProfileSource{profile: profile}, testFitConfig())
 
 	results := []ScoredTender{
-		{Tender: Tender{ID: "long-shot", CPV: "99000000", Value: i64(999)}, RelevanceScore: 0.1},
-		{Tender: Tender{ID: "strong", CPV: "45210000", Value: i64(150)}, RelevanceScore: 0.9},
+		{Tender: Tender{ID: "long-shot", CPV: "99000000", Value: i64(999_00)}, RelevanceScore: 0.1},
+		{Tender: Tender{ID: "strong", CPV: "45210000", Value: i64(150_00)}, RelevanceScore: 0.9},
 	}
 
 	out, err := svc.AnnotateForClient(context.Background(), "u1", "ws1", results)
