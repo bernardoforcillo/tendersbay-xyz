@@ -396,11 +396,13 @@ describe('AccountTendersPage — search', () => {
     await user.type(screen.getByLabelText('Max value'), 'abc');
     expect(searchMock).toHaveBeenLastCalledWith('roads', {}, 'ws-1', 'relevance');
 
+    // Typed in whole euros, sent in minor units: the bound is compared against
+    // a minor-unit column, so an unscaled 100000 would cap the search at €1,000.
     await user.clear(screen.getByLabelText('Max value'));
     await user.type(screen.getByLabelText('Max value'), '100000');
     expect(searchMock).toHaveBeenLastCalledWith(
       'roads',
-      { valueMax: 100000n },
+      { valueMax: 100_000_00n },
       'ws-1',
       'relevance',
     );

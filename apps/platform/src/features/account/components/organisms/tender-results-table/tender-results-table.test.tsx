@@ -21,7 +21,7 @@ function fixture(overrides: Partial<TenderResult> = {}): TenderResult {
     procedureType: 'open',
     country: 'IT',
     cpv: '45221000',
-    value: 500_000n,
+    value: 500_000_00n,
     currency: 'EUR',
     publishedAt: '',
     deadline: '',
@@ -64,7 +64,9 @@ describe('TenderResultsTable — rendering', () => {
 
   it('renders the formatted value', () => {
     renderWithI18n(
-      <TenderResultsTable tenders={[fixture({ id: 't-1', value: 240_000n, currency: 'EUR' })]} />,
+      <TenderResultsTable
+        tenders={[fixture({ id: 't-1', value: 240_000_00n, currency: 'EUR' })]}
+      />,
     );
     // Formatted value contains "240" and "EUR" somewhere in the output
     expect(screen.getByRole('table')).toHaveTextContent('240');
@@ -117,9 +119,9 @@ describe('TenderResultsTable — navigation', () => {
 
 describe('TenderResultsTable — sorting', () => {
   const tenders = [
-    fixture({ id: 'a', title: 'Aqueduct repairs', fitTier: 'long_shot', value: 100_000n }),
-    fixture({ id: 'b', title: 'Bridge reinforcement', fitTier: 'strong', value: 800_000n }),
-    fixture({ id: 'c', title: 'Coastal erosion study', fitTier: '', value: 300_000n }),
+    fixture({ id: 'a', title: 'Aqueduct repairs', fitTier: 'long_shot', value: 100_000_00n }),
+    fixture({ id: 'b', title: 'Bridge reinforcement', fitTier: 'strong', value: 800_000_00n }),
+    fixture({ id: 'c', title: 'Coastal erosion study', fitTier: '', value: 300_000_00n }),
   ];
 
   function getDataRows() {
@@ -166,7 +168,7 @@ describe('TenderResultsTable — sorting', () => {
     const user = userEvent.setup();
     const withUnknown = [
       fixture({ id: 'x', title: 'Tender X', value: 0n }),
-      fixture({ id: 'y', title: 'Tender Y', value: 50_000n }),
+      fixture({ id: 'y', title: 'Tender Y', value: 50_000_00n }),
     ];
     renderWithI18n(<TenderResultsTable tenders={withUnknown} />);
     await user.click(screen.getByRole('button', { name: /value/i })); // asc

@@ -31,6 +31,17 @@ var (
 	ErrRateLimiterUnavailable = errors.New("tender: rate limiter unavailable")
 )
 
+// minorUnitScale converts whole currency units to the minor units (cents) that
+// ingested_tenders.value is stored in — the house rule stated in
+// company.proto's header, "money travels as int64 minor units".
+//
+// It exists as a named constant because the mismatch it guards against is not
+// hypothetical: a bare 100 read as €100 where the column holds €1.00 is
+// invisible in review, wrong by two orders of magnitude, and was shipped in
+// both the display and the query-bound paths. Anywhere a whole-euro figure
+// meets Tender.Value, it should meet this constant too.
+const minorUnitScale = 100
+
 // Tender is a search result's structured fields.
 type Tender struct {
 	ID            string
@@ -40,14 +51,17 @@ type Tender struct {
 	ProcedureType string
 	Country       string
 	CPV           string
-	Value         *int64
-	Currency      string
-	PublishedAt   *time.Time
-	Deadline      *time.Time
-	Source        string
-	SourceRef     string
-	NUTS          string
-	SourceURL     string // the notice document's URL; "" if none is ingested
+	// Value is in MINOR units (cents), as ingested by parseMinorUnits — a
+	// €6,297,240.05 notice is 629_724_005 here. nil when the notice publishes
+	// no estimate, which is common.
+	Value       *int64
+	Currency    string
+	PublishedAt *time.Time
+	Deadline    *time.Time
+	Source      string
+	SourceRef   string
+	NUTS        string
+	SourceURL   string // the notice document's URL; "" if none is ingested
 
 	// ── The eForms detail, as same-row scalars ──
 	//
@@ -104,7 +118,11 @@ type Filters struct {
 	// Buyer is a case-insensitive substring of the contracting authority's
 	// name, not a prefix — buyers are written inconsistently across sources
 	// ("Comune di Roma" / "Roma Capitale — Comune di Roma").
-	Buyer        string
+	Buyer string
+	// ValueMin/ValueMax are in MINOR units, the same scale as Tender.Value —
+	// they become "t.value >= $n" / "t.value <= $n" verbatim, so any other unit
+	// silently shifts the band by a factor of 100. nil = unbounded on that side,
+	// which is distinct from a zero bound.
 	ValueMin     *int64
 	ValueMax     *int64
 	DeadlineFrom *time.Time

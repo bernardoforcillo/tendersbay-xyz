@@ -34,7 +34,7 @@ describe('AppliedFilterChips', () => {
   it('shows a constraint the server read out of the query', () => {
     renderWithI18n(
       <AppliedFilterChips
-        applied={applied({ valueMax: 100000n })}
+        applied={applied({ valueMax: 100_000_00n })}
         explicit={NOTHING_EXPLICIT}
         locale="en-IE"
         onClear={vi.fn()}
@@ -98,7 +98,7 @@ describe('AppliedFilterChips', () => {
     const onClear = vi.fn();
     renderWithI18n(
       <AppliedFilterChips
-        applied={applied({ valueMax: 100000n })}
+        applied={applied({ valueMax: 100_000_00n })}
         explicit={NOTHING_EXPLICIT}
         locale="en-IE"
         onClear={onClear}
@@ -111,12 +111,15 @@ describe('AppliedFilterChips', () => {
   it('shows a range when both bounds were inferred', () => {
     renderWithI18n(
       <AppliedFilterChips
-        applied={applied({ valueMin: 50000n, valueMax: 200000n })}
+        applied={applied({ valueMin: 50_000_00n, valueMax: 200_000_00n })}
         explicit={NOTHING_EXPLICIT}
         locale="en-IE"
         onClear={vi.fn()}
       />,
     );
+    // Bounds arrive in minor units and must read back as the whole euros the
+    // user typed — a chip saying "5,000,000–20,000,000" would look like the
+    // search had misread the query it is meant to be echoing.
     expect(screen.getByText('50,000–200,000')).toBeInTheDocument();
   });
 
