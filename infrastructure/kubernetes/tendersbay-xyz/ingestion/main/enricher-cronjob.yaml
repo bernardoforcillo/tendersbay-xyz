@@ -50,7 +50,7 @@ spec:
               # Same image as ingestion, different binary — see the service
               # Dockerfile. The tag is rewritten by the shared Flux image
               # automation, which scans this whole folder (see update.yaml).
-              image: bernardoforcillo/tendersbay-ingestion:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
+              image: bernardoforcillo/tendersbay-ingestion:20260810151335-93e752ecbf57bac0e21760798e780c825ebc9435@sha256:070ec0709dd6d76f2a2b3ec0db83c8efd549a74ff172008f3ea75aa12b44d0bf # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
               command: ['/enricher']
               securityContext:
                 allowPrivilegeEscalation: false
@@ -82,11 +82,11 @@ spec:
                   value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
                 - name: POSTHOG_HOST
                   value: 'https://eu.i.posthog.com'
-                # No QDRANT_URL / OLLAMA_BASE_URL / EMBEDDING_MODEL here: this
-                # job only fetches XML and persists the structure it parses out.
-                # It resets indexed_at on every row it enriches, so the embedding
-                # work it creates is done by the `indexer` CronJob, which owns
-                # those settings.
+                  # No QDRANT_URL / OLLAMA_BASE_URL / EMBEDDING_MODEL here: this
+                  # job only fetches XML and persists the structure it parses out.
+                  # It resets indexed_at on every row it enriches, so the embedding
+                  # work it creates is done by the `indexer` CronJob, which owns
+                  # those settings.
               imagePullPolicy: Always
               volumeMounts:
                 - name: tmp
