@@ -101,7 +101,12 @@ export function AppliedFilterChips({
   // Formatted without a currency: the bound is a plain number the parser
   // read out of the query, and stamping a currency on it would assert
   // something the query never said.
-  const formatValue = (v: bigint) => new Intl.NumberFormat(locale).format(v);
+  //
+  // Scaled back down because the bound travels in minor units (it is compared
+  // against a minor-unit column) while the user typed — and must read back —
+  // whole euros: a chip answering "sotto 100k" with "100.000.000" would look
+  // like the search had misunderstood them.
+  const formatValue = (v: bigint) => new Intl.NumberFormat(locale).format(v / 100n);
   const formatDate = (d: Date) =>
     new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(d);
 

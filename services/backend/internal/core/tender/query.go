@@ -269,13 +269,20 @@ var magnitudes = map[string]int64{
 }
 
 // parseAmount turns a matched number, magnitude suffix and currency mark into
-// a value, reporting ok=false when the match doesn't look like money at all.
+// a bound in MINOR units, reporting ok=false when the match doesn't look like
+// money at all.
+//
+// The user types whole euros ("sotto 100k" means €100,000), but the bound is
+// compared against ingested_tenders.value, which is minor units — so the final
+// step scales by 100. Without it "sotto 100k" became "value <= 100000", i.e.
+// €1,000, and matched almost nothing.
 //
 // Separators are stripped rather than interpreted: "100.000" means a hundred
 // thousand across most of Europe and a hundred-point-zero in the anglophone
 // convention, and there is no way to tell which from the string alone. Reading
 // them as thousands separators is right far more often for procurement values,
-// which are whole euros.
+// which are whole euros. That same judgement is why no cents are read here: a
+// query never carries them, so the scale is always exactly ×100.
 func parseAmount(number, suffix, currency string) (int64, bool) {
 	cleaned := strings.NewReplacer(".", "", ",", "", " ", "", " ", "").Replace(number)
 	if cleaned == "" {
@@ -295,11 +302,16 @@ func parseAmount(number, suffix, currency string) (int64, bool) {
 		n *= mult
 	}
 	// Nothing marks this as money, so only a plausibly monetary magnitude
-	// counts — see minBareAmount.
+	// counts — see minBareAmount. Checked against the number as typed, before
+	// the scale below, since that floor is about what the user wrote.
 	if !hasMagnitude && currency == "" && n < minBareAmount {
 		return 0, false
 	}
-	return n, true
+	// Same guard as the magnitude multiply, for the same reason.
+	if n > (1<<62)/minorUnitScale {
+		return 0, false
+	}
+	return n * minorUnitScale, true
 }
 
 // ── Deadlines ──

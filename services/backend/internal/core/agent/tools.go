@@ -278,12 +278,18 @@ func newSearchTendersTool(ts *turnState, search func(query, country, cpv, status
 // result — raw fields only, no fit tier or reason (that's the deterministic
 // RecommendTendersForClient RPC's job, not this tool's).
 type searchTendersResultItem struct {
-	ID             string  `json:"id"`
-	Title          string  `json:"title"`
-	BuyerName      string  `json:"buyer_name"`
-	Country        string  `json:"country"`
-	CPV            string  `json:"cpv"`
-	Value          *int64  `json:"value,omitempty"`
+	ID        string `json:"id"`
+	Title     string `json:"title"`
+	BuyerName string `json:"buyer_name"`
+	Country   string `json:"country"`
+	CPV       string `json:"cpv"`
+	// Named value_minor, not value, because the model reads this key and will
+	// quote it back to the user: a bare "value": 629724005 gets reported as
+	// €629,724,005 rather than €6,297,240.05. The suffix is the same unit
+	// marker the dossier tools already use (turnover_minor, value_minor), and
+	// it is the only thing standing between minor units and a figure a bidder
+	// might act on.
+	ValueMinor     *int64  `json:"value_minor,omitempty"`
 	Deadline       string  `json:"deadline,omitempty"`
 	RelevanceScore float64 `json:"relevance_score"`
 }
@@ -305,7 +311,7 @@ func marshalSearchTendersResult(results []tender.ScoredTender, notice string) (s
 		}
 		items[i] = searchTendersResultItem{
 			ID: r.ID, Title: r.Title, BuyerName: r.BuyerName, Country: r.Country, CPV: r.CPV,
-			Value: r.Value, Deadline: deadline, RelevanceScore: r.RelevanceScore,
+			ValueMinor: r.Value, Deadline: deadline, RelevanceScore: r.RelevanceScore,
 		}
 	}
 	b, err := json.Marshal(searchTendersResult{Results: items, Notice: notice})
@@ -491,9 +497,11 @@ type tenderCriterionItem struct {
 // document links — those repeat the notice-level values on most real notices
 // and would pay tokens for a duplicate.
 type tenderCriteriaLotItem struct {
-	Ref           string `json:"ref"`
-	Title         string `json:"title,omitempty"`
-	Value         *int64 `json:"value,omitempty"`
+	Ref   string `json:"ref"`
+	Title string `json:"title,omitempty"`
+	// Minor units, and named for it — same reason as
+	// searchTendersResultItem.ValueMinor: the model quotes this figure.
+	ValueMinor    *int64 `json:"value_minor,omitempty"`
 	Currency      string `json:"currency,omitempty"`
 	Deadline      string `json:"deadline,omitempty"` // RFC3339
 	DocumentsURL  string `json:"documents_url,omitempty"`
@@ -569,7 +577,7 @@ func marshalGetTenderCriteriaResult(d tender.TenderDetail) (string, error) {
 			deadline = l.Deadline.Format(time.RFC3339)
 		}
 		lots = append(lots, tenderCriteriaLotItem{
-			Ref: l.Ref, Title: l.Title, Value: l.Value, Currency: l.Currency,
+			Ref: l.Ref, Title: l.Title, ValueMinor: l.Value, Currency: l.Currency,
 			Deadline: deadline, DocumentsURL: l.DocumentsURL, SubmissionURL: l.SubmissionURL,
 		})
 	}

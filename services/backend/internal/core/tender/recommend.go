@@ -41,14 +41,24 @@ type ReasonSignals struct {
 // valueFit classifies a tender's value against a client's value band.
 // Either bound may be unset (nil); a nil tender value or a fully-unset band
 // both report "unknown" rather than a false "below"/"above".
+//
+// The two sides arrive in different units and are reconciled here. `value` is
+// minor units (Tender.Value); min/max come from clientprofile.Profile, which
+// stores whole units — the figure the user typed into the profile form and the
+// one core/agent echoes back as "fino a %d EUR". Comparing them raw made a
+// €500,000 ceiling read as €5,000, so all but the smallest notices came back
+// "above". Scaling the band, rather than restating the profile in minor units,
+// keeps the persisted preference and its rendering untouched: it is a
+// whole-euro preference the user may change on a whim, not a cent-exact fact
+// (see core/company's package comment on that distinction).
 func valueFit(value, min, max *int64) string {
 	if value == nil || (min == nil && max == nil) {
 		return "unknown"
 	}
-	if min != nil && *value < *min {
+	if min != nil && *value < *min*minorUnitScale {
 		return "below"
 	}
-	if max != nil && *value > *max {
+	if max != nil && *value > *max*minorUnitScale {
 		return "above"
 	}
 	return "in_band"

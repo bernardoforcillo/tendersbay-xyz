@@ -101,7 +101,9 @@ message TenderFilters {
   // Case-insensitive substring of the contracting authority's name — not a
   // prefix, since buyers are written inconsistently across sources.
   string buyer = 10;
-  // Value bounds in the tender's own currency unit. optional, so that "no
+  // Value bounds in MINOR units (cents), matching TenderResult.value — these
+  // are compared against the stored value directly, so a client sending whole
+  // units shifts the whole band by a factor of 100. optional, so that "no
   // lower bound" stays distinct from "at least zero".
   optional int64 value_min = 11;
   optional int64 value_max = 12;
@@ -189,6 +191,8 @@ message TenderResult {
   string procedure_type = 5;
   string country = 6;           // alpha-2, e.g. "IT", "DE"
   string cpv = 7;
+  // MINOR units (cents), the scale ingestion stores: 629724005 is
+  // €6,297,240.05, NOT €629,724,005. Divide by 100 to display.
   int64 value = 8;
   string currency = 9;
   string published_at = 10;     // RFC3339, empty if unset
@@ -270,6 +274,7 @@ message TenderLot {
   string ref = 1;
   string title = 2;
   string cpv = 3;
+  // MINOR units (cents), as TenderResult.value.
   int64  value = 4;
   string currency = 5;
   string deadline = 6; // RFC3339, empty if unset
@@ -312,6 +317,7 @@ message TenderDetail {
   string language = 9;
   string cpv = 10;
   repeated string cpv_secondary = 11;
+  // MINOR units (cents), as TenderResult.value.
   int64  value = 12;
   string currency = 13;
   string published_at = 14; // RFC3339, empty if unset
