@@ -23,10 +23,35 @@ import (
 // a tender with more than one document of type "notice" would duplicate its
 // row under a join, silently inflating result counts and consuming candidate
 // slots with copies of itself.
+//
+// Everything here is a scalar on ingested_tenders (or the one lateral). That
+// is a hard constraint, not a coincidence: this projection is materialised
+// across a candidate window bounded at maxWindow (core/tender's hybrid.go), so
+// a join to a child table — lots, award criteria, organizations — would be an
+// N+1 over hundreds of rows on every single search. Child collections belong
+// on TenderDetail, whose fetch is already per-tender. Adding a scalar here
+// costs two edits (this list and queryScoredTenders' Scan) because all four
+// search queries share it; adding a child collection would cost the hot path.
+// A second hard constraint, learned in production: every column here must
+// exist in a schema this service does NOT own. tenders.* is migrated by
+// services/ingestion, which deploys on its own image tag — so a column added
+// by ingestion's newest migration is not present the moment a new backend
+// rolls out, and Flux gives no ordering guarantee between the two.
+//
+// That is not a hypothetical. publication_number, documents_url,
+// submission_url and grid_usable (ingestion's migration 0010) were listed
+// here and took EVERY search down with SQLSTATE 42703 until ingestion caught
+// up — both arms, because the lexical and semantic paths share this string.
+//
+// So the rule is: this projection may only name columns that have been in
+// tenders.ingested_tenders for at least one full release cycle, and a field
+// that only TenderDetail consumes must never appear here at all. The four
+// above were pure dead weight — nothing downstream read them from a search
+// result, and the proto carries them on TenderDetail only.
 const tenderSelectColumns = `
 	t.id, t.title, t.buyer_name, t.status, t.procedure_type, t.country, t.cpv,
 	t.value, t.currency, t.published_at, t.deadline, t.source, t.source_ref,
-	t.nuts, doc.url`
+	t.nuts, doc.url, t.description`
 
 const tenderFromClause = `
 FROM tenders.ingested_tenders t
@@ -450,13 +475,13 @@ func (r *TenderRepo) queryScoredTenders(ctx context.Context, what, sql string, a
 		var (
 			row       TenderResultRow
 			id        int64
-			sourceURL *string
 			relevance float64
 			snippet   string
 		)
 		if err := rows.Scan(&id, &row.Title, &row.BuyerName, &row.Status, &row.ProcedureType,
 			&row.Country, &row.CPV, &row.Value, &row.Currency, &row.PublishedAt, &row.Deadline,
-			&row.Source, &row.SourceRef, &row.NUTS, &sourceURL, &relevance, &snippet); err != nil {
+			&row.Source, &row.SourceRef, &row.NUTS, &row.SourceURL,
+			&row.Description, &relevance, &snippet); err != nil {
 			return nil, fmt.Errorf("postgres: scan %s row: %w", what, err)
 		}
 		t := tender.Tender{
@@ -465,9 +490,10 @@ func (r *TenderRepo) queryScoredTenders(ctx context.Context, what, sql string, a
 			CPV: row.CPV, Value: row.Value, Currency: row.Currency,
 			PublishedAt: row.PublishedAt, Deadline: row.Deadline,
 			Source: row.Source, SourceRef: row.SourceRef, NUTS: row.NUTS,
-		}
-		if sourceURL != nil {
-			t.SourceURL = *sourceURL
+			Description: row.Description,
+			// The nullable URL column flattens to "": an absent link and an
+			// empty one are the same fact.
+			SourceURL: derefString(row.SourceURL),
 		}
 		out = append(out, tender.ScoredTender{Tender: t, RelevanceScore: relevance, Snippet: snippet})
 	}

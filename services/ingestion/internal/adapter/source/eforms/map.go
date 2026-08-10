@@ -14,6 +14,15 @@ import (
 // using it as SourceRef is what makes the CN→CAN status transition land as
 // an update to the same row instead of two unrelated ones (see the design
 // doc's "Why SourceRef = procedure-identifier" section).
+//
+// PublicationNumber is carried through alongside it precisely because
+// SourceRef deliberately is not it. Publication numbers are immutable — TED
+// republishes a corrected notice under a new one rather than editing the old
+// — which makes the field the change key for notice-document enrichment: an
+// unchanged number means the eForms XML we already read cannot have changed,
+// so it is never re-fetched. XMLURL is the address of that document, and it
+// costs nothing to recover here because tedapi already requests the `links`
+// field for the notice PDF.
 func Map(n Notice, source string) tender.Tender {
 	officialLang := first(n.OfficialLanguage) // e.g. "RON" — uppercase, as TED returns it
 	langKey := strings.ToLower(officialLang)  // lowercase key into NoticeTitle/BuyerName/TitleLot
@@ -37,24 +46,26 @@ func Map(n Notice, source string) tender.Tender {
 	}
 
 	return tender.Tender{
-		Source:        source,
-		SourceRef:     n.ProcedureIdentifier,
-		Title:         pickText(n.NoticeTitle, langKey),
-		Description:   pickText(n.DescriptionProc, langKey),
-		Buyer:         tender.Buyer{Name: first(pickTextArray(n.BuyerName, langKey)), ID: first(n.OrganisationIdentifierBuyer)},
-		Status:        statusFromNoticeType(n.NoticeType),
-		ProcedureType: n.ProcedureType,
-		Language:      lang3To1(officialLang),
-		Country:       country,
-		CPV:           cpv,
-		CPVSecondary:  cpvSecondary,
-		Value:         parseMinorUnits(n.EstimatedValueProc),
-		Currency:      n.EstimatedValueCurProc,
-		PublishedAt:   parseDeadline(n.PublicationDate, ""),
-		Deadline:      deadline,
-		Documents:     documents,
-		Lots:          lots,
-		Raw:           n.Raw,
+		Source:            source,
+		SourceRef:         n.ProcedureIdentifier,
+		PublicationNumber: n.PublicationNumber,
+		XMLURL:            pickXMLLink(n.Links.XML, officialLang),
+		Title:             pickText(n.NoticeTitle, langKey),
+		Description:       pickText(n.DescriptionProc, langKey),
+		Buyer:             tender.Buyer{Name: first(pickTextArray(n.BuyerName, langKey)), ID: first(n.OrganisationIdentifierBuyer)},
+		Status:            statusFromNoticeType(n.NoticeType),
+		ProcedureType:     n.ProcedureType,
+		Language:          lang3To1(officialLang),
+		Country:           country,
+		CPV:               cpv,
+		CPVSecondary:      cpvSecondary,
+		Value:             parseMinorUnits(n.EstimatedValueProc),
+		Currency:          n.EstimatedValueCurProc,
+		PublishedAt:       parseDeadline(n.PublicationDate, ""),
+		Deadline:          deadline,
+		Documents:         documents,
+		Lots:              lots,
+		Raw:               n.Raw,
 	}
 }
 
@@ -122,4 +133,18 @@ func pickLink(m map[string]string, officialLang string) string {
 		return v
 	}
 	return m["ENG"]
+}
+
+// pickXMLLink returns the machine-readable eForms document's URL. Unlike the
+// PDF map — one rendering per published language — the XML is a single file
+// containing every language at once, which TED files under the pseudo-code
+// "MUL" (verified live: `links.xml` has exactly one key, "MUL"). That key is
+// therefore tried first; the per-language fallback exists only so a notice
+// keyed some other way still yields a URL instead of silently dropping the
+// one field the enrichment queue is resolvable by.
+func pickXMLLink(m map[string]string, officialLang string) string {
+	if v, ok := m["MUL"]; ok {
+		return v
+	}
+	return pickLink(m, officialLang)
 }

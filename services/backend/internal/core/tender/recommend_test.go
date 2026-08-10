@@ -294,6 +294,14 @@ func (f *recommendFakeRepo) LotsByTenderID(context.Context, int64) ([]Lot, error
 	return nil, nil
 }
 
+func (f *recommendFakeRepo) CriteriaByTenderID(context.Context, int64) ([]AwardCriterion, error) {
+	return nil, nil
+}
+
+func (f *recommendFakeRepo) OrganizationsByTenderID(context.Context, int64) ([]Organization, error) {
+	return nil, nil
+}
+
 func (f *recommendFakeRepo) RecentTenderRefs(context.Context, int) ([]TenderRef, error) {
 	return nil, nil
 }

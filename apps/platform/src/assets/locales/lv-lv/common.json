@@ -139,6 +139,185 @@
       "emptyDescription": "Izmēģiniet manuālu meklēšanu zemāk vai paplašiniet šī klienta profilu."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Uzņēmuma lieta",
+      "description": "Tas, ko zinām par jūsu uzņēmumu. Salīdzinām to ar katra iepirkuma kvalifikācijas prasībām.",
+      "save": "Saglabāt",
+      "saving": "Notiek saglabāšana…",
+      "error": "Neizdevās saglabāt. Mēģiniet vēlreiz.",
+      "identity": {
+        "legalName": "Nosaukums",
+        "vatNumber": "PVN numurs",
+        "fiscalCode": "Nodokļu maksātāja numurs",
+        "legalForm": "Juridiskā forma",
+        "cciaaOffice": "Tirdzniecības kamera",
+        "cciaaNumber": "Reģistrācijas numurs",
+        "country": "Valsts",
+        "nuts": "Reģions (NUTS)",
+        "foundedYear": "Dibināšanas gads"
+      },
+      "soa": {
+        "title": "SOA apliecinājumi",
+        "category": "Kategorija",
+        "classifica": "Classifica",
+        "issuedBy": "Izdevējs",
+        "validUntil": "Derīgs līdz",
+        "verifiedUntil": "Trīsgadu pārbaude derīga līdz",
+        "verifiedUntilHint": "Trīsgadu pārbaude beidzas trīs gadus pirms paša apliecinājuma. Pēc šī datuma apliecinājums vairs netiek ņemts vērā.",
+        "add": "Pievienot apliecinājumu",
+        "remove": "Noņemt",
+        "empty": "Nav reģistrēts neviens SOA apliecinājums."
+      },
+      "certifications": {
+        "title": "Sertifikāti",
+        "standard": "Standarts",
+        "standardRaw": "Standarts, kā sertificēts",
+        "scope": "Tvērums",
+        "issuedBy": "Izdevējs",
+        "validFrom": "Derīgs no",
+        "validUntil": "Derīgs līdz",
+        "add": "Pievienot sertifikātu",
+        "remove": "Noņemt",
+        "empty": "Nav reģistrēts neviens sertifikāts."
+      },
+      "financialYears": {
+        "title": "Pārskata gadi",
+        "year": "Gads",
+        "turnover": "Kopējais apgrozījums",
+        "specificTurnover": "Apgrozījums attiecīgajā jomā",
+        "currency": "Valūta",
+        "headcount": "Darbinieku skaits",
+        "add": "Pievienot gadu",
+        "remove": "Noņemt",
+        "empty": "Nav reģistrēts neviens pārskata gads."
+      },
+      "pastContracts": {
+        "title": "Izpildītie līgumi",
+        "description": "Kas tika izpildīts",
+        "buyer": "Pasūtītājs",
+        "cpv": "CPV",
+        "value": "Vērtība",
+        "started": "Sākums",
+        "ended": "Beigas",
+        "role": "Loma",
+        "sharePct": "Jūsu daļa",
+        "sharePctHint": "Piegādātāju apvienībā prasībā ieskaita tikai jūsu pašu daļu.",
+        "add": "Pievienot līgumu",
+        "remove": "Noņemt",
+        "empty": "Nav reģistrēts neviens izpildīts līgums."
+      },
+      "registrations": {
+        "title": "Reģistrācijas un saraksti",
+        "kind": "Veids",
+        "authority": "Iestāde",
+        "identifier": "Numurs",
+        "section": "Sadaļa",
+        "validFrom": "Derīga no",
+        "validUntil": "Derīga līdz",
+        "add": "Pievienot reģistrāciju",
+        "remove": "Noņemt",
+        "empty": "Nav reģistrēta neviena reģistrācija."
+      }
+    },
+    "provenance": {
+      "user_stated": "Jūs to ievadījāt",
+      "user_confirmed": "Jūs to apstiprinājāt",
+      "agent_inferred": "Aģenta secināts",
+      "imported": "Importēts",
+      "never": "Nav reģistrēts"
+    },
+    "eligibility": {
+      "title": "Kvalifikācijas prasības",
+      "recheck": "Pārbaudīt vēlreiz",
+      "evaluatedAt": "Pārbaudīts {{when}}",
+      "requirementLabel": "Šis iepirkums prasa",
+      "heldLabel": "Jūsu lietā ir",
+      "changesLabel": "Kas to mainītu",
+      "caveatsLabel": "Lasiet kopā ar šo",
+      "lead": {
+        "requires": "Šis iepirkums prasa",
+        "holds": "jūsu lietā ir",
+        "noRequirements": "Šim iepirkumam nav reģistrēta neviena prasība."
+      },
+      "verdict": {
+        "insufficient_data": "Par maz datu, lai izlemtu",
+        "go": "Šķiet, ka atbilstat prasībām",
+        "no_go": "Šķiet, ka neatbilstat prasībām"
+      },
+      "status": {
+        "met": "Izpildīta",
+        "missing": "Trūkst",
+        "shortfall": "Zem prasītā līmeņa",
+        "expiring": "Drīz beigsies",
+        "expired": "Beidzies termiņš",
+        "unknown": "Vēl neesam jautājuši"
+      },
+      "remedy": {
+        "provide_fact": "Pastāstiet, kas jums ir",
+        "renew": "Atjaunojiet to pirms termiņa",
+        "upgrade": "Paceliet līdz prasītajam līmenim",
+        "avvalimento": "Balstieties uz trešās personas spējām (avvalimento)",
+        "rti": "Piedalieties piegādātāju apvienībā (RTI)",
+        "subcontract": "Nosedziet ar apakšuzņēmuma līgumu"
+      },
+      "caveat": {
+        "no_requirements_captured": "Šim iepirkumam netika iegūta neviena prasība, tāpēc šis vērtējums nebalstās ne uz ko publicētu.",
+        "award_grid_only": "Iegūti tikai piedāvājuma izvēles kritēriji — kvalifikācijas prasības var būt dokumentos, kurus neesam lasījuši.",
+        "unconfirmed_extraction": "Dažas prasības nolasītas no dokumentiem, un jūs tās vēl neesat apstiprinājis.",
+        "open_questions": "Daži jautājumi par jūsu uzņēmumu joprojām ir bez atbildes.",
+        "documents_unread": "Neesam lasījuši iepirkuma dokumentus, tāpēc kāda prasība var trūkt."
+      },
+      "counts": {
+        "requirements_zero": "{{count}} prasību",
+        "requirements_one": "{{count}} prasība",
+        "requirements_other": "{{count}} prasības",
+        "authoritative_zero": "{{count}} apstiprinātu",
+        "authoritative_one": "{{count}} apstiprināta",
+        "authoritative_other": "{{count}} apstiprinātas",
+        "blocking_zero": "{{count}} bloķējošu",
+        "blocking_one": "{{count}} bloķējoša",
+        "blocking_other": "{{count}} bloķējošas",
+        "unknown_zero": "{{count}} bez atbildes",
+        "unknown_one": "{{count}} bez atbildes",
+        "unknown_other": "{{count}} bez atbildes"
+      }
+    },
+    "requirements": {
+      "title": "Prasības",
+      "empty": "Šim iepirkumam nav reģistrēta neviena prasība.",
+      "confirm": "Apstiprināt",
+      "confirmed": "Apstiprināta",
+      "remove": "Noņemt",
+      "unconfirmedHint": "Nolasīts no dokumentiem — salīdziniet to ar citēto fragmentu, pirms uz to paļaujaties.",
+      "lotLabel": "{{lot}}. daļa",
+      "noticeLevel": "Attiecas uz visu paziņojumu",
+      "askWhy": "Kāpēc?",
+      "source": {
+        "user_stated": "Jūs to norādījāt",
+        "document_excerpt": "No iepirkuma dokumentiem",
+        "award_criteria": "No piedāvājuma izvēles kritērijiem",
+        "agent_inferred": "Aģenta secināts"
+      }
+    },
+    "capture": {
+      "title": "Viens jautājums",
+      "save": "Saglabāt",
+      "saving": "Notiek saglabāšana…",
+      "notSure": "Nezinu",
+      "error": "Neizdevās saglabāt. Mēģiniet vēlreiz.",
+      "cannotCheck": "Šo mēs nevaram pārbaudīt automātiski.",
+      "prompt": {
+        "soa": "Kāda SOA kategorija un classifica jums ir?",
+        "certification": "Kāds sertifikāts jums ir šim nolūkam?",
+        "turnover": "Kādu apgrozījumu uzrādījāt?",
+        "past_contracts": "Kurš jūsu līgums to sedz?",
+        "headcount": "Cik darbinieku jums bija?",
+        "registration": "Kura reģistrācija vai saraksts to sedz?",
+        "other": "Šo mēs nevaram pārbaudīt automātiski — izlasiet to un izlemiet pats."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Pieteikties",
@@ -473,6 +652,59 @@
       "deadlineUntil": "noslēdzas līdz {{date}}",
       "undo": "Notīrīt",
       "remove": "Noņemt {{chip}}"
+    },
+    "coverage": {
+      "title": "Ko esam izlasījuši",
+      "openBuyerDocuments": "Atvērt pasūtītāja dokumentus",
+      "label": {
+        "full": "Iepirkuma dokumenti izlasīti",
+        "notice_only": "Tikai paziņojums",
+        "none": "Nekas nav izlasīts"
+      },
+      "reason": {
+        "no_documents_published": "Pasūtītājs kopā ar šo paziņojumu nav publicējis nevienu dokumentu.",
+        "notice_not_read": "Neesam lasījuši šī paziņojuma strukturētos datus, tāpēc nezinām, ko tas publicē.",
+        "body_not_retrieved": "Pasūtītājs publicē dokumentus, kurus vēl neesam ieguvuši.",
+        "not_yet_extracted": "Rindā — vēl nav izlasīti.",
+        "extraction_failed": "Neizdevās nolasīt šo dokumentu tekstu."
+      },
+      "counts": {
+        "documents_zero": "izlasīti {{count}} dokumentu",
+        "documents_one": "izlasīts {{count}} dokuments",
+        "documents_other": "izlasīti {{count}} dokumenti",
+        "parts_zero": "iegūtas {{count}} sadaļu",
+        "parts_one": "iegūta {{count}} sadaļa",
+        "parts_other": "iegūtas {{count}} sadaļas",
+        "knownLinks_zero": "publicēti {{count}} dokumentu",
+        "knownLinks_one": "publicēts {{count}} dokuments",
+        "knownLinks_other": "publicēti {{count}} dokumenti"
+      }
+    },
+    "criteria": {
+      "title": "Kur nopelna punktus",
+      "notEnriched": "Vēl neesam lasījuši šī paziņojuma strukturētos datus.",
+      "gridUnusable": "Paziņojums nosauc piedāvājuma izvēles metodi, bet nepublicē svarus. Vērtēšanas tabula ir iepirkuma dokumentos.",
+      "weight": "Svars",
+      "noWeight": "Svars nav publicēts",
+      "lot": "{{lot}}. daļa",
+      "appliesToEveryLot": "Attiecas uz visām daļām",
+      "showAllLots": "Rādīt visas daļas",
+      "type": {
+        "quality": "Kvalitāte",
+        "cost": "Izmaksas",
+        "price": "Cena"
+      }
+    },
+    "citation": {
+      "page": "{{page}}. lpp.",
+      "pageRange": "{{start}}.–{{end}}. lpp.",
+      "section": "§ {{section}}",
+      "part": "{{index}}. daļa",
+      "openDocument": "Atvērt dokumentu",
+      "expandPassage": "Rādīt apkārtējo fragmentu",
+      "collapsePassage": "Paslēpt fragmentu",
+      "passageUnavailable": "Neizdevās iegūt apkārtējo fragmentu.",
+      "truncated": "Fragments saīsināts."
     }
   },
   "today": {
@@ -514,6 +746,7 @@
     "nav": {
       "general": "Vispārīgi",
       "profile": "Klienta profils",
+      "company": "Uzņēmuma lieta",
       "overview": "Pārskats",
       "members": "Dalībnieki",
       "roles": "Lomas",
@@ -712,6 +945,27 @@
       "duplicate": "Šis iepirkums jau ir šajā workbench.",
       "unavailable": "Šis iepirkums vairs nav pieejams.",
       "generic": "Kaut kas nogāja greizi. Lūdzu, mēģiniet vēlreiz."
+    },
+    "scheda": {
+      "coverageTitle": "Ko esam izlasījuši",
+      "evidenceTitle": "Prasības un pierādījumi",
+      "pointsTitle": "Kur nopelna punktus",
+      "repairChat": {
+        "title": "Jautājiet par šo iepirkumu",
+        "open": "Uzdot jautājumu",
+        "close": "Aizvērt",
+        "askWhy": "Kāpēc?",
+        "seedGapQuestion": "Kāpēc šis iepirkums prasa “{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Reģistrēts attiecībā pret: {{recommendation}}",
+      "youDecided": "jūs izlēmāt {{decision}}",
+      "noRecommendation": "Jūsu lēmuma brīdī kvalifikācijas pārbaude nebija pieejama.",
+      "recordedAt": "reģistrēts {{when}}",
+      "blockingGapsAtDecision_zero": "{{count}} bloķējošu trūkumu",
+      "blockingGapsAtDecision_one": "{{count}} bloķējošs trūkums",
+      "blockingGapsAtDecision_other": "{{count}} bloķējoši trūkumi"
     }
   },
   "workbench": {

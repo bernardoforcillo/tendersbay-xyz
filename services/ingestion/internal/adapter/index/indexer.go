@@ -14,6 +14,7 @@ import (
 	"github.com/buildwithgo/berrygem/rag"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/postgres"
 )
 
@@ -25,8 +26,8 @@ const batchSize = 200
 // Repo is the subset of postgres.TenderRepo the indexer needs.
 type Repo interface {
 	ListUnindexed(ctx context.Context, limit int) ([]postgres.UnindexedTender, error)
-	DocumentParts(ctx context.Context, documentID int64) ([]string, error)
-	SaveDocumentParts(ctx context.Context, documentID int64, parts []string) error
+	DocumentParts(ctx context.Context, documentID int64) ([]tender.DocumentPart, error)
+	SaveDocumentParts(ctx context.Context, documentID int64, parts []tender.DocumentPart) error
 	MarkIndexed(ctx context.Context, tenderID int64) error
 }
 
@@ -38,9 +39,11 @@ type KnowledgeBase interface {
 	IngestWithAttributes(ctx context.Context, doc *rag.Document, attrs knowledge.Attributes) error
 }
 
-// Fetcher downloads and extracts one document's text.
+// Fetcher downloads and extracts one document's text, as chunks carrying the
+// page/section provenance the extractor observed. The indexer itself embeds
+// only the text; the rest is persisted for the retrieval side to cite.
 type Fetcher interface {
-	FetchAndExtract(ctx context.Context, url string) ([]string, error)
+	FetchAndExtract(ctx context.Context, url string) ([]tender.DocumentPart, error)
 }
 
 // Indexer embeds and indexes tenders that haven't been indexed yet.
@@ -162,7 +165,7 @@ func (idx *Indexer) indexOne(ctx context.Context, t postgres.UnindexedTender) er
 				ID:      fmt.Sprintf("%d_chunk_%d", t.ID, chunkIndex),
 				DocID:   tenderID,
 				Index:   chunkIndex,
-				Content: p,
+				Content: p.Text,
 			})
 			chunkIndex++
 		}

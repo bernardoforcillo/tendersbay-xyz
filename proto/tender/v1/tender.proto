@@ -23,6 +23,26 @@ service TenderService {
   // coverage marquee reads it. "available" = we have >=1 tender for that
   // country (TED-inclusive), not a below-threshold-only claim.
   rpc GetCoverage(GetCoverageRequest) returns (GetCoverageResponse);
+  // Passages of one tender's extracted documents around one question, together
+  // with what we hold of that tender at all.
+  //
+  // Availability and passages are ONE answer and travel on one RPC by design.
+  // Splitting them would eventually let a caller obtain passages without the
+  // coverage that qualifies them, and an empty passage list with no cause
+  // conflates "no passage matched your question" with "we hold nothing but the
+  // notice PDF" — the exact conflation core/document exists to prevent.
+  //
+  // An empty question is valid and means "availability only": the server skips
+  // retrieval entirely rather than paying for a query that cannot match. That
+  // is what the public tender page's coverage strip calls.
+  //
+  // Authenticated, unlike the GetTender it sits beside: retrieval runs a
+  // full-text query per call, which is a materially more expensive read than
+  // serving an already-materialised notice, and the surface that consumes it is
+  // behind auth anyway. The retrieval BOUND is a separate matter and is not
+  // enforced at the transport: core/document clamps the passage count and each
+  // passage's length itself, so no caller can widen a bound it does not own.
+  rpc GetTenderPassages(GetTenderPassagesRequest) returns (GetTenderPassagesResponse);
 }
 
 message SearchTendersRequest {
@@ -255,6 +275,31 @@ message TenderLot {
   string deadline = 6; // RFC3339, empty if unset
 }
 
+// AwardCriterion is one criterion of a notice's award grid, as published.
+//
+// weight is meaningful ONLY when weight_set. A zero weight and an absent weight
+// are different published facts: notices routinely publish a lone entry naming
+// the award method ("offerta economicamente più vantaggiosa") with nothing
+// attached to it. Coalescing absent to 0 makes "criteria published" read as
+// "grid recoverable", which overstates real coverage by roughly 2x on Italian
+// notices — see core/tender.AwardCriterion.Weight.
+message AwardCriterion {
+  string lot_ref = 1;     // "" = notice-level, applies to every lot
+  int32  ordinal = 2;     // position as published, within its lot_ref
+  string type = 3;        // "quality" | "cost" | "price", as declared
+  string name = 4;
+  string description = 5;
+  double weight = 6;
+  bool   weight_set = 7;
+  // weight_raw is the weight exactly as published ("30", "30%", "30,5"), so a
+  // numeric parse failure loses comparability rather than the datum.
+  string weight_raw = 8;
+  // ISO 639-2/T ("ITA", "ENG"). Multilingual notices repeat every text field
+  // once per language, so without it a reader cannot tell a deliberate language
+  // choice from a parser accident.
+  string lang = 9;
+}
+
 message TenderDetail {
   string id = 1;
   string title = 2;
@@ -276,4 +321,91 @@ message TenderDetail {
   string source_url = 18;   // best-effort; may be empty
   repeated TenderDocument documents = 19;
   repeated TenderLot lots = 20;
+
+  // ── The eForms detail ───────────────────────────────────────────────────
+  //
+  // criteria holds the notice-level and every lot's criteria in ONE flat list
+  // sorted by (lot_ref, ordinal); a criterion may name a lot that was never
+  // ingested, so nesting them inside TenderLot would silently drop those.
+  repeated AwardCriterion criteria = 21;
+  // grid_usable is meaningful only when grid_usable_set. Unset is a THIRD state
+  // — the notice's structured data was never read — and it is what lets a
+  // reader tell "this notice publishes no usable grid" from "we have not looked
+  // at this notice". A plain bool would record ignorance as a finding.
+  bool   grid_usable = 22;
+  bool   grid_usable_set = 23;
+  // enriched_at is when the structured notice was successfully read; "" means
+  // never, or read unsuccessfully. It carries the same distinction
+  // grid_usable_set does and additionally dates the answer.
+  string enriched_at = 24;   // RFC3339
+  // documents_url is the buyer's own document page. It is the single actionable
+  // affordance behind a body_not_retrieved coverage — we hold the link and not
+  // what is behind it — so a coverage strip that could not offer it would be
+  // telling the reader about a gap it gives them no way to close.
+  string documents_url = 25;
+}
+
+// DocumentAvailability is what we hold of one tender's documents: the quantity
+// and the CAUSE, which are orthogonal axes.
+//
+// notice_only because the buyer published nothing else and notice_only because
+// we have not fetched what they did publish are the same quantity and opposite
+// facts. The evidence counts travel with the answer so a consumer can audit it
+// rather than trusting it — see core/document.Availability.Consistent, which is
+// what makes "no_documents_published" defensible only while
+// known_document_links is zero.
+message DocumentAvailability {
+  string coverage = 1;             // full | notice_only | none
+  string reason = 2;               // "" | no_documents_published | notice_not_read |
+                                    // body_not_retrieved | not_yet_extracted | extraction_failed
+  bool   notice_read = 3;          // true only when the notice was read SUCCESSFULLY
+  int32  known_document_links = 4; // buyer links we hold but have not retrieved
+  int32  extracted_documents = 5;
+  int32  extracted_parts = 6;
+}
+
+// DocumentCitation is where a quoted passage came from.
+//
+// Every field below document_url is optional, and that is a fact about the
+// corpus rather than a modelling preference: page and section metadata are
+// populated GOING FORWARD ONLY, so documents extracted before those columns
+// existed carry none. A renderer must degrade all the way to the URL alone.
+//
+// page_start_set/page_end_set exist because page 0 and "we never learned the
+// page" are both 0 on the wire, and rendering "p. 0" under a verbatim legal
+// quote would undermine the one affordance this feature rests on. part_index is
+// the exception that never degrades — it is the part's own key.
+message DocumentCitation {
+  string document_url = 1;
+  string document_type = 2;   // "notice" | "spec" | "corrigendum" | ... — published label
+  int32  part_index = 3;
+  int32  page_start = 4;
+  bool   page_start_set = 5;
+  int32  page_end = 6;
+  bool   page_end_set = 7;
+  repeated string section_path = 8; // e.g. ["7", "7.2"]; empty when unknown
+  string section_title = 9;
+  bool   has_table = 10;
+}
+
+// Passage is one retrieved span of a tender document. text is already clamped
+// server-side; truncated reports that it was, so a consumer can say "the passage
+// continues" instead of presenting a sentence that stops mid-clause.
+message Passage {
+  string text = 1;
+  bool   truncated = 2;
+  double relevance_score = 3;
+  DocumentCitation citation = 4;
+}
+
+message GetTenderPassagesRequest {
+  string id = 1;
+  // Empty is valid and means "availability only" — the server skips retrieval.
+  string question = 2;
+  // A hint the server may only NARROW. The real bound lives in core/document.
+  int32  limit = 3;
+}
+message GetTenderPassagesResponse {
+  DocumentAvailability availability = 1;
+  repeated Passage passages = 2;
 }

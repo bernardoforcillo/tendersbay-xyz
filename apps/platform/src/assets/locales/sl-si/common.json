@@ -139,6 +139,189 @@
       "emptyDescription": "Poskusite z ročnim iskanjem spodaj ali razširite profil te stranke."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Dosje podjetja",
+      "description": "Kar vemo o vašem podjetju. To primerjamo s pogoji za sodelovanje pri vsakem razpisu.",
+      "save": "Shrani",
+      "saving": "Shranjevanje…",
+      "error": "Shranjevanje ni uspelo. Poskusite znova.",
+      "identity": {
+        "legalName": "Firma",
+        "vatNumber": "Identifikacijska številka za DDV",
+        "fiscalCode": "Davčna številka",
+        "legalForm": "Pravna oblika",
+        "cciaaOffice": "Gospodarska zbornica",
+        "cciaaNumber": "Matična številka",
+        "country": "Država",
+        "nuts": "Regija (NUTS)",
+        "foundedYear": "Leto ustanovitve"
+      },
+      "soa": {
+        "title": "Potrdila SOA",
+        "category": "Kategorija",
+        "classifica": "Classifica",
+        "issuedBy": "Izdal",
+        "validUntil": "Velja do",
+        "verifiedUntil": "Triletno preverjanje velja do",
+        "verifiedUntilHint": "Triletno preverjanje poteče tri leta pred samim potrdilom. Po tem datumu potrdilo ne šteje več.",
+        "add": "Dodaj potrdilo",
+        "remove": "Odstrani",
+        "empty": "Ni zabeleženega potrdila SOA."
+      },
+      "certifications": {
+        "title": "Certifikati",
+        "standard": "Standard",
+        "standardRaw": "Standard, kot je certificiran",
+        "scope": "Obseg",
+        "issuedBy": "Izdal",
+        "validFrom": "Velja od",
+        "validUntil": "Velja do",
+        "add": "Dodaj certifikat",
+        "remove": "Odstrani",
+        "empty": "Ni zabeleženega certifikata."
+      },
+      "financialYears": {
+        "title": "Poslovna leta",
+        "year": "Leto",
+        "turnover": "Skupni promet",
+        "specificTurnover": "Promet na zadevnem področju",
+        "currency": "Valuta",
+        "headcount": "Število zaposlenih",
+        "add": "Dodaj poslovno leto",
+        "remove": "Odstrani",
+        "empty": "Ni zabeleženega poslovnega leta."
+      },
+      "pastContracts": {
+        "title": "Izvedeni posli",
+        "description": "Kaj je bilo izvedeno",
+        "buyer": "Naročnik",
+        "cpv": "CPV",
+        "value": "Vrednost",
+        "started": "Začetek",
+        "ended": "Konec",
+        "role": "Vloga",
+        "sharePct": "Vaš delež",
+        "sharePctHint": "V skupnem nastopu se pri pogoju upošteva le vaš lastni delež.",
+        "add": "Dodaj posel",
+        "remove": "Odstrani",
+        "empty": "Ni zabeleženega izvedenega posla."
+      },
+      "registrations": {
+        "title": "Vpisi in seznami",
+        "kind": "Vrsta",
+        "authority": "Organ",
+        "identifier": "Številka",
+        "section": "Razdelek",
+        "validFrom": "Velja od",
+        "validUntil": "Velja do",
+        "add": "Dodaj vpis",
+        "remove": "Odstrani",
+        "empty": "Ni zabeleženega vpisa."
+      }
+    },
+    "provenance": {
+      "user_stated": "Vnesli ste sami",
+      "user_confirmed": "Potrdili ste sami",
+      "agent_inferred": "Sklepal je agent",
+      "imported": "Uvoženo",
+      "never": "Ni zabeleženo"
+    },
+    "eligibility": {
+      "title": "Pogoji za sodelovanje",
+      "recheck": "Preveri znova",
+      "evaluatedAt": "Preverjeno {{when}}",
+      "requirementLabel": "Ta razpis zahteva",
+      "heldLabel": "Vaš dosje izkazuje",
+      "changesLabel": "Kaj bi to spremenilo",
+      "caveatsLabel": "Preberite skupaj s tem",
+      "lead": {
+        "requires": "Ta razpis zahteva",
+        "holds": "vaš dosje izkazuje",
+        "noRequirements": "Za ta razpis ni zabeleženega nobenega pogoja."
+      },
+      "verdict": {
+        "insufficient_data": "Premalo podatkov za odločitev",
+        "go": "Videti je, da pogoje izpolnjujete",
+        "no_go": "Videti je, da pogojev ne izpolnjujete"
+      },
+      "status": {
+        "met": "Izpolnjen",
+        "missing": "Manjka",
+        "shortfall": "Pod zahtevano ravnjo",
+        "expiring": "Kmalu poteče",
+        "expired": "Potekel",
+        "unknown": "Še nismo vprašali"
+      },
+      "remedy": {
+        "provide_fact": "Povejte nam, s čim razpolagate",
+        "renew": "Obnovite pred iztekom roka",
+        "upgrade": "Dvignite na zahtevano raven",
+        "avvalimento": "Izkažite z zmogljivostmi tretjega (avvalimento)",
+        "rti": "Oddajte ponudbo v skupnem nastopu (RTI)",
+        "subcontract": "Pokrijte s podizvajalstvom"
+      },
+      "caveat": {
+        "no_requirements_captured": "Za ta razpis ni bil zajet noben pogoj, zato ta ocena ne temelji na ničemer objavljenem.",
+        "award_grid_only": "Zajeta so bila le merila za oddajo — pogoji za sodelovanje so lahko v dokumentih, ki jih nismo prebrali.",
+        "unconfirmed_extraction": "Nekateri pogoji so bili prebrani iz dokumentov in jih še niste potrdili.",
+        "open_questions": "Nekatera vprašanja o vašem podjetju so še brez odgovora.",
+        "documents_unread": "Razpisne dokumentacije nismo prebrali, zato kakšen pogoj lahko manjka."
+      },
+      "counts": {
+        "requirements_one": "{{count}} pogoj",
+        "requirements_two": "{{count}} pogoja",
+        "requirements_few": "{{count}} pogoji",
+        "requirements_other": "{{count}} pogojev",
+        "authoritative_one": "{{count}} potrjen",
+        "authoritative_two": "{{count}} potrjena",
+        "authoritative_few": "{{count}} potrjeni",
+        "authoritative_other": "{{count}} potrjenih",
+        "blocking_one": "{{count}} blokirni",
+        "blocking_two": "{{count}} blokirna",
+        "blocking_few": "{{count}} blokirni",
+        "blocking_other": "{{count}} blokirnih",
+        "unknown_one": "{{count}} brez odgovora",
+        "unknown_two": "{{count}} brez odgovora",
+        "unknown_few": "{{count}} brez odgovora",
+        "unknown_other": "{{count}} brez odgovora"
+      }
+    },
+    "requirements": {
+      "title": "Pogoji",
+      "empty": "Za ta razpis ni zabeleženega nobenega pogoja.",
+      "confirm": "Potrdi",
+      "confirmed": "Potrjeno",
+      "remove": "Odstrani",
+      "unconfirmedHint": "Prebrano iz dokumentov — primerjajte z navedenim odlomkom, preden se na to zanesete.",
+      "lotLabel": "Sklop {{lot}}",
+      "noticeLevel": "Velja za celotno obvestilo",
+      "askWhy": "Zakaj?",
+      "source": {
+        "user_stated": "Navedli ste sami",
+        "document_excerpt": "Iz razpisne dokumentacije",
+        "award_criteria": "Iz meril za oddajo",
+        "agent_inferred": "Sklepal je agent"
+      }
+    },
+    "capture": {
+      "title": "Eno vprašanje",
+      "save": "Shrani",
+      "saving": "Shranjevanje…",
+      "notSure": "Ne vem",
+      "error": "Shranjevanje ni uspelo. Poskusite znova.",
+      "cannotCheck": "Tega ne moremo preveriti samodejno.",
+      "prompt": {
+        "soa": "Katero kategorijo in classifica SOA imate?",
+        "certification": "Kateri certifikat imate za to?",
+        "turnover": "Kakšen promet ste izkazali?",
+        "past_contracts": "Kateri vaš posel to pokriva?",
+        "headcount": "Koliko zaposlenih ste imeli?",
+        "registration": "Kateri vpis ali seznam to pokriva?",
+        "other": "Tega ne moremo preveriti samodejno — preberite in presodite sami."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Prijava",
@@ -475,6 +658,62 @@
       "deadlineUntil": "zapre se do {{date}}",
       "undo": "Počisti",
       "remove": "Odstrani {{chip}}"
+    },
+    "coverage": {
+      "title": "Kaj smo prebrali",
+      "openBuyerDocuments": "Odpri dokumente naročnika",
+      "label": {
+        "full": "Razpisna dokumentacija prebrana",
+        "notice_only": "Samo obvestilo",
+        "none": "Nič prebranega"
+      },
+      "reason": {
+        "no_documents_published": "Naročnik k temu obvestilu ni objavil nobenega dokumenta.",
+        "notice_not_read": "Strukturiranih podatkov tega obvestila nismo prebrali, zato ne vemo, kaj objavlja.",
+        "body_not_retrieved": "Naročnik objavlja dokumente, ki jih še nismo pridobili.",
+        "not_yet_extracted": "V čakalni vrsti — še ni prebrano.",
+        "extraction_failed": "Besedila teh dokumentov nismo mogli prebrati."
+      },
+      "counts": {
+        "documents_one": "{{count}} prebran dokument",
+        "documents_two": "{{count}} prebrana dokumenta",
+        "documents_few": "{{count}} prebrani dokumenti",
+        "documents_other": "{{count}} prebranih dokumentov",
+        "parts_one": "{{count}} izluščen razdelek",
+        "parts_two": "{{count}} izluščena razdelka",
+        "parts_few": "{{count}} izluščeni razdelki",
+        "parts_other": "{{count}} izluščenih razdelkov",
+        "knownLinks_one": "{{count}} objavljen dokument",
+        "knownLinks_two": "{{count}} objavljena dokumenta",
+        "knownLinks_few": "{{count}} objavljeni dokumenti",
+        "knownLinks_other": "{{count}} objavljenih dokumentov"
+      }
+    },
+    "criteria": {
+      "title": "Kje se pridobijo točke",
+      "notEnriched": "Strukturiranih podatkov tega obvestila še nismo prebrali.",
+      "gridUnusable": "Obvestilo navaja način oddaje, a ne objavlja uteži. Ocenjevalna lestvica je v razpisni dokumentaciji.",
+      "weight": "Utež",
+      "noWeight": "Utež ni objavljena",
+      "lot": "Sklop {{lot}}",
+      "appliesToEveryLot": "Velja za vse sklope",
+      "showAllLots": "Prikaži vse sklope",
+      "type": {
+        "quality": "Kakovost",
+        "cost": "Stroški",
+        "price": "Cena"
+      }
+    },
+    "citation": {
+      "page": "str. {{page}}",
+      "pageRange": "str. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Del {{index}}",
+      "openDocument": "Odpri dokument",
+      "expandPassage": "Prikaži celoten odlomek",
+      "collapsePassage": "Skrij odlomek",
+      "passageUnavailable": "Celotnega odlomka nismo mogli pridobiti.",
+      "truncated": "Odlomek skrajšan."
     }
   },
   "today": {
@@ -517,6 +756,7 @@
     "nav": {
       "general": "Splošno",
       "profile": "Profil stranke",
+      "company": "Dosje podjetja",
       "overview": "Pregled",
       "members": "Člani",
       "roles": "Vloge",
@@ -720,6 +960,28 @@
       "duplicate": "Ta razpis je že v tem workbenchu.",
       "unavailable": "Ta razpis ni več na voljo.",
       "generic": "Nekaj je šlo narobe. Poskusite znova."
+    },
+    "scheda": {
+      "coverageTitle": "Kaj smo prebrali",
+      "evidenceTitle": "Pogoji in dokazila",
+      "pointsTitle": "Kje se pridobijo točke",
+      "repairChat": {
+        "title": "Vprašajte o tem razpisu",
+        "open": "Zastavi vprašanje",
+        "close": "Zapri",
+        "askWhy": "Zakaj?",
+        "seedGapQuestion": "Zakaj ta razpis zahteva »{{requirement}}«?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Zabeleženo glede na: {{recommendation}}",
+      "youDecided": "odločili ste {{decision}}",
+      "noRecommendation": "Ob vaši odločitvi preverjanje pogojev ni bilo na voljo.",
+      "recordedAt": "zabeleženo {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blokirna vrzel",
+      "blockingGapsAtDecision_two": "{{count}} blokirni vrzeli",
+      "blockingGapsAtDecision_few": "{{count}} blokirne vrzeli",
+      "blockingGapsAtDecision_other": "{{count}} blokirnih vrzeli"
     }
   },
   "workbench": {

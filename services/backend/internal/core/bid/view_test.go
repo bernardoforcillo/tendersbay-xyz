@@ -5,6 +5,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 )
@@ -28,8 +29,10 @@ func (f *viewFakeRepo) FindBidByID(_ context.Context, _, bidID string) (Bid, err
 func (f *viewFakeRepo) ListBidsByWorkbench(_ context.Context, _ string) ([]Bid, error) {
 	return f.bids, nil
 }
-func (f *viewFakeRepo) UpdateGoNoGo(context.Context, string, GoNoGo) (Bid, error) { return Bid{}, nil }
-func (f *viewFakeRepo) UpdateStage(context.Context, string, Stage) (Bid, error)   { return Bid{}, nil }
+func (f *viewFakeRepo) UpdateGoNoGo(context.Context, string, GoNoGo, DecisionRecord) (Bid, error) {
+	return Bid{}, nil
+}
+func (f *viewFakeRepo) UpdateStage(context.Context, string, Stage) (Bid, error) { return Bid{}, nil }
 func (f *viewFakeRepo) UpdateOutcome(context.Context, string, Outcome) (Bid, error) {
 	return Bid{}, nil
 }
@@ -58,6 +61,14 @@ func (f *viewFakeAccess) CanManageWorkbench(context.Context, string, string) err
 }
 func (f *viewFakeAccess) WorkspaceOf(context.Context, string) (string, error) {
 	return f.workspaceID, nil
+}
+
+// viewFakeEligibility is a never-called stand-in: the read paths under test in
+// this file never record a decision, so no assessment is ever requested.
+type viewFakeEligibility struct{}
+
+func (viewFakeEligibility) CheckEligibility(context.Context, string, string, int64, string) (company.Assessment, error) {
+	return company.Assessment{}, nil
 }
 
 type viewFakeTenders struct {
@@ -107,7 +118,7 @@ func TestListBids_Aggregates(t *testing.T) {
 			10: {Tier: tender.FitStrong, HasProfile: true, Available: true},
 		},
 	}
-	svc := NewService(repo, access, tenders)
+	svc := NewService(repo, access, tenders, &viewFakeEligibility{})
 
 	views, err := svc.ListBids(context.Background(), "u1", "wb1")
 	if err != nil {
@@ -157,7 +168,7 @@ func TestListBids_SortsByDeadlineDanglingLast(t *testing.T) {
 			1: {Available: true}, 3: {Available: true},
 		},
 	}
-	svc := NewService(repo, access, tenders)
+	svc := NewService(repo, access, tenders, &viewFakeEligibility{})
 
 	views, err := svc.ListBids(context.Background(), "u1", "wb1")
 	if err != nil {
@@ -173,7 +184,7 @@ func TestListBids_SortsByDeadlineDanglingLast(t *testing.T) {
 }
 
 func TestListBids_ReadRequiresAccess(t *testing.T) {
-	svc := NewService(&viewFakeRepo{}, &viewFakeAccess{accessErr: workbench.ErrForbidden}, &viewFakeTenders{})
+	svc := NewService(&viewFakeRepo{}, &viewFakeAccess{accessErr: workbench.ErrForbidden}, &viewFakeTenders{}, &viewFakeEligibility{})
 	if _, err := svc.ListBids(context.Background(), "u1", "wb1"); !errors.Is(err, workbench.ErrForbidden) {
 		t.Fatalf("want ErrForbidden, got %v", err)
 	}
@@ -197,7 +208,7 @@ func TestGetBid_AggregatesSingle(t *testing.T) {
 		summaries: map[int64]tender.TenderSummary{10: {ID: 10, Title: "Bridge"}},
 		fits:      map[int64]tender.TenderFitResult{10: {Tier: tender.FitPossible, HasProfile: true, Available: true}},
 	}
-	svc := NewService(repo, access, tenders)
+	svc := NewService(repo, access, tenders, &viewFakeEligibility{})
 
 	v, err := svc.GetBid(context.Background(), "u1", "wb1", "bid-10")
 	if err != nil {

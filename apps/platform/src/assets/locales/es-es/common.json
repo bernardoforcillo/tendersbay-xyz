@@ -139,6 +139,181 @@
       "emptyDescription": "Prueba una búsqueda manual abajo, o amplía el perfil de este cliente."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Expediente de empresa",
+      "description": "Lo que sabemos de tu empresa. Lo contrastamos con los requisitos de participación de cada licitación.",
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "error": "No hemos podido guardarlo. Inténtalo de nuevo.",
+      "identity": {
+        "legalName": "Razón social",
+        "vatNumber": "NIF/IVA",
+        "fiscalCode": "Código fiscal",
+        "legalForm": "Forma jurídica",
+        "cciaaOffice": "Cámara de Comercio",
+        "cciaaNumber": "Número de registro mercantil",
+        "country": "País",
+        "nuts": "Región (NUTS)",
+        "foundedYear": "Año de constitución"
+      },
+      "soa": {
+        "title": "Atestaciones SOA",
+        "category": "Categoría",
+        "classifica": "Classifica",
+        "issuedBy": "Emitida por",
+        "validUntil": "Válida hasta",
+        "verifiedUntil": "Verificación trienal válida hasta",
+        "verifiedUntilHint": "La verificación trienal caduca tres años antes que la propia atestación. Pasada esa fecha, la atestación deja de contar.",
+        "add": "Añadir atestación",
+        "remove": "Eliminar",
+        "empty": "No hay ninguna atestación SOA registrada."
+      },
+      "certifications": {
+        "title": "Certificaciones",
+        "standard": "Norma",
+        "standardRaw": "Norma, tal y como está certificada",
+        "scope": "Alcance",
+        "issuedBy": "Emitida por",
+        "validFrom": "Válida desde",
+        "validUntil": "Válida hasta",
+        "add": "Añadir certificación",
+        "remove": "Eliminar",
+        "empty": "No hay ninguna certificación registrada."
+      },
+      "financialYears": {
+        "title": "Ejercicios económicos",
+        "year": "Año",
+        "turnover": "Volumen de negocio",
+        "specificTurnover": "Volumen de negocio en el ámbito de la licitación",
+        "currency": "Moneda",
+        "headcount": "Plantilla",
+        "add": "Añadir ejercicio",
+        "remove": "Eliminar",
+        "empty": "No hay ningún ejercicio registrado."
+      },
+      "pastContracts": {
+        "title": "Contratos ejecutados",
+        "description": "Qué se ejecutó",
+        "buyer": "Órgano de contratación",
+        "cpv": "CPV",
+        "value": "Importe",
+        "started": "Inicio",
+        "ended": "Fin",
+        "role": "Papel",
+        "sharePct": "Tu participación",
+        "sharePctHint": "En una UTE solo cuenta para el requisito la parte ejecutada por ti.",
+        "add": "Añadir contrato",
+        "remove": "Eliminar",
+        "empty": "No hay ningún contrato registrado."
+      },
+      "registrations": {
+        "title": "Inscripciones y registros",
+        "kind": "Tipo",
+        "authority": "Organismo",
+        "identifier": "Referencia",
+        "section": "Sección",
+        "validFrom": "Válida desde",
+        "validUntil": "Válida hasta",
+        "add": "Añadir inscripción",
+        "remove": "Eliminar",
+        "empty": "No hay ninguna inscripción registrada."
+      }
+    },
+    "provenance": {
+      "user_stated": "Lo has introducido tú",
+      "user_confirmed": "Lo has confirmado tú",
+      "agent_inferred": "Deducido por el agente",
+      "imported": "Importado",
+      "never": "Sin registrar"
+    },
+    "eligibility": {
+      "title": "Requisitos de participación",
+      "recheck": "Volver a comprobar",
+      "evaluatedAt": "Comprobado {{when}}",
+      "requirementLabel": "Esta licitación exige",
+      "heldLabel": "Tu expediente acredita",
+      "changesLabel": "Qué cambiaría esto",
+      "caveatsLabel": "Léelo junto con esto",
+      "lead": {
+        "requires": "Esta licitación exige",
+        "holds": "tu expediente acredita",
+        "noRequirements": "No se ha registrado ningún requisito para esta licitación."
+      },
+      "verdict": {
+        "insufficient_data": "Datos insuficientes para decidir",
+        "go": "Pareces cumplir los requisitos",
+        "no_go": "No pareces cumplir los requisitos"
+      },
+      "status": {
+        "met": "Cumplido",
+        "missing": "Falta",
+        "shortfall": "Por debajo del nivel exigido",
+        "expiring": "A punto de caducar",
+        "expired": "Caducado",
+        "unknown": "Aún no preguntado"
+      },
+      "remedy": {
+        "provide_fact": "Dinos qué acreditas",
+        "renew": "Renuévalo antes del plazo",
+        "upgrade": "Elévalo al nivel exigido",
+        "avvalimento": "Cúbrelo integrando medios externos (avvalimento)",
+        "rti": "Concurre en UTE (RTI)",
+        "subcontract": "Cúbrelo mediante subcontratación"
+      },
+      "caveat": {
+        "no_requirements_captured": "No se ha capturado ningún requisito de esta licitación, así que esta conclusión no se apoya en nada publicado.",
+        "award_grid_only": "Solo se han capturado los criterios de adjudicación: los requisitos de participación pueden estar en documentos que no hemos leído.",
+        "unconfirmed_extraction": "Algunos requisitos se han leído de los pliegos y aún no los has confirmado.",
+        "open_questions": "Quedan preguntas sobre tu empresa sin responder.",
+        "documents_unread": "No hemos leído los pliegos, así que pueden faltar requisitos."
+      },
+      "counts": {
+        "requirements_one": "{{count}} requisito",
+        "requirements_other": "{{count}} requisitos",
+        "authoritative_one": "{{count}} confirmado",
+        "authoritative_other": "{{count}} confirmados",
+        "blocking_one": "{{count}} bloqueante",
+        "blocking_other": "{{count}} bloqueantes",
+        "unknown_one": "{{count}} sin responder",
+        "unknown_other": "{{count}} sin responder"
+      }
+    },
+    "requirements": {
+      "title": "Requisitos",
+      "empty": "No se ha registrado ningún requisito para esta licitación.",
+      "confirm": "Confirmar",
+      "confirmed": "Confirmado",
+      "remove": "Eliminar",
+      "unconfirmedHint": "Leído de los pliegos: contrástalo con el pasaje citado antes de fiarte.",
+      "lotLabel": "Lote {{lot}}",
+      "noticeLevel": "Se aplica a todo el anuncio",
+      "askWhy": "¿Por qué?",
+      "source": {
+        "user_stated": "Lo has declarado tú",
+        "document_excerpt": "De los pliegos",
+        "award_criteria": "De los criterios de adjudicación",
+        "agent_inferred": "Deducido por el agente"
+      }
+    },
+    "capture": {
+      "title": "Una pregunta",
+      "save": "Guardar",
+      "saving": "Guardando…",
+      "notSure": "No lo sé",
+      "error": "No hemos podido guardarlo. Inténtalo de nuevo.",
+      "cannotCheck": "Este no lo podemos comprobar automáticamente.",
+      "prompt": {
+        "soa": "¿Qué categoría y classifica SOA tienes?",
+        "certification": "¿Qué certificación tienes para esto?",
+        "turnover": "¿Qué volumen de negocio registraste?",
+        "past_contracts": "¿Qué contrato tuyo cubre esto?",
+        "headcount": "¿Cuántas personas tenías en plantilla?",
+        "registration": "¿Qué inscripción o registro cubre esto?",
+        "other": "Este no lo podemos comprobar automáticamente: léelo y decide tú."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Iniciar sesión",
@@ -471,6 +646,56 @@
       "deadlineUntil": "cierra antes del {{date}}",
       "undo": "Borrar",
       "remove": "Quitar {{chip}}"
+    },
+    "coverage": {
+      "title": "Qué hemos leído",
+      "openBuyerDocuments": "Abrir los documentos del órgano de contratación",
+      "label": {
+        "full": "Pliegos leídos",
+        "notice_only": "Solo el anuncio",
+        "none": "Nada leído"
+      },
+      "reason": {
+        "no_documents_published": "El órgano de contratación no publicó ningún documento con este anuncio.",
+        "notice_not_read": "No hemos leído los datos estructurados de este anuncio, así que no sabemos qué publica.",
+        "body_not_retrieved": "El órgano de contratación publica documentos que aún no hemos descargado.",
+        "not_yet_extracted": "En cola: aún no leídos.",
+        "extraction_failed": "No hemos podido leer el texto de estos documentos."
+      },
+      "counts": {
+        "documents_one": "{{count}} documento leído",
+        "documents_other": "{{count}} documentos leídos",
+        "parts_one": "{{count}} sección extraída",
+        "parts_other": "{{count}} secciones extraídas",
+        "knownLinks_one": "{{count}} documento publicado",
+        "knownLinks_other": "{{count}} documentos publicados"
+      }
+    },
+    "criteria": {
+      "title": "Dónde se ganan los puntos",
+      "notEnriched": "Todavía no hemos leído los datos estructurados de este anuncio.",
+      "gridUnusable": "El anuncio nombra el método de adjudicación pero no publica ponderaciones. El baremo está en el pliego.",
+      "weight": "Ponderación",
+      "noWeight": "Sin ponderación publicada",
+      "lot": "Lote {{lot}}",
+      "appliesToEveryLot": "Se aplica a todos los lotes",
+      "showAllLots": "Mostrar todos los lotes",
+      "type": {
+        "quality": "Calidad",
+        "cost": "Coste",
+        "price": "Precio"
+      }
+    },
+    "citation": {
+      "page": "p. {{page}}",
+      "pageRange": "pp. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Parte {{index}}",
+      "openDocument": "Abrir el documento",
+      "expandPassage": "Ver el pasaje completo",
+      "collapsePassage": "Ocultar el pasaje",
+      "passageUnavailable": "No hemos podido recuperar el pasaje completo.",
+      "truncated": "Pasaje abreviado."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "General",
       "profile": "Perfil del cliente",
+      "company": "Expediente de empresa",
       "overview": "Resumen",
       "members": "Miembros",
       "roles": "Roles",
@@ -713,6 +939,26 @@
       "duplicate": "Esta licitación ya está en ese workbench.",
       "unavailable": "Esta licitación ya no está disponible.",
       "generic": "Algo ha salido mal. Inténtalo de nuevo."
+    },
+    "scheda": {
+      "coverageTitle": "Qué hemos leído",
+      "evidenceTitle": "Requisitos y evidencias",
+      "pointsTitle": "Dónde se ganan los puntos",
+      "repairChat": {
+        "title": "Pregunta sobre esta licitación",
+        "open": "Hacer una pregunta",
+        "close": "Cerrar",
+        "askWhy": "¿Por qué?",
+        "seedGapQuestion": "¿Por qué esta licitación exige «{{requirement}}»?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Registrado frente a: {{recommendation}}",
+      "youDecided": "tú decidiste {{decision}}",
+      "noRecommendation": "Cuando decidiste no había ninguna comprobación de requisitos disponible.",
+      "recordedAt": "registrado {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} carencia bloqueante",
+      "blockingGapsAtDecision_other": "{{count}} carencias bloqueantes"
     }
   },
   "workbench": {

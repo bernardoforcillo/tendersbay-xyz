@@ -139,6 +139,181 @@
       "emptyDescription": "Versuchen Sie unten eine manuelle Suche, oder erweitern Sie das Profil dieses Kunden."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Unternehmensdossier",
+      "description": "Was wir über Ihr Unternehmen wissen. Wir gleichen es mit den Eignungskriterien jeder Ausschreibung ab.",
+      "save": "Speichern",
+      "saving": "Wird gespeichert…",
+      "error": "Speichern nicht möglich. Bitte versuchen Sie es erneut.",
+      "identity": {
+        "legalName": "Firmenname",
+        "vatNumber": "USt-IdNr.",
+        "fiscalCode": "Steuernummer",
+        "legalForm": "Rechtsform",
+        "cciaaOffice": "Handelskammer",
+        "cciaaNumber": "Handelsregisternummer",
+        "country": "Land",
+        "nuts": "Region (NUTS)",
+        "foundedYear": "Gegründet"
+      },
+      "soa": {
+        "title": "SOA-Attestierungen",
+        "category": "Kategorie",
+        "classifica": "Classifica",
+        "issuedBy": "Ausgestellt von",
+        "validUntil": "Gültig bis",
+        "verifiedUntil": "Dreijährliche Überprüfung gültig bis",
+        "verifiedUntilHint": "Die dreijährliche Überprüfung läuft drei Jahre vor der Attestierung selbst ab. Danach zählt die Attestierung nicht mehr.",
+        "add": "Attestierung hinzufügen",
+        "remove": "Entfernen",
+        "empty": "Keine SOA-Attestierung erfasst."
+      },
+      "certifications": {
+        "title": "Zertifizierungen",
+        "standard": "Norm",
+        "standardRaw": "Norm laut Zertifikat",
+        "scope": "Geltungsbereich",
+        "issuedBy": "Ausgestellt von",
+        "validFrom": "Gültig ab",
+        "validUntil": "Gültig bis",
+        "add": "Zertifizierung hinzufügen",
+        "remove": "Entfernen",
+        "empty": "Keine Zertifizierung erfasst."
+      },
+      "financialYears": {
+        "title": "Geschäftsjahre",
+        "year": "Jahr",
+        "turnover": "Gesamtumsatz",
+        "specificTurnover": "Umsatz im einschlägigen Bereich",
+        "currency": "Währung",
+        "headcount": "Beschäftigte",
+        "add": "Geschäftsjahr hinzufügen",
+        "remove": "Entfernen",
+        "empty": "Kein Geschäftsjahr erfasst."
+      },
+      "pastContracts": {
+        "title": "Referenzaufträge",
+        "description": "Was erbracht wurde",
+        "buyer": "Auftraggeber",
+        "cpv": "CPV",
+        "value": "Auftragswert",
+        "started": "Beginn",
+        "ended": "Ende",
+        "role": "Rolle",
+        "sharePct": "Ihr Anteil",
+        "sharePctHint": "In einer Bietergemeinschaft zählt für ein Kriterium nur Ihr eigener Anteil.",
+        "add": "Referenz hinzufügen",
+        "remove": "Entfernen",
+        "empty": "Kein Referenzauftrag erfasst."
+      },
+      "registrations": {
+        "title": "Eintragungen und Listen",
+        "kind": "Art",
+        "authority": "Stelle",
+        "identifier": "Referenz",
+        "section": "Abschnitt",
+        "validFrom": "Gültig ab",
+        "validUntil": "Gültig bis",
+        "add": "Eintragung hinzufügen",
+        "remove": "Entfernen",
+        "empty": "Keine Eintragung erfasst."
+      }
+    },
+    "provenance": {
+      "user_stated": "Von Ihnen eingetragen",
+      "user_confirmed": "Von Ihnen bestätigt",
+      "agent_inferred": "Vom Agenten abgeleitet",
+      "imported": "Importiert",
+      "never": "Nicht erfasst"
+    },
+    "eligibility": {
+      "title": "Eignung",
+      "recheck": "Erneut prüfen",
+      "evaluatedAt": "Geprüft {{when}}",
+      "requirementLabel": "Diese Ausschreibung verlangt",
+      "heldLabel": "Ihr Dossier enthält",
+      "changesLabel": "Was das ändern würde",
+      "caveatsLabel": "Dazu ist zu beachten",
+      "lead": {
+        "requires": "Diese Ausschreibung verlangt",
+        "holds": "Ihr Dossier enthält",
+        "noRequirements": "Für diese Ausschreibung wurde kein Kriterium erfasst."
+      },
+      "verdict": {
+        "insufficient_data": "Zu wenig für eine Entscheidung",
+        "go": "Sie erfüllen die Kriterien voraussichtlich",
+        "no_go": "Sie erfüllen die Kriterien voraussichtlich nicht"
+      },
+      "status": {
+        "met": "Erfüllt",
+        "missing": "Fehlt",
+        "shortfall": "Unter dem geforderten Niveau",
+        "expiring": "Läuft aus",
+        "expired": "Abgelaufen",
+        "unknown": "Noch nicht gefragt"
+      },
+      "remedy": {
+        "provide_fact": "Sagen Sie uns, was Sie vorweisen können",
+        "renew": "Vor Fristablauf erneuern",
+        "upgrade": "Auf das geforderte Niveau anheben",
+        "avvalimento": "Über eine Eignungsleihe (avvalimento) abdecken",
+        "rti": "Als Bietergemeinschaft (RTI) anbieten",
+        "subcontract": "Über einen Unterauftrag abdecken"
+      },
+      "caveat": {
+        "no_requirements_captured": "Für diese Ausschreibung wurde kein Kriterium erfasst — diese Einschätzung stützt sich auf nichts Veröffentlichtes.",
+        "award_grid_only": "Erfasst wurden nur die Zuschlagskriterien — die Eignungskriterien können in Unterlagen stehen, die wir nicht gelesen haben.",
+        "unconfirmed_extraction": "Einige Kriterien stammen aus den Unterlagen und wurden von Ihnen noch nicht bestätigt.",
+        "open_questions": "Einige Fragen zu Ihrem Unternehmen sind noch offen.",
+        "documents_unread": "Wir haben die Vergabeunterlagen nicht gelesen, daher können Kriterien fehlen."
+      },
+      "counts": {
+        "requirements_one": "{{count}} Kriterium",
+        "requirements_other": "{{count}} Kriterien",
+        "authoritative_one": "{{count}} bestätigt",
+        "authoritative_other": "{{count}} bestätigt",
+        "blocking_one": "{{count}} blockierend",
+        "blocking_other": "{{count}} blockierend",
+        "unknown_one": "{{count}} offen",
+        "unknown_other": "{{count}} offen"
+      }
+    },
+    "requirements": {
+      "title": "Anforderungen",
+      "empty": "Für diese Ausschreibung wurde keine Anforderung erfasst.",
+      "confirm": "Bestätigen",
+      "confirmed": "Bestätigt",
+      "remove": "Entfernen",
+      "unconfirmedHint": "Aus den Unterlagen gelesen — gleichen Sie es mit der zitierten Stelle ab, bevor Sie sich darauf verlassen.",
+      "lotLabel": "Los {{lot}}",
+      "noticeLevel": "Gilt für die gesamte Bekanntmachung",
+      "askWhy": "Warum?",
+      "source": {
+        "user_stated": "Von Ihnen angegeben",
+        "document_excerpt": "Aus den Vergabeunterlagen",
+        "award_criteria": "Aus den Zuschlagskriterien",
+        "agent_inferred": "Vom Agenten abgeleitet"
+      }
+    },
+    "capture": {
+      "title": "Eine Frage",
+      "save": "Speichern",
+      "saving": "Wird gespeichert…",
+      "notSure": "Weiß ich nicht",
+      "error": "Speichern nicht möglich. Bitte versuchen Sie es erneut.",
+      "cannotCheck": "Das können wir nicht automatisch prüfen.",
+      "prompt": {
+        "soa": "Welche SOA-Kategorie und Classifica haben Sie?",
+        "certification": "Welche Zertifizierung haben Sie dafür?",
+        "turnover": "Welchen Umsatz haben Sie erzielt?",
+        "past_contracts": "Welcher Ihrer Aufträge deckt das ab?",
+        "headcount": "Wie viele Beschäftigte hatten Sie?",
+        "registration": "Welche Eintragung oder Liste deckt das ab?",
+        "other": "Das können wir nicht automatisch prüfen — lesen Sie es und entscheiden Sie selbst."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Anmelden",
@@ -471,6 +646,56 @@
       "deadlineUntil": "Frist bis {{date}}",
       "undo": "Löschen",
       "remove": "{{chip}} entfernen"
+    },
+    "coverage": {
+      "title": "Was wir gelesen haben",
+      "openBuyerDocuments": "Unterlagen des Auftraggebers öffnen",
+      "label": {
+        "full": "Vergabeunterlagen gelesen",
+        "notice_only": "Nur die Bekanntmachung",
+        "none": "Nichts gelesen"
+      },
+      "reason": {
+        "no_documents_published": "Der Auftraggeber hat zu dieser Bekanntmachung keine Unterlagen veröffentlicht.",
+        "notice_not_read": "Wir haben die strukturierten Daten dieser Bekanntmachung nicht gelesen und wissen daher nicht, was sie veröffentlicht.",
+        "body_not_retrieved": "Der Auftraggeber veröffentlicht Unterlagen, die wir noch nicht abgerufen haben.",
+        "not_yet_extracted": "In der Warteschlange — noch nicht gelesen.",
+        "extraction_failed": "Wir konnten den Text dieser Unterlagen nicht lesen."
+      },
+      "counts": {
+        "documents_one": "{{count}} Dokument gelesen",
+        "documents_other": "{{count}} Dokumente gelesen",
+        "parts_one": "{{count}} Abschnitt extrahiert",
+        "parts_other": "{{count}} Abschnitte extrahiert",
+        "knownLinks_one": "{{count}} Dokument veröffentlicht",
+        "knownLinks_other": "{{count}} Dokumente veröffentlicht"
+      }
+    },
+    "criteria": {
+      "title": "Wo die Punkte vergeben werden",
+      "notEnriched": "Wir haben die strukturierten Daten dieser Bekanntmachung noch nicht gelesen.",
+      "gridUnusable": "Die Bekanntmachung nennt das Zuschlagsverfahren, veröffentlicht aber keine Gewichtungen. Die Bewertungsmatrix steht in den Vergabeunterlagen.",
+      "weight": "Gewichtung",
+      "noWeight": "Keine Gewichtung veröffentlicht",
+      "lot": "Los {{lot}}",
+      "appliesToEveryLot": "Gilt für alle Lose",
+      "showAllLots": "Alle Lose anzeigen",
+      "type": {
+        "quality": "Qualität",
+        "cost": "Kosten",
+        "price": "Preis"
+      }
+    },
+    "citation": {
+      "page": "S. {{page}}",
+      "pageRange": "S. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Teil {{index}}",
+      "openDocument": "Dokument öffnen",
+      "expandPassage": "Umgebende Textstelle anzeigen",
+      "collapsePassage": "Textstelle ausblenden",
+      "passageUnavailable": "Die umgebende Textstelle konnte nicht abgerufen werden.",
+      "truncated": "Textstelle gekürzt."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "Allgemein",
       "profile": "Kundenprofil",
+      "company": "Unternehmensdossier",
       "overview": "Übersicht",
       "members": "Mitglieder",
       "roles": "Rollen",
@@ -718,6 +944,26 @@
       "duplicate": "Diese Ausschreibung befindet sich bereits in diesem Workbench.",
       "unavailable": "Diese Ausschreibung ist nicht mehr verfügbar.",
       "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+    },
+    "scheda": {
+      "coverageTitle": "Was wir gelesen haben",
+      "evidenceTitle": "Anforderungen und Nachweise",
+      "pointsTitle": "Wo die Punkte vergeben werden",
+      "repairChat": {
+        "title": "Zu dieser Ausschreibung fragen",
+        "open": "Frage stellen",
+        "close": "Schließen",
+        "askWhy": "Warum?",
+        "seedGapQuestion": "Warum verlangt diese Ausschreibung „{{requirement}}“?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Erfasst gegenüber: {{recommendation}}",
+      "youDecided": "Sie haben {{decision}} entschieden",
+      "noRecommendation": "Zum Zeitpunkt Ihrer Entscheidung lag keine Eignungsprüfung vor.",
+      "recordedAt": "erfasst {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blockierende Lücke",
+      "blockingGapsAtDecision_other": "{{count}} blockierende Lücken"
     }
   },
   "workbench": {

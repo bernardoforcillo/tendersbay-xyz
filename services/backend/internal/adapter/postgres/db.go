@@ -67,5 +67,7 @@ func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 	m.Add(migrateAgentTenderResults())
 	m.Add(migrateLowercaseEmails())
 	m.Add(migrateBids())
+	m.Add(migrateCompany())
+	m.Add(migrateBidDecision())
 	return db, sqlDB, m.Up(ctx)
 }

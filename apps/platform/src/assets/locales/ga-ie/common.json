@@ -139,6 +139,193 @@
       "emptyDescription": "Bain triail as cuardach láimhe thíos, nó leathnaigh próifíl an chliaint seo."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Comhad an chomhlachta",
+      "description": "An méid atá ar eolas againn faoi do chomhlacht. Cuirimid i gcomparáid é le critéir roghnúcháin gach tairisceana.",
+      "save": "Sábháil",
+      "saving": "Á shábháil…",
+      "error": "Níorbh fhéidir é sin a shábháil. Bain triail eile as.",
+      "identity": {
+        "legalName": "Ainm dlíthiúil",
+        "vatNumber": "Uimhir CBL",
+        "fiscalCode": "Uimhir chánach",
+        "legalForm": "Foirm dhlíthiúil",
+        "cciaaOffice": "Comhlachas tráchtála",
+        "cciaaNumber": "Uimhir chláraithe cuideachta",
+        "country": "Tír",
+        "nuts": "Réigiún (NUTS)",
+        "foundedYear": "Bunaithe"
+      },
+      "soa": {
+        "title": "Deimhnithe SOA",
+        "category": "Catagóir",
+        "classifica": "Classifica",
+        "issuedBy": "Eisithe ag",
+        "validUntil": "Bailí go dtí",
+        "verifiedUntil": "Fíorú trí bliana bailí go dtí",
+        "verifiedUntilHint": "Téann an fíorú trí bliana in éag trí bliana roimh an deimhniú féin. Tar éis an dáta sin ní áirítear an deimhniú a thuilleadh.",
+        "add": "Cuir deimhniú leis",
+        "remove": "Bain",
+        "empty": "Níl aon deimhniú SOA taifeadta."
+      },
+      "certifications": {
+        "title": "Deimhnithe",
+        "standard": "Caighdeán",
+        "standardRaw": "An caighdeán mar atá deimhnithe",
+        "scope": "Raon feidhme",
+        "issuedBy": "Eisithe ag",
+        "validFrom": "Bailí ó",
+        "validUntil": "Bailí go dtí",
+        "add": "Cuir deimhniú leis",
+        "remove": "Bain",
+        "empty": "Níl aon deimhniú taifeadta."
+      },
+      "financialYears": {
+        "title": "Blianta airgeadais",
+        "year": "Bliain",
+        "turnover": "Láimhdeachas iomlán",
+        "specificTurnover": "Láimhdeachas sa réimse ábhartha",
+        "currency": "Airgeadra",
+        "headcount": "Fostaithe",
+        "add": "Cuir bliain leis",
+        "remove": "Bain",
+        "empty": "Níl aon bhliain airgeadais taifeadta."
+      },
+      "pastContracts": {
+        "title": "Conarthaí a comhlíonadh",
+        "description": "Cad a seachadadh",
+        "buyer": "Údarás conarthach",
+        "cpv": "CPV",
+        "value": "Luach",
+        "started": "Tosaithe",
+        "ended": "Críochnaithe",
+        "role": "Ról",
+        "sharePct": "Do sciar féin",
+        "sharePctHint": "I gcuibhreannas ní áirítear ach do sciar féin i leith riachtanais.",
+        "add": "Cuir conradh leis",
+        "remove": "Bain",
+        "empty": "Níl aon chonradh a comhlíonadh taifeadta."
+      },
+      "registrations": {
+        "title": "Cláruithe agus liostaí",
+        "kind": "Cineál",
+        "authority": "Údarás",
+        "identifier": "Tagairt",
+        "section": "Rannán",
+        "validFrom": "Bailí ó",
+        "validUntil": "Bailí go dtí",
+        "add": "Cuir clárú leis",
+        "remove": "Bain",
+        "empty": "Níl aon chlárú taifeadta."
+      }
+    },
+    "provenance": {
+      "user_stated": "Chuir tú féin isteach é seo",
+      "user_confirmed": "Dheimhnigh tú féin é seo",
+      "agent_inferred": "Thuig an gníomhaire é seo",
+      "imported": "Iompórtáilte",
+      "never": "Gan taifeadadh"
+    },
+    "eligibility": {
+      "title": "Critéir roghnúcháin",
+      "recheck": "Seiceáil arís",
+      "evaluatedAt": "Seiceáilte {{when}}",
+      "requirementLabel": "Éilíonn an tairiscint seo",
+      "heldLabel": "Léiríonn do chomhad",
+      "changesLabel": "Cad a d'athródh é seo",
+      "caveatsLabel": "Léigh in éineacht leis seo",
+      "lead": {
+        "requires": "Éilíonn an tairiscint seo",
+        "holds": "léiríonn do chomhad",
+        "noRequirements": "Níl aon riachtanas taifeadta don tairiscint seo."
+      },
+      "verdict": {
+        "insufficient_data": "Ró-bheagán eolais chun cinneadh a dhéanamh",
+        "go": "Dealraíonn sé go gcomhlíonann tú na critéir",
+        "no_go": "Dealraíonn sé nach gcomhlíonann tú na critéir"
+      },
+      "status": {
+        "met": "Comhlíonta",
+        "missing": "Ar iarraidh",
+        "shortfall": "Faoi bhun an leibhéil a éilítear",
+        "expiring": "Ag dul in éag",
+        "expired": "In éag",
+        "unknown": "Níor fiafraíodh fós"
+      },
+      "remedy": {
+        "provide_fact": "Inis dúinn cad atá agat",
+        "renew": "Athnuaigh é roimh an spriocdháta",
+        "upgrade": "Ardaigh é go dtí an leibhéal a éilítear",
+        "avvalimento": "Bí ag brath ar acmhainn tríú páirtí (avvalimento)",
+        "rti": "Tairg mar chuibhreannas (RTI)",
+        "subcontract": "Clúdaigh é le fochonraitheoireacht"
+      },
+      "caveat": {
+        "no_requirements_captured": "Níor tógadh aon riachtanas don tairiscint seo, mar sin níl an bhreith seo bunaithe ar aon rud foilsithe.",
+        "award_grid_only": "Níor tógadh ach na critéir dhámhachtana — d'fhéadfadh na critéir roghnúcháin a bheith i gcáipéisí nár léamar.",
+        "unconfirmed_extraction": "Léadh roinnt riachtanas as na cáipéisí agus níor dheimhnigh tú fós iad.",
+        "open_questions": "Tá roinnt ceisteanna faoi do chomhlacht gan freagairt fós.",
+        "documents_unread": "Níor léamar cáipéisí na tairisceana, mar sin d'fhéadfadh riachtanais a bheith ar iarraidh."
+      },
+      "counts": {
+        "requirements_one": "{{count}} riachtanas",
+        "requirements_two": "{{count}} riachtanas",
+        "requirements_few": "{{count}} riachtanas",
+        "requirements_many": "{{count}} riachtanas",
+        "requirements_other": "{{count}} riachtanas",
+        "authoritative_one": "{{count}} deimhnithe",
+        "authoritative_two": "{{count}} deimhnithe",
+        "authoritative_few": "{{count}} deimhnithe",
+        "authoritative_many": "{{count}} deimhnithe",
+        "authoritative_other": "{{count}} deimhnithe",
+        "blocking_one": "{{count}} bacainneach",
+        "blocking_two": "{{count}} bacainneach",
+        "blocking_few": "{{count}} bacainneach",
+        "blocking_many": "{{count}} bacainneach",
+        "blocking_other": "{{count}} bacainneach",
+        "unknown_one": "{{count}} gan freagra",
+        "unknown_two": "{{count}} gan freagra",
+        "unknown_few": "{{count}} gan freagra",
+        "unknown_many": "{{count}} gan freagra",
+        "unknown_other": "{{count}} gan freagra"
+      }
+    },
+    "requirements": {
+      "title": "Riachtanais",
+      "empty": "Níl aon riachtanas taifeadta don tairiscint seo.",
+      "confirm": "Deimhnigh",
+      "confirmed": "Deimhnithe",
+      "remove": "Bain",
+      "unconfirmedHint": "Léite as na cáipéisí — cuir i gcomparáid leis an sliocht luaite é sula mbraitheann tú air.",
+      "lotLabel": "Lota {{lot}}",
+      "noticeLevel": "Baineann leis an bhfógra ar fad",
+      "askWhy": "Cén fáth?",
+      "source": {
+        "user_stated": "Dhearbhaigh tú féin é seo",
+        "document_excerpt": "As cáipéisí na tairisceana",
+        "award_criteria": "As na critéir dhámhachtana",
+        "agent_inferred": "Thuig an gníomhaire é seo"
+      }
+    },
+    "capture": {
+      "title": "Ceist amháin",
+      "save": "Sábháil",
+      "saving": "Á shábháil…",
+      "notSure": "Níl a fhios agam",
+      "error": "Níorbh fhéidir é sin a shábháil. Bain triail eile as.",
+      "cannotCheck": "Ní féidir linn é seo a sheiceáil go huathoibríoch.",
+      "prompt": {
+        "soa": "Cén chatagóir agus cén classifica SOA atá agat?",
+        "certification": "Cén deimhniú atá agat dó seo?",
+        "turnover": "Cén láimhdeachas a thaifead tú?",
+        "past_contracts": "Cén conradh de do chuid a chlúdaíonn é seo?",
+        "headcount": "Cé mhéad duine a bhí fostaithe agat?",
+        "registration": "Cén clárú nó cén liosta a chlúdaíonn é seo?",
+        "other": "Ní féidir linn é seo a sheiceáil go huathoibríoch — léigh é agus déan do chinneadh féin."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Sínigh isteach",
@@ -481,6 +668,65 @@
       "deadlineUntil": "dúnann faoi {{date}}",
       "undo": "Glan",
       "remove": "Bain {{chip}}"
+    },
+    "coverage": {
+      "title": "Ar léamar",
+      "openBuyerDocuments": "Oscail cáipéisí an údaráis chonarthaigh",
+      "label": {
+        "full": "Cáipéisí na tairisceana léite",
+        "notice_only": "An fógra amháin",
+        "none": "Níor léadh aon rud"
+      },
+      "reason": {
+        "no_documents_published": "Níor fhoilsigh an t-údarás conarthach aon cháipéis leis an bhfógra seo.",
+        "notice_not_read": "Níor léamar sonraí struchtúrtha an fhógra seo, mar sin níl a fhios againn cad a fhoilsíonn sé.",
+        "body_not_retrieved": "Foilsíonn an t-údarás conarthach cáipéisí nach bhfuil faighte againn fós.",
+        "not_yet_extracted": "Sa scuaine — gan léamh fós.",
+        "extraction_failed": "Níorbh fhéidir linn téacs na gcáipéisí seo a léamh."
+      },
+      "counts": {
+        "documents_one": "{{count}} cáipéis léite",
+        "documents_two": "{{count}} cháipéis léite",
+        "documents_few": "{{count}} cháipéis léite",
+        "documents_many": "{{count}} gcáipéis léite",
+        "documents_other": "{{count}} cáipéis léite",
+        "parts_one": "{{count}} alt bainte amach",
+        "parts_two": "{{count}} alt bainte amach",
+        "parts_few": "{{count}} alt bainte amach",
+        "parts_many": "{{count}} n-alt bainte amach",
+        "parts_other": "{{count}} alt bainte amach",
+        "knownLinks_one": "{{count}} cáipéis foilsithe",
+        "knownLinks_two": "{{count}} cháipéis foilsithe",
+        "knownLinks_few": "{{count}} cháipéis foilsithe",
+        "knownLinks_many": "{{count}} gcáipéis foilsithe",
+        "knownLinks_other": "{{count}} cáipéis foilsithe"
+      }
+    },
+    "criteria": {
+      "title": "Cá bhfuil na pointí",
+      "notEnriched": "Níor léamar sonraí struchtúrtha an fhógra seo fós.",
+      "gridUnusable": "Ainmníonn an fógra an modh dámhachtana ach ní fhoilsíonn sé ualuithe. Tá an greille scórála i gcáipéisí na tairisceana.",
+      "weight": "Ualú",
+      "noWeight": "Níor foilsíodh ualú",
+      "lot": "Lota {{lot}}",
+      "appliesToEveryLot": "Baineann le gach lota",
+      "showAllLots": "Taispeáin gach lota",
+      "type": {
+        "quality": "Cáilíocht",
+        "cost": "Costas",
+        "price": "Praghas"
+      }
+    },
+    "citation": {
+      "page": "lch. {{page}}",
+      "pageRange": "lgh. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Cuid {{index}}",
+      "openDocument": "Oscail an cháipéis",
+      "expandPassage": "Taispeáin an sliocht iomlán",
+      "collapsePassage": "Folaigh an sliocht",
+      "passageUnavailable": "Níorbh fhéidir linn an sliocht iomlán a fháil.",
+      "truncated": "Sliocht giorraithe."
     }
   },
   "today": {
@@ -524,6 +770,7 @@
     "nav": {
       "general": "Ginearálta",
       "profile": "Próifíl an chliaint",
+      "company": "Comhad an chomhlachta",
       "overview": "Forbhreathnú",
       "members": "Baill",
       "roles": "Róil",
@@ -735,6 +982,29 @@
       "duplicate": "Tá an tairiscint seo sa workbench sin cheana.",
       "unavailable": "Níl an tairiscint seo ar fáil a thuilleadh.",
       "generic": "Tharla earráid. Bain triail eile as le do thoil."
+    },
+    "scheda": {
+      "coverageTitle": "Ar léamar",
+      "evidenceTitle": "Riachtanais agus fianaise",
+      "pointsTitle": "Cá bhfuil na pointí",
+      "repairChat": {
+        "title": "Cuir ceist faoin tairiscint seo",
+        "open": "Cuir ceist",
+        "close": "Dún",
+        "askWhy": "Cén fáth?",
+        "seedGapQuestion": "Cén fáth a n-éilíonn an tairiscint seo „{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Taifeadta i gcoinne: {{recommendation}}",
+      "youDecided": "shocraigh tú {{decision}}",
+      "noRecommendation": "Ní raibh seiceáil incháilitheachta ar fáil nuair a rinne tú an cinneadh.",
+      "recordedAt": "taifeadta {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} bearna bhacainneach",
+      "blockingGapsAtDecision_two": "{{count}} bhearna bhacainneach",
+      "blockingGapsAtDecision_few": "{{count}} bhearna bhacainneach",
+      "blockingGapsAtDecision_many": "{{count}} mbearna bhacainneach",
+      "blockingGapsAtDecision_other": "{{count}} bearna bhacainneach"
     }
   },
   "workbench": {

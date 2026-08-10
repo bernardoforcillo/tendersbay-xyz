@@ -318,3 +318,242 @@ func TestRevertCPVLabelExpansionKeepsTheColumn(t *testing.T) {
 		}
 	}
 }
+
+func TestFilesEmbedsEFormsXMLDetailMigration(t *testing.T) {
+	entries, err := fs.ReadDir(migrations.Files, ".")
+	if err != nil {
+		t.Fatalf("ReadDir: %v", err)
+	}
+	var found bool
+	for _, e := range entries {
+		if e.Name() == "0010_eforms_xml_detail.up.sql" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("0010_eforms_xml_detail.up.sql not found in embedded migrations: %v", entries)
+	}
+}
+
+// columnDefinition returns the line of a CREATE TABLE / ALTER TABLE body that
+// defines the named column, matched on the column name as the first token so
+// that "weight" does not also match "weight_raw". Returns "" when no such line
+// exists, which the callers treat as the column being missing.
+func columnDefinition(code, column string) string {
+	for _, line := range strings.Split(code, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, column+" ") || strings.HasPrefix(trimmed, column+"\t") {
+			return trimmed
+		}
+		// ALTER TABLE ... ADD COLUMN IF NOT EXISTS <column> <type>
+		if i := strings.Index(trimmed, "IF NOT EXISTS "+column+" "); i >= 0 {
+			return trimmed
+		}
+	}
+	return ""
+}
+
+// TestEFormsXMLDetailKeepsAbsenceDistinguishable guards the single decision the
+// rest of Phase 1a is built on: absence must stay distinguishable from zero.
+//
+// grid_usable is three-valued on purpose (NULL = not yet enriched or not a TED
+// row, false = enriched with no weighted criterion, true = at least one weight)
+// and award_criteria.weight is nullable because NULL is the COMMON case — only
+// 18 of 50 sampled Italian cn-standard notices carry any weight at all, and
+// only 63 of 87 criterion entries. A NOT NULL or a DEFAULT false on either
+// column collapses "we have not looked" into "there is nothing there", which is
+// the coverage-vs-cause conflation this phase exists to remove, and it would do
+// so silently — every downstream query keeps returning rows, just the wrong
+// ones. Asserted here because no runtime error would ever reveal it.
+func TestEFormsXMLDetailKeepsAbsenceDistinguishable(t *testing.T) {
+	body, err := fs.ReadFile(migrations.Files, "0010_eforms_xml_detail.up.sql")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	code := sqlStatementsOnly(string(body))
+
+	for _, column := range []string{"grid_usable", "weight"} {
+		def := columnDefinition(code, column)
+		if def == "" {
+			t.Errorf("0010's executable SQL never defines %q", column)
+			continue
+		}
+		if strings.Contains(def, "NOT NULL") {
+			t.Errorf("0010 declares %s NOT NULL (%q) — absence must stay representable", column, def)
+		}
+		if strings.Contains(def, "DEFAULT") {
+			t.Errorf("0010 gives %s a DEFAULT (%q) — a default makes an unenriched row indistinguishable from an enriched one with nothing to report", column, def)
+		}
+	}
+
+	// weight_raw is the other half of the pair: when the numeric parse gives up
+	// on "30%" or "30,5" the published string must still survive.
+	if def := columnDefinition(code, "weight_raw"); def == "" {
+		t.Error("0010 defines weight without weight_raw — a parse failure would lose the published datum entirely")
+	}
+
+	// The queue index has to stay partial. A plain index on xml_fetched_at would
+	// carry an entry per enriched row forever, when the set it serves is the one
+	// that shrinks toward empty as the corpus drains.
+	if !strings.Contains(code, "WHERE xml_fetched_at IS NULL") {
+		t.Error("0010's idx_ingested_tenders_xml_pending is not partial on xml_fetched_at IS NULL")
+	}
+}
+
+// TestEFormsXMLDetailBackfillsOnlyTEDRowsWithRaw guards the one-shot UPDATE at
+// the bottom of 0010. It is what makes the enricher's queue resolvable at all —
+// without it every pre-existing TED row lists as pending with no URL to fetch —
+// but it reads `raw` with a TED-shaped path, and the other three sources
+// (pl-bzp, fr-boamp, es-placsp) store an entirely different payload under the
+// same column. Dropping either half of the WHERE clause would quietly write
+// NULL over the whole table instead of touching only the rows the path applies
+// to.
+func TestEFormsXMLDetailBackfillsOnlyTEDRowsWithRaw(t *testing.T) {
+	body, err := fs.ReadFile(migrations.Files, "0010_eforms_xml_detail.up.sql")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	code := sqlStatementsOnly(string(body))
+
+	for _, want := range []string{
+		"raw->>'publication-number'",
+		"raw->'links'->'xml'->>'MUL'",
+		"source = 'ted'",
+		"raw IS NOT NULL",
+	} {
+		if !strings.Contains(code, want) {
+			t.Errorf("0010's backfill missing %q — without it the pre-existing corpus is either unreachable or overwritten across every source", want)
+		}
+	}
+}
+
+// TestEFormsXMLDetailLeavesVersionAndHistoryAlone pins the decision recorded at
+// length in 0010's header: version and history track status transitions only,
+// and XML enrichment must not extend them. history is an unbounded jsonb on a
+// row read on every fetch, and "the criteria changed between a call and its
+// award" is the expected consequence of keying on procedure-identifier, not a
+// notable event. xml_fetched_at, xml_status and publication_number already
+// record when we looked, what we got, and which notice it came from. Asserted
+// against the executable SQL only, so the header's own prose — which has to
+// name both columns to explain why they are excluded — cannot trip it.
+func TestEFormsXMLDetailLeavesVersionAndHistoryAlone(t *testing.T) {
+	body, err := fs.ReadFile(migrations.Files, "0010_eforms_xml_detail.up.sql")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	code := sqlStatementsOnly(string(body))
+
+	for _, forbidden := range []string{"version", "history"} {
+		if strings.Contains(code, forbidden) {
+			t.Errorf("0010's executable SQL touches %q — XML enrichment must not bump version or append to history", forbidden)
+		}
+	}
+}
+
+func TestFilesEmbedsPortalDocumentRetrievalMigration(t *testing.T) {
+	entries, err := fs.ReadDir(migrations.Files, ".")
+	if err != nil {
+		t.Fatalf("ReadDir: %v", err)
+	}
+	var found bool
+	for _, e := range entries {
+		if e.Name() == "0011_portal_document_retrieval.up.sql" {
+			found = true
+		}
+	}
+	if !found {
+		t.Fatalf("0011_portal_document_retrieval.up.sql not found in embedded migrations: %v", entries)
+	}
+}
+
+// TestPortalRetrievalKeepsCoverageDistinguishableFromCause guards 0011 the same
+// way TestEFormsXMLDetailKeepsAbsenceDistinguishable guards 0010, one layer
+// further out.
+//
+// docs_files_found and docs_files_extracted must stay nullable and undefaulted.
+// A DEFAULT 0 on either would say "the buyer published no documents" for every
+// tender whose portal denied us, timed out, or served a captcha — which is
+// precisely the inaccessible-mistaken-for-absent conflation this whole pass
+// exists to remove, and it would do so silently: every downstream query keeps
+// returning rows, just the wrong ones. No runtime error would ever reveal it.
+//
+// docs_attempts is deliberately the opposite (NOT NULL DEFAULT 0), because a
+// counter of attempts genuinely starts at zero — the same split 0010 made
+// between xml_attempts and grid_usable.
+func TestPortalRetrievalKeepsCoverageDistinguishableFromCause(t *testing.T) {
+	body, err := fs.ReadFile(migrations.Files, "0011_portal_document_retrieval.up.sql")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	code := sqlStatementsOnly(string(body))
+
+	for _, column := range []string{"docs_files_found", "docs_files_extracted", "docs_status", "docs_platform", "docs_fetched_at"} {
+		def := columnDefinition(code, column)
+		if def == "" {
+			t.Errorf("0011's executable SQL never defines %q", column)
+			continue
+		}
+		if strings.Contains(def, "NOT NULL") {
+			t.Errorf("0011 declares %s NOT NULL (%q) — absence must stay representable", column, def)
+		}
+		if strings.Contains(def, "DEFAULT") {
+			t.Errorf("0011 gives %s a DEFAULT (%q) — a default makes an unretrieved row indistinguishable from a retrieved one with nothing to report", column, def)
+		}
+	}
+
+	if def := columnDefinition(code, "docs_attempts"); !strings.Contains(def, "NOT NULL DEFAULT 0") {
+		t.Errorf("0011 defines docs_attempts as %q, want NOT NULL DEFAULT 0 — a counter of attempts really does start at zero", def)
+	}
+}
+
+// TestPortalRetrievalQueueStaysDownstreamOfEnrichment pins the predicate that
+// makes this pass's ordering a property of the data rather than of a CronJob
+// schedule. grid_usable is three-valued: NULL means the enricher has not looked
+// yet, so `= false` is what keeps an unenriched row out of the queue entirely.
+//
+// Widening it to `IS NOT TRUE`, or adding `OR grid_usable IS NULL`, would point
+// this pass at the whole unenriched corpus and spend third-party requests
+// against strangers' servers discovering documents for notices whose own XML
+// would have answered the question. The index must also stay partial, for the
+// reason 0010's queue index is partial.
+func TestPortalRetrievalQueueStaysDownstreamOfEnrichment(t *testing.T) {
+	body, err := fs.ReadFile(migrations.Files, "0011_portal_document_retrieval.up.sql")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	code := sqlStatementsOnly(string(body))
+
+	for _, want := range []string{
+		"WHERE docs_fetched_at IS NULL",
+		"AND grid_usable = false",
+		"AND documents_url <> ''",
+	} {
+		if !strings.Contains(code, want) {
+			t.Errorf("0011's queue index is missing %q", want)
+		}
+	}
+	for _, forbidden := range []string{"grid_usable IS NOT TRUE", "grid_usable IS NULL", "grid_usable <> true"} {
+		if strings.Contains(code, forbidden) {
+			t.Errorf("0011's executable SQL contains %q — an unenriched row must not enter this queue", forbidden)
+		}
+	}
+}
+
+// TestPortalRetrievalStoresNoBytes pins the storage decision. A retrieved file
+// lives in memory and, for the length of one extraction, in a temp file; what is
+// persisted is its URL and its extracted text. Adding a bytea column to
+// ingested_tender_documents would be changing that decision rather than
+// implementing it, and this migration is where such a column would land.
+func TestPortalRetrievalStoresNoBytes(t *testing.T) {
+	body, err := fs.ReadFile(migrations.Files, "0011_portal_document_retrieval.up.sql")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	code := sqlStatementsOnly(string(body))
+
+	for _, forbidden := range []string{"bytea", "lo_", "large object"} {
+		if strings.Contains(strings.ToLower(code), forbidden) {
+			t.Errorf("0011's executable SQL introduces %q — this pass stores no file bytes", forbidden)
+		}
+	}
+}

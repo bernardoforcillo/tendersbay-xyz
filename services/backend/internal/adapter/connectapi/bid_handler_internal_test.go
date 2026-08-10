@@ -2,8 +2,10 @@ package connectapi
 
 import (
 	"testing"
+	"time"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
@@ -106,5 +108,60 @@ func TestToProtoChecklistItem_MapsFields(t *testing.T) {
 	}
 	if got.Status != "done" || got.Note != "n/a" || !got.Required || got.Position != 4 {
 		t.Fatalf("got = %+v, want status/note/required/position mapped", got)
+	}
+}
+
+// TestToProtoBid_CarriesTheDecisionRecord pins the wire half of the override
+// measurement. The recommendation, the derived override flag and the size of
+// the disagreement have to leave the server: the assessment is computed fresh on
+// every read, so nothing downstream can reconstruct what the user decided
+// AGAINST once the dossier moves on.
+func TestToProtoBid_CarriesTheDecisionRecord(t *testing.T) {
+	at := time.Date(2026, 5, 2, 11, 30, 0, 0, time.UTC)
+	got := toProtoBidEntity(bid.Bid{
+		ID: "bid-1", WorkbenchID: "wb-1", TenderID: 42, GoNoGo: bid.GoNoGoGo,
+		Decision: bid.DecisionRecord{
+			Recommendation:   company.VerdictNoGo,
+			Overridden:       true,
+			BlockingGapCount: 3,
+			RecordedAt:       &at,
+		},
+	})
+	if got.DecisionRecommendation != "no_go" {
+		t.Errorf("decision_recommendation = %q, want no_go", got.DecisionRecommendation)
+	}
+	if !got.DecisionOverridden {
+		t.Error("decision_overridden = false — go_no_go_overridden can never fire without it")
+	}
+	if got.DecisionBlockingGapCount != 3 {
+		t.Errorf("decision_blocking_gap_count = %d, want 3", got.DecisionBlockingGapCount)
+	}
+	if got.DecisionRecordedAt != at.Format(time.RFC3339) {
+		t.Errorf("decision_recorded_at = %q, want %q", got.DecisionRecordedAt, at.Format(time.RFC3339))
+	}
+}
+
+// TestToProtoBid_DistinguishesNoCheckFromInsufficientData is the distinction the
+// whole record exists to preserve: "" means no eligibility check existed, and
+// "insufficient_data" means one ran and found the evidence too thin. Collapsing
+// them would put every undecided bid in the same bucket as every genuinely
+// unanswerable one and make the override rate un-interpretable.
+func TestToProtoBid_DistinguishesNoCheckFromInsufficientData(t *testing.T) {
+	undecided := toProtoBidEntity(bid.Bid{ID: "bid-1", GoNoGo: bid.GoNoGoUndecided})
+	if undecided.DecisionRecommendation != "" {
+		t.Errorf("decision_recommendation = %q, want \"\" for a bid no check ever ran on", undecided.DecisionRecommendation)
+	}
+	if undecided.DecisionRecordedAt != "" {
+		t.Errorf("decision_recorded_at = %q, want \"\" — an undecided bid has no decision time", undecided.DecisionRecordedAt)
+	}
+
+	thin := toProtoBidEntity(bid.Bid{ID: "bid-2", Decision: bid.DecisionRecord{
+		Recommendation: company.VerdictInsufficientData,
+	}})
+	if thin.DecisionRecommendation != "insufficient_data" {
+		t.Errorf("decision_recommendation = %q, want insufficient_data", thin.DecisionRecommendation)
+	}
+	if thin.DecisionOverridden {
+		t.Error("decision_overridden = true — a decision under acknowledged uncertainty contradicts nothing")
 	}
 }

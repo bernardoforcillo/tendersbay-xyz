@@ -48,6 +48,42 @@ type Tender struct {
 	SourceRef     string
 	NUTS          string
 	SourceURL     string // the notice document's URL; "" if none is ingested
+
+	// ── The eForms detail, as same-row scalars ──
+	//
+	// Every field below is a scalar column on tenders.ingested_tenders, so it
+	// costs zero extra queries: it rides the one projection every search
+	// already runs (see tenderSelectColumns in the postgres adapter).
+	//
+	// Award criteria, organizations and lots are deliberately NOT here. They
+	// are child tables, and this struct is materialised across a candidate
+	// window bounded at maxWindow (hybrid.go) — one join per search would be
+	// an N+1 on the hot path for data no result card shows. They live on
+	// TenderDetail, whose fetch is already per-tender.
+
+	// Description is the notice's free-text scope of work; "" when the source
+	// exposes none. It is carried in full rather than truncated: the search
+	// projection already reads the head of this column to build its snippet,
+	// so the page is detoasted and the I/O is paid either way, and a silently
+	// truncated field is worse than either extreme — a reader cannot tell a
+	// short description from a clipped one.
+	Description string
+
+	// PublicationNumber, DocumentsURL, SubmissionURL and GridUsable are
+	// DELIBERATELY ABSENT from this type. They live on TenderDetail only.
+	//
+	// They were briefly here, populated from the shared search projection, and
+	// that took every search down in production: those columns are created by
+	// services/ingestion's migration 0010, this service does not migrate the
+	// tenders schema, and the two deploy on independent image tags — so the
+	// backend asked for a column that did not exist yet and every query failed
+	// with SQLSTATE 42703, on both the lexical and the semantic arm.
+	//
+	// Nothing had ever read them from a search result; the proto carries them
+	// on TenderDetail alone. Two rules follow, and postgres.TenderSelectColumns'
+	// guard tests enforce them: a field only the detail view consumes never
+	// joins the hot projection, and this type never names a column from a
+	// migration younger than one full release cycle.
 }
 
 // Filters narrows a search. Zero-value fields are unset, and every list field
@@ -144,6 +180,15 @@ type Repo interface {
 	FindDetailByID(ctx context.Context, id int64) (*TenderDetail, error)
 	DocumentsByTenderID(ctx context.Context, id int64) ([]Document, error)
 	LotsByTenderID(ctx context.Context, id int64) ([]Lot, error)
+	// CriteriaByTenderID returns every criterion for one tender — the
+	// notice-level ones and every lot's — in ONE query, ordered by
+	// (lot_ref, ordinal). Grouping by lot happens in Go (see
+	// TenderDetail.CriteriaForLot): a query per lot would be an N+1 against a
+	// 13-lot notice, for a set small enough to sort in memory.
+	CriteriaByTenderID(ctx context.Context, id int64) ([]AwardCriterion, error)
+	// OrganizationsByTenderID returns the parties the notice names — the
+	// buyer, and the bodies a bidder needs in order to challenge an award.
+	OrganizationsByTenderID(ctx context.Context, id int64) ([]Organization, error)
 	RecentTenderRefs(ctx context.Context, limit int) ([]TenderRef, error)
 	DistinctCountries(ctx context.Context) ([]string, error)
 }

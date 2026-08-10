@@ -50,6 +50,9 @@ const (
 	// TenderServiceGetCoverageProcedure is the fully-qualified name of the TenderService's GetCoverage
 	// RPC.
 	TenderServiceGetCoverageProcedure = "/tender.v1.TenderService/GetCoverage"
+	// TenderServiceGetTenderPassagesProcedure is the fully-qualified name of the TenderService's
+	// GetTenderPassages RPC.
+	TenderServiceGetTenderPassagesProcedure = "/tender.v1.TenderService/GetTenderPassages"
 )
 
 // TenderServiceClient is a client for the tender.v1.TenderService service.
@@ -68,6 +71,24 @@ type TenderServiceClient interface {
 	// coverage marquee reads it. "available" = we have >=1 tender for that
 	// country (TED-inclusive), not a below-threshold-only claim.
 	GetCoverage(context.Context, *connect.Request[v1.GetCoverageRequest]) (*connect.Response[v1.GetCoverageResponse], error)
+	// Passages of one tender's extracted documents around one question, together
+	// with what we hold of that tender at all.
+	//
+	// Availability and passages are ONE answer and travel on one RPC by design.
+	// Splitting them would eventually let a caller obtain passages without the
+	// coverage that qualifies them, and an empty passage list with no cause
+	// conflates "no passage matched your question" with "we hold nothing but the
+	// notice PDF" — the exact conflation core/document exists to prevent.
+	//
+	// An empty question is valid and means "availability only": the server skips
+	// retrieval entirely rather than paying for a query that cannot match. That
+	// is what the public tender page's coverage strip calls.
+	//
+	// Anonymous-safe and rate-limited like GetTender, which it sits beside on the
+	// public tender page. The retrieval bound is not an auth matter: core/document
+	// clamps both the passage count and each passage's length itself, so no caller
+	// — authenticated or not — can widen a bound it does not own.
+	GetTenderPassages(context.Context, *connect.Request[v1.GetTenderPassagesRequest]) (*connect.Response[v1.GetTenderPassagesResponse], error)
 }
 
 // NewTenderServiceClient constructs a client for the tender.v1.TenderService service. By default,
@@ -117,6 +138,12 @@ func NewTenderServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 			connect.WithSchema(tenderServiceMethods.ByName("GetCoverage")),
 			connect.WithClientOptions(opts...),
 		),
+		getTenderPassages: connect.NewClient[v1.GetTenderPassagesRequest, v1.GetTenderPassagesResponse](
+			httpClient,
+			baseURL+TenderServiceGetTenderPassagesProcedure,
+			connect.WithSchema(tenderServiceMethods.ByName("GetTenderPassages")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -128,6 +155,7 @@ type tenderServiceClient struct {
 	listTenderSitemap         *connect.Client[v1.ListTenderSitemapRequest, v1.ListTenderSitemapResponse]
 	recommendTendersForClient *connect.Client[v1.RecommendTendersForClientRequest, v1.RecommendTendersForClientResponse]
 	getCoverage               *connect.Client[v1.GetCoverageRequest, v1.GetCoverageResponse]
+	getTenderPassages         *connect.Client[v1.GetTenderPassagesRequest, v1.GetTenderPassagesResponse]
 }
 
 // SearchTenders calls tender.v1.TenderService.SearchTenders.
@@ -160,6 +188,11 @@ func (c *tenderServiceClient) GetCoverage(ctx context.Context, req *connect.Requ
 	return c.getCoverage.CallUnary(ctx, req)
 }
 
+// GetTenderPassages calls tender.v1.TenderService.GetTenderPassages.
+func (c *tenderServiceClient) GetTenderPassages(ctx context.Context, req *connect.Request[v1.GetTenderPassagesRequest]) (*connect.Response[v1.GetTenderPassagesResponse], error) {
+	return c.getTenderPassages.CallUnary(ctx, req)
+}
+
 // TenderServiceHandler is an implementation of the tender.v1.TenderService service.
 type TenderServiceHandler interface {
 	SearchTenders(context.Context, *connect.Request[v1.SearchTendersRequest]) (*connect.Response[v1.SearchTendersResponse], error)
@@ -176,6 +209,24 @@ type TenderServiceHandler interface {
 	// coverage marquee reads it. "available" = we have >=1 tender for that
 	// country (TED-inclusive), not a below-threshold-only claim.
 	GetCoverage(context.Context, *connect.Request[v1.GetCoverageRequest]) (*connect.Response[v1.GetCoverageResponse], error)
+	// Passages of one tender's extracted documents around one question, together
+	// with what we hold of that tender at all.
+	//
+	// Availability and passages are ONE answer and travel on one RPC by design.
+	// Splitting them would eventually let a caller obtain passages without the
+	// coverage that qualifies them, and an empty passage list with no cause
+	// conflates "no passage matched your question" with "we hold nothing but the
+	// notice PDF" — the exact conflation core/document exists to prevent.
+	//
+	// An empty question is valid and means "availability only": the server skips
+	// retrieval entirely rather than paying for a query that cannot match. That
+	// is what the public tender page's coverage strip calls.
+	//
+	// Anonymous-safe and rate-limited like GetTender, which it sits beside on the
+	// public tender page. The retrieval bound is not an auth matter: core/document
+	// clamps both the passage count and each passage's length itself, so no caller
+	// — authenticated or not — can widen a bound it does not own.
+	GetTenderPassages(context.Context, *connect.Request[v1.GetTenderPassagesRequest]) (*connect.Response[v1.GetTenderPassagesResponse], error)
 }
 
 // NewTenderServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -221,6 +272,12 @@ func NewTenderServiceHandler(svc TenderServiceHandler, opts ...connect.HandlerOp
 		connect.WithSchema(tenderServiceMethods.ByName("GetCoverage")),
 		connect.WithHandlerOptions(opts...),
 	)
+	tenderServiceGetTenderPassagesHandler := connect.NewUnaryHandler(
+		TenderServiceGetTenderPassagesProcedure,
+		svc.GetTenderPassages,
+		connect.WithSchema(tenderServiceMethods.ByName("GetTenderPassages")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/tender.v1.TenderService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case TenderServiceSearchTendersProcedure:
@@ -235,6 +292,8 @@ func NewTenderServiceHandler(svc TenderServiceHandler, opts ...connect.HandlerOp
 			tenderServiceRecommendTendersForClientHandler.ServeHTTP(w, r)
 		case TenderServiceGetCoverageProcedure:
 			tenderServiceGetCoverageHandler.ServeHTTP(w, r)
+		case TenderServiceGetTenderPassagesProcedure:
+			tenderServiceGetTenderPassagesHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -266,4 +325,8 @@ func (UnimplementedTenderServiceHandler) RecommendTendersForClient(context.Conte
 
 func (UnimplementedTenderServiceHandler) GetCoverage(context.Context, *connect.Request[v1.GetCoverageRequest]) (*connect.Response[v1.GetCoverageResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.GetCoverage is not implemented"))
+}
+
+func (UnimplementedTenderServiceHandler) GetTenderPassages(context.Context, *connect.Request[v1.GetTenderPassagesRequest]) (*connect.Response[v1.GetTenderPassagesResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("tender.v1.TenderService.GetTenderPassages is not implemented"))
 }

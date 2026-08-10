@@ -139,6 +139,185 @@
       "emptyDescription": "Vyzkoušejte ruční vyhledávání níže, nebo rozšiřte profil tohoto klienta."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Dokumentace firmy",
+      "description": "Co o vaší firmě víme. Porovnáváme to s podmínkami účasti každé zakázky.",
+      "save": "Uložit",
+      "saving": "Ukládání…",
+      "error": "Uložení se nezdařilo. Zkuste to znovu.",
+      "identity": {
+        "legalName": "Obchodní firma",
+        "vatNumber": "DIČ",
+        "fiscalCode": "Daňové identifikační číslo",
+        "legalForm": "Právní forma",
+        "cciaaOffice": "Hospodářská komora",
+        "cciaaNumber": "Číslo v obchodním rejstříku",
+        "country": "Země",
+        "nuts": "Region (NUTS)",
+        "foundedYear": "Rok založení"
+      },
+      "soa": {
+        "title": "Atestace SOA",
+        "category": "Kategorie",
+        "classifica": "Classifica",
+        "issuedBy": "Vydal",
+        "validUntil": "Platná do",
+        "verifiedUntil": "Tříleté ověření platné do",
+        "verifiedUntilHint": "Tříleté ověření zaniká tři roky před samotnou atestací. Po tomto datu se atestace již nepočítá.",
+        "add": "Přidat atestaci",
+        "remove": "Odebrat",
+        "empty": "Žádná atestace SOA není zaznamenána."
+      },
+      "certifications": {
+        "title": "Certifikace",
+        "standard": "Norma",
+        "standardRaw": "Norma podle certifikátu",
+        "scope": "Rozsah",
+        "issuedBy": "Vydal",
+        "validFrom": "Platná od",
+        "validUntil": "Platná do",
+        "add": "Přidat certifikaci",
+        "remove": "Odebrat",
+        "empty": "Žádná certifikace není zaznamenána."
+      },
+      "financialYears": {
+        "title": "Účetní období",
+        "year": "Rok",
+        "turnover": "Celkový obrat",
+        "specificTurnover": "Obrat v dané oblasti",
+        "currency": "Měna",
+        "headcount": "Počet zaměstnanců",
+        "add": "Přidat období",
+        "remove": "Odebrat",
+        "empty": "Žádné účetní období není zaznamenáno."
+      },
+      "pastContracts": {
+        "title": "Realizované zakázky",
+        "description": "Co bylo realizováno",
+        "buyer": "Zadavatel",
+        "cpv": "CPV",
+        "value": "Hodnota",
+        "started": "Začátek",
+        "ended": "Konec",
+        "role": "Role",
+        "sharePct": "Váš podíl",
+        "sharePctHint": "Ve sdružení se do podmínky započítává pouze váš vlastní podíl.",
+        "add": "Přidat zakázku",
+        "remove": "Odebrat",
+        "empty": "Žádná realizovaná zakázka není zaznamenána."
+      },
+      "registrations": {
+        "title": "Zápisy a seznamy",
+        "kind": "Druh",
+        "authority": "Orgán",
+        "identifier": "Číslo",
+        "section": "Oddíl",
+        "validFrom": "Platný od",
+        "validUntil": "Platný do",
+        "add": "Přidat zápis",
+        "remove": "Odebrat",
+        "empty": "Žádný zápis není zaznamenán."
+      }
+    },
+    "provenance": {
+      "user_stated": "Zadali jste to vy",
+      "user_confirmed": "Potvrdili jste to vy",
+      "agent_inferred": "Odvodil agent",
+      "imported": "Importováno",
+      "never": "Nezaznamenáno"
+    },
+    "eligibility": {
+      "title": "Podmínky účasti",
+      "recheck": "Ověřit znovu",
+      "evaluatedAt": "Ověřeno {{when}}",
+      "requirementLabel": "Tato zakázka vyžaduje",
+      "heldLabel": "Vaše dokumentace obsahuje",
+      "changesLabel": "Co by to změnilo",
+      "caveatsLabel": "Čtěte spolu s tímto",
+      "lead": {
+        "requires": "Tato zakázka vyžaduje",
+        "holds": "vaše dokumentace obsahuje",
+        "noRequirements": "K této zakázce nebyla zaznamenána žádná podmínka."
+      },
+      "verdict": {
+        "insufficient_data": "Příliš málo údajů pro rozhodnutí",
+        "go": "Podmínky zřejmě splňujete",
+        "no_go": "Podmínky zřejmě nesplňujete"
+      },
+      "status": {
+        "met": "Splněno",
+        "missing": "Chybí",
+        "shortfall": "Pod požadovanou úrovní",
+        "expiring": "Brzy vyprší",
+        "expired": "Vypršelo",
+        "unknown": "Zatím jsme se neptali"
+      },
+      "remedy": {
+        "provide_fact": "Řekněte nám, čím disponujete",
+        "renew": "Obnovte to před uplynutím lhůty",
+        "upgrade": "Zvyšte na požadovanou úroveň",
+        "avvalimento": "Prokažte to prostřednictvím jiné osoby (avvalimento)",
+        "rti": "Podejte nabídku ve sdružení (RTI)",
+        "subcontract": "Pokryjte to poddodávkou"
+      },
+      "caveat": {
+        "no_requirements_captured": "K této zakázce nebyla zachycena žádná podmínka, takže tento závěr nestojí na ničem zveřejněném.",
+        "award_grid_only": "Zachycena byla pouze hodnoticí kritéria — podmínky účasti mohou být v dokumentech, které jsme nečetli.",
+        "unconfirmed_extraction": "Některé podmínky byly načteny z dokumentů a dosud jste je nepotvrdili.",
+        "open_questions": "Některé otázky o vaší firmě zůstávají bez odpovědi.",
+        "documents_unread": "Nečetli jsme zadávací dokumentaci, takže některé podmínky mohou chybět."
+      },
+      "counts": {
+        "requirements_one": "{{count}} podmínka",
+        "requirements_few": "{{count}} podmínky",
+        "requirements_other": "{{count}} podmínek",
+        "authoritative_one": "{{count}} potvrzená",
+        "authoritative_few": "{{count}} potvrzené",
+        "authoritative_other": "{{count}} potvrzených",
+        "blocking_one": "{{count}} blokující",
+        "blocking_few": "{{count}} blokující",
+        "blocking_other": "{{count}} blokujících",
+        "unknown_one": "{{count}} bez odpovědi",
+        "unknown_few": "{{count}} bez odpovědi",
+        "unknown_other": "{{count}} bez odpovědi"
+      }
+    },
+    "requirements": {
+      "title": "Podmínky",
+      "empty": "K této zakázce nebyla zaznamenána žádná podmínka.",
+      "confirm": "Potvrdit",
+      "confirmed": "Potvrzeno",
+      "remove": "Odebrat",
+      "unconfirmedHint": "Načteno z dokumentů — porovnejte to s citovanou pasáží, než se na to spolehnete.",
+      "lotLabel": "Část {{lot}}",
+      "noticeLevel": "Platí pro celé oznámení",
+      "askWhy": "Proč?",
+      "source": {
+        "user_stated": "Uvedli jste to vy",
+        "document_excerpt": "Ze zadávací dokumentace",
+        "award_criteria": "Z hodnoticích kritérií",
+        "agent_inferred": "Odvodil agent"
+      }
+    },
+    "capture": {
+      "title": "Jedna otázka",
+      "save": "Uložit",
+      "saving": "Ukládání…",
+      "notSure": "Nevím",
+      "error": "Uložení se nezdařilo. Zkuste to znovu.",
+      "cannotCheck": "Tuto podmínku nedokážeme ověřit automaticky.",
+      "prompt": {
+        "soa": "Jakou kategorii a classifica SOA máte?",
+        "certification": "Jakou certifikaci k tomu máte?",
+        "turnover": "Jaký obrat jste vykázali?",
+        "past_contracts": "Která z vašich zakázek to pokrývá?",
+        "headcount": "Kolik jste měli zaměstnanců?",
+        "registration": "Který zápis nebo seznam to pokrývá?",
+        "other": "Tuto podmínku nedokážeme ověřit automaticky — přečtěte si ji a rozhodněte sami."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Přihlásit se",
@@ -473,6 +652,59 @@
       "deadlineUntil": "uzávěrka do {{date}}",
       "undo": "Vymazat",
       "remove": "Odebrat {{chip}}"
+    },
+    "coverage": {
+      "title": "Co jsme přečetli",
+      "openBuyerDocuments": "Otevřít dokumenty zadavatele",
+      "label": {
+        "full": "Zadávací dokumentace přečtena",
+        "notice_only": "Pouze oznámení",
+        "none": "Nic nepřečteno"
+      },
+      "reason": {
+        "no_documents_published": "Zadavatel k tomuto oznámení nezveřejnil žádné dokumenty.",
+        "notice_not_read": "Nepřečetli jsme strukturovaná data tohoto oznámení, takže nevíme, co zveřejňuje.",
+        "body_not_retrieved": "Zadavatel zveřejňuje dokumenty, které jsme dosud nestáhli.",
+        "not_yet_extracted": "Ve frontě — zatím nepřečteno.",
+        "extraction_failed": "Text těchto dokumentů se nám nepodařilo přečíst."
+      },
+      "counts": {
+        "documents_one": "{{count}} přečtený dokument",
+        "documents_few": "{{count}} přečtené dokumenty",
+        "documents_other": "{{count}} přečtených dokumentů",
+        "parts_one": "{{count}} extrahovaný oddíl",
+        "parts_few": "{{count}} extrahované oddíly",
+        "parts_other": "{{count}} extrahovaných oddílů",
+        "knownLinks_one": "{{count}} zveřejněný dokument",
+        "knownLinks_few": "{{count}} zveřejněné dokumenty",
+        "knownLinks_other": "{{count}} zveřejněných dokumentů"
+      }
+    },
+    "criteria": {
+      "title": "Kde se získávají body",
+      "notEnriched": "Strukturovaná data tohoto oznámení jsme zatím nepřečetli.",
+      "gridUnusable": "Oznámení uvádí způsob hodnocení, ale nezveřejňuje váhy. Hodnoticí tabulka je v zadávací dokumentaci.",
+      "weight": "Váha",
+      "noWeight": "Váha nezveřejněna",
+      "lot": "Část {{lot}}",
+      "appliesToEveryLot": "Platí pro všechny části",
+      "showAllLots": "Zobrazit všechny části",
+      "type": {
+        "quality": "Kvalita",
+        "cost": "Náklady",
+        "price": "Cena"
+      }
+    },
+    "citation": {
+      "page": "s. {{page}}",
+      "pageRange": "s. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Část {{index}}",
+      "openDocument": "Otevřít dokument",
+      "expandPassage": "Zobrazit okolní pasáž",
+      "collapsePassage": "Skrýt pasáž",
+      "passageUnavailable": "Okolní pasáž se nepodařilo načíst.",
+      "truncated": "Pasáž zkrácena."
     }
   },
   "today": {
@@ -514,6 +746,7 @@
     "nav": {
       "general": "Obecné",
       "profile": "Profil klienta",
+      "company": "Dokumentace firmy",
       "overview": "Přehled",
       "members": "Členové",
       "roles": "Role",
@@ -712,6 +945,27 @@
       "duplicate": "Tato zakázka je již v tomto workbenchi.",
       "unavailable": "Tato zakázka již není dostupná.",
       "generic": "Něco se pokazilo. Zkuste to prosím znovu."
+    },
+    "scheda": {
+      "coverageTitle": "Co jsme přečetli",
+      "evidenceTitle": "Podmínky a doklady",
+      "pointsTitle": "Kde se získávají body",
+      "repairChat": {
+        "title": "Zeptat se na tuto zakázku",
+        "open": "Položit otázku",
+        "close": "Zavřít",
+        "askWhy": "Proč?",
+        "seedGapQuestion": "Proč tato zakázka vyžaduje „{{requirement}}“?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Zaznamenáno vůči: {{recommendation}}",
+      "youDecided": "rozhodli jste {{decision}}",
+      "noRecommendation": "V době vašeho rozhodnutí nebylo ověření podmínek k dispozici.",
+      "recordedAt": "zaznamenáno {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blokující nedostatek",
+      "blockingGapsAtDecision_few": "{{count}} blokující nedostatky",
+      "blockingGapsAtDecision_other": "{{count}} blokujících nedostatků"
     }
   },
   "workbench": {

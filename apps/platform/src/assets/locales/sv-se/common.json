@@ -139,6 +139,181 @@
       "emptyDescription": "Prova en manuell sökning nedan, eller utöka den här kundens profil."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Företagsdossier",
+      "description": "Det vi vet om ditt företag. Vi stämmer av det mot kvalificeringskraven i varje upphandling.",
+      "save": "Spara",
+      "saving": "Sparar…",
+      "error": "Vi kunde inte spara. Försök igen.",
+      "identity": {
+        "legalName": "Firmanamn",
+        "vatNumber": "Momsregistreringsnummer",
+        "fiscalCode": "Skattenummer",
+        "legalForm": "Bolagsform",
+        "cciaaOffice": "Handelskammare",
+        "cciaaNumber": "Organisationsnummer",
+        "country": "Land",
+        "nuts": "Region (NUTS)",
+        "foundedYear": "Grundat"
+      },
+      "soa": {
+        "title": "SOA-intyg",
+        "category": "Kategori",
+        "classifica": "Classifica",
+        "issuedBy": "Utfärdat av",
+        "validUntil": "Giltigt till",
+        "verifiedUntil": "Treårig kontroll giltig till",
+        "verifiedUntilHint": "Den treåriga kontrollen löper ut tre år före själva intyget. Efter det datumet räknas intyget inte längre.",
+        "add": "Lägg till intyg",
+        "remove": "Ta bort",
+        "empty": "Inget SOA-intyg är registrerat."
+      },
+      "certifications": {
+        "title": "Certifieringar",
+        "standard": "Standard",
+        "standardRaw": "Standard enligt certifikatet",
+        "scope": "Omfattning",
+        "issuedBy": "Utfärdad av",
+        "validFrom": "Giltig från",
+        "validUntil": "Giltig till",
+        "add": "Lägg till certifiering",
+        "remove": "Ta bort",
+        "empty": "Ingen certifiering är registrerad."
+      },
+      "financialYears": {
+        "title": "Räkenskapsår",
+        "year": "År",
+        "turnover": "Total omsättning",
+        "specificTurnover": "Omsättning inom det aktuella området",
+        "currency": "Valuta",
+        "headcount": "Antal anställda",
+        "add": "Lägg till räkenskapsår",
+        "remove": "Ta bort",
+        "empty": "Inget räkenskapsår är registrerat."
+      },
+      "pastContracts": {
+        "title": "Utförda uppdrag",
+        "description": "Vad som levererades",
+        "buyer": "Upphandlande myndighet",
+        "cpv": "CPV",
+        "value": "Värde",
+        "started": "Start",
+        "ended": "Slut",
+        "role": "Roll",
+        "sharePct": "Din andel",
+        "sharePctHint": "I ett konsortium räknas bara din egen andel mot kravet.",
+        "add": "Lägg till uppdrag",
+        "remove": "Ta bort",
+        "empty": "Inget utfört uppdrag är registrerat."
+      },
+      "registrations": {
+        "title": "Registreringar och förteckningar",
+        "kind": "Typ",
+        "authority": "Myndighet",
+        "identifier": "Referens",
+        "section": "Avsnitt",
+        "validFrom": "Giltig från",
+        "validUntil": "Giltig till",
+        "add": "Lägg till registrering",
+        "remove": "Ta bort",
+        "empty": "Ingen registrering är registrerad."
+      }
+    },
+    "provenance": {
+      "user_stated": "Du angav detta",
+      "user_confirmed": "Du bekräftade detta",
+      "agent_inferred": "Härlett av agenten",
+      "imported": "Importerat",
+      "never": "Inte registrerat"
+    },
+    "eligibility": {
+      "title": "Kvalificering",
+      "recheck": "Kontrollera igen",
+      "evaluatedAt": "Kontrollerat {{when}}",
+      "requirementLabel": "Denna upphandling kräver",
+      "heldLabel": "Din dossier styrker",
+      "changesLabel": "Vad som skulle ändra detta",
+      "caveatsLabel": "Läs det tillsammans med detta",
+      "lead": {
+        "requires": "Denna upphandling kräver",
+        "holds": "din dossier styrker",
+        "noRequirements": "Inget krav har registrerats för denna upphandling."
+      },
+      "verdict": {
+        "insufficient_data": "För lite för att avgöra",
+        "go": "Du verkar uppfylla kraven",
+        "no_go": "Du verkar inte uppfylla kraven"
+      },
+      "status": {
+        "met": "Uppfyllt",
+        "missing": "Saknas",
+        "shortfall": "Under den nivå som krävs",
+        "expiring": "Löper snart ut",
+        "expired": "Utgånget",
+        "unknown": "Inte efterfrågat än"
+      },
+      "remedy": {
+        "provide_fact": "Berätta vad du har",
+        "renew": "Förnya det före fristen",
+        "upgrade": "Höj det till den nivå som krävs",
+        "avvalimento": "Åberopa ett annat företags kapacitet (avvalimento)",
+        "rti": "Lämna anbud som konsortium (RTI)",
+        "subcontract": "Täck det med underleverantör"
+      },
+      "caveat": {
+        "no_requirements_captured": "Inget krav hämtades för denna upphandling, så denna bedömning vilar inte på något publicerat.",
+        "award_grid_only": "Endast tilldelningskriterierna hämtades — kvalificeringskraven kan finnas i dokument vi inte har läst.",
+        "unconfirmed_extraction": "Vissa krav har lästs ur dokumenten och du har inte bekräftat dem än.",
+        "open_questions": "Vissa frågor om ditt företag är fortfarande obesvarade.",
+        "documents_unread": "Vi har inte läst upphandlingsdokumenten, så krav kan saknas."
+      },
+      "counts": {
+        "requirements_one": "{{count}} krav",
+        "requirements_other": "{{count}} krav",
+        "authoritative_one": "{{count}} bekräftat",
+        "authoritative_other": "{{count}} bekräftade",
+        "blocking_one": "{{count}} blockerande",
+        "blocking_other": "{{count}} blockerande",
+        "unknown_one": "{{count}} obesvarat",
+        "unknown_other": "{{count}} obesvarade"
+      }
+    },
+    "requirements": {
+      "title": "Krav",
+      "empty": "Inget krav har registrerats för denna upphandling.",
+      "confirm": "Bekräfta",
+      "confirmed": "Bekräftat",
+      "remove": "Ta bort",
+      "unconfirmedHint": "Läst ur dokumenten — stäm av mot det citerade stycket innan du förlitar dig på det.",
+      "lotLabel": "Del {{lot}}",
+      "noticeLevel": "Gäller hela annonsen",
+      "askWhy": "Varför?",
+      "source": {
+        "user_stated": "Du uppgav detta",
+        "document_excerpt": "Från upphandlingsdokumenten",
+        "award_criteria": "Från tilldelningskriterierna",
+        "agent_inferred": "Härlett av agenten"
+      }
+    },
+    "capture": {
+      "title": "En fråga",
+      "save": "Spara",
+      "saving": "Sparar…",
+      "notSure": "Vet inte",
+      "error": "Vi kunde inte spara. Försök igen.",
+      "cannotCheck": "Det här kan vi inte kontrollera automatiskt.",
+      "prompt": {
+        "soa": "Vilken SOA-kategori och classifica har du?",
+        "certification": "Vilken certifiering har du för detta?",
+        "turnover": "Vilken omsättning redovisade du?",
+        "past_contracts": "Vilket av dina uppdrag täcker detta?",
+        "headcount": "Hur många anställda hade du?",
+        "registration": "Vilken registrering eller förteckning täcker detta?",
+        "other": "Det här kan vi inte kontrollera automatiskt — läs det och avgör själv."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Logga in",
@@ -471,6 +646,56 @@
       "deadlineUntil": "stänger senast {{date}}",
       "undo": "Rensa",
       "remove": "Ta bort {{chip}}"
+    },
+    "coverage": {
+      "title": "Vad vi har läst",
+      "openBuyerDocuments": "Öppna myndighetens dokument",
+      "label": {
+        "full": "Upphandlingsdokumenten är lästa",
+        "notice_only": "Endast annonsen",
+        "none": "Inget läst"
+      },
+      "reason": {
+        "no_documents_published": "Den upphandlande myndigheten publicerade inga dokument med denna annons.",
+        "notice_not_read": "Vi har inte läst annonsens strukturerade data, så vi vet inte vad den publicerar.",
+        "body_not_retrieved": "Den upphandlande myndigheten publicerar dokument som vi ännu inte hämtat.",
+        "not_yet_extracted": "I kö — ännu inte lästa.",
+        "extraction_failed": "Vi kunde inte läsa texten i dessa dokument."
+      },
+      "counts": {
+        "documents_one": "{{count}} dokument läst",
+        "documents_other": "{{count}} dokument lästa",
+        "parts_one": "{{count}} avsnitt extraherat",
+        "parts_other": "{{count}} avsnitt extraherade",
+        "knownLinks_one": "{{count}} dokument publicerat",
+        "knownLinks_other": "{{count}} dokument publicerade"
+      }
+    },
+    "criteria": {
+      "title": "Var poängen finns",
+      "notEnriched": "Vi har ännu inte läst annonsens strukturerade data.",
+      "gridUnusable": "Annonsen anger tilldelningsmetoden men publicerar inga viktningar. Utvärderingsmodellen finns i upphandlingsdokumenten.",
+      "weight": "Viktning",
+      "noWeight": "Ingen viktning publicerad",
+      "lot": "Del {{lot}}",
+      "appliesToEveryLot": "Gäller alla delar",
+      "showAllLots": "Visa alla delar",
+      "type": {
+        "quality": "Kvalitet",
+        "cost": "Kostnad",
+        "price": "Pris"
+      }
+    },
+    "citation": {
+      "page": "s. {{page}}",
+      "pageRange": "s. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Del {{index}}",
+      "openDocument": "Öppna dokumentet",
+      "expandPassage": "Visa hela stycket",
+      "collapsePassage": "Dölj stycket",
+      "passageUnavailable": "Vi kunde inte hämta hela stycket.",
+      "truncated": "Stycket är förkortat."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "Allmänt",
       "profile": "Kundprofil",
+      "company": "Företagsdossier",
       "overview": "Översikt",
       "members": "Medlemmar",
       "roles": "Roller",
@@ -709,6 +935,26 @@
       "duplicate": "Denna upphandling finns redan i det workbenchet.",
       "unavailable": "Denna upphandling är inte längre tillgänglig.",
       "generic": "Något gick fel. Försök igen."
+    },
+    "scheda": {
+      "coverageTitle": "Vad vi har läst",
+      "evidenceTitle": "Krav och underlag",
+      "pointsTitle": "Var poängen finns",
+      "repairChat": {
+        "title": "Fråga om denna upphandling",
+        "open": "Ställ en fråga",
+        "close": "Stäng",
+        "askWhy": "Varför?",
+        "seedGapQuestion": "Varför kräver denna upphandling ”{{requirement}}”?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Registrerat mot: {{recommendation}}",
+      "youDecided": "du valde {{decision}}",
+      "noRecommendation": "Det fanns ingen kvalificeringskontroll tillgänglig när du beslutade.",
+      "recordedAt": "registrerat {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blockerande brist",
+      "blockingGapsAtDecision_other": "{{count}} blockerande brister"
     }
   },
   "workbench": {

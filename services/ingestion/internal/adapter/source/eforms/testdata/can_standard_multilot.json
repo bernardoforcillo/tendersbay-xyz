@@ -21,6 +21,9 @@
     "pdf": {
       "RON": "https://ted.europa.eu/ro/notice/472143-2026/pdf",
       "ENG": "https://ted.europa.eu/en/notice/472143-2026/pdf"
+    },
+    "xml": {
+      "MUL": "https://ted.europa.eu/en/notice/472143-2026/xml"
     }
   }
 }

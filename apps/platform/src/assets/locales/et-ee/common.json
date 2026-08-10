@@ -139,6 +139,181 @@
       "emptyDescription": "Proovige allpool käsitsi otsingut või laiendage selle kliendi profiili."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Ettevõtte toimik",
+      "description": "See, mida teie ettevõtte kohta teame. Võrdleme seda iga hanke kvalifitseerimistingimustega.",
+      "save": "Salvesta",
+      "saving": "Salvestamine…",
+      "error": "Salvestamine ebaõnnestus. Proovige uuesti.",
+      "identity": {
+        "legalName": "Ärinimi",
+        "vatNumber": "KMKR number",
+        "fiscalCode": "Maksukohustuslase number",
+        "legalForm": "Õiguslik vorm",
+        "cciaaOffice": "Kaubanduskoda",
+        "cciaaNumber": "Registrikood",
+        "country": "Riik",
+        "nuts": "Piirkond (NUTS)",
+        "foundedYear": "Asutamisaasta"
+      },
+      "soa": {
+        "title": "SOA tunnistused",
+        "category": "Kategooria",
+        "classifica": "Classifica",
+        "issuedBy": "Väljaandja",
+        "validUntil": "Kehtib kuni",
+        "verifiedUntil": "Kolmeaastane kontroll kehtib kuni",
+        "verifiedUntilHint": "Kolmeaastane kontroll aegub kolm aastat enne tunnistust ennast. Pärast seda kuupäeva tunnistus enam ei kehti.",
+        "add": "Lisa tunnistus",
+        "remove": "Eemalda",
+        "empty": "Ühtegi SOA tunnistust ei ole kirjas."
+      },
+      "certifications": {
+        "title": "Sertifikaadid",
+        "standard": "Standard",
+        "standardRaw": "Standard sertifikaadi järgi",
+        "scope": "Ulatus",
+        "issuedBy": "Väljaandja",
+        "validFrom": "Kehtib alates",
+        "validUntil": "Kehtib kuni",
+        "add": "Lisa sertifikaat",
+        "remove": "Eemalda",
+        "empty": "Ühtegi sertifikaati ei ole kirjas."
+      },
+      "financialYears": {
+        "title": "Majandusaastad",
+        "year": "Aasta",
+        "turnover": "Kogukäive",
+        "specificTurnover": "Käive asjaomases valdkonnas",
+        "currency": "Valuuta",
+        "headcount": "Töötajate arv",
+        "add": "Lisa majandusaasta",
+        "remove": "Eemalda",
+        "empty": "Ühtegi majandusaastat ei ole kirjas."
+      },
+      "pastContracts": {
+        "title": "Täidetud lepingud",
+        "description": "Mida tehti",
+        "buyer": "Hankija",
+        "cpv": "CPV",
+        "value": "Maksumus",
+        "started": "Algus",
+        "ended": "Lõpp",
+        "role": "Roll",
+        "sharePct": "Teie osa",
+        "sharePctHint": "Ühispakkumuses arvestatakse tingimuse täitmisel ainult teie enda osa.",
+        "add": "Lisa leping",
+        "remove": "Eemalda",
+        "empty": "Ühtegi täidetud lepingut ei ole kirjas."
+      },
+      "registrations": {
+        "title": "Registreeringud ja nimekirjad",
+        "kind": "Liik",
+        "authority": "Asutus",
+        "identifier": "Number",
+        "section": "Jaotis",
+        "validFrom": "Kehtib alates",
+        "validUntil": "Kehtib kuni",
+        "add": "Lisa registreering",
+        "remove": "Eemalda",
+        "empty": "Ühtegi registreeringut ei ole kirjas."
+      }
+    },
+    "provenance": {
+      "user_stated": "Teie sisestatud",
+      "user_confirmed": "Teie kinnitatud",
+      "agent_inferred": "Agendi tuletatud",
+      "imported": "Imporditud",
+      "never": "Kirjas ei ole"
+    },
+    "eligibility": {
+      "title": "Kvalifitseerimistingimused",
+      "recheck": "Kontrolli uuesti",
+      "evaluatedAt": "Kontrollitud {{when}}",
+      "requirementLabel": "See hange nõuab",
+      "heldLabel": "Teie toimik tõendab",
+      "changesLabel": "Mis seda muudaks",
+      "caveatsLabel": "Lugege koos sellega",
+      "lead": {
+        "requires": "See hange nõuab",
+        "holds": "teie toimik tõendab",
+        "noRequirements": "Selle hanke kohta ei ole ühtegi tingimust kirja pandud."
+      },
+      "verdict": {
+        "insufficient_data": "Otsustamiseks liiga vähe andmeid",
+        "go": "Näib, et vastate tingimustele",
+        "no_go": "Näib, et te ei vasta tingimustele"
+      },
+      "status": {
+        "met": "Täidetud",
+        "missing": "Puudub",
+        "shortfall": "Alla nõutava taseme",
+        "expiring": "Aegub varsti",
+        "expired": "Aegunud",
+        "unknown": "Pole veel küsitud"
+      },
+      "remedy": {
+        "provide_fact": "Öelge meile, mis teil olemas on",
+        "renew": "Uuendage see enne tähtaega",
+        "upgrade": "Tõstke nõutavale tasemele",
+        "avvalimento": "Tuginege kolmanda isiku vahenditele (avvalimento)",
+        "rti": "Esitage ühispakkumus (RTI)",
+        "subcontract": "Katke alltöövõtuga"
+      },
+      "caveat": {
+        "no_requirements_captured": "Selle hanke kohta ei õnnestunud ühtegi tingimust välja lugeda, seega ei tugine see hinnang millelegi avaldatule.",
+        "award_grid_only": "Välja loeti ainult hindamiskriteeriumid — kvalifitseerimistingimused võivad olla dokumentides, mida me ei lugenud.",
+        "unconfirmed_extraction": "Osa tingimusi on dokumentidest välja loetud ja te ei ole neid veel kinnitanud.",
+        "open_questions": "Osa teie ettevõtet puudutavaid küsimusi on veel vastuseta.",
+        "documents_unread": "Me ei ole hankedokumente lugenud, seega võib tingimusi puudu olla."
+      },
+      "counts": {
+        "requirements_one": "{{count}} tingimus",
+        "requirements_other": "{{count}} tingimust",
+        "authoritative_one": "{{count}} kinnitatud",
+        "authoritative_other": "{{count}} kinnitatud",
+        "blocking_one": "{{count}} takistav",
+        "blocking_other": "{{count}} takistavat",
+        "unknown_one": "{{count}} vastuseta",
+        "unknown_other": "{{count}} vastuseta"
+      }
+    },
+    "requirements": {
+      "title": "Tingimused",
+      "empty": "Selle hanke kohta ei ole ühtegi tingimust kirja pandud.",
+      "confirm": "Kinnita",
+      "confirmed": "Kinnitatud",
+      "remove": "Eemalda",
+      "unconfirmedHint": "Loetud dokumentidest — võrrelge tsiteeritud lõiguga, enne kui sellele tuginete.",
+      "lotLabel": "Osa {{lot}}",
+      "noticeLevel": "Kehtib kogu teate kohta",
+      "askWhy": "Miks?",
+      "source": {
+        "user_stated": "Teie esitatud",
+        "document_excerpt": "Hankedokumentidest",
+        "award_criteria": "Hindamiskriteeriumidest",
+        "agent_inferred": "Agendi tuletatud"
+      }
+    },
+    "capture": {
+      "title": "Üks küsimus",
+      "save": "Salvesta",
+      "saving": "Salvestamine…",
+      "notSure": "Ei tea",
+      "error": "Salvestamine ebaõnnestus. Proovige uuesti.",
+      "cannotCheck": "Seda me automaatselt kontrollida ei saa.",
+      "prompt": {
+        "soa": "Milline SOA kategooria ja classifica teil on?",
+        "certification": "Milline sertifikaat teil selle kohta on?",
+        "turnover": "Millise käibe te saavutasite?",
+        "past_contracts": "Milline teie leping seda katab?",
+        "headcount": "Kui palju töötajaid teil oli?",
+        "registration": "Milline registreering või nimekiri seda katab?",
+        "other": "Seda me automaatselt kontrollida ei saa — lugege see läbi ja otsustage ise."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Logi sisse",
@@ -471,6 +646,56 @@
       "deadlineUntil": "sulgub {{date}}",
       "undo": "Tühjenda",
       "remove": "Eemalda {{chip}}"
+    },
+    "coverage": {
+      "title": "Mida oleme lugenud",
+      "openBuyerDocuments": "Ava hankija dokumendid",
+      "label": {
+        "full": "Hankedokumendid loetud",
+        "notice_only": "Ainult teade",
+        "none": "Midagi ei ole loetud"
+      },
+      "reason": {
+        "no_documents_published": "Hankija ei avaldanud selle teatega ühtegi dokumenti.",
+        "notice_not_read": "Me ei ole selle teate struktureeritud andmeid lugenud, seega ei tea, mida see avaldab.",
+        "body_not_retrieved": "Hankija avaldab dokumente, mida me ei ole veel alla laadinud.",
+        "not_yet_extracted": "Järjekorras — veel lugemata.",
+        "extraction_failed": "Nende dokumentide teksti ei õnnestunud lugeda."
+      },
+      "counts": {
+        "documents_one": "{{count}} dokument loetud",
+        "documents_other": "{{count}} dokumenti loetud",
+        "parts_one": "{{count}} jaotis eraldatud",
+        "parts_other": "{{count}} jaotist eraldatud",
+        "knownLinks_one": "{{count}} dokument avaldatud",
+        "knownLinks_other": "{{count}} dokumenti avaldatud"
+      }
+    },
+    "criteria": {
+      "title": "Kus punkte teenitakse",
+      "notEnriched": "Me ei ole selle teate struktureeritud andmeid veel lugenud.",
+      "gridUnusable": "Teade nimetab hindamismeetodi, kuid ei avalda osakaale. Hindamistabel on hankedokumentides.",
+      "weight": "Osakaal",
+      "noWeight": "Osakaalu ei ole avaldatud",
+      "lot": "Osa {{lot}}",
+      "appliesToEveryLot": "Kehtib kõigi osade kohta",
+      "showAllLots": "Näita kõiki osi",
+      "type": {
+        "quality": "Kvaliteet",
+        "cost": "Kulu",
+        "price": "Hind"
+      }
+    },
+    "citation": {
+      "page": "lk {{page}}",
+      "pageRange": "lk {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Osa {{index}}",
+      "openDocument": "Ava dokument",
+      "expandPassage": "Näita ümbritsevat lõiku",
+      "collapsePassage": "Peida lõik",
+      "passageUnavailable": "Ümbritsevat lõiku ei õnnestunud hankida.",
+      "truncated": "Lõiku on lühendatud."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "Üldine",
       "profile": "Kliendi profiil",
+      "company": "Ettevõtte toimik",
       "overview": "Ülevaade",
       "members": "Liikmed",
       "roles": "Rollid",
@@ -718,6 +944,26 @@
       "duplicate": "See hange on juba selles workbenchis.",
       "unavailable": "See hange ei ole enam saadaval.",
       "generic": "Midagi läks valesti. Proovige uuesti."
+    },
+    "scheda": {
+      "coverageTitle": "Mida oleme lugenud",
+      "evidenceTitle": "Tingimused ja tõendid",
+      "pointsTitle": "Kus punkte teenitakse",
+      "repairChat": {
+        "title": "Küsige selle hanke kohta",
+        "open": "Esita küsimus",
+        "close": "Sulge",
+        "askWhy": "Miks?",
+        "seedGapQuestion": "Miks see hange nõuab „{{requirement}}“?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Kirja pandud võrdluses: {{recommendation}}",
+      "youDecided": "teie otsustasite {{decision}}",
+      "noRecommendation": "Teie otsuse ajal ei olnud kvalifitseerimiskontroll saadaval.",
+      "recordedAt": "kirja pandud {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} takistav puudujääk",
+      "blockingGapsAtDecision_other": "{{count}} takistavat puudujääki"
     }
   },
   "workbench": {

@@ -1,21 +1,40 @@
 package bid
 
-import "context"
+import (
+	"context"
+	"log/slog"
+	"time"
+)
 
 // Service owns the bid lifecycle and the ESPD checklist. It authorizes every
 // call against the workbench RBAC layer, then delegates persistence to its
 // Repository — no business rules leak into the transport or adapter layers.
 type Service struct {
-	repo      Repository
-	access    WorkbenchAccess
-	fit       TenderFit
-	summaries TenderSummaries
+	repo        Repository
+	access      WorkbenchAccess
+	fit         TenderFit
+	summaries   TenderSummaries
+	eligibility Eligibility
+
+	// now is injected so the decision timestamp is reproducible in tests. The
+	// lifecycle's other timestamps are written by the database (created_at /
+	// updated_at defaults); this one is a domain fact about when a human
+	// decided, so the domain owns it.
+	now func() time.Time
 }
 
 // NewService wires the Service. fit and summaries are BOTH taken from the single
-// tenders arg (*tender.Service satisfies both ports).
-func NewService(repo Repository, access WorkbenchAccess, tenders Tenders) *Service {
-	return &Service{repo: repo, access: access, fit: tenders, summaries: tenders}
+// tenders arg (*tender.Service satisfies both ports); eligibility is
+// *company.Service.
+func NewService(repo Repository, access WorkbenchAccess, tenders Tenders, eligibility Eligibility) *Service {
+	return &Service{
+		repo:        repo,
+		access:      access,
+		fit:         tenders,
+		summaries:   tenders,
+		eligibility: eligibility,
+		now:         time.Now,
+	}
 }
 
 // AddBid tracks tenderID as a new bid in workbenchID: authorize, confirm the
@@ -49,7 +68,13 @@ func (s *Service) AddBid(ctx context.Context, userID, workbenchID string, tender
 	return created, nil
 }
 
-// SetGoNoGo records the pursue/skip decision. Only "go"/"no_go" are settable.
+// SetGoNoGo records the pursue/skip decision together with the eligibility
+// recommendation it was taken against. Only "go"/"no_go" are settable.
+//
+// The recommendation NEVER gates the decision. A user may record a go on a
+// no_go recommendation and the call succeeds — they carry the liability, they
+// decide, and an override that the product refuses to represent is an override
+// the product cannot learn from.
 func (s *Service) SetGoNoGo(ctx context.Context, userID, workbenchID, bidID string, d GoNoGo) (Bid, error) {
 	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
 		return Bid{}, err
@@ -57,10 +82,58 @@ func (s *Service) SetGoNoGo(ctx context.Context, userID, workbenchID, bidID stri
 	if d != GoNoGoGo && d != GoNoGoNoGo {
 		return Bid{}, ErrInvalidArgument
 	}
-	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+	current, err := s.repo.FindBidByID(ctx, workbenchID, bidID)
+	if err != nil {
 		return Bid{}, err
 	}
-	return s.repo.UpdateGoNoGo(ctx, bidID, d)
+	return s.repo.UpdateGoNoGo(ctx, bidID, d, s.recommendationFor(ctx, userID, workbenchID, current, d))
+}
+
+// recommendationFor resolves the eligibility recommendation this decision is
+// being taken against.
+//
+// It never returns an error, and that is deliberate: a decision the user has
+// already made must be recordable even when we cannot say what we would have
+// advised. Failing the write instead would turn a missing assessment into an
+// outage in the lifecycle, and it would do so precisely in the cases where the
+// engine is weakest — a tender we hold no documents for. An unresolvable check
+// records Recommendation "" ("no recommendation existed"), which is a distinct,
+// queryable fact rather than a silent zero pretending to be agreement.
+//
+// The check is notice-level (lotRef ""): a bid tracks a tender, not a lot, so
+// the requirements that apply are the notice's own — which is also the set a
+// multi-lot notice states once and every lot inherits.
+func (s *Service) recommendationFor(ctx context.Context, userID, workbenchID string, current Bid, d GoNoGo) DecisionRecord {
+	at := s.now()
+	rec := DecisionRecord{RecordedAt: &at}
+
+	workspaceID, err := s.access.WorkspaceOf(ctx, workbenchID)
+	if err != nil {
+		slog.WarnContext(ctx, "bid decision recorded without an eligibility recommendation",
+			"stage", "workspace_lookup", "error", err)
+		return rec
+	}
+	a, err := s.eligibility.CheckEligibility(ctx, userID, workspaceID, current.TenderID, "")
+	if err != nil {
+		slog.WarnContext(ctx, "bid decision recorded without an eligibility recommendation",
+			"stage", "eligibility_check", "error", err)
+		return rec
+	}
+
+	rec.Recommendation = a.Verdict
+	rec.BlockingGapCount = a.BlockingGapCount
+	rec.Overridden = Overrides(a.Verdict, d)
+
+	// Server-side product metric — the trust signal. slog → OTLP, since Go
+	// carries no product-analytics SDK, and deliberately no workspace id, no
+	// tender id and no company identifier travels on this line.
+	slog.InfoContext(ctx, "bid decision recorded",
+		"decision", string(d), "recommendation", string(a.Verdict), "overridden", rec.Overridden,
+		"blocking_gaps", a.BlockingGapCount, "unknown_gaps", a.UnknownGapCount,
+		"requirement_count", a.RequirementCount,
+		"authoritative_requirements", a.AuthoritativeRequirements,
+		"document_coverage", string(a.DocumentCoverage))
+	return rec
 }
 
 // AdvanceStage moves the bid one step forward (shortlisted->preparing->submitted).

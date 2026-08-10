@@ -16,7 +16,8 @@
     "./agent/v1/agent_connect": "./src/gen/agent/v1/agent_connect.js",
     "./tender/v1/tender_pb": "./src/gen/tender/v1/tender_pb.js",
     "./tender/v1/tender_connect": "./src/gen/tender/v1/tender_connect.js",
-    "./bid/v1/bid_pb": "./src/gen/bid/v1/bid_pb.js"
+    "./bid/v1/bid_pb": "./src/gen/bid/v1/bid_pb.js",
+    "./company/v1/company_pb": "./src/gen/company/v1/company_pb.js"
   },
   "peerDependencies": {
     "@bufbuild/protobuf": "^2.0.0",

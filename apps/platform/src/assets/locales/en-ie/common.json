@@ -139,6 +139,181 @@
       "emptyDescription": "Try a manual search below, or widen this client’s profile."
     }
   },
+  "company": {
+    "dossier": {
+      "title": "Company dossier",
+      "description": "What we hold about your company. We check it against every tender's requirements.",
+      "save": "Save",
+      "saving": "Saving…",
+      "error": "We could not save that. Try again.",
+      "identity": {
+        "legalName": "Legal name",
+        "vatNumber": "VAT number",
+        "fiscalCode": "Fiscal code",
+        "legalForm": "Legal form",
+        "cciaaOffice": "Chamber of commerce office",
+        "cciaaNumber": "Chamber of commerce number",
+        "country": "Country",
+        "nuts": "Region (NUTS)",
+        "foundedYear": "Founded"
+      },
+      "soa": {
+        "title": "SOA attestations",
+        "category": "Category",
+        "classifica": "Classifica",
+        "issuedBy": "Issued by",
+        "validUntil": "Valid until",
+        "verifiedUntil": "Triennial verification until",
+        "verifiedUntilHint": "The triennial verification lapses three years before the attestation does. Past that date the attestation no longer counts.",
+        "add": "Add attestation",
+        "remove": "Remove",
+        "empty": "No SOA attestation recorded."
+      },
+      "certifications": {
+        "title": "Certifications",
+        "standard": "Standard",
+        "standardRaw": "Standard, as certified",
+        "scope": "Scope",
+        "issuedBy": "Issued by",
+        "validFrom": "Valid from",
+        "validUntil": "Valid until",
+        "add": "Add certification",
+        "remove": "Remove",
+        "empty": "No certification recorded."
+      },
+      "financialYears": {
+        "title": "Financial years",
+        "year": "Year",
+        "turnover": "Turnover",
+        "specificTurnover": "Turnover in the relevant sector",
+        "currency": "Currency",
+        "headcount": "Employees",
+        "add": "Add year",
+        "remove": "Remove",
+        "empty": "No financial year recorded."
+      },
+      "pastContracts": {
+        "title": "Past contracts",
+        "description": "What was delivered",
+        "buyer": "Buyer",
+        "cpv": "CPV",
+        "value": "Value",
+        "started": "Started",
+        "ended": "Ended",
+        "role": "Role",
+        "sharePct": "Your share",
+        "sharePctHint": "In a grouping only your own share counts towards a requirement.",
+        "add": "Add contract",
+        "remove": "Remove",
+        "empty": "No past contract recorded."
+      },
+      "registrations": {
+        "title": "Registrations and lists",
+        "kind": "Kind",
+        "authority": "Authority",
+        "identifier": "Reference",
+        "section": "Section",
+        "validFrom": "Valid from",
+        "validUntil": "Valid until",
+        "add": "Add registration",
+        "remove": "Remove",
+        "empty": "No registration recorded."
+      }
+    },
+    "provenance": {
+      "user_stated": "You entered this",
+      "user_confirmed": "You confirmed this",
+      "agent_inferred": "The agent inferred this",
+      "imported": "Imported",
+      "never": "Not recorded"
+    },
+    "eligibility": {
+      "title": "Eligibility",
+      "recheck": "Check again",
+      "evaluatedAt": "Checked {{when}}",
+      "requirementLabel": "This tender requires",
+      "heldLabel": "Your dossier holds",
+      "changesLabel": "What would change this",
+      "caveatsLabel": "Read this alongside",
+      "lead": {
+        "requires": "This tender requires",
+        "holds": "your dossier holds",
+        "noRequirements": "No requirement has been recorded for this tender."
+      },
+      "verdict": {
+        "insufficient_data": "Not enough to decide",
+        "go": "You appear eligible",
+        "no_go": "You do not appear eligible"
+      },
+      "status": {
+        "met": "Met",
+        "missing": "Missing",
+        "shortfall": "Short of the level required",
+        "expiring": "Expiring",
+        "expired": "Expired",
+        "unknown": "Not asked yet"
+      },
+      "remedy": {
+        "provide_fact": "Tell us what you hold",
+        "renew": "Renew it before the deadline",
+        "upgrade": "Raise it to the level required",
+        "avvalimento": "Borrow it through avvalimento",
+        "rti": "Bid as a temporary grouping (RTI)",
+        "subcontract": "Cover it by subcontracting"
+      },
+      "caveat": {
+        "no_requirements_captured": "No requirement was captured for this tender, so this verdict rests on nothing published.",
+        "award_grid_only": "Only the award criteria were captured — participation requirements may sit in documents we have not read.",
+        "unconfirmed_extraction": "Some requirements were read out of the documents and you have not confirmed them yet.",
+        "open_questions": "Some questions about your company are still unanswered.",
+        "documents_unread": "We have not read the tender documents, so requirements may be missing."
+      },
+      "counts": {
+        "requirements_one": "{{count}} requirement",
+        "requirements_other": "{{count}} requirements",
+        "authoritative_one": "{{count}} confirmed",
+        "authoritative_other": "{{count}} confirmed",
+        "blocking_one": "{{count}} blocking",
+        "blocking_other": "{{count}} blocking",
+        "unknown_one": "{{count}} unanswered",
+        "unknown_other": "{{count}} unanswered"
+      }
+    },
+    "requirements": {
+      "title": "Requirements",
+      "empty": "No requirement has been recorded for this tender.",
+      "confirm": "Confirm",
+      "confirmed": "Confirmed",
+      "remove": "Remove",
+      "unconfirmedHint": "Read out of the documents — check it against the quoted passage before you rely on it.",
+      "lotLabel": "Lot {{lot}}",
+      "noticeLevel": "Applies to the whole notice",
+      "askWhy": "Why?",
+      "source": {
+        "user_stated": "You stated this",
+        "document_excerpt": "From the documents",
+        "award_criteria": "From the award criteria",
+        "agent_inferred": "Inferred by the agent"
+      }
+    },
+    "capture": {
+      "title": "One question",
+      "save": "Save",
+      "saving": "Saving…",
+      "notSure": "Not sure",
+      "error": "We could not save that. Try again.",
+      "cannotCheck": "We cannot check this one automatically.",
+      "prompt": {
+        "soa": "Which SOA category and classifica do you hold?",
+        "certification": "Which certification do you hold for this?",
+        "turnover": "What turnover did you record?",
+        "past_contracts": "Which contract of yours covers this?",
+        "headcount": "How many people did you employ?",
+        "registration": "Which registration or list covers this?",
+        "other": "We cannot check this one automatically — read it and decide yourself."
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Log in",
@@ -471,6 +646,56 @@
       "deadlineUntil": "closing by {{date}}",
       "undo": "Clear",
       "remove": "Remove {{chip}}"
+    },
+    "coverage": {
+      "title": "What we have read",
+      "openBuyerDocuments": "Open the buyer's documents",
+      "label": {
+        "full": "Full documents read",
+        "notice_only": "Notice only",
+        "none": "Nothing read"
+      },
+      "reason": {
+        "no_documents_published": "The buyer published no documents with this notice.",
+        "notice_not_read": "We have not read this notice's structured data, so we do not know what it publishes.",
+        "body_not_retrieved": "The buyer publishes documents we have not retrieved yet.",
+        "not_yet_extracted": "Queued — not read yet.",
+        "extraction_failed": "We could not read the text of these documents."
+      },
+      "counts": {
+        "documents_one": "{{count}} document read",
+        "documents_other": "{{count}} documents read",
+        "parts_one": "{{count}} section extracted",
+        "parts_other": "{{count}} sections extracted",
+        "knownLinks_one": "{{count}} document published",
+        "knownLinks_other": "{{count}} documents published"
+      }
+    },
+    "criteria": {
+      "title": "Where the points are",
+      "notEnriched": "We have not read this notice's structured data yet.",
+      "gridUnusable": "The notice names the award method but publishes no weights. The scoring grid is in the tender documents.",
+      "weight": "Weight",
+      "noWeight": "No weight published",
+      "lot": "Lot {{lot}}",
+      "appliesToEveryLot": "Applies to every lot",
+      "showAllLots": "Show every lot",
+      "type": {
+        "quality": "Quality",
+        "cost": "Cost",
+        "price": "Price"
+      }
+    },
+    "citation": {
+      "page": "p. {{page}}",
+      "pageRange": "pp. {{start}}–{{end}}",
+      "section": "§ {{section}}",
+      "part": "Part {{index}}",
+      "openDocument": "Open the document",
+      "expandPassage": "Show the surrounding passage",
+      "collapsePassage": "Hide the passage",
+      "passageUnavailable": "We could not retrieve the surrounding passage.",
+      "truncated": "Passage shortened."
     }
   },
   "today": {
@@ -511,6 +736,7 @@
     "nav": {
       "general": "General",
       "profile": "Client profile",
+      "company": "Company dossier",
       "overview": "Overview",
       "members": "Members",
       "roles": "Roles",
@@ -709,6 +935,26 @@
       "duplicate": "This tender is already in that workbench.",
       "unavailable": "This tender is no longer available.",
       "generic": "Something went wrong. Please try again."
+    },
+    "scheda": {
+      "coverageTitle": "What we have read",
+      "evidenceTitle": "Requirements and evidence",
+      "pointsTitle": "Where the points are",
+      "repairChat": {
+        "title": "Ask about this tender",
+        "open": "Ask a question",
+        "close": "Close",
+        "askWhy": "Why?",
+        "seedGapQuestion": "Why does this tender require \"{{requirement}}\"?"
+      }
+    },
+    "decision": {
+      "recordedAgainst": "Recorded against: {{recommendation}}",
+      "youDecided": "you decided {{decision}}",
+      "noRecommendation": "No eligibility check was available when you decided.",
+      "recordedAt": "recorded {{when}}",
+      "blockingGapsAtDecision_one": "{{count}} blocking gap",
+      "blockingGapsAtDecision_other": "{{count}} blocking gaps"
     }
   },
   "workbench": {

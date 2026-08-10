@@ -7,14 +7,14 @@ import { ToolChip } from '~/features/account/components/atoms/tool-chip';
 import { ChatInput } from '~/features/account/components/molecules/chat-input';
 import { CreditDisplay } from '~/features/account/components/molecules/credit-display';
 import { MessageBubble } from '~/features/account/components/molecules/message-bubble';
-import { useChatStream } from '~/features/account/hooks/use-chat-stream';
+import { type ChatSurface, useChatStream } from '~/features/account/hooks/use-chat-stream';
 import { agentClient, workspaceClient } from '~/lib/api/client';
 import { type ChatMessage, useChatStore } from '~/store/chat';
 import { useWorkspaceStore } from '~/store/workspace';
 
 interface ChatWindowProps {
-  /** Analytics surface — 'explore' (default) or 'workbench'. */
-  location?: 'explore' | 'workbench';
+  /** Analytics surface — 'explore' (default), 'workbench', or the scheda gara's repair panel. */
+  location?: ChatSurface;
   /** When set, a freshly created chat is bound to this workbench. */
   workbenchId?: string;
 }

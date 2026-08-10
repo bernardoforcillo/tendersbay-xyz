@@ -423,7 +423,14 @@ func (f *parseFakeRepo) FindDetailByID(context.Context, int64) (*TenderDetail, e
 func (f *parseFakeRepo) DocumentsByTenderID(context.Context, int64) ([]Document, error) {
 	return nil, nil
 }
-func (f *parseFakeRepo) LotsByTenderID(context.Context, int64) ([]Lot, error)       { return nil, nil }
+func (f *parseFakeRepo) LotsByTenderID(context.Context, int64) ([]Lot, error) { return nil, nil }
+func (f *parseFakeRepo) CriteriaByTenderID(context.Context, int64) ([]AwardCriterion, error) {
+	return nil, nil
+}
+func (f *parseFakeRepo) OrganizationsByTenderID(context.Context, int64) ([]Organization, error) {
+	return nil, nil
+}
+
 func (f *parseFakeRepo) RecentTenderRefs(context.Context, int) ([]TenderRef, error) { return nil, nil }
 func (f *parseFakeRepo) DistinctCountries(context.Context) ([]string, error)        { return nil, nil }
 

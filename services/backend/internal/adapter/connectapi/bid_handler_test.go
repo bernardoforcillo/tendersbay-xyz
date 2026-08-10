@@ -16,7 +16,7 @@ import (
 // under test (requireUser and the tender_id parse) both return before any
 // h.svc port is dereferenced, so the nil ports are never reached.
 func testBidHandler() *connectapi.BidHandler {
-	return connectapi.NewBidHandler(bid.NewService(nil, nil, nil))
+	return connectapi.NewBidHandler(bid.NewService(nil, nil, nil, nil))
 }
 
 func TestAddBid_RejectsUnauthenticated(t *testing.T) {

@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -23,58 +23,104 @@ vi.mock('~/features/workbench/context', () => ({
     refetch: vi.fn(),
   }),
 }));
+
 const { useBid, useChecklist } = vi.hoisted(() => ({ useBid: vi.fn(), useChecklist: vi.fn() }));
 vi.mock('~/features/workbench/hooks', () => ({ useBid, useChecklist }));
-vi.mock('~/lib/api/client', () => ({ bidClient: {} }));
+
+// The scheda gara reads three more sources. They are stubbed to "nothing known"
+// so this test stays about the page's composition, not about its data.
+const EMPTY = { data: null, loading: false, error: null, refetch: vi.fn() };
+vi.mock('~/features/company/hooks', () => ({ useEligibility: () => EMPTY }));
+vi.mock('~/features/tenders/hooks', () => ({
+  useTenderAvailability: () => EMPTY,
+  useTenderDetail: () => EMPTY,
+}));
+// The repair chat mounts the whole assistant stack; the page only owns whether
+// it is composed in at all.
+vi.mock('~/features/workbench/components/organisms/bid-repair-chat', () => ({
+  BidRepairChat: () => <div data-testid="bid-repair-chat" />,
+}));
+vi.mock('~/lib/api/client', () => ({ bidClient: {}, companyClient: {}, tenderClient: {} }));
 
 import { BidDetailPage } from './index';
+
+const BASE_BID = {
+  id: 'b1',
+  tenderId: '42',
+  tenderAvailable: true,
+  tenderTitle: 'Road works',
+  tenderBuyerName: 'City',
+  goNoGo: 'undecided',
+  stage: 'shortlisted',
+  outcome: '',
+  needsProfile: false,
+  fitTier: '',
+  reason: '',
+  checklistDone: 0,
+  checklistTotal: 0,
+  tenderDeadline: '',
+};
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  useChecklist.mockReturnValue({ data: [], loading: false, error: null, refetch: vi.fn() });
+});
 
 describe('BidDetailPage', () => {
   it('renders a tombstone when the tender is unavailable', () => {
     useBid.mockReturnValue({
-      data: {
-        id: 'b1',
-        tenderAvailable: false,
-        goNoGo: 'undecided',
-        stage: 'shortlisted',
-        outcome: '',
-        needsProfile: false,
-        fitTier: '',
-        checklistDone: 0,
-        checklistTotal: 0,
-        tenderDeadline: '',
-      },
+      data: { ...BASE_BID, tenderAvailable: false, tenderTitle: '', tenderBuyerName: '' },
       loading: false,
       error: null,
       refetch: vi.fn(),
     });
-    useChecklist.mockReturnValue({ data: [], loading: false, error: null, refetch: vi.fn() });
     render(<BidDetailPage />);
     expect(screen.getByText('bid.tombstone.title')).toBeTruthy();
   });
 
   it('shows go/no-go controls for a manager', () => {
     useBid.mockReturnValue({
-      data: {
-        id: 'b1',
-        tenderAvailable: true,
-        tenderTitle: 'Road works',
-        tenderBuyerName: 'City',
-        goNoGo: 'undecided',
-        stage: 'shortlisted',
-        outcome: '',
-        needsProfile: true,
-        fitTier: '',
-        checklistDone: 0,
-        checklistTotal: 0,
-        tenderDeadline: '',
-      },
+      data: { ...BASE_BID, needsProfile: true },
       loading: false,
       error: null,
       refetch: vi.fn(),
     });
-    useChecklist.mockReturnValue({ data: [], loading: false, error: null, refetch: vi.fn() });
     render(<BidDetailPage />);
     expect(screen.getByRole('button', { name: 'bid.actions.markGo' })).toBeTruthy();
+  });
+
+  // The section order is the product rule; the page must compose the template,
+  // not re-order blocks itself.
+  it('renders the coverage, decision, checklist and stage sections in order', () => {
+    useBid.mockReturnValue({ data: BASE_BID, loading: false, error: null, refetch: vi.fn() });
+    const { container } = render(<BidDetailPage />);
+    const labels = [...container.querySelectorAll('section')].map((s) =>
+      s.getAttribute('aria-label'),
+    );
+    expect(labels).toEqual(['Decision', 'ESPD / DGUE checklist', 'Stage', 'Ask about this gara']);
+  });
+
+  it('offers no outcome section until the bid is a go', () => {
+    useBid.mockReturnValue({ data: BASE_BID, loading: false, error: null, refetch: vi.fn() });
+    const { container, unmount } = render(<BidDetailPage />);
+    expect(
+      [...container.querySelectorAll('section')].some(
+        (s) => s.getAttribute('aria-label') === 'Outcome',
+      ),
+    ).toBe(false);
+    unmount();
+
+    useBid.mockReturnValue({
+      data: { ...BASE_BID, goNoGo: 'go' },
+      loading: false,
+      error: null,
+      refetch: vi.fn(),
+    });
+    const decided = render(<BidDetailPage />);
+    expect(
+      [...decided.container.querySelectorAll('section')].some(
+        (s) => s.getAttribute('aria-label') === 'Outcome',
+      ),
+    ).toBe(true);
   });
 });

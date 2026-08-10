@@ -23,7 +23,7 @@ func NewBidHandler(svc *bid.Service) *BidHandler {
 // tender summary, fit, and checklist counts stay zero (clients refetch
 // ListBids/GetBid for the enriched view).
 func toProtoBidEntity(b bid.Bid) *bidv1.Bid {
-	return &bidv1.Bid{
+	out := &bidv1.Bid{
 		Id:          b.ID,
 		WorkbenchId: b.WorkbenchID,
 		TenderId:    strconv.FormatInt(b.TenderID, 10),
@@ -32,7 +32,22 @@ func toProtoBidEntity(b bid.Bid) *bidv1.Bid {
 		Outcome:     string(b.Outcome),
 		CreatedAt:   b.CreatedAt.Format(time.RFC3339),
 		UpdatedAt:   b.UpdatedAt.Format(time.RFC3339),
+
+		// The decision record travels on EVERY bid shape, including the bare
+		// entity the write RPCs return, because SetGoNoGo's own response is what
+		// the client reports the override from — it is the one moment the
+		// recommendation and the human's answer are both in hand.
+		DecisionRecommendation:   string(b.Decision.Recommendation),
+		DecisionOverridden:       b.Decision.Overridden,
+		DecisionBlockingGapCount: int32(b.Decision.BlockingGapCount),
 	}
+	// "" and "insufficient_data" stay distinguishable above; nil RecordedAt is
+	// the same distinction on the timestamp — a bid still undecided has no
+	// decision time, and a zero one would date it to year one.
+	if b.Decision.RecordedAt != nil {
+		out.DecisionRecordedAt = b.Decision.RecordedAt.Format(time.RFC3339)
+	}
+	return out
 }
 
 // toProtoBid maps a fully-enriched bid.BidView (the read RPCs' shape) onto the

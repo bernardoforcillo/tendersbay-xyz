@@ -26,6 +26,20 @@ type Lot struct {
 	Value    *int64
 	Currency string
 	Deadline *time.Time
+
+	// ── The eForms detail ──
+	//
+	// The notice's XML nests these structurally inside each lot, so — unlike
+	// the search-API payload the tender was first ingested from — they are
+	// reliably per-lot rather than index-aligned guesses.
+	//
+	// The honest caveat: on real multi-lot notices they are frequently
+	// DEGENERATE. All 13 lots of 545620-2026 share one CPV, one documents_url
+	// and one submission_url; only value and title actually differ. Per-lot
+	// value is the real win here; per-lot CPV usually is not.
+	CPVSecondary  []string
+	DocumentsURL  string
+	SubmissionURL string
 }
 
 // TenderDetail is the full single-tender view (superset of Tender's fields).
@@ -50,6 +64,27 @@ type TenderDetail struct {
 	SourceURL     string
 	Documents     []Document
 	Lots          []Lot
+
+	// ── The eForms detail ──
+	//
+	// The five scalars below are the same columns Tender carries, documented
+	// there; GridUsable is a pointer for the same three-valued reason.
+	Description       string
+	PublicationNumber string
+	DocumentsURL      string
+	SubmissionURL     string
+	GridUsable        *bool
+	// EnrichedAt is when the notice's structured detail was successfully read;
+	// nil means never, or read unsuccessfully. It is what lets a reader tell
+	// "this tender has no criteria" from "we have not looked at this tender" —
+	// the same distinction GridUsable's nil carries, kept as a separate field
+	// because it also dates the answer.
+	EnrichedAt *time.Time
+	// Criteria holds the notice-level and every lot's criteria in ONE flat
+	// list, sorted by (lot_ref, ordinal). Use CriteriaForLot for the per-lot
+	// view; see its comment for why nesting them inside Lot would be wrong.
+	Criteria      []AwardCriterion
+	Organizations []Organization
 }
 
 // TenderRef is one sitemap entry.

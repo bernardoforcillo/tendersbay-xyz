@@ -150,6 +150,52 @@ export declare type Bid = Message<"bid.v1.Bid"> & {
    * @generated from field: int32 checklist_total = 22;
    */
   checklistTotal: number;
+
+  /**
+   * ── The decision record ─────────────────────────────────────────────────
+   *
+   * What the eligibility engine recommended at the moment this bid's go/no-go
+   * was taken, carried on the wire so the client can report whether the human
+   * agreed. Override rate is the number the whole scheda gara is measured by,
+   * and it is not derivable from anything else here: the assessment is computed
+   * fresh on every read, so re-running it later answers a different question
+   * than "what did they decide against".
+   *
+   * "" means NO recommendation existed — the check could not be run at all —
+   * which is a DIFFERENT fact from "insufficient_data" ("it ran, and the
+   * evidence was too thin"). Collapsing the two would make the override rate
+   * un-interpretable, so they stay distinguishable on the wire too.
+   *
+   * "" | insufficient_data | go | no_go
+   *
+   * @generated from field: string decision_recommendation = 23;
+   */
+  decisionRecommendation: string;
+
+  /**
+   * Whether the decision CONTRADICTS the recommendation. Derived server-side,
+   * never taken from a caller. insufficient_data is deliberately never an
+   * override: there was no opinion to contradict.
+   *
+   * @generated from field: bool decision_overridden = 24;
+   */
+  decisionOverridden: boolean;
+
+  /**
+   * How many blocking gaps stood at decision time — the SIZE of the
+   * disagreement. Overriding a no_go resting on one lapsed certificate is a
+   * different act from overriding one with four blocking gaps.
+   *
+   * @generated from field: int32 decision_blocking_gap_count = 25;
+   */
+  decisionBlockingGapCount: number;
+
+  /**
+   * RFC3339; "" on a bid still undecided.
+   *
+   * @generated from field: string decision_recorded_at = 26;
+   */
+  decisionRecordedAt: string;
 };
 
 /**
