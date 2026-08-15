@@ -62,7 +62,7 @@ spec:
               # Same image as ingestion, different binary — see the service
               # Dockerfile. The tag is rewritten by the shared Flux image
               # automation, which scans this whole folder (see update.yaml).
-              image: bernardoforcillo/tendersbay-ingestion:20260810151335-93e752ecbf57bac0e21760798e780c825ebc9435@sha256:070ec0709dd6d76f2a2b3ec0db83c8efd549a74ff172008f3ea75aa12b44d0bf # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
+              image: bernardoforcillo/tendersbay-ingestion:20260815141503-082b65fac42e32fdfea974fdfad4adffce703415@sha256:e520baddc726cd3a2bf26c73fa2a834a2c272794484abc0c9c0081c7560aa19d # {"$imagepolicy": "tendersbay-xyz:tendersbay-ingestion-image-policy"}
               command: ['/retriever']
               securityContext:
                 allowPrivilegeEscalation: false
