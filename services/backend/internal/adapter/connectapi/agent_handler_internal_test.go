@@ -117,7 +117,7 @@ func newBillingHandler(creditRepo *fakeCreditRepo, usageRepo *fakeUsageRepo) *Ag
 var oneTurnOfUsage = credits.Usage{
 	AgentType:    "base-chat",
 	SessionID:    "session-1",
-	Model:        "accounts/fireworks/models/deepseek-v4-flash",
+	Model:        "accounts/fireworks/models/deepseek-v4-flash-0731",
 	InputTokens:  12,
 	OutputTokens: 30,
 	TotalTokens:  42,
