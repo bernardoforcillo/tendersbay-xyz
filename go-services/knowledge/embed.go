@@ -101,9 +101,15 @@ func (e *Embedder) documentPrompt(title, text string) string {
 }
 
 type embedRequest struct {
-	Model string `json:"model"`
-	Input string `json:"input"`
+	Model string   `json:"model"`
+	Input []string `json:"input"`
 }
+
+// maxEmbedBatch bounds how many texts ride in one /api/embed call. Ollama
+// accepts an arbitrarily long array, but the whole batch is marshalled and
+// held in memory on both sides, and a failure costs the entire batch — 32
+// keeps the round-trip saving while leaving a retry cheap.
+const maxEmbedBatch = 32
 
 type embedResponse struct {
 	Embeddings [][]float32 `json:"embeddings"`
@@ -128,7 +134,48 @@ func (e *Embedder) EmbedDocument(ctx context.Context, title, text string) ([]flo
 // EmbedDocument — prefer those, so query and document sides stay on the
 // convention the model was trained with.
 func (e *Embedder) Embed(ctx context.Context, text string) ([]float32, error) {
-	payload, err := json.Marshal(embedRequest{Model: e.model, Input: text})
+	vecs, err := e.EmbedBatch(ctx, []string{text})
+	if err != nil {
+		return nil, err
+	}
+	return vecs[0], nil
+}
+
+// EmbedDocuments embeds many chunks of one document in as few round-trips as
+// the batch size allows, applying the document-side task prompt to each.
+//
+// This exists because embedding was the indexing pass's throughput ceiling:
+// one HTTP request per chunk against a CPU-only Ollama measured 0.4-0.9s
+// each, so a 200-tender batch spent minutes in per-request overhead for work
+// the model can do in groups.
+func (e *Embedder) EmbedDocuments(ctx context.Context, title string, texts []string) ([][]float32, error) {
+	prompts := make([]string, len(texts))
+	for i, t := range texts {
+		prompts[i] = e.documentPrompt(title, t)
+	}
+	return e.EmbedBatch(ctx, prompts)
+}
+
+// EmbedBatch returns one vector per input text, in the same order, applying
+// no task prompt. Inputs are split into requests of at most maxEmbedBatch.
+func (e *Embedder) EmbedBatch(ctx context.Context, texts []string) ([][]float32, error) {
+	if len(texts) == 0 {
+		return nil, nil
+	}
+	out := make([][]float32, 0, len(texts))
+	for start := 0; start < len(texts); start += maxEmbedBatch {
+		end := min(start+maxEmbedBatch, len(texts))
+		vecs, err := e.embedOnce(ctx, texts[start:end])
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, vecs...)
+	}
+	return out, nil
+}
+
+func (e *Embedder) embedOnce(ctx context.Context, texts []string) ([][]float32, error) {
+	payload, err := json.Marshal(embedRequest{Model: e.model, Input: texts})
 	if err != nil {
 		return nil, fmt.Errorf("knowledge: marshal embed request: %w", err)
 	}
@@ -150,8 +197,11 @@ func (e *Embedder) Embed(ctx context.Context, text string) ([]float32, error) {
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
 		return nil, fmt.Errorf("knowledge: decode embed response: %w", err)
 	}
-	if len(out.Embeddings) == 0 {
-		return nil, fmt.Errorf("knowledge: ollama embed: empty embeddings in response")
+	// Positional, so a short or long reply is not recoverable by guessing:
+	// vector i belongs to text i, and a mismatch would silently attach the
+	// wrong embedding to a chunk rather than fail.
+	if len(out.Embeddings) != len(texts) {
+		return nil, fmt.Errorf("knowledge: ollama embed: got %d embeddings for %d inputs", len(out.Embeddings), len(texts))
 	}
-	return out.Embeddings[0], nil
+	return out.Embeddings, nil
 }

@@ -33,9 +33,39 @@ func TestEmbedder_Embed(t *testing.T) {
 	if gotBody["model"] != "embeddinggemma:latest" {
 		t.Errorf("model = %v, want embeddinggemma:latest", gotBody["model"])
 	}
-	if gotBody["input"] != "appalto pubblico" {
+	// input is an array now: one request carries a batch, and a single
+	// Embed is just a batch of one.
+	if got := firstInput(gotBody); got != "appalto pubblico" {
 		t.Errorf("input = %v, want %q", gotBody["input"], "appalto pubblico")
 	}
+}
+
+// firstInput reads the first element of a decoded /api/embed "input" array.
+func firstInput(body map[string]any) string {
+	arr, _ := body["input"].([]any)
+	if len(arr) == 0 {
+		return ""
+	}
+	s, _ := arr[0].(string)
+	return s
+}
+
+// embeddingsFor builds an /api/embed reply carrying one copy of vec per
+// input in the request. The real endpoint answers positionally, and the
+// client rejects a count mismatch rather than misalign vectors to chunks —
+// so a stub returning a fixed single vector fails any multi-chunk test.
+func embeddingsFor(body map[string]any, vec []float32) []byte {
+	arr, _ := body["input"].([]any)
+	n := len(arr)
+	if n == 0 {
+		n = 1
+	}
+	vecs := make([][]float32, n)
+	for i := range vecs {
+		vecs[i] = vec
+	}
+	resp, _ := json.Marshal(map[string]any{"model": "embeddinggemma:latest", "embeddings": vecs})
+	return resp
 }
 
 // captureInput starts a stub Ollama that records the "input" field of the
@@ -46,7 +76,7 @@ func captureInput(t *testing.T) (*httptest.Server, func() string) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var body map[string]any
 		_ = json.NewDecoder(r.Body).Decode(&body)
-		last, _ = body["input"].(string)
+		last = firstInput(body)
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"model":"x","embeddings":[[0.1]]}`))
 	}))

@@ -248,9 +248,9 @@ func TestIngestWithAttributes_UsesTitleForTheDocumentPrompt(t *testing.T) {
 		func(w http.ResponseWriter, r *http.Request) {
 			var body map[string]any
 			_ = json.NewDecoder(r.Body).Decode(&body)
-			gotInput, _ = body["input"].(string)
+			gotInput = firstInput(body)
 			w.Header().Set("Content-Type", "application/json")
-			_, _ = w.Write([]byte(`{"model":"embeddinggemma:latest","embeddings":[[0.1]]}`))
+			_, _ = w.Write(embeddingsFor(body, []float32{0.1}))
 		},
 	)
 

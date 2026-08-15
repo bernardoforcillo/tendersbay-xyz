@@ -65,12 +65,26 @@ func (kb *KnowledgeBase) IngestWithAttributes(ctx context.Context, doc *rag.Docu
 	}
 	facets := attrs.Payload()
 
+	// Every chunk is embedded in one call rather than one call each: against
+	// a CPU-only Ollama each round-trip measured 0.4-0.9s, so per-request
+	// overhead — not the model — was what bounded indexing throughput.
+	//
+	// The cost of batching is error attribution: a failure now names the
+	// document instead of the single chunk that caused it. That is the right
+	// trade here, because the failures actually seen are whole-endpoint ones
+	// (Ollama down, model not pulled), which no per-chunk detail would help.
+	texts := make([]string, len(chunks))
+	for i, c := range chunks {
+		texts[i] = c.Content
+	}
+	vecs, err := kb.embedder.EmbedDocuments(ctx, title, texts)
+	if err != nil {
+		return fmt.Errorf("knowledge: embed %d chunks of document %s: %w", len(chunks), doc.ID, err)
+	}
+
 	points := make([]qdrant.Point, len(chunks))
 	for i, c := range chunks {
-		vec, err := kb.embedder.EmbedDocument(ctx, title, c.Content)
-		if err != nil {
-			return fmt.Errorf("knowledge: embed chunk %s: %w", c.ID, err)
-		}
+		vec := vecs[i]
 
 		payload := map[string]any{}
 		for k, v := range doc.Metadata {
