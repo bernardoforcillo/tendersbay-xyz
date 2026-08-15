@@ -73,8 +73,9 @@ func alwaysExistingCollectionHandler(t *testing.T, onUpsert func(body map[string
 func fakeOllamaEmbed(vec []float32) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		resp, _ := json.Marshal(map[string]any{"model": "embeddinggemma:latest", "embeddings": [][]float32{vec}})
-		_, _ = w.Write(resp)
+		var body map[string]any
+		_ = json.NewDecoder(r.Body).Decode(&body)
+		_, _ = w.Write(embeddingsFor(body, vec))
 	}
 }
 

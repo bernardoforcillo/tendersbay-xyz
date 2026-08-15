@@ -87,9 +87,13 @@ spec:
                 limits:
                   memory: '1Gi'
                   cpu: '1000m'
+                # Observed steady state is 27Mi and 13m of CPU. The estimate
+                # above stands as the LIMIT, which is what it was really
+                # protecting; the request no longer reserves half a gigabyte
+                # for a peak that may never arrive.
                 requests:
-                  memory: '512Mi'
-                  cpu: '250m'
+                  memory: '256Mi'
+                  cpu: '100m'
               envFrom:
                 - secretRef:
                     name: ingestion-secrets

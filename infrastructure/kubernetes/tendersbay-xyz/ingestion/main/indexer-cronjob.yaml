@@ -64,9 +64,13 @@ spec:
                 limits:
                   memory: '512Mi'
                   cpu: '500m'
+                # Requests reflect measured steady state; limits deliberately
+                # do not. A request is a scheduler reservation, and reserving
+                # far above real use is what let the node look emptier than it
+                # was. The limit keeps the original spike headroom.
                 requests:
-                  memory: '256Mi'
-                  cpu: '100m'
+                  memory: '128Mi'
+                  cpu: '50m'
               envFrom:
                 - secretRef:
                     name: ingestion-secrets
