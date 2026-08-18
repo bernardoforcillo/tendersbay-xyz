@@ -557,3 +557,16 @@ func TestPortalRetrievalStoresNoBytes(t *testing.T) {
 		}
 	}
 }
+
+func TestFilesEmbedsSelectionCriteriaMigration(t *testing.T) {
+	entries, err := fs.ReadDir(migrations.Files, ".")
+	if err != nil {
+		t.Fatalf("ReadDir: %v", err)
+	}
+	for _, e := range entries {
+		if e.Name() == "0012_selection_criteria.up.sql" {
+			return
+		}
+	}
+	t.Fatalf("0012_selection_criteria.up.sql not found in embedded migrations: %v", entries)
+}

@@ -367,6 +367,16 @@ INSERT INTO tenders.ingested_tender_award_criteria (
 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 `
 
+const deleteSelectionCriteriaSQL = `
+DELETE FROM tenders.ingested_tender_selection_criteria WHERE tender_id = $1
+`
+
+const insertSelectionCriterionSQL = `
+INSERT INTO tenders.ingested_tender_selection_criteria (
+	tender_id, lot_ref, ordinal, category, type, name, description, origin, lang
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+`
+
 const deleteOrganizationsSQL = `
 DELETE FROM tenders.ingested_tender_organizations WHERE tender_id = $1
 `
@@ -962,6 +972,10 @@ func (r *TenderRepo) SaveDetail(ctx context.Context, tenderID int64, d tender.No
 			}
 		}
 
+		if err := replaceSelectionCriteria(ctx, tx, tenderID, d.SelectionCriteria); err != nil {
+			return err
+		}
+
 		if _, err := tx.Exec(ctx, deleteOrganizationsSQL, tenderID); err != nil {
 			return fmt.Errorf("postgres: delete organizations for tender %d: %w", tenderID, err)
 		}
@@ -991,6 +1005,48 @@ func (r *TenderRepo) SaveDetail(ctx context.Context, tenderID int64, d tender.No
 		return nil
 	})
 	return err
+}
+
+// replaceSelectionCriteria writes a tender's selection-criteria set, replacing
+// whatever was there. It takes the caller's transaction rather than opening its
+// own, so the set lands atomically with whatever else that caller is writing —
+// a reader must never see half a criteria set.
+func replaceSelectionCriteria(ctx context.Context, tx *pg.DB, tenderID int64, criteria []tender.SelectionCriterion) error {
+	if _, err := tx.Exec(ctx, deleteSelectionCriteriaSQL, tenderID); err != nil {
+		return fmt.Errorf("postgres: delete selection criteria for tender %d: %w", tenderID, err)
+	}
+	for _, c := range criteria {
+		if _, err := tx.Exec(ctx, insertSelectionCriterionSQL,
+			tenderID, c.LotRef, c.Ordinal, c.Category, c.Type, c.Name, c.Description, c.Origin, c.Lang,
+		); err != nil {
+			return fmt.Errorf("postgres: insert selection criterion %s/%d for tender %d: %w",
+				c.LotRef, c.Ordinal, tenderID, err)
+		}
+	}
+	return nil
+}
+
+// SaveSelectionCriteria persists a tender's selection criteria ON THEIR OWN,
+// for a provider that publishes them in its search feed rather than in a notice
+// document — PLACSP is the case that forced this method to exist.
+//
+// It deliberately does NOT go through SaveDetail, even though a NoticeDetail is
+// where these criteria live in the domain model. SaveDetail's last statement
+// stamps xml_status = ok and xml_fetched_at = now(), which is the record that
+// THE NOTICE DOCUMENT WAS READ. For a PLACSP tender no notice document was
+// fetched and none exists to fetch, so routing this write through SaveDetail
+// would take the row out of the enrichment queue by claiming a read that never
+// happened — the same class of lie 0011 was written to stop telling, one table
+// over.
+//
+// So the two writers stay separate and the bookkeeping stays honest: this one
+// writes rows, SaveDetail writes rows AND progress. The wholesale-replace
+// semantics are identical, which is what keeps a criteria set a set no matter
+// which door it came through.
+func (r *TenderRepo) SaveSelectionCriteria(ctx context.Context, tenderID int64, criteria []tender.SelectionCriterion) error {
+	return r.db.InTx(ctx, func(tx *pg.DB) error {
+		return replaceSelectionCriteria(ctx, tx, tenderID, criteria)
+	})
 }
 
 // MarkXMLFailed records one failed enrichment attempt against a tender. A

@@ -1269,3 +1269,82 @@ func TestSave_ClearsXMLQueueStateOnlyWhenThePublicationNumberChanges(t *testing.
 			pubNumber, xmlURL)
 	}
 }
+
+// TestSaveSelectionCriteria_ReplacesAndLeavesEnrichmentAlone pins the two
+// properties that made this a separate method from SaveDetail: the set is
+// REPLACED wholesale (so a corrected feed publishing fewer requirements does not
+// leave the withdrawn ones behind), and the enrichment bookkeeping is UNTOUCHED
+// (so a provider that publishes criteria in its search feed never claims the
+// notice document was read).
+func TestSaveSelectionCriteria_ReplacesAndLeavesEnrichmentAlone(t *testing.T) {
+	repo, sqlDB := testRepo(t)
+	ctx := context.Background()
+	source, ref := "test-repo", "selection-1"
+	cleanupTender(t, sqlDB, source, ref)
+
+	if _, err := repo.Save(ctx, []tender.Tender{{Source: source, SourceRef: ref, Title: "ES folder", Status: tender.StatusOpen}}); err != nil {
+		t.Fatalf("Save: %v", err)
+	}
+	var id int64
+	if err := sqlDB.QueryRowContext(ctx,
+		`SELECT id FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2`, source, ref,
+	).Scan(&id); err != nil {
+		t.Fatalf("resolve tender id: %v", err)
+	}
+
+	three := []tender.SelectionCriterion{
+		{Ordinal: 0, Category: "technical", Type: "OSR-TECH", Description: "Equipo minimo", Origin: "es-placsp", Lang: "SPA"},
+		{Ordinal: 1, Category: "financial", Type: "5", Description: "Volumen anual de negocios", Origin: "es-placsp", Lang: "SPA"},
+		{Ordinal: 2, Category: "declaration", Type: "1", Description: "Capacidad de obrar", Origin: "es-placsp", Lang: "SPA"},
+	}
+	if err := repo.SaveSelectionCriteria(ctx, id, three); err != nil {
+		t.Fatalf("SaveSelectionCriteria (first): %v", err)
+	}
+
+	var got int
+	countRow := func() {
+		t.Helper()
+		if err := sqlDB.QueryRowContext(ctx,
+			`SELECT count(*) FROM tenders.ingested_tender_selection_criteria WHERE tender_id = $1`, id,
+		).Scan(&got); err != nil {
+			t.Fatalf("count: %v", err)
+		}
+	}
+	countRow()
+	if got != 3 {
+		t.Fatalf("after first write: %d rows, want 3", got)
+	}
+
+	// A corrected feed publishing FEWER requirements must shrink the set, which
+	// is the whole reason this replaces instead of upserting.
+	if err := repo.SaveSelectionCriteria(ctx, id, three[:1]); err != nil {
+		t.Fatalf("SaveSelectionCriteria (replace): %v", err)
+	}
+	countRow()
+	if got != 1 {
+		t.Errorf("after replacing with one criterion: %d rows, want 1 — the set is not being replaced", got)
+	}
+
+	var category, origin string
+	if err := sqlDB.QueryRowContext(ctx,
+		`SELECT category, origin FROM tenders.ingested_tender_selection_criteria WHERE tender_id = $1`, id,
+	).Scan(&category, &origin); err != nil {
+		t.Fatalf("read surviving row: %v", err)
+	}
+	if category != "technical" || origin != "es-placsp" {
+		t.Errorf("surviving row = (%q, %q), want (technical, es-placsp)", category, origin)
+	}
+
+	// The enrichment queue must not have moved: this tender has no notice
+	// document and none was read.
+	var fetchedAt sql.NullTime
+	var status string
+	if err := sqlDB.QueryRowContext(ctx,
+		`SELECT xml_fetched_at, coalesce(xml_status, '') FROM tenders.ingested_tenders WHERE id = $1`, id,
+	).Scan(&fetchedAt, &status); err != nil {
+		t.Fatalf("read enrichment bookkeeping: %v", err)
+	}
+	if fetchedAt.Valid || status != "" {
+		t.Errorf("enrichment bookkeeping moved: xml_fetched_at=%v xml_status=%q — writing selection criteria must not claim the notice was read", fetchedAt, status)
+	}
+}
