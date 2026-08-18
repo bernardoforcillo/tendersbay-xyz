@@ -36,7 +36,25 @@ type Document struct {
 	BuyerName          string        // the direct LocatedContractingParty's Party name
 	NUTS               string        // RealizedLocation/cbc:CountrySubentityCode
 	Documents          []DocumentRef // attached notice documents (PCAP/PCTP), nil when none
-	Raw                []byte        // untouched CODICE payload
+
+	// SelectionCriteria are the admissibility conditions published under
+	// cac:TenderingTerms/cac:TendererQualificationRequest. PLACSP is unusual in
+	// carrying these inline in the SEARCH feed — for TED they live in the notice
+	// document and arrive on a later pass — so unlike most enrichment data they
+	// are available here, at fetch time. nil when the folder publishes none.
+	SelectionCriteria []SelectionRequirement
+
+	Raw []byte // untouched CODICE payload
+}
+
+// SelectionRequirement is one admissibility condition as CODICE publishes it.
+// The three element families PLACSP uses are collapsed onto one type because
+// they differ only by which code list the code belongs to, which Category
+// records.
+type SelectionRequirement struct {
+	Category    string // "technical" | "financial" | "declaration"
+	Code        string // the code verbatim, meaningful only within Category
+	Description string // the requirement in prose, as published
 }
 
 // DocumentRef is one attachment referenced from a CODICE contract folder —
@@ -59,6 +77,7 @@ type contractFolderStatus struct {
 	Party             locatedParty       `xml:"LocatedContractingParty"`
 	Project           procurementProject `xml:"ProcurementProject"`
 	Process           tenderingProcess   `xml:"TenderingProcess"`
+	Terms             tenderingTerms     `xml:"TenderingTerms"`
 	LegalDocument     documentReference  `xml:"LegalDocumentReference"`
 	TechnicalDocument documentReference  `xml:"TechnicalDocumentReference"`
 }
@@ -116,6 +135,31 @@ type realizedLocation struct {
 // tenderingProcess reads only the submission deadline. A CODICE TenderingProcess
 // also holds a DocumentAvailabilityPeriod with its own EndDate/EndTime; naming
 // TenderSubmissionDeadlinePeriod explicitly keeps the two from being confused.
+// tenderingTerms decodes the qualification block. The three child families are
+// separate elements, so encoding/xml gives three slices and the interleaving
+// between them is lost — a limitation of decoding into named fields rather than
+// streaming tokens. collectSelectionCriteria therefore emits them in a fixed,
+// documented order rather than pretending to reproduce document order; within
+// each family the published order IS preserved, which is the part that carries
+// meaning (buyers list the binding requirement first).
+type tenderingTerms struct {
+	Qualification struct {
+		Technical   []evaluationCriteria      `xml:"TechnicalEvaluationCriteria"`
+		Financial   []evaluationCriteria      `xml:"FinancialEvaluationCriteria"`
+		Declaration []specificTendererRequire `xml:"SpecificTendererRequirement"`
+	} `xml:"TendererQualificationRequest"`
+}
+
+type evaluationCriteria struct {
+	Code        string `xml:"EvaluationCriteriaTypeCode"`
+	Description string `xml:"Description"`
+}
+
+type specificTendererRequire struct {
+	Code        string `xml:"RequirementTypeCode"`
+	Description string `xml:"Description"`
+}
+
 type tenderingProcess struct {
 	Deadline struct {
 		EndDate string `xml:"EndDate"`
@@ -151,7 +195,46 @@ func Parse(payload []byte) (Document, error) {
 	doc.EstimatedValue = parseMinorUnits(amt.Value)
 	doc.Currency = strings.TrimSpace(amt.Currency)
 	doc.Documents = collectDocuments(cfs)
+	doc.SelectionCriteria = collectSelectionCriteria(cfs)
 	return doc, nil
+}
+
+// collectSelectionCriteria flattens the qualification block into one ordered
+// list. The families are emitted technical, then financial, then declaration —
+// a fixed order, not the document's, for the reason given on tenderingTerms.
+//
+// An entry with no description is dropped. A bare code with no prose says only
+// that the buyer ticked a box on a form: it carries no requirement a bidder
+// could act on, and keeping it would inflate any count of "requirements
+// published" with entries that state nothing.
+func collectSelectionCriteria(cfs contractFolderStatus) []SelectionRequirement {
+	q := cfs.Terms.Qualification
+	out := make([]SelectionRequirement, 0, len(q.Technical)+len(q.Financial)+len(q.Declaration))
+
+	add := func(category, code, desc string) {
+		desc = strings.TrimSpace(desc)
+		if desc == "" {
+			return
+		}
+		out = append(out, SelectionRequirement{
+			Category:    category,
+			Code:        strings.TrimSpace(code),
+			Description: desc,
+		})
+	}
+	for _, c := range q.Technical {
+		add("technical", c.Code, c.Description)
+	}
+	for _, c := range q.Financial {
+		add("financial", c.Code, c.Description)
+	}
+	for _, c := range q.Declaration {
+		add("declaration", c.Code, c.Description)
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
 }
 
 // collectDocuments turns the folder's LegalDocumentReference (PCAP,
