@@ -58,8 +58,8 @@ func TestRequirementsFromSelectionCriteria(t *testing.T) {
 		if r.Source != RequirementNoticePublished {
 			t.Errorf("requirement %d Source = %q, want notice_published", i, r.Source)
 		}
-		if !r.Blocking {
-			t.Errorf("requirement %d is not Blocking — an unclassified requirement must raise a question", i)
+		if r.Blocking {
+			t.Errorf("requirement %d is Blocking — see the note in selection.go: it would deadlock the go verdict", i)
 		}
 		if r.Citation != nil {
 			t.Errorf("requirement %d carries a citation, but it came from a feed, not a document", i)
@@ -85,5 +85,47 @@ func TestRequirementsFromSelectionCriteria_EmptyIsNil(t *testing.T) {
 	onlyEmpty := []tender.SelectionCriterion{{Ordinal: 0, Category: "declaration"}}
 	if got := RequirementsFromSelectionCriteria("ws-1", 42, onlyEmpty); got != nil {
 		t.Errorf("got %+v, want nil when every criterion states nothing", got)
+	}
+}
+
+// TestNoticePublishedDoesNotDeadlockGo is the regression test for the trap
+// documented on Blocking in selection.go, and it is the reason that field is
+// false.
+//
+// RequirementOther returns unknownGap unconditionally — no recorded fact ever
+// moves it off GapUnknown — and Consistent rejects a go when any gap is
+// GapUnknown on a Blocking requirement. Had these requirements been Blocking,
+// every tender from a source that publishes criteria would have been
+// permanently unable to reach go, with a capture question whose answer changed
+// nothing. This pins that it cannot happen.
+func TestNoticePublishedDoesNotDeadlockGo(t *testing.T) {
+	published := RequirementsFromSelectionCriteria("ws-1", 42, []tender.SelectionCriterion{
+		{Ordinal: 0, Category: "financial", Description: "Volumen anual de negocios.", Origin: "es-placsp"},
+	})
+	if len(published) != 1 {
+		t.Fatalf("expected one derived requirement, got %d", len(published))
+	}
+
+	// The shape Evaluate produces for an "other" requirement: permanently
+	// unknown, carrying its question.
+	gap := Gap{Requirement: published[0], Status: GapUnknown}
+
+	a := Assessment{Verdict: VerdictGo, Gaps: []Gap{gap}, AuthoritativeRequirements: 1}
+	if !a.Consistent() {
+		t.Error("a go verdict became inconsistent purely because a notice published prose — " +
+			"the user cannot clear this, so it must not block")
+	}
+
+	// And the guard still works for a genuinely blocking unknown, so this test
+	// is not passing because the rule was weakened.
+	blocking := published[0]
+	blocking.Blocking = true
+	deadlocked := Assessment{
+		Verdict:                   VerdictGo,
+		Gaps:                      []Gap{{Requirement: blocking, Status: GapUnknown}},
+		AuthoritativeRequirements: 1,
+	}
+	if deadlocked.Consistent() {
+		t.Error("the go guard no longer rejects a blocking unknown — the rule itself has drifted")
 	}
 }

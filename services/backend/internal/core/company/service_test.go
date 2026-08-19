@@ -174,15 +174,16 @@ func (f fakeMembers) LoadMembership(_ context.Context, workspaceID, userID strin
 }
 
 type fakeTenders struct {
-	deadline *time.Time
-	err      error
+	deadline  *time.Time
+	selection []tender.SelectionCriterion
+	err       error
 }
 
 func (f fakeTenders) GetTender(_ context.Context, p tender.GetTenderParams) (tender.TenderDetail, error) {
 	if f.err != nil {
 		return tender.TenderDetail{}, f.err
 	}
-	return tender.TenderDetail{ID: p.ID, Deadline: f.deadline}, nil
+	return tender.TenderDetail{ID: p.ID, Deadline: f.deadline, SelectionCriteria: f.selection}, nil
 }
 
 type fakeDocuments struct {
@@ -797,4 +798,59 @@ func TestPutMergesWithTheRecordOnFile(t *testing.T) {
 			t.Fatalf("PutFinancialYear on an absent dossier: %v", err)
 		}
 	})
+}
+
+// TestCheckEligibilityIncludesPublishedCriteria proves the last link of the
+// Spanish chain: criteria PLACSP published reach the assessment the UI renders,
+// and reach it WITHOUT changing what the engine is willing to conclude.
+func TestCheckEligibilityIncludesPublishedCriteria(t *testing.T) {
+	ctx := context.Background()
+	deadline := evalNow.AddDate(0, 0, 20)
+	repo := &fakeRepo{dossier: &Dossier{SOA: []SOACategory{
+		{Category: "OG1", Classifica: ClassificaIII, Attribution: stated()},
+	}}}
+	// One captured requirement the dossier satisfies, so the verdict has
+	// somewhere to land other than insufficient_data.
+	reqs := &fakeReqRepo{stored: []Requirement{
+		{ID: "r1", Kind: RequirementSOA, Source: RequirementUserStated, Blocking: true,
+			Text: "SOA OG1 III", SOA: &SOARequirement{Category: "OG1", Classifica: ClassificaIII}},
+	}}
+	docs := fakeDocuments{availability: document.Availability{
+		Coverage: document.CoverageNotice, Reason: document.ReasonBodyNotRetrieved,
+		NoticeRead: true, KnownDocumentLinks: 1,
+	}}
+	tenders := fakeTenders{deadline: &deadline, selection: []tender.SelectionCriterion{
+		{Ordinal: 0, Category: "financial", Origin: "es-placsp",
+			Description: "Volumen anual de negocios igual o superior a 309.552,00 EUR."},
+	}}
+	s := newTestService(repo, reqs, viewer(), tenders, docs)
+
+	a, err := s.CheckEligibility(ctx, testUser, testWS, 545620, "")
+	if err != nil {
+		t.Fatalf("CheckEligibility: %v", err)
+	}
+
+	var found bool
+	for _, g := range a.Gaps {
+		if g.Requirement.Source == RequirementNoticePublished {
+			found = true
+			if g.Status != GapUnknown {
+				t.Errorf("published criterion status = %q, want unknown — it is never machine-decided", g.Status)
+			}
+			if g.Question == nil {
+				t.Error("published criterion carries no capture question, so the user has no way to act on it")
+			}
+		}
+	}
+	if !found {
+		t.Fatal("the published criterion never reached the assessment — the chain is not wired")
+	}
+
+	// And it did not cost the verdict: a satisfied dossier still reaches go.
+	if a.Verdict != VerdictGo {
+		t.Errorf("verdict = %q, want go — published prose must not degrade a verdict the dossier supports", a.Verdict)
+	}
+	if !a.Consistent() {
+		t.Error("assessment is not self-consistent with the published criterion present")
+	}
 }

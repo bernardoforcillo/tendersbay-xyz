@@ -51,12 +51,27 @@ func RequirementsFromSelectionCriteria(workspaceID string, tenderID int64, crite
 			LotRef:      c.LotRef,
 			Kind:        RequirementOther,
 			Text:        text,
-			// Blocking is TRUE for the reason the field documents: an
-			// unclassified requirement treated as blocking produces a QUESTION,
-			// while treating it as non-blocking produces a silent pass. Note
-			// this does not make it decide anything — CanBlock is false for this
-			// source, so Blocking here means "ask the user", not "fail them".
-			Blocking: true,
+			// Blocking is FALSE, against the field's capture-time default, and
+			// this is the single most consequential line in the file.
+			//
+			// The default is TRUE because an unclassified requirement someone
+			// CAPTURED should raise a question rather than pass silently. These
+			// were not captured: they are derived on every read, automatically,
+			// for every tender from a source that publishes them. And
+			// RequirementOther returns unknownGap UNCONDITIONALLY — no recorded
+			// fact ever moves it off GapUnknown.
+			//
+			// Those two facts together are the trap. The go-verdict rule rejects
+			// a go when any gap is GapUnknown on a Blocking requirement, so
+			// Blocking: true here would make every Spanish tender permanently
+			// incapable of reaching go, with a capture question the user can
+			// answer and whose answer changes nothing. That is not caution, it is
+			// a dead end the user cannot clear — and it would arrive without them
+			// having done anything.
+			//
+			// False keeps them exactly where they belong: visible in the gaps,
+			// carrying their question, contributing to neither verdict.
+			Blocking: false,
 			Source:   RequirementNoticePublished,
 			// No Citation: the verification affordance points at a passage in a
 			// document the user can open, and this requirement did not come from
