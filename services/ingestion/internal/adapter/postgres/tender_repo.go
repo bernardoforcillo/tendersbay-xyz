@@ -377,6 +377,10 @@ INSERT INTO tenders.ingested_tender_selection_criteria (
 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 `
 
+const selectTenderIDBySourceRefSQL = `
+SELECT id FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2
+`
+
 const deleteOrganizationsSQL = `
 DELETE FROM tenders.ingested_tender_organizations WHERE tender_id = $1
 `
@@ -1026,9 +1030,9 @@ func replaceSelectionCriteria(ctx context.Context, tx *pg.DB, tenderID int64, cr
 	return nil
 }
 
-// SaveSelectionCriteria persists a tender's selection criteria ON THEIR OWN,
-// for a provider that publishes them in its search feed rather than in a notice
-// document — PLACSP is the case that forced this method to exist.
+// SaveSelectionCriteria persists the selection criteria a DetailedSource
+// supplied, keyed by the SourceRef of the tender each set belongs to. It
+// implements ingestion.Sink; see that interface for the contract.
 //
 // It deliberately does NOT go through SaveDetail, even though a NoticeDetail is
 // where these criteria live in the domain model. SaveDetail's last statement
@@ -1037,15 +1041,44 @@ func replaceSelectionCriteria(ctx context.Context, tx *pg.DB, tenderID int64, cr
 // fetched and none exists to fetch, so routing this write through SaveDetail
 // would take the row out of the enrichment queue by claiming a read that never
 // happened — the same class of lie 0011 was written to stop telling, one table
-// over.
+// over. Two writers, one replace rule: this one writes rows, SaveDetail writes
+// rows AND progress.
 //
-// So the two writers stay separate and the bookkeeping stays honest: this one
-// writes rows, SaveDetail writes rows AND progress. The wholesale-replace
-// semantics are identical, which is what keeps a criteria set a set no matter
-// which door it came through.
-func (r *TenderRepo) SaveSelectionCriteria(ctx context.Context, tenderID int64, criteria []tender.SelectionCriterion) error {
+// The whole map goes in ONE transaction. A provider's criteria for one cycle are
+// a set in the same sense a single tender's are, and a partial write would leave
+// some tenders describing this cycle's feed and others the last one.
+func (r *TenderRepo) SaveSelectionCriteria(ctx context.Context, source string, bySourceRef map[string][]tender.SelectionCriterion) error {
 	return r.db.InTx(ctx, func(tx *pg.DB) error {
-		return replaceSelectionCriteria(ctx, tx, tenderID, criteria)
+		for ref, criteria := range bySourceRef {
+			rows, err := tx.Query(ctx, selectTenderIDBySourceRefSQL, source, ref)
+			if err != nil {
+				return fmt.Errorf("postgres: resolve tender %s/%s: %w", source, ref, err)
+			}
+			var tenderID int64
+			found := rows.Next()
+			if found {
+				if err := rows.Scan(&tenderID); err != nil {
+					rows.Close()
+					return fmt.Errorf("postgres: scan tender id %s/%s: %w", source, ref, err)
+				}
+			}
+			rows.Close()
+			if err := rows.Err(); err != nil {
+				return fmt.Errorf("postgres: resolve tender %s/%s: %w", source, ref, err)
+			}
+			// A ref that resolves to nothing is skipped, not an error — see the
+			// Sink contract. Reaching it means the provider keyed its map with
+			// refs it did not put on the tenders it returned, which is that
+			// provider's bug to fix and not a reason to lose every other
+			// provider's cycle.
+			if !found {
+				continue
+			}
+			if err := replaceSelectionCriteria(ctx, tx, tenderID, criteria); err != nil {
+				return err
+			}
+		}
+		return nil
 	})
 }
 

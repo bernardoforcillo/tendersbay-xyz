@@ -89,3 +89,33 @@ func rawJSON(payload []byte) json.RawMessage {
 	}
 	return encoded
 }
+
+// MapSelectionCriteria turns a document's parsed requirements into domain
+// selection criteria. Ordinal is assigned here, from the order
+// collectSelectionCriteria emitted — see the note on tenderingTerms for why
+// that order is a fixed family sequence rather than the document's.
+//
+// origin is the provider name rather than a constant, so the row records which
+// reading produced it and a reader can grade trust per row without this package
+// deciding what trust means.
+//
+// LotRef is left empty: CODICE publishes the qualification block once for the
+// whole contract folder, never per lot. Writing a lot ref we do not have would
+// be inventing a scope the source never expressed.
+func MapSelectionCriteria(d Document, source string) []tender.SelectionCriterion {
+	if len(d.SelectionCriteria) == 0 {
+		return nil
+	}
+	out := make([]tender.SelectionCriterion, len(d.SelectionCriteria))
+	for i, r := range d.SelectionCriteria {
+		out[i] = tender.SelectionCriterion{
+			Ordinal:     i,
+			Category:    r.Category,
+			Type:        r.Code,
+			Description: r.Description,
+			Origin:      source,
+			Lang:        "spa",
+		}
+	}
+	return out
+}

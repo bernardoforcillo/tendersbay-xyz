@@ -1297,7 +1297,7 @@ func TestSaveSelectionCriteria_ReplacesAndLeavesEnrichmentAlone(t *testing.T) {
 		{Ordinal: 1, Category: "financial", Type: "5", Description: "Volumen anual de negocios", Origin: "es-placsp", Lang: "SPA"},
 		{Ordinal: 2, Category: "declaration", Type: "1", Description: "Capacidad de obrar", Origin: "es-placsp", Lang: "SPA"},
 	}
-	if err := repo.SaveSelectionCriteria(ctx, id, three); err != nil {
+	if err := repo.SaveSelectionCriteria(ctx, source, map[string][]tender.SelectionCriterion{ref: three}); err != nil {
 		t.Fatalf("SaveSelectionCriteria (first): %v", err)
 	}
 
@@ -1317,7 +1317,7 @@ func TestSaveSelectionCriteria_ReplacesAndLeavesEnrichmentAlone(t *testing.T) {
 
 	// A corrected feed publishing FEWER requirements must shrink the set, which
 	// is the whole reason this replaces instead of upserting.
-	if err := repo.SaveSelectionCriteria(ctx, id, three[:1]); err != nil {
+	if err := repo.SaveSelectionCriteria(ctx, source, map[string][]tender.SelectionCriterion{ref: three[:1]}); err != nil {
 		t.Fatalf("SaveSelectionCriteria (replace): %v", err)
 	}
 	countRow()
