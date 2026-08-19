@@ -192,3 +192,75 @@ func TestParse_Malformed(t *testing.T) {
 		t.Fatal("Parse: want error on malformed XML, got nil")
 	}
 }
+
+// qualificationFolder carries the three child families PLACSP publishes under
+// cac:TendererQualificationRequest, taken from the shape of a real feed entry.
+// It deliberately keeps:
+//   - two TechnicalEvaluationCriteria, to prove within-family published order
+//     survives (the binding requirement is listed first);
+//   - a FinancialEvaluationCriteria whose code is the bare "5", which is
+//     meaningful only because its family says it is a financial capability
+//     code — the reason Category exists;
+//   - a SpecificTendererRequirement carrying a description that is only
+//     whitespace, to prove an entry stating nothing is dropped rather than
+//     counted;
+//   - the families declared financial-before-technical, to prove the emitted
+//     order is the fixed one collectSelectionCriteria documents and not the
+//     document's.
+const qualificationFolder = `<cac-place-ext:ContractFolderStatus>
+  <cbc:ContractFolderID>QUAL/1</cbc:ContractFolderID>
+  <cac:TenderingTerms>
+    <cac:TendererQualificationRequest>
+      <cac:FinancialEvaluationCriteria>
+        <cbc:EvaluationCriteriaTypeCode listURI="x">5</cbc:EvaluationCriteriaTypeCode>
+        <cbc:Description>Volumen anual de negocios igual o superior a 309.552,00 EUR.</cbc:Description>
+      </cac:FinancialEvaluationCriteria>
+      <cac:TechnicalEvaluationCriteria>
+        <cbc:EvaluationCriteriaTypeCode listURI="x">OSR-COMPTASK</cbc:EvaluationCriteriaTypeCode>
+        <cbc:Description>Relacion de los principales servicios realizados.</cbc:Description>
+      </cac:TechnicalEvaluationCriteria>
+      <cac:TechnicalEvaluationCriteria>
+        <cbc:EvaluationCriteriaTypeCode listURI="x">OSR-TECH</cbc:EvaluationCriteriaTypeCode>
+        <cbc:Description>Equipo minimo adscrito al contrato.</cbc:Description>
+      </cac:TechnicalEvaluationCriteria>
+      <cac:SpecificTendererRequirement>
+        <cbc:RequirementTypeCode listURI="x">1</cbc:RequirementTypeCode>
+        <cbc:Description>   </cbc:Description>
+      </cac:SpecificTendererRequirement>
+    </cac:TendererQualificationRequest>
+  </cac:TenderingTerms>
+</cac-place-ext:ContractFolderStatus>`
+
+func TestParseSelectionCriteria(t *testing.T) {
+	doc, err := codice.Parse([]byte(qualificationFolder))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+
+	want := []codice.SelectionRequirement{
+		{Category: "technical", Code: "OSR-COMPTASK", Description: "Relacion de los principales servicios realizados."},
+		{Category: "technical", Code: "OSR-TECH", Description: "Equipo minimo adscrito al contrato."},
+		{Category: "financial", Code: "5", Description: "Volumen anual de negocios igual o superior a 309.552,00 EUR."},
+	}
+	if len(doc.SelectionCriteria) != len(want) {
+		t.Fatalf("got %d criteria, want %d: %+v", len(doc.SelectionCriteria), len(want), doc.SelectionCriteria)
+	}
+	for i, w := range want {
+		if got := doc.SelectionCriteria[i]; got != w {
+			t.Errorf("criterion %d = %+v, want %+v", i, got, w)
+		}
+	}
+}
+
+// TestParseSelectionCriteriaAbsent pins the nil return: a folder publishing no
+// qualification block must not yield an empty non-nil slice, so "published
+// none" and "we did not look" stay distinguishable downstream.
+func TestParseSelectionCriteriaAbsent(t *testing.T) {
+	doc, err := codice.Parse([]byte(fullFolder))
+	if err != nil {
+		t.Fatalf("Parse: %v", err)
+	}
+	if doc.SelectionCriteria != nil {
+		t.Errorf("SelectionCriteria = %+v, want nil", doc.SelectionCriteria)
+	}
+}

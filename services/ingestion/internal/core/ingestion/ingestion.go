@@ -28,6 +28,28 @@ type Source interface {
 	Fetch(ctx context.Context) ([]tender.Tender, error)
 }
 
+// DetailedSource is an OPTIONAL companion to Source, implemented by a provider
+// whose SEARCH feed already carries notice-document detail. Spain's PLACSP is
+// the case that forced it to exist: its ATOM entries embed the whole CODICE
+// document, selection criteria included, where TED publishes only a link to a
+// notice document a later pass has to fetch.
+//
+// It is a separate interface rather than a widened Source so the four existing
+// providers keep compiling untouched — a provider that has nothing extra to
+// give should not have to say so. runSource type-asserts and falls back to
+// plain Fetch, which is also what keeps this seam honest: a provider either
+// genuinely has the detail at fetch time or it does not, and there is no third
+// state where it half-implements one.
+//
+// The criteria are keyed by SourceRef, not by tender ID: IDs are the sink's
+// business and do not exist yet at fetch time. Providers must use the same
+// SourceRef they put on the tenders they return, or the sink cannot join the
+// two and the criteria are silently dropped.
+type DetailedSource interface {
+	Source
+	FetchWithDetail(ctx context.Context) ([]tender.Tender, map[string][]tender.SelectionCriterion, error)
+}
+
 // SaveResult reports how many tender rows one Save call inserted vs updated.
 type SaveResult struct {
 	Inserted int
@@ -49,6 +71,19 @@ type RunRecord struct {
 // Sink is the output port for persistence.
 type Sink interface {
 	Save(ctx context.Context, tenders []tender.Tender) (SaveResult, error)
+
+	// SaveSelectionCriteria persists the selection criteria a DetailedSource
+	// supplied, keyed by the SourceRef of the tender each set belongs to. It is
+	// called AFTER Save, so every referenced tender row exists; a ref that
+	// still resolves to nothing is skipped rather than erroring, because the
+	// only way to reach that state is a provider keying its map inconsistently
+	// with the tenders it returned, and failing the whole cycle over one
+	// mismatched key would lose the other providers' work too.
+	//
+	// It must not touch enrichment bookkeeping. These criteria came from a
+	// search feed, not from a notice document, and a row whose notice was never
+	// read must not be recorded as read.
+	SaveSelectionCriteria(ctx context.Context, source string, bySourceRef map[string][]tender.SelectionCriterion) error
 	RecordRun(ctx context.Context, rec RunRecord) error
 }
 
@@ -134,7 +169,7 @@ func (s *Service) runSource(ctx context.Context, src Source) ProviderReport {
 
 	slog.InfoContext(ctx, "provider run started", "provider", src.Name())
 
-	tenders, err := src.Fetch(fetchCtx)
+	tenders, criteria, err := fetchFrom(fetchCtx, src)
 	if err != nil {
 		report.Err = err
 	} else {
@@ -145,6 +180,19 @@ func (s *Service) runSource(ctx context.Context, src Source) ProviderReport {
 		} else {
 			report.Inserted = result.Inserted
 			report.Updated = result.Updated
+
+			// Counts are recorded BEFORE this can fail, so a criteria write
+			// that errors still leaves an audit row saying truthfully how many
+			// tenders landed. The error is reported rather than logged away:
+			// criteria refill on the next cycle when the feed is re-read, so a
+			// single failure is self-healing, but one that persists means a
+			// provider's admissibility data never arrives and that should be
+			// visible rather than quiet.
+			if len(criteria) > 0 {
+				if err := s.sink.SaveSelectionCriteria(fetchCtx, src.Name(), criteria); err != nil {
+					report.Err = err
+				}
+			}
 		}
 	}
 
@@ -174,4 +222,16 @@ func (s *Service) runSource(ctx context.Context, src Source) ProviderReport {
 			"updated", report.Updated)
 	}
 	return report
+}
+
+// fetchFrom calls the richer FetchWithDetail when a provider implements
+// DetailedSource, and plain Fetch otherwise. Keeping the type assertion here
+// rather than in runSource leaves that function reading as one straight line of
+// cycle bookkeeping, and gives the fallback exactly one place to live.
+func fetchFrom(ctx context.Context, src Source) ([]tender.Tender, map[string][]tender.SelectionCriterion, error) {
+	if d, ok := src.(DetailedSource); ok {
+		return d.FetchWithDetail(ctx)
+	}
+	tenders, err := src.Fetch(ctx)
+	return tenders, nil, err
 }

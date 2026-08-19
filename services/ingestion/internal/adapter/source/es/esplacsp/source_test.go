@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/bernardoforcillo/tendersbay-xyz/go-services/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/ingestion/internal/adapter/source/es/placspapi"
 )
 
@@ -96,4 +97,88 @@ func TestSource_Fetch_ContextCancelled(t *testing.T) {
 	case <-time.After(5 * time.Second):
 		t.Fatal("Fetch did not return after ctx cancellation")
 	}
+}
+
+// qualifiedFeed is freshFeed's folder plus the qualification block PLACSP
+// publishes inline — the whole reason this provider implements
+// ingestion.DetailedSource rather than plain Source.
+func qualifiedFeed() string {
+	updated := time.Now().UTC().Add(-time.Hour).Format(time.RFC3339)
+	return fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8"?>
+<feed>
+  <entry>
+    <updated>%s</updated>
+    <cac-place-ext:ContractFolderStatus>
+      <cbc:ContractFolderID>777/2026</cbc:ContractFolderID>
+      <cbc-place-ext:ContractFolderStatusCode>EV</cbc-place-ext:ContractFolderStatusCode>
+      <cac:ProcurementProject>
+        <cbc:Name>Servicio de limpieza viaria</cbc:Name>
+      </cac:ProcurementProject>
+      <cac:TenderingTerms>
+        <cac:TendererQualificationRequest>
+          <cac:FinancialEvaluationCriteria>
+            <cbc:EvaluationCriteriaTypeCode>5</cbc:EvaluationCriteriaTypeCode>
+            <cbc:Description>Volumen anual de negocios igual o superior a 309.552,00 EUR.</cbc:Description>
+          </cac:FinancialEvaluationCriteria>
+        </cac:TendererQualificationRequest>
+      </cac:TenderingTerms>
+    </cac-place-ext:ContractFolderStatus>
+  </entry>
+</feed>`, updated)
+}
+
+func TestFetchWithDetail_KeysCriteriaBySourceRef(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/atom+xml")
+		_, _ = w.Write([]byte(qualifiedFeed()))
+	}))
+	defer srv.Close()
+	src := &Source{api: placspapi.NewWithURL(srv.URL)}
+
+	tenders, criteria, err := src.FetchWithDetail(context.Background())
+	if err != nil {
+		t.Fatalf("FetchWithDetail: %v", err)
+	}
+	if len(tenders) != 1 {
+		t.Fatalf("len(tenders) = %d, want 1", len(tenders))
+	}
+
+	// The join the sink performs: the map key must be the tender's SourceRef.
+	// If these ever drift apart the criteria are silently dropped, so assert the
+	// relationship rather than the literal.
+	set, ok := criteria[tenders[0].SourceRef]
+	if !ok {
+		t.Fatalf("criteria keyed %v, want a key equal to SourceRef %q", keysOf(criteria), tenders[0].SourceRef)
+	}
+	if len(set) != 1 || set[0].Category != "financial" || set[0].Origin != "es-placsp" {
+		t.Fatalf("criteria = %+v, want one financial criterion originating from es-placsp", set)
+	}
+}
+
+// TestFetchWithDetail_NoCriteriaYieldsNoEntry pins that a folder publishing no
+// qualification block contributes nothing to the map, rather than an empty set
+// the sink would then write (and, under replace semantics, use to clear rows).
+func TestFetchWithDetail_NoCriteriaYieldsNoEntry(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/atom+xml")
+		_, _ = w.Write([]byte(freshFeed()))
+	}))
+	defer srv.Close()
+	src := &Source{api: placspapi.NewWithURL(srv.URL)}
+
+	_, criteria, err := src.FetchWithDetail(context.Background())
+	if err != nil {
+		t.Fatalf("FetchWithDetail: %v", err)
+	}
+	if len(criteria) != 0 {
+		t.Errorf("criteria = %+v, want empty for a folder with no qualification block", criteria)
+	}
+}
+
+func keysOf(m map[string][]tender.SelectionCriterion) []string {
+	out := make([]string, 0, len(m))
+	for k := range m {
+		out = append(out, k)
+	}
+	return out
 }

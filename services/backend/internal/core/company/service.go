@@ -742,6 +742,24 @@ func (s *Service) CheckEligibility(ctx context.Context, userID, workspaceID stri
 		return Assessment{}, err
 	}
 
+	// The criteria the source itself published, merged in after the captured
+	// ones. They are derived on read from tender-owned rows rather than stored
+	// per workspace: the notice's requirement is a fact about the tender, true
+	// for every tenant, so persisting a copy per workspace would duplicate rows
+	// and mis-model who owns them.
+	//
+	// No attempt is made to dedupe them against captured requirements. A
+	// published entry is prose and a captured one is a parsed payload; matching
+	// the two would mean deciding that "volumen anual de negocios igual o
+	// superior a 309.552,00 €" is the same requirement as a turnover threshold
+	// somebody typed, which is the extraction problem this whole path declines
+	// to pretend it has solved. Showing both, clearly sourced, is the honest
+	// shape.
+	reqs = append(reqs, filterByLot(
+		RequirementsFromSelectionCriteria(workspaceID, tenderID, detail.SelectionCriteria),
+		lotRef,
+	)...)
+
 	a := Evaluate(reqs, dossier, detail.Deadline, s.now())
 	a.TenderID = tenderID
 	a.LotRef = lotRef

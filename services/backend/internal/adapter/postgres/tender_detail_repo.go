@@ -21,9 +21,9 @@ var tenderDetailColumns = []drops.Expression{
 
 // FindDetailByID returns the full detail row for id, or tender.ErrTenderNotFound.
 //
-// It issues six queries: the scalar detail row, its cpv_secondary array, then
-// documents, lots, criteria and organizations. That is six round trips for a
-// FIXED shape, not an N+1 — N is one tender, and each child read is a single
+// It issues seven queries: the scalar detail row, its cpv_secondary array, then
+// documents, lots, award criteria, organizations and selection criteria. That is
+// seven round trips for a FIXED shape, not an N+1 — N is one tender, and each child read is a single
 // statement over an indexed tender_id regardless of how many rows it returns.
 // The N+1 that would have been easy to write here is a criteria query per lot;
 // CriteriaByTenderID exists precisely so that a 13-lot notice still costs one.
@@ -55,12 +55,17 @@ func (r *TenderRepo) FindDetailByID(ctx context.Context, id int64) (*tender.Tend
 	if err != nil {
 		return nil, err
 	}
+	selection, err := r.SelectionCriteriaByTenderID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
 	d := detailRowToDomain(rows[0])
 	d.CPVSecondary = cpvSecondary
 	d.Documents = docs
 	d.Lots = lots
 	d.Criteria = criteria
 	d.Organizations = orgs
+	d.SelectionCriteria = selection
 	return &d, nil
 }
 
@@ -189,6 +194,43 @@ func (r *TenderRepo) CriteriaByTenderID(ctx context.Context, id int64) ([]tender
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("postgres: tender award criteria: %w", err)
+	}
+	return out, nil
+}
+
+// selectionCriteriaSQL reads the admissibility conditions a source published
+// inline. Ordered (lot_ref, ordinal) for the same reason the award grid is:
+// lot_ref sorts ” first, so notice-level entries lead.
+//
+// Empty is the ordinary answer. Only a source that publishes qualification in
+// its feed contributes rows — today Spain's PLACSP — so for a TED tender this
+// query correctly returns nothing, and that nothing means "this source does not
+// publish them", not "this tender has no requirements".
+const selectionCriteriaSQL = `
+SELECT lot_ref, ordinal, category, type, name, description, origin, lang
+FROM tenders.ingested_tender_selection_criteria
+WHERE tender_id = $1
+ORDER BY lot_ref ASC, ordinal ASC`
+
+// SelectionCriteriaByTenderID reads one tender's published selection criteria.
+func (r *TenderRepo) SelectionCriteriaByTenderID(ctx context.Context, id int64) ([]tender.SelectionCriterion, error) {
+	rows, err := r.db.Query(ctx, selectionCriteriaSQL, id)
+	if err != nil {
+		return nil, fmt.Errorf("postgres: tender selection criteria: %w", err)
+	}
+	defer rows.Close()
+
+	var out []tender.SelectionCriterion
+	for rows.Next() {
+		var c tender.SelectionCriterion
+		if err := rows.Scan(&c.LotRef, &c.Ordinal, &c.Category, &c.Type,
+			&c.Name, &c.Description, &c.Origin, &c.Lang); err != nil {
+			return nil, fmt.Errorf("postgres: scan selection criterion: %w", err)
+		}
+		out = append(out, c)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("postgres: tender selection criteria: %w", err)
 	}
 	return out, nil
 }

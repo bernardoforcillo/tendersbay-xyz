@@ -367,6 +367,20 @@ INSERT INTO tenders.ingested_tender_award_criteria (
 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 `
 
+const deleteSelectionCriteriaSQL = `
+DELETE FROM tenders.ingested_tender_selection_criteria WHERE tender_id = $1
+`
+
+const insertSelectionCriterionSQL = `
+INSERT INTO tenders.ingested_tender_selection_criteria (
+	tender_id, lot_ref, ordinal, category, type, name, description, origin, lang
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+`
+
+const selectTenderIDBySourceRefSQL = `
+SELECT id FROM tenders.ingested_tenders WHERE source = $1 AND source_ref = $2
+`
+
 const deleteOrganizationsSQL = `
 DELETE FROM tenders.ingested_tender_organizations WHERE tender_id = $1
 `
@@ -962,6 +976,10 @@ func (r *TenderRepo) SaveDetail(ctx context.Context, tenderID int64, d tender.No
 			}
 		}
 
+		if err := replaceSelectionCriteria(ctx, tx, tenderID, d.SelectionCriteria); err != nil {
+			return err
+		}
+
 		if _, err := tx.Exec(ctx, deleteOrganizationsSQL, tenderID); err != nil {
 			return fmt.Errorf("postgres: delete organizations for tender %d: %w", tenderID, err)
 		}
@@ -991,6 +1009,77 @@ func (r *TenderRepo) SaveDetail(ctx context.Context, tenderID int64, d tender.No
 		return nil
 	})
 	return err
+}
+
+// replaceSelectionCriteria writes a tender's selection-criteria set, replacing
+// whatever was there. It takes the caller's transaction rather than opening its
+// own, so the set lands atomically with whatever else that caller is writing —
+// a reader must never see half a criteria set.
+func replaceSelectionCriteria(ctx context.Context, tx *pg.DB, tenderID int64, criteria []tender.SelectionCriterion) error {
+	if _, err := tx.Exec(ctx, deleteSelectionCriteriaSQL, tenderID); err != nil {
+		return fmt.Errorf("postgres: delete selection criteria for tender %d: %w", tenderID, err)
+	}
+	for _, c := range criteria {
+		if _, err := tx.Exec(ctx, insertSelectionCriterionSQL,
+			tenderID, c.LotRef, c.Ordinal, c.Category, c.Type, c.Name, c.Description, c.Origin, c.Lang,
+		); err != nil {
+			return fmt.Errorf("postgres: insert selection criterion %s/%d for tender %d: %w",
+				c.LotRef, c.Ordinal, tenderID, err)
+		}
+	}
+	return nil
+}
+
+// SaveSelectionCriteria persists the selection criteria a DetailedSource
+// supplied, keyed by the SourceRef of the tender each set belongs to. It
+// implements ingestion.Sink; see that interface for the contract.
+//
+// It deliberately does NOT go through SaveDetail, even though a NoticeDetail is
+// where these criteria live in the domain model. SaveDetail's last statement
+// stamps xml_status = ok and xml_fetched_at = now(), which is the record that
+// THE NOTICE DOCUMENT WAS READ. For a PLACSP tender no notice document was
+// fetched and none exists to fetch, so routing this write through SaveDetail
+// would take the row out of the enrichment queue by claiming a read that never
+// happened — the same class of lie 0011 was written to stop telling, one table
+// over. Two writers, one replace rule: this one writes rows, SaveDetail writes
+// rows AND progress.
+//
+// The whole map goes in ONE transaction. A provider's criteria for one cycle are
+// a set in the same sense a single tender's are, and a partial write would leave
+// some tenders describing this cycle's feed and others the last one.
+func (r *TenderRepo) SaveSelectionCriteria(ctx context.Context, source string, bySourceRef map[string][]tender.SelectionCriterion) error {
+	return r.db.InTx(ctx, func(tx *pg.DB) error {
+		for ref, criteria := range bySourceRef {
+			rows, err := tx.Query(ctx, selectTenderIDBySourceRefSQL, source, ref)
+			if err != nil {
+				return fmt.Errorf("postgres: resolve tender %s/%s: %w", source, ref, err)
+			}
+			var tenderID int64
+			found := rows.Next()
+			if found {
+				if err := rows.Scan(&tenderID); err != nil {
+					rows.Close()
+					return fmt.Errorf("postgres: scan tender id %s/%s: %w", source, ref, err)
+				}
+			}
+			rows.Close()
+			if err := rows.Err(); err != nil {
+				return fmt.Errorf("postgres: resolve tender %s/%s: %w", source, ref, err)
+			}
+			// A ref that resolves to nothing is skipped, not an error — see the
+			// Sink contract. Reaching it means the provider keyed its map with
+			// refs it did not put on the tenders it returned, which is that
+			// provider's bug to fix and not a reason to lose every other
+			// provider's cycle.
+			if !found {
+				continue
+			}
+			if err := replaceSelectionCriteria(ctx, tx, tenderID, criteria); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }
 
 // MarkXMLFailed records one failed enrichment attempt against a tender. A

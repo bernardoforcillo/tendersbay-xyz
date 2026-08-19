@@ -194,3 +194,50 @@ func TestFetchSince_ContextCancelled(t *testing.T) {
 		t.Fatal("FetchSince did not return after ctx cancellation")
 	}
 }
+
+// TestFetchSince_ExtractsSelectionCriteria pins the selection criteria against
+// the COMMITTED REAL FIXTURE rather than a hand-written folder, because the
+// value of this parse is entirely in whether it matches what PLACSP actually
+// publishes. It asserts the financial requirement specifically: that entry is
+// the one carrying a concrete threshold in prose, which is the whole reason the
+// block is worth reading.
+func TestFetchSince_ExtractsSelectionCriteria(t *testing.T) {
+	atom, err := os.ReadFile("../testdata/atom_sample.xml")
+	if err != nil {
+		t.Fatalf("ReadFile: %v", err)
+	}
+	atom = bytes.Replace(atom, []byte(`rel="next"`), []byte(`rel="next-disabled"`), 1)
+
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/atom+xml")
+		_, _ = w.Write(atom)
+	}))
+	defer srv.Close()
+
+	docs, err := placspapi.NewWithURL(srv.URL).FetchSince(context.Background(), time.Date(2026, 1, 1, 0, 0, 0, 0, time.UTC))
+	if err != nil {
+		t.Fatalf("FetchSince: %v", err)
+	}
+
+	var financial, technical int
+	var threshold bool
+	for _, d := range docs {
+		for _, c := range d.SelectionCriteria {
+			switch c.Category {
+			case "financial":
+				financial++
+				if strings.Contains(c.Description, "volumen anual de negocios") {
+					threshold = true
+				}
+			case "technical":
+				technical++
+			}
+		}
+	}
+	if technical == 0 || financial == 0 {
+		t.Fatalf("fixture yielded technical=%d financial=%d, want both non-zero", technical, financial)
+	}
+	if !threshold {
+		t.Error("the financial requirement's prose threshold was not extracted from the real fixture")
+	}
+}
