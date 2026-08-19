@@ -2,17 +2,31 @@
 // publishes, and the pure engine that checks them against the dossier.
 //
 // One finding shapes everything below, and it must not be designed around:
-// **this system holds no structured selection criteria**. Phase 1a persists
-// AWARD criteria only (tenders.ingested_tender_award_criteria, surfaced as
-// tender.AwardCriterion) — how an ADMITTED bid is scored. Eligibility asks
-// whether we may be admitted at all, which lives in a different section of an
-// Italian disciplinare and in an eForms path
-// (cac:TenderingTerms/cac:TendererQualificationRequest, BT-747/748/749) that no
-// parser in this repo reads. The engine therefore cannot derive a single
-// participation requirement from structured notice data today; everything it
-// evaluates was captured by a human or quoted by the agent out of a document.
-// Presenting an award grid as an eligibility check is a wrong answer, not a
-// partial one.
+// **the system holds almost no selection criteria, and none it may decide on**.
+// Award criteria (tenders.ingested_tender_award_criteria, surfaced as
+// tender.AwardCriterion) say how an ADMITTED bid is scored. Eligibility asks
+// whether we may be admitted at all — a different section of an Italian
+// disciplinare, and a different element of a notice. Presenting an award grid
+// as an eligibility check is a wrong answer, not a partial one.
+//
+// What has changed since that was written, precisely and no further: Spain's
+// PLACSP publishes its qualification block inline in its feed, so
+// tenders.ingested_tender_selection_criteria now holds real Spanish
+// requirements, surfaced as tender.SelectionCriterion and mapped in by
+// RequirementsFromSelectionCriteria. What has NOT changed:
+//
+//   - The eForms path (cac:TenderingTerms/cac:TendererQualificationRequest,
+//     BT-747/748/749) is still unread — and reading it would gain less than it
+//     sounds. Sampled Italian notices set selection-criteria-source =
+//     epo-sub-espd, a POINTER meaning "the criteria are in the ESPD document",
+//     with no name, amount or category attached.
+//   - Italy therefore still has nothing, which is the market that matters most.
+//   - What Spain gives is PROSE, not comparables. It arrives as
+//     RequirementOther under the non-authoritative RequirementNoticePublished
+//     source, so it is shown to a human and never decides. The engine still
+//     cannot derive a single BLOCKING participation requirement from structured
+//     notice data; everything it evaluates was captured by a human or quoted by
+//     the agent out of a document.
 package company
 
 import (
@@ -66,11 +80,29 @@ const (
 	// a verdict.
 	RequirementAwardCriteria RequirementSource = "award_criteria"
 	RequirementAgentInferred RequirementSource = "agent_inferred"
+	// RequirementNoticePublished is a selection criterion the notice or the
+	// source's own feed published — today Spain's PLACSP, which embeds its
+	// qualification block in the search feed rather than linking a document.
+	//
+	// It is NOT authoritative, and that is a deliberate choice rather than a
+	// gap waiting to be filled. What PLACSP publishes is prose: "un volumen
+	// anual de negocios […] igual o superior a 309.552,00 €, equivalente a una
+	// vez y media el VEC (artículo 87.3.a) LCSP)". The figure is in there, next
+	// to a legal basis, a reference period and a derivation — none of which
+	// survive being flattened into a comparison. Until an extraction pass with
+	// an eval behind it can recover a threshold AND be checked, this source
+	// informs a human and never decides for one.
+	//
+	// Note it needs no branch in CanBlock: that switch already returns false by
+	// default, so a source is non-blocking unless someone deliberately makes it
+	// otherwise. The safe direction is the one you get for free.
+	RequirementNoticePublished RequirementSource = "notice_published"
 )
 
 var validRequirementSources = map[RequirementSource]bool{
 	RequirementUserStated: true, RequirementDocumentExcerpt: true,
 	RequirementAwardCriteria: true, RequirementAgentInferred: true,
+	RequirementNoticePublished: true,
 }
 
 // Authoritative reports whether a requirement from this source may, once

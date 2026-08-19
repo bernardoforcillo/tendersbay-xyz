@@ -114,3 +114,54 @@ func (d TenderDetail) CriteriaForLot(ref string) []AwardCriterion {
 	}
 	return notice
 }
+
+// SelectionCriterion is one condition a bidder must satisfy to be ADMITTED to a
+// procedure, as published by the notice or the source's feed. It is the "may we
+// bid" half of what a notice says about qualification, where AwardCriterion is
+// the "where are the points won" half.
+//
+// It carries no weight and no parsed threshold, and neither omission is an
+// oversight — see the migration that stores it
+// (services/ingestion/migrations/0012_selection_criteria.up.sql) for the long
+// version. The short version: selection is pass/fail, so a weight would be
+// absent on every row ever written; and no source observed publishes a
+// machine-comparable threshold, so a threshold column would be a claim wearing
+// the clothes of a measurement.
+//
+// What it does carry is the requirement as PROSE, which for Spain is
+// substantial — "un volumen anual de negocios […] igual o superior a
+// 309.552,00 €, equivalente a una vez y media el VEC (artículo 87.3.a) LCSP)".
+// The number is in there. It is in there as Spanish, next to a legal basis and
+// a reference period, which is exactly why it reaches the eligibility engine as
+// an un-modelled requirement a human reads rather than as a comparison a
+// machine makes.
+type SelectionCriterion struct {
+	// LotRef is "" for a notice-level criterion. CODICE publishes the
+	// qualification block once per contract folder and never per lot, so today
+	// every row is notice-level; the field exists because eForms can scope one
+	// to a lot and a reader should not have to change shape when it does.
+	LotRef string
+	// Ordinal is the position as published within its LotRef — the stable sort
+	// key, and the only part guaranteed distinct, since two notices routinely
+	// publish the same boilerplate requirement verbatim.
+	Ordinal int
+	// Category is the requirement family: "technical" | "financial" |
+	// "declaration". It is separate from Type because Type alone is ambiguous —
+	// PLACSP publishes the bare code "5" under a financial-capability list and
+	// the bare code "1" under a declaration list, and without the family both
+	// are integers that collide.
+	Category string
+	// Type is the source's own code within Category, verbatim.
+	Type string
+	// Name and Description are alternatives, not a pair: a source publishes one
+	// or the other. PLACSP carries only prose in Description.
+	Name        string
+	Description string
+	// Origin names the reading that produced this entry ("es-placsp"), so a
+	// consumer can grade trust per row. It is deliberately NOT an authority
+	// level: what may block a bid is decided by the domain that owns
+	// admissibility, not recorded here.
+	Origin string
+	// Lang is the language of Name/Description in ISO 639-2/T.
+	Lang string
+}
