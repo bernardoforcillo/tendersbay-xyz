@@ -123,3 +123,27 @@ func (s *Service) buildView(ctx context.Context, b Bid, summaries map[int64]tend
 	}
 	return view, nil
 }
+
+// WorkbenchStats returns the decision and outcome tally for one workbench. Read
+// access only, same as ListBids.
+//
+// It reads the bids and derives, rather than asking the repository for an
+// aggregate. Two reasons, and the second is the load-bearing one. It reuses a
+// query that already exists, so this costs no new SQL and no migration. And
+// DecisionStatsOf stays the single definition of the override rate — a SQL
+// SUM(CASE ...) would be a second one, free to drift from Overrides() silently,
+// in the place least likely to be checked against it.
+//
+// An empty workbench returns a zero DecisionStats, not an error: "you have
+// tracked nothing yet" is a real state the caller must render, and its rates
+// already report themselves as unavailable rather than as zero.
+func (s *Service) WorkbenchStats(ctx context.Context, userID, workbenchID string) (DecisionStats, error) {
+	if err := s.access.CanAccessWorkbench(ctx, userID, workbenchID); err != nil {
+		return DecisionStats{}, err
+	}
+	bids, err := s.repo.ListBidsByWorkbench(ctx, workbenchID)
+	if err != nil {
+		return DecisionStats{}, err
+	}
+	return DecisionStatsOf(bids), nil
+}
