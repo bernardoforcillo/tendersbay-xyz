@@ -56,7 +56,11 @@ const (
 // membership question, resolved by the caller after this decides that anyone
 // should be told at all.
 type Candidate struct {
-	BidID       string
+	BidID string
+	// WorkspaceID and WorkbenchID locate the bid. Both are carried because the
+	// mail has to deep-link straight to the scheda gara: a reminder that lands
+	// the reader on a dashboard has spent its urgency on navigation.
+	WorkspaceID string
 	WorkbenchID string
 	TenderID    int64
 	TenderTitle string

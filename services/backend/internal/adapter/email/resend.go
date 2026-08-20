@@ -94,19 +94,38 @@ func (r *ResendSender) SendWorkspaceInvite(ctx context.Context, to, workspaceNam
 }
 
 func (r *ResendSender) send(ctx context.Context, to, subject, html string) error {
-	body, _ := json.Marshal(map[string]string{
-		"from":    r.from,
-		"to":      to,
-		"subject": subject,
-		"html":    html,
+	return postEmail(ctx, r.client, r.baseURL, r.apiKey, emailPayload{
+		From: r.from, To: to, Subject: subject, HTML: html,
 	})
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, r.baseURL, bytes.NewReader(body))
+}
+
+// emailPayload is Resend's request body. Headers is a map rather than fixed
+// fields because only the reminder path sets any, and it must stay omitted
+// everywhere else: an empty headers object on a transactional mail is noise in
+// a request that has worked untouched for months.
+type emailPayload struct {
+	From    string            `json:"from"`
+	To      string            `json:"to"`
+	Subject string            `json:"subject"`
+	HTML    string            `json:"html"`
+	Headers map[string]string `json:"headers,omitempty"`
+}
+
+// postEmail is the one place this package talks to Resend. Extracted so the
+// reminder sender can set headers and its own From without a second copy of the
+// auth, status and transport handling drifting away from this one.
+func postEmail(ctx context.Context, client *http.Client, url, apiKey string, p emailPayload) error {
+	body, err := json.Marshal(p)
+	if err != nil {
+		return fmt.Errorf("resend: encode payload: %w", err)
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(body))
 	if err != nil {
 		return err
 	}
-	req.Header.Set("Authorization", "Bearer "+r.apiKey)
+	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Content-Type", "application/json")
-	resp, err := r.client.Do(req)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
