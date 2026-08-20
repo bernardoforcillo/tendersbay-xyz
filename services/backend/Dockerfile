@@ -22,9 +22,17 @@ RUN go mod download
 WORKDIR /workspace/services/backend
 RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /backend .
 
+# The deadline-reminder pass, shipped in this same image and run by a CronJob
+# that overrides the entrypoint — the shape services/ingestion already uses for
+# its five binaries. It needs this module's internal/ packages (core/alerting,
+# the repositories), so it cannot live in the ingestion image, and it does not
+# earn a service of its own: see cmd/digest for why.
+RUN CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o /digest ./cmd/digest
+
 # ---- Stage 2: minimal runtime ----
 FROM gcr.io/distroless/static-debian12:nonroot
 COPY --from=builder /backend /backend
+COPY --from=builder /digest /digest
 EXPOSE 8080
 ENV PORT=8080
 USER nonroot:nonroot

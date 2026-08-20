@@ -38,6 +38,16 @@ type Repo interface {
 	// in the layer that can see the suppression list.
 	RecipientsFor(ctx context.Context, workbenchID string) ([]Recipient, error)
 
+	// OptOut records that the holder of token no longer wants reminders, and
+	// reports whether a row actually matched.
+	//
+	// The bool exists so the caller can LOG a miss without TELLING one: an
+	// unknown token must produce the same page as a known one, or the endpoint
+	// becomes an oracle for which tokens are live. It is unauthenticated by
+	// necessity — the whole point is that a reader can escape without finding
+	// their password first.
+	OptOut(ctx context.Context, token string) (bool, error)
+
 	// MarkReminded advances a bid's watermark to bucket.
 	//
 	// It records that a bucket was PROCESSED, not that mail was delivered, and

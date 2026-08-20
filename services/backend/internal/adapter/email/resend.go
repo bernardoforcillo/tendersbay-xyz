@@ -9,6 +9,12 @@ import (
 	"net/http"
 )
 
+// TransactionalFrom is the sending address for authentication and invitation
+// mail. It is a constant here so the reminder sender's shared-domain check and
+// the composition root compare against the same value rather than two string
+// literals that can drift apart.
+const TransactionalFrom = "noreply@tendersbay.xyz"
+
 type ResendSender struct {
 	apiKey  string
 	from    string

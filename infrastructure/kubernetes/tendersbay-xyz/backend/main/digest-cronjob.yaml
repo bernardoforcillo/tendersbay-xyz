@@ -1,0 +1,102 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: digest
+  namespace: tendersbay-xyz
+spec:
+  # ONCE A DAY, not hourly, and the reason is the product rather than the load.
+  # Reminder buckets (14/7/3/1 days before a deadline) already cap a bid at four
+  # mails over its whole life, so running hourly would send the same four mails
+  # — just at whatever hour the countdown happened to cross a threshold. A
+  # deadline reminder that arrives at 03:00 is worse than the same one at
+  # breakfast, so the schedule picks the hour instead of letting arithmetic pick
+  # it.
+  #
+  # 06:00 UTC is 08:00 in Rome in summer and 07:00 in winter — a working hour
+  # either way for the Italian beachhead, and early enough that a 1-day
+  # last-call reminder still leaves a working day to act on it.
+  #
+  # Cron is UTC here, as everywhere in this repo.
+  schedule: '0 6 * * *'
+  # Forbid is what makes an in-process ticker unnecessary: one pass at a time,
+  # cluster-wide, with no lock in the application. A run that overruns simply
+  # skips the next fire, and the watermark means the skipped work is picked up
+  # by the following one.
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      # No retry. A reminder pass is not idempotent in the direction a retry
+      # would need: the watermark advances as mail goes out, so a job killed
+      # halfway has already delivered part of its batch and a rerun would
+      # deliver the rest — which is what the NEXT daily fire does anyway,
+      # without a second process racing the first.
+      backoffLimit: 0
+      # 660s = 11m, comfortably outside cmd/digest's own 10m pass timeout so the
+      # binary fails with a log line rather than being killed mid-send with no
+      # explanation.
+      activeDeadlineSeconds: 660
+      ttlSecondsAfterFinished: 3600
+      template:
+        metadata:
+          labels:
+            app: tendersbay-xyz
+            tier: backend-digest
+        spec:
+          restartPolicy: Never
+          securityContext:
+            # gcr.io/distroless/static-debian12:nonroot is UID/GID 65532.
+            runAsUser: 65532
+            runAsGroup: 65532
+            runAsNonRoot: true
+            fsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: digest
+              # Same image as the backend, different binary — see the service
+              # Dockerfile. The tag is rewritten by the shared Flux image
+              # automation, which scans this whole folder.
+              image: bernardoforcillo/tendersbay-backend:latest # {"$imagepolicy": "tendersbay-xyz:tendersbay-backend-image-policy"}
+              command: ['/digest']
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+              # A pass holds one batch of candidate rows and sends mail one at a
+              # time; there is no corpus in memory. Sized like the other small
+              # jobs rather than measured, because there is nothing running yet
+              # to measure — revisit after the first weeks.
+              resources:
+                limits:
+                  memory: '256Mi'
+                  cpu: '500m'
+                requests:
+                  memory: '64Mi'
+                  cpu: '50m'
+              envFrom:
+                # Same secret as the API: same DATABASE_URL, same RESEND_API_KEY.
+                # REMINDER_MAIL_FROM must be added to it before this job can send
+                # anything — without it the pass logs and exits 0 on purpose, so
+                # deploying this manifest ahead of the secret is safe and quiet.
+                - secretRef:
+                    name: backend-secrets
+              env:
+                - name: SERVICE_NAME
+                  value: 'tendersbay-digest'
+                # PostHog project key is a public client key (phc_…); plaintext is fine.
+                - name: POSTHOG_API_KEY
+                  value: 'phc_wDJgrzT5ar2CaE8LKuTVk35njTgJB4w2cTQyDQNzcD4C'
+                - name: POSTHOG_HOST
+                  value: 'https://eu.i.posthog.com'
+              imagePullPolicy: Always
+              volumeMounts:
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: tmp
+              emptyDir: {}

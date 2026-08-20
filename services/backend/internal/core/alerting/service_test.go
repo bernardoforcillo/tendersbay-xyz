@@ -13,6 +13,9 @@ type fakeRepo struct {
 	candidates []Candidate
 	recipients map[string][]Recipient
 	marked     map[string]int
+	optedOut   []string
+	optOutHit  bool
+	optOutErr  error
 	listErr    error
 	recErr     error
 	markErr    error
@@ -28,6 +31,14 @@ func (f *fakeRepo) ListDueCandidates(context.Context) ([]Candidate, error) {
 func (f *fakeRepo) RecipientsFor(_ context.Context, wb string) ([]Recipient, error) {
 	return f.recipients[wb], f.recErr
 }
+func (f *fakeRepo) OptOut(_ context.Context, token string) (bool, error) {
+	if f.optOutErr != nil {
+		return false, f.optOutErr
+	}
+	f.optedOut = append(f.optedOut, token)
+	return f.optOutHit, nil
+}
+
 func (f *fakeRepo) MarkReminded(_ context.Context, bidID string, bucket int) error {
 	if f.markErr != nil {
 		return f.markErr
@@ -148,5 +159,37 @@ func TestRunPropagatesListFailure(t *testing.T) {
 	repo.listErr = errors.New("db down")
 	if _, err := testService(repo, &fakeMailer{}).Run(context.Background()); err == nil {
 		t.Error("Run reported success when it could not read candidates at all")
+	}
+}
+
+// TestUnsubscribeTreatsUnknownTokensLikeKnownOnes: the endpoint must not become
+// a check for which tokens are live, so a miss is logged and not reported.
+func TestUnsubscribeTreatsUnknownTokensLikeKnownOnes(t *testing.T) {
+	repo := newFakeRepo()
+	repo.optOutHit = false
+	if err := testService(repo, &fakeMailer{}).Unsubscribe(context.Background(), "nope"); err != nil {
+		t.Errorf("unknown token produced an error the caller would render differently: %v", err)
+	}
+	repo.optOutHit = true
+	if err := testService(repo, &fakeMailer{}).Unsubscribe(context.Background(), "real"); err != nil {
+		t.Errorf("known token: %v", err)
+	}
+}
+
+func TestUnsubscribeIgnoresEmptyTokenWithoutTouchingTheStore(t *testing.T) {
+	repo := newFakeRepo()
+	if err := testService(repo, &fakeMailer{}).Unsubscribe(context.Background(), ""); err != nil {
+		t.Fatalf("empty token: %v", err)
+	}
+	if len(repo.optedOut) != 0 {
+		t.Error("an empty token reached the store")
+	}
+}
+
+func TestUnsubscribePropagatesStoreFailure(t *testing.T) {
+	repo := newFakeRepo()
+	repo.optOutErr = errors.New("db down")
+	if err := testService(repo, &fakeMailer{}).Unsubscribe(context.Background(), "t"); err == nil {
+		t.Error("a store failure was swallowed — the reader would be told they are unsubscribed when they are not")
 	}
 }

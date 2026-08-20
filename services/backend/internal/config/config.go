@@ -26,18 +26,24 @@ const (
 
 // Config holds the runtime configuration for the backend service.
 type Config struct {
-	Port            string
-	ServiceName     string
-	PostHogAPIKey   string
-	PostHogHost     string
-	DatabaseURL     string
-	JWTSecret       string
-	JWTExpiry       time.Duration
-	RefreshExpiry   time.Duration
-	ResendAPIKey    string
-	FireworksAPIKey string
-	AppBaseURL      string
-	CORSOrigins     []string
+	Port          string
+	ServiceName   string
+	PostHogAPIKey string
+	PostHogHost   string
+	DatabaseURL   string
+	JWTSecret     string
+	JWTExpiry     time.Duration
+	RefreshExpiry time.Duration
+	ResendAPIKey  string
+	// ReminderMailFrom is the From for deadline reminders, and it MUST be a
+	// different sending subdomain from transactional mail — email.NewReminder
+	// refuses to build otherwise. Empty disables reminder SENDING; it does not
+	// disable unsubscribing, which has to keep working for anyone who already
+	// received one.
+	ReminderMailFrom string
+	FireworksAPIKey  string
+	AppBaseURL       string
+	CORSOrigins      []string
 	// WorkspaceInviteExpiry is how long an email workspace invitation stays valid.
 	WorkspaceInviteExpiry time.Duration
 	QdrantURL             string
@@ -51,19 +57,20 @@ type Config struct {
 // POSTHOG_API_KEY has no default; an empty key disables telemetry export.
 func FromEnv() Config {
 	cfg := Config{
-		Port:            getenv("PORT", defaultPort),
-		ServiceName:     getenv("SERVICE_NAME", defaultServiceName),
-		PostHogAPIKey:   os.Getenv("POSTHOG_API_KEY"),
-		PostHogHost:     getenv("POSTHOG_HOST", defaultPostHogHost),
-		DatabaseURL:     os.Getenv("DATABASE_URL"),
-		JWTSecret:       os.Getenv("JWT_SECRET"),
-		ResendAPIKey:    os.Getenv("RESEND_API_KEY"),
-		FireworksAPIKey: os.Getenv("FIREWORKS_API_KEY"),
-		AppBaseURL:      os.Getenv("APP_BASE_URL"),
-		QdrantURL:       getenv("QDRANT_URL", defaultQdrantURL),
-		OllamaBaseURL:   getenv("OLLAMA_BASE_URL", defaultOllamaBaseURL),
-		EmbeddingModel:  getenv("EMBEDDING_MODEL", defaultEmbeddingModel),
-		RedisURL:        getenv("REDIS_URL", defaultRedisURL),
+		Port:             getenv("PORT", defaultPort),
+		ServiceName:      getenv("SERVICE_NAME", defaultServiceName),
+		PostHogAPIKey:    os.Getenv("POSTHOG_API_KEY"),
+		PostHogHost:      getenv("POSTHOG_HOST", defaultPostHogHost),
+		DatabaseURL:      os.Getenv("DATABASE_URL"),
+		JWTSecret:        os.Getenv("JWT_SECRET"),
+		ResendAPIKey:     os.Getenv("RESEND_API_KEY"),
+		ReminderMailFrom: os.Getenv("REMINDER_MAIL_FROM"),
+		FireworksAPIKey:  os.Getenv("FIREWORKS_API_KEY"),
+		AppBaseURL:       os.Getenv("APP_BASE_URL"),
+		QdrantURL:        getenv("QDRANT_URL", defaultQdrantURL),
+		OllamaBaseURL:    getenv("OLLAMA_BASE_URL", defaultOllamaBaseURL),
+		EmbeddingModel:   getenv("EMBEDDING_MODEL", defaultEmbeddingModel),
+		RedisURL:         getenv("REDIS_URL", defaultRedisURL),
 	}
 
 	if raw := os.Getenv("CORS_ORIGINS"); raw != "" {

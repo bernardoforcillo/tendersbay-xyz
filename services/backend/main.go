@@ -30,6 +30,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/redis"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/config"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/alerting"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
@@ -108,7 +109,7 @@ func main() {
 		slog.Warn("RESEND_API_KEY not set — emails will be logged to stdout only")
 		mailer = email.NewLog()
 	} else {
-		mailer = email.NewResend(cfg.ResendAPIKey, "noreply@tendersbay.xyz")
+		mailer = email.NewResend(cfg.ResendAPIKey, email.TransactionalFrom)
 	}
 
 	// Redis-backed rate limiter, shared by the auth service (login/signup/
@@ -297,7 +298,14 @@ func main() {
 	mux.Handle(tenderPath, tenderRPC)
 	mux.Handle(bidPath, bidRPC)
 	mux.Handle(companyPath, companyRPC)
-	mux.Handle("/", httpapi.New(healthSvc))
+	// The alerting service is built with a NIL mailer here on purpose: this
+	// process serves the API and never sends a reminder — that is cmd/digest's
+	// job. What it must serve is the unsubscribe endpoint, which needs only the
+	// repository, and which has to keep working even when reminder sending is
+	// switched off. Someone who received a mail last month must still be able
+	// to escape it.
+	alertingSvc := alerting.NewService(postgres.NewAlertingRepo(db), nil)
+	mux.Handle("/", httpapi.New(healthSvc, alertingSvc))
 
 	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(connectapi.ClientIPMiddleware(mux)))
 

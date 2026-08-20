@@ -109,3 +109,24 @@ func (s *Service) mark(ctx context.Context, r Reminder) {
 		slog.ErrorContext(ctx, "reminder watermark not advanced", "bucket", r.Bucket, "error", err)
 	}
 }
+
+// Unsubscribe records an opt-out for the holder of token.
+//
+// It returns nil for an unknown token, deliberately. The caller renders one
+// page either way: a reader who mistyped a link and a reader whose token was
+// revoked both deserve "you will not get these any more", and distinguishing
+// them would turn the endpoint into a check for which tokens are live. A miss
+// is logged, because a rash of them is worth seeing.
+func (s *Service) Unsubscribe(ctx context.Context, token string) error {
+	if token == "" {
+		return nil
+	}
+	found, err := s.repo.OptOut(ctx, token)
+	if err != nil {
+		return err
+	}
+	if !found {
+		slog.InfoContext(ctx, "unsubscribe token did not match")
+	}
+	return nil
+}

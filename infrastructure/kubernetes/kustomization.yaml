@@ -26,6 +26,7 @@ resources:
   - tendersbay-xyz/backend/main/service.yaml
   - tendersbay-xyz/backend/main/certificate.yaml
   - tendersbay-xyz/backend/main/ingress.yaml
+  - tendersbay-xyz/backend/main/digest-cronjob.yaml
   - tendersbay-xyz/backend/main/update.yaml
   # backend app — canary channel -> api.dev.tendersbay.xyz
   # backend-canary-secrets is applied out-of-band (kubectl) — see backend/readme.md.

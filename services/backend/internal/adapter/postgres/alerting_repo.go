@@ -212,3 +212,29 @@ func (r *AlertingRepo) MarkReminded(ctx context.Context, bidID string, bucket in
 	}
 	return nil
 }
+
+// OptOut satisfies alerting.Repo.
+//
+// The WHERE deliberately does NOT filter on opted_out_at IS NULL. A second
+// unsubscribe from an already-unsubscribed reader must still report a match, or
+// the endpoint would answer "no such token" to someone holding a perfectly valid
+// one — and the caller would log a miss that is really a duplicate click.
+// COALESCE keeps the original timestamp, so the suppression list records when
+// they FIRST said no, which is the date a deliverability complaint is answered
+// with.
+func (r *AlertingRepo) OptOut(ctx context.Context, token string) (bool, error) {
+	rows, err := r.db.Query(ctx,
+		`UPDATE reminder_preferences
+		    SET opted_out_at = COALESCE(opted_out_at, now())
+		  WHERE unsubscribe_token = $1
+		  RETURNING user_id`, token)
+	if err != nil {
+		return false, fmt.Errorf("postgres: record unsubscribe: %w", err)
+	}
+	defer rows.Close()
+	found := rows.Next()
+	if err := rows.Err(); err != nil {
+		return false, fmt.Errorf("postgres: record unsubscribe: %w", err)
+	}
+	return found, nil
+}
