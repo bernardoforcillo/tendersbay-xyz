@@ -69,5 +69,6 @@ func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 	m.Add(migrateBids())
 	m.Add(migrateCompany())
 	m.Add(migrateBidDecision())
+	m.Add(migrateReminders())
 	return db, sqlDB, m.Up(ctx)
 }

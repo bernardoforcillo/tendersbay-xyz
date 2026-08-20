@@ -607,6 +607,14 @@ var (
 	BidDecisionBlockingGaps   = pg.Add(Bids, pg.BigInt("decision_blocking_gaps").NotNull().Default("0"))
 	BidDecisionRecordedAt     = pg.Add(Bids, pg.Timestamp("decision_recorded_at", true)) // nullable: NULL = still undecided
 
+	// BidLastRemindedBucket is the reminder watermark: the narrowest
+	// days-before-deadline threshold already processed for this bid, 0 = none.
+	// It lives on the bid rather than in its own table because it is one small
+	// integer with the same lifetime as the row — a join table would be a second
+	// place for the same fact to be wrong, and the row's own deletion already
+	// takes it with it.
+	BidLastRemindedBucket = pg.Add(Bids, pg.BigInt("last_reminded_bucket").NotNull().Default("0"))
+
 	BidCreatedBy = pg.Add(Bids, pg.UUID("created_by").NotNull())
 	BidCreatedAt = pg.Add(Bids, pg.Timestamp("created_at", true).NotNull().Default("now()"))
 	BidUpdatedAt = pg.Add(Bids, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
@@ -634,6 +642,7 @@ type DBBid struct {
 	DecisionOverridden     bool       `drop:"decision_overridden"`
 	DecisionBlockingGaps   int64      `drop:"decision_blocking_gaps"`
 	DecisionRecordedAt     *time.Time `drop:"decision_recorded_at"` // nullable: nil = still undecided
+	LastRemindedBucket     int64      `drop:"last_reminded_bucket"`
 	CreatedBy              string     `drop:"created_by"`
 	CreatedAt              time.Time  `drop:"created_at"`
 	UpdatedAt              time.Time  `drop:"updated_at"`
@@ -649,6 +658,36 @@ type DBChecklistItem struct {
 	Required    bool      `drop:"required"`
 	Position    int64     `drop:"position"`
 	UpdatedAt   time.Time `drop:"updated_at"`
+}
+
+// ── Reminder preferences ────────────────────────────────────────────────────
+//
+// One row per user, minted the first time they are considered for a reminder.
+//
+// unsubscribe_token is stored in PLAIN, unlike auth's tokens which are stored
+// hashed, and that difference is a threat model rather than an inconsistency.
+// An auth token grants access to an account, so the server must never be able
+// to reproduce one. This token grants exactly one power — stop sending me these
+// reminders — and it has to travel in every message and still work in a mail
+// opened months later, which a hash cannot do. A leaked one buys an attacker
+// the ability to silence a person's own reminders, and it is revoked by
+// regenerating the column.
+//
+// opted_out_at is a timestamp rather than a boolean so the suppression list
+// records WHEN, which is what a deliverability complaint is answered with.
+var (
+	ReminderPrefs      = pg.NewTable("reminder_preferences")
+	RPUserID           = pg.Add(ReminderPrefs, pg.UUID("user_id").PrimaryKey())
+	RPUnsubscribeToken = pg.Add(ReminderPrefs, pg.Text("unsubscribe_token").NotNull().Unique())
+	RPOptedOutAt       = pg.Add(ReminderPrefs, pg.Timestamp("opted_out_at", true)) // nullable: NULL = still subscribed
+	RPCreatedAt        = pg.Add(ReminderPrefs, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+)
+
+type DBReminderPrefs struct {
+	UserID           string     `drop:"user_id"`
+	UnsubscribeToken string     `drop:"unsubscribe_token"`
+	OptedOutAt       *time.Time `drop:"opted_out_at"`
+	CreatedAt        time.Time  `drop:"created_at"`
 }
 
 // ── Company dossier tables (Phase 2) ────────────────────────────────────────
