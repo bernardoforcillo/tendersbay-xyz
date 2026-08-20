@@ -98,7 +98,7 @@ func (r *AlertingRepo) ListDueCandidates(ctx context.Context) ([]alerting.Candid
 // and losing one reminder to that is better than mailing a message with no way
 // out.
 const recipientsSQL = `
-SELECT u.id, u.email, u.display_name, COALESCE(p.unsubscribe_token, '')
+SELECT u.id, u.email, u.display_name, u.locale, COALESCE(p.unsubscribe_token, '')
 FROM workbench_members m
 JOIN users u ON u.id = m.user_id
 LEFT JOIN reminder_preferences p ON p.user_id = u.id
@@ -125,17 +125,13 @@ func (r *AlertingRepo) RecipientsFor(ctx context.Context, workbenchID string) ([
 	for rows.Next() {
 		var id string
 		var rec alerting.Recipient
-		if err := rows.Scan(&id, &rec.Email, &rec.DisplayName, &rec.UnsubscribeToken); err != nil {
+		if err := rows.Scan(&id, &rec.Email, &rec.DisplayName, &rec.Locale, &rec.UnsubscribeToken); err != nil {
 			return nil, fmt.Errorf("postgres: scan reminder recipient: %w", err)
 		}
-		// Locale is deliberately left empty, and the reminder sender falls back
-		// to English because of it. NOTHING IN THIS DATABASE STORES A PER-USER
-		// LOCALE — the frontend carries 24 of them, the backend persists none —
-		// so any value here would be invented. Guessing Italian because the
-		// beachhead is Italian would mail Spanish and Polish members in a
-		// language they did not choose, which is worse than English. Capturing
-		// a locale at signup is the fix, and it is a change to the user domain,
-		// not to this query.
+		// Locale comes from users.locale, captured at signup from the browser's
+		// Accept-Language and changeable by the user. It is '' for anyone who
+		// signed up before that existed, and the sender falls back to English
+		// for those — which is the honest outcome, because nobody told us.
 		out = append(out, rec)
 	}
 	if err := rows.Err(); err != nil {

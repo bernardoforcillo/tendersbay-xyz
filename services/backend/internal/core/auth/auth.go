@@ -38,10 +38,15 @@ func NormalizeEmail(email string) string {
 // Domain types
 
 type User struct {
-	ID              string
-	Email           string
-	PasswordHash    string
-	DisplayName     string
+	ID           string
+	Email        string
+	PasswordHash string
+	DisplayName  string
+	// Locale is the user's chosen interface and email language, as one of
+	// SupportedLocales; "" means nobody has told us. It is NOT defaulted to
+	// English on read — see NormalizeLocale for why the absence has to stay
+	// visible.
+	Locale          string
 	EmailVerifiedAt *time.Time
 	CreatedAt       time.Time
 	UpdatedAt       time.Time
@@ -93,6 +98,10 @@ type UserRepository interface {
 	UpdatePassword(ctx context.Context, id, hash string) error
 	UpdateEmail(ctx context.Context, id, email string) error
 	UpdateDisplayName(ctx context.Context, id, displayName string) error
+	// UpdateLocale stores a validated locale. Callers must pass a value that
+	// came through NormalizeLocale; the repository does not re-validate,
+	// because two validators drift.
+	UpdateLocale(ctx context.Context, id, locale string) error
 	MarkEmailVerified(ctx context.Context, id string, at time.Time) error
 	Delete(ctx context.Context, id string) error
 }
@@ -212,7 +221,16 @@ func (s *Service) SignUp(ctx context.Context, email, plainPassword, displayName,
 	if err != nil {
 		return err
 	}
-	user, err := s.users.Create(ctx, User{Email: email, PasswordHash: hash, DisplayName: displayName})
+	// Persist the locale the signup form (or the browser) told us. Until this
+	// line existed, the argument was used ONLY to build the verification link
+	// below and then thrown away — so every user in the system had told us their
+	// language and nothing kept it. Normalising here as well as at the edge is
+	// cheap and idempotent, and it means a caller that forgets cannot store a
+	// tag no renderer ships.
+	stored := NormalizeLocale(locale)
+	user, err := s.users.Create(ctx, User{
+		Email: email, PasswordHash: hash, DisplayName: displayName, Locale: stored,
+	})
 	if err != nil {
 		return err
 	}
@@ -228,7 +246,14 @@ func (s *Service) SignUp(ctx context.Context, email, plainPassword, displayName,
 	}); err != nil {
 		return err
 	}
-	link := fmt.Sprintf("%s/%s/auth/verify-email?token=%s&type=signup", s.cfg.AppBaseURL, locale, plain)
+	// The LINK needs a path segment even when we have no locale to store, or
+	// the URL collapses to "//auth/verify-email" and 404s. So "" is a real
+	// stored value and never a real URL: the two uses diverge deliberately here.
+	linkLocale := stored
+	if linkLocale == "" {
+		linkLocale = defaultLinkLocale
+	}
+	link := fmt.Sprintf("%s/%s/auth/verify-email?token=%s&type=signup", s.cfg.AppBaseURL, linkLocale, plain)
 	return s.email.SendVerification(ctx, email, displayName, link)
 }
 

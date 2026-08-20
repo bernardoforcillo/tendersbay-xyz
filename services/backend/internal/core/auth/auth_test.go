@@ -49,7 +49,9 @@ func (m *mockUsers) UpdatePassword(_ context.Context, id, hash string) error {
 	}
 	return nil
 }
-func (m *mockUsers) UpdateEmail(_ context.Context, _, _ string) error       { return nil }
+func (m *mockUsers) UpdateEmail(_ context.Context, _, _ string) error  { return nil }
+func (m *mockUsers) UpdateLocale(_ context.Context, _, _ string) error { return nil }
+
 func (m *mockUsers) UpdateDisplayName(_ context.Context, _, _ string) error { return nil }
 func (m *mockUsers) MarkEmailVerified(_ context.Context, id string, at time.Time) error {
 	for k, u := range m.users {

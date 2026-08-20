@@ -2,6 +2,7 @@ package connectapi
 
 import (
 	"context"
+	"log/slog"
 
 	"connectrpc.com/connect"
 	authv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1"
@@ -21,7 +22,15 @@ func NewAuthHandler(svc *auth.Service, refreshTTL int) *AuthHandler {
 var _ authv1connect.AuthServiceHandler = (*AuthHandler)(nil)
 
 func (h *AuthHandler) SignUp(ctx context.Context, req *connect.Request[authv1.SignUpRequest]) (*connect.Response[authv1.SignUpResponse], error) {
-	if err := h.svc.SignUp(ctx, req.Msg.Email, req.Msg.Password, req.Msg.DisplayName, req.Msg.Locale, ClientIPFromContext(ctx)); err != nil {
+	// The form's locale wins; the browser's Accept-Language is the fallback for
+	// a client that sends none. Reading the header here rather than in the
+	// domain is the layering: HTTP is this adapter's business, and auth.Service
+	// takes a tag it can normalise without knowing where it came from.
+	locale := auth.NormalizeLocale(req.Msg.Locale)
+	if locale == "" {
+		locale = auth.LocaleFromAcceptLanguage(req.Header().Get("Accept-Language"))
+	}
+	if err := h.svc.SignUp(ctx, req.Msg.Email, req.Msg.Password, req.Msg.DisplayName, locale, ClientIPFromContext(ctx)); err != nil {
 		return nil, toConnectError(err)
 	}
 	return connect.NewResponse(&authv1.SignUpResponse{}), nil
@@ -32,6 +41,15 @@ func (h *AuthHandler) Login(ctx context.Context, req *connect.Request[authv1.Log
 	if err != nil {
 		return nil, toConnectError(err)
 	}
+	// Backfill the locale for an account created before it was stored. Login is
+	// the right hook because it is the one moment we have both a known user and
+	// a live browser header, and because it costs a read that has just happened
+	// anyway. A failure is logged, never returned: nobody should be unable to
+	// sign in because we could not record their language.
+	if err := h.svc.EnsureLocale(ctx, result.User.ID, req.Header().Get("Accept-Language")); err != nil {
+		slog.WarnContext(ctx, "could not record user locale on login", "error", err)
+	}
+
 	resp := connect.NewResponse(&authv1.LoginResponse{
 		AccessToken: result.AccessToken,
 		User:        toProtoUser(result.User),

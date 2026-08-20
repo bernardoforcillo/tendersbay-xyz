@@ -20,8 +20,9 @@ func (r *UserRepo) Create(ctx context.Context, u auth.User) (auth.User, error) {
 			UserEmail.Val(u.Email),
 			UserPasswordHash.Val(u.PasswordHash),
 			UserDisplayName.Val(u.DisplayName),
+			UserLocale.Val(u.Locale),
 		).
-		Returning(UserID, UserEmail, UserPasswordHash, UserDisplayName, UserEmailVerifiedAt, UserCreatedAt, UserUpdatedAt).
+		Returning(UserID, UserEmail, UserPasswordHash, UserDisplayName, UserLocale, UserEmailVerifiedAt, UserCreatedAt, UserUpdatedAt).
 		One(ctx, &row)
 	if err != nil {
 		return auth.User{}, err
@@ -77,6 +78,17 @@ func (r *UserRepo) UpdateDisplayName(ctx context.Context, id, displayName string
 	return err
 }
 
+// UpdateLocale stores a locale the caller has already validated through
+// auth.NormalizeLocale. It does not re-validate: two validators drift, and the
+// one that matters is the one nearest the user's input.
+func (r *UserRepo) UpdateLocale(ctx context.Context, id, locale string) error {
+	_, err := r.db.Update(Users).
+		Set(UserLocale.Val(locale), UserUpdatedAt.Val(time.Now())).
+		Where(UserID.Eq(id)).
+		Exec(ctx)
+	return err
+}
+
 func (r *UserRepo) MarkEmailVerified(ctx context.Context, id string, at time.Time) error {
 	_, err := r.db.Update(Users).
 		Set(UserEmailVerifiedAt.Val(at), UserUpdatedAt.Val(time.Now())).
@@ -96,6 +108,7 @@ func dbUserToDomain(row DBUser) auth.User {
 		Email:           row.Email,
 		PasswordHash:    row.PasswordHash,
 		DisplayName:     row.DisplayName,
+		Locale:          row.Locale,
 		EmailVerifiedAt: row.EmailVerifiedAt,
 		CreatedAt:       row.CreatedAt,
 		UpdatedAt:       row.UpdatedAt,

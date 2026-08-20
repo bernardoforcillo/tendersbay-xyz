@@ -26,6 +26,8 @@ func (m *mockUserStore) UpdateEmail(_ context.Context, _, email string) error {
 	m.u.Email = email
 	return nil
 }
+func (m *mockUserStore) UpdateLocale(_ context.Context, _, _ string) error { return nil }
+
 func (m *mockUserStore) UpdateDisplayName(_ context.Context, _, name string) error {
 	m.u.DisplayName = name
 	return nil

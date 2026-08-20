@@ -9,11 +9,16 @@ import (
 
 // Table and column definitions — single source of truth for all repositories.
 var (
-	Users               = pg.NewTable("users")
-	UserID              = pg.Add(Users, pg.Text("id").PrimaryKey())
-	UserEmail           = pg.Add(Users, pg.Text("email").NotNull())
-	UserPasswordHash    = pg.Add(Users, pg.Text("password_hash").NotNull())
-	UserDisplayName     = pg.Add(Users, pg.Text("display_name").NotNull())
+	Users            = pg.NewTable("users")
+	UserID           = pg.Add(Users, pg.Text("id").PrimaryKey())
+	UserEmail        = pg.Add(Users, pg.Text("email").NotNull())
+	UserPasswordHash = pg.Add(Users, pg.Text("password_hash").NotNull())
+	UserDisplayName  = pg.Add(Users, pg.Text("display_name").NotNull())
+	// UserLocale is one of auth.SupportedLocales, or '' when nobody has told us.
+	// Defaulted to '' rather than to a language: see auth.NormalizeLocale for
+	// why "we were never told" must stay distinguishable from "they chose
+	// English".
+	UserLocale          = pg.Add(Users, pg.Text("locale").NotNull().Default("''"))
 	UserEmailVerifiedAt = pg.Add(Users, pg.Timestamp("email_verified_at", true))
 	UserCreatedAt       = pg.Add(Users, pg.Timestamp("created_at", true).NotNull())
 	UserUpdatedAt       = pg.Add(Users, pg.Timestamp("updated_at", true).NotNull())
@@ -47,6 +52,7 @@ type DBUser struct {
 	ID              string     `drop:"id"`
 	Email           string     `drop:"email"`
 	PasswordHash    string     `drop:"password_hash"`
+	Locale          string     `drop:"locale"`
 	DisplayName     string     `drop:"display_name"`
 	EmailVerifiedAt *time.Time `drop:"email_verified_at"`
 	CreatedAt       time.Time  `drop:"created_at"`
