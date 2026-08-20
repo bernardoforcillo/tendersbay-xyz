@@ -98,7 +98,7 @@ func (r *ReminderSender) SendReminder(ctx context.Context, to alerting.Recipient
 		return fmt.Errorf("email: refusing to send a reminder with no unsubscribe token")
 	}
 	c := copyFor(to.Locale, rem)
-	c.link = r.bidLink(rem.Candidate)
+	c.link = r.bidLink(rem.Candidate, rem.Bucket)
 	unsub := r.unsubscribeLink(to.UnsubscribeToken)
 
 	var buf bytes.Buffer
@@ -127,9 +127,20 @@ func (r *ReminderSender) SendReminder(ctx context.Context, to alerting.Recipient
 // (/workspaces/:ws/workbench/:wb/bids/:bid). It is built here rather than
 // carried on the Reminder because a URL shape is a delivery concern: the domain
 // decides that someone should be told, not where the button points.
-func (r *ReminderSender) bidLink(c alerting.Candidate) string {
-	return fmt.Sprintf("%s/workspaces/%s/workbench/%s/bids/%s",
-		r.appBaseURL, c.WorkspaceID, c.WorkbenchID, c.BidID)
+// The link carries src=reminder and the bucket that sent it, so the app can
+// record a click and attribute it. Without them the funnel has a numerator
+// (mails sent, counted here) and no denominator's other half — there is no way
+// to tell a reminder that pulled someone back from one that was deleted unread,
+// which is precisely the number that decides whether this feature earns its
+// place.
+//
+// The bucket is carried because the interesting question is not "do reminders
+// work" but WHICH one works: a 1-day last call and a 14-day heads-up are
+// different products sharing a template. It is a closed set of four small
+// integers, so it is safe to put in analytics.
+func (r *ReminderSender) bidLink(c alerting.Candidate, bucket int) string {
+	return fmt.Sprintf("%s/workspaces/%s/workbench/%s/bids/%s?src=reminder&b=%d",
+		r.appBaseURL, c.WorkspaceID, c.WorkbenchID, c.BidID, bucket)
 }
 
 func (r *ReminderSender) unsubscribeLink(token string) string {

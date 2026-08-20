@@ -77,6 +77,16 @@ export type AnalyticsLocation = (typeof ANALYTICS_LOCATIONS)[number];
  * Where the reader was standing when they opened a citation. A quote expanded
  * from the dossier is a verification act; one expanded in chat is a reading act.
  */
+/**
+ * The days-before-deadline thresholds a reminder can fire at, mirroring
+ * services/backend/internal/core/alerting's buckets. Closed, because the whole
+ * point of carrying it is to compare the four against each other: a 1-day last
+ * call and a 14-day heads-up are different products sharing a template, and an
+ * open string would let a typo quietly become a fifth cohort.
+ */
+export const REMINDER_BUCKETS = ['14', '7', '3', '1'] as const;
+export type ReminderBucket = (typeof REMINDER_BUCKETS)[number];
+
 export const CITATION_SURFACES = ['dossier', 'chat'] as const;
 export type CitationSurface = (typeof CITATION_SURFACES)[number];
 
@@ -151,6 +161,20 @@ export type ReportedFieldCategory = DossierFieldCategory | '';
  *     below asserts no boolean about criteria ever enters this catalogue.
  */
 export type AnalyticsEventProps = {
+  /**
+   * A reader arrived from a deadline reminder — the click half of the only
+   * funnel this product has that starts OUTSIDE it. Sent counts live
+   * server-side (the digest pass logs them); without this event they have no
+   * counterpart, and a reminder that pulled someone back is indistinguishable
+   * from one deleted unread.
+   *
+   * `bucket` is which reminder did it, so the four can be compared rather than
+   * averaged into one number that describes none of them.
+   */
+  reminder_link_opened: {
+    location: AnalyticsLocation;
+    bucket: ReminderBucket | '';
+  };
   /** How much of the tender's document text we actually hold, and why. */
   document_coverage_shown: {
     location: AnalyticsLocation;
@@ -270,6 +294,14 @@ const BOOL: PropSpec = { kind: 'bool' };
 export const EVENT_SPECS: {
   readonly [K in AnalyticsEventName]: { readonly [P in keyof AnalyticsEventProps[K]]-?: PropSpec };
 } = {
+  reminder_link_opened: {
+    location: LOCATION,
+    // allowEmpty: a link that lost its bucket (a mail client rewriting the
+    // URL, a user editing it) still tells us the reminder worked. Dropping the
+    // event for a missing dimension would undercount the very thing it exists
+    // to measure.
+    bucket: { kind: 'enum', values: REMINDER_BUCKETS, allowEmpty: true },
+  },
   document_coverage_shown: {
     location: LOCATION,
     coverage: { kind: 'enum', values: COVERAGE_VALUES, allowEmpty: true },

@@ -24,6 +24,7 @@ import { BidStageStepper } from '~/features/workbench/components/organisms/bid-s
 import { SchedaGara } from '~/features/workbench/components/templates/scheda-gara';
 import { useWorkbenchContext } from '~/features/workbench/context';
 import { useBid, useChecklist } from '~/features/workbench/hooks';
+import { useReminderAttribution } from '~/features/workbench/hooks/use-reminder-attribution';
 import { can, Permission } from '~/features/workbench/permissions';
 import { useSchedaGaraStore } from '~/store/scheda-gara';
 
@@ -52,6 +53,10 @@ export function BidDetailPage() {
   const { bidId, workspaceId, workbenchId } = useParams({
     from: '/_authenticated/workspaces/$workspaceId/workbench/$workbenchId/bids/$bidId',
   });
+  // Attribute the visit if a deadline reminder sent them here, before anything
+  // else touches the URL.
+  useReminderAttribution(bidId);
+
   const { myPermissions } = useWorkbenchContext();
   const canManage = can(myPermissions, Permission.ManageWorkbench);
 

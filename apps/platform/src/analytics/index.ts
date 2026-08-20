@@ -21,6 +21,8 @@ export {
   type DossierFieldCategory,
   EVENT_SPECS,
   INVALID_VALUE,
+  REMINDER_BUCKETS,
+  type ReminderBucket,
   type ReportedCoverage,
   type ReportedCoverageReason,
   type ReportedFieldCategory,
