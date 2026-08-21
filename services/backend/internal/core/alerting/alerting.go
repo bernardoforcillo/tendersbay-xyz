@@ -183,7 +183,20 @@ func bucketFor(days int) (int, bool) {
 }
 
 // daysUntil counts whole days between now and the deadline, truncating toward
-// zero, so "23 hours away" is 0 days — the last-call bucket — and not 1.
+// zero.
+//
+// Truncation is chosen over rounding because the two disagree exactly where it
+// matters most. A deadline 30 minutes away truncates to 0 — "oggi", the last
+// call — where rounding up would call it "domani" and tell someone they had a
+// day they do not have. That is the failure mode this whole feature exists to
+// prevent, and it is worth the cost at the other end.
+//
+// The cost, stated plainly because it is real and was found by running this
+// against a database rather than by reading it: a deadline 47 hours out also
+// truncates, to 1, so the mail says "domani" when it is nearly two days away.
+// The number is understated, never overstated — the reader is told they have
+// LESS time than they do, and acts earlier. For a legal submission deadline
+// that is the only direction of error that is safe to have.
 func daysUntil(deadline, now time.Time) int {
 	return int(deadline.Sub(now).Hours() / 24)
 }

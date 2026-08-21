@@ -45,6 +45,24 @@ func main() {
 
 	cfg := config.FromEnv()
 
+	// DIGEST_DRY_RUN decides what would be sent and sends nothing.
+	//
+	// It exists because of a risk this feature carries at deploy time and
+	// nowhere else: last_reminded_bucket defaults to 0, so the FIRST pass
+	// treats every existing bid as never reminded and mails every one already
+	// inside fourteen days of its deadline. That is correct — those deadlines
+	// are real and nobody was told — but it is a burst, and the difference
+	// between expecting it and discovering it is being able to count it first.
+	//
+	// It needs no mailer and no dry-run mode in the domain, because Due is
+	// already a pure public function: read the candidates, apply the rule, and
+	// stop before the part that acts. Nothing is sent and no watermark moves,
+	// so it is safe to run against production.
+	if os.Getenv("DIGEST_DRY_RUN") != "" {
+		dryRun(ctx, cfg)
+		return
+	}
+
 	if cfg.ResendAPIKey == "" || cfg.ReminderMailFrom == "" {
 		// Exit 0, not 1. Reminders being switched off is a configuration
 		// choice, and a CronJob that reports failure for it would page someone
@@ -89,4 +107,33 @@ func main() {
 		slog.Error("every reminder in this pass failed", "failed", rep.Failed)
 		os.Exit(1)
 	}
+}
+
+// dryRun reports what a real pass would send, grouped by bucket, and exits.
+func dryRun(ctx context.Context, cfg config.Config) {
+	db, sqlDB, err := postgres.New(ctx, cfg.DatabaseURL)
+	if err != nil {
+		slog.Error("database unavailable", "error", err)
+		os.Exit(1)
+	}
+	defer sqlDB.Close()
+
+	candidates, err := postgres.NewAlertingRepo(db).ListDueCandidates(ctx)
+	if err != nil {
+		slog.Error("could not read candidates", "error", err)
+		os.Exit(1)
+	}
+	due := alerting.Due(candidates, time.Now().UTC())
+
+	perBucket := map[int]int{}
+	for _, r := range due {
+		perBucket[r.Bucket]++
+	}
+	// Counts only, no bid ids and no addresses: a dry run is something an
+	// operator runs against production, and it must not put anyone's data in a
+	// log line to answer "how many".
+	slog.Info("reminder dry run",
+		"considered", len(candidates), "would_send", len(due),
+		"bucket_14", perBucket[14], "bucket_7", perBucket[7],
+		"bucket_3", perBucket[3], "bucket_1", perBucket[1])
 }
