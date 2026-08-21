@@ -30,11 +30,17 @@ describe('LandingTemplate', () => {
     const { container } = renderWithI18n(<LandingTemplate />, 'en-ie');
     const coverage = container.querySelector('#coverage');
     const assurance = container.querySelector('#assurance');
-    expect(coverage, 'coverage section').not.toBeNull();
-    expect(assurance, 'assurance section').not.toBeNull();
+    // Narrow rather than assert-then-bang: this both fails with the missing
+    // section named AND gives the compiler the guarantee, where `!` gave it
+    // only the guarantee and left the failure to be a TypeError one line down.
+    if (!coverage || !assurance) {
+      throw new Error(
+        `landing must render both sections — coverage: ${coverage !== null}, assurance: ${assurance !== null}`,
+      );
+    }
     // Coverage must come first: assurance follows it in document order.
     expect(
-      coverage!.compareDocumentPosition(assurance!) & Node.DOCUMENT_POSITION_FOLLOWING,
+      coverage.compareDocumentPosition(assurance) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
   });
 });

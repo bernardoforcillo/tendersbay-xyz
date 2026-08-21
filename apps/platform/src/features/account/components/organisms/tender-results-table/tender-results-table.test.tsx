@@ -38,6 +38,23 @@ function fixture(overrides: Partial<TenderResult> = {}): TenderResult {
 
 beforeEach(() => navigateMock.mockReset());
 
+/**
+ * The row at `i`, asserted present.
+ *
+ * A bare `rows[i]!` silences the compiler and then fails with "Cannot read
+ * properties of undefined" several frames deep inside a testing-library
+ * helper, naming neither the index nor the table. This fails at the index that
+ * was wrong and says how many rows actually rendered — which is the whole
+ * question when a sort assertion breaks.
+ */
+function at(rows: HTMLElement[], i: number): HTMLElement {
+  const row = rows[i];
+  if (!row) {
+    throw new Error(`expected a row at index ${i}, but ${rows.length} rendered`);
+  }
+  return row;
+}
+
 describe('TenderResultsTable — rendering', () => {
   it('renders a row per tender with title and buyer', () => {
     renderWithI18n(
@@ -107,7 +124,7 @@ describe('TenderResultsTable — navigation', () => {
     );
     // Tab to the row (it has tabIndex=0) and press Enter
     const rows = screen.getAllByRole('row');
-    const dataRow = rows[1]!;
+    const dataRow = at(rows, 1);
     dataRow.focus();
     await user.keyboard('{Enter}');
     expect(navigateMock).toHaveBeenCalledWith({
@@ -131,9 +148,9 @@ describe('TenderResultsTable — sorting', () => {
   it('defaults to fitTier asc — strong row appears first', () => {
     renderWithI18n(<TenderResultsTable tenders={tenders} />);
     const rows = getDataRows();
-    expect(within(rows[0]!).getByText('Bridge reinforcement')).toBeInTheDocument();
-    expect(within(rows[1]!).getByText('Aqueduct repairs')).toBeInTheDocument();
-    expect(within(rows[2]!).getByText('Coastal erosion study')).toBeInTheDocument();
+    expect(within(at(rows, 0)).getByText('Bridge reinforcement')).toBeInTheDocument();
+    expect(within(at(rows, 1)).getByText('Aqueduct repairs')).toBeInTheDocument();
+    expect(within(at(rows, 2)).getByText('Coastal erosion study')).toBeInTheDocument();
   });
 
   it('clicking Fit toggles to desc — no-tier row appears first', async () => {
@@ -141,8 +158,8 @@ describe('TenderResultsTable — sorting', () => {
     renderWithI18n(<TenderResultsTable tenders={tenders} />);
     await user.click(screen.getByRole('button', { name: /fit/i }));
     const rows = getDataRows();
-    expect(within(rows[0]!).getByText('Coastal erosion study')).toBeInTheDocument();
-    expect(within(rows[2]!).getByText('Bridge reinforcement')).toBeInTheDocument();
+    expect(within(at(rows, 0)).getByText('Coastal erosion study')).toBeInTheDocument();
+    expect(within(at(rows, 2)).getByText('Bridge reinforcement')).toBeInTheDocument();
   });
 
   it('clicking Value sorts ascending by value', async () => {
@@ -150,9 +167,9 @@ describe('TenderResultsTable — sorting', () => {
     renderWithI18n(<TenderResultsTable tenders={tenders} />);
     await user.click(screen.getByRole('button', { name: /value/i }));
     const rows = getDataRows();
-    expect(within(rows[0]!).getByText('Aqueduct repairs')).toBeInTheDocument();
-    expect(within(rows[1]!).getByText('Coastal erosion study')).toBeInTheDocument();
-    expect(within(rows[2]!).getByText('Bridge reinforcement')).toBeInTheDocument();
+    expect(within(at(rows, 0)).getByText('Aqueduct repairs')).toBeInTheDocument();
+    expect(within(at(rows, 1)).getByText('Coastal erosion study')).toBeInTheDocument();
+    expect(within(at(rows, 2)).getByText('Bridge reinforcement')).toBeInTheDocument();
   });
 
   it('clicking Value twice sorts descending', async () => {
@@ -161,7 +178,7 @@ describe('TenderResultsTable — sorting', () => {
     await user.click(screen.getByRole('button', { name: /value/i }));
     await user.click(screen.getByRole('button', { name: /value/i }));
     const rows = getDataRows();
-    expect(within(rows[0]!).getByText('Bridge reinforcement')).toBeInTheDocument();
+    expect(within(at(rows, 0)).getByText('Bridge reinforcement')).toBeInTheDocument();
   });
 
   it('pushes tenders with unknown value (0n) to end regardless of sort direction', async () => {
@@ -173,12 +190,12 @@ describe('TenderResultsTable — sorting', () => {
     renderWithI18n(<TenderResultsTable tenders={withUnknown} />);
     await user.click(screen.getByRole('button', { name: /value/i })); // asc
     const rowsAsc = getDataRows();
-    expect(within(rowsAsc[0]!).getByText('Tender Y')).toBeInTheDocument();
-    expect(within(rowsAsc[1]!).getByText('Tender X')).toBeInTheDocument();
+    expect(within(at(rowsAsc, 0)).getByText('Tender Y')).toBeInTheDocument();
+    expect(within(at(rowsAsc, 1)).getByText('Tender X')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /value/i })); // desc
     const rowsDesc = getDataRows();
-    expect(within(rowsDesc[0]!).getByText('Tender Y')).toBeInTheDocument();
-    expect(within(rowsDesc[1]!).getByText('Tender X')).toBeInTheDocument();
+    expect(within(at(rowsDesc, 0)).getByText('Tender Y')).toBeInTheDocument();
+    expect(within(at(rowsDesc, 1)).getByText('Tender X')).toBeInTheDocument();
   });
 });
