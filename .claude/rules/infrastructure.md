@@ -96,6 +96,23 @@ The `platform` image `bernardoforcillo/tendersbay-platform` is built and pushed 
   only the manifest edit lands on the `main` git branch). The Flux deploy-key secret
   (`tendersbay-xyz-auth`) therefore needs **write** access.
 
+### Jobs, not just Deployments
+
+Two of the three apps run scheduled work, and the CronJob manifests live beside the
+Deployment in the same `<app>/<channel>/` folder:
+
+- `ingestion/main/` ships five — `cronjob.yaml`, `enricher-cronjob.yaml`,
+  `indexer-cronjob.yaml`, `retriever-cronjob.yaml` and the one-shot `seed-cpv-job.yaml`.
+  Each overrides `command` to pick a binary out of the shared ingestion image.
+- `backend/main/digest-cronjob.yaml` runs the deadline-reminder pass out of the backend
+  image the same way.
+
+The pattern is deliberate and is the answer to "where does scheduled work go": a second
+binary in an existing image plus a CronJob, NOT a ticker inside a Deployment (which would
+fire once per replica and couple cadence to pod lifecycle) and NOT a new service unless
+@.claude/rules/system-design.md's threshold is genuinely met. `concurrencyPolicy: Forbid`
+is what makes application-level locking unnecessary.
+
 A second app `backend` lives in the same namespace under `tendersbay-xyz/backend/`,
 shipping the image `bernardoforcillo/tendersbay-backend` (built by
 `.github/workflows/ci-backend.yml`). It mirrors `platform`'s two-channel layout with its

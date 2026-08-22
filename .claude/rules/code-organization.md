@@ -62,13 +62,20 @@ out-of-scope explicit rather than letting a phase creep into the next layer's wo
 ## Enforce it mechanically, not just by convention
 
 Convention alone erodes as a codebase grows, and it erodes faster with AI agents in the loop
-— an agent reuses whatever pattern it finds already in the code, good or bad. This repo uses
-Biome, not ESLint, so there's no import-boundary lint rule wired up yet. Until one exists,
-the cheapest real backstop is dependency-level: don't add a vendor SDK or DB client to
-`apps/platform`'s `package.json` at all — code that can't be installed can't be imported.
-Investigating a Biome or custom import-boundary rule (or a `go vet`-based check for the
-`internal/core` → `internal/adapter` direction) to make this a CI failure instead of a review
-comment is a reasonable next step, not yet in place.
+— an agent reuses whatever pattern it finds already in the code, good or bad.
+
+**The Go direction IS enforced, mechanically.** `services/backend/boundary_test.go` shells out
+to `go list` and fails the build on any `internal/core` → `internal/adapter` import that is not
+in `knownViolations` — a deliberately SHRINKING allowlist, which is also the live debt register
+for this rule: what is in it is what still has to be unwound (`core/agent` and `core/credits`
+reaching `postgres`). Adding a new edge fails CI; removing one means deleting its entry. Read
+that map before proposing a change that would need a new exemption.
+
+**The frontend direction is not, and has no runner.** This repo uses Biome, not ESLint, so
+there is no import-boundary lint rule for `apps/platform`. The backstop there stays
+dependency-level: don't add a vendor SDK or DB client to `apps/platform`'s `package.json` at
+all — code that can't be installed can't be imported. A Biome or custom rule to make that a CI
+failure instead of a review comment is still a reasonable next step, and still not in place.
 
 ## Naming and supply-chain hygiene
 

@@ -7,7 +7,17 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, standalone backend se
   Go static server (`//go:embed`); Air provides hot reload in dev.
 - `services/backend` — standalone Go HTTP service (hexagonal: `internal/core` +
   `internal/adapter/*`), its own `go.mod` and Docker image (`tendersbay-backend`); serves
-  `api.tendersbay.xyz`. Unlike `apps/`, a service does not embed the frontend.
+  `api.tendersbay.xyz`. Unlike `apps/`, a service does not embed the frontend. Its image
+  also carries `cmd/digest`, the deadline-reminder pass a CronJob invokes.
+- `services/ingestion` — the second Go service, and the one that fills the corpus. It runs
+  as CronJobs rather than a server: one binary per phase (`ingestion`, `enricher`,
+  `indexer`, `retriever`, `seed-cpv`) built into a single image, each phase overriding the
+  entrypoint. It owns the `tenders` schema and its numbered SQL migrations —
+  `services/backend` reads those tables and must never migrate them.
+- `go-services/*` — Go modules shared by both services, mounted in `go.work` alongside
+  them: `tender` (the normalized tender domain model), `knowledge` (Qdrant + Ollama
+  embeddings), `telemetry` (slog to PostHog over OTLP), `password`, `token`. A type here
+  is depended on by two services at once, so a change to one is a change to both.
 - `packages/tsconfig` (`@tendersbay/tsconfig`) — shared TypeScript configs.
 - `packages/tailwind` (`@tendersbay/tailwind`) — shared Tailwind v4 theme.
 - `packages/components` (`@tendersbay/components`) — shared React components.
@@ -75,6 +85,11 @@ Internal code organization (which layer — UI, transport, domain, capabilities/
 supporting foundations — may depend on which other layer, mapped across `apps/platform`
 and `services/backend`) is documented in @.claude/rules/code-organization.md; the same
 `software-architect` agent reviews changes against it.
+
+How to establish that a claim is true before acting on it — positive controls for
+negative results, the obligation that comes with a delegated or handed-over finding,
+and what to do when a required check cannot be run here — is documented in
+@.claude/rules/verification.md.
 
 ## Memory wiki
 
