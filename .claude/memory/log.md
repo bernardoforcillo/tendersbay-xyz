@@ -2,6 +2,81 @@
 
 Append-only. Prefix `## [YYYY-MM-DD] <op> | <topic>` so `grep "^## \[" log.md | tail` shows the timeline.
 
+## [2026-08-22] ingest | competitive-program: selection criteria, deadline reminders, locale, verification method
+- Source: no plan file — the work came from a PRD run
+  (`docs/superpowers/prd/2026-08-17-competitive-program.md` +
+  `…-evidence-kit.md`) and 16 commits on `claude/platform-competitive-features-c4oyng`,
+  whose messages carry the reasoning. Every claim below was re-verified against code before
+  writing; the brief was treated as findings to check, not facts to copy.
+- New `selection-criteria-sources.md` (project): TED eForms qualification is a pointer
+  (`epo-sub-espd`) with the n=2 sampling caveat stated as structural-not-frequency; ES PLACSP
+  publishes inline prose with real thresholds + legal basis; three CODICE families; why
+  category and type are two columns; why there is no weight and no threshold column; the
+  `DetailedSource` / `SourceRef` / `SaveDetail`-bypass wiring notes.
+- New `published-requirement-modelling.md` (project): `RequirementNoticePublished` is
+  non-authoritative because `CanBlock`'s switch defaults false; everything maps to
+  `RequirementOther` because a category is not a threshold; and the trap — `RequirementOther`
+  returns `unknownGap` unconditionally, so `Blocking: true` would deadlock the go verdict
+  permanently. Generalised to "an unconditionally-unknown gap makes Blocking a deadlock, not
+  a safeguard."
+- New `deadline-reminder-pipeline.md` (project): buckets + watermark ARE the idempotency
+  mechanism (no lock); `bucketFor` must return the narrowest crossed threshold or the 7-day
+  reminder never fires; `daysUntil` truncates so the error is always understated; nobody-to-mail
+  advances the watermark and every-send-failed does not; digest CronJob shape, `backoffLimit: 0`,
+  06:00 UTC, and the `DIGEST_DRY_RUN` first-pass burst.
+- New `marketing-email-deliverability.md` (reference): the transactional/marketing sending-domain
+  split enforced in `email.NewReminder`'s constructor rather than documented, because the
+  protection would be lost silently; List-Unsubscribe + One-Click; GET on `/unsubscribe` must
+  change nothing (scanners prefetch); plain vs. hashed token threat model.
+- New `user-locale-capture.md` (project): `""` must stay representable; `SignUpRequest.locale`
+  had been collected and discarded all along; `EnsureLocale` backfills on login and never
+  overwrites (header = device, stored = choice).
+- New `positive-control-for-negative-results.md` (reference): the method lesson — three
+  false negatives from this session (routeTree grep, `scan_tenders` regex whose own positive
+  control returned 0, `needsProfile` "discarded"), two of them from a subagent report and
+  about to become PRD headline findings.
+- New `sandbox-verification-capabilities.md` (reference): Postgres 16 is startable here and
+  caught a duplicate index, two wrong fixture assumptions and a bucket surprise; `buf` and
+  `kubectl` are absent, so proto codegen and `kubectl kustomize` are blocked.
+- Updated `landing-analytics.md`: the two `landing_search_*` events (live because the dock is),
+  `reminder_link_opened` + its three attribution decisions, and the typed
+  `analytics/events/EVENT_SPECS` registry as the mechanism for authenticated surfaces.
+- Personal note (treat handed-over findings as claims to verify; prefer mutation-checked
+  assertions) → harness memory, not committed here.
+- Skipped as already recorded: commit/staging hygiene (git-flow rule), hexagonal layering
+  (code-organization rule), CronJob-vs-service threshold (system-design rule).
+
+## [2026-08-22] lint | full sweep + three stale claims retired
+- `eu-coverage-section.md`: retired "ANAC is retrospective, not a live portal." PVL
+  (`pubblicitalegale.anticorruzione.it`) has been the mandatory legal-publication venue since
+  2024-01-01 — live, prospective, credential-free. Recorded the two nuances: the
+  "interoperabilità ANAC" APIs are the **publish** side (via PDND), not a bidder feed; and the
+  SPA's UUID-keyed routes only *imply* a JSON backend — unconfirmed, every ANAC host is
+  unreachable from the sandbox. IT stays unintegrated, for engineering reasons now.
+- `landing-page-design.md`: retired "search dock is grayscale + disabled / not functional."
+  Verified live — real `<input>` → `useLandingSearch` → `tenderClient.searchTenders`, debounced,
+  five-state machine, results render upward, carry-over into the first-run profile. Recorded
+  that the disabled teaser *moved* to `features/account/.../search-dock`, so
+  `landing.search.hint` is still live copy and must not be deleted as dead.
+- Flagged, not rewritten: `docs/gtm/feature-growth-priorities.md` is built end-to-end on a
+  waitlist premise dropped 2026-07-16 (25 mentions, a whole capture section, an invite-referral
+  loop keyed on `waitlist_signup`, and a false quote of the closing CTA). Noted in
+  `landing-page-design.md` next to the waitlist-drop record.
+- `code-organization-principles.md`: recorded that mechanical boundary enforcement now EXISTS
+  (`services/backend/boundary_test.go`, `go list`-based, shrinking 5-entry allowlist) — the
+  page previously described it only as a general principle and `.claude/rules/code-organization.md`
+  still says it is "not yet in place" (proposed rules fix, not applied).
+- Orphans fixed: `vite-plugin-seo` gained an inbound link from `landing-page-design`;
+  `system-design-principles`, `code-organization-principles` and `ai-coding-workflow-principles`
+  gained inbound links from the new pages. No orphans remain.
+- No dangling wikilinks, no index drift after the update. `check.mjs` passes.
+- Open questions carried forward: what share of Italian eForms notices set
+  `selection-criteria-source = epo-sub-espd` (answer from the stored corpus, not the network);
+  whether PVL exposes a consumer-readable JSON backend; and three docs that under-describe the
+  tree — `CLAUDE.md` (no `services/ingestion`, no `go-services/*`),
+  `.claude/rules/infrastructure.md` (no ingestion CronJobs), `.claude/rules/code-organization.md`
+  (the stale enforcement claim above).
+
 ## [2026-07-26] ingest | landing-usp-redesign
 - Corrected a stale page rather than trusting its "updated" date: `vite-plugin-seo.md`
   (last touched 2026-07-01) claimed static/identical meta and no hardcoded canonical — both

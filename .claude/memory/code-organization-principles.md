@@ -3,7 +3,7 @@ name: code-organization-principles
 description: Layered code-organization and dependency-boundary framework (ownership over folders, one-directional dependency rule, mechanical boundary enforcement, naming consistency, supply-chain hygiene) — full reasoning behind the tendersbay-xyz code-organization rule set
 metadata:
   type: reference
-  updated: 2026-07-18
+  updated: 2026-08-22
 ---
 
 This page holds the full reasoning behind each principle; the tendersbay-xyz-specific,
@@ -33,6 +33,18 @@ actionable version lives in `.claude/rules/code-organization.md` and is what the
   lint rules (or an equivalent dependency-level guard, like never installing a vendor SDK in
   a package that shouldn't use it) turn a boundary violation into a build failure instead of
   a review comment that might get missed.
+  - **This repo now has one (verified 2026-08-22).** `services/backend/boundary_test.go`
+    enforces `internal/core ↛ internal/adapter` by shelling out to `go list` and comparing
+    the observed edge set against a deliberately **shrinking** 5-entry `knownViolations`
+    allowlist — the test fails both on a *new* edge and on an allowlist entry that has
+    quietly stopped applying, so the allowlist is a live debt register rather than a
+    permanent exemption. Two design notes worth reusing: it lives in the root `package main`
+    because the packages it audits form a real source-level import cycle (`postgres` →
+    `core/*`, `core/agent` → `core/credits` → `postgres`), so a checker that *imported* them
+    could not be placed inside `internal/`; and it uses `go list` rather than `grep` because
+    grep is actively wrong here — `grep -rn "internal/adapter" internal/core` already matches
+    the doc comments that *assert* compliance. `.claude/rules/code-organization.md` still
+    says no such check is "in place" — that sentence is stale and is a proposed rules fix.
 - **AI coding agents amplify whatever structure already exists.** An agent asked to add a
   feature will pattern-match the surrounding code — including bad patterns, like a frontend
   calling a vendor directly. A codebase with enforced boundaries produces agent-written code

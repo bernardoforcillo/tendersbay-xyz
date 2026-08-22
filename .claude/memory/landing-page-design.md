@@ -3,7 +3,7 @@ name: landing-page-design
 description: "tendersbay landing page — positioning, brand palette, tone, and key product framing"
 metadata:
   type: project
-  updated: 2026-07-26
+  updated: 2026-08-22
   sources:
     [
       docs/gtm/2026-07-15-landing-restructure.md,
@@ -41,15 +41,34 @@ bureaucracy, and help them **win**. It is explicitly **NOT** a translation produ
 **Notable specifics:** hero shows a rotating sample-tender card (`SAMPLE_TENDERS` fixture →
 swap for real tenders in phase 2); footer contact is `mailto:me@bernardoforcillo.com`;
 copyright line is "© Bernardo Forcillo — Tutti i diritti riservati"; landing copy is
-authored in all 24 EU locales (default/source `en-ie`).
+authored in all 24 EU locales (default/source `en-ie`). The page's static SEO `<head>` tags,
+`robots.txt`, `sitemap.xml` and `llms.txt` are emitted at build by
+[[vite-plugin-seo]], not by anything in the landing feature.
 
-**Floating search dock** (`organisms/search-dock`): a permanent Gemini-style bar docked
-bottom-center (`z-40`, under the header), **grayscale + disabled** (pre-launch teaser, not
-functional) with a sparkle icon, a **looping localized placeholder** of detailed tender
-example queries (`landing.search.examples`, rotated by `useRotatingPlaceholder`), and a
-hover/focus hint "AI-powered search — coming soon" (`landing.search.hint`). Fades out over
-the footer via `useHideNearFooter` (IntersectionObserver on `#site-footer`). Disabled-but-
-focusable RAC `Button` (`aria-disabled`, no-op `onPress`).
+**Floating search dock** (`features/landing/.../organisms/search-dock`): a permanent
+Gemini-style bar docked bottom-center (`z-40`, under the header) with a **looping localized
+placeholder** of detailed tender example queries (`landing.search.examples`, rotated by
+`useRotatingPlaceholder`, paused once you type). Fades out over the footer via
+`useHideNearFooter` (IntersectionObserver on `#site-footer`).
+
+**It is LIVE — corrected 2026-08-22.** This page previously described it as "grayscale +
+disabled (pre-launch teaser, not functional)"; that is **stale**. It is a real `<input>`
+driving `useLandingSearch` → `tenderClient.searchTenders`: 300ms debounce, 2-char minimum,
+3-result cap, anon-safe (server clamps the anon tier), with a monotonic request-id guard so
+a slow superseded response cannot clobber a newer one. Results render **upward** above the
+input (Spotlight/Raycast pattern) through `SearchResults`, over an honest five-state machine
+(`idle | loading | results | empty | error` — there is deliberately no "sample" state; an
+empty result is `empty`, never faked into cards). On each resolved search it fires
+`landing_search_performed` and writes a **carry-over** (`~/lib/landing-carry-over`,
+sessionStorage key `tb.landing.lastSearch`, read-and-cleared) that pre-fills the first-run
+client-profile capture in `features/workspace/.../first-run-profile`. Events in
+[[landing-analytics]].
+
+The "coming soon" teaser did not disappear — it **moved**. The disabled-but-focusable RAC
+`Button` (`aria-disabled`, no-op `onPress`, `cursor-default grayscale`) and the
+`landing.search.hint` tooltip ("AI-powered search — coming soon") now live in the
+**account** dock, `features/account/.../organisms/search-dock`. So the `landing.search.hint`
+key is still live copy — don't delete it as dead.
 
 **Copy re-architecture (2026-06-26, persona-led + cutting tone):** the landing was
 rewritten for max "desire at the end", driven by the buyer-personas + vertical study
@@ -87,6 +106,12 @@ Coverage → Vision → CTA:
   copy dropped; `landing.cta` + hero primary CTA route to the real `/$locale/auth/signup`
   flow (button "Create your account"). The authenticated product (auth/workbench/
   workspace/explore) already exists in-repo, so the waitlist framing was wrong.
+  **Stale doc, flagged 2026-08-22 (not rewritten):** `docs/gtm/feature-growth-priorities.md`
+  is built end-to-end on waitlist capture — 25 mentions, a whole "1.1 Waitlist capture with
+  position-in-line + country gating" section, an invite-link referral loop keyed on
+  `waitlist_signup`, and the claim that the closing CTA reads "Join the waitlist — Claim
+  your spot". Every one of those is false as of this date. Its loop layer needs a rewrite
+  against the real signup funnel ([[landing-analytics]]) before anything is built from it.
 - **Instrumentation:** `AgentsSection` fires `agents_section_viewed` ({ location: 'agents' })
   once via motion `useInView` (once, amount 0.4) — measures whether the open-loop hook pulls
   readers toward the CTA. Consent-gating is automatic. (`locale` is a super-property.)
