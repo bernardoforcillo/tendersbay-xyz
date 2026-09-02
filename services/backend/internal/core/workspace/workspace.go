@@ -394,19 +394,25 @@ func (s *Service) Standing(ctx context.Context, workspaceID, userID string) (Sta
 
 // ── Members ─────────────────────────────────────────────────────────────────
 
+// ListMembers returns the workspace's members with their roles and profiles.
+//
+// It resolves the caller's standing ONCE, in LoadMembership, and reads through
+// the store from there. Going through scope.ListMembers and scope.ListRoles
+// instead would re-resolve it twice more — each of those authorizes on its own
+// — for three ladders down the same container on one page.
 func (s *Service) ListMembers(ctx context.Context, userID, workspaceID string) ([]MemberView, error) {
 	if _, err := s.LoadMembership(ctx, workspaceID, userID); err != nil {
 		return nil, err
 	}
-	ac := actor(ctx, userID, workspaceID)
-	members, err := s.sc.ListMembers(ac)
+	members, err := s.store.ListMembers(ctx, workspaceID)
 	if err != nil {
 		return nil, mapLibraryError(err)
 	}
-	roles, err := s.rolesByKey(ac, workspaceID)
+	roles, err := s.rolesByKey(ctx, workspaceID)
 	if err != nil {
 		return nil, err
 	}
+
 	ids := make([]string, len(members))
 	for i, m := range members {
 		ids[i] = m.UserID
@@ -431,11 +437,10 @@ func (s *Service) ListMembers(ctx context.Context, userID, workspaceID string) (
 }
 
 func (s *Service) ChangeMemberRole(ctx context.Context, userID, workspaceID, targetUserID, roleID string) (MemberView, error) {
-	ac := actor(ctx, userID, workspaceID)
-	if err := s.sc.ChangeMemberRole(ac, targetUserID, roleID); err != nil {
+	if err := s.sc.ChangeMemberRole(actor(ctx, userID, workspaceID), targetUserID, roleID); err != nil {
 		return MemberView{}, mapLibraryError(err)
 	}
-	role, err := s.role(ac, workspaceID, roleID)
+	role, err := s.role(ctx, workspaceID, roleID)
 	if err != nil {
 		return MemberView{}, err
 	}
@@ -460,15 +465,7 @@ func (s *Service) ListRoles(ctx context.Context, userID, workspaceID string) ([]
 	if _, err := s.LoadMembership(ctx, workspaceID, userID); err != nil {
 		return nil, err
 	}
-	views, err := s.sc.ListRoles(actor(ctx, userID, workspaceID))
-	if err != nil {
-		return nil, mapLibraryError(err)
-	}
-	out := make([]Role, len(views))
-	for i, v := range views {
-		out[i] = roleFromView(workspaceID, v)
-	}
-	return out, nil
+	return s.roleViews(ctx, workspaceID)
 }
 
 func (s *Service) CreateRole(ctx context.Context, userID, workspaceID, name string, perms Permission) (Role, error) {
@@ -476,7 +473,7 @@ func (s *Service) CreateRole(ctx context.Context, userID, workspaceID, name stri
 	if err != nil {
 		return Role{}, mapLibraryError(err)
 	}
-	return roleFromView(workspaceID, view), nil
+	return roleFromView(workspaceID, codec.View(view)), nil
 }
 
 func (s *Service) UpdateRole(ctx context.Context, userID, workspaceID, roleID, name string, perms Permission) (Role, error) {
@@ -484,7 +481,7 @@ func (s *Service) UpdateRole(ctx context.Context, userID, workspaceID, roleID, n
 	if err != nil {
 		return Role{}, mapLibraryError(err)
 	}
-	return roleFromView(workspaceID, view), nil
+	return roleFromView(workspaceID, codec.View(view)), nil
 }
 
 func (s *Service) DeleteRole(ctx context.Context, userID, workspaceID, roleID string) error {
@@ -502,30 +499,44 @@ var defaultRoleNames = map[string]string{
 	RoleMember: "Member",
 }
 
-func roleFromView(workspaceID string, v scope.RoleView) Role {
-	name := v.Name
-	if v.IsDefault {
-		if label, ok := defaultRoleNames[v.Key]; ok {
-			name = label
-		}
-	}
+func roleFromView(workspaceID string, v rbac.RoleView[Permission]) Role {
 	return Role{
 		ID:          v.Key,
 		WorkspaceID: workspaceID,
-		Name:        name,
-		Permissions: maskOf(v.Permissions, v.Permissions.IsFull()),
+		Name:        v.Name,
+		Permissions: v.Permissions,
 		IsDefault:   v.IsDefault,
 	}
 }
 
-func (s *Service) rolesByKey(ctx context.Context, workspaceID string) (map[string]Role, error) {
-	views, err := s.sc.ListRoles(ctx)
+// roleViews lists the workspace's roles: the code-defined three plus its own
+// stored ones. It reads the store directly rather than through
+// scope.ListRoles, which would resolve the caller's standing a second time —
+// every caller has already been gated by the time it gets here.
+func (s *Service) roleViews(ctx context.Context, workspaceID string) ([]Role, error) {
+	records, err := s.store.ListRoles(ctx, workspaceID)
 	if err != nil {
 		return nil, mapLibraryError(err)
 	}
-	out := make(map[string]Role, len(views))
-	for _, v := range views {
-		out[v.Key] = roleFromView(workspaceID, v)
+	views, err := codec.Roles(records)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]Role, len(views))
+	for i, v := range views {
+		out[i] = roleFromView(workspaceID, v)
+	}
+	return out, nil
+}
+
+func (s *Service) rolesByKey(ctx context.Context, workspaceID string) (map[string]Role, error) {
+	roles, err := s.roleViews(ctx, workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	out := make(map[string]Role, len(roles))
+	for _, r := range roles {
+		out[r.ID] = r
 	}
 	return out, nil
 }
@@ -680,15 +691,19 @@ func (s *Service) JoinViaInviteLink(ctx context.Context, userID, code string) (W
 }
 
 // previewNames resolves the workspace and role labels an unauthenticated
-// preview shows. It reads the role registry directly rather than through
-// ListRoles' authorization, because a preview is by definition served to
-// someone who is not yet a member.
+// preview shows. It skips ListRoles' gate deliberately: a preview is by
+// definition served to someone who is not yet a member.
+//
+// The role label comes from the same place a member list's does. It used to be
+// the raw key when the role was code-defined, so an invitation to the "member"
+// role previewed as "member" while the role list beside it said "Member" — two
+// answers to one question, which is exactly what having one label source fixes.
 func (s *Service) previewNames(ctx context.Context, workspaceID, key string) (workspaceName, roleName string, err error) {
 	ws, err := s.sc.Container(ctx, workspaceID)
 	if err != nil {
 		return "", "", mapLibraryError(err)
 	}
-	roleName = key
+	roleName = codec.Label(key)
 	if rec, err := s.store.FindRole(ctx, workspaceID, key); err == nil && rec.Name != "" {
 		roleName = rec.Name
 	}

@@ -37,6 +37,10 @@ const (
 	// AgentTokens is the metered LLM budget every workspace draws down when it
 	// talks to an agent. It is the one feature with a limit today, and it is
 	// what used to be the workspace_credits row.
+	//
+	// It DEPENDS ON AgentChat, so the kill switch below reaches the meter as
+	// well: one evaluation answers both "is the agent on" and "is there budget
+	// left", off one subscription read, instead of the caller asking twice.
 	AgentTokens catalog.Key = "agent.tokens"
 	// AgentChat is the agent surface itself, entitlement-gated and flagged so
 	// it has a kill switch that needs no deploy.
@@ -71,8 +75,9 @@ func Config() featurelayer.Config {
 	return featurelayer.Config{
 		Features: []catalog.Feature{
 			{Key: AgentTokens, Name: "Agent tokens", Lifecycle: catalog.GA,
-				Description: "Metered LLM budget drawn down by every agent turn."},
-			{Key: AgentChat, Name: "Agent chat", Lifecycle: catalog.GA, DependsOn: []catalog.Key{AgentTokens}},
+				Description: "Metered LLM budget drawn down by every agent turn.",
+				DependsOn:   []catalog.Key{AgentChat}},
+			{Key: AgentChat, Name: "Agent chat", Lifecycle: catalog.GA},
 			{Key: TenderSearch, Name: "Tender search", Lifecycle: catalog.GA, Free: true,
 				Description: "Served to anonymous callers, so it carries no entitlement check."},
 		},
@@ -161,15 +166,9 @@ func evalContext(workspaceID, userID string) featurelayer.EvalContext {
 	return featurelayer.EvalContext{TenantID: workspaceID, UserID: userID}
 }
 
-// Enabled reports whether a workspace may use a feature. It is the read for UI
-// gating and for a cheap guard in front of an expensive path; it consumes
-// nothing.
-func (e *Engine) Enabled(ctx context.Context, key catalog.Key, workspaceID, userID string) bool {
-	return e.e.IsEnabled(ctx, key, evalContext(workspaceID, userID))
-}
-
-// Evaluate is Enabled with the reasoning attached, for a caller that needs to
-// tell "not on your plan" from "switched off" or "out of budget".
+// Evaluate reports whether a workspace may use a feature, with the reasoning
+// attached so a caller can tell "not on your plan" from "switched off". It
+// consumes nothing.
 func (e *Engine) Evaluate(ctx context.Context, key catalog.Key, workspaceID, userID string) featurelayer.Decision {
 	return e.e.Evaluate(ctx, key, evalContext(workspaceID, userID))
 }

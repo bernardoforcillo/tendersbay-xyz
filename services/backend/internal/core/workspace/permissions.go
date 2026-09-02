@@ -105,15 +105,22 @@ func Statements() map[string][]access.Action {
 	}
 }
 
-// codec is the mask projection and the access engine behind it, built once.
+// codec is the mask projection, the role labels, and the access engine behind
+// both, built once.
 //
 // The member role is redefined over authlayer's empty default because this
 // product's baseline member can already see and create workbenches; that was
 // the seeded "Member" role's permission set before authlayer.
-var codec = rbac.New(Statements(), PermViewWorkspace, PermAdministrator, permissionGrants,
-	map[string][]access.Action{
+var codec = rbac.New(rbac.Config[Permission]{
+	Statements: Statements(),
+	Baseline:   PermViewWorkspace,
+	Admin:      PermAdministrator,
+	Grants:     permissionGrants,
+	MemberGrants: map[string][]access.Action{
 		ResourceWorkbench: {scope.ActionRead, scope.ActionCreate},
-	})
+	},
+	Labels: map[string]string{RoleOwner: "Owner", RoleAdmin: "Admin", RoleMember: "Member"},
+})
 
 // NewAccess returns the access engine for workspaces. It is one shared value,
 // not a fresh build per call: permissions from two engines over the same

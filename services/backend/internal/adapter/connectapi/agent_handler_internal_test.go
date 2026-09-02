@@ -130,7 +130,7 @@ func newBillingHandler(t *testing.T, usage *countingUsage, ledger *fakeLedger) *
 		t.Fatalf("features.New: %v", err)
 	}
 	svc := credits.NewService(engine, memSubscriptions{subs}, noPricing{}, ledger)
-	return NewAgentHandler(nil, svc, nil, nil)
+	return NewAgentHandler(nil, svc, nil)
 }
 
 // oneTurnOfUsage is what runTurn reports for a turn that reached the provider.

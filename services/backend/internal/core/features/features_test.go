@@ -41,7 +41,7 @@ func TestConfigIsValid(t *testing.T) {
 
 func TestFreePlan_CarriesTheAgent(t *testing.T) {
 	e, _ := engineFor(t, freePlan())
-	if !e.Enabled(context.Background(), features.AgentChat, ws, "u-1") {
+	if !e.Evaluate(context.Background(), features.AgentChat, ws, "u-1").Enabled {
 		t.Fatal("the free plan must carry the agent")
 	}
 }
@@ -76,7 +76,7 @@ func TestEveryFeatureIsReachable(t *testing.T) {
 // subscription existing at all.
 func TestTenderSearch_IsFreeWithoutASubscription(t *testing.T) {
 	e, _ := engineFor(t, nil)
-	if !e.Enabled(context.Background(), features.TenderSearch, "", "") {
+	if !e.Evaluate(context.Background(), features.TenderSearch, "", "").Enabled {
 		t.Fatal("tender search must be available with no tenant and no subscription")
 	}
 }
@@ -85,7 +85,7 @@ func TestTenderSearch_IsFreeWithoutASubscription(t *testing.T) {
 // nothing, which is what keeps an unmetered agent from being the default.
 func TestNoSubscription_FailsClosed(t *testing.T) {
 	e, _ := engineFor(t, nil)
-	if e.Enabled(context.Background(), features.AgentChat, ws, "u-1") {
+	if e.Evaluate(context.Background(), features.AgentChat, ws, "u-1").Enabled {
 		t.Fatal("a workspace with no subscription must not reach the agent")
 	}
 	d := e.Evaluate(context.Background(), features.AgentChat, ws, "u-1")
@@ -203,5 +203,41 @@ func TestGrantOverridesThePlanLimit(t *testing.T) {
 	}
 	if d.Usage.Max != custom {
 		t.Fatalf("max = %d, want the overridden %d", d.Usage.Max, custom)
+	}
+}
+
+// The kill switch on the agent surface reaches the METER, because the meter
+// depends on the surface. That dependency is what lets one credits.Check answer
+// both "is the agent on" and "is there budget", off one subscription read.
+func TestKillSwitchReachesTheMeter(t *testing.T) {
+	cfg := features.Config()
+	for i := range cfg.Flags {
+		if cfg.Flags[i].Feature == features.AgentChat {
+			cfg.Flags[i].Enabled = false
+		}
+	}
+	snap, err := featurelayer.NewSnapshot(cfg)
+	if err != nil {
+		t.Fatalf("NewSnapshot: %v", err)
+	}
+	subs := entitlement.NewMemSubscriptions()
+	subs.Set(*freePlan())
+	engine := featurelayer.New(snap,
+		featurelayer.WithSubscriptions(subs),
+		featurelayer.WithUsage(entitlement.NewMemUsage()),
+	)
+
+	d, err := engine.Usage(context.Background(), features.AgentTokens, featurelayer.EvalContext{TenantID: ws})
+	if err != nil {
+		t.Fatalf("Usage: %v", err)
+	}
+	if d.Enabled {
+		t.Fatal("the meter is still open with the agent switched off")
+	}
+	if d.Reason != featurelayer.ReasonPrerequisite {
+		t.Fatalf("reason = %q, want prerequisite — that is what tells a caller it is a kill switch and not an empty budget", d.Reason)
+	}
+	if d.Usage != nil {
+		t.Fatal("a refusal before the counter must report no usage, or it reads as a budget answer")
 	}
 }

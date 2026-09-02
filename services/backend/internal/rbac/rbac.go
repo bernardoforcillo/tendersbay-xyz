@@ -40,12 +40,34 @@ type Codec[M ~uint64] struct {
 	grants     []Grant[M]
 	baseline   M
 	admin      M
+	labels     map[string]string
+}
+
+// Config is everything a scope declares about its own permission surface.
+// Grouped into a struct rather than passed positionally: six arguments of which
+// three are maps is a call nobody can read.
+type Config[M ~uint64] struct {
+	// Statements is the complete set of (resource, action) pairs the scope
+	// declares. Nothing outside it can be granted or checked.
+	Statements map[string][]access.Action
+	// Baseline is the bit that means "is a member", and Admin the bit that
+	// means "bypasses every check". Neither is a grant, so neither appears in
+	// Grants.
+	Baseline M
+	Admin    M
+	// Grants maps each remaining bit onto what it stands for.
+	Grants []Grant[M]
+	// MemberGrants is what the baseline role carries — empty for a scope where
+	// membership alone is the whole of it.
+	MemberGrants map[string][]access.Action
+	// Labels are the display names for the code-defined roles, keyed by
+	// scope.RoleOwner / RoleAdmin / RoleMember. authlayer reports a
+	// code-defined role's name as its key, because a role built in code has no
+	// separate label; these are what the client shows instead.
+	Labels map[string]string
 }
 
 // New builds a codec and, with it, the access engine the scope runs on.
-//
-// baseline is the bit that means "is a member" and admin the bit that means
-// "bypasses every check" — neither is a grant, so neither appears in grants.
 //
 // The three code-defined roles are seeded here rather than through
 // scope.NewAccess, which declares <container>:delete and then withholds it from
@@ -54,23 +76,22 @@ type Codec[M ~uint64] struct {
 // means by an administrator. Owner and admin both hold everything; deletion is
 // gated by ownership instead of by a grant, in the domain that owns the rule.
 //
-// memberGrants is what the baseline role carries — empty for a scope where
-// membership alone is the whole of it.
-//
 // It panics on a grant the statements do not declare, at package
 // initialization: a capability nobody can hold is a programming error, not a
 // runtime condition, and authlayer refuses it for the same reason.
-func New[M ~uint64](
-	statements map[string][]access.Action,
-	baseline, admin M,
-	grants []Grant[M],
-	memberGrants map[string][]access.Action,
-) *Codec[M] {
-	ac := access.New(access.NewStatements(statements))
-	ac.NewRole(scope.RoleOwner, statements)
-	ac.NewRole(scope.RoleAdmin, statements)
-	ac.NewRole(scope.RoleMember, memberGrants)
-	return &Codec[M]{ac: ac, statements: statements, grants: grants, baseline: baseline, admin: admin}
+func New[M ~uint64](cfg Config[M]) *Codec[M] {
+	ac := access.New(access.NewStatements(cfg.Statements))
+	ac.NewRole(scope.RoleOwner, cfg.Statements)
+	ac.NewRole(scope.RoleAdmin, cfg.Statements)
+	ac.NewRole(scope.RoleMember, cfg.MemberGrants)
+	return &Codec[M]{
+		ac:         ac,
+		statements: cfg.Statements,
+		grants:     cfg.Grants,
+		baseline:   cfg.Baseline,
+		admin:      cfg.Admin,
+		labels:     cfg.Labels,
+	}
 }
 
 // Access is the engine to hand scope.New. One per scope, built once: an
@@ -184,4 +205,75 @@ func Slug(s string) string {
 		}
 	}
 	return strings.Trim(b.String(), "-")
+}
+
+// RoleView is one role as the product publishes it: authlayer's key, the label
+// to show for it, its permissions already projected onto the wire mask, and
+// whether it is one of the code-defined three.
+type RoleView[M ~uint64] struct {
+	Key         string
+	Name        string
+	Permissions M
+	IsDefault   bool
+}
+
+// Roles composes the code-defined roles with a container's own stored ones.
+//
+// It is scope.Service.ListRoles without the authorization: that method gates on
+// membership, and a caller can be entitled to see a container's roles by a rule
+// the engine does not know about — a shared workbench's viewers, whose access
+// comes from a visibility column. The gate is the domain's to apply before
+// calling this.
+func (c *Codec[M]) Roles(records []scope.RoleRecord) ([]RoleView[M], error) {
+	out := make([]RoleView[M], 0, len(records)+3)
+	for _, key := range []string{scope.RoleOwner, scope.RoleAdmin, scope.RoleMember} {
+		r, ok := c.ac.Role(key)
+		if !ok {
+			continue
+		}
+		out = append(out, RoleView[M]{
+			Key:         r.Key,
+			Name:        c.Label(r.Key),
+			Permissions: c.Mask(r.Permissions, r.Permissions.IsFull()),
+			IsDefault:   true,
+		})
+	}
+	for _, rec := range records {
+		perms, err := c.ac.Decode(rec.Permissions)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, RoleView[M]{
+			Key:         rec.Key,
+			Name:        rec.Name,
+			Permissions: c.Mask(perms, perms.IsFull()),
+		})
+	}
+	return out, nil
+}
+
+// View projects one of authlayer's role views onto the product's. Use it for
+// the single role scope.Service.CreateRole and UpdateRole hand back; Roles is
+// the same projection over a whole container.
+func (c *Codec[M]) View(v scope.RoleView) RoleView[M] {
+	name := v.Name
+	if v.IsDefault {
+		name = c.Label(v.Key)
+	}
+	return RoleView[M]{
+		Key:         v.Key,
+		Name:        name,
+		Permissions: c.Mask(v.Permissions, v.Permissions.IsFull()),
+		IsDefault:   v.IsDefault,
+	}
+}
+
+// Label is the display name for a code-defined role key, and the key itself for
+// anything else — which is the right answer for a stored role only when its own
+// name is unavailable, so callers holding the row should prefer that.
+func (c *Codec[M]) Label(key string) string {
+	if name, ok := c.labels[key]; ok {
+		return name
+	}
+	return key
 }

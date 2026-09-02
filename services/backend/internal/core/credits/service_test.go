@@ -161,6 +161,9 @@ func TestDeduct_OverBudgetIsLoggedNotFailed(t *testing.T) {
 	if check.OK {
 		t.Fatal("an exhausted budget must not report OK")
 	}
+	if check.Unavailable {
+		t.Fatal("an exhausted budget is not the agent being switched off")
+	}
 }
 
 func TestCheck_SeededWorkspace(t *testing.T) {
@@ -191,6 +194,11 @@ func TestCheck_UnseededWorkspaceIsNotOK(t *testing.T) {
 	}
 	if check.OK || check.Allowance != 0 {
 		t.Fatalf("check = %+v, want the zero result", check)
+	}
+	// Not entitled is not the same as switched off: the caller renders one as
+	// "top up" and the other as "try again later".
+	if check.Unavailable {
+		t.Fatal("a workspace with no subscription must not read as the agent being switched off")
 	}
 }
 

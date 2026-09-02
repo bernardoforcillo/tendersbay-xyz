@@ -25,10 +25,21 @@ func statements() map[string][]access.Action {
 }
 
 func newCodec() *rbac.Codec[mask] {
-	return rbac.New(statements(), view, admin, []rbac.Grant[mask]{
-		{Bit: edit, Grants: map[string][]access.Action{"thing": {scope.ActionUpdate}}},
-		{Bit: invite, Grants: map[string][]access.Action{"invite": {scope.ActionCreate, scope.ActionDelete}}},
-	}, map[string][]access.Action{})
+	return rbac.New(rbac.Config[mask]{
+		Statements: statements(),
+		Baseline:   view,
+		Admin:      admin,
+		Grants: []rbac.Grant[mask]{
+			{Bit: edit, Grants: map[string][]access.Action{"thing": {scope.ActionUpdate}}},
+			{Bit: invite, Grants: map[string][]access.Action{"invite": {scope.ActionCreate, scope.ActionDelete}}},
+		},
+		MemberGrants: map[string][]access.Action{},
+		Labels: map[string]string{
+			scope.RoleOwner:  "Owner",
+			scope.RoleAdmin:  "Boss",
+			scope.RoleMember: "Plain",
+		},
+	})
 }
 
 // Every bit has to survive mask -> grants -> permission -> mask, or a role
@@ -133,5 +144,68 @@ func TestRoleKeyAndSlug(t *testing.T) {
 	}
 	if got := rbac.Slug("!!!"); got != "" {
 		t.Errorf("Slug(%q) = %q, want empty — RoleKey is what supplies a fallback", "!!!", got)
+	}
+}
+
+// Roles is scope.ListRoles without the authorization: the three code-defined
+// roles under their product labels, then the container's own.
+func TestRoles(t *testing.T) {
+	c := newCodec()
+	stored, err := c.Encode(edit)
+	if err != nil {
+		t.Fatalf("Encode: %v", err)
+	}
+	views, err := c.Roles([]scope.RoleRecord{{Key: "reviewer", Name: "Reviewer", Permissions: stored}})
+	if err != nil {
+		t.Fatalf("Roles: %v", err)
+	}
+	if len(views) != 4 {
+		t.Fatalf("got %d roles, want the three code-defined ones plus the stored one", len(views))
+	}
+
+	byKey := map[string]rbac.RoleView[mask]{}
+	for _, v := range views {
+		byKey[v.Key] = v
+	}
+	// A code-defined role is labelled, not named after its key.
+	if got := byKey[scope.RoleAdmin]; got.Name != "Boss" || !got.IsDefault {
+		t.Fatalf("admin role = %+v, want the Boss label and IsDefault", got)
+	}
+	if !byKey[scope.RoleAdmin].Permissions.hasAll(view, admin, edit, invite) {
+		t.Fatalf("admin permissions = %d, want everything", byKey[scope.RoleAdmin].Permissions)
+	}
+	if byKey[scope.RoleMember].Permissions != view {
+		t.Fatalf("member permissions = %d, want just the baseline", byKey[scope.RoleMember].Permissions)
+	}
+	// A stored role keeps its own name and decodes back to its own bits.
+	stored2 := byKey["reviewer"]
+	if stored2.Name != "Reviewer" || stored2.IsDefault {
+		t.Fatalf("stored role = %+v", stored2)
+	}
+	if stored2.Permissions != view|edit {
+		t.Fatalf("stored permissions = %d, want %d", stored2.Permissions, view|edit)
+	}
+}
+
+func (m mask) hasAll(bits ...mask) bool {
+	for _, b := range bits {
+		if m&b != b {
+			return false
+		}
+	}
+	return true
+}
+
+// View is the same projection over the single role scope hands back from
+// CreateRole and UpdateRole.
+func TestView(t *testing.T) {
+	c := newCodec()
+	r, _ := c.Access().Role(scope.RoleMember)
+	got := c.View(scope.RoleView{Key: r.Key, Name: r.Key, Permissions: r.Permissions, IsDefault: true})
+	if got.Name != "Plain" {
+		t.Fatalf("name = %q, want the label", got.Name)
+	}
+	if got.Permissions != view {
+		t.Fatalf("permissions = %d, want the baseline", got.Permissions)
 	}
 }

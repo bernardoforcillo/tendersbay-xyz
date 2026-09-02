@@ -13,11 +13,7 @@ import (
 type scopeService = scope.Service[Workbench, Member, *Workbench, *Member]
 
 type Service struct {
-	sc *scopeService
-	// ac is the same access engine sc holds. roleViews needs it to decode a
-	// stored role's grants, and building one per call would recompile the
-	// statement set on every member list.
-	ac       *access.Access
+	sc       *scopeService
 	store    Store
 	repo     Repository
 	users    UserLookup
@@ -50,7 +46,7 @@ func NewService(
 		scope.WithContainerResource(ResourceWorkbench),
 		scope.WithParent(parent, scope.InheritWhen(ResourceWorkbench, ActionManage)),
 	)
-	return &Service{sc: sc, ac: ac, store: store, repo: repo, users: users, wsAccess: wsAccess}
+	return &Service{sc: sc, store: store, repo: repo, users: users, wsAccess: wsAccess}
 }
 
 func actor(ctx context.Context, userID, containerID string) context.Context {
@@ -343,7 +339,7 @@ func (s *Service) CreateRole(ctx context.Context, userID, workbenchID, name stri
 	if err != nil {
 		return Role{}, mapErr(err)
 	}
-	return roleFromView(workbenchID, view), nil
+	return roleFromView(workbenchID, codec.View(view)), nil
 }
 
 func (s *Service) UpdateRole(ctx context.Context, userID, workbenchID, roleID, name string, perms Permission) (Role, error) {
@@ -351,41 +347,29 @@ func (s *Service) UpdateRole(ctx context.Context, userID, workbenchID, roleID, n
 	if err != nil {
 		return Role{}, mapErr(err)
 	}
-	return roleFromView(workbenchID, view), nil
+	return roleFromView(workbenchID, codec.View(view)), nil
 }
 
 func (s *Service) DeleteRole(ctx context.Context, userID, workbenchID, roleID string) error {
 	return mapErr(s.sc.DeleteRole(actor(ctx, userID, workbenchID), roleID))
 }
 
-// roleViews composes the code-defined roles with the workbench's own stored
-// ones. It reads the store directly instead of calling scope.ListRoles because
-// that method authorizes on membership, which the shared-viewer path does not
-// have; the gate has already been applied by the caller.
+// roleViews lists the workbench's roles. It reads the store directly rather
+// than calling scope.ListRoles because that method authorizes on membership,
+// which the shared-viewer path does not have; the gate has already been applied
+// by the caller.
 func (s *Service) roleViews(ctx context.Context, workbenchID string) ([]Role, error) {
-	ac := s.ac
-	out := make([]Role, 0, 5)
-	for _, key := range []string{RoleOwner, RoleManager, RoleViewer} {
-		r, ok := ac.Role(key)
-		if !ok {
-			continue
-		}
-		out = append(out, roleFromView(workbenchID, scope.RoleView{
-			Key: r.Key, Name: r.Key, Permissions: r.Permissions, IsDefault: true,
-		}))
-	}
-	recs, err := s.store.ListRoles(ctx, workbenchID)
+	records, err := s.store.ListRoles(ctx, workbenchID)
 	if err != nil {
 		return nil, mapErr(err)
 	}
-	for _, rec := range recs {
-		perm, err := ac.Decode(rec.Permissions)
-		if err != nil {
-			return nil, err
-		}
-		out = append(out, roleFromView(workbenchID, scope.RoleView{
-			Key: rec.Key, Name: rec.Name, Permissions: perm,
-		}))
+	views, err := codec.Roles(records)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]Role, len(views))
+	for i, v := range views {
+		out[i] = roleFromView(workbenchID, v)
 	}
 	return out, nil
 }
@@ -403,18 +387,12 @@ func (s *Service) role(ctx context.Context, workbenchID, key string) (Role, erro
 	return Role{}, ErrRoleNotFound
 }
 
-func roleFromView(workbenchID string, v scope.RoleView) Role {
-	name := v.Name
-	if v.IsDefault {
-		if label, ok := defaultRoleNames[v.Key]; ok {
-			name = label
-		}
-	}
+func roleFromView(workbenchID string, v rbac.RoleView[Permission]) Role {
 	return Role{
 		ID:          v.Key,
 		WorkbenchID: workbenchID,
-		Name:        name,
-		Permissions: maskOf(v.Permissions, v.Permissions.IsFull()),
+		Name:        v.Name,
+		Permissions: v.Permissions,
 		IsDefault:   v.IsDefault,
 	}
 }

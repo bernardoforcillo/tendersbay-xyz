@@ -292,7 +292,7 @@ func main() {
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc, clientProfileSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
-	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, featureEngine, workspaceSvc)
+	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, workspaceSvc)
 	bidHandler := connectapi.NewBidHandler(bidSvc)
 	companyHandler := connectapi.NewCompanyHandler(companySvc)
 

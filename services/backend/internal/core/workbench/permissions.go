@@ -73,22 +73,22 @@ func Statements() map[string][]access.Action {
 	}
 }
 
-// codec is the mask projection and the access engine behind it, built once.
-// The viewer role carries no grants at all: membership alone is the right to
-// see the workbench, which is exactly what the old default "Viewer" role was.
-var codec = rbac.New(Statements(), PermViewWorkbench, PermAdministrator, permissionGrants,
-	map[string][]access.Action{})
+// codec is the mask projection, the role labels, and the access engine behind
+// both, built once. The viewer role carries no grants at all: membership alone
+// is the right to see the workbench, which is exactly what the old default
+// "Viewer" role was.
+var codec = rbac.New(rbac.Config[Permission]{
+	Statements:   Statements(),
+	Baseline:     PermViewWorkbench,
+	Admin:        PermAdministrator,
+	Grants:       permissionGrants,
+	MemberGrants: map[string][]access.Action{},
+	Labels:       map[string]string{RoleOwner: "Owner", RoleManager: "Manager", RoleViewer: "Viewer"},
+})
 
 // NewAccess returns the access engine for workbenches — one shared value, for
 // the reason workspace.NewAccess gives.
 func NewAccess() *access.Access { return codec.Access() }
-
-// defaultRoleNames are the labels the client shows for the code-defined roles.
-var defaultRoleNames = map[string]string{
-	RoleOwner:   "Owner",
-	RoleManager: "Manager",
-	RoleViewer:  "Viewer",
-}
 
 func grantsFor(p Permission) map[string][]access.Action { return codec.GrantsFor(p) }
 
