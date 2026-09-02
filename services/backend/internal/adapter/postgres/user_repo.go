@@ -45,6 +45,26 @@ func (r *UserRepo) FindByID(ctx context.Context, id string) (auth.User, error) {
 	return dbUserToDomain(row), nil
 }
 
+// FindByIDs resolves many profiles in one query, keyed by id. Missing ids are
+// simply absent from the map — the caller decides whether that is an error.
+//
+// It exists because the member listings had it the other way round: one query
+// per member, on a page whose whole job is to show all of them.
+func (r *UserRepo) FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error) {
+	out := make(map[string]auth.User, len(ids))
+	if len(ids) == 0 {
+		return out, nil
+	}
+	var rows []DBUser
+	if err := r.db.Select().From(Users).Where(UserID.In(ids...)).All(ctx, &rows); err != nil {
+		return nil, err
+	}
+	for _, row := range rows {
+		out[row.ID] = dbUserToDomain(row)
+	}
+	return out, nil
+}
+
 // UpdateDisplayName is the only write this repository still owns. It does not
 // touch updated_at's credential meaning — authlayer stamps that column on every
 // write of its own — but it does bump it, because a renamed profile is a

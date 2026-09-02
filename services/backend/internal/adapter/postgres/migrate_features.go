@@ -49,7 +49,7 @@ func migrateFeatures() pg.Migration {
 			}
 			// drops emits single-column constraints only, and the usage
 			// counter's identity is the whole triple — it is also what makes
-			// the ON CONFLICT in UsageRepo.Increment atomic.
+			// the ON CONFLICT in FeatureUsageRepo.Increment atomic.
 			if _, err := db.Exec(ctx,
 				`ALTER TABLE feature_usage ADD CONSTRAINT pk_feature_usage PRIMARY KEY (workspace_id, feature, period)`,
 			); err != nil {

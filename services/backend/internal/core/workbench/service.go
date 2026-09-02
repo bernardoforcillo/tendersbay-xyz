@@ -6,6 +6,7 @@ import (
 
 	"github.com/bernardoforcillo/authlayer/access"
 	"github.com/bernardoforcillo/authlayer/scope"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/rbac"
 )
 
@@ -436,11 +437,21 @@ func (s *Service) ListMembers(ctx context.Context, userID, workbenchID string) (
 	for _, r := range roles {
 		byKey[r.ID] = r
 	}
+
+	ids := make([]string, len(members))
+	for i, m := range members {
+		ids[i] = m.UserID
+	}
+	profiles, err := s.users.FindByIDs(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+
 	out := make([]MemberView, 0, len(members))
 	for _, m := range members {
-		u, err := s.users.FindByID(ctx, m.UserID)
-		if err != nil {
-			return nil, err
+		u, ok := profiles[m.UserID]
+		if !ok {
+			return nil, auth.ErrNotFound
 		}
 		out = append(out, MemberView{Member: m, Role: byKey[m.RoleKey], User: u})
 	}

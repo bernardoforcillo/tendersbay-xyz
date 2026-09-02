@@ -164,6 +164,18 @@ func (fakeUsers) FindByID(_ context.Context, id string) (auth.User, error) {
 	return auth.User{ID: id, Email: id + "@example.com", DisplayName: strings.ToUpper(id)}, nil
 }
 
+func (f fakeUsers) FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error) {
+	out := make(map[string]auth.User, len(ids))
+	for _, id := range ids {
+		u, err := f.FindByID(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		out[id] = u
+	}
+	return out, nil
+}
+
 // ── fixture ─────────────────────────────────────────────────────────────────
 
 type fixture struct {

@@ -110,9 +110,12 @@ type Repository interface {
 	Delete(ctx context.Context, id string) error
 }
 
-// UserLookup is the narrow slice of the user profile store used to enrich members.
+// UserLookup is the narrow slice of the user profile store used to enrich
+// members. FindByIDs is what a member listing uses: one query for the whole
+// page rather than one per row.
 type UserLookup interface {
 	FindByID(ctx context.Context, id string) (auth.User, error)
+	FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error)
 }
 
 // WorkspaceInfo is the parent-workspace context this package still needs after

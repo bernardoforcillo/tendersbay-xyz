@@ -123,6 +123,18 @@ func (f *fakeUsers) FindByID(_ context.Context, id string) (auth.User, error) {
 	return u, nil
 }
 
+func (f *fakeUsers) FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error) {
+	out := make(map[string]auth.User, len(ids))
+	for _, id := range ids {
+		u, err := f.FindByID(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		out[id] = u
+	}
+	return out, nil
+}
+
 func (f *fakeUsers) FindByEmail(_ context.Context, email string) (auth.User, error) {
 	for _, u := range f.byID {
 		if u.Email == email {

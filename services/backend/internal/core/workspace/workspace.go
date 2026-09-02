@@ -159,9 +159,12 @@ type Repository interface {
 }
 
 // UserLookup is the narrow slice of the user profile store this service needs.
+// FindByIDs is what a member listing uses: one query for the whole page rather
+// than one per row.
 type UserLookup interface {
 	FindByID(ctx context.Context, id string) (auth.User, error)
 	FindByEmail(ctx context.Context, email string) (auth.User, error)
+	FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error)
 }
 
 // EmailSender delivers workspace invitation emails.
@@ -404,11 +407,23 @@ func (s *Service) ListMembers(ctx context.Context, userID, workspaceID string) (
 	if err != nil {
 		return nil, err
 	}
+	ids := make([]string, len(members))
+	for i, m := range members {
+		ids[i] = m.UserID
+	}
+	profiles, err := s.users.FindByIDs(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+
 	views := make([]MemberView, 0, len(members))
 	for _, m := range members {
-		u, err := s.users.FindByID(ctx, m.UserID)
-		if err != nil {
-			return nil, err
+		u, ok := profiles[m.UserID]
+		if !ok {
+			// A membership pointing at a user that is gone. The foreign key
+			// makes it impossible, so it means the two tables disagree — which
+			// is worth failing on rather than rendering as a blank name.
+			return nil, auth.ErrNotFound
 		}
 		views = append(views, MemberView{Member: m, Role: roles[m.RoleKey], User: u})
 	}
