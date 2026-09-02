@@ -6,42 +6,41 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
-	"github.com/bernardoforcillo/featurelayer/catalog"
 	agentv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	tenderv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
-	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 )
-
-// FeatureGate is the narrow slice of the feature engine this handler needs:
-// one question, asked before a turn is allowed to start.
-type FeatureGate interface {
-	Enabled(ctx context.Context, key catalog.Key, workspaceID, userID string) bool
-}
 
 type AgentHandler struct {
 	svc       *agent.Service
 	creditSvc *credits.Service
-	features  FeatureGate
 	members   agent.MemberRepository
 }
 
-func NewAgentHandler(svc *agent.Service, creditSvc *credits.Service, gate FeatureGate, members agent.MemberRepository) *AgentHandler {
-	return &AgentHandler{svc: svc, creditSvc: creditSvc, features: gate, members: members}
+func NewAgentHandler(svc *agent.Service, creditSvc *credits.Service, members agent.MemberRepository) *AgentHandler {
+	return &AgentHandler{svc: svc, creditSvc: creditSvc, members: members}
 }
 
-// gate refuses a turn when the agent surface is switched off. It runs before
-// the budget check because "switched off" is not a billing condition and the
-// client must not be told to top up over it. A nil gate (tests that wire only
-// the billing collaborator) lets everything through.
-func (h *AgentHandler) gate(ctx context.Context, workspaceID, userID string) error {
-	if h.features == nil || h.features.Enabled(ctx, features.AgentChat, workspaceID, userID) {
-		return nil
+// mayRun asks the one question a turn has to pass: is the agent on here, and is
+// there budget left. credits.Check answers both off a single read — the kill
+// switch reaches the meter through the feature catalog — and the two refusals
+// stay distinct, because "the agent is off" must never reach the client as
+// "top up".
+func (h *AgentHandler) mayRun(ctx context.Context, workspaceID string) (credits.CheckResult, error) {
+	check, err := h.creditSvc.Check(ctx, workspaceID)
+	if err != nil {
+		return credits.CheckResult{}, toConnectError(err)
 	}
-	return connect.NewError(connect.CodeUnavailable, agent.ErrAgentUnavailable)
+	if check.Unavailable {
+		return credits.CheckResult{}, connect.NewError(connect.CodeUnavailable, agent.ErrAgentUnavailable)
+	}
+	if !check.OK {
+		return credits.CheckResult{}, connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
+	}
+	return check, nil
 }
 
 var _ agentv1connect.AgentServiceHandler = (*AgentHandler)(nil)
@@ -274,16 +273,9 @@ func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agen
 		return toConnectError(err)
 	}
 
-	if err := h.gate(ctx, session.WorkspaceID, uid); err != nil {
-		return err
-	}
-
-	check, err := h.creditSvc.Check(ctx, session.WorkspaceID)
+	check, err := h.mayRun(ctx, session.WorkspaceID)
 	if err != nil {
-		return toConnectError(err)
-	}
-	if !check.OK {
-		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
+		return err
 	}
 
 	sendToken, sendChoice, sendTenderResults, sendToolCall := newStreamCallbacks(stream)
@@ -304,16 +296,9 @@ func (h *AgentHandler) SubmitChoice(ctx context.Context, req *connect.Request[ag
 		return toConnectError(err)
 	}
 
-	if err := h.gate(ctx, session.WorkspaceID, uid); err != nil {
-		return err
-	}
-
-	check, err := h.creditSvc.Check(ctx, session.WorkspaceID)
+	check, err := h.mayRun(ctx, session.WorkspaceID)
 	if err != nil {
-		return toConnectError(err)
-	}
-	if !check.OK {
-		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
+		return err
 	}
 
 	sendToken, sendChoice, sendTenderResults, sendToolCall := newStreamCallbacks(stream)

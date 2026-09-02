@@ -13,6 +13,15 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 )
 
+// newTestWorkbench builds a workbench with its scope-owned id set. The id lives
+// on the embedded scope.ContainerBase, so it cannot be given in a flat
+// composite literal.
+func newTestWorkbench(id, name string, v workbench.Visibility) workbench.Workbench {
+	wb := workbench.Workbench{Name: name, Visibility: v}
+	wb.ID = id
+	return wb
+}
+
 func TestAskChoiceTool_ParsesOptionsAndInvokesCallback(t *testing.T) {
 	var gotQuestion string
 	var gotOptions []ChoiceOption
@@ -87,7 +96,7 @@ func TestCreateWorkbenchTool_CallsCallbackWithParsedArgs(t *testing.T) {
 	var gotVisibility workbench.Visibility
 	tool := newCreateWorkbenchTool(&turnState{}, func(name, description string, visibility workbench.Visibility) (workbench.Workbench, error) {
 		gotName, gotDescription, gotVisibility = name, description, visibility
-		return workbench.Workbench{ID: "wb-1", Name: name, Visibility: visibility}, nil
+		return newTestWorkbench("wb-1", name, visibility), nil
 	})
 
 	args, _ := json.Marshal(map[string]any{
@@ -772,7 +781,7 @@ func TestCreateWorkbenchTool_EmitsRunningThenDoneBreadcrumbs(t *testing.T) {
 	ts.sendToolCall = func(tc ToolCall) error { got = append(got, tc); return nil }
 
 	tool := newCreateWorkbenchTool(ts, func(name, _ string, v workbench.Visibility) (workbench.Workbench, error) {
-		return workbench.Workbench{ID: "wb-1", Name: name, Visibility: v}, nil
+		return newTestWorkbench("wb-1", name, v), nil
 	})
 	args, _ := json.Marshal(map[string]any{"name": "X", "visibility": "private"})
 	if _, err := tool.Execute(context.Background(), string(args)); err != nil {

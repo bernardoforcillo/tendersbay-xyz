@@ -107,15 +107,15 @@ func orEmpty[T any](s []T) []T {
 	return s
 }
 
-// UsageRepo is featurelayer's entitlement.UsageStore over feature_usage: how
+// FeatureUsageRepo is featurelayer's entitlement.UsageStore over feature_usage: how
 // much of a metered feature a workspace has spent in the current period.
-type UsageRepo struct{ db *pg.DB }
+type FeatureUsageRepo struct{ db *pg.DB }
 
-func NewFeatureUsageRepo(db *pg.DB) *UsageRepo { return &UsageRepo{db: db} }
+func NewFeatureUsageRepo(db *pg.DB) *FeatureUsageRepo { return &FeatureUsageRepo{db: db} }
 
-var _ entitlement.UsageStore = (*UsageRepo)(nil)
+var _ entitlement.UsageStore = (*FeatureUsageRepo)(nil)
 
-func (r *UsageRepo) Get(ctx context.Context, key entitlement.UsageKey) (int64, error) {
+func (r *FeatureUsageRepo) Get(ctx context.Context, key entitlement.UsageKey) (int64, error) {
 	var used int64
 	rows, err := r.db.Query(ctx,
 		`SELECT used FROM feature_usage WHERE workspace_id = $1 AND feature = $2 AND period = $3`,
@@ -141,7 +141,7 @@ func (r *UsageRepo) Get(ctx context.Context, key entitlement.UsageKey) (int64, e
 // two concurrent agent turns on the same workspace must not both see room for
 // the last of a budget and both spend it. That is the same guarantee the
 // workspace_credits deduct gave, kept.
-func (r *UsageRepo) Increment(ctx context.Context, key entitlement.UsageKey, delta, max int64) (int64, bool, error) {
+func (r *FeatureUsageRepo) Increment(ctx context.Context, key entitlement.UsageKey, delta, max int64) (int64, bool, error) {
 	// A single request larger than the whole allowance can never fit, and the
 	// INSERT below would not catch it: with no row yet there is no conflict, so
 	// DO UPDATE's guard never runs. Answering from the current counter is both

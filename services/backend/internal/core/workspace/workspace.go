@@ -22,6 +22,7 @@ import (
 	"github.com/bernardoforcillo/authlayer/invite"
 	"github.com/bernardoforcillo/authlayer/scope"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/rbac"
 )
 
 // ── Entities ────────────────────────────────────────────────────────────────
@@ -158,9 +159,12 @@ type Repository interface {
 }
 
 // UserLookup is the narrow slice of the user profile store this service needs.
+// FindByIDs is what a member listing uses: one query for the whole page rather
+// than one per row.
 type UserLookup interface {
 	FindByID(ctx context.Context, id string) (auth.User, error)
 	FindByEmail(ctx context.Context, email string) (auth.User, error)
+	FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error)
 }
 
 // EmailSender delivers workspace invitation emails.
@@ -217,40 +221,33 @@ func actor(ctx context.Context, userID, workspaceID string) context.Context {
 	return scope.WithScope(scope.WithSubject(ctx, userID), workspaceID)
 }
 
-// mapLibraryError translates authlayer's sentinels into this package's.
-// Anything unrecognised passes through and surfaces as CodeInternal, which is
-// the right answer for a store failure.
+// scopeErrors is this domain's vocabulary for authlayer's scope sentinels.
+// The translation itself is rbac.Errors.Translate; what is declared here is
+// only which of this package's errors each condition means.
+var scopeErrors = rbac.Errors{
+	NotFound:            ErrWorkspaceNotFound,
+	NotMember:           ErrNotMember,
+	Forbidden:           ErrForbidden,
+	PrivilegeEscalation: ErrPrivilegeEscalation,
+	RoleNotFound:        ErrRoleNotFound,
+	RoleInUse:           ErrRoleInUse,
+	DefaultRole:         ErrDefaultRole,
+	LastOwner:           ErrLastOwner,
+	OwnerOnly:           ErrOwnerOnly,
+	AlreadyMember:       ErrAlreadyMember,
+	RoleKeyTaken:        ErrRoleKeyTaken,
+	// The only unique constraint a workspace can violate is its slug.
+	Conflict: ErrSlugTaken,
+}
+
+// mapLibraryError translates authlayer's sentinels into this package's, so
+// connectapi.toConnectError keeps its existing switch and the wire status codes
+// do not move. Anything unrecognised is passed through untouched and surfaces
+// as CodeInternal, which is the correct answer for a store or transport failure.
 func mapLibraryError(err error) error {
-	if err == nil {
-		return nil
-	}
 	switch {
-	case errors.Is(err, scope.ErrContainerNotFound):
-		return ErrWorkspaceNotFound
-	case errors.Is(err, scope.ErrNotMember), errors.Is(err, scope.ErrSubjectMissing), errors.Is(err, scope.ErrScopeMissing):
-		return ErrNotMember
-	case errors.Is(err, scope.ErrForbidden):
-		return ErrForbidden
-	case errors.Is(err, scope.ErrPrivilegeEscalation):
-		return ErrPrivilegeEscalation
-	case errors.Is(err, scope.ErrRoleNotFound):
-		return ErrRoleNotFound
-	case errors.Is(err, scope.ErrRoleInUse):
-		return ErrRoleInUse
-	case errors.Is(err, scope.ErrDefaultRole):
-		return ErrDefaultRole
-	case errors.Is(err, scope.ErrLastOwner):
-		return ErrLastOwner
-	case errors.Is(err, scope.ErrOwnerOnly):
-		return ErrOwnerOnly
-	case errors.Is(err, scope.ErrAlreadyMember):
-		return ErrAlreadyMember
-	case errors.Is(err, scope.ErrRoleKeyTaken):
-		return ErrRoleKeyTaken
-	case errors.Is(err, scope.ErrConflict):
-		return ErrSlugTaken
-	case errors.Is(err, scope.ErrNotParentMember):
-		return ErrNotMember
+	case err == nil:
+		return nil
 	case errors.Is(err, invite.ErrInviteNotFound):
 		return ErrInviteInvalid
 	case errors.Is(err, invite.ErrInviteExpired):
@@ -262,7 +259,7 @@ func mapLibraryError(err error) error {
 	case errors.Is(err, invite.ErrLinkExhausted):
 		return ErrLinkExhausted
 	default:
-		return err
+		return scopeErrors.Translate(err)
 	}
 }
 
@@ -348,29 +345,39 @@ func (s *Service) requireOwner(ctx context.Context, workspaceID, userID string) 
 
 // ── Membership checks ───────────────────────────────────────────────────────
 
-// LoadMembership reports a caller's standing in a workspace. It is the port the
-// agent, company, client-profile and tender-search paths gate on, and it stays
-// a single read: scope.Standing resolves owner bypass, the member row and the
-// role's grants in one ladder.
+// LoadMembership reports a caller's standing in a workspace, refusing a
+// non-member. It is the port the agent, company, client-profile and
+// tender-search paths gate on.
+//
+// It is Standing in the shape those callers speak — one query either way, one
+// implementation of the ladder. The two differ only in what a non-member means:
+// an error here, because these callers are gating; a false flag there, because
+// the workbench domain has to tell "not a member" from "no such workspace".
 func (s *Service) LoadMembership(ctx context.Context, workspaceID, userID string) (Membership, error) {
-	perms, elevated, err := s.sc.Standing(ctx, workspaceID, userID)
+	st, err := s.Standing(ctx, workspaceID, userID)
 	if err != nil {
-		return Membership{}, mapLibraryError(err)
+		return Membership{}, err
 	}
-	m := Membership{Role: Role{WorkspaceID: workspaceID, Permissions: maskOf(perms, elevated)}}
+	if !st.IsMember {
+		return Membership{}, ErrNotMember
+	}
+	m := Membership{Role: Role{WorkspaceID: workspaceID, Permissions: st.Permissions}}
 	m.Member.ContainerID = workspaceID
 	m.Member.UserID = userID
 	return m, nil
 }
 
 // Standing is a caller's position in a workspace, for the domains that gate on
-// it without being part of it — today the workbench domain's coarse
-// (workspace-level) access layer.
+// it without being part of it — today the workbench domain, whose own scope is
+// nested in this one.
+//
+// It carries no workspace name and no owner flag. Both were here, and neither
+// was read: ownership reaches the workbench domain as elevation through the
+// nesting, and the breadcrumb name is a separate one-column read. Keeping them
+// cost a container lookup on every call, for two fields nobody consulted.
 type Standing struct {
-	WorkspaceName string
-	IsMember      bool
-	IsOwner       bool
-	Permissions   Permission
+	IsMember    bool
+	Permissions Permission
 }
 
 // Standing reports userID's position in a workspace. A non-member is not an
@@ -378,43 +385,54 @@ type Standing struct {
 // what lets the workbench domain distinguish "no such workspace" from "you may
 // not see this workbench".
 func (s *Service) Standing(ctx context.Context, workspaceID, userID string) (Standing, error) {
-	ws, err := s.sc.Container(ctx, workspaceID)
-	if err != nil {
-		return Standing{}, mapLibraryError(err)
-	}
-	out := Standing{WorkspaceName: ws.Name, IsOwner: ws.OwnerID == userID}
 	perms, elevated, err := s.sc.Standing(ctx, workspaceID, userID)
 	if errors.Is(err, scope.ErrNotMember) {
-		return out, nil
+		return Standing{}, nil
 	}
 	if err != nil {
 		return Standing{}, mapLibraryError(err)
 	}
-	out.IsMember = true
-	out.Permissions = maskOf(perms, elevated)
-	return out, nil
+	return Standing{IsMember: true, Permissions: maskOf(perms, elevated)}, nil
 }
 
 // ── Members ─────────────────────────────────────────────────────────────────
 
+// ListMembers returns the workspace's members with their roles and profiles.
+//
+// It resolves the caller's standing ONCE, in LoadMembership, and reads through
+// the store from there. Going through scope.ListMembers and scope.ListRoles
+// instead would re-resolve it twice more — each of those authorizes on its own
+// — for three ladders down the same container on one page.
 func (s *Service) ListMembers(ctx context.Context, userID, workspaceID string) ([]MemberView, error) {
 	if _, err := s.LoadMembership(ctx, workspaceID, userID); err != nil {
 		return nil, err
 	}
-	ac := actor(ctx, userID, workspaceID)
-	members, err := s.sc.ListMembers(ac)
+	members, err := s.store.ListMembers(ctx, workspaceID)
 	if err != nil {
 		return nil, mapLibraryError(err)
 	}
-	roles, err := s.rolesByKey(ac, workspaceID)
+	roles, err := s.rolesByKey(ctx, workspaceID)
 	if err != nil {
 		return nil, err
 	}
+
+	ids := make([]string, len(members))
+	for i, m := range members {
+		ids[i] = m.UserID
+	}
+	profiles, err := s.users.FindByIDs(ctx, ids)
+	if err != nil {
+		return nil, err
+	}
+
 	views := make([]MemberView, 0, len(members))
 	for _, m := range members {
-		u, err := s.users.FindByID(ctx, m.UserID)
-		if err != nil {
-			return nil, err
+		u, ok := profiles[m.UserID]
+		if !ok {
+			// A membership pointing at a user that is gone. The foreign key
+			// makes it impossible, so it means the two tables disagree — which
+			// is worth failing on rather than rendering as a blank name.
+			return nil, auth.ErrNotFound
 		}
 		views = append(views, MemberView{Member: m, Role: roles[m.RoleKey], User: u})
 	}
@@ -422,11 +440,10 @@ func (s *Service) ListMembers(ctx context.Context, userID, workspaceID string) (
 }
 
 func (s *Service) ChangeMemberRole(ctx context.Context, userID, workspaceID, targetUserID, roleID string) (MemberView, error) {
-	ac := actor(ctx, userID, workspaceID)
-	if err := s.sc.ChangeMemberRole(ac, targetUserID, roleID); err != nil {
+	if err := s.sc.ChangeMemberRole(actor(ctx, userID, workspaceID), targetUserID, roleID); err != nil {
 		return MemberView{}, mapLibraryError(err)
 	}
-	role, err := s.role(ac, workspaceID, roleID)
+	role, err := s.role(ctx, workspaceID, roleID)
 	if err != nil {
 		return MemberView{}, err
 	}
@@ -451,23 +468,15 @@ func (s *Service) ListRoles(ctx context.Context, userID, workspaceID string) ([]
 	if _, err := s.LoadMembership(ctx, workspaceID, userID); err != nil {
 		return nil, err
 	}
-	views, err := s.sc.ListRoles(actor(ctx, userID, workspaceID))
-	if err != nil {
-		return nil, mapLibraryError(err)
-	}
-	out := make([]Role, len(views))
-	for i, v := range views {
-		out[i] = roleFromView(workspaceID, v)
-	}
-	return out, nil
+	return s.roleViews(ctx, workspaceID)
 }
 
 func (s *Service) CreateRole(ctx context.Context, userID, workspaceID, name string, perms Permission) (Role, error) {
-	view, err := s.sc.CreateRole(actor(ctx, userID, workspaceID), roleKey(name), name, grantsFor(perms))
+	view, err := s.sc.CreateRole(actor(ctx, userID, workspaceID), rbac.RoleKey(name), name, grantsFor(perms))
 	if err != nil {
 		return Role{}, mapLibraryError(err)
 	}
-	return roleFromView(workspaceID, view), nil
+	return roleFromView(workspaceID, codec.View(view)), nil
 }
 
 func (s *Service) UpdateRole(ctx context.Context, userID, workspaceID, roleID, name string, perms Permission) (Role, error) {
@@ -475,7 +484,7 @@ func (s *Service) UpdateRole(ctx context.Context, userID, workspaceID, roleID, n
 	if err != nil {
 		return Role{}, mapLibraryError(err)
 	}
-	return roleFromView(workspaceID, view), nil
+	return roleFromView(workspaceID, codec.View(view)), nil
 }
 
 func (s *Service) DeleteRole(ctx context.Context, userID, workspaceID, roleID string) error {
@@ -493,30 +502,44 @@ var defaultRoleNames = map[string]string{
 	RoleMember: "Member",
 }
 
-func roleFromView(workspaceID string, v scope.RoleView) Role {
-	name := v.Name
-	if v.IsDefault {
-		if label, ok := defaultRoleNames[v.Key]; ok {
-			name = label
-		}
-	}
+func roleFromView(workspaceID string, v rbac.RoleView[Permission]) Role {
 	return Role{
 		ID:          v.Key,
 		WorkspaceID: workspaceID,
-		Name:        name,
-		Permissions: maskOf(v.Permissions, v.Permissions.IsFull()),
+		Name:        v.Name,
+		Permissions: v.Permissions,
 		IsDefault:   v.IsDefault,
 	}
 }
 
-func (s *Service) rolesByKey(ctx context.Context, workspaceID string) (map[string]Role, error) {
-	views, err := s.sc.ListRoles(ctx)
+// roleViews lists the workspace's roles: the code-defined three plus its own
+// stored ones. It reads the store directly rather than through
+// scope.ListRoles, which would resolve the caller's standing a second time —
+// every caller has already been gated by the time it gets here.
+func (s *Service) roleViews(ctx context.Context, workspaceID string) ([]Role, error) {
+	records, err := s.store.ListRoles(ctx, workspaceID)
 	if err != nil {
 		return nil, mapLibraryError(err)
 	}
-	out := make(map[string]Role, len(views))
-	for _, v := range views {
-		out[v.Key] = roleFromView(workspaceID, v)
+	views, err := codec.Roles(records)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]Role, len(views))
+	for i, v := range views {
+		out[i] = roleFromView(workspaceID, v)
+	}
+	return out, nil
+}
+
+func (s *Service) rolesByKey(ctx context.Context, workspaceID string) (map[string]Role, error) {
+	roles, err := s.roleViews(ctx, workspaceID)
+	if err != nil {
+		return nil, err
+	}
+	out := make(map[string]Role, len(roles))
+	for _, r := range roles {
+		out[r.ID] = r
 	}
 	return out, nil
 }
@@ -654,6 +677,14 @@ func (s *Service) PreviewInviteLink(ctx context.Context, code string) (LinkPrevi
 	return LinkPreview{WorkspaceName: name, RoleName: roleName, Valid: true}, nil
 }
 
+// PurgeExpiredInvites deletes every email invitation and invite link that
+// expired before the given instant, and reports how many rows went. Same
+// reasoning as auth.Service.PurgeExpired: an expired invitation is refused on
+// redemption but never removed, so the table only grew.
+func (s *Service) PurgeExpiredInvites(ctx context.Context, before time.Time) (int, error) {
+	return s.inv.PurgeExpired(ctx, before)
+}
+
 func (s *Service) JoinViaInviteLink(ctx context.Context, userID, code string) (Workspace, error) {
 	ws, err := s.inv.JoinViaLink(scope.WithSubject(ctx, userID), code)
 	if err != nil {
@@ -663,15 +694,19 @@ func (s *Service) JoinViaInviteLink(ctx context.Context, userID, code string) (W
 }
 
 // previewNames resolves the workspace and role labels an unauthenticated
-// preview shows. It reads the role registry directly rather than through
-// ListRoles' authorization, because a preview is by definition served to
-// someone who is not yet a member.
+// preview shows. It skips ListRoles' gate deliberately: a preview is by
+// definition served to someone who is not yet a member.
+//
+// The role label comes from the same place a member list's does. It used to be
+// the raw key when the role was code-defined, so an invitation to the "member"
+// role previewed as "member" while the role list beside it said "Member" — two
+// answers to one question, which is exactly what having one label source fixes.
 func (s *Service) previewNames(ctx context.Context, workspaceID, key string) (workspaceName, roleName string, err error) {
 	ws, err := s.sc.Container(ctx, workspaceID)
 	if err != nil {
 		return "", "", mapLibraryError(err)
 	}
-	roleName = key
+	roleName = codec.Label(key)
 	if rec, err := s.store.FindRole(ctx, workspaceID, key); err == nil && rec.Name != "" {
 		roleName = rec.Name
 	}

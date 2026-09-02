@@ -72,5 +72,6 @@ func New(ctx context.Context, dsn string) (*pg.DB, *sql.DB, error) {
 	m.Add(migrateAuthlayer())
 	m.Add(migrateWorkspaceScope())
 	m.Add(migrateFeatures())
+	m.Add(migrateWorkbenchScope())
 	return db, sqlDB, m.Up(ctx)
 }

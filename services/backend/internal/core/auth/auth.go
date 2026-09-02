@@ -308,6 +308,17 @@ func (s *Service) VerifyEmail(ctx context.Context, plainToken, _ string) error {
 	return MapLibraryError(err)
 }
 
+// PurgeExpired deletes every session and verification token that expired
+// before the given instant, and reports how many rows went.
+//
+// It exists because nothing was calling it: sessions, signup tokens and reset
+// tokens all carry an expiry the service honours on read, but a row that is
+// merely ignored is still a row, and before this the two tables only ever grew.
+// authlayer has always offered the sweep; this is the service scheduling it.
+func (s *Service) PurgeExpired(ctx context.Context, before time.Time) (int, error) {
+	return s.al.PurgeExpired(ctx, before)
+}
+
 // VerifyAccessToken parses and verifies a bearer access token. Used by the
 // transport middleware; it performs no store access.
 func (s *Service) VerifyAccessToken(raw string) (Claims, error) {

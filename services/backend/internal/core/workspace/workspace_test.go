@@ -123,6 +123,18 @@ func (f *fakeUsers) FindByID(_ context.Context, id string) (auth.User, error) {
 	return u, nil
 }
 
+func (f *fakeUsers) FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error) {
+	out := make(map[string]auth.User, len(ids))
+	for _, id := range ids {
+		u, err := f.FindByID(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		out[id] = u
+	}
+	return out, nil
+}
+
 func (f *fakeUsers) FindByEmail(_ context.Context, email string) (auth.User, error) {
 	for _, u := range f.byID {
 		if u.Email == email {
@@ -515,27 +527,38 @@ func TestLoadMembership(t *testing.T) {
 	}
 }
 
-func TestStanding_ReportsOwnershipAndNonMembership(t *testing.T) {
-	f := newFixture(t, time.Hour, "owner", "stranger")
+func TestStanding_ReportsMembershipAndPermissions(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob", "stranger")
 	ctx := context.Background()
 	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
 
 	own, err := f.svc.Standing(ctx, ws.ID, "owner")
 	if err != nil {
 		t.Fatalf("Standing: %v", err)
 	}
-	if !own.IsOwner || !own.IsMember || own.WorkspaceName != "Acme" {
-		t.Fatalf("owner standing = %+v", own)
+	if !own.IsMember || !own.Permissions.Has(workspace.PermManageWorkbenches) {
+		t.Fatalf("owner standing = %+v, want a member who administers workbenches", own)
 	}
+
+	member, err := f.svc.Standing(ctx, ws.ID, "bob")
+	if err != nil {
+		t.Fatalf("Standing: %v", err)
+	}
+	if !member.IsMember || member.Permissions.Has(workspace.PermManageWorkbenches) {
+		t.Fatalf("member standing = %+v, want a member who does not administer workbenches", member)
+	}
+
 	out, err := f.svc.Standing(ctx, ws.ID, "stranger")
 	if err != nil {
 		t.Fatalf("Standing for a non-member must not be an error: %v", err)
 	}
-	if out.IsMember || out.IsOwner {
+	if out.IsMember || out.Permissions != 0 {
 		t.Fatalf("stranger standing = %+v", out)
 	}
-	if out.WorkspaceName != "Acme" {
-		t.Fatalf("a non-member still needs the workspace name, got %q", out.WorkspaceName)
+
+	if _, err := f.svc.Standing(ctx, "no-such-workspace", "owner"); !errors.Is(err, workspace.ErrWorkspaceNotFound) {
+		t.Fatalf("err = %v, want ErrWorkspaceNotFound — a missing workspace is not a non-member", err)
 	}
 }
 

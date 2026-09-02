@@ -11,8 +11,8 @@ import (
 // moved onto the code-defined keys.
 func TestPlanRoles_DropsTheSeededRows(t *testing.T) {
 	plans := planRoles([]legacyRole{
-		{id: "r1", workspaceID: "w1", name: "Admin", mask: legacySeededAdminMask},
-		{id: "r2", workspaceID: "w1", name: "Member", mask: legacySeededMemberMask, isDefault: true},
+		{id: "r1", containerID: "w1", name: "Admin", mask: legacySeededAdminMask},
+		{id: "r2", containerID: "w1", name: "Member", mask: legacySeededMemberMask, isDefault: true},
 	})
 	want := map[string]struct {
 		key  string
@@ -34,7 +34,7 @@ func TestPlanRoles_DropsTheSeededRows(t *testing.T) {
 // access nobody granted.
 func TestPlanRoles_CustomRoleNamedLikeAReservedOneIsRenamed(t *testing.T) {
 	plans := planRoles([]legacyRole{
-		{id: "r1", workspaceID: "w1", name: "Admin", mask: int64(workspace.PermViewWorkbenches)},
+		{id: "r1", containerID: "w1", name: "Admin", mask: int64(workspace.PermViewWorkbenches)},
 	})
 	if len(plans) != 1 {
 		t.Fatalf("got %d plans", len(plans))
@@ -48,11 +48,11 @@ func TestPlanRoles_CustomRoleNamedLikeAReservedOneIsRenamed(t *testing.T) {
 // names that slugify alike must not both claim the same key.
 func TestPlanRoles_DeduplicatesWithinAWorkspace(t *testing.T) {
 	plans := planRoles([]legacyRole{
-		{id: "r1", workspaceID: "w1", name: "Bid Team", mask: 0},
-		{id: "r2", workspaceID: "w1", name: "bid  team", mask: 0},
-		{id: "r3", workspaceID: "w1", name: "BID-TEAM", mask: 0},
+		{id: "r1", containerID: "w1", name: "Bid Team", mask: 0},
+		{id: "r2", containerID: "w1", name: "bid  team", mask: 0},
+		{id: "r3", containerID: "w1", name: "BID-TEAM", mask: 0},
 		// A different workspace is a different namespace.
-		{id: "r4", workspaceID: "w2", name: "Bid Team", mask: 0},
+		{id: "r4", containerID: "w2", name: "Bid Team", mask: 0},
 	})
 	got := map[string]string{}
 	for _, p := range plans {
@@ -70,7 +70,7 @@ func TestPlanRoles_DeduplicatesWithinAWorkspace(t *testing.T) {
 // a permission column authlayer cannot read back.
 func TestPlanRoles_MasksEncode(t *testing.T) {
 	plans := planRoles([]legacyRole{
-		{id: "r1", workspaceID: "w1", name: "Reviewer",
+		{id: "r1", containerID: "w1", name: "Reviewer",
 			mask: int64(workspace.PermViewWorkbenches | workspace.PermManageInvites)},
 	})
 	encoded, err := workspace.EncodePermissions(workspace.Permission(plans[0].mask))

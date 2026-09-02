@@ -15,6 +15,8 @@ import (
 	"context"
 	"time"
 
+	featurelayer "github.com/bernardoforcillo/featurelayer"
+
 	"github.com/bernardoforcillo/featurelayer/entitlement"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 )
@@ -89,9 +91,16 @@ func NewService(engine *features.Engine, subs SubscriptionWriter, pricing Pricin
 // plan defined today is unlimited, but a caller that renders these numbers has
 // to know which value means "no ceiling" rather than "no budget".
 type CheckResult struct {
-	Remaining         int64
-	Allowance         int64
-	OK                bool
+	Remaining int64
+	Allowance int64
+	// OK is whether a turn may run: entitled, switched on, and with budget
+	// left.
+	OK bool
+	// Unavailable distinguishes the two ways OK can be false. It means the
+	// agent surface itself is off — the kill switch, a rollout, a retired
+	// feature — rather than this workspace being out of budget, and the two
+	// need different answers: "try again later" is not "top up".
+	Unavailable       bool
 	CurrentCycleStart time.Time
 	// ResetsAt is when the current period ends and the counter starts again.
 	// It is derived from the workspace's billing anchor, so it is the real
@@ -99,17 +108,26 @@ type CheckResult struct {
 	ResetsAt time.Time
 }
 
-// Check reads the budget without spending any of it. A workspace with no
-// subscription, or one whose plan does not carry the agent, comes back as the
-// zero CheckResult — OK false — which is what blocks the turn upstream. That is
-// the same answer a workspace with no credits row got before.
+// Check answers, in one read, whether an agent turn may run here and how much
+// budget is left.
+//
+// It is one question, not two, because the answer comes from one evaluation:
+// features.AgentTokens depends on features.AgentChat, so the kill switch on the
+// surface reaches the meter, and featurelayer resolves the whole chain off a
+// single subscription lookup. The caller used to ask twice — once through a
+// feature gate, once here — for the same row.
+//
+// A workspace with no subscription, or one whose plan does not carry the agent,
+// comes back as the zero CheckResult: OK false, and not Unavailable, because
+// nothing is switched off — it simply has no entitlement. That is the same
+// answer a workspace with no credits row got before featurelayer.
 func (s *Service) Check(ctx context.Context, workspaceID string) (CheckResult, error) {
 	d, err := s.features.Usage(ctx, features.AgentTokens, workspaceID)
 	if err != nil {
 		return CheckResult{}, err
 	}
 	if d.Usage == nil {
-		return CheckResult{}, nil
+		return CheckResult{Unavailable: switchedOff(d.Reason)}, nil
 	}
 	return CheckResult{
 		Remaining:         d.Usage.Remaining,
@@ -118,6 +136,26 @@ func (s *Service) Check(ctx context.Context, workspaceID string) (CheckResult, e
 		CurrentCycleStart: d.Usage.PeriodStart,
 		ResetsAt:          d.Usage.ResetsAt,
 	}, nil
+}
+
+// switchedOff reports whether a refusal was the agent surface being off rather
+// than this workspace being out of budget or off-plan. Everything a flag, a
+// lifecycle or a prerequisite decides is about the feature; everything an
+// entitlement decides is about the workspace.
+func switchedOff(r featurelayer.Reason) bool {
+	switch r {
+	case featurelayer.ReasonFlagOff,
+		featurelayer.ReasonFlagWindow,
+		featurelayer.ReasonFlagRule,
+		featurelayer.ReasonFlagRollout,
+		featurelayer.ReasonFlagDefault,
+		featurelayer.ReasonLifecycle,
+		featurelayer.ReasonPrerequisite,
+		featurelayer.ReasonUnknownFeature:
+		return true
+	default:
+		return false
+	}
 }
 
 // Deduct weighs input and output tokens by their own per-token cost (not a
