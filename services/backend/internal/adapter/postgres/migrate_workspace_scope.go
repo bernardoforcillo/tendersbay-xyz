@@ -151,6 +151,13 @@ func migrateWorkspaceScope() pg.Migration {
 		// (an encoded set that is not exactly one of the mask's bit groups has
 		// no bit to become), and a workspace whose roles came back wrong is
 		// worse than one whose roles have to be recreated.
+		//
+		// So rolling this back is a ONE-WAY door for role assignments, and the
+		// operational consequence is worth stating plainly: role_id comes back
+		// empty, which means Up cannot simply be re-applied afterwards — it
+		// finds members it has no key to map and stops at role_key's NOT NULL.
+		// Coming forward again means recreating the role rows and their
+		// memberships first. Roll back only if that is acceptable.
 		Down: func(ctx context.Context, db *pg.DB) error {
 			for _, s := range []string{
 				`ALTER TABLE workspace_invite_links ADD COLUMN IF NOT EXISTS revoked BOOLEAN NOT NULL DEFAULT false`,

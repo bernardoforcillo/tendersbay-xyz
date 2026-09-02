@@ -10,14 +10,20 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 )
 
-// NewWorkbenchScopeStore returns authlayer's scope store for workbenches — the
-// nested half of the RBAC model, with the workspace as its parent.
-func NewWorkbenchScopeStore(db *pg.DB) *dropsstore.Store[workbench.Workbench, workbench.Member] {
-	return dropsstore.New[workbench.Workbench, workbench.Member](db, dropsstore.WithNames(dropsstore.Names{
+// workbenchTables names the three tables authlayer's scope store persists a
+// workbench's containment to, declared once here the way workspaceTables is.
+func workbenchTables() dropsstore.Names {
+	return dropsstore.Names{
 		Containers: "workbenches",
 		Members:    "workbench_members",
 		Roles:      "workbench_roles",
-	}))
+	}
+}
+
+// NewWorkbenchScopeStore returns authlayer's scope store for workbenches — the
+// nested half of the RBAC model, with the workspace as its parent.
+func NewWorkbenchScopeStore(db *pg.DB) *dropsstore.Store[workbench.Workbench, workbench.Member] {
+	return dropsstore.New[workbench.Workbench, workbench.Member](db, dropsstore.WithNames(workbenchTables()))
 }
 
 // WorkbenchRepo covers the workbench queries authlayer's scope store has no

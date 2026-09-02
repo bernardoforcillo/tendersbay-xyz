@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/bernardoforcillo/drops/pg"
@@ -56,7 +57,13 @@ func migrateFeatures() pg.Migration {
 				return err
 			}
 
-			if err := backfillSubscriptions(ctx, db); err != nil {
+			period, ok := features.MeterPeriod(features.AgentTokens)
+			if !ok {
+				return fmt.Errorf(
+					"features: %s has no single metered period; the 0014 backfill cannot key its counters",
+					features.AgentTokens)
+			}
+			if err := backfillSubscriptions(ctx, db, period); err != nil {
 				return err
 			}
 			_, err := db.Exec(ctx, `DROP TABLE IF EXISTS workspace_credits`)
@@ -104,7 +111,11 @@ func migrateFeatures() pg.Migration {
 // backfillSubscriptions gives every workspace a subscription and carries its
 // current cycle's spend across. It reads through a LEFT JOIN so a workspace
 // with no credits row is included rather than left behind.
-func backfillSubscriptions(ctx context.Context, db *pg.DB) error {
+//
+// period is the window the catalog meters the agent budget over, passed in
+// rather than assumed: it keys both the carried counter and the per-tenant
+// grant, and the engine has to read them back under the same key.
+func backfillSubscriptions(ctx context.Context, db *pg.DB, period entitlement.Period) error {
 	rows, err := db.Query(ctx, `
 		SELECT w.id, c.monthly_token_allowance, c.current_cycle_start, c.current_cycle_tokens
 		FROM workspaces w
@@ -155,7 +166,7 @@ func backfillSubscriptions(ctx context.Context, db *pg.DB) error {
 		if c.allowance != features.FreeMonthlyTokenAllowance {
 			grants = append(grants, entitlement.Override(
 				features.AgentTokens,
-				&entitlement.Limit{Max: c.allowance, Period: entitlement.Month},
+				&entitlement.Limit{Max: c.allowance, Period: period},
 				"allowance carried over from workspace_credits",
 			))
 		}
@@ -179,7 +190,7 @@ func backfillSubscriptions(ctx context.Context, db *pg.DB) error {
 			VALUES ($1, $2, $3, $4)
 			ON CONFLICT (workspace_id, feature, period) DO NOTHING`,
 			c.workspaceID, string(features.AgentTokens),
-			entitlement.PeriodKey(entitlement.Month, c.anchor, now), c.spent,
+			entitlement.PeriodKey(period, c.anchor, now), c.spent,
 		); err != nil {
 			return err
 		}

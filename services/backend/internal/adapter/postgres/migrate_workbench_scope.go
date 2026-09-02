@@ -108,6 +108,10 @@ func migrateWorkbenchScope() pg.Migration {
 		// bitmask from encoded grants is lossy in that direction, and a
 		// workbench whose roles came back wrong is worse than one whose roles
 		// have to be recreated. Same posture as 0013.
+		//
+		// It inherits 0013's one-way property with it: role_id comes back
+		// empty, so Up cannot be re-applied until the role rows and their
+		// memberships are recreated. See 0013's Down for the full note.
 		Down: func(ctx context.Context, db *pg.DB) error {
 			for _, s := range []string{
 				`ALTER TABLE workbench_roles DROP CONSTRAINT IF EXISTS workbench_roles_container_key`,

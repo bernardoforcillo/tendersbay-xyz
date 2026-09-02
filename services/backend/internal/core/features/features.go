@@ -185,3 +185,54 @@ func (e *Engine) Usage(ctx context.Context, key catalog.Key, workspaceID string)
 func (e *Engine) Consume(ctx context.Context, key catalog.Key, workspaceID, userID string, n int64) (featurelayer.Decision, error) {
 	return e.e.Consume(ctx, key, evalContext(workspaceID, userID), n)
 }
+
+// MeterPeriod reports the reset window a metered feature's limit is keyed to,
+// as every definition in the catalog spells it — a plan's, a plan it extends,
+// an add-on's.
+//
+// It exists because a usage counter is stored under a period key
+// (entitlement.PeriodKey), so anything writing that column outside the engine —
+// the 0014 backfill is the only one — has to name the same window the engine
+// will read it back with. Hardcoding entitlement.Month there would keep working
+// right up until a plan moved the agent budget to a week, at which point the
+// backfilled counters would sit under keys nobody looks at and every migrated
+// workspace would quietly start its first period with a full budget.
+//
+// The second result is false when nothing meters the feature, or when two
+// definitions disagree about the window. Disagreement is a real possibility —
+// an add-on's limit is added to the plan's — and there is no sensible way to
+// pick between them, so callers are made to handle it rather than be handed a
+// guess.
+func MeterPeriod(key catalog.Key) (entitlement.Period, bool) {
+	cfg := Config()
+	var (
+		found  bool
+		period entitlement.Period
+	)
+	for _, ents := range allEntitlements(cfg) {
+		for _, e := range ents {
+			if e.Feature != key || e.Limit == nil {
+				continue
+			}
+			if found && e.Limit.Period != period {
+				return "", false
+			}
+			period, found = e.Limit.Period, true
+		}
+	}
+	return period, found
+}
+
+// allEntitlements is every entitlement list the config declares, plans and
+// add-ons alike. Plan inheritance needs no special handling: Extends points at
+// another plan that is itself in the list.
+func allEntitlements(cfg featurelayer.Config) [][]entitlement.Entitlement {
+	lists := make([][]entitlement.Entitlement, 0, len(cfg.Plans)+len(cfg.AddOns))
+	for _, p := range cfg.Plans {
+		lists = append(lists, p.Entitlements)
+	}
+	for _, a := range cfg.AddOns {
+		lists = append(lists, a.Entitlements)
+	}
+	return lists
+}

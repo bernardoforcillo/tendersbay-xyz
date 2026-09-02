@@ -241,3 +241,26 @@ func TestKillSwitchReachesTheMeter(t *testing.T) {
 		t.Fatal("a refusal before the counter must report no usage, or it reads as a budget answer")
 	}
 }
+
+// The 0014 backfill keys its carried counters with this, so a catalog that
+// stopped agreeing on the window would have it writing rows the engine reads
+// back under a different key.
+func TestMeterPeriod_AgreesAcrossEveryDefinition(t *testing.T) {
+	got, ok := features.MeterPeriod(features.AgentTokens)
+	if !ok {
+		t.Fatal("the agent token budget declares no single metered period")
+	}
+	if got != entitlement.Month {
+		t.Fatalf("MeterPeriod = %q, want %q", got, entitlement.Month)
+	}
+}
+
+// A feature nothing meters has no window, and saying so is the point: a caller
+// that needs one has to notice rather than be handed the zero value.
+func TestMeterPeriod_UnmeteredFeature(t *testing.T) {
+	for _, key := range []catalog.Key{features.AgentChat, features.TenderSearch, "nothing.at.all"} {
+		if _, ok := features.MeterPeriod(key); ok {
+			t.Fatalf("%s reported a metered period", key)
+		}
+	}
+}
