@@ -252,6 +252,11 @@ var (
 	ChatMessageTenders   = pg.Add(ChatMessages, pg.JSONB("tenders"))
 	ChatMessageCreatedAt = pg.Add(ChatMessages, pg.Timestamp("created_at", true).NotNull().Default("now()"))
 
+	// FROZEN AT 0004. workspace_credits is created by migrate_agent and DROPPED
+	// by migration 0014, which moved the agent's token budget onto
+	// featurelayer: the allowance is a plan's, the counter is feature_usage's.
+	// The handles stay because 0004 still generates its DDL from them and 0014
+	// still reads the old columns to carry each workspace's cycle across.
 	WorkspaceCredits              = pg.NewTable("workspace_credits")
 	WCreditsID                    = pg.Add(WorkspaceCredits, pg.UUID("id").Default("gen_random_uuid()").PrimaryKey())
 	WCreditsWorkspaceID           = pg.Add(WorkspaceCredits, pg.UUID("workspace_id").NotNull().Unique().References(WorkspaceID, pg.OnDelete("CASCADE")))
@@ -304,14 +309,41 @@ type DBChatMessage struct {
 	CreatedAt time.Time        `drop:"created_at"`
 }
 
-type DBWorkspaceCredits struct {
-	ID                 string    `drop:"id"`
-	WorkspaceID        string    `drop:"workspace_id"`
-	MonthlyAllowance   int64     `drop:"monthly_token_allowance"`
-	CurrentCycleStart  time.Time `drop:"current_cycle_start"`
-	CurrentCycleTokens int64     `drop:"current_cycle_tokens"`
-	CreatedAt          time.Time `drop:"created_at"`
-	UpdatedAt          time.Time `drop:"updated_at"`
+// ── Feature management (featurelayer) ───────────────────────────────────────
+// Two per-tenant tables behind featurelayer's entitlement ports: what a
+// workspace is subscribed to, and how much of each metered feature it has used
+// in the current period. The DEFINITIONS those are evaluated against — the
+// feature catalog, the plans, their limits — are code, in internal/core/features.
+var (
+	WorkspaceSubscriptions = pg.NewTable("workspace_subscriptions")
+	WSubWorkspaceID        = pg.Add(WorkspaceSubscriptions, pg.UUID("workspace_id").PrimaryKey().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	WSubPlan               = pg.Add(WorkspaceSubscriptions, pg.Text("plan").NotNull())
+	WSubAddOns             = pg.Add(WorkspaceSubscriptions, pg.JSONB("add_ons").NotNull().Default("'[]'::jsonb"))
+	WSubTrial              = pg.Add(WorkspaceSubscriptions, pg.JSONB("trial"))
+	WSubGrants             = pg.Add(WorkspaceSubscriptions, pg.JSONB("grants").NotNull().Default("'[]'::jsonb"))
+	WSubBillingAnchor      = pg.Add(WorkspaceSubscriptions, pg.Timestamp("billing_anchor", true).NotNull().Default("now()"))
+	WSubCreatedAt          = pg.Add(WorkspaceSubscriptions, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	WSubUpdatedAt          = pg.Add(WorkspaceSubscriptions, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	// FeatureUsage is one counter per (workspace, feature, period). period is
+	// featurelayer's period key — the period start in RFC3339 UTC, or the empty
+	// string for a limit with no period — so a new month simply starts writing
+	// to a new row and no reset job has to run.
+	FeatureUsage      = pg.NewTable("feature_usage")
+	FUsageWorkspaceID = pg.Add(FeatureUsage, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	FUsageFeature     = pg.Add(FeatureUsage, pg.Text("feature").NotNull())
+	FUsagePeriod      = pg.Add(FeatureUsage, pg.Text("period").NotNull())
+	FUsageUsed        = pg.Add(FeatureUsage, pg.BigInt("used").NotNull().Default("0"))
+	FUsageUpdatedAt   = pg.Add(FeatureUsage, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+)
+
+type DBWorkspaceSubscription struct {
+	WorkspaceID   string           `drop:"workspace_id"`
+	Plan          string           `drop:"plan"`
+	AddOns        json.RawMessage  `drop:"add_ons"`
+	Trial         *json.RawMessage `drop:"trial"`
+	Grants        json.RawMessage  `drop:"grants"`
+	BillingAnchor time.Time        `drop:"billing_anchor"`
 }
 
 type DBAgentPricing struct {

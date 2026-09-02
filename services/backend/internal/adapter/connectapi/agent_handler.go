@@ -6,22 +6,42 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
+	"github.com/bernardoforcillo/featurelayer/catalog"
 	agentv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	tenderv1 "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 )
+
+// FeatureGate is the narrow slice of the feature engine this handler needs:
+// one question, asked before a turn is allowed to start.
+type FeatureGate interface {
+	Enabled(ctx context.Context, key catalog.Key, workspaceID, userID string) bool
+}
 
 type AgentHandler struct {
 	svc       *agent.Service
 	creditSvc *credits.Service
+	features  FeatureGate
 	members   agent.MemberRepository
 }
 
-func NewAgentHandler(svc *agent.Service, creditSvc *credits.Service, members agent.MemberRepository) *AgentHandler {
-	return &AgentHandler{svc: svc, creditSvc: creditSvc, members: members}
+func NewAgentHandler(svc *agent.Service, creditSvc *credits.Service, gate FeatureGate, members agent.MemberRepository) *AgentHandler {
+	return &AgentHandler{svc: svc, creditSvc: creditSvc, features: gate, members: members}
+}
+
+// gate refuses a turn when the agent surface is switched off. It runs before
+// the budget check because "switched off" is not a billing condition and the
+// client must not be told to top up over it. A nil gate (tests that wire only
+// the billing collaborator) lets everything through.
+func (h *AgentHandler) gate(ctx context.Context, workspaceID, userID string) error {
+	if h.features == nil || h.features.Enabled(ctx, features.AgentChat, workspaceID, userID) {
+		return nil
+	}
+	return connect.NewError(connect.CodeUnavailable, agent.ErrAgentUnavailable)
 }
 
 var _ agentv1connect.AgentServiceHandler = (*AgentHandler)(nil)
@@ -254,6 +274,10 @@ func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agen
 		return toConnectError(err)
 	}
 
+	if err := h.gate(ctx, session.WorkspaceID, uid); err != nil {
+		return err
+	}
+
 	check, err := h.creditSvc.Check(ctx, session.WorkspaceID)
 	if err != nil {
 		return toConnectError(err)
@@ -278,6 +302,10 @@ func (h *AgentHandler) SubmitChoice(ctx context.Context, req *connect.Request[ag
 	session, err := h.svc.GetChatForChoice(ctx, uid, req.Msg.ChoiceId)
 	if err != nil {
 		return toConnectError(err)
+	}
+
+	if err := h.gate(ctx, session.WorkspaceID, uid); err != nil {
+		return err
 	}
 
 	check, err := h.creditSvc.Check(ctx, session.WorkspaceID)
@@ -309,7 +337,14 @@ func (h *AgentHandler) GetCredits(ctx context.Context, req *connect.Request[agen
 		return nil, toConnectError(err)
 	}
 
-	resetDate := nextMonthStart(check.CurrentCycleStart)
+	// The reset date now comes from the entitlement period itself rather than
+	// being recomputed as "the first of next month": featurelayer anchors the
+	// period to the workspace's billing anchor, so a workspace that started
+	// mid-month resets mid-month, and guessing would be wrong for it.
+	resetDate := ""
+	if !check.ResetsAt.IsZero() {
+		resetDate = check.ResetsAt.UTC().Format("2006-01-02")
+	}
 
 	return connect.NewResponse(&agentv1.GetCreditsResponse{
 		Remaining:  check.Remaining,
@@ -368,9 +403,4 @@ func toProtoChoicePrompt(cp agent.ChoicePrompt) *agentv1.ChoicePrompt {
 		Options:     options,
 		AllowCustom: cp.AllowCustom,
 	}
-}
-
-func nextMonthStart(t time.Time) string {
-	y, m, _ := t.Date()
-	return time.Date(y, m+1, 1, 0, 0, 0, 0, t.Location()).Format("2006-01-02")
 }

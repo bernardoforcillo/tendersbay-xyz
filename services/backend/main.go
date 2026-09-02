@@ -37,6 +37,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
@@ -146,6 +147,18 @@ func main() {
 		workspace.Config{AppBaseURL: cfg.AppBaseURL, InviteExpiry: cfg.WorkspaceInviteExpiry},
 	)
 
+	// Feature management: what a workspace may use and how much of it. The
+	// definitions live in code (internal/core/features); the two stores here
+	// hold the per-workspace half — its subscription and its usage counters.
+	// A failure is fatal rather than degraded: without the entitlement engine
+	// every metered feature would be unmetered.
+	subscriptionRepo := postgres.NewSubscriptionRepo(db)
+	featureEngine, err := features.New(subscriptionRepo, postgres.NewFeatureUsageRepo(db))
+	if err != nil {
+		slog.Error("failed to build the feature engine", "error", err)
+		os.Exit(1)
+	}
+
 	// Client profile (per-client bid-qualification agent, v1.0) — built here,
 	// before both tenderSvc and agentSvc, since tenderSvc.RecommendForClient
 	// needs it as a ProfileSource.
@@ -254,7 +267,6 @@ func main() {
 
 	// Agent / chat service
 	chatRepo := postgres.NewChatRepo(db)
-	creditRepo := postgres.NewWorkspaceCreditRepo(db)
 	pricingRepo := postgres.NewAgentPricingRepo(db)
 	usageRepo := postgres.NewTokenUsageRepo(db)
 
@@ -272,14 +284,14 @@ func main() {
 		slog.Warn("could not determine the pod name; agent turns will record an empty pod", "error", err)
 	}
 
-	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
+	creditSvc := credits.NewService(featureEngine, subscriptionRepo, pricingRepo, usageRepo)
 	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, workspaceSvc, workbenchSvc, tenderSvc, documentSvc, companySvc, clientProfileSvc, pod)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc, clientProfileSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
-	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, workspaceSvc)
+	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, featureEngine, workspaceSvc)
 	bidHandler := connectapi.NewBidHandler(bidSvc)
 	companyHandler := connectapi.NewCompanyHandler(companySvc)
 

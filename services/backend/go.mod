@@ -6,6 +6,7 @@ require (
 	connectrpc.com/connect v1.20.0
 	github.com/bernardoforcillo/authlayer v0.0.2-0.20260901211342-cdb178a8a83d
 	github.com/bernardoforcillo/drops v0.6.0
+	github.com/bernardoforcillo/featurelayer v0.0.0-20260901212336-9d484ab9aac2
 	github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge v0.0.0-20260815141703-be1248895ed9
 	github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry v0.0.0-20260815141703-be1248895ed9
 	github.com/buildwithgo/berrygem v0.0.0-20260505193244-810711e4a49b

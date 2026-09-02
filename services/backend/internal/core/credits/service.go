@@ -1,14 +1,25 @@
+// Package credits is the agent's token budget: how much LLM spend a workspace
+// has left this period, and the ledger of what it actually spent.
+//
+// The budget itself is no longer this package's own bookkeeping. Entitlement,
+// the monthly limit and the counter behind it belong to featurelayer through
+// internal/core/features, where the allowance is a property of the workspace's
+// PLAN rather than a column on its row. What stays here is what featurelayer
+// has no opinion about: turning a turn's input and output tokens into a single
+// weighted number using this product's per-agent pricing, and recording every
+// turn in the token ledger — including the ones the budget refused, because the
+// provider was already paid for them.
 package credits
 
 import (
 	"context"
-	"errors"
 	"time"
 
-	"github.com/bernardoforcillo/drops/pg"
-	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
+	"github.com/bernardoforcillo/featurelayer/entitlement"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 )
 
+// Usage is one agent turn's token consumption, as reported by the agent domain.
 type Usage struct {
 	WorkspaceID  string
 	UserID       string
@@ -20,80 +31,109 @@ type Usage struct {
 	TotalTokens  int32
 }
 
-// CreditRepo, PricingRepo, and UsageRepo are the ports credits.Service uses —
-// each satisfied by *postgres.WorkspaceCreditRepo, *postgres.AgentPricingRepo,
-// and *postgres.TokenUsageRepo respectively, without changes there.
-type CreditRepo interface {
-	FindByWorkspace(ctx context.Context, workspaceID string) (postgres.DBWorkspaceCredits, error)
-	Deduct(ctx context.Context, workspaceID string, tokens int64) (postgres.DBWorkspaceCredits, bool, error)
-	ResetCycle(ctx context.Context, workspaceID string) (postgres.DBWorkspaceCredits, error)
-	Upsert(ctx context.Context, workspaceID string, allowance int64) (postgres.DBWorkspaceCredits, error)
+// UsageLog is one row of the token ledger: what a turn consumed and what it was
+// weighted at. It is an audit record, kept whether or not the budget allowed
+// the spend.
+type UsageLog struct {
+	WorkspaceID    string
+	UserID         string
+	AgentType      string
+	SessionID      string
+	Model          string
+	InputTokens    int32
+	OutputTokens   int32
+	TotalTokens    int32
+	CostMultiplier int64
 }
 
-// DefaultMonthlyTokenAllowance matches the `workspace_credits.monthly_token_allowance`
-// column default (see schema.go) — kept in sync manually since Seed always
-// passes it explicitly rather than relying on the column default.
-const DefaultMonthlyTokenAllowance int64 = 2_000_000
-
-type PricingRepo interface {
-	FindByAgentType(ctx context.Context, agentType string) (postgres.DBAgentPricing, error)
+// Pricing is an agent type's per-token cost, in budget units.
+type Pricing struct {
+	InputCost  int64
+	OutputCost int64
 }
 
-type UsageRepo interface {
-	Insert(ctx context.Context, log postgres.DBTokenUsage) (postgres.DBTokenUsage, error)
-}
+// Ports. Each is satisfied by a postgres repository unchanged; the domain
+// declares the shapes so this package does not depend on the adapter layer.
+type (
+	// PricingSource resolves an agent type's per-token cost. A miss is not an
+	// error the caller has to handle — Deduct falls back to 1:1.
+	PricingSource interface {
+		FindByAgentType(ctx context.Context, agentType string) (Pricing, error)
+	}
+	// UsageLogger appends to the token ledger.
+	UsageLogger interface {
+		Insert(ctx context.Context, log UsageLog) error
+	}
+	// SubscriptionWriter creates or updates a workspace's subscription. Only
+	// Seed uses it; reading subscriptions is featurelayer's job.
+	SubscriptionWriter interface {
+		Upsert(ctx context.Context, sub entitlement.Subscription) error
+	}
+)
 
 type Service struct {
-	creditRepo  CreditRepo
-	pricingRepo PricingRepo
-	usageRepo   UsageRepo
+	features *features.Engine
+	subs     SubscriptionWriter
+	pricing  PricingSource
+	ledger   UsageLogger
 }
 
-func NewService(creditRepo CreditRepo, pricingRepo PricingRepo, usageRepo UsageRepo) *Service {
-	return &Service{creditRepo: creditRepo, pricingRepo: pricingRepo, usageRepo: usageRepo}
+func NewService(engine *features.Engine, subs SubscriptionWriter, pricing PricingSource, ledger UsageLogger) *Service {
+	return &Service{features: engine, subs: subs, pricing: pricing, ledger: ledger}
 }
 
+// CheckResult is a workspace's standing against its agent-token budget.
+//
+// Unlimited is possible in principle — featurelayer allows an entitlement with
+// no limit — and is reported as Allowance and Remaining of -1 with OK true. No
+// plan defined today is unlimited, but a caller that renders these numbers has
+// to know which value means "no ceiling" rather than "no budget".
 type CheckResult struct {
 	Remaining         int64
 	Allowance         int64
 	OK                bool
 	CurrentCycleStart time.Time
+	// ResetsAt is when the current period ends and the counter starts again.
+	// It is derived from the workspace's billing anchor, so it is the real
+	// date rather than the first of next month.
+	ResetsAt time.Time
 }
 
+// Check reads the budget without spending any of it. A workspace with no
+// subscription, or one whose plan does not carry the agent, comes back as the
+// zero CheckResult — OK false — which is what blocks the turn upstream. That is
+// the same answer a workspace with no credits row got before.
 func (s *Service) Check(ctx context.Context, workspaceID string) (CheckResult, error) {
-	row, err := s.creditRepo.FindByWorkspace(ctx, workspaceID)
-	if errors.Is(err, pg.ErrNoRows) {
-		return CheckResult{}, nil
-	}
+	d, err := s.features.Usage(ctx, features.AgentTokens, workspaceID)
 	if err != nil {
 		return CheckResult{}, err
 	}
-	remaining := row.MonthlyAllowance - row.CurrentCycleTokens
-	if remaining < 0 {
-		remaining = 0
+	if d.Usage == nil {
+		return CheckResult{}, nil
 	}
 	return CheckResult{
-		Remaining:         remaining,
-		Allowance:         row.MonthlyAllowance,
-		OK:                remaining > 0,
-		CurrentCycleStart: row.CurrentCycleStart,
+		Remaining:         d.Usage.Remaining,
+		Allowance:         d.Usage.Max,
+		OK:                d.Enabled && d.Usage.Remaining != 0,
+		CurrentCycleStart: d.Usage.PeriodStart,
+		ResetsAt:          d.Usage.ResetsAt,
 	}, nil
 }
 
 // Deduct weighs input and output tokens by their own per-token cost (not a
 // summed flat multiplier — see the design doc for the bug this replaces) and
-// applies the result through CreditRepo.Deduct's atomic ceiling. A deduct
-// that the repo rejects (workspace already at/over its monthly cap) is NOT
-// an error: the response was already streamed to the user and already cost
-// real money with the LLM provider by the time this runs, so failing the
-// whole ConnectRPC call here would be a UX regression, not a safety win. The
-// usage log is written either way, as the accurate record of what happened.
+// spends the result against the workspace's budget.
+//
+// A spend the budget refuses is NOT an error: the response was already streamed
+// to the user and already cost real money with the LLM provider by the time
+// this runs, so failing the whole ConnectRPC call here would be a UX
+// regression, not a safety win. The ledger row is written either way, as the
+// accurate record of what happened — it is the only place an over-budget turn
+// is visible at all, since featurelayer applies no partial increment.
 func (s *Service) Deduct(ctx context.Context, usage Usage) (int64, error) {
 	var inputCost, outputCost int64 = 1, 1
-	pricing, err := s.pricingRepo.FindByAgentType(ctx, usage.AgentType)
-	if err == nil {
-		inputCost = pricing.InputCost
-		outputCost = pricing.OutputCost
+	if p, err := s.pricing.FindByAgentType(ctx, usage.AgentType); err == nil {
+		inputCost, outputCost = p.InputCost, p.OutputCost
 	}
 
 	weighted := int64(usage.InputTokens)*inputCost + int64(usage.OutputTokens)*outputCost
@@ -101,12 +141,12 @@ func (s *Service) Deduct(ctx context.Context, usage Usage) (int64, error) {
 		weighted = 1
 	}
 
-	row, _, err := s.creditRepo.Deduct(ctx, usage.WorkspaceID, weighted)
+	d, err := s.features.Consume(ctx, features.AgentTokens, usage.WorkspaceID, usage.UserID, weighted)
 	if err != nil {
 		return 0, err
 	}
 
-	log := postgres.DBTokenUsage{
+	if err := s.ledger.Insert(ctx, UsageLog{
 		WorkspaceID:    usage.WorkspaceID,
 		UserID:         usage.UserID,
 		AgentType:      usage.AgentType,
@@ -116,27 +156,27 @@ func (s *Service) Deduct(ctx context.Context, usage Usage) (int64, error) {
 		OutputTokens:   usage.OutputTokens,
 		TotalTokens:    usage.TotalTokens,
 		CostMultiplier: inputCost + outputCost,
-	}
-	if _, err := s.usageRepo.Insert(ctx, log); err != nil {
+	}); err != nil {
 		return 0, err
 	}
 
-	remaining := row.MonthlyAllowance - row.CurrentCycleTokens
-	if remaining < 0 {
-		remaining = 0
+	if d.Usage == nil {
+		// Refused before the counter was consulted — the workspace is not
+		// entitled to the agent at all. There is no budget to report.
+		return 0, nil
 	}
-	return remaining, nil
+	// -1 when the entitlement carries no limit; see CheckResult.
+	return d.Usage.Remaining, nil
 }
 
-func (s *Service) ResetMonthly(ctx context.Context, workspaceID string) error {
-	_, err := s.creditRepo.ResetCycle(ctx, workspaceID)
-	return err
-}
-
-// Seed ensures workspaceID has a workspace_credits row at the default monthly
-// allowance. It is idempotent (backed by an upsert) — safe to call every time
-// a workspace is created, including a retry after a partial failure.
+// Seed gives a workspace the free plan. It is idempotent — safe to call on
+// every workspace creation, including a retry after a partial failure — and
+// leaves an existing subscription's billing anchor alone, so re-seeding cannot
+// move the period boundary and hand out a fresh budget mid-month.
 func (s *Service) Seed(ctx context.Context, workspaceID string) error {
-	_, err := s.creditRepo.Upsert(ctx, workspaceID, DefaultMonthlyTokenAllowance)
-	return err
+	return s.subs.Upsert(ctx, entitlement.Subscription{
+		TenantID:      workspaceID,
+		Plan:          features.PlanFree,
+		BillingAnchor: time.Now().UTC(),
+	})
 }

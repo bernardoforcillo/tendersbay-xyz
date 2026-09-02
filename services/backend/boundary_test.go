@@ -72,17 +72,18 @@ type importEdge struct {
 //     "we are knowingly taking on debt that the whole team has agreed to",
 //     and it belongs in a PR description with a reason, not in a green CI run.
 //
-// The five entries below are not five independent problems. `postgres` already
-// imports core/{auth,bid,clientprofile,document,tender,workbench,workspace},
-// so reversing agent's or credits' port direction requires postgres to import
-// them too — and `core/agent` imports `core/credits`, closing the cycle. They
-// therefore have to come out together, in one atomic change, which is exactly
-// why they are still here rather than already fixed.
+// The two agent entries are one problem, not two: `postgres` already imports
+// core/{auth,bid,clientprofile,document,tender,workbench,workspace}, so
+// reversing agent's port direction requires postgres to import it too, and the
+// build and test edges have to come out together.
+//
+// credits used to be here as well, and came out when it moved onto featurelayer:
+// its ports now speak credits.UsageLog / credits.Pricing, which the postgres
+// repositories map to. That is the shape the agent edge needs too — the entries
+// below are the same debt, not a different one.
 var knownViolations = map[importEdge]string{
-	{Pkg: "internal/core/agent", Kind: "build", Adapter: "internal/adapter/postgres"}:      "ChatRepository is defined in postgres.DBChatSession/DBChatMessage; unwinding it is atomic with credits below",
+	{Pkg: "internal/core/agent", Kind: "build", Adapter: "internal/adapter/postgres"}:      "ChatRepository is defined in postgres.DBChatSession/DBChatMessage",
 	{Pkg: "internal/core/agent", Kind: "test", Adapter: "internal/adapter/postgres"}:       "the agent tests build postgres.DBChatMessage fixtures; falls out with the build edge above",
-	{Pkg: "internal/core/credits", Kind: "build", Adapter: "internal/adapter/postgres"}:    "CreditRepo/PricingRepo/UsageRepo are defined in postgres.DBWorkspaceCredits/DBAgentPricing; load-bearing for the agent edge",
-	{Pkg: "internal/core/credits", Kind: "test", Adapter: "internal/adapter/postgres"}:     "the credits tests build postgres.DBWorkspaceCredits fixtures; falls out with the build edge above",
 	{Pkg: "internal/core/tender/eval", Kind: "test", Adapter: "internal/adapter/postgres"}: "the search eval harness talks to a real database; the only entry with no build-time counterpart, so it can be unwound on its own",
 }
 

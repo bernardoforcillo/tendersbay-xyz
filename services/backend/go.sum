@@ -4,6 +4,8 @@ github.com/bernardoforcillo/authlayer v0.0.2-0.20260901211342-cdb178a8a83d h1:CE
 github.com/bernardoforcillo/authlayer v0.0.2-0.20260901211342-cdb178a8a83d/go.mod h1:TKe7cocU8ngCBmyTQAJ83kr1VKbUw+QCNeV5AgfmbM8=
 github.com/bernardoforcillo/drops v0.6.0 h1:BdO6kk9MLlUQtRWFf9kpS6pZtumdnOtw5MHNqeGdRKU=
 github.com/bernardoforcillo/drops v0.6.0/go.mod h1:9r+/t5MUZa+V0w5uwvrojHO6CCrSMfeFUuIn+18L9V4=
+github.com/bernardoforcillo/featurelayer v0.0.0-20260901212336-9d484ab9aac2 h1:KFULHuSGO2By9buutPPx1JEq66YIa5yt138sqzr3JzQ=
+github.com/bernardoforcillo/featurelayer v0.0.0-20260901212336-9d484ab9aac2/go.mod h1:2f4dS+C0b64S0E85fK5RIR1aM25aqTrMeojOIo2pRz8=
 github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge v0.0.0-20260815141703-be1248895ed9 h1:W9NFHmMF33KKM98Iapo/khYAwko3i8XA66bYfIa75I8=
 github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge v0.0.0-20260815141703-be1248895ed9/go.mod h1:tyrdPNUddIyF/i3+SCQh9h0NHer+Pp6BHhW2KAxsh7c=
 github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry v0.0.0-20260815141703-be1248895ed9 h1:8QsJqFgFUGTxqvnRVoAk1LqaFHNoDAk1wg3gyP7Z7m8=

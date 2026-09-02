@@ -241,6 +241,8 @@ func toConnectError(err error) error {
 	// Agent domain
 	case errors.Is(err, agent.ErrInsufficientCredits):
 		return connect.NewError(connect.CodeResourceExhausted, err)
+	case errors.Is(err, agent.ErrAgentUnavailable):
+		return connect.NewError(connect.CodeUnavailable, err)
 	case errors.Is(err, agent.ErrChoiceNotPending):
 		return connect.NewError(connect.CodeFailedPrecondition, err)
 	case errors.Is(err, agent.ErrEmptyMessage):

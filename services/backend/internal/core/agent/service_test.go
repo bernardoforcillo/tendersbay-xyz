@@ -240,7 +240,7 @@ func (f fakeProfileSource) Get(context.Context, string, string) (clientprofile.P
 
 func newTestService(chatRepo *fakeChatRepo, members *fakeMemberRepo, workbenches Workbenches) *Service {
 	registry := NewRegistry("")
-	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil), members, workbenches, fakeTenders{}, fakeDocuments{}, fakeCompanies{}, fakeProfileSource{err: clientprofile.ErrProfileNotFound}, "test-pod")
+	return NewService(registry, chatRepo, credits.NewService(nil, nil, nil, nil), members, workbenches, fakeTenders{}, fakeDocuments{}, fakeCompanies{}, fakeProfileSource{err: clientprofile.ErrProfileNotFound}, "test-pod")
 }
 
 func TestListChats_RejectsNonMember(t *testing.T) {
