@@ -34,6 +34,17 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, standalone backend se
 - **Git hooks:** Husky 9 — `pre-commit` runs `pnpm lint`, `commit-msg` runs commitlint
 - **Node:** `>=24` (see `.nvmrc`)
 - **Backend:** Go `1.26` — `apps/platform` serves the embedded frontend via `net/http`
+- **Auth & RBAC:** [`authlayer`](https://github.com/bernardoforcillo/authlayer) — `services/backend`
+  uses its `auth` (users, credentials, session families with refresh rotation, verification
+  tokens), `scope` + `access` (workspace RBAC, custom roles, the privilege-escalation guard)
+  and `invite` (email invitations, shareable links) packages, all persisted by its own
+  `store/drops` PostgreSQL backend. `internal/core/{auth,user,workspace}` are thin domain
+  layers over it: they own the product's rules (display names, localized links, rate-limit
+  budgets, slug rules, the permission bitmask the proto speaks) and delegate the rest.
+- **Features & entitlements:** [`featurelayer`](https://github.com/bernardoforcillo/featurelayer)
+  — the feature catalog, flags and plan-based metered limits. Definitions live in code
+  (`internal/core/features`); the per-workspace half (subscription, usage counters) is in
+  Postgres. `internal/core/credits` is the agent's token budget on top of it.
 - **Go hot reload:** Air — `pnpm dev` runs Vite + Air concurrently (install once with
   `go install github.com/air-verse/air@latest`; ensure `air` is on `PATH`)
 - **Frontend:** Vite 6 + React 19 + Tailwind CSS v4 (`@tailwindcss/vite`)
