@@ -263,11 +263,11 @@ func (s *Service) GetWorkbench(ctx context.Context, userID, workbenchID string) 
 	if err != nil {
 		return Workbench{}, 0, "", mapErr(err)
 	}
-	info, err := s.wsAccess.Lookup(ctx, wb.WorkspaceID, userID)
+	name, err := s.wsAccess.WorkspaceName(ctx, wb.WorkspaceID)
 	if err != nil {
 		return Workbench{}, 0, "", err
 	}
-	return wb, perms, info.Name, nil
+	return wb, perms, name, nil
 }
 
 func (s *Service) UpdateWorkbench(ctx context.Context, userID, workbenchID, name, description string) (Workbench, error) {

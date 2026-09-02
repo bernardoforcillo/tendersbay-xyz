@@ -498,11 +498,20 @@ func (a workspaceAccess) Lookup(ctx context.Context, workspaceID, userID string)
 		return workbench.WorkspaceInfo{}, err
 	}
 	return workbench.WorkspaceInfo{
-		Name:          st.WorkspaceName,
 		IsMember:      st.IsMember,
 		MayViewShared: st.Permissions.Has(workspace.PermViewWorkbenches),
 		MayManageAll:  st.Permissions.Has(workspace.PermManageWorkbenches),
 	}, nil
+}
+
+// WorkspaceName reads the one column a workbench breadcrumb needs, without the
+// membership and role lookups a standing resolution costs.
+func (a workspaceAccess) WorkspaceName(ctx context.Context, workspaceID string) (string, error) {
+	ws, err := a.svc.Scope().Container(ctx, workspaceID)
+	if err != nil {
+		return "", err
+	}
+	return ws.Name, nil
 }
 
 // unavailableRateLimiter denies every request with an explanatory error,

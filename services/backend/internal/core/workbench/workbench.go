@@ -129,7 +129,6 @@ type UserLookup interface {
 // keep in sync with core/workspace — a defect waiting for the first person who
 // added a bit. The workspace domain now answers the questions instead.
 type WorkspaceInfo struct {
-	Name string
 	// IsMember is whether the caller belongs to the workspace at all. A
 	// non-member must not learn that a workbench exists.
 	IsMember bool
@@ -141,7 +140,14 @@ type WorkspaceInfo struct {
 }
 
 // WorkspaceAccess bridges to the workspace domain without importing it.
-// Implemented by an adapter in the composition root over workspace.Standing.
+// Implemented by an adapter in the composition root over the workspace service.
+//
+// Two methods, because they are two questions with two costs: Lookup resolves a
+// caller's standing, which means reading their membership and their role;
+// WorkspaceName reads one column. GetWorkbench needs only the second, for a
+// breadcrumb, and asking the first for it made a page load pay for a permission
+// check nothing consulted.
 type WorkspaceAccess interface {
 	Lookup(ctx context.Context, workspaceID, userID string) (WorkspaceInfo, error)
+	WorkspaceName(ctx context.Context, workspaceID string) (string, error)
 }

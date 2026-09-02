@@ -345,29 +345,39 @@ func (s *Service) requireOwner(ctx context.Context, workspaceID, userID string) 
 
 // ── Membership checks ───────────────────────────────────────────────────────
 
-// LoadMembership reports a caller's standing in a workspace. It is the port the
-// agent, company, client-profile and tender-search paths gate on, and it stays
-// a single read: scope.Standing resolves owner bypass, the member row and the
-// role's grants in one ladder.
+// LoadMembership reports a caller's standing in a workspace, refusing a
+// non-member. It is the port the agent, company, client-profile and
+// tender-search paths gate on.
+//
+// It is Standing in the shape those callers speak — one query either way, one
+// implementation of the ladder. The two differ only in what a non-member means:
+// an error here, because these callers are gating; a false flag there, because
+// the workbench domain has to tell "not a member" from "no such workspace".
 func (s *Service) LoadMembership(ctx context.Context, workspaceID, userID string) (Membership, error) {
-	perms, elevated, err := s.sc.Standing(ctx, workspaceID, userID)
+	st, err := s.Standing(ctx, workspaceID, userID)
 	if err != nil {
-		return Membership{}, mapLibraryError(err)
+		return Membership{}, err
 	}
-	m := Membership{Role: Role{WorkspaceID: workspaceID, Permissions: maskOf(perms, elevated)}}
+	if !st.IsMember {
+		return Membership{}, ErrNotMember
+	}
+	m := Membership{Role: Role{WorkspaceID: workspaceID, Permissions: st.Permissions}}
 	m.Member.ContainerID = workspaceID
 	m.Member.UserID = userID
 	return m, nil
 }
 
 // Standing is a caller's position in a workspace, for the domains that gate on
-// it without being part of it — today the workbench domain's coarse
-// (workspace-level) access layer.
+// it without being part of it — today the workbench domain, whose own scope is
+// nested in this one.
+//
+// It carries no workspace name and no owner flag. Both were here, and neither
+// was read: ownership reaches the workbench domain as elevation through the
+// nesting, and the breadcrumb name is a separate one-column read. Keeping them
+// cost a container lookup on every call, for two fields nobody consulted.
 type Standing struct {
-	WorkspaceName string
-	IsMember      bool
-	IsOwner       bool
-	Permissions   Permission
+	IsMember    bool
+	Permissions Permission
 }
 
 // Standing reports userID's position in a workspace. A non-member is not an
@@ -375,21 +385,14 @@ type Standing struct {
 // what lets the workbench domain distinguish "no such workspace" from "you may
 // not see this workbench".
 func (s *Service) Standing(ctx context.Context, workspaceID, userID string) (Standing, error) {
-	ws, err := s.sc.Container(ctx, workspaceID)
-	if err != nil {
-		return Standing{}, mapLibraryError(err)
-	}
-	out := Standing{WorkspaceName: ws.Name, IsOwner: ws.OwnerID == userID}
 	perms, elevated, err := s.sc.Standing(ctx, workspaceID, userID)
 	if errors.Is(err, scope.ErrNotMember) {
-		return out, nil
+		return Standing{}, nil
 	}
 	if err != nil {
 		return Standing{}, mapLibraryError(err)
 	}
-	out.IsMember = true
-	out.Permissions = maskOf(perms, elevated)
-	return out, nil
+	return Standing{IsMember: true, Permissions: maskOf(perms, elevated)}, nil
 }
 
 // ── Members ─────────────────────────────────────────────────────────────────

@@ -150,12 +150,11 @@ type fakeWorkspace struct {
 }
 
 func (f *fakeWorkspace) Lookup(_ context.Context, wsID, userID string) (workbench.WorkspaceInfo, error) {
-	info, ok := f.infos[wsID+"|"+userID]
-	if !ok {
-		return workbench.WorkspaceInfo{Name: "Acme"}, nil
-	}
-	info.Name = "Acme"
-	return info, nil
+	return f.infos[wsID+"|"+userID], nil
+}
+
+func (f *fakeWorkspace) WorkspaceName(context.Context, string) (string, error) {
+	return "Acme", nil
 }
 
 type fakeUsers struct{}
