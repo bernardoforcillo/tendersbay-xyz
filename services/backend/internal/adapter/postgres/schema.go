@@ -161,11 +161,20 @@ type DBMembership struct {
 }
 
 // ── Workbench tables ────────────────────────────────────────────────────────
-// Mirrors the workspace tables above: full DDL constraints on the drops
-// handles so the 0003 migration generates CREATE TABLE from the same columns
-// the repositories query with. Composite constraints (the members composite
-// PK and the (workbench_id, name) unique) are added as raw ALTER TABLE in
-// migrate_workbenches.go — drops does not emit them inline.
+// Mirrors the workspace tables above: full DDL constraints on the drops handles
+// so the 0003 migration generates CREATE TABLE from the same columns.
+// Composite constraints (the members composite PK and the (workbench_id, name)
+// unique) are added as raw ALTER TABLE in migrate_workbenches.go — drops does
+// not emit them inline.
+//
+// PARTLY FROZEN AT 0003, the same way the workspace block above is: migration
+// 0015 rewrites workbench_roles and workbench_members for authlayer's nested
+// scope (role_id -> role_key, workbench_id -> container_id, added_at ->
+// joined_at, the bitmask -> encoded grants), after which authlayer's own schema
+// owns them and nothing here queries them. The Workbenches handles below are
+// still LIVE — WorkbenchRepo uses them, and workbenches.workspace_id keeps its
+// name because core/workbench satisfies scope.Nested with a method rather than
+// by embedding NestedBase.
 var (
 	Workbenches   = pg.NewTable("workbenches")
 	WBID          = pg.Add(Workbenches, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))

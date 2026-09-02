@@ -165,15 +165,16 @@ func main() {
 	clientProfileRepo := postgres.NewClientProfileRepo(db)
 	clientProfileSvc := clientprofile.NewService(clientProfileRepo, workspaceSvc)
 
-	workbenchWSAccess := workspaceAccess{workspaceSvc}
-	workbenchUow := postgres.NewWorkbenchUnitOfWork(db)
+	// Workbenches are a NESTED authlayer scope: workspaceSvc.Scope() is the
+	// parent, so "may administer every workbench" and "may create one" are
+	// resolved from the workspace's own grants rather than re-derived here.
 	workbenchSvc := workbench.NewService(
+		workbench.NewAccess(),
+		workspaceSvc.Scope(),
+		postgres.NewWorkbenchScopeStore(db),
 		postgres.NewWorkbenchRepo(db),
-		postgres.NewWorkbenchRoleRepo(db),
-		postgres.NewWorkbenchMemberRepo(db),
 		userRepo, // satisfies workbench.UserLookup (FindByID)
-		workbenchWSAccess,
-		workbenchUow,
+		workspaceAccess{workspaceSvc},
 	)
 
 	// Tender search — Qdrant/Ollama/Redis unreachable at startup is logged,
@@ -434,10 +435,10 @@ func (a workspaceAccess) Lookup(ctx context.Context, workspaceID, userID string)
 		return workbench.WorkspaceInfo{}, err
 	}
 	return workbench.WorkspaceInfo{
-		Name:     st.WorkspaceName,
-		Perms:    uint64(st.Permissions),
-		IsOwner:  st.IsOwner,
-		IsMember: st.IsMember,
+		Name:          st.WorkspaceName,
+		IsMember:      st.IsMember,
+		MayViewShared: st.Permissions.Has(workspace.PermViewWorkbenches),
+		MayManageAll:  st.Permissions.Has(workspace.PermManageWorkbenches),
 	}, nil
 }
 

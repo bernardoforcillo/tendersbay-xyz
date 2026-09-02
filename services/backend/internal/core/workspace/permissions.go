@@ -159,10 +159,19 @@ func grantsFor(p Permission) map[string][]access.Action {
 func maskOf(perms access.Permission, elevated bool) Permission {
 	// Anyone with standing at all is a member, and membership is what
 	// PermViewWorkspace names.
-	out := PermViewWorkspace
+	//
+	// An elevated caller is reported as holding every bit rather than just the
+	// administrator one: elevation bypasses each check individually, so a mask
+	// that showed less would be telling the client something untrue about what
+	// it may do.
 	if elevated {
-		out |= PermAdministrator
+		out := PermViewWorkspace | PermAdministrator
+		for _, pg := range permissionGrants {
+			out |= pg.bit
+		}
+		return out
 	}
+	out := PermViewWorkspace
 	for _, pg := range permissionGrants {
 		granted := true
 		for resource, actions := range pg.grants {

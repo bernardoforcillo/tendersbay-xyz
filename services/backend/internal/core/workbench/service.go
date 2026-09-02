@@ -3,101 +3,157 @@ package workbench
 import (
 	"context"
 	"errors"
+
+	"github.com/bernardoforcillo/authlayer/access"
+	"github.com/bernardoforcillo/authlayer/scope"
 )
 
+type scopeService = scope.Service[Workbench, Member, *Workbench, *Member]
+
 type Service struct {
-	workbenches WorkbenchRepository
-	roles       WorkbenchRoleRepository
-	members     WorkbenchMemberRepository
-	users       UserLookup
-	wsAccess    WorkspaceAccess
-	uow         UnitOfWork
+	sc       *scopeService
+	store    Store
+	repo     Repository
+	users    UserLookup
+	wsAccess WorkspaceAccess
 }
 
+// NewService wires the nested scope. parent is the workspace's own scope
+// service, which supplies the standing this one inherits from.
+//
+// Two options make the nesting work, and both are load-bearing:
+//
+//   - WithContainerResource turns CreateContainer into a "workbench:create"
+//     check against the WORKSPACE. That grant is declared on the workspace's
+//     surface (workspace.Statements), which is what makes
+//     workspace.PermCreateWorkbench mean something. Without it, creating a
+//     workbench would silently require elevated standing in the workspace.
+//   - InheritWhen projects the workspace's "workbench:manage" onto elevation
+//     here, so a workspace administrator administers every workbench in it.
+//     scope's own default (InheritElevation) would carry only workspace
+//     OWNERS across, which is narrower than the rule this product has.
 func NewService(
-	workbenches WorkbenchRepository,
-	roles WorkbenchRoleRepository,
-	members WorkbenchMemberRepository,
+	ac *access.Access,
+	parent scope.ParentScope,
+	store Store,
+	repo Repository,
 	users UserLookup,
 	wsAccess WorkspaceAccess,
-	uow UnitOfWork,
 ) *Service {
-	return &Service{
-		workbenches: workbenches,
-		roles:       roles,
-		members:     members,
-		users:       users,
-		wsAccess:    wsAccess,
-		uow:         uow,
+	sc := scope.New[Workbench, Member](ac, store,
+		scope.WithContainerResource(ResourceWorkbench),
+		scope.WithParent(parent, scope.InheritWhen(ResourceWorkbench, ActionManage)),
+	)
+	return &Service{sc: sc, store: store, repo: repo, users: users, wsAccess: wsAccess}
+}
+
+// ActionManage is the workspace-level action this scope inherits elevation
+// from. It is declared by the PARENT (workspace.ActionManage) — repeated here
+// only so the inheritance above reads without a cross-package import.
+const ActionManage access.Action = "manage"
+
+func actor(ctx context.Context, userID, containerID string) context.Context {
+	return scope.WithScope(scope.WithSubject(ctx, userID), containerID)
+}
+
+func mapErr(err error) error {
+	if err == nil {
+		return nil
+	}
+	switch {
+	case errors.Is(err, scope.ErrContainerNotFound):
+		return ErrWorkbenchNotFound
+	case errors.Is(err, scope.ErrNotMember), errors.Is(err, scope.ErrSubjectMissing), errors.Is(err, scope.ErrScopeMissing):
+		return ErrNotMember
+	case errors.Is(err, scope.ErrNotParentMember):
+		return ErrNotWorkspaceMember
+	case errors.Is(err, scope.ErrForbidden):
+		return ErrForbidden
+	case errors.Is(err, scope.ErrPrivilegeEscalation):
+		return ErrPrivilegeEscalation
+	case errors.Is(err, scope.ErrRoleNotFound):
+		return ErrRoleNotFound
+	case errors.Is(err, scope.ErrRoleInUse):
+		return ErrRoleInUse
+	case errors.Is(err, scope.ErrDefaultRole):
+		return ErrDefaultRole
+	case errors.Is(err, scope.ErrLastOwner):
+		return ErrLastOwner
+	case errors.Is(err, scope.ErrOwnerOnly):
+		return ErrOwnerOnly
+	case errors.Is(err, scope.ErrAlreadyMember):
+		return ErrAlreadyMember
+	case errors.Is(err, scope.ErrRoleKeyTaken):
+		return ErrRoleKeyTaken
+	default:
+		return err
 	}
 }
 
-// authz is the outcome of an authorization check.
+// ── Authorization ───────────────────────────────────────────────────────────
+
 type authz struct {
 	wb       Workbench
-	wsName   string
-	perms    Permission // effective per-workbench permissions
-	elevated bool       // owner/administrator — bypasses the subset guard
+	perms    Permission
+	elevated bool
 }
 
-// authorize resolves the two-layer access model for a workbench action needing
-// bit `need`. Resolution order: workbench owner → workspace owner/admin override
-// → not-a-workspace-member (hidden) → explicit workbench membership → shared
-// baseline viewer → private/non-member (hidden).
+// authorize resolves a read or a gated action on one workbench.
+//
+// The first rung is the whole of authlayer's ladder: workbench owner, inherited
+// elevation from the workspace, explicit membership, the member's role. Only
+// when that reports no standing at all does this package's own rule apply — a
+// SHARED workbench is visible to a workspace member who may see shared
+// workbenches. That rule cannot live in the engine because it turns on the
+// visibility column, so it lives here, after the engine has had its say.
+//
+// A caller with no way in gets ErrWorkbenchNotFound rather than ErrForbidden,
+// on both the not-a-workspace-member and the private-workbench paths: whether a
+// particular workbench exists is itself something they must not learn.
 func (s *Service) authorize(ctx context.Context, workbenchID, userID string, need Permission) (authz, error) {
-	wb, err := s.workbenches.FindByID(ctx, workbenchID)
+	wb, err := s.sc.Container(ctx, workbenchID)
 	if err != nil {
-		return authz{}, err
+		return authz{}, mapErr(err)
 	}
+
+	perms, elevated, err := s.sc.Standing(ctx, workbenchID, userID)
+	switch {
+	case err == nil:
+		mask := maskOf(perms, elevated)
+		if !elevated && !mask.Has(need) {
+			return authz{}, ErrForbidden
+		}
+		return authz{wb: wb, perms: mask, elevated: elevated}, nil
+	case errors.Is(err, scope.ErrNotMember):
+		// No standing of its own and nothing inherited — fall through.
+	default:
+		return authz{}, mapErr(err)
+	}
+
 	info, err := s.wsAccess.Lookup(ctx, wb.WorkspaceID, userID)
 	if err != nil {
 		return authz{}, err
 	}
-	a := authz{wb: wb, wsName: info.Name}
-
-	// Elevated: workbench owner, workspace owner, workspace ADMINISTRATOR, or
-	// workspace MANAGE_WORKBENCHES — all bypass per-workbench checks.
-	if wb.OwnerID == userID || info.IsOwner ||
-		info.Perms&wsPermAdministrator != 0 || info.Perms&wsPermManageWorkbenches != 0 {
-		a.perms = permAdminRole
-		a.elevated = true
-		return a, nil
-	}
-	// Must at least be a member of the parent workspace; otherwise hide existence.
 	if !info.IsMember {
 		return authz{}, ErrWorkbenchNotFound
 	}
-	// Explicit per-workbench membership.
-	m, err := s.members.LoadMembership(ctx, workbenchID, userID)
-	if err == nil {
-		a.perms = m.Role.Permissions
-		a.elevated = a.perms.Has(PermAdministrator)
-		if !a.elevated && !a.perms.Has(need) {
-			return authz{}, ErrForbidden
-		}
-		return a, nil
-	}
-	if !errors.Is(err, ErrNotMember) {
-		return authz{}, err
-	}
-	// Shared workbench: workspace members with VIEW_WORKBENCHES get baseline view.
-	if wb.Visibility == VisibilityShared && info.Perms&wsPermViewWorkbenches != 0 {
-		a.perms = PermViewWorkbench
+	if wb.Visibility == VisibilityShared && info.MayViewShared {
+		a := authz{wb: wb, perms: PermViewWorkbench}
 		if !a.perms.Has(need) {
 			return authz{}, ErrForbidden
 		}
 		return a, nil
 	}
-	// Private workbench, not a member → indistinguishable from not-found.
 	return authz{}, ErrWorkbenchNotFound
 }
 
-// requireWorkbenchOwner asserts the caller owns the workbench, allowing the
-// workspace owner / administrator / manage-workbenches override.
+// requireWorkbenchOwner gates the two owner-only actions. It is not expressed
+// as a grant — see permissionGrants — so the workspace-level override has to be
+// asked for explicitly here rather than falling out of the engine.
 func (s *Service) requireWorkbenchOwner(ctx context.Context, workbenchID, userID string) (Workbench, error) {
-	wb, err := s.workbenches.FindByID(ctx, workbenchID)
+	wb, err := s.sc.Container(ctx, workbenchID)
 	if err != nil {
-		return Workbench{}, err
+		return Workbench{}, mapErr(err)
 	}
 	if wb.OwnerID == userID {
 		return wb, nil
@@ -106,136 +162,93 @@ func (s *Service) requireWorkbenchOwner(ctx context.Context, workbenchID, userID
 	if err != nil {
 		return Workbench{}, err
 	}
-	if info.IsOwner || info.Perms&wsPermAdministrator != 0 || info.Perms&wsPermManageWorkbenches != 0 {
+	if info.MayManageAll {
 		return wb, nil
 	}
 	return Workbench{}, ErrOwnerOnly
 }
 
-// CreateWorkbench creates a workbench, seeds a "Manager" (all bits) and default
-// "Viewer" role, and adds the creator as a Manager member — all atomically.
-// Requires the caller be a workspace member with CREATE_WORKBENCH (or a
-// workspace owner/admin/manage-workbenches).
+// ── Workbench lifecycle ─────────────────────────────────────────────────────
+
+// CreateWorkbench creates a workbench owned by userID, who becomes its first
+// member with the owner role. The permission check is the nesting's: the engine
+// asks the workspace whether the caller holds workbench:create.
 func (s *Service) CreateWorkbench(ctx context.Context, userID, workspaceID, name, description string, visibility Visibility) (Workbench, error) {
-	info, err := s.wsAccess.Lookup(ctx, workspaceID, userID)
-	if err != nil {
-		return Workbench{}, err
-	}
-	if !info.IsMember && !info.IsOwner {
-		return Workbench{}, ErrNotWorkspaceMember
-	}
-	allowed := info.IsOwner ||
-		info.Perms&wsPermAdministrator != 0 ||
-		info.Perms&wsPermManageWorkbenches != 0 ||
-		info.Perms&wsPermCreateWorkbench != 0
-	if !allowed {
-		return Workbench{}, ErrForbidden
-	}
 	if visibility != VisibilityShared {
 		visibility = VisibilityPrivate
 	}
-
-	var created Workbench
-	err = s.uow.Do(ctx, func(r Repos) error {
-		wb, err := r.Workbenches.Create(ctx, Workbench{
-			WorkspaceID: workspaceID, Name: name, Description: description,
-			Visibility: visibility, OwnerID: userID,
-		})
-		if err != nil {
-			return err
-		}
-		mgr, err := r.Roles.Create(ctx, Role{WorkbenchID: wb.ID, Name: "Manager", Permissions: permAdminRole})
-		if err != nil {
-			return err
-		}
-		if _, err := r.Roles.Create(ctx, Role{WorkbenchID: wb.ID, Name: "Viewer", Permissions: PermViewWorkbench, IsDefault: true}); err != nil {
-			return err
-		}
-		if _, err := r.Members.Add(ctx, Member{WorkbenchID: wb.ID, UserID: userID, RoleID: mgr.ID}); err != nil {
-			return err
-		}
-		created = wb
-		return nil
+	wb, err := s.sc.CreateContainer(actor(ctx, userID, workspaceID), Workbench{
+		Name: name, Description: description, Visibility: visibility,
 	})
 	if err != nil {
-		return Workbench{}, err
+		return Workbench{}, mapErr(err)
 	}
-	return created, nil
+	return wb, nil
 }
 
-// ListWorkbenches returns the workbenches in a workspace the caller may see:
-// owner / explicit member / shared (with VIEW_WORKBENCHES) / all when the caller
-// is a workspace owner/admin.
+// ListWorkbenches returns the workbenches in a workspace the caller may see.
+// The filter mirrors authorize's ladder, applied to a list: administrators see
+// everything, an owner sees their own, a shared workbench needs only the
+// workspace-level right, and anything else needs membership.
 func (s *Service) ListWorkbenches(ctx context.Context, userID, workspaceID string) ([]Workbench, error) {
 	info, err := s.wsAccess.Lookup(ctx, workspaceID, userID)
 	if err != nil {
 		return nil, err
 	}
-	if !info.IsMember && !info.IsOwner {
+	if !info.IsMember {
 		return nil, ErrNotMember
 	}
-	all, err := s.workbenches.ListByWorkspace(ctx, workspaceID)
+	all, err := s.repo.ListByWorkspace(ctx, workspaceID)
 	if err != nil {
 		return nil, err
 	}
-	admin := info.IsOwner || info.Perms&wsPermAdministrator != 0 || info.Perms&wsPermManageWorkbenches != 0
-	canView := info.Perms&wsPermViewWorkbenches != 0
 	out := make([]Workbench, 0, len(all))
 	for _, wb := range all {
 		switch {
-		case admin, wb.OwnerID == userID:
+		case info.MayManageAll, wb.OwnerID == userID:
 			out = append(out, wb)
 			continue
-		case wb.Visibility == VisibilityShared && canView:
+		case wb.Visibility == VisibilityShared && info.MayViewShared:
 			out = append(out, wb)
 			continue
 		}
-		if _, err := s.members.Find(ctx, wb.ID, userID); err == nil {
+		if _, err := s.store.FindMember(ctx, wb.ID, userID); err == nil {
 			out = append(out, wb)
-		} else if !errors.Is(err, ErrNotMember) {
-			return nil, err
+		} else if !errors.Is(err, scope.ErrNotMember) {
+			return nil, mapErr(err)
 		}
 	}
 	return out, nil
 }
 
-// CanAccessWorkbench returns nil when userID may view workbenchID (its owner,
-// an explicit member, a workspace owner/admin/manage-workbenches, or a shared
-// workbench viewable by a workspace member with VIEW_WORKBENCHES), and
-// ErrWorkbenchNotFound / ErrForbidden otherwise. It reuses the exact same
-// authorize path GetWorkbench uses, so an external caller (e.g. the agent chat
-// service gating access to a workbench-scoped chat) gets an identical decision.
+// CanAccessWorkbench returns nil when userID may view workbenchID. It reuses
+// the exact authorize path GetWorkbench uses, so an external caller (the agent
+// chat service gating a workbench-scoped chat) gets an identical decision.
 func (s *Service) CanAccessWorkbench(ctx context.Context, userID, workbenchID string) error {
 	_, err := s.authorize(ctx, workbenchID, userID, PermViewWorkbench)
 	return err
 }
 
-// CanManageWorkbench returns nil when userID may perform write actions on
-// workbenchID, and ErrWorkbenchNotFound / ErrForbidden otherwise. It mirrors
-// CanAccessWorkbench but resolves the same authorize path against
-// PermManageWorkbench, so an external caller (the bid domain gating its write
-// RPCs) gets an identical decision to the one UpdateWorkbench uses.
+// CanManageWorkbench mirrors CanAccessWorkbench against PermManageWorkbench, so
+// the bid domain's write RPCs get the same decision UpdateWorkbench uses.
 func (s *Service) CanManageWorkbench(ctx context.Context, userID, workbenchID string) error {
 	_, err := s.authorize(ctx, workbenchID, userID, PermManageWorkbench)
 	return err
 }
 
 // WorkspaceOf resolves a workbench's parent workspace id. It performs no
-// authorization of its own — callers (the bid domain, after their own
-// CanAccessWorkbench check) use it only to scope a downstream profile/fit
-// lookup. Returns ErrWorkbenchNotFound when the workbench does not exist.
+// authorization of its own — callers use it only to scope a downstream lookup
+// after their own access check.
 func (s *Service) WorkspaceOf(ctx context.Context, workbenchID string) (string, error) {
-	wb, err := s.workbenches.FindByID(ctx, workbenchID)
+	wb, err := s.sc.Container(ctx, workbenchID)
 	if err != nil {
-		return "", err
+		return "", mapErr(err)
 	}
 	return wb.WorkspaceID, nil
 }
 
-// AccessibleWorkbenchIDs returns the set of workbench IDs in workspaceID that
-// userID may view — the same visibility ListWorkbenches applies, indexed for an
-// O(1) membership test. Used to filter workbench-scoped chats in a workspace
-// listing without a per-row authorize round trip.
+// AccessibleWorkbenchIDs returns the workbench IDs in workspaceID that userID
+// may view, indexed for an O(1) membership test.
 func (s *Service) AccessibleWorkbenchIDs(ctx context.Context, userID, workspaceID string) (map[string]struct{}, error) {
 	wbs, err := s.ListWorkbenches(ctx, userID, workspaceID)
 	if err != nil {
@@ -249,20 +262,24 @@ func (s *Service) AccessibleWorkbenchIDs(ctx context.Context, userID, workspaceI
 }
 
 // GetWorkbench returns the workbench, the caller's effective permissions, and
-// the parent workspace name (for the breadcrumb).
+// the parent workspace name for the breadcrumb.
 func (s *Service) GetWorkbench(ctx context.Context, userID, workbenchID string) (Workbench, Permission, string, error) {
 	a, err := s.authorize(ctx, workbenchID, userID, PermViewWorkbench)
 	if err != nil {
 		return Workbench{}, 0, "", err
 	}
-	return a.wb, a.perms, a.wsName, nil
+	info, err := s.wsAccess.Lookup(ctx, a.wb.WorkspaceID, userID)
+	if err != nil {
+		return Workbench{}, 0, "", err
+	}
+	return a.wb, a.perms, info.Name, nil
 }
 
 func (s *Service) UpdateWorkbench(ctx context.Context, userID, workbenchID, name, description string) (Workbench, error) {
 	if _, err := s.authorize(ctx, workbenchID, userID, PermManageWorkbench); err != nil {
 		return Workbench{}, err
 	}
-	return s.workbenches.Update(ctx, workbenchID, name, description)
+	return s.repo.UpdateDetails(ctx, workbenchID, name, description)
 }
 
 func (s *Service) ChangeVisibility(ctx context.Context, userID, workbenchID string, v Visibility) (Workbench, error) {
@@ -272,7 +289,7 @@ func (s *Service) ChangeVisibility(ctx context.Context, userID, workbenchID stri
 	if _, err := s.authorize(ctx, workbenchID, userID, PermManageWorkbench); err != nil {
 		return Workbench{}, err
 	}
-	return s.workbenches.UpdateVisibility(ctx, workbenchID, v)
+	return s.repo.UpdateVisibility(ctx, workbenchID, v)
 }
 
 func (s *Service) DeleteWorkbench(ctx context.Context, userID, workbenchID string) error {
@@ -280,120 +297,146 @@ func (s *Service) DeleteWorkbench(ctx context.Context, userID, workbenchID strin
 	if err != nil {
 		return err
 	}
-	return s.workbenches.Delete(ctx, wb.ID)
+	return s.repo.Delete(ctx, wb.ID)
 }
 
+// TransferOwnership hands a workbench to another WORKSPACE member — not
+// necessarily one of its own members, which is why it does not use scope's own
+// TransferOwnership: that one is owner-only and requires the target to already
+// belong to the container. Both differences are product rules, so both are
+// enforced here.
 func (s *Service) TransferOwnership(ctx context.Context, userID, workbenchID, newOwnerID string) error {
 	wb, err := s.requireWorkbenchOwner(ctx, workbenchID, userID)
 	if err != nil {
 		return err
 	}
-	// The new owner must be a member of the parent workspace.
 	info, err := s.wsAccess.Lookup(ctx, wb.WorkspaceID, newOwnerID)
 	if err != nil {
 		return err
 	}
-	if !info.IsMember && !info.IsOwner {
+	if !info.IsMember {
 		return ErrNotWorkspaceMember
 	}
-	return s.workbenches.UpdateOwner(ctx, workbenchID, newOwnerID)
+	return mapErr(s.store.UpdateContainerOwner(ctx, workbenchID, newOwnerID))
 }
 
 // LeaveWorkbench removes the caller's own membership. The owner must transfer
-// ownership first.
+// ownership first — authlayer's last-owner lock, not a check of our own.
 func (s *Service) LeaveWorkbench(ctx context.Context, userID, workbenchID string) error {
-	wb, err := s.workbenches.FindByID(ctx, workbenchID)
-	if err != nil {
-		return err
-	}
-	if wb.OwnerID == userID {
-		return ErrLastOwner
-	}
-	if _, err := s.members.Find(ctx, workbenchID, userID); err != nil {
-		return err
-	}
-	return s.members.Remove(ctx, workbenchID, userID)
+	return mapErr(s.sc.LeaveContainer(actor(ctx, userID, workbenchID)))
 }
 
-func (s *Service) roleInWorkbench(ctx context.Context, workbenchID, roleID string) (Role, error) {
-	role, err := s.roles.FindByID(ctx, roleID)
-	if err != nil {
-		return Role{}, err
-	}
-	if role.WorkbenchID != workbenchID {
-		return Role{}, ErrRoleNotFound
-	}
-	return role, nil
-}
+// ── Roles ───────────────────────────────────────────────────────────────────
 
+// ListRoles is gated by authorize rather than by scope's own ListRoles, so a
+// shared workbench's viewers can see its roles the way they always could —
+// scope has no standing to grant them, since their access comes from the
+// visibility column it does not know about.
 func (s *Service) ListRoles(ctx context.Context, userID, workbenchID string) ([]Role, error) {
 	if _, err := s.authorize(ctx, workbenchID, userID, PermViewWorkbench); err != nil {
 		return nil, err
 	}
-	return s.roles.ListByWorkbench(ctx, workbenchID)
+	return s.roleViews(ctx, workbenchID)
 }
 
 func (s *Service) CreateRole(ctx context.Context, userID, workbenchID, name string, perms Permission) (Role, error) {
-	a, err := s.authorize(ctx, workbenchID, userID, PermManageRoles)
+	view, err := s.sc.CreateRole(actor(ctx, userID, workbenchID), roleKey(name), name, grantsFor(perms))
 	if err != nil {
-		return Role{}, err
+		return Role{}, mapErr(err)
 	}
-	if !a.elevated && !perms.subsetOf(a.perms) {
-		return Role{}, ErrPrivilegeEscalation
-	}
-	return s.roles.Create(ctx, Role{WorkbenchID: workbenchID, Name: name, Permissions: perms})
+	return roleFromView(workbenchID, view), nil
 }
 
 func (s *Service) UpdateRole(ctx context.Context, userID, workbenchID, roleID, name string, perms Permission) (Role, error) {
-	a, err := s.authorize(ctx, workbenchID, userID, PermManageRoles)
+	view, err := s.sc.UpdateRole(actor(ctx, userID, workbenchID), roleID, name, grantsFor(perms))
 	if err != nil {
-		return Role{}, err
+		return Role{}, mapErr(err)
 	}
-	if _, err := s.roleInWorkbench(ctx, workbenchID, roleID); err != nil {
-		return Role{}, err
-	}
-	if !a.elevated && !perms.subsetOf(a.perms) {
-		return Role{}, ErrPrivilegeEscalation
-	}
-	return s.roles.Update(ctx, roleID, name, perms)
+	return roleFromView(workbenchID, view), nil
 }
 
 func (s *Service) DeleteRole(ctx context.Context, userID, workbenchID, roleID string) error {
-	if _, err := s.authorize(ctx, workbenchID, userID, PermManageRoles); err != nil {
-		return err
-	}
-	role, err := s.roleInWorkbench(ctx, workbenchID, roleID)
-	if err != nil {
-		return err
-	}
-	if role.IsDefault {
-		return ErrDefaultRole
-	}
-	n, err := s.roles.CountMembersUsing(ctx, roleID)
-	if err != nil {
-		return err
-	}
-	if n > 0 {
-		return ErrRoleInUse
-	}
-	return s.roles.Delete(ctx, roleID)
+	return mapErr(s.sc.DeleteRole(actor(ctx, userID, workbenchID), roleID))
 }
+
+// roleViews composes the code-defined roles with the workbench's own stored
+// ones. It reads the store directly instead of calling scope.ListRoles because
+// that method authorizes on membership, which the shared-viewer path does not
+// have; the gate has already been applied by the caller.
+func (s *Service) roleViews(ctx context.Context, workbenchID string) ([]Role, error) {
+	ac := NewAccess()
+	out := make([]Role, 0, 5)
+	for _, key := range []string{RoleOwner, RoleManager, RoleViewer} {
+		r, ok := ac.Role(key)
+		if !ok {
+			continue
+		}
+		out = append(out, roleFromView(workbenchID, scope.RoleView{
+			Key: r.Key, Name: r.Key, Permissions: r.Permissions, IsDefault: true,
+		}))
+	}
+	recs, err := s.store.ListRoles(ctx, workbenchID)
+	if err != nil {
+		return nil, mapErr(err)
+	}
+	for _, rec := range recs {
+		perm, err := ac.Decode(rec.Permissions)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, roleFromView(workbenchID, scope.RoleView{
+			Key: rec.Key, Name: rec.Name, Permissions: perm,
+		}))
+	}
+	return out, nil
+}
+
+func (s *Service) role(ctx context.Context, workbenchID, key string) (Role, error) {
+	roles, err := s.roleViews(ctx, workbenchID)
+	if err != nil {
+		return Role{}, err
+	}
+	for _, r := range roles {
+		if r.ID == key {
+			return r, nil
+		}
+	}
+	return Role{}, ErrRoleNotFound
+}
+
+func roleFromView(workbenchID string, v scope.RoleView) Role {
+	name := v.Name
+	if v.IsDefault {
+		if label, ok := defaultRoleNames[v.Key]; ok {
+			name = label
+		}
+	}
+	return Role{
+		ID:          v.Key,
+		WorkbenchID: workbenchID,
+		Name:        name,
+		Permissions: maskOf(v.Permissions, v.Permissions.IsFull()),
+		IsDefault:   v.IsDefault,
+	}
+}
+
+// ── Members ─────────────────────────────────────────────────────────────────
 
 func (s *Service) ListMembers(ctx context.Context, userID, workbenchID string) ([]MemberView, error) {
 	if _, err := s.authorize(ctx, workbenchID, userID, PermViewWorkbench); err != nil {
 		return nil, err
 	}
-	members, err := s.members.ListByWorkbench(ctx, workbenchID)
+	members, err := s.store.ListMembers(ctx, workbenchID)
+	if err != nil {
+		return nil, mapErr(err)
+	}
+	roles, err := s.roleViews(ctx, workbenchID)
 	if err != nil {
 		return nil, err
 	}
-	roles, err := s.roles.ListByWorkbench(ctx, workbenchID)
-	if err != nil {
-		return nil, err
-	}
-	byID := make(map[string]Role, len(roles))
+	byKey := make(map[string]Role, len(roles))
 	for _, r := range roles {
-		byID[r.ID] = r
+		byKey[r.ID] = r
 	}
 	out := make([]MemberView, 0, len(members))
 	for _, m := range members {
@@ -401,80 +444,44 @@ func (s *Service) ListMembers(ctx context.Context, userID, workbenchID string) (
 		if err != nil {
 			return nil, err
 		}
-		out = append(out, MemberView{Member: m, Role: byID[m.RoleID], User: u})
+		out = append(out, MemberView{Member: m, Role: byKey[m.RoleKey], User: u})
 	}
 	return out, nil
 }
 
-// AddMember adds an existing workspace member to the workbench with a role.
+// AddMember admits an existing workspace member to the workbench. That the
+// target already belongs to the parent is authlayer's MembersFromParent policy,
+// not a check of ours — it surfaces as ErrNotWorkspaceMember.
 func (s *Service) AddMember(ctx context.Context, userID, workbenchID, targetUserID, roleID string) (MemberView, error) {
-	a, err := s.authorize(ctx, workbenchID, userID, PermManageMembers)
-	if err != nil {
-		return MemberView{}, err
+	if _, err := s.sc.AddMember(actor(ctx, userID, workbenchID), targetUserID, roleID); err != nil {
+		return MemberView{}, mapErr(err)
 	}
-	role, err := s.roleInWorkbench(ctx, workbenchID, roleID)
-	if err != nil {
-		return MemberView{}, err
-	}
-	if !a.elevated && !role.Permissions.subsetOf(a.perms) {
-		return MemberView{}, ErrPrivilegeEscalation
-	}
-	// Target must already belong to the parent workspace.
-	info, err := s.wsAccess.Lookup(ctx, a.wb.WorkspaceID, targetUserID)
-	if err != nil {
-		return MemberView{}, err
-	}
-	if !info.IsMember && !info.IsOwner {
-		return MemberView{}, ErrNotWorkspaceMember
-	}
-	if _, err := s.members.Add(ctx, Member{WorkbenchID: workbenchID, UserID: targetUserID, RoleID: roleID}); err != nil {
-		return MemberView{}, err
-	}
-	u, err := s.users.FindByID(ctx, targetUserID)
-	if err != nil {
-		return MemberView{}, err
-	}
-	return MemberView{Member: Member{WorkbenchID: workbenchID, UserID: targetUserID, RoleID: roleID}, Role: role, User: u}, nil
+	return s.memberView(ctx, workbenchID, targetUserID, roleID)
 }
 
 func (s *Service) ChangeMemberRole(ctx context.Context, userID, workbenchID, targetUserID, roleID string) (MemberView, error) {
-	a, err := s.authorize(ctx, workbenchID, userID, PermManageMembers)
-	if err != nil {
-		return MemberView{}, err
+	if err := s.sc.ChangeMemberRole(actor(ctx, userID, workbenchID), targetUserID, roleID); err != nil {
+		return MemberView{}, mapErr(err)
 	}
-	if targetUserID == a.wb.OwnerID {
-		return MemberView{}, ErrLastOwner
-	}
-	role, err := s.roleInWorkbench(ctx, workbenchID, roleID)
-	if err != nil {
-		return MemberView{}, err
-	}
-	if !a.elevated && !role.Permissions.subsetOf(a.perms) {
-		return MemberView{}, ErrPrivilegeEscalation
-	}
-	if _, err := s.members.Find(ctx, workbenchID, targetUserID); err != nil {
-		return MemberView{}, err
-	}
-	if err := s.members.UpdateRole(ctx, workbenchID, targetUserID, roleID); err != nil {
-		return MemberView{}, err
-	}
-	u, err := s.users.FindByID(ctx, targetUserID)
-	if err != nil {
-		return MemberView{}, err
-	}
-	return MemberView{Member: Member{WorkbenchID: workbenchID, UserID: targetUserID, RoleID: roleID}, Role: role, User: u}, nil
+	return s.memberView(ctx, workbenchID, targetUserID, roleID)
 }
 
 func (s *Service) RemoveMember(ctx context.Context, userID, workbenchID, targetUserID string) error {
-	a, err := s.authorize(ctx, workbenchID, userID, PermManageMembers)
+	return mapErr(s.sc.RemoveMember(actor(ctx, userID, workbenchID), targetUserID))
+}
+
+func (s *Service) memberView(ctx context.Context, workbenchID, userID, roleKey string) (MemberView, error) {
+	role, err := s.role(ctx, workbenchID, roleKey)
 	if err != nil {
-		return err
+		return MemberView{}, err
 	}
-	if targetUserID == a.wb.OwnerID {
-		return ErrLastOwner
+	u, err := s.users.FindByID(ctx, userID)
+	if err != nil {
+		return MemberView{}, err
 	}
-	if _, err := s.members.Find(ctx, workbenchID, targetUserID); err != nil {
-		return err
-	}
-	return s.members.Remove(ctx, workbenchID, targetUserID)
+	view := MemberView{Role: role, User: u}
+	view.Member.ContainerID = workbenchID
+	view.Member.UserID = userID
+	view.Member.RoleKey = roleKey
+	return view, nil
 }
