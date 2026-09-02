@@ -87,19 +87,6 @@ func main() {
 	authStore := dropsstore.NewAuthStore(db)
 	userRepo := postgres.NewUserRepo(db)
 
-	workspaceRepo := postgres.NewWorkspaceRepo(db)
-	roleRepo := postgres.NewRoleRepo(db)
-	memberRepo := postgres.NewMemberRepo(db)
-	emailInviteRepo := postgres.NewEmailInviteRepo(db)
-	inviteLinkRepo := postgres.NewInviteLinkRepo(db)
-	workspaceUow := postgres.NewUnitOfWork(db)
-
-	// Client profile (per-client bid-qualification agent, v1.0) — built here,
-	// before both tenderSvc and agentSvc, since tenderSvc.RecommendForClient
-	// needs it as a ProfileSource.
-	clientProfileRepo := postgres.NewClientProfileRepo(db)
-	clientProfileSvc := clientprofile.NewService(clientProfileRepo, memberRepo)
-
 	var mailer interface {
 		SendVerification(ctx context.Context, to, displayName, link string) error
 		SendPasswordReset(ctx context.Context, to, displayName, link string) error
@@ -145,13 +132,27 @@ func main() {
 	// core/user shares authSvc's underlying authlayer service rather than
 	// building a second one over the same store — see user.NewService.
 	userSvc := user.NewService(authSvc.Authlayer(), userRepo, mailer, authCfg)
+
+	// Workspace RBAC and invitations run on authlayer's scope and invite
+	// engines over its drops store. The access engine is built once and shared:
+	// it holds the declared permission surface and the code-defined roles, and
+	// two of them would be two vocabularies.
 	workspaceSvc := workspace.NewService(
-		workspaceRepo, roleRepo, memberRepo, emailInviteRepo, inviteLinkRepo,
-		userRepo, mailer, workspaceUow,
+		workspace.NewAccess(),
+		postgres.NewWorkspaceScopeStore(db),
+		postgres.NewWorkspaceInviteStore(db),
+		postgres.NewWorkspaceRepo(db),
+		userRepo, mailer,
 		workspace.Config{AppBaseURL: cfg.AppBaseURL, InviteExpiry: cfg.WorkspaceInviteExpiry},
 	)
 
-	workbenchWSAccess := postgres.NewWorkbenchWorkspaceAccess(db)
+	// Client profile (per-client bid-qualification agent, v1.0) — built here,
+	// before both tenderSvc and agentSvc, since tenderSvc.RecommendForClient
+	// needs it as a ProfileSource.
+	clientProfileRepo := postgres.NewClientProfileRepo(db)
+	clientProfileSvc := clientprofile.NewService(clientProfileRepo, workspaceSvc)
+
+	workbenchWSAccess := workspaceAccess{workspaceSvc}
 	workbenchUow := postgres.NewWorkbenchUnitOfWork(db)
 	workbenchSvc := workbench.NewService(
 		postgres.NewWorkbenchRepo(db),
@@ -234,7 +235,7 @@ func main() {
 	// serves the scheda gara's coverage strip and passage reads from it. The two
 	// belong on one service for the client: a passage without the coverage that
 	// qualifies it is exactly the pairing core/document refuses to break.
-	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo, documentSvc)
+	tenderHandler := connectapi.NewTenderHandler(tenderSvc, workspaceSvc, documentSvc)
 
 	// Company dossier + eligibility. tenderSvc supplies the submission deadline
 	// (without it an expiring attestation reads as met) and documentSvc supplies
@@ -242,7 +243,7 @@ func main() {
 	// rather than as a clean bill of health.
 	companySvc := company.NewService(
 		postgres.NewCompanyRepo(db), postgres.NewRequirementRepo(db),
-		memberRepo, tenderSvc, documentSvc,
+		workspaceSvc, tenderSvc, documentSvc,
 	)
 
 	// Bid lifecycle (workbench-bando-hub) — consumes workbenchSvc for access
@@ -272,13 +273,13 @@ func main() {
 	}
 
 	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
-	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, documentSvc, companySvc, clientProfileSvc, pod)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, workspaceSvc, workbenchSvc, tenderSvc, documentSvc, companySvc, clientProfileSvc, pod)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc, clientProfileSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
-	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, memberRepo)
+	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, workspaceSvc)
 	bidHandler := connectapi.NewBidHandler(bidSvc)
 	companyHandler := connectapi.NewCompanyHandler(companySvc)
 
@@ -406,6 +407,26 @@ func (a knowledgeBaseAdapter) RelatedByDocID(ctx context.Context, docID string, 
 		out[i] = tender.ScoredChunk{DocID: r.DocID, Score: r.Score}
 	}
 	return out, nil
+}
+
+// workspaceAccess adapts the workspace domain to workbench.WorkspaceAccess.
+// It lives here, in the composition root, rather than in either domain: the
+// workbench package deliberately does not import the workspace package (see
+// its WorkspaceAccess doc), and the workspace package must not learn about
+// workbenches to satisfy it.
+type workspaceAccess struct{ svc *workspace.Service }
+
+func (a workspaceAccess) Lookup(ctx context.Context, workspaceID, userID string) (workbench.WorkspaceInfo, error) {
+	st, err := a.svc.Standing(ctx, workspaceID, userID)
+	if err != nil {
+		return workbench.WorkspaceInfo{}, err
+	}
+	return workbench.WorkspaceInfo{
+		Name:     st.WorkspaceName,
+		Perms:    uint64(st.Permissions),
+		IsOwner:  st.IsOwner,
+		IsMember: st.IsMember,
+	}, nil
 }
 
 // unavailableRateLimiter denies every request with an explanatory error,

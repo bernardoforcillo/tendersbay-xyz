@@ -39,11 +39,21 @@ type DBUser struct {
 
 // ── Workspace tables ────────────────────────────────────────────────────────
 // These columns carry full DDL constraints (types, NOT NULL, UNIQUE, DEFAULT,
-// FOREIGN KEY) so drops generates the CREATE TABLE for the 0002 migration from
-// the same handles the repositories query with. Composite constraints (the
-// members composite PK and the (workspace_id, name)/(workspace_id, email)
-// uniques) are added as raw ALTER TABLE in migrate_workspaces.go — drops does
-// not emit them inline.
+// FOREIGN KEY) so drops generates the CREATE TABLE for the 0002 migration.
+// Composite constraints (the members composite PK and the (workspace_id,
+// name)/(workspace_id, email) uniques) are added as raw ALTER TABLE in
+// migrate_workspaces.go — drops does not emit them inline.
+//
+// FROZEN AT 0002. Everything below workspaces itself — the roles, members and
+// invitation handles and their DB structs — describes the shape migration 0002
+// creates, NOT the shape the database ends up in: migration 0013 rewrites those
+// three tables for authlayer (role_id -> role_key, workspace_id -> container_id,
+// the permission bitmask -> encoded grants), and from there on authlayer's own
+// schema is the source of truth and nothing here queries them. They are kept
+// verbatim because 0002 still generates its DDL from them and because 0013
+// reads the old columns by name before transforming them; edit them and you
+// change history, not the live schema. Workspaces itself is still live — see
+// WorkspaceRepo.
 var (
 	Workspaces         = pg.NewTable("workspaces")
 	WorkspaceID        = pg.Add(Workspaces, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))

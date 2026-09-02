@@ -167,10 +167,10 @@ func (f fakeMembers) LoadMembership(_ context.Context, workspaceID, userID strin
 	if f.err != nil {
 		return workspace.Membership{}, f.err
 	}
-	return workspace.Membership{
-		Member: workspace.Member{WorkspaceID: workspaceID, UserID: userID},
-		Role:   workspace.Role{Permissions: f.perms},
-	}, nil
+	m := workspace.Membership{Role: workspace.Role{Permissions: f.perms}}
+	m.Member.ContainerID = workspaceID
+	m.Member.UserID = userID
+	return m, nil
 }
 
 type fakeTenders struct {
