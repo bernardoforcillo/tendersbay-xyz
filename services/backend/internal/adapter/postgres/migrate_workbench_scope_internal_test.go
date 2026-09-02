@@ -11,8 +11,8 @@ import (
 // calls them admin and member, so the members holding them have to land there.
 func TestPlanWorkbenchRoles_MapsTheSeededRowsOntoTheRegistryKeys(t *testing.T) {
 	plans := planWorkbenchRolePlans([]legacyRole{
-		{id: "r1", workspaceID: "wb1", name: "Manager", mask: legacySeededManagerMask},
-		{id: "r2", workspaceID: "wb1", name: "Viewer", mask: legacySeededViewerMask, isDefault: true},
+		{id: "r1", containerID: "wb1", name: "Manager", mask: legacySeededManagerMask},
+		{id: "r2", containerID: "wb1", name: "Viewer", mask: legacySeededViewerMask, isDefault: true},
 	})
 	want := map[string]string{"r1": workbench.RoleManager, "r2": workbench.RoleViewer}
 	for _, p := range plans {
@@ -30,7 +30,7 @@ func TestPlanWorkbenchRoles_MapsTheSeededRowsOntoTheRegistryKeys(t *testing.T) {
 // hand out access nobody granted.
 func TestPlanWorkbenchRoles_CustomRoleKeepsItsOwnPermissions(t *testing.T) {
 	plans := planWorkbenchRolePlans([]legacyRole{
-		{id: "r1", workspaceID: "wb1", name: "Manager", mask: int64(workbench.PermManageMembers)},
+		{id: "r1", containerID: "wb1", name: "Manager", mask: int64(workbench.PermManageMembers)},
 	})
 	if len(plans) != 1 || !plans[0].keep {
 		t.Fatalf("plans = %+v, want one kept", plans)
@@ -44,9 +44,9 @@ func TestPlanWorkbenchRoles_CustomRoleKeepsItsOwnPermissions(t *testing.T) {
 // renamed rather than merged into the registry role.
 func TestPlanWorkbenchRoles_ReservedKeyCollisionIsRenamed(t *testing.T) {
 	plans := planWorkbenchRolePlans([]legacyRole{
-		{id: "r1", workspaceID: "wb1", name: "Admin", mask: int64(workbench.PermManageRoles)},
-		{id: "r2", workspaceID: "wb1", name: "Reviewer", mask: 0},
-		{id: "r3", workspaceID: "wb1", name: "reviewer", mask: 0},
+		{id: "r1", containerID: "wb1", name: "Admin", mask: int64(workbench.PermManageRoles)},
+		{id: "r2", containerID: "wb1", name: "Reviewer", mask: 0},
+		{id: "r3", containerID: "wb1", name: "reviewer", mask: 0},
 	})
 	got := map[string]string{}
 	for _, p := range plans {
@@ -61,7 +61,7 @@ func TestPlanWorkbenchRoles_ReservedKeyCollisionIsRenamed(t *testing.T) {
 
 func TestPlanWorkbenchRoles_MasksEncode(t *testing.T) {
 	plans := planWorkbenchRolePlans([]legacyRole{
-		{id: "r1", workspaceID: "wb1", name: "Reviewer",
+		{id: "r1", containerID: "wb1", name: "Reviewer",
 			mask: int64(workbench.PermManageWorkbench | workbench.PermManageMembers)},
 	})
 	encoded, err := workbench.EncodePermissions(workbench.Permission(plans[0].mask))

@@ -20,9 +20,12 @@ a boundary violation.
    Each wraps exactly one external system (database, cache, email provider, a future
    payments vendor, etc.) behind an interface **defined by the domain layer**, per the
    ports-and-adapters shape `internal/core`/`internal/adapter` already implies.
-5. **Supporting foundations** — shared packages (`packages/*`) and cross-cutting config
-   (`services/backend/internal/config`). The one layer allowed to be imported from more than
-   one place in the chain above.
+5. **Supporting foundations** — shared packages (`packages/*`), cross-cutting config
+   (`services/backend/internal/config`), and mechanism shared by several domains
+   (`services/backend/internal/rbac`, the bitmask ⇄ authlayer-grant projection the workspace
+   and workbench scopes both run on). The one layer allowed to be imported from more than
+   one place in the chain above — and the one that must hold no product decisions: `rbac`
+   knows how a permission is projected, never which permissions exist.
 
 ## The dependency rule
 

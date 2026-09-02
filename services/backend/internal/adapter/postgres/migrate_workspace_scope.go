@@ -184,26 +184,7 @@ func migrateWorkspaceScope() pg.Migration {
 	}
 }
 
-// legacyRole is one pre-authlayer workspace_roles row.
-type legacyRole struct {
-	id          string
-	workspaceID string
-	name        string
-	mask        int64
-	isDefault   bool
-}
-
-// rolePlan is what 0013 decided about one pre-authlayer role row.
-type rolePlan struct {
-	id   string
-	key  string
-	mask int64
-	keep bool // false: the registry now defines this role, so the row goes
-}
-
-// planRoleMigration reads every stored role and decides its key and fate. The
-// whole snapshot is read before anything is written, so the mapping — including
-// the per-workspace deduplication — is decided from one consistent view.
+// planRoleMigration reads every stored role and decides its key and fate.
 func planRoleMigration(ctx context.Context, db *pg.DB) ([]rolePlan, error) {
 	rows, err := db.Query(ctx, `SELECT id, workspace_id, name, permissions, is_default FROM workspace_roles`)
 	if err != nil {
@@ -214,7 +195,7 @@ func planRoleMigration(ctx context.Context, db *pg.DB) ([]rolePlan, error) {
 	var legacy []legacyRole
 	for rows.Next() {
 		var r legacyRole
-		if err := rows.Scan(&r.id, &r.workspaceID, &r.name, &r.mask, &r.isDefault); err != nil {
+		if err := rows.Scan(&r.id, &r.containerID, &r.name, &r.mask, &r.isDefault); err != nil {
 			return nil, err
 		}
 		legacy = append(legacy, r)
@@ -226,45 +207,18 @@ func planRoleMigration(ctx context.Context, db *pg.DB) ([]rolePlan, error) {
 }
 
 // planRoles is the decision itself, separated from the reading so it can be
-// exercised without a database. See the migration's own doc for the rules.
+// exercised without a database. The shared rules live in planLegacyRoles; what
+// this adds is which rows the old CreateWorkspace seeded.
 func planRoles(legacy []legacyRole) []rolePlan {
-	reserved := map[string]bool{
-		workspace.RoleOwner:  true,
-		workspace.RoleAdmin:  true,
-		workspace.RoleMember: true,
-	}
-	// taken tracks the keys already claimed in each workspace, so two roles
-	// whose names slugify to the same thing ("Bid Team" and "bid team") do not
-	// collide on the new (container_id, key) unique.
-	taken := map[string]map[string]bool{}
-
-	plans := make([]rolePlan, 0, len(legacy))
-	for _, r := range legacy {
-		key := workspace.RoleKeyFor(r.name)
-		seeded := (r.name == "Admin" && r.mask == legacySeededAdminMask) ||
-			(r.name == "Member" && r.isDefault && r.mask == legacySeededMemberMask)
-
-		keep := true
+	reserved := []string{workspace.RoleOwner, workspace.RoleAdmin, workspace.RoleMember}
+	return planLegacyRoles(legacy, reserved, func(r legacyRole) (string, bool) {
 		switch {
-		case seeded && reserved[key]:
-			// The row the old CreateWorkspace seeded. authlayer defines it now.
-			keep = false
-		case reserved[key]:
-			// Someone's own role that merely reads like a reserved one.
-			key += "-custom"
+		case r.name == "Admin" && r.mask == legacySeededAdminMask:
+			return workspace.RoleAdmin, true
+		case r.name == "Member" && r.isDefault && r.mask == legacySeededMemberMask:
+			return workspace.RoleMember, true
+		default:
+			return "", false
 		}
-
-		if keep {
-			if taken[r.workspaceID] == nil {
-				taken[r.workspaceID] = map[string]bool{}
-			}
-			base := key
-			for n := 2; taken[r.workspaceID][key] || reserved[key]; n++ {
-				key = fmt.Sprintf("%s-%d", base, n)
-			}
-			taken[r.workspaceID][key] = true
-		}
-		plans = append(plans, rolePlan{id: r.id, key: key, mask: r.mask, keep: keep})
-	}
-	return plans
+	})
 }

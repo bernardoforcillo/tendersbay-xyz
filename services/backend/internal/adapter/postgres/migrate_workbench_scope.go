@@ -143,7 +143,7 @@ func planWorkbenchRoles(ctx context.Context, db *pg.DB) ([]rolePlan, error) {
 	var legacy []legacyRole
 	for rows.Next() {
 		var r legacyRole
-		if err := rows.Scan(&r.id, &r.workspaceID, &r.name, &r.mask, &r.isDefault); err != nil {
+		if err := rows.Scan(&r.id, &r.containerID, &r.name, &r.mask, &r.isDefault); err != nil {
 			return nil, err
 		}
 		legacy = append(legacy, r)
@@ -155,47 +155,19 @@ func planWorkbenchRoles(ctx context.Context, db *pg.DB) ([]rolePlan, error) {
 }
 
 // planWorkbenchRolePlans is the decision itself, separated from the reading so
-// it can be exercised without a database.
+// it can be exercised without a database. Unlike the workspace's, the seeded
+// rows here do NOT collapse into the key their names derive to: authlayer's
+// registry calls them admin and member, and that is where their members land.
 func planWorkbenchRolePlans(legacy []legacyRole) []rolePlan {
-	reserved := map[string]bool{
-		workbench.RoleOwner:   true,
-		workbench.RoleManager: true,
-		workbench.RoleViewer:  true,
-	}
-	taken := map[string]map[string]bool{}
-
-	plans := make([]rolePlan, 0, len(legacy))
-	for _, r := range legacy {
-		var (
-			key  string
-			keep = true
-		)
+	reserved := []string{workbench.RoleOwner, workbench.RoleManager, workbench.RoleViewer}
+	return planLegacyRoles(legacy, reserved, func(r legacyRole) (string, bool) {
 		switch {
 		case r.name == "Manager" && r.mask == legacySeededManagerMask:
-			// The row the old CreateWorkbench seeded. Its key is not derived
-			// from the name: authlayer's registry calls this role "admin", and
-			// the members holding it have to land on that key.
-			key, keep = workbench.RoleManager, false
+			return workbench.RoleManager, true
 		case r.name == "Viewer" && r.isDefault && r.mask == legacySeededViewerMask:
-			key, keep = workbench.RoleViewer, false
+			return workbench.RoleViewer, true
 		default:
-			key = workbench.RoleKeyFor(r.name)
-			if reserved[key] {
-				key += "-custom"
-			}
+			return "", false
 		}
-
-		if keep {
-			if taken[r.workspaceID] == nil {
-				taken[r.workspaceID] = map[string]bool{}
-			}
-			base := key
-			for n := 2; taken[r.workspaceID][key] || reserved[key]; n++ {
-				key = fmt.Sprintf("%s-%d", base, n)
-			}
-			taken[r.workspaceID][key] = true
-		}
-		plans = append(plans, rolePlan{id: r.id, key: key, mask: r.mask, keep: keep})
-	}
-	return plans
+	})
 }

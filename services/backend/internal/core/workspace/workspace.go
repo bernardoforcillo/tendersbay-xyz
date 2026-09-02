@@ -22,6 +22,7 @@ import (
 	"github.com/bernardoforcillo/authlayer/invite"
 	"github.com/bernardoforcillo/authlayer/scope"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/rbac"
 )
 
 // ── Entities ────────────────────────────────────────────────────────────────
@@ -217,40 +218,33 @@ func actor(ctx context.Context, userID, workspaceID string) context.Context {
 	return scope.WithScope(scope.WithSubject(ctx, userID), workspaceID)
 }
 
-// mapLibraryError translates authlayer's sentinels into this package's.
-// Anything unrecognised passes through and surfaces as CodeInternal, which is
-// the right answer for a store failure.
+// scopeErrors is this domain's vocabulary for authlayer's scope sentinels.
+// The translation itself is rbac.Errors.Translate; what is declared here is
+// only which of this package's errors each condition means.
+var scopeErrors = rbac.Errors{
+	NotFound:            ErrWorkspaceNotFound,
+	NotMember:           ErrNotMember,
+	Forbidden:           ErrForbidden,
+	PrivilegeEscalation: ErrPrivilegeEscalation,
+	RoleNotFound:        ErrRoleNotFound,
+	RoleInUse:           ErrRoleInUse,
+	DefaultRole:         ErrDefaultRole,
+	LastOwner:           ErrLastOwner,
+	OwnerOnly:           ErrOwnerOnly,
+	AlreadyMember:       ErrAlreadyMember,
+	RoleKeyTaken:        ErrRoleKeyTaken,
+	// The only unique constraint a workspace can violate is its slug.
+	Conflict: ErrSlugTaken,
+}
+
+// mapLibraryError translates authlayer's sentinels into this package's, so
+// connectapi.toConnectError keeps its existing switch and the wire status codes
+// do not move. Anything unrecognised is passed through untouched and surfaces
+// as CodeInternal, which is the correct answer for a store or transport failure.
 func mapLibraryError(err error) error {
-	if err == nil {
-		return nil
-	}
 	switch {
-	case errors.Is(err, scope.ErrContainerNotFound):
-		return ErrWorkspaceNotFound
-	case errors.Is(err, scope.ErrNotMember), errors.Is(err, scope.ErrSubjectMissing), errors.Is(err, scope.ErrScopeMissing):
-		return ErrNotMember
-	case errors.Is(err, scope.ErrForbidden):
-		return ErrForbidden
-	case errors.Is(err, scope.ErrPrivilegeEscalation):
-		return ErrPrivilegeEscalation
-	case errors.Is(err, scope.ErrRoleNotFound):
-		return ErrRoleNotFound
-	case errors.Is(err, scope.ErrRoleInUse):
-		return ErrRoleInUse
-	case errors.Is(err, scope.ErrDefaultRole):
-		return ErrDefaultRole
-	case errors.Is(err, scope.ErrLastOwner):
-		return ErrLastOwner
-	case errors.Is(err, scope.ErrOwnerOnly):
-		return ErrOwnerOnly
-	case errors.Is(err, scope.ErrAlreadyMember):
-		return ErrAlreadyMember
-	case errors.Is(err, scope.ErrRoleKeyTaken):
-		return ErrRoleKeyTaken
-	case errors.Is(err, scope.ErrConflict):
-		return ErrSlugTaken
-	case errors.Is(err, scope.ErrNotParentMember):
-		return ErrNotMember
+	case err == nil:
+		return nil
 	case errors.Is(err, invite.ErrInviteNotFound):
 		return ErrInviteInvalid
 	case errors.Is(err, invite.ErrInviteExpired):
@@ -262,7 +256,7 @@ func mapLibraryError(err error) error {
 	case errors.Is(err, invite.ErrLinkExhausted):
 		return ErrLinkExhausted
 	default:
-		return err
+		return scopeErrors.Translate(err)
 	}
 }
 
@@ -463,7 +457,7 @@ func (s *Service) ListRoles(ctx context.Context, userID, workspaceID string) ([]
 }
 
 func (s *Service) CreateRole(ctx context.Context, userID, workspaceID, name string, perms Permission) (Role, error) {
-	view, err := s.sc.CreateRole(actor(ctx, userID, workspaceID), roleKey(name), name, grantsFor(perms))
+	view, err := s.sc.CreateRole(actor(ctx, userID, workspaceID), rbac.RoleKey(name), name, grantsFor(perms))
 	if err != nil {
 		return Role{}, mapLibraryError(err)
 	}

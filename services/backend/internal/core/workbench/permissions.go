@@ -1,10 +1,9 @@
 package workbench
 
 import (
-	"strings"
-
 	"github.com/bernardoforcillo/authlayer/access"
 	"github.com/bernardoforcillo/authlayer/scope"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/rbac"
 )
 
 // Resource names this scope declares. ResourceWorkbench is also the name the
@@ -16,6 +15,11 @@ const (
 	ResourceMember    = scope.ResourceMember
 	ResourceRole      = scope.ResourceRole
 )
+
+// ActionManage is the workspace-level action this scope inherits elevation
+// from. It is declared by the PARENT (workspace.ActionManage) — repeated here
+// only so NewService's inheritance reads without a cross-package import.
+const ActionManage access.Action = "manage"
 
 // Role keys, and why they are authlayer's three rather than this product's own
 // words: scope.Service.ListRoles enumerates the code-defined roles by the fixed
@@ -32,8 +36,8 @@ const (
 
 // Permission is a bitmask of workbench capabilities — the vocabulary the proto
 // and the client speak. Like workspace.Permission it is a PROJECTION of what
-// authlayer enforces, not the thing enforced; see that package's permissions.go
-// for the full argument, which applies here unchanged.
+// authlayer enforces, not the thing enforced; internal/rbac carries the
+// argument and the machinery.
 type Permission uint64
 
 const (
@@ -46,29 +50,21 @@ const (
 
 func (p Permission) Has(need Permission) bool { return p&need == need }
 
-// permissionGrants is the mask-to-grant mapping. PermViewWorkbench is
-// membership and PermAdministrator is elevation, so neither has grants — the
-// same two exceptions workspace.permissionGrants documents.
-//
-// Deleting a workbench is again absent and again owner-only, so "workbench"
-// declares only update. That keeps the manager role at IsFull and therefore
-// elevated, which is what the old PermAdministrator bit meant.
-var permissionGrants = []struct {
-	bit    Permission
-	grants map[string][]access.Action
-}{
-	{PermManageWorkbench, map[string][]access.Action{ResourceWorkbench: {scope.ActionUpdate}}},
-	{PermManageMembers, map[string][]access.Action{ResourceMember: {scope.ActionCreate, scope.ActionUpdate, scope.ActionDelete}}},
-	{PermManageRoles, map[string][]access.Action{ResourceRole: {scope.ActionCreate, scope.ActionUpdate, scope.ActionDelete}}},
+// permissionGrants is the mask-to-grant mapping. Deleting a workbench is
+// absent, and again owner-only, so "workbench" declares only update — that
+// keeps the manager role holding every grant and therefore elevated, which is
+// what the old PermAdministrator bit meant.
+var permissionGrants = []rbac.Grant[Permission]{
+	{Bit: PermManageWorkbench, Grants: map[string][]access.Action{ResourceWorkbench: {scope.ActionUpdate}}},
+	{Bit: PermManageMembers, Grants: map[string][]access.Action{ResourceMember: {scope.ActionCreate, scope.ActionUpdate, scope.ActionDelete}}},
+	{Bit: PermManageRoles, Grants: map[string][]access.Action{ResourceRole: {scope.ActionCreate, scope.ActionUpdate, scope.ActionDelete}}},
 }
 
 // Statements is this scope's complete permission surface.
 //
 // It does NOT declare workbench:create or workbench:manage: those are the
 // PARENT's grants (see workspace.Statements), asked of the workspace rather
-// than of a workbench that does not exist yet — creation is checked against the
-// workspace, and "administer every workbench" is a workspace-level capability
-// projected down by the inheritance below.
+// than of a workbench that does not exist yet.
 func Statements() map[string][]access.Action {
 	return map[string][]access.Action{
 		ResourceWorkbench: {scope.ActionUpdate},
@@ -77,17 +73,15 @@ func Statements() map[string][]access.Action {
 	}
 }
 
-// NewAccess builds the workbench access engine. owner and manager both hold
-// everything — matching the old seeded "Manager" role, which carried
-// PermAdministrator — and viewer holds nothing, which is exactly the old
-// default "Viewer" role: membership alone is the right to see the workbench.
-func NewAccess() *access.Access {
-	ac := access.New(access.NewStatements(Statements()))
-	ac.NewRole(RoleOwner, Statements())
-	ac.NewRole(RoleManager, Statements())
-	ac.NewRole(RoleViewer, map[string][]access.Action{})
-	return ac
-}
+// codec is the mask projection and the access engine behind it, built once.
+// The viewer role carries no grants at all: membership alone is the right to
+// see the workbench, which is exactly what the old default "Viewer" role was.
+var codec = rbac.New(Statements(), PermViewWorkbench, PermAdministrator, permissionGrants,
+	map[string][]access.Action{})
+
+// NewAccess returns the access engine for workbenches — one shared value, for
+// the reason workspace.NewAccess gives.
+func NewAccess() *access.Access { return codec.Access() }
 
 // defaultRoleNames are the labels the client shows for the code-defined roles.
 var defaultRoleNames = map[string]string{
@@ -96,91 +90,10 @@ var defaultRoleNames = map[string]string{
 	RoleViewer:  "Viewer",
 }
 
-func grantsFor(p Permission) map[string][]access.Action {
-	if p.Has(PermAdministrator) {
-		return Statements()
-	}
-	out := map[string][]access.Action{}
-	for _, pg := range permissionGrants {
-		if !p.Has(pg.bit) {
-			continue
-		}
-		for resource, actions := range pg.grants {
-			out[resource] = append(out[resource], actions...)
-		}
-	}
-	return out
-}
+func grantsFor(p Permission) map[string][]access.Action { return codec.GrantsFor(p) }
 
-// maskOf projects an authlayer permission back onto the wire mask.
-//
-// An elevated caller is reported as holding EVERY bit, not just the
-// administrator one. That is not cosmetic: elevation here can be INHERITED —
-// a workspace administrator has no membership in the workbench and therefore no
-// grants of their own, so a mask derived from grants alone would tell the client
-// they may only look, while every write they attempted would in fact succeed.
-func maskOf(perms access.Permission, elevated bool) Permission {
-	if elevated {
-		out := PermViewWorkbench | PermAdministrator
-		for _, pg := range permissionGrants {
-			out |= pg.bit
-		}
-		return out
-	}
-	out := PermViewWorkbench
-	for _, pg := range permissionGrants {
-		granted := true
-		for resource, actions := range pg.grants {
-			if !perms.Allows(resource, actions...) {
-				granted = false
-				break
-			}
-		}
-		if granted {
-			out |= pg.bit
-		}
-	}
-	return out
-}
-
-// roleKey derives a role's key from its display name, the same way
-// workspace.roleKey does — the key is what travels the wire as Role.ID.
-func roleKey(name string) string {
-	key := slugify(name)
-	if key == "" {
-		key = "role"
-	}
-	return key
-}
-
-func slugify(s string) string {
-	s = strings.ToLower(strings.TrimSpace(s))
-	var b strings.Builder
-	lastDash := false
-	for _, r := range s {
-		switch {
-		case (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9'):
-			b.WriteRune(r)
-			lastDash = false
-		default:
-			if !lastDash {
-				b.WriteByte('-')
-				lastDash = true
-			}
-		}
-	}
-	return strings.Trim(b.String(), "-")
-}
+func maskOf(perms access.Permission, elevated bool) Permission { return codec.Mask(perms, elevated) }
 
 // EncodePermissions renders a wire mask in the form authlayer's role store
-// keeps. It exists for the 0015 migration; see workspace.EncodePermissions.
-func EncodePermissions(p Permission) ([]byte, error) {
-	perm, err := NewAccess().Permission(grantsFor(p))
-	if err != nil {
-		return nil, err
-	}
-	return perm.Encode(), nil
-}
-
-// RoleKeyFor is roleKey, exported for the 0015 migration.
-func RoleKeyFor(name string) string { return roleKey(name) }
+// keeps. It exists for the 0015 migration.
+func EncodePermissions(p Permission) ([]byte, error) { return codec.Encode(p) }
