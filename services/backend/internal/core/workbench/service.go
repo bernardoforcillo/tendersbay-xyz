@@ -202,20 +202,30 @@ func (s *Service) ListWorkbenches(ctx context.Context, userID, workspaceID strin
 	if err != nil {
 		return nil, err
 	}
+
+	// The memberships are read once, not once per workbench: the previous
+	// version asked FindMember for every row it could not decide from the
+	// workspace alone, which is a query per workbench in the workspace on the
+	// commonest listing in the product.
+	joined := map[string]bool{}
+	if !info.MayManageAll {
+		mine, err := s.store.ListUserContainers(ctx, userID)
+		if err != nil {
+			return nil, mapErr(err)
+		}
+		for _, wb := range mine {
+			joined[wb.ID] = true
+		}
+	}
+
 	out := make([]Workbench, 0, len(all))
 	for _, wb := range all {
 		switch {
-		case info.MayManageAll, wb.OwnerID == userID:
+		case info.MayManageAll,
+			wb.OwnerID == userID,
+			joined[wb.ID],
+			wb.Visibility == VisibilityShared && info.MayViewShared:
 			out = append(out, wb)
-			continue
-		case wb.Visibility == VisibilityShared && info.MayViewShared:
-			out = append(out, wb)
-			continue
-		}
-		if _, err := s.store.FindMember(ctx, wb.ID, userID); err == nil {
-			out = append(out, wb)
-		} else if !errors.Is(err, scope.ErrNotMember) {
-			return nil, mapErr(err)
 		}
 	}
 	return out, nil

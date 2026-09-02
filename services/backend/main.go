@@ -328,6 +328,15 @@ func main() {
 		IdleTimeout:  120 * time.Second,
 	}
 
+	// Housekeeping: authlayer refuses an expired session, verification or
+	// invitation on read but never removes it, so without this the three tables
+	// only grow. Started after everything it sweeps is built, and stopped by
+	// the same context the server is.
+	startHousekeeping(ctx, housekeepingInterval,
+		namedPurge{"auth", authSvc.PurgeExpired},
+		namedPurge{"invites", workspaceSvc.PurgeExpiredInvites},
+	)
+
 	srvErr := make(chan error, 1)
 	go func() {
 		slog.Info("backend listening", "addr", "http://localhost:"+cfg.Port)
@@ -349,6 +358,55 @@ func main() {
 			os.Exit(1)
 		}
 	}
+}
+
+// housekeepingInterval is how often the expired-row sweeps run. Hourly is far
+// more often than it needs to be for correctness — nothing depends on a dead
+// row being gone — and cheap enough that the tables never accumulate a backlog
+// worth noticing.
+const housekeepingInterval = time.Hour
+
+// namedPurge is one sweep and the name it is logged under.
+type namedPurge struct {
+	name string
+	run  func(ctx context.Context, before time.Time) (int, error)
+}
+
+// startHousekeeping runs each sweep on a ticker until ctx is done. It runs one
+// round immediately: a process that restarts more often than the interval would
+// otherwise never sweep at all.
+//
+// A failing sweep is logged and retried on the next tick, never fatal — falling
+// behind on deleting dead rows is not a reason to take the service down. Each
+// round gets its own timeout so a slow delete cannot wedge the loop.
+func startHousekeeping(ctx context.Context, every time.Duration, purges ...namedPurge) {
+	run := func() {
+		for _, p := range purges {
+			roundCtx, cancel := context.WithTimeout(ctx, time.Minute)
+			n, err := p.run(roundCtx, time.Now().UTC())
+			cancel()
+			if err != nil {
+				slog.WarnContext(ctx, "housekeeping sweep failed", "sweep", p.name, "error", err)
+				continue
+			}
+			if n > 0 {
+				slog.InfoContext(ctx, "housekeeping swept expired rows", "sweep", p.name, "rows", n)
+			}
+		}
+	}
+	go func() {
+		ticker := time.NewTicker(every)
+		defer ticker.Stop()
+		run()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				run()
+			}
+		}
+	}()
 }
 
 // embeddingCacheTTL bounds how long a memoised query embedding lives. Long

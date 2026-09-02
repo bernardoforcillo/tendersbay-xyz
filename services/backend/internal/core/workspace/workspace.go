@@ -654,6 +654,14 @@ func (s *Service) PreviewInviteLink(ctx context.Context, code string) (LinkPrevi
 	return LinkPreview{WorkspaceName: name, RoleName: roleName, Valid: true}, nil
 }
 
+// PurgeExpiredInvites deletes every email invitation and invite link that
+// expired before the given instant, and reports how many rows went. Same
+// reasoning as auth.Service.PurgeExpired: an expired invitation is refused on
+// redemption but never removed, so the table only grew.
+func (s *Service) PurgeExpiredInvites(ctx context.Context, before time.Time) (int, error) {
+	return s.inv.PurgeExpired(ctx, before)
+}
+
 func (s *Service) JoinViaInviteLink(ctx context.Context, userID, code string) (Workspace, error) {
 	ws, err := s.inv.JoinViaLink(scope.WithSubject(ctx, userID), code)
 	if err != nil {

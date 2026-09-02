@@ -39,20 +39,35 @@ func TestConfigIsValid(t *testing.T) {
 	}
 }
 
-func TestFreePlan_CarriesTheProductFeatures(t *testing.T) {
+func TestFreePlan_CarriesTheAgent(t *testing.T) {
 	e, _ := engineFor(t, freePlan())
-	ctx := context.Background()
-	for _, key := range []struct {
-		key  catalog.Key
-		want bool
-	}{
-		{features.AgentChat, true},
-		{features.BidWorkbench, true},
-		{features.CompanyDossier, true},
-		{features.ClientProfile, true},
-	} {
-		if got := e.Enabled(ctx, key.key, ws, "u-1"); got != key.want {
-			t.Fatalf("%s enabled = %v, want %v", key.key, got, key.want)
+	if !e.Enabled(context.Background(), features.AgentChat, ws, "u-1") {
+		t.Fatal("the free plan must carry the agent")
+	}
+}
+
+// Every declared feature has to be reachable on some plan, or it is a gate that
+// can never open. This is the check that keeps the catalog and the plans from
+// drifting apart as either grows.
+func TestEveryFeatureIsReachable(t *testing.T) {
+	cfg := features.Config()
+	entitled := map[catalog.Key]bool{}
+	for _, p := range cfg.Plans {
+		for _, ent := range p.Entitlements {
+			entitled[ent.Feature] = true
+		}
+	}
+	for _, a := range cfg.AddOns {
+		for _, ent := range a.Entitlements {
+			entitled[ent.Feature] = true
+		}
+	}
+	for _, f := range cfg.Features {
+		if f.Free {
+			continue // free features carry no entitlement check at all
+		}
+		if !entitled[f.Key] {
+			t.Errorf("feature %q is declared but no plan or add-on grants it, so nothing can ever use it", f.Key)
 		}
 	}
 }

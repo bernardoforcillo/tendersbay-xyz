@@ -10,6 +10,14 @@
 // straight from JSON, so moving these definitions into a file (or a database) is
 // a change of source, not of shape; until there is a reason to deploy a plan
 // change without a deploy, code review is the better gate.
+//
+// A feature is declared here when something actually asks about it. The catalog
+// is a control surface, not an inventory of the product: an entry nobody checks
+// reads like a gate that exists and isn't one, and the first person to move it
+// out of the free plan would find they had changed nothing. The workbench, the
+// dossier and the client profile are gated by workspace RBAC today and are not
+// listed for that reason — add them here at the same commit that adds the
+// check, not before.
 package features
 
 import (
@@ -36,10 +44,6 @@ const (
 	// TenderSearch is free: it is served to anonymous callers, so it must not
 	// depend on a subscription existing.
 	TenderSearch catalog.Key = "tender.search"
-
-	BidWorkbench   catalog.Key = "bid.workbench"
-	CompanyDossier catalog.Key = "company.dossier"
-	ClientProfile  catalog.Key = "client.profile"
 )
 
 // Plans.
@@ -71,9 +75,6 @@ func Config() featurelayer.Config {
 			{Key: AgentChat, Name: "Agent chat", Lifecycle: catalog.GA, DependsOn: []catalog.Key{AgentTokens}},
 			{Key: TenderSearch, Name: "Tender search", Lifecycle: catalog.GA, Free: true,
 				Description: "Served to anonymous callers, so it carries no entitlement check."},
-			{Key: BidWorkbench, Name: "Bid workbench", Lifecycle: catalog.GA},
-			{Key: CompanyDossier, Name: "Company dossier", Lifecycle: catalog.GA},
-			{Key: ClientProfile, Name: "Client profile", Lifecycle: catalog.GA},
 		},
 		// One flag, and it earns its place: a kill switch on the only surface
 		// that spends real money per request. Enabled:true with an On default
@@ -90,9 +91,6 @@ func Config() featurelayer.Config {
 				Name: "Free",
 				Entitlements: []entitlement.Entitlement{
 					{Feature: AgentChat},
-					{Feature: BidWorkbench},
-					{Feature: CompanyDossier},
-					{Feature: ClientProfile},
 					entitlement.Limited(AgentTokens, FreeMonthlyTokenAllowance, entitlement.Month),
 				},
 			},
