@@ -3,7 +3,9 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"os"
+	"sort"
 	"testing"
 	"time"
 
@@ -107,6 +109,12 @@ func TestAuthlayerMigrationsCarryLegacyData(t *testing.T) {
 		// The custom role is somebody's own: it keeps its permissions and gets
 		// a key derived from its name.
 		assertRoleKey(t, sqlDB, "workspace_members", seed.customUserID, "bid-team")
+		// A role that merely READS like a reserved one is renamed, never
+		// promoted — its holder must not land on the registry's admin.
+		assertRoleKey(t, sqlDB, "workspace_members", seed.reservedNameUserID, "admin-custom")
+		// And two names deriving to one key are separated, or the new
+		// (container_id, key) unique would reject the second row outright.
+		assertRoleKey(t, sqlDB, "workspace_members", seed.collidingUserID, "bid-team-2")
 	})
 
 	t.Run("0013 drops the seeded rows and keeps the custom one", func(t *testing.T) {
@@ -125,14 +133,17 @@ func TestAuthlayerMigrationsCarryLegacyData(t *testing.T) {
 		}
 		// "Admin" and "Member" are exactly what authlayer's registry defines
 		// now; leaving the rows would list every workspace's roles twice.
-		if len(names) != 1 || names[0] != "Bid Team" {
-			t.Fatalf("workspace roles after 0013 = %v, want only the custom one", names)
+		sort.Strings(names)
+		want := []string{"ADMIN", "Bid Team", "bid  team"}
+		if fmt.Sprint(names) != fmt.Sprint(want) {
+			t.Fatalf("workspace roles after 0013 = %v, want only the custom ones %v", names, want)
 		}
 
 		// The kept role's mask has to come back as grants authlayer can read.
 		var encoded []byte
 		if err := sqlDB.QueryRowContext(ctx,
-			`SELECT permissions FROM workspace_roles WHERE container_id = $1`, seed.workspaceID,
+			`SELECT permissions FROM workspace_roles WHERE container_id = $1 AND key = 'bid-team'`,
+			seed.workspaceID,
 		).Scan(&encoded); err != nil {
 			t.Fatalf("read permissions: %v", err)
 		}
@@ -229,6 +240,34 @@ func TestAuthlayerMigrationsCarryLegacyData(t *testing.T) {
 		}
 	})
 
+	t.Run("0014 leaves a default allowance ungranted but keeps its anchor", func(t *testing.T) {
+		sub, err := NewSubscriptionRepo(db).Subscription(ctx, seed.defaultWorkspaceID)
+		if err != nil {
+			t.Fatalf("Subscription: %v", err)
+		}
+		// The plan already says this number; recording it again as a grant
+		// would freeze the workspace at today's free allowance and quietly
+		// exclude it from any future change to the plan.
+		if len(sub.Grants) != 0 {
+			t.Fatalf("a workspace on the default allowance got grants %+v", sub.Grants)
+		}
+		if !sub.BillingAnchor.UTC().Equal(seed.cycleStart) {
+			t.Fatalf("billing anchor = %s, want the cycle it was on, %s", sub.BillingAnchor.UTC(), seed.cycleStart)
+		}
+
+		// Nothing spent, so there is no counter to carry — and writing a zero
+		// row would only be a row the engine has to read past.
+		var rows int
+		if err := sqlDB.QueryRowContext(ctx,
+			`SELECT count(*) FROM feature_usage WHERE workspace_id = $1`, seed.defaultWorkspaceID,
+		).Scan(&rows); err != nil {
+			t.Fatalf("count usage: %v", err)
+		}
+		if rows != 0 {
+			t.Fatalf("a workspace that had spent nothing got %d usage rows", rows)
+		}
+	})
+
 	t.Run("0014 drops the credits table", func(t *testing.T) {
 		var exists bool
 		if err := sqlDB.QueryRowContext(ctx,
@@ -282,6 +321,74 @@ func TestAuthlayerMigrationsCarryLegacyData(t *testing.T) {
 		}
 		if len(members) != 2 {
 			t.Fatalf("workbench members = %+v", members)
+		}
+	})
+
+	// The last link in the chain, and the one nothing else exercises: 0013
+	// rewrote every kept role's permission column with
+	// workspace.EncodePermissions, and until now nobody has read one back out
+	// of Postgres. This runs the whole round trip — old bitmask, encoded
+	// grants, a column, authlayer's decode, the projection the proto speaks —
+	// through the same Service the handlers call.
+	t.Run("a migrated role projects back to the mask the client is told", func(t *testing.T) {
+		svc := workspace.NewService(
+			workspace.NewAccess(),
+			NewWorkspaceScopeStore(db),
+			NewWorkspaceInviteStore(db),
+			NewWorkspaceRepo(db),
+			NewUserRepo(db),
+			nil, // Standing sends no mail
+			workspace.Config{AppBaseURL: "https://example.test", InviteExpiry: 7 * 24 * time.Hour},
+		)
+
+		for _, tc := range []struct {
+			name     string
+			userID   string
+			holds    workspace.Permission
+			withheld workspace.Permission
+		}{
+			// An elevated caller holds every bit, which is the rule that makes
+			// an inherited elevation readable — see internal/rbac.
+			{"the seeded admin", seed.adminUserID,
+				workspace.PermManageMembers | workspace.PermManageWorkbenches | workspace.PermAdministrator, 0},
+			// The baseline member can see and create workbenches, which is what
+			// the seeded "Member" role granted before authlayer.
+			{"the seeded member", seed.memberUserID,
+				workspace.PermViewWorkbenches | workspace.PermCreateWorkbench,
+				workspace.PermManageMembers | workspace.PermAdministrator},
+			// The custom role's own two capabilities, and nothing it never had.
+			{"a custom role", seed.customUserID,
+				workspace.PermViewWorkbenches | workspace.PermManageInvites,
+				workspace.PermManageMembers | workspace.PermAdministrator},
+			// Renamed, not promoted: this is the check that would catch a
+			// migration handing "ADMIN" the registry's admin.
+			{"a role renamed off a reserved key", seed.reservedNameUserID,
+				workspace.PermViewWorkbenches,
+				workspace.PermManageMembers | workspace.PermManageInvites | workspace.PermAdministrator},
+			{"the role that lost the key race", seed.collidingUserID,
+				workspace.PermCreateWorkbench,
+				workspace.PermManageInvites | workspace.PermAdministrator},
+		} {
+			t.Run(tc.name, func(t *testing.T) {
+				st, err := svc.Standing(ctx, seed.workspaceID, tc.userID)
+				if err != nil {
+					t.Fatalf("Standing: %v", err)
+				}
+				if !st.IsMember {
+					t.Fatal("a migrated member is not a member")
+				}
+				// Membership itself, which is never a stored grant.
+				if !st.Permissions.Has(workspace.PermViewWorkspace) {
+					t.Fatalf("permissions %#x carry no baseline", st.Permissions)
+				}
+				if !st.Permissions.Has(tc.holds) {
+					t.Fatalf("permissions %#x are missing %#x", st.Permissions, tc.holds)
+				}
+				if tc.withheld != 0 && st.Permissions&tc.withheld != 0 {
+					t.Fatalf("permissions %#x include %#x, which this role never had",
+						st.Permissions, st.Permissions&tc.withheld)
+				}
+			})
 		}
 	})
 
@@ -390,10 +497,13 @@ func migratorThrough0011(db *pg.DB) *pg.Migrator {
 type legacySeed struct {
 	workspaceID           string
 	creditlessWorkspaceID string
+	defaultWorkspaceID    string
 	workbenchID           string
 	adminUserID           string
 	memberUserID          string
 	customUserID          string
+	reservedNameUserID    string
+	collidingUserID       string
 	sessionID             string
 	emailVerificationID   string
 	passwordResetID       string
@@ -438,6 +548,10 @@ func seedLegacyRows(t *testing.T, sqlDB *sql.DB) legacySeed {
 		VALUES ('member@example.com', 'x', 'Member') RETURNING id`)
 	scan(&s.customUserID, `INSERT INTO users (email, password_hash, display_name)
 		VALUES ('custom@example.com', 'x', 'Custom') RETURNING id`)
+	scan(&s.reservedNameUserID, `INSERT INTO users (email, password_hash, display_name)
+		VALUES ('reserved@example.com', 'x', 'Reserved') RETURNING id`)
+	scan(&s.collidingUserID, `INSERT INTO users (email, password_hash, display_name)
+		VALUES ('colliding@example.com', 'x', 'Colliding') RETURNING id`)
 
 	scan(&s.sessionID, `INSERT INTO sessions (user_id, token_hash, expires_at)
 		VALUES ($1, 'live-session', now() + interval '1 day') RETURNING id`, s.adminUserID)
@@ -452,6 +566,8 @@ func seedLegacyRows(t *testing.T, sqlDB *sql.DB) legacySeed {
 		VALUES ('Acme', 'acme', $1) RETURNING id`, s.adminUserID)
 	scan(&s.creditlessWorkspaceID, `INSERT INTO workspaces (name, slug, owner_id)
 		VALUES ('No Credits', 'no-credits', $1) RETURNING id`, s.adminUserID)
+	scan(&s.defaultWorkspaceID, `INSERT INTO workspaces (name, slug, owner_id)
+		VALUES ('Default Allowance', 'default-allowance', $1) RETURNING id`, s.adminUserID)
 
 	// The two rows the old CreateWorkspace seeded, at exactly the masks it
 	// wrote — that is what identifies them as seeded rather than custom.
@@ -463,6 +579,22 @@ func seedLegacyRows(t *testing.T, sqlDB *sql.DB) legacySeed {
 	scan(&customRoleID, `INSERT INTO workspace_roles (workspace_id, name, permissions, is_default)
 		VALUES ($1, 'Bid Team', $2, false) RETURNING id`,
 		s.workspaceID, int64(workspace.PermViewWorkbenches|workspace.PermManageInvites))
+	// A role somebody named "ADMIN" that is NOT the seeded one: it carries its
+	// own permissions, and promoting it to the registry's admin would hand out
+	// access nobody granted. The spelling differs from the seeded "Admin"
+	// because it has to: 0002's UNIQUE (workspace_id, name) makes an exact
+	// duplicate unreachable, so a name that merely DERIVES to a reserved key is
+	// the only shape this branch can ever see.
+	var reservedNameRoleID, collidingRoleID string
+	scan(&reservedNameRoleID, `INSERT INTO workspace_roles (workspace_id, name, permissions, is_default)
+		VALUES ($1, 'ADMIN', $2, false) RETURNING id`,
+		s.workspaceID, int64(workspace.PermViewWorkbenches))
+	// A second name that derives to the key "Bid Team" already claimed. The new
+	// (container_id, key) unique is what turns a double-insert into
+	// ErrRoleKeyTaken, so two rows must not both claim it.
+	scan(&collidingRoleID, `INSERT INTO workspace_roles (workspace_id, name, permissions, is_default)
+		VALUES ($1, 'bid  team', $2, false) RETURNING id`,
+		s.workspaceID, int64(workspace.PermCreateWorkbench))
 
 	exec(`INSERT INTO workspace_members (workspace_id, user_id, role_id) VALUES ($1, $2, $3)`,
 		s.workspaceID, s.adminUserID, adminRoleID)
@@ -470,6 +602,10 @@ func seedLegacyRows(t *testing.T, sqlDB *sql.DB) legacySeed {
 		s.workspaceID, s.memberUserID, memberRoleID)
 	exec(`INSERT INTO workspace_members (workspace_id, user_id, role_id) VALUES ($1, $2, $3)`,
 		s.workspaceID, s.customUserID, customRoleID)
+	exec(`INSERT INTO workspace_members (workspace_id, user_id, role_id) VALUES ($1, $2, $3)`,
+		s.workspaceID, s.reservedNameUserID, reservedNameRoleID)
+	exec(`INSERT INTO workspace_members (workspace_id, user_id, role_id) VALUES ($1, $2, $3)`,
+		s.workspaceID, s.collidingUserID, collidingRoleID)
 
 	scan(&s.inviteID, `INSERT INTO workspace_email_invitations
 		(workspace_id, email, role_id, token_hash, invited_by, expires_at)
@@ -504,6 +640,13 @@ func seedLegacyRows(t *testing.T, sqlDB *sql.DB) legacySeed {
 	exec(`INSERT INTO workspace_credits
 		(workspace_id, monthly_token_allowance, current_cycle_start, current_cycle_tokens)
 		VALUES ($1, $2, $3, $4)`, s.workspaceID, s.allowance, s.cycleStart, s.spent)
+	// The third shape: a credits row at exactly the default allowance with
+	// nothing spent. It must keep its anchor like the others and pick up
+	// neither a grant (its allowance is the plan's) nor a usage row (there is
+	// no spend to carry).
+	exec(`INSERT INTO workspace_credits
+		(workspace_id, monthly_token_allowance, current_cycle_start, current_cycle_tokens)
+		VALUES ($1, $2, $3, 0)`, s.defaultWorkspaceID, features.FreeMonthlyTokenAllowance, s.cycleStart)
 
 	return s
 }
