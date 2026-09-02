@@ -38,9 +38,12 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, standalone backend se
   uses its `auth` (users, credentials, session families with refresh rotation, verification
   tokens), `scope` + `access` (workspace RBAC, custom roles, the privilege-escalation guard)
   and `invite` (email invitations, shareable links) packages, all persisted by its own
-  `store/drops` PostgreSQL backend. `internal/core/{auth,user,workspace}` are thin domain
-  layers over it: they own the product's rules (display names, localized links, rate-limit
-  budgets, slug rules, the permission bitmask the proto speaks) and delegate the rest.
+  `store/drops` PostgreSQL backend. `internal/core/{auth,user,workspace,workbench}` are thin
+  domain layers over it: they own the product's rules (display names, localized links,
+  rate-limit budgets, slug rules, workbench visibility, the permission bitmask the proto
+  speaks) and delegate the rest. `workbench` is a NESTED scope with `workspace` as its
+  parent, so "may create a workbench" and "administers every workbench" are the workspace's
+  own grants rather than a bitmask copied between the two.
 - **Features & entitlements:** [`featurelayer`](https://github.com/bernardoforcillo/featurelayer)
   — the feature catalog, flags and plan-based metered limits. Definitions live in code
   (`internal/core/features`); the per-workspace half (subscription, usage counters) is in

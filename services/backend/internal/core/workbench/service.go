@@ -11,7 +11,11 @@ import (
 type scopeService = scope.Service[Workbench, Member, *Workbench, *Member]
 
 type Service struct {
-	sc       *scopeService
+	sc *scopeService
+	// ac is the same access engine sc holds. roleViews needs it to decode a
+	// stored role's grants, and building one per call would recompile the
+	// statement set on every member list.
+	ac       *access.Access
 	store    Store
 	repo     Repository
 	users    UserLookup
@@ -44,7 +48,7 @@ func NewService(
 		scope.WithContainerResource(ResourceWorkbench),
 		scope.WithParent(parent, scope.InheritWhen(ResourceWorkbench, ActionManage)),
 	)
-	return &Service{sc: sc, store: store, repo: repo, users: users, wsAccess: wsAccess}
+	return &Service{sc: sc, ac: ac, store: store, repo: repo, users: users, wsAccess: wsAccess}
 }
 
 // ActionManage is the workspace-level action this scope inherits elevation
@@ -374,7 +378,7 @@ func (s *Service) DeleteRole(ctx context.Context, userID, workbenchID, roleID st
 // that method authorizes on membership, which the shared-viewer path does not
 // have; the gate has already been applied by the caller.
 func (s *Service) roleViews(ctx context.Context, workbenchID string) ([]Role, error) {
-	ac := NewAccess()
+	ac := s.ac
 	out := make([]Role, 0, 5)
 	for _, key := range []string{RoleOwner, RoleManager, RoleViewer} {
 		r, ok := ac.Role(key)

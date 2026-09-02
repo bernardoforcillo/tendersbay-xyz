@@ -382,6 +382,11 @@ type namedPurge struct {
 func startHousekeeping(ctx context.Context, every time.Duration, purges ...namedPurge) {
 	run := func() {
 		for _, p := range purges {
+			// Shutdown cancels ctx; a sweep started here would only fail on it
+			// and log a warning that says nothing about the service's health.
+			if ctx.Err() != nil {
+				return
+			}
 			roundCtx, cancel := context.WithTimeout(ctx, time.Minute)
 			n, err := p.run(roundCtx, time.Now().UTC())
 			cancel()
