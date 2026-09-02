@@ -44,7 +44,7 @@ func (h *UserHandler) ChangeEmail(ctx context.Context, req *connect.Request[user
 	if !ok {
 		return nil, connect.NewError(connect.CodeUnauthenticated, nil)
 	}
-	if err := h.svc.ChangeEmail(ctx, id, req.Msg.NewEmail, req.Msg.Password, req.Msg.Locale); err != nil {
+	if err := h.svc.ChangeEmail(ctx, id, SessionIDFromContext(ctx), req.Msg.NewEmail, req.Msg.Password, req.Msg.Locale); err != nil {
 		return nil, toConnectError(err)
 	}
 	return connect.NewResponse(&userv1.ChangeEmailResponse{}), nil
@@ -55,7 +55,7 @@ func (h *UserHandler) ChangePassword(ctx context.Context, req *connect.Request[u
 	if !ok {
 		return nil, connect.NewError(connect.CodeUnauthenticated, nil)
 	}
-	if err := h.svc.ChangePassword(ctx, id, req.Msg.CurrentPassword, req.Msg.NewPassword); err != nil {
+	if err := h.svc.ChangePassword(ctx, id, SessionIDFromContext(ctx), req.Msg.CurrentPassword, req.Msg.NewPassword); err != nil {
 		return nil, toConnectError(err)
 	}
 	return connect.NewResponse(&userv1.ChangePasswordResponse{}), nil
@@ -66,7 +66,7 @@ func (h *UserHandler) DeleteAccount(ctx context.Context, req *connect.Request[us
 	if !ok {
 		return nil, connect.NewError(connect.CodeUnauthenticated, nil)
 	}
-	if err := h.svc.DeleteAccount(ctx, id, req.Msg.Password); err != nil {
+	if err := h.svc.DeleteAccount(ctx, id, SessionIDFromContext(ctx), req.Msg.Password); err != nil {
 		return nil, toConnectError(err)
 	}
 	return connect.NewResponse(&userv1.DeleteAccountResponse{}), nil

@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"connectrpc.com/connect"
-	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
@@ -33,6 +32,27 @@ func UserIDFromContext(ctx context.Context) (string, bool) {
 // standing up a real JWT.
 func ContextWithUserID(ctx context.Context, userID string) context.Context {
 	return context.WithValue(ctx, userIDKey, userID)
+}
+
+const sessionIDKey contextKey = "session_id"
+
+// SessionIDFromContext extracts the refresh session the caller's access token
+// was minted for, injected by JWTMiddleware from the token's `sid` claim.
+//
+// It exists because authlayer's sensitive account operations (change password,
+// change email, delete account) take the caller's OWN session id so they can
+// revoke every other session without signing the caller out of the tab they
+// are working in. An empty value is not an error — it simply means nothing is
+// spared, which is the safe direction.
+func SessionIDFromContext(ctx context.Context) string {
+	id, _ := ctx.Value(sessionIDKey).(string)
+	return id
+}
+
+// ContextWithSession injects both identifiers the way JWTMiddleware does, for
+// tests that exercise a handler needing the session id as well as the user id.
+func ContextWithSession(ctx context.Context, userID, sessionID string) context.Context {
+	return context.WithValue(ContextWithUserID(ctx, userID), sessionIDKey, sessionID)
 }
 
 const clientIPKey contextKey = "client_ip"
@@ -74,17 +94,28 @@ func ClientIPMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// JWTMiddleware parses the Bearer token and injects user_id into the request context.
-// Unauthenticated requests pass through — handlers that require auth check UserIDFromContext.
-func JWTMiddleware(secret string) func(http.Handler) http.Handler {
+// TokenVerifier is the one thing this transport needs from the auth domain:
+// turn a bearer string into verified claims, or refuse it. Satisfied by
+// *auth.Service, which delegates to authlayer's HS256 verifier.
+//
+// It is an interface rather than the concrete service so the middleware keeps
+// the transport layer's job description — validate and delegate — without
+// pulling the whole auth service into every test that needs a signed request.
+type TokenVerifier interface {
+	VerifyAccessToken(raw string) (auth.Claims, error)
+}
+
+// JWTMiddleware parses the Bearer token and injects the user and session ids
+// into the request context. Unauthenticated requests pass through — handlers
+// that require auth check UserIDFromContext.
+func JWTMiddleware(verifier TokenVerifier) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			header := r.Header.Get("Authorization")
 			if strings.HasPrefix(header, "Bearer ") {
 				raw := strings.TrimPrefix(header, "Bearer ")
-				if claims, err := token.ParseJWT(raw, secret); err == nil {
-					ctx := context.WithValue(r.Context(), userIDKey, claims.UserID)
-					r = r.WithContext(ctx)
+				if claims, err := verifier.VerifyAccessToken(raw); err == nil {
+					r = r.WithContext(ContextWithSession(r.Context(), claims.Subject, claims.SessionID))
 				}
 			}
 			next.ServeHTTP(w, r)

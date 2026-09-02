@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	dropsstore "github.com/bernardoforcillo/authlayer/store/drops"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry"
 	"github.com/joho/godotenv"
@@ -79,10 +80,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	// authStore is authlayer's own PostgreSQL store, pointed at the users,
+	// sessions and verifications tables migration 0012 shaped for it. It owns
+	// every credential column; userRepo below owns display_name and nothing
+	// else, so no column has two writers.
+	authStore := dropsstore.NewAuthStore(db)
 	userRepo := postgres.NewUserRepo(db)
-	sessionRepo := postgres.NewSessionRepo(db)
-	evRepo := postgres.NewEVRepo(db)
-	prRepo := postgres.NewPRRepo(db)
 
 	workspaceRepo := postgres.NewWorkspaceRepo(db)
 	roleRepo := postgres.NewRoleRepo(db)
@@ -138,8 +141,10 @@ func main() {
 		AppBaseURL:    cfg.AppBaseURL,
 	}
 
-	authSvc := auth.NewService(userRepo, sessionRepo, evRepo, prRepo, mailer, rl, authCfg)
-	userSvc := user.NewService(userRepo, sessionRepo, evRepo, mailer, authCfg)
+	authSvc := auth.NewService(authStore, userRepo, mailer, rl, authCfg)
+	// core/user shares authSvc's underlying authlayer service rather than
+	// building a second one over the same store — see user.NewService.
+	userSvc := user.NewService(authSvc.Authlayer(), userRepo, mailer, authCfg)
 	workspaceSvc := workspace.NewService(
 		workspaceRepo, roleRepo, memberRepo, emailInviteRepo, inviteLinkRepo,
 		userRepo, mailer, workspaceUow,
@@ -299,7 +304,7 @@ func main() {
 	mux.Handle(companyPath, companyRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
-	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(connectapi.ClientIPMiddleware(mux)))
+	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(authSvc)(connectapi.ClientIPMiddleware(mux)))
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.Port,
