@@ -143,7 +143,7 @@ func TestProPlan_RaisesTheCeiling(t *testing.T) {
 	e, _ := engineFor(t, &entitlement.Subscription{
 		TenantID: ws, Plan: features.PlanPro, BillingAnchor: time.Now().UTC(),
 	})
-	d, err := e.Usage(context.Background(), features.AgentTokens, ws)
+	d, err := e.Usage(context.Background(), features.AgentTokens, ws, "u-1")
 	if err != nil {
 		t.Fatalf("Usage: %v", err)
 	}
@@ -161,7 +161,7 @@ func TestExtraTokensAddOn(t *testing.T) {
 		AddOns:        []entitlement.AddOnID{features.AddOnExtraTokens},
 		BillingAnchor: time.Now().UTC(),
 	})
-	d, err := e.Usage(ctx, features.AgentTokens, ws)
+	d, err := e.Usage(ctx, features.AgentTokens, ws, "u-1")
 	if err != nil {
 		t.Fatalf("Usage: %v", err)
 	}
@@ -175,7 +175,7 @@ func TestExtraTokensAddOn(t *testing.T) {
 		AddOns:        []entitlement.AddOnID{features.AddOnExtraTokens},
 		BillingAnchor: time.Now().UTC(),
 	})
-	d, err = free.Usage(ctx, features.AgentTokens, ws)
+	d, err = free.Usage(ctx, features.AgentTokens, ws, "u-1")
 	if err != nil {
 		t.Fatalf("Usage: %v", err)
 	}
@@ -197,7 +197,7 @@ func TestGrantOverridesThePlanLimit(t *testing.T) {
 		)},
 		BillingAnchor: time.Now().UTC(),
 	})
-	d, err := e.Usage(context.Background(), features.AgentTokens, ws)
+	d, err := e.Usage(context.Background(), features.AgentTokens, ws, "u-1")
 	if err != nil {
 		t.Fatalf("Usage: %v", err)
 	}

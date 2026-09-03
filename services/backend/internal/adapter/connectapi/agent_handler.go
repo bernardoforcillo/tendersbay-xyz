@@ -29,8 +29,12 @@ func NewAgentHandler(svc *agent.Service, creditSvc *credits.Service, members age
 // switch reaches the meter through the feature catalog — and the two refusals
 // stay distinct, because "the agent is off" must never reach the client as
 // "top up".
-func (h *AgentHandler) mayRun(ctx context.Context, workspaceID string) (credits.CheckResult, error) {
-	check, err := h.creditSvc.Check(ctx, workspaceID)
+//
+// It passes the caller, not only the workspace: the kill switch is a flag, and
+// a flag is evaluated against a caller. Gating the turn without one and spending
+// with one is how a rollout admits a turn and then refuses it mid-stream.
+func (h *AgentHandler) mayRun(ctx context.Context, workspaceID, userID string) (credits.CheckResult, error) {
+	check, err := h.creditSvc.Check(ctx, workspaceID, userID)
 	if err != nil {
 		return credits.CheckResult{}, toConnectError(err)
 	}
@@ -273,7 +277,7 @@ func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agen
 		return toConnectError(err)
 	}
 
-	check, err := h.mayRun(ctx, session.WorkspaceID)
+	check, err := h.mayRun(ctx, session.WorkspaceID, uid)
 	if err != nil {
 		return err
 	}
@@ -296,7 +300,7 @@ func (h *AgentHandler) SubmitChoice(ctx context.Context, req *connect.Request[ag
 		return toConnectError(err)
 	}
 
-	check, err := h.mayRun(ctx, session.WorkspaceID)
+	check, err := h.mayRun(ctx, session.WorkspaceID, uid)
 	if err != nil {
 		return err
 	}
@@ -317,7 +321,7 @@ func (h *AgentHandler) GetCredits(ctx context.Context, req *connect.Request[agen
 		return nil, toConnectError(err)
 	}
 
-	check, err := h.creditSvc.Check(ctx, req.Msg.WorkspaceId)
+	check, err := h.creditSvc.Check(ctx, req.Msg.WorkspaceId, uid)
 	if err != nil {
 		return nil, toConnectError(err)
 	}

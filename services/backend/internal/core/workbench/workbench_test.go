@@ -630,3 +630,87 @@ func TestPermissionMaskRoundTrip(t *testing.T) {
 		}
 	}
 }
+
+// ── a workbench membership does not outlive the workspace membership ────────
+
+// leaveWorkspace is what workspace.RemoveMember leaves behind: the user stops
+// being a workspace member, and their workbench_members row stays exactly where
+// it was, because nothing cascades it.
+func (f *fixture) leaveWorkspace(userID string) {
+	delete(f.ws.infos, workspaceID+"|"+userID)
+	delete(f.parent.standing, userID)
+	delete(f.parent.elevated, userID)
+}
+
+// The regression this guards is a real one this package shipped: authorize used
+// to answer from the workbench's own standing alone, so a colleague removed
+// from the workspace kept every workbench they had been added to.
+//
+// The manager case is the sharp end. scope reports elevated for any member
+// whose permissions are full, so a removed manager's standing looks identical
+// to an inherited elevation — which is why the check cannot be skipped for
+// elevated callers.
+func TestRemovedWorkspaceMemberLosesTheirWorkbench(t *testing.T) {
+	for _, role := range []struct {
+		name    string
+		roleKey string
+	}{
+		{"a viewer", workbench.RoleViewer},
+		{"a manager", workbench.RoleManager},
+	} {
+		t.Run(role.name, func(t *testing.T) {
+			f := newFixture(t)
+			f.member(t, "owner", workbench.WorkspaceInfo{}, scope.ActionRead, scope.ActionCreate)
+			f.member(t, "bob", workbench.WorkspaceInfo{}, scope.ActionRead)
+			wb := f.create(t, "owner", "Bid A", workbench.VisibilityPrivate)
+
+			ctx := context.Background()
+			if _, err := f.svc.AddMember(ctx, "owner", wb.ID, "bob", role.roleKey); err != nil {
+				t.Fatalf("AddMember: %v", err)
+			}
+			if _, _, _, err := f.svc.GetWorkbench(ctx, "bob", wb.ID); err != nil {
+				t.Fatalf("a member cannot see the workbench they were added to: %v", err)
+			}
+
+			f.leaveWorkspace("bob")
+
+			// Every gated entry point, because they do not share one gate: the
+			// reads go through authorize, the mutations delegate to scope.
+			if _, _, _, err := f.svc.GetWorkbench(ctx, "bob", wb.ID); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+				t.Fatalf("GetWorkbench = %v, want ErrWorkbenchNotFound", err)
+			}
+			if _, err := f.svc.ListMembers(ctx, "bob", wb.ID); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+				t.Fatalf("ListMembers = %v, want ErrWorkbenchNotFound", err)
+			}
+			if err := f.svc.CanAccessWorkbench(ctx, "bob", wb.ID); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+				t.Fatalf("CanAccessWorkbench = %v, want ErrWorkbenchNotFound", err)
+			}
+			if _, err := f.svc.UpdateWorkbench(ctx, "bob", wb.ID, "Renamed", ""); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+				t.Fatalf("UpdateWorkbench = %v, want ErrWorkbenchNotFound", err)
+			}
+			if _, err := f.svc.CreateRole(ctx, "bob", wb.ID, "Sneaky", workbench.PermManageWorkbench); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+				t.Fatalf("CreateRole = %v, want ErrWorkbenchNotFound", err)
+			}
+			if _, err := f.svc.AddMember(ctx, "bob", wb.ID, "stranger", workbench.RoleViewer); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+				t.Fatalf("AddMember = %v, want ErrWorkbenchNotFound", err)
+			}
+			if err := f.svc.RemoveMember(ctx, "bob", wb.ID, "owner"); !errors.Is(err, workbench.ErrWorkbenchNotFound) {
+				t.Fatalf("RemoveMember = %v, want ErrWorkbenchNotFound", err)
+			}
+		})
+	}
+}
+
+// The workbench's own owner is the exception, and deliberately so: locking them
+// out would leave a workbench nobody can transfer.
+func TestRemovedWorkspaceMemberKeepsTheirOwnWorkbench(t *testing.T) {
+	f := newFixture(t)
+	f.member(t, "owner", workbench.WorkspaceInfo{}, scope.ActionRead, scope.ActionCreate)
+	wb := f.create(t, "owner", "Bid A", workbench.VisibilityPrivate)
+
+	f.leaveWorkspace("owner")
+
+	if _, _, _, err := f.svc.GetWorkbench(context.Background(), "owner", wb.ID); err != nil {
+		t.Fatalf("the workbench owner lost their own workbench: %v", err)
+	}
+}

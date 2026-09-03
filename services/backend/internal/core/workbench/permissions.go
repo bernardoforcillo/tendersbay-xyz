@@ -25,7 +25,7 @@ const ActionManage access.Action = "manage"
 // words: scope.Service.ListRoles enumerates the code-defined roles by the fixed
 // keys owner/admin/member, so a role registered under any other key would exist
 // and resolve but never appear in a role list. The product's labels ride on top
-// as display names (see defaultRoleNames) — "Manager" is the admin key and
+// as display names (rbac.Config.Labels) — "Manager" is the admin key and
 // "Viewer" the member key, which is what the old seeded rows were called and
 // what the client has always shown.
 const (

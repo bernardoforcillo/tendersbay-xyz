@@ -366,6 +366,18 @@ func main() {
 // worth noticing.
 const housekeepingInterval = time.Hour
 
+// housekeepingGrace is how long an expired row is kept before being swept.
+//
+// Sweeping at exactly now() would be correct and would read badly: the services
+// answer ErrInviteExpired, ErrLinkExpired and ErrVerificationExpired from the
+// row itself, so deleting it the moment it expires turns "this invitation
+// expired, ask for a new one" into "this invitation does not exist" for anyone
+// arriving after the next tick — and a password-reset link is most often
+// followed exactly then. Thirty days keeps the specific answer for as long as
+// anyone is plausibly still holding the mail, and still bounds the tables:
+// what grows without limit is rows kept forever, not rows kept for a month.
+const housekeepingGrace = 30 * 24 * time.Hour
+
 // namedPurge is one sweep and the name it is logged under.
 type namedPurge struct {
 	name string
@@ -388,7 +400,7 @@ func startHousekeeping(ctx context.Context, every time.Duration, purges ...named
 				return
 			}
 			roundCtx, cancel := context.WithTimeout(ctx, time.Minute)
-			n, err := p.run(roundCtx, time.Now().UTC())
+			n, err := p.run(roundCtx, time.Now().UTC().Add(-housekeepingGrace))
 			cancel()
 			if err != nil {
 				slog.WarnContext(ctx, "housekeeping sweep failed", "sweep", p.name, "error", err)
