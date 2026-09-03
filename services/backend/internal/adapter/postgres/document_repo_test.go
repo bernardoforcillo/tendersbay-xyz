@@ -28,6 +28,7 @@ func testDocumentRepo(t *testing.T) (*postgres.DocumentRepo, *sql.DB) {
 		t.Fatalf("postgres.New: %v", err)
 	}
 	t.Cleanup(func() { sqlDB.Close() })
+	requireIngestionSchema(t, sqlDB)
 	return postgres.NewDocumentRepo(db), sqlDB
 }
 

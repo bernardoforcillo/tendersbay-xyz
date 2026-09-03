@@ -19,6 +19,7 @@ func testCPVLexicon(t *testing.T) *postgres.CPVLexicon {
 		t.Fatalf("postgres.New: %v", err)
 	}
 	t.Cleanup(func() { sqlDB.Close() })
+	requireIngestionSchema(t, sqlDB)
 	return postgres.NewCPVLexicon(db)
 }
 
