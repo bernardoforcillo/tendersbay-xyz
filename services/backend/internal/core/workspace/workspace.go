@@ -491,17 +491,6 @@ func (s *Service) DeleteRole(ctx context.Context, userID, workspaceID, roleID st
 	return mapLibraryError(s.sc.DeleteRole(actor(ctx, userID, workspaceID), roleID))
 }
 
-// defaultRoleNames are the labels the client shows for the code-defined roles.
-// authlayer reports a code-defined role's Name as its key, because a role built
-// in code carries no separate label; the product has always shown these three
-// capitalized, and a role list reading "owner / admin / member" would be a
-// visible regression from a migration that is supposed to be invisible.
-var defaultRoleNames = map[string]string{
-	RoleOwner:  "Owner",
-	RoleAdmin:  "Admin",
-	RoleMember: "Member",
-}
-
 func roleFromView(workspaceID string, v rbac.RoleView[Permission]) Role {
 	return Role{
 		ID:          v.Key,

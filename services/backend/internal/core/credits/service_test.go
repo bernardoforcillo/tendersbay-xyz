@@ -11,7 +11,10 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 )
 
-const workspaceID = "ws-1"
+const (
+	workspaceID = "ws-1"
+	userID      = "u-1"
+)
 
 type stubPricing struct {
 	pricing credits.Pricing
@@ -151,7 +154,7 @@ func TestDeduct_OverBudgetIsLoggedNotFailed(t *testing.T) {
 		t.Fatalf("ledger rows = %d, want 2 — the refused turn is still a real cost", len(f.ledger.rows))
 	}
 
-	check, err := f.svc.Check(ctx, workspaceID)
+	check, err := f.svc.Check(ctx, workspaceID, userID)
 	if err != nil {
 		t.Fatalf("Check: %v", err)
 	}
@@ -168,7 +171,7 @@ func TestDeduct_OverBudgetIsLoggedNotFailed(t *testing.T) {
 
 func TestCheck_SeededWorkspace(t *testing.T) {
 	f := newFixture(t, stubPricing{missing: true}, true)
-	check, err := f.svc.Check(context.Background(), workspaceID)
+	check, err := f.svc.Check(context.Background(), workspaceID, userID)
 	if err != nil {
 		t.Fatalf("Check: %v", err)
 	}
@@ -188,7 +191,7 @@ func TestCheck_SeededWorkspace(t *testing.T) {
 // gave before featurelayer.
 func TestCheck_UnseededWorkspaceIsNotOK(t *testing.T) {
 	f := newFixture(t, stubPricing{missing: true}, false)
-	check, err := f.svc.Check(context.Background(), workspaceID)
+	check, err := f.svc.Check(context.Background(), workspaceID, userID)
 	if err != nil {
 		t.Fatalf("Check: %v", err)
 	}
@@ -209,7 +212,7 @@ func TestSeed_GivesTheFreePlanAndIsIdempotent(t *testing.T) {
 	if err := f.svc.Seed(ctx, workspaceID); err != nil {
 		t.Fatalf("Seed: %v", err)
 	}
-	first, err := f.svc.Check(ctx, workspaceID)
+	first, err := f.svc.Check(ctx, workspaceID, userID)
 	if err != nil {
 		t.Fatalf("Check: %v", err)
 	}
@@ -224,7 +227,7 @@ func TestSeed_GivesTheFreePlanAndIsIdempotent(t *testing.T) {
 	if err := f.svc.Seed(ctx, workspaceID); err != nil {
 		t.Fatalf("re-Seed: %v", err)
 	}
-	after, err := f.svc.Check(ctx, workspaceID)
+	after, err := f.svc.Check(ctx, workspaceID, userID)
 	if err != nil {
 		t.Fatalf("Check: %v", err)
 	}

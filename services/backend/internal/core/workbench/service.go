@@ -85,10 +85,21 @@ func mapErr(err error) error { return scopeErrors.Translate(err) }
 // workbenches. That rule cannot live in the engine because it turns on the
 // visibility column, so it lives here, after the engine has had its say.
 //
-// The workbench itself is loaded only on that fallback path, which is the only
-// one that needs it: scope.Standing already resolves the container, the member
-// and the role in one ladder, and reading it again on the common path was a
-// second query for a value nothing looked at.
+// Standing resolved that way is then re-checked against the parent workspace,
+// and that check is load-bearing rather than defensive. A workbench membership
+// row OUTLIVES the workspace membership that justified it: nothing cascades
+// workbench_members when workspace.RemoveMember runs (its foreign key is to
+// users), and authlayer's MembersFromParent policy says in its own doc that it
+// constrains AddMember only, never Standing. Without the re-check, a colleague
+// removed from the workspace keeps full access to every workbench they were
+// explicitly added to. Keying it on the standing being unelevated would not do
+// either: scope sets elevated for any member whose permissions are full, so a
+// removed workbench MANAGER — the most privileged orphan there is — would be
+// exactly the one waved through.
+//
+// The workbench's own owner is the deliberate exception, as it was before the
+// nested scope: an owner locked out of their workbench by losing workspace
+// membership can no longer transfer it to anyone.
 //
 // A caller with no way in gets ErrWorkbenchNotFound rather than ErrForbidden,
 // on both the not-a-workspace-member and the private-workbench paths: whether a
@@ -97,6 +108,9 @@ func (s *Service) authorize(ctx context.Context, workbenchID, userID string, nee
 	perms, elevated, err := s.sc.Standing(ctx, workbenchID, userID)
 	switch {
 	case err == nil:
+		if err := s.requireParentStanding(ctx, workbenchID, userID); err != nil {
+			return 0, err
+		}
 		mask := maskOf(perms, elevated)
 		if !elevated && !mask.Has(need) {
 			return 0, ErrForbidden
@@ -126,6 +140,31 @@ func (s *Service) authorize(ctx context.Context, workbenchID, userID string, nee
 		return PermViewWorkbench, nil
 	}
 	return 0, ErrWorkbenchNotFound
+}
+
+// requireParentStanding refuses a caller who no longer belongs to the workspace
+// that holds the workbench. See authorize for why standing on the workbench
+// alone is not enough to answer with.
+//
+// It costs the container read and one workspace lookup, which is the query the
+// nested-scope rewrite had removed from this path. Correctness buys it back:
+// the alternative is honouring a membership row whose justification is gone.
+func (s *Service) requireParentStanding(ctx context.Context, workbenchID, userID string) error {
+	wb, err := s.sc.Container(ctx, workbenchID)
+	if err != nil {
+		return mapErr(err)
+	}
+	if wb.OwnerID == userID {
+		return nil
+	}
+	info, err := s.wsAccess.Lookup(ctx, wb.WorkspaceID, userID)
+	if err != nil {
+		return err
+	}
+	if !info.IsMember {
+		return ErrWorkbenchNotFound
+	}
+	return nil
 }
 
 // requireWorkbenchOwner gates the two owner-only actions. It is not expressed
@@ -317,11 +356,24 @@ func (s *Service) TransferOwnership(ctx context.Context, userID, workbenchID, ne
 
 // LeaveWorkbench removes the caller's own membership. The owner must transfer
 // ownership first — authlayer's last-owner lock, not a check of our own.
+//
+// This is the one membership call that does NOT need requireParentStanding:
+// dropping your own row cannot grant anything, and somebody already removed
+// from the workspace should still be able to clean themselves out of what it
+// left behind.
 func (s *Service) LeaveWorkbench(ctx context.Context, userID, workbenchID string) error {
 	return mapErr(s.sc.LeaveContainer(actor(ctx, userID, workbenchID)))
 }
 
 // ── Roles ───────────────────────────────────────────────────────────────────
+
+// The six mutating calls below delegate authorization to scope, which resolves
+// it from the caller's standing on the WORKBENCH. That is the standing
+// authorize refuses to take at face value — see its doc — so each one asks
+// requireParentStanding first. Before the nested scope every one of them went
+// through authorize and inherited the parent check from it; delegating without
+// it would let a colleague removed from the workspace go on minting roles and
+// admitting members to a workbench they were once added to.
 
 // ListRoles is gated by authorize rather than by scope's own ListRoles, so a
 // shared workbench's viewers can see its roles the way they always could —
@@ -335,6 +387,9 @@ func (s *Service) ListRoles(ctx context.Context, userID, workbenchID string) ([]
 }
 
 func (s *Service) CreateRole(ctx context.Context, userID, workbenchID, name string, perms Permission) (Role, error) {
+	if err := s.requireParentStanding(ctx, workbenchID, userID); err != nil {
+		return Role{}, err
+	}
 	view, err := s.sc.CreateRole(actor(ctx, userID, workbenchID), rbac.RoleKey(name), name, grantsFor(perms))
 	if err != nil {
 		return Role{}, mapErr(err)
@@ -343,6 +398,9 @@ func (s *Service) CreateRole(ctx context.Context, userID, workbenchID, name stri
 }
 
 func (s *Service) UpdateRole(ctx context.Context, userID, workbenchID, roleID, name string, perms Permission) (Role, error) {
+	if err := s.requireParentStanding(ctx, workbenchID, userID); err != nil {
+		return Role{}, err
+	}
 	view, err := s.sc.UpdateRole(actor(ctx, userID, workbenchID), roleID, name, grantsFor(perms))
 	if err != nil {
 		return Role{}, mapErr(err)
@@ -351,6 +409,9 @@ func (s *Service) UpdateRole(ctx context.Context, userID, workbenchID, roleID, n
 }
 
 func (s *Service) DeleteRole(ctx context.Context, userID, workbenchID, roleID string) error {
+	if err := s.requireParentStanding(ctx, workbenchID, userID); err != nil {
+		return err
+	}
 	return mapErr(s.sc.DeleteRole(actor(ctx, userID, workbenchID), roleID))
 }
 
@@ -440,6 +501,9 @@ func (s *Service) ListMembers(ctx context.Context, userID, workbenchID string) (
 // target already belongs to the parent is authlayer's MembersFromParent policy,
 // not a check of ours — it surfaces as ErrNotWorkspaceMember.
 func (s *Service) AddMember(ctx context.Context, userID, workbenchID, targetUserID, roleID string) (MemberView, error) {
+	if err := s.requireParentStanding(ctx, workbenchID, userID); err != nil {
+		return MemberView{}, err
+	}
 	if _, err := s.sc.AddMember(actor(ctx, userID, workbenchID), targetUserID, roleID); err != nil {
 		return MemberView{}, mapErr(err)
 	}
@@ -447,6 +511,9 @@ func (s *Service) AddMember(ctx context.Context, userID, workbenchID, targetUser
 }
 
 func (s *Service) ChangeMemberRole(ctx context.Context, userID, workbenchID, targetUserID, roleID string) (MemberView, error) {
+	if err := s.requireParentStanding(ctx, workbenchID, userID); err != nil {
+		return MemberView{}, err
+	}
 	if err := s.sc.ChangeMemberRole(actor(ctx, userID, workbenchID), targetUserID, roleID); err != nil {
 		return MemberView{}, mapErr(err)
 	}
@@ -454,6 +521,9 @@ func (s *Service) ChangeMemberRole(ctx context.Context, userID, workbenchID, tar
 }
 
 func (s *Service) RemoveMember(ctx context.Context, userID, workbenchID, targetUserID string) error {
+	if err := s.requireParentStanding(ctx, workbenchID, userID); err != nil {
+		return err
+	}
 	return mapErr(s.sc.RemoveMember(actor(ctx, userID, workbenchID), targetUserID))
 }
 
