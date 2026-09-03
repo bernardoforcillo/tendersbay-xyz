@@ -57,6 +57,11 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, standalone backend se
   ./internal/adapter/postgres/ -run TestNew`) or those tests skip, naming the command.
   `cpv_lexicon_test.go` additionally wants the vocabulary seeded (`go run ./cmd/seed-cpv`
   from `services/ingestion`).
+- **End-to-end tests** live in `services/backend/e2e/`: the production wiring behind an
+  `httptest` server, driven over HTTP with the generated ConnectRPC clients (each account
+  gets its own cookie jar, since the refresh token is an HttpOnly cookie). Only the mailer,
+  the rate limiter and the absent agent provider are substituted. They run on
+  `TEST_DATABASE_URL`, add only their own rows, and skip without it.
 - **Features & entitlements:** [`featurelayer`](https://github.com/bernardoforcillo/featurelayer)
   — the feature catalog, flags and plan-based metered limits. Definitions live in code
   (`internal/core/features`); the per-workspace half (subscription, usage counters) is in
