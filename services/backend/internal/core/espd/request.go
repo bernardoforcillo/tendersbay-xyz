@@ -96,7 +96,7 @@ func ParseRequest(raw []byte) (Request, error) {
 		if code == "" {
 			continue
 		}
-		k, ok := criterionForTypeCode(code)
+		k, ok := CriterionForTypeCode(code)
 		if !ok {
 			req.UnmappedCriteria = append(req.UnmappedCriteria, code)
 			continue
@@ -122,57 +122,134 @@ func versionOf(versionID string) (Version, error) {
 	return "", fmt.Errorf("%w: ESPD-EDM version %q", ErrUnsupportedRequest, v)
 }
 
-// criterionForTypeCode maps the ESPD-EDM criterion taxonomy code
-// (cbc:CriterionTypeCode, e.g. CRITERION.EXCLUSION.CONVICTIONS.FRAUD) to our
-// key. The taxonomy is the one identifier stable across EDM 2.x and 4.x code
-// lists — the UUIDs are not — which is why the request keeps type codes and
-// the serializers keep UUIDs.
+// CriterionForTypeCode maps a buyer's cbc:CriterionTypeCode onto our key.
 //
-// Matching is on the code with its CRITERION. prefix stripped and upper-cased,
-// so a buyer tool that emits a lower-case variant still maps. Anything not in
-// the table is reported, not dropped.
-func criterionForTypeCode(code string) (CriterionKey, bool) {
-	c := strings.ToUpper(strings.TrimSpace(code))
-	c = strings.TrimPrefix(c, "CRITERION.")
-	k, ok := taxonomy[c]
+// BOTH generations are recognised, because a request can arrive in either and a
+// criterion this parser does not recognise is a criterion the preview cannot
+// tell the operator about:
+//
+//   - ESPD-EDM 2.x spells the taxonomy out —
+//     "CRITERION.EXCLUSION.CONVICTIONS.FRAUD";
+//   - 4.x shortened every one of them — "fraud".
+//
+// Matching ignores case and the optional CRITERION. prefix, so a tool that
+// emits a lower-case variant still maps. Anything absent from both tables is
+// REPORTED as unmapped, never dropped: a buyer asking for something we do not
+// model has to be visible.
+//
+// It is exported because the codelist package cross-checks it against the
+// vendored tables — the tables and this map are two transcriptions of one
+// taxonomy, and only a test can keep them honest.
+func CriterionForTypeCode(code string) (CriterionKey, bool) {
+	c := strings.TrimSpace(code)
+	if k, ok := shortTaxonomy[strings.ToLower(c)]; ok {
+		return k, true
+	}
+	upper := strings.TrimPrefix(strings.ToUpper(c), "CRITERION.")
+	k, ok := taxonomy[upper]
 	return k, ok
 }
 
+// taxonomy is the ESPD-EDM 2.x criteria taxonomy, transcribed from
+// ESPD-CriteriaTaxonomy_V2.1.1.gc in the official release. The codes are not
+// guessable — the release spells "analogous situation" as BANKRUPTCY_ANALOGOUS
+// and files the quality-assurance certificates under
+// TECHNICAL_PROFESSIONAL_ABILITY rather than under QUALITY_ASSURANCE — so this
+// table is checked against the vendored code list by a test in
+// internal/adapter/espd/codelist.
 var taxonomy = map[string]CriterionKey{
-	"EXCLUSION.CONVICTIONS.PARTICIPATION_IN_CRIMINAL_ORGANISATION":                      CritParticipationCriminalOrg,
-	"EXCLUSION.CONVICTIONS.CORRUPTION":                                                  CritCorruption,
-	"EXCLUSION.CONVICTIONS.FRAUD":                                                       CritFraud,
-	"EXCLUSION.CONVICTIONS.TERRORIST_OFFENCES":                                          CritTerroristOffences,
-	"EXCLUSION.CONVICTIONS.MONEY_LAUNDERING":                                            CritMoneyLaundering,
-	"EXCLUSION.CONVICTIONS.CHILD_LABOUR-HUMAN_TRAFFICKING":                              CritChildLabour,
-	"EXCLUSION.CONTRIBUTIONS.PAYMENT_OF_TAXES":                                          CritPaymentTaxes,
-	"EXCLUSION.CONTRIBUTIONS.PAYMENT_OF_SOCIAL_SECURITY":                                CritPaymentSocialSecurity,
-	"EXCLUSION.SOCIAL.ENVIRONMENTAL_LAW":                                                CritEnvironmentalLaw,
-	"EXCLUSION.SOCIAL.SOCIAL_LAW":                                                       CritSocialLaw,
-	"EXCLUSION.SOCIAL.LABOUR_LAW":                                                       CritLabourLaw,
-	"EXCLUSION.BUSINESS.BANKRUPTCY":                                                     CritBankruptcy,
-	"EXCLUSION.BUSINESS.INSOLVENCY":                                                     CritInsolvency,
-	"EXCLUSION.BUSINESS.CREDITORS_ARRANGEMENT":                                          CritCreditorsArrangement,
-	"EXCLUSION.BUSINESS.ANALOGOUS_SITUATION":                                            CritAnalogousSituation,
-	"EXCLUSION.BUSINESS.ASSETS_ADMINISTERED_BY_LIQUIDATOR":                              CritAssetsByLiquidator,
-	"EXCLUSION.BUSINESS.BUSINESS_ACTIVITIES_SUSPENDED":                                  CritActivitiesSuspended,
-	"EXCLUSION.MISCONDUCT.MC_PROFESSIONAL":                                              CritProfessionalMisconduct,
-	"EXCLUSION.MISCONDUCT.MARKET_DISTORTION":                                            CritDistortingCompetition,
-	"EXCLUSION.CONFLICT_OF_INTEREST.PROCEDURE_PARTICIPATION":                            CritConflictOfInterest,
-	"EXCLUSION.CONFLICT_OF_INTEREST.PROCUREMENT_PROCEDURE_PREPARATION":                  CritInvolvementInPreparation,
-	"EXCLUSION.CONFLICT_OF_INTEREST.EARLY_TERMINATION":                                  CritEarlyTermination,
-	"EXCLUSION.CONFLICT_OF_INTEREST.MISINTERPRETATION":                                  CritMisrepresentation,
-	"EXCLUSION.NATIONAL.OTHER":                                                          CritPurelyNationalGrounds,
-	"SELECTION.SUITABILITY.PROFESSIONAL_REGISTER_ENROLMENT":                             CritEnrolmentProfessionalReg,
-	"SELECTION.SUITABILITY.TRADE_REGISTER_ENROLMENT":                                    CritEnrolmentTradeReg,
-	"SELECTION.ECONOMIC_FINANCIAL_STANDING.TURNOVER.GENERAL_YEARLY":                     CritGeneralTurnover,
-	"SELECTION.ECONOMIC_FINANCIAL_STANDING.TURNOVER.SPECIFIC_YEARLY":                    CritSpecificTurnover,
+	"EXCLUSION.CONVICTIONS.PARTICIPATION_IN_CRIMINAL_ORGANISATION": CritParticipationCriminalOrg,
+	"EXCLUSION.CONVICTIONS.CORRUPTION":                             CritCorruption,
+	"EXCLUSION.CONVICTIONS.FRAUD":                                  CritFraud,
+	"EXCLUSION.CONVICTIONS.TERRORIST_OFFENCES":                     CritTerroristOffences,
+	"EXCLUSION.CONVICTIONS.MONEY_LAUNDERING":                       CritMoneyLaundering,
+	"EXCLUSION.CONVICTIONS.CHILD_LABOUR-HUMAN_TRAFFICKING":         CritChildLabour,
+	"EXCLUSION.CONTRIBUTIONS.PAYMENT_OF_TAXES":                     CritPaymentTaxes,
+	"EXCLUSION.CONTRIBUTIONS.PAYMENT_OF_SOCIAL_SECURITY":           CritPaymentSocialSecurity,
+	"EXCLUSION.SOCIAL.ENVIRONMENTAL_LAW":                           CritEnvironmentalLaw,
+	"EXCLUSION.SOCIAL.SOCIAL_LAW":                                  CritSocialLaw,
+	"EXCLUSION.SOCIAL.LABOUR_LAW":                                  CritLabourLaw,
+	"EXCLUSION.BUSINESS.BANKRUPTCY":                                CritBankruptcy,
+	"EXCLUSION.BUSINESS.INSOLVENCY":                                CritInsolvency,
+	"EXCLUSION.BUSINESS.CREDITORS_ARRANGEMENT":                     CritCreditorsArrangement,
+	"EXCLUSION.BUSINESS.BANKRUPTCY_ANALOGOUS":                      CritAnalogousSituation,
+	"EXCLUSION.BUSINESS.LIQUIDATOR_ADMINISTERED":                   CritAssetsByLiquidator,
+	"EXCLUSION.BUSINESS.ACTIVITIES_SUSPENDED":                      CritActivitiesSuspended,
+	"EXCLUSION.MISCONDUCT.MC_PROFESSIONAL":                         CritProfessionalMisconduct,
+	"EXCLUSION.MISCONDUCT.MARKET_DISTORTION":                       CritDistortingCompetition,
+	"EXCLUSION.CONFLICT_OF_INTEREST.PROCEDURE_PARTICIPATION":       CritConflictOfInterest,
+	"EXCLUSION.CONFLICT_OF_INTEREST.PROCEDURE_PREPARATION":         CritInvolvementInPreparation,
+	"EXCLUSION.CONFLICT_OF_INTEREST.EARLY_TERMINATION":             CritEarlyTermination,
+	"EXCLUSION.CONFLICT_OF_INTEREST.MISINTERPRETATION":             CritMisrepresentation,
+	"EXCLUSION.NATIONAL.OTHER":                                     CritPurelyNationalGrounds,
+
+	"SELECTION.SUITABILITY.PROFESSIONAL_REGISTER_ENROLMENT": CritEnrolmentProfessionalReg,
+	"SELECTION.SUITABILITY.TRADE_REGISTER_ENROLMENT":        CritEnrolmentTradeReg,
+	"SELECTION.SUITABILITY.AUTHORISATION":                   CritOtherRegistration,
+
+	"SELECTION.ECONOMIC_FINANCIAL_STANDING.TURNOVER.GENERAL_YEARLY":  CritGeneralTurnover,
+	"SELECTION.ECONOMIC_FINANCIAL_STANDING.TURNOVER.SPECIFIC_YEARLY": CritSpecificTurnover,
+
 	"SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.REFERENCES.WORKS_PERFORMANCE":             CritReferences,
 	"SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.REFERENCES.SUPPLIES_DELIVERY_PERFORMANCE": CritReferences,
 	"SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.REFERENCES.SERVICES_DELIVERY_PERFORMANCE": CritReferences,
 	"SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.MANAGEMENT.AVERAGE_ANNUAL_MANPOWER":       CritAverageAnnualManpower,
-	"SELECTION.QUALITY_ASSURANCE.CERTIFICATE_INDEPENDENT_BODIES_ABOUT_QA":               CritQualityAssurance,
-	"SELECTION.QUALITY_ASSURANCE.CERTIFICATE_INDEPENDENT_BODIES_ABOUT_ENVIRONMENTAL":    CritEnvironmentalManagement,
+
+	"SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.CERTIFICATES.QUALITY_ASSURANCE.QA_INDEPENDENT_CERTIFICATE":         CritQualityAssurance,
+	"SELECTION.TECHNICAL_PROFESSIONAL_ABILITY.CERTIFICATES.ENVIRONMENTAL_MANAGEMENT.ENV_INDEPENDENT_CERTIFICATE": CritEnvironmentalManagement,
+
+	"OTHER.EO_DATA.REGISTERED_IN_OFFICIAL_LIST":     CritSOAAttestation,
+	"OTHER.EO_DATA.RELIES_ON_OTHER_CAPACITIES":      CritReliance,
+	"OTHER.EO_DATA.SUBCONTRACTS_WITH_THIRD_PARTIES": CritSubcontracting,
+	"OTHER.EO_DATA.LOTS_TENDERED":                   CritLots,
+}
+
+// shortTaxonomy is the same set of questions as 4.1.0 spells them. The codes
+// are lower-case in the release, and matched lower-cased here.
+var shortTaxonomy = map[string]CriterionKey{
+	"crime-org":       CritParticipationCriminalOrg,
+	"corruption":      CritCorruption,
+	"fraud":           CritFraud,
+	"terr-offence":    CritTerroristOffences,
+	"finan-laund":     CritMoneyLaundering,
+	"human-traffic":   CritChildLabour,
+	"tax-pay":         CritPaymentTaxes,
+	"socsec-pay":      CritPaymentSocialSecurity,
+	"envir-law":       CritEnvironmentalLaw,
+	"socsec-law":      CritSocialLaw,
+	"labour-law":      CritLabourLaw,
+	"bankruptcy":      CritBankruptcy,
+	"insolvency":      CritInsolvency,
+	"cred-arran":      CritCreditorsArrangement,
+	"bankr-nat":       CritAnalogousSituation,
+	"liq-admin":       CritAssetsByLiquidator,
+	"susp-act":        CritActivitiesSuspended,
+	"prof-misconduct": CritProfessionalMisconduct,
+	"distorsion":      CritDistortingCompetition,
+	"partic-confl":    CritConflictOfInterest,
+	"prep-confl":      CritInvolvementInPreparation,
+	"sanction":        CritEarlyTermination,
+	"misrepresent":    CritMisrepresentation,
+	"nati-ground":     CritPurelyNationalGrounds,
+
+	"prof-regist":   CritEnrolmentProfessionalReg,
+	"trade-regist":  CritEnrolmentTradeReg,
+	"authorisation": CritOtherRegistration,
+
+	"gen-year-to":  CritGeneralTurnover,
+	"spec-year-to": CritSpecificTurnover,
+
+	"work-perform":    CritReferences,
+	"supply-perform":  CritReferences,
+	"service-perform": CritReferences,
+	"year-manpower":   CritAverageAnnualManpower,
+
+	"qu-certif-indep":    CritQualityAssurance,
+	"envir-certif-indep": CritEnvironmentalManagement,
+
+	"registered": CritSOAAttestation,
+	"relied":     CritReliance,
+	"subco-ent":  CritSubcontracting,
 }
 
 // ── XML shape (local names only; namespaces deliberately ignored) ───────────
