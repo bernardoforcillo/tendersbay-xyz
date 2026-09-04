@@ -54,6 +54,23 @@ const (
 	BidServiceUpsertChecklistAnswerProcedure = "/bid.v1.BidService/UpsertChecklistAnswer"
 	// BidServiceRemoveBidProcedure is the fully-qualified name of the BidService's RemoveBid RPC.
 	BidServiceRemoveBidProcedure = "/bid.v1.BidService/RemoveBid"
+	// BidServiceListEspdDataProcedure is the fully-qualified name of the BidService's ListEspdData RPC.
+	BidServiceListEspdDataProcedure = "/bid.v1.BidService/ListEspdData"
+	// BidServicePutLotProcedure is the fully-qualified name of the BidService's PutLot RPC.
+	BidServicePutLotProcedure = "/bid.v1.BidService/PutLot"
+	// BidServiceRemoveLotProcedure is the fully-qualified name of the BidService's RemoveLot RPC.
+	BidServiceRemoveLotProcedure = "/bid.v1.BidService/RemoveLot"
+	// BidServicePutSubcontractorProcedure is the fully-qualified name of the BidService's
+	// PutSubcontractor RPC.
+	BidServicePutSubcontractorProcedure = "/bid.v1.BidService/PutSubcontractor"
+	// BidServiceRemoveSubcontractorProcedure is the fully-qualified name of the BidService's
+	// RemoveSubcontractor RPC.
+	BidServiceRemoveSubcontractorProcedure = "/bid.v1.BidService/RemoveSubcontractor"
+	// BidServicePutRelianceProcedure is the fully-qualified name of the BidService's PutReliance RPC.
+	BidServicePutRelianceProcedure = "/bid.v1.BidService/PutReliance"
+	// BidServiceRemoveRelianceProcedure is the fully-qualified name of the BidService's RemoveReliance
+	// RPC.
+	BidServiceRemoveRelianceProcedure = "/bid.v1.BidService/RemoveReliance"
 )
 
 // BidServiceClient is a client for the bid.v1.BidService service.
@@ -67,6 +84,16 @@ type BidServiceClient interface {
 	ListChecklistItems(context.Context, *connect.Request[v1.ListChecklistItemsRequest]) (*connect.Response[v1.ListChecklistItemsResponse], error)
 	UpsertChecklistAnswer(context.Context, *connect.Request[v1.UpsertChecklistAnswerRequest]) (*connect.Response[v1.UpsertChecklistAnswerResponse], error)
 	RemoveBid(context.Context, *connect.Request[v1.RemoveBidRequest]) (*connect.Response[v1.RemoveBidResponse], error)
+	// ESPD per-bid data: the lots tendered for (Part I), reliance on other
+	// entities (Part II.C) and subcontractors (Part II.D). Reads follow
+	// CanAccessWorkbench, writes CanManageWorkbench, like the checklist.
+	ListEspdData(context.Context, *connect.Request[v1.ListEspdDataRequest]) (*connect.Response[v1.ListEspdDataResponse], error)
+	PutLot(context.Context, *connect.Request[v1.PutLotRequest]) (*connect.Response[v1.PutLotResponse], error)
+	RemoveLot(context.Context, *connect.Request[v1.RemoveLotRequest]) (*connect.Response[v1.RemoveLotResponse], error)
+	PutSubcontractor(context.Context, *connect.Request[v1.PutSubcontractorRequest]) (*connect.Response[v1.PutSubcontractorResponse], error)
+	RemoveSubcontractor(context.Context, *connect.Request[v1.RemoveSubcontractorRequest]) (*connect.Response[v1.RemoveSubcontractorResponse], error)
+	PutReliance(context.Context, *connect.Request[v1.PutRelianceRequest]) (*connect.Response[v1.PutRelianceResponse], error)
+	RemoveReliance(context.Context, *connect.Request[v1.RemoveRelianceRequest]) (*connect.Response[v1.RemoveRelianceResponse], error)
 }
 
 // NewBidServiceClient constructs a client for the bid.v1.BidService service. By default, it uses
@@ -134,6 +161,48 @@ func NewBidServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...
 			connect.WithSchema(bidServiceMethods.ByName("RemoveBid")),
 			connect.WithClientOptions(opts...),
 		),
+		listEspdData: connect.NewClient[v1.ListEspdDataRequest, v1.ListEspdDataResponse](
+			httpClient,
+			baseURL+BidServiceListEspdDataProcedure,
+			connect.WithSchema(bidServiceMethods.ByName("ListEspdData")),
+			connect.WithClientOptions(opts...),
+		),
+		putLot: connect.NewClient[v1.PutLotRequest, v1.PutLotResponse](
+			httpClient,
+			baseURL+BidServicePutLotProcedure,
+			connect.WithSchema(bidServiceMethods.ByName("PutLot")),
+			connect.WithClientOptions(opts...),
+		),
+		removeLot: connect.NewClient[v1.RemoveLotRequest, v1.RemoveLotResponse](
+			httpClient,
+			baseURL+BidServiceRemoveLotProcedure,
+			connect.WithSchema(bidServiceMethods.ByName("RemoveLot")),
+			connect.WithClientOptions(opts...),
+		),
+		putSubcontractor: connect.NewClient[v1.PutSubcontractorRequest, v1.PutSubcontractorResponse](
+			httpClient,
+			baseURL+BidServicePutSubcontractorProcedure,
+			connect.WithSchema(bidServiceMethods.ByName("PutSubcontractor")),
+			connect.WithClientOptions(opts...),
+		),
+		removeSubcontractor: connect.NewClient[v1.RemoveSubcontractorRequest, v1.RemoveSubcontractorResponse](
+			httpClient,
+			baseURL+BidServiceRemoveSubcontractorProcedure,
+			connect.WithSchema(bidServiceMethods.ByName("RemoveSubcontractor")),
+			connect.WithClientOptions(opts...),
+		),
+		putReliance: connect.NewClient[v1.PutRelianceRequest, v1.PutRelianceResponse](
+			httpClient,
+			baseURL+BidServicePutRelianceProcedure,
+			connect.WithSchema(bidServiceMethods.ByName("PutReliance")),
+			connect.WithClientOptions(opts...),
+		),
+		removeReliance: connect.NewClient[v1.RemoveRelianceRequest, v1.RemoveRelianceResponse](
+			httpClient,
+			baseURL+BidServiceRemoveRelianceProcedure,
+			connect.WithSchema(bidServiceMethods.ByName("RemoveReliance")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
@@ -148,6 +217,13 @@ type bidServiceClient struct {
 	listChecklistItems    *connect.Client[v1.ListChecklistItemsRequest, v1.ListChecklistItemsResponse]
 	upsertChecklistAnswer *connect.Client[v1.UpsertChecklistAnswerRequest, v1.UpsertChecklistAnswerResponse]
 	removeBid             *connect.Client[v1.RemoveBidRequest, v1.RemoveBidResponse]
+	listEspdData          *connect.Client[v1.ListEspdDataRequest, v1.ListEspdDataResponse]
+	putLot                *connect.Client[v1.PutLotRequest, v1.PutLotResponse]
+	removeLot             *connect.Client[v1.RemoveLotRequest, v1.RemoveLotResponse]
+	putSubcontractor      *connect.Client[v1.PutSubcontractorRequest, v1.PutSubcontractorResponse]
+	removeSubcontractor   *connect.Client[v1.RemoveSubcontractorRequest, v1.RemoveSubcontractorResponse]
+	putReliance           *connect.Client[v1.PutRelianceRequest, v1.PutRelianceResponse]
+	removeReliance        *connect.Client[v1.RemoveRelianceRequest, v1.RemoveRelianceResponse]
 }
 
 // AddBid calls bid.v1.BidService.AddBid.
@@ -195,6 +271,41 @@ func (c *bidServiceClient) RemoveBid(ctx context.Context, req *connect.Request[v
 	return c.removeBid.CallUnary(ctx, req)
 }
 
+// ListEspdData calls bid.v1.BidService.ListEspdData.
+func (c *bidServiceClient) ListEspdData(ctx context.Context, req *connect.Request[v1.ListEspdDataRequest]) (*connect.Response[v1.ListEspdDataResponse], error) {
+	return c.listEspdData.CallUnary(ctx, req)
+}
+
+// PutLot calls bid.v1.BidService.PutLot.
+func (c *bidServiceClient) PutLot(ctx context.Context, req *connect.Request[v1.PutLotRequest]) (*connect.Response[v1.PutLotResponse], error) {
+	return c.putLot.CallUnary(ctx, req)
+}
+
+// RemoveLot calls bid.v1.BidService.RemoveLot.
+func (c *bidServiceClient) RemoveLot(ctx context.Context, req *connect.Request[v1.RemoveLotRequest]) (*connect.Response[v1.RemoveLotResponse], error) {
+	return c.removeLot.CallUnary(ctx, req)
+}
+
+// PutSubcontractor calls bid.v1.BidService.PutSubcontractor.
+func (c *bidServiceClient) PutSubcontractor(ctx context.Context, req *connect.Request[v1.PutSubcontractorRequest]) (*connect.Response[v1.PutSubcontractorResponse], error) {
+	return c.putSubcontractor.CallUnary(ctx, req)
+}
+
+// RemoveSubcontractor calls bid.v1.BidService.RemoveSubcontractor.
+func (c *bidServiceClient) RemoveSubcontractor(ctx context.Context, req *connect.Request[v1.RemoveSubcontractorRequest]) (*connect.Response[v1.RemoveSubcontractorResponse], error) {
+	return c.removeSubcontractor.CallUnary(ctx, req)
+}
+
+// PutReliance calls bid.v1.BidService.PutReliance.
+func (c *bidServiceClient) PutReliance(ctx context.Context, req *connect.Request[v1.PutRelianceRequest]) (*connect.Response[v1.PutRelianceResponse], error) {
+	return c.putReliance.CallUnary(ctx, req)
+}
+
+// RemoveReliance calls bid.v1.BidService.RemoveReliance.
+func (c *bidServiceClient) RemoveReliance(ctx context.Context, req *connect.Request[v1.RemoveRelianceRequest]) (*connect.Response[v1.RemoveRelianceResponse], error) {
+	return c.removeReliance.CallUnary(ctx, req)
+}
+
 // BidServiceHandler is an implementation of the bid.v1.BidService service.
 type BidServiceHandler interface {
 	AddBid(context.Context, *connect.Request[v1.AddBidRequest]) (*connect.Response[v1.AddBidResponse], error)
@@ -206,6 +317,16 @@ type BidServiceHandler interface {
 	ListChecklistItems(context.Context, *connect.Request[v1.ListChecklistItemsRequest]) (*connect.Response[v1.ListChecklistItemsResponse], error)
 	UpsertChecklistAnswer(context.Context, *connect.Request[v1.UpsertChecklistAnswerRequest]) (*connect.Response[v1.UpsertChecklistAnswerResponse], error)
 	RemoveBid(context.Context, *connect.Request[v1.RemoveBidRequest]) (*connect.Response[v1.RemoveBidResponse], error)
+	// ESPD per-bid data: the lots tendered for (Part I), reliance on other
+	// entities (Part II.C) and subcontractors (Part II.D). Reads follow
+	// CanAccessWorkbench, writes CanManageWorkbench, like the checklist.
+	ListEspdData(context.Context, *connect.Request[v1.ListEspdDataRequest]) (*connect.Response[v1.ListEspdDataResponse], error)
+	PutLot(context.Context, *connect.Request[v1.PutLotRequest]) (*connect.Response[v1.PutLotResponse], error)
+	RemoveLot(context.Context, *connect.Request[v1.RemoveLotRequest]) (*connect.Response[v1.RemoveLotResponse], error)
+	PutSubcontractor(context.Context, *connect.Request[v1.PutSubcontractorRequest]) (*connect.Response[v1.PutSubcontractorResponse], error)
+	RemoveSubcontractor(context.Context, *connect.Request[v1.RemoveSubcontractorRequest]) (*connect.Response[v1.RemoveSubcontractorResponse], error)
+	PutReliance(context.Context, *connect.Request[v1.PutRelianceRequest]) (*connect.Response[v1.PutRelianceResponse], error)
+	RemoveReliance(context.Context, *connect.Request[v1.RemoveRelianceRequest]) (*connect.Response[v1.RemoveRelianceResponse], error)
 }
 
 // NewBidServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -269,6 +390,48 @@ func NewBidServiceHandler(svc BidServiceHandler, opts ...connect.HandlerOption) 
 		connect.WithSchema(bidServiceMethods.ByName("RemoveBid")),
 		connect.WithHandlerOptions(opts...),
 	)
+	bidServiceListEspdDataHandler := connect.NewUnaryHandler(
+		BidServiceListEspdDataProcedure,
+		svc.ListEspdData,
+		connect.WithSchema(bidServiceMethods.ByName("ListEspdData")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bidServicePutLotHandler := connect.NewUnaryHandler(
+		BidServicePutLotProcedure,
+		svc.PutLot,
+		connect.WithSchema(bidServiceMethods.ByName("PutLot")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bidServiceRemoveLotHandler := connect.NewUnaryHandler(
+		BidServiceRemoveLotProcedure,
+		svc.RemoveLot,
+		connect.WithSchema(bidServiceMethods.ByName("RemoveLot")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bidServicePutSubcontractorHandler := connect.NewUnaryHandler(
+		BidServicePutSubcontractorProcedure,
+		svc.PutSubcontractor,
+		connect.WithSchema(bidServiceMethods.ByName("PutSubcontractor")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bidServiceRemoveSubcontractorHandler := connect.NewUnaryHandler(
+		BidServiceRemoveSubcontractorProcedure,
+		svc.RemoveSubcontractor,
+		connect.WithSchema(bidServiceMethods.ByName("RemoveSubcontractor")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bidServicePutRelianceHandler := connect.NewUnaryHandler(
+		BidServicePutRelianceProcedure,
+		svc.PutReliance,
+		connect.WithSchema(bidServiceMethods.ByName("PutReliance")),
+		connect.WithHandlerOptions(opts...),
+	)
+	bidServiceRemoveRelianceHandler := connect.NewUnaryHandler(
+		BidServiceRemoveRelianceProcedure,
+		svc.RemoveReliance,
+		connect.WithSchema(bidServiceMethods.ByName("RemoveReliance")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/bid.v1.BidService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case BidServiceAddBidProcedure:
@@ -289,6 +452,20 @@ func NewBidServiceHandler(svc BidServiceHandler, opts ...connect.HandlerOption) 
 			bidServiceUpsertChecklistAnswerHandler.ServeHTTP(w, r)
 		case BidServiceRemoveBidProcedure:
 			bidServiceRemoveBidHandler.ServeHTTP(w, r)
+		case BidServiceListEspdDataProcedure:
+			bidServiceListEspdDataHandler.ServeHTTP(w, r)
+		case BidServicePutLotProcedure:
+			bidServicePutLotHandler.ServeHTTP(w, r)
+		case BidServiceRemoveLotProcedure:
+			bidServiceRemoveLotHandler.ServeHTTP(w, r)
+		case BidServicePutSubcontractorProcedure:
+			bidServicePutSubcontractorHandler.ServeHTTP(w, r)
+		case BidServiceRemoveSubcontractorProcedure:
+			bidServiceRemoveSubcontractorHandler.ServeHTTP(w, r)
+		case BidServicePutRelianceProcedure:
+			bidServicePutRelianceHandler.ServeHTTP(w, r)
+		case BidServiceRemoveRelianceProcedure:
+			bidServiceRemoveRelianceHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -332,4 +509,32 @@ func (UnimplementedBidServiceHandler) UpsertChecklistAnswer(context.Context, *co
 
 func (UnimplementedBidServiceHandler) RemoveBid(context.Context, *connect.Request[v1.RemoveBidRequest]) (*connect.Response[v1.RemoveBidResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("bid.v1.BidService.RemoveBid is not implemented"))
+}
+
+func (UnimplementedBidServiceHandler) ListEspdData(context.Context, *connect.Request[v1.ListEspdDataRequest]) (*connect.Response[v1.ListEspdDataResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("bid.v1.BidService.ListEspdData is not implemented"))
+}
+
+func (UnimplementedBidServiceHandler) PutLot(context.Context, *connect.Request[v1.PutLotRequest]) (*connect.Response[v1.PutLotResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("bid.v1.BidService.PutLot is not implemented"))
+}
+
+func (UnimplementedBidServiceHandler) RemoveLot(context.Context, *connect.Request[v1.RemoveLotRequest]) (*connect.Response[v1.RemoveLotResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("bid.v1.BidService.RemoveLot is not implemented"))
+}
+
+func (UnimplementedBidServiceHandler) PutSubcontractor(context.Context, *connect.Request[v1.PutSubcontractorRequest]) (*connect.Response[v1.PutSubcontractorResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("bid.v1.BidService.PutSubcontractor is not implemented"))
+}
+
+func (UnimplementedBidServiceHandler) RemoveSubcontractor(context.Context, *connect.Request[v1.RemoveSubcontractorRequest]) (*connect.Response[v1.RemoveSubcontractorResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("bid.v1.BidService.RemoveSubcontractor is not implemented"))
+}
+
+func (UnimplementedBidServiceHandler) PutReliance(context.Context, *connect.Request[v1.PutRelianceRequest]) (*connect.Response[v1.PutRelianceResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("bid.v1.BidService.PutReliance is not implemented"))
+}
+
+func (UnimplementedBidServiceHandler) RemoveReliance(context.Context, *connect.Request[v1.RemoveRelianceRequest]) (*connect.Response[v1.RemoveRelianceResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("bid.v1.BidService.RemoveReliance is not implemented"))
 }

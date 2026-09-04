@@ -90,6 +90,9 @@ is documented in @.claude/rules/frontend.md.
   library keeps `src/<feature>/…`. App routing/i18n infra (`src/routes/`, `src/i18n/`,
   `src/assets/locales/`) stays outside `features/`.
 
+Personal data (account holders vs. third parties named in the dossier, purpose binding,
+lifecycle, what may never reach analytics or logs) is documented in @.claude/rules/pii.md.
+
 Branching and the canary release policy (`feature → dev → main`, and the Docker
 image tags each branch publishes) are documented in @.claude/rules/git-flow.md.
 

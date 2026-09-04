@@ -19,6 +19,17 @@ service BidService {
   rpc ListChecklistItems(ListChecklistItemsRequest) returns (ListChecklistItemsResponse);
   rpc UpsertChecklistAnswer(UpsertChecklistAnswerRequest) returns (UpsertChecklistAnswerResponse);
   rpc RemoveBid(RemoveBidRequest) returns (RemoveBidResponse);
+
+  // ESPD per-bid data: the lots tendered for (Part I), reliance on other
+  // entities (Part II.C) and subcontractors (Part II.D). Reads follow
+  // CanAccessWorkbench, writes CanManageWorkbench, like the checklist.
+  rpc ListEspdData(ListEspdDataRequest) returns (ListEspdDataResponse);
+  rpc PutLot(PutLotRequest) returns (PutLotResponse);
+  rpc RemoveLot(RemoveLotRequest) returns (RemoveLotResponse);
+  rpc PutSubcontractor(PutSubcontractorRequest) returns (PutSubcontractorResponse);
+  rpc RemoveSubcontractor(RemoveSubcontractorRequest) returns (RemoveSubcontractorResponse);
+  rpc PutReliance(PutRelianceRequest) returns (PutRelianceResponse);
+  rpc RemoveReliance(RemoveRelianceRequest) returns (RemoveRelianceResponse);
 }
 
 message Bid {
@@ -119,3 +130,53 @@ message UpsertChecklistAnswerResponse { ChecklistItem item = 1; }
 
 message RemoveBidRequest { string workbench_id = 1; string bid_id = 2; }
 message RemoveBidResponse {}
+
+// ── ESPD per-bid data ─────────────────────────────────────────────────────
+//
+// No provenance here: these are the operator's choices for this gara, not
+// facts a buyer can demand a certificate for. Upsert keys: lot on lot_ref,
+// subcontractor on vat, reliance on (vat, criterion).
+
+message Lot {
+  string id = 1;
+  string lot_ref = 2;              // the buyer's lot id as published ("LOT-0001", "1", "A")
+  int32  position = 3;             // display order
+}
+
+message Subcontractor {
+  string id = 1;
+  string name = 2;
+  string vat = 3;
+  string country = 4;              // alpha-2, "" = unstated
+  int32  share_pct = 5;            // meaningful only if share_pct_set
+  bool   share_pct_set = 6;
+}
+
+message Reliance {
+  string id = 1;
+  string entity_name = 2;
+  string vat = 3;
+  string criterion = 4;            // the espd criterion key relied on, e.g. "iv.b.general_yearly_turnover"
+}
+
+message ListEspdDataRequest { string workbench_id = 1; string bid_id = 2; }
+message ListEspdDataResponse {
+  repeated Lot lots = 1;
+  repeated Subcontractor subcontractors = 2;
+  repeated Reliance reliances = 3;
+}
+
+message PutLotRequest { string workbench_id = 1; string bid_id = 2; Lot lot = 3; }
+message PutLotResponse { Lot lot = 1; }
+message RemoveLotRequest { string workbench_id = 1; string bid_id = 2; string id = 3; }
+message RemoveLotResponse {}
+
+message PutSubcontractorRequest { string workbench_id = 1; string bid_id = 2; Subcontractor subcontractor = 3; }
+message PutSubcontractorResponse { Subcontractor subcontractor = 1; }
+message RemoveSubcontractorRequest { string workbench_id = 1; string bid_id = 2; string id = 3; }
+message RemoveSubcontractorResponse {}
+
+message PutRelianceRequest { string workbench_id = 1; string bid_id = 2; Reliance reliance = 3; }
+message PutRelianceResponse { Reliance reliance = 1; }
+message RemoveRelianceRequest { string workbench_id = 1; string bid_id = 2; string id = 3; }
+message RemoveRelianceResponse {}

@@ -3,6 +3,7 @@ package bid
 import (
 	"context"
 	"log/slog"
+	"strings"
 	"time"
 )
 
@@ -216,4 +217,106 @@ func (s *Service) UpsertChecklistAnswer(ctx context.Context, userID, workbenchID
 		return ChecklistItem{}, err
 	}
 	return s.repo.UpsertChecklistItem(ctx, bidID, itemCode, status, note)
+}
+
+// ── ESPD per-bid data ───────────────────────────────────────────────────────
+
+// ListEspdData returns the lots, subcontractors and reliances declared for a
+// bid (a read — shared-workbench viewers may see it).
+func (s *Service) ListEspdData(ctx context.Context, userID, workbenchID, bidID string) (EspdData, error) {
+	if err := s.access.CanAccessWorkbench(ctx, userID, workbenchID); err != nil {
+		return EspdData{}, err
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return EspdData{}, err
+	}
+	return s.repo.ListEspdData(ctx, bidID)
+}
+
+// PutLot records a lot this bid tenders for, upserting on its reference.
+func (s *Service) PutLot(ctx context.Context, userID, workbenchID, bidID string, l Lot) (Lot, error) {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return Lot{}, err
+	}
+	l.LotRef = strings.TrimSpace(l.LotRef)
+	if err := l.validate(); err != nil {
+		return Lot{}, err
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return Lot{}, err
+	}
+	return s.repo.PutLot(ctx, bidID, l)
+}
+
+// DeleteLot removes one lot.
+func (s *Service) DeleteLot(ctx context.Context, userID, workbenchID, bidID, id string) error {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return err
+	}
+	if strings.TrimSpace(id) == "" {
+		return ErrInvalidArgument
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return err
+	}
+	return s.repo.DeleteLot(ctx, bidID, id)
+}
+
+// PutSubcontractor records a Part II.D entry, upserting on the VAT number.
+func (s *Service) PutSubcontractor(ctx context.Context, userID, workbenchID, bidID string, sub Subcontractor) (Subcontractor, error) {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return Subcontractor{}, err
+	}
+	sub.Name, sub.VAT = strings.TrimSpace(sub.Name), strings.TrimSpace(sub.VAT)
+	sub.Country = strings.ToUpper(strings.TrimSpace(sub.Country))
+	if err := sub.validate(); err != nil {
+		return Subcontractor{}, err
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return Subcontractor{}, err
+	}
+	return s.repo.PutSubcontractor(ctx, bidID, sub)
+}
+
+// DeleteSubcontractor removes one Part II.D entry.
+func (s *Service) DeleteSubcontractor(ctx context.Context, userID, workbenchID, bidID, id string) error {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return err
+	}
+	if strings.TrimSpace(id) == "" {
+		return ErrInvalidArgument
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return err
+	}
+	return s.repo.DeleteSubcontractor(ctx, bidID, id)
+}
+
+// PutReliance records a Part II.C avvalimento, upserting on (vat, criterion).
+func (s *Service) PutReliance(ctx context.Context, userID, workbenchID, bidID string, r Reliance) (Reliance, error) {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return Reliance{}, err
+	}
+	r.EntityName, r.VAT, r.Criterion = strings.TrimSpace(r.EntityName), strings.TrimSpace(r.VAT), strings.TrimSpace(r.Criterion)
+	if err := r.validate(); err != nil {
+		return Reliance{}, err
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return Reliance{}, err
+	}
+	return s.repo.PutReliance(ctx, bidID, r)
+}
+
+// DeleteReliance removes one Part II.C entry.
+func (s *Service) DeleteReliance(ctx context.Context, userID, workbenchID, bidID, id string) error {
+	if err := s.access.CanManageWorkbench(ctx, userID, workbenchID); err != nil {
+		return err
+	}
+	if strings.TrimSpace(id) == "" {
+		return ErrInvalidArgument
+	}
+	if _, err := s.repo.FindBidByID(ctx, workbenchID, bidID); err != nil {
+		return err
+	}
+	return s.repo.DeleteReliance(ctx, bidID, id)
 }

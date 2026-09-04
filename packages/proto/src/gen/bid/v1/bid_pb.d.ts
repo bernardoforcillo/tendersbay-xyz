@@ -604,6 +604,401 @@ export declare type RemoveBidResponse = Message<"bid.v1.RemoveBidResponse"> & {
 export declare const RemoveBidResponseSchema: GenMessage<RemoveBidResponse>;
 
 /**
+ * @generated from message bid.v1.Lot
+ */
+export declare type Lot = Message<"bid.v1.Lot"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * the buyer's lot id as published ("LOT-0001", "1", "A")
+   *
+   * @generated from field: string lot_ref = 2;
+   */
+  lotRef: string;
+
+  /**
+   * display order
+   *
+   * @generated from field: int32 position = 3;
+   */
+  position: number;
+};
+
+/**
+ * Describes the message bid.v1.Lot.
+ * Use `create(LotSchema)` to create a new message.
+ */
+export declare const LotSchema: GenMessage<Lot>;
+
+/**
+ * @generated from message bid.v1.Subcontractor
+ */
+export declare type Subcontractor = Message<"bid.v1.Subcontractor"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: string vat = 3;
+   */
+  vat: string;
+
+  /**
+   * alpha-2, "" = unstated
+   *
+   * @generated from field: string country = 4;
+   */
+  country: string;
+
+  /**
+   * meaningful only if share_pct_set
+   *
+   * @generated from field: int32 share_pct = 5;
+   */
+  sharePct: number;
+
+  /**
+   * @generated from field: bool share_pct_set = 6;
+   */
+  sharePctSet: boolean;
+};
+
+/**
+ * Describes the message bid.v1.Subcontractor.
+ * Use `create(SubcontractorSchema)` to create a new message.
+ */
+export declare const SubcontractorSchema: GenMessage<Subcontractor>;
+
+/**
+ * @generated from message bid.v1.Reliance
+ */
+export declare type Reliance = Message<"bid.v1.Reliance"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string entity_name = 2;
+   */
+  entityName: string;
+
+  /**
+   * @generated from field: string vat = 3;
+   */
+  vat: string;
+
+  /**
+   * the espd criterion key relied on, e.g. "iv.b.general_yearly_turnover"
+   *
+   * @generated from field: string criterion = 4;
+   */
+  criterion: string;
+};
+
+/**
+ * Describes the message bid.v1.Reliance.
+ * Use `create(RelianceSchema)` to create a new message.
+ */
+export declare const RelianceSchema: GenMessage<Reliance>;
+
+/**
+ * @generated from message bid.v1.ListEspdDataRequest
+ */
+export declare type ListEspdDataRequest = Message<"bid.v1.ListEspdDataRequest"> & {
+  /**
+   * @generated from field: string workbench_id = 1;
+   */
+  workbenchId: string;
+
+  /**
+   * @generated from field: string bid_id = 2;
+   */
+  bidId: string;
+};
+
+/**
+ * Describes the message bid.v1.ListEspdDataRequest.
+ * Use `create(ListEspdDataRequestSchema)` to create a new message.
+ */
+export declare const ListEspdDataRequestSchema: GenMessage<ListEspdDataRequest>;
+
+/**
+ * @generated from message bid.v1.ListEspdDataResponse
+ */
+export declare type ListEspdDataResponse = Message<"bid.v1.ListEspdDataResponse"> & {
+  /**
+   * @generated from field: repeated bid.v1.Lot lots = 1;
+   */
+  lots: Lot[];
+
+  /**
+   * @generated from field: repeated bid.v1.Subcontractor subcontractors = 2;
+   */
+  subcontractors: Subcontractor[];
+
+  /**
+   * @generated from field: repeated bid.v1.Reliance reliances = 3;
+   */
+  reliances: Reliance[];
+};
+
+/**
+ * Describes the message bid.v1.ListEspdDataResponse.
+ * Use `create(ListEspdDataResponseSchema)` to create a new message.
+ */
+export declare const ListEspdDataResponseSchema: GenMessage<ListEspdDataResponse>;
+
+/**
+ * @generated from message bid.v1.PutLotRequest
+ */
+export declare type PutLotRequest = Message<"bid.v1.PutLotRequest"> & {
+  /**
+   * @generated from field: string workbench_id = 1;
+   */
+  workbenchId: string;
+
+  /**
+   * @generated from field: string bid_id = 2;
+   */
+  bidId: string;
+
+  /**
+   * @generated from field: bid.v1.Lot lot = 3;
+   */
+  lot?: Lot | undefined;
+};
+
+/**
+ * Describes the message bid.v1.PutLotRequest.
+ * Use `create(PutLotRequestSchema)` to create a new message.
+ */
+export declare const PutLotRequestSchema: GenMessage<PutLotRequest>;
+
+/**
+ * @generated from message bid.v1.PutLotResponse
+ */
+export declare type PutLotResponse = Message<"bid.v1.PutLotResponse"> & {
+  /**
+   * @generated from field: bid.v1.Lot lot = 1;
+   */
+  lot?: Lot | undefined;
+};
+
+/**
+ * Describes the message bid.v1.PutLotResponse.
+ * Use `create(PutLotResponseSchema)` to create a new message.
+ */
+export declare const PutLotResponseSchema: GenMessage<PutLotResponse>;
+
+/**
+ * @generated from message bid.v1.RemoveLotRequest
+ */
+export declare type RemoveLotRequest = Message<"bid.v1.RemoveLotRequest"> & {
+  /**
+   * @generated from field: string workbench_id = 1;
+   */
+  workbenchId: string;
+
+  /**
+   * @generated from field: string bid_id = 2;
+   */
+  bidId: string;
+
+  /**
+   * @generated from field: string id = 3;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message bid.v1.RemoveLotRequest.
+ * Use `create(RemoveLotRequestSchema)` to create a new message.
+ */
+export declare const RemoveLotRequestSchema: GenMessage<RemoveLotRequest>;
+
+/**
+ * @generated from message bid.v1.RemoveLotResponse
+ */
+export declare type RemoveLotResponse = Message<"bid.v1.RemoveLotResponse"> & {
+};
+
+/**
+ * Describes the message bid.v1.RemoveLotResponse.
+ * Use `create(RemoveLotResponseSchema)` to create a new message.
+ */
+export declare const RemoveLotResponseSchema: GenMessage<RemoveLotResponse>;
+
+/**
+ * @generated from message bid.v1.PutSubcontractorRequest
+ */
+export declare type PutSubcontractorRequest = Message<"bid.v1.PutSubcontractorRequest"> & {
+  /**
+   * @generated from field: string workbench_id = 1;
+   */
+  workbenchId: string;
+
+  /**
+   * @generated from field: string bid_id = 2;
+   */
+  bidId: string;
+
+  /**
+   * @generated from field: bid.v1.Subcontractor subcontractor = 3;
+   */
+  subcontractor?: Subcontractor | undefined;
+};
+
+/**
+ * Describes the message bid.v1.PutSubcontractorRequest.
+ * Use `create(PutSubcontractorRequestSchema)` to create a new message.
+ */
+export declare const PutSubcontractorRequestSchema: GenMessage<PutSubcontractorRequest>;
+
+/**
+ * @generated from message bid.v1.PutSubcontractorResponse
+ */
+export declare type PutSubcontractorResponse = Message<"bid.v1.PutSubcontractorResponse"> & {
+  /**
+   * @generated from field: bid.v1.Subcontractor subcontractor = 1;
+   */
+  subcontractor?: Subcontractor | undefined;
+};
+
+/**
+ * Describes the message bid.v1.PutSubcontractorResponse.
+ * Use `create(PutSubcontractorResponseSchema)` to create a new message.
+ */
+export declare const PutSubcontractorResponseSchema: GenMessage<PutSubcontractorResponse>;
+
+/**
+ * @generated from message bid.v1.RemoveSubcontractorRequest
+ */
+export declare type RemoveSubcontractorRequest = Message<"bid.v1.RemoveSubcontractorRequest"> & {
+  /**
+   * @generated from field: string workbench_id = 1;
+   */
+  workbenchId: string;
+
+  /**
+   * @generated from field: string bid_id = 2;
+   */
+  bidId: string;
+
+  /**
+   * @generated from field: string id = 3;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message bid.v1.RemoveSubcontractorRequest.
+ * Use `create(RemoveSubcontractorRequestSchema)` to create a new message.
+ */
+export declare const RemoveSubcontractorRequestSchema: GenMessage<RemoveSubcontractorRequest>;
+
+/**
+ * @generated from message bid.v1.RemoveSubcontractorResponse
+ */
+export declare type RemoveSubcontractorResponse = Message<"bid.v1.RemoveSubcontractorResponse"> & {
+};
+
+/**
+ * Describes the message bid.v1.RemoveSubcontractorResponse.
+ * Use `create(RemoveSubcontractorResponseSchema)` to create a new message.
+ */
+export declare const RemoveSubcontractorResponseSchema: GenMessage<RemoveSubcontractorResponse>;
+
+/**
+ * @generated from message bid.v1.PutRelianceRequest
+ */
+export declare type PutRelianceRequest = Message<"bid.v1.PutRelianceRequest"> & {
+  /**
+   * @generated from field: string workbench_id = 1;
+   */
+  workbenchId: string;
+
+  /**
+   * @generated from field: string bid_id = 2;
+   */
+  bidId: string;
+
+  /**
+   * @generated from field: bid.v1.Reliance reliance = 3;
+   */
+  reliance?: Reliance | undefined;
+};
+
+/**
+ * Describes the message bid.v1.PutRelianceRequest.
+ * Use `create(PutRelianceRequestSchema)` to create a new message.
+ */
+export declare const PutRelianceRequestSchema: GenMessage<PutRelianceRequest>;
+
+/**
+ * @generated from message bid.v1.PutRelianceResponse
+ */
+export declare type PutRelianceResponse = Message<"bid.v1.PutRelianceResponse"> & {
+  /**
+   * @generated from field: bid.v1.Reliance reliance = 1;
+   */
+  reliance?: Reliance | undefined;
+};
+
+/**
+ * Describes the message bid.v1.PutRelianceResponse.
+ * Use `create(PutRelianceResponseSchema)` to create a new message.
+ */
+export declare const PutRelianceResponseSchema: GenMessage<PutRelianceResponse>;
+
+/**
+ * @generated from message bid.v1.RemoveRelianceRequest
+ */
+export declare type RemoveRelianceRequest = Message<"bid.v1.RemoveRelianceRequest"> & {
+  /**
+   * @generated from field: string workbench_id = 1;
+   */
+  workbenchId: string;
+
+  /**
+   * @generated from field: string bid_id = 2;
+   */
+  bidId: string;
+
+  /**
+   * @generated from field: string id = 3;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message bid.v1.RemoveRelianceRequest.
+ * Use `create(RemoveRelianceRequestSchema)` to create a new message.
+ */
+export declare const RemoveRelianceRequestSchema: GenMessage<RemoveRelianceRequest>;
+
+/**
+ * @generated from message bid.v1.RemoveRelianceResponse
+ */
+export declare type RemoveRelianceResponse = Message<"bid.v1.RemoveRelianceResponse"> & {
+};
+
+/**
+ * Describes the message bid.v1.RemoveRelianceResponse.
+ * Use `create(RemoveRelianceResponseSchema)` to create a new message.
+ */
+export declare const RemoveRelianceResponseSchema: GenMessage<RemoveRelianceResponse>;
+
+/**
  * BidService turns a found tender into a tracked bid inside a workbench and
  * drives its lifecycle: go/no-go, sector-adapted ESPD checklist, forward-only
  * stage stepper, terminal outcome. Every request carries workbench_id so the
@@ -683,6 +1078,66 @@ export declare const BidService: GenService<{
     methodKind: "unary";
     input: typeof RemoveBidRequestSchema;
     output: typeof RemoveBidResponseSchema;
+  },
+  /**
+   * ESPD per-bid data: the lots tendered for (Part I), reliance on other
+   * entities (Part II.C) and subcontractors (Part II.D). Reads follow
+   * CanAccessWorkbench, writes CanManageWorkbench, like the checklist.
+   *
+   * @generated from rpc bid.v1.BidService.ListEspdData
+   */
+  listEspdData: {
+    methodKind: "unary";
+    input: typeof ListEspdDataRequestSchema;
+    output: typeof ListEspdDataResponseSchema;
+  },
+  /**
+   * @generated from rpc bid.v1.BidService.PutLot
+   */
+  putLot: {
+    methodKind: "unary";
+    input: typeof PutLotRequestSchema;
+    output: typeof PutLotResponseSchema;
+  },
+  /**
+   * @generated from rpc bid.v1.BidService.RemoveLot
+   */
+  removeLot: {
+    methodKind: "unary";
+    input: typeof RemoveLotRequestSchema;
+    output: typeof RemoveLotResponseSchema;
+  },
+  /**
+   * @generated from rpc bid.v1.BidService.PutSubcontractor
+   */
+  putSubcontractor: {
+    methodKind: "unary";
+    input: typeof PutSubcontractorRequestSchema;
+    output: typeof PutSubcontractorResponseSchema;
+  },
+  /**
+   * @generated from rpc bid.v1.BidService.RemoveSubcontractor
+   */
+  removeSubcontractor: {
+    methodKind: "unary";
+    input: typeof RemoveSubcontractorRequestSchema;
+    output: typeof RemoveSubcontractorResponseSchema;
+  },
+  /**
+   * @generated from rpc bid.v1.BidService.PutReliance
+   */
+  putReliance: {
+    methodKind: "unary";
+    input: typeof PutRelianceRequestSchema;
+    output: typeof PutRelianceResponseSchema;
+  },
+  /**
+   * @generated from rpc bid.v1.BidService.RemoveReliance
+   */
+  removeReliance: {
+    methodKind: "unary";
+    input: typeof RemoveRelianceRequestSchema;
+    output: typeof RemoveRelianceResponseSchema;
   },
 }>;
 

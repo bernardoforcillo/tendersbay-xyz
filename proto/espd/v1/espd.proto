@@ -1,0 +1,162 @@
+syntax = "proto3";
+package espd.v1;
+
+option go_package = "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/espd/v1;espdv1";
+
+import "company/v1/company.proto";
+
+// EspdService composes, previews, confirms and exports the European Single
+// Procurement Document (ESPD; DGUE in Italy) for one bid, from the company
+// dossier (CompanyService), the bid's own data (BidService) and, when the buyer
+// published one, the buyer's ESPD request.
+//
+// Every request carries workbench_id + bid_id so the handler resolves access in
+// one round trip, exactly as BidService does. Authorization is the workbench's:
+// a member who may read the workbench may preview; one who may manage it may
+// confirm, import and export.
+//
+// Wire conventions follow bid.proto and company.proto: enums travel as strings
+// with the values listed in a comment, timestamps as RFC3339 strings, money as
+// int64 minor units, optional scalars as a value plus a paired `_set` bool.
+//
+// The export bytes travel IN the response message: an XML is tens of kilobytes
+// and a PDF a few hundred, well inside a ConnectRPC unary response. A streaming
+// or `GET`-on-httpapi variant is the documented escape hatch, not the MVP.
+//
+// This service is declared in Phase 1 alongside the data model so the contract
+// is reviewable with it; the handler and its `espd.export` entitlement check
+// arrive together in Phase 2.
+service EspdService {
+  // GetResponsePreview composes the document and returns every filled field
+  // (leaf) with its provenance, every open field (gap) with where to fix it,
+  // and the readiness verdict. A read: computed fresh, never stored.
+  rpc GetResponsePreview(GetResponsePreviewRequest) returns (GetResponsePreviewResponse);
+  // ConfirmDeclarations re-confirms, for THIS bid, the Part III declarations
+  // the dossier holds right now. The confirmation binds to a content hash: a
+  // later change to any declaration makes it stale, and the preview says so.
+  rpc ConfirmDeclarations(ConfirmDeclarationsRequest) returns (ConfirmDeclarationsResponse);
+  // ExportResponse serializes the composed document. Refused while the preview
+  // has open gaps or an unconfirmed Part III (FailedPrecondition), and gated by
+  // the `espd.export` entitlement.
+  rpc ExportResponse(ExportResponseRequest) returns (ExportResponseResponse);
+  // ImportRequest attaches the buyer's ESPD request XML to the bid. The
+  // response is the parsed Part I plus the criteria the buyer asks for.
+  rpc ImportRequest(ImportRequestRequest) returns (ImportRequestResponse);
+  // ListExports is the audit trail — the fact of each export, never the bytes.
+  rpc ListExports(ListExportsRequest) returns (ListExportsResponse);
+}
+
+// Value is one typed document value. kind decides which field is meaningful.
+message Value {
+  string kind = 1;            // text | bool | amount | int | date | code
+  string text = 2;            // text, code
+  bool   bool_value = 3;      // bool
+  int64  int_value = 4;       // int; amount in MINOR units
+  string currency = 5;        // amount: ISO-4217
+  string date = 6;            // date: RFC3339
+}
+
+// Leaf is ONE filled field with its origin. Attribution is meaningful for
+// dossier and declaration leaves (source_kind dossier | declaration); bid and
+// request leaves carry a nominal one.
+message Leaf {
+  string part = 1;            // I | II.A | II.B | II.C | II.D | III.A | III.B | III.C | III.D | IV.A | IV.B | IV.C | IV.D | VI
+  string criterion = 2;       // stable key, e.g. "iii.a.fraud", "iv.b.general_yearly_turnover"
+  string field = 3;           // stable field name within the criterion
+  Value  value = 4;
+  company.v1.Attribution attribution = 5;
+  string source_kind = 6;     // dossier | declaration | bid | request
+  string source_id = 7;       // the record the value was read from; "" when not a stored row
+}
+
+// Gap is one field the document requires that no authoritative fact covers.
+message Gap {
+  string part = 1;
+  string criterion = 2;
+  string field = 3;
+  string scope = 4;           // company (fix once, in the dossier) | bid (fix on this gara)
+  string reason = 5;          // missing | not_authoritative | stale
+}
+
+// DeclarationAnswer is the state of one Part III.A–C question.
+message DeclarationAnswer {
+  string criterion = 1;
+  bool   answered = 2;        // false: never declared
+  bool   applies = 3;         // the exclusion ground applies to the operator
+  string self_cleaning = 4;
+  company.v1.Attribution attribution = 5;
+}
+
+// DeclarationState is Part III as a whole with the per-bid confirmation.
+message DeclarationState {
+  repeated DeclarationAnswer answers = 1;
+  bool   complete = 2;        // every exclusion ground answered
+  bool   confirmed = 3;       // the CURRENT set carries a confirmation for this bid
+  string confirmed_at = 4;    // RFC3339, "" when never confirmed
+  string confirmed_by = 5;    // user id, "" when never confirmed
+  string declarations_hash = 6;
+}
+
+// RequestSummary is what the preview shows of the buyer's request.
+message RequestSummary {
+  string version = 1;         // edm_2_1_1 | edm_4
+  string buyer_name = 2;
+  string procedure_title = 3;
+  string procedure_reference = 4;   // ContractFolderID — the CIG in Italy
+  string notice_ref = 5;
+  string country = 6;               // alpha-2
+  repeated string lots = 7;
+  repeated string criteria = 8;             // our keys the buyer asked for
+  repeated string unmapped_criteria = 9;    // buyer type codes we have no key for — shown, never dropped
+  string sha256 = 10;
+  string imported_by = 11;
+  string imported_at = 12;          // RFC3339
+}
+
+message GetResponsePreviewRequest { string workbench_id = 1; string bid_id = 2; }
+message GetResponsePreviewResponse {
+  repeated Leaf leaves = 1;
+  repeated Gap gaps = 2;
+  bool   ready = 3;
+  int32  ready_count = 4;
+  int32  missing_count = 5;
+  bool   request_known = 6;
+  RequestSummary request = 7;       // set iff request_known
+  DeclarationState declarations = 8;
+  string composed_at = 9;           // RFC3339
+}
+
+message ConfirmDeclarationsRequest { string workbench_id = 1; string bid_id = 2; }
+message ConfirmDeclarationsResponse { DeclarationState declarations = 1; }
+
+message ExportResponseRequest {
+  string workbench_id = 1;
+  string bid_id = 2;
+  string version = 3;         // edm_2_1_1 | edm_4
+  string format = 4;          // xml | pdf
+  string locale = 5;          // BCP-47 for the PDF labels; "" = workspace default
+}
+message ExportResponseResponse {
+  bytes  content = 1;
+  string filename = 2;
+  string mime_type = 3;
+  Export export = 4;          // the audit row this export wrote
+}
+
+message ImportRequestRequest { string workbench_id = 1; string bid_id = 2; bytes xml = 3; }
+message ImportRequestResponse { RequestSummary request = 1; }
+
+// Export is the FACT of an export.
+message Export {
+  string id = 1;
+  string bid_id = 2;
+  string user_id = 3;
+  string version = 4;         // edm_2_1_1 | edm_4
+  string format = 5;          // xml | pdf
+  string content_sha256 = 6;
+  string declarations_confirmed_at = 7;  // RFC3339
+  string exported_at = 8;                // RFC3339
+}
+
+message ListExportsRequest { string workbench_id = 1; string bid_id = 2; }
+message ListExportsResponse { repeated Export exports = 1; }

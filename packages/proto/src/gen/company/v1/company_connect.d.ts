@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { CheckEligibilityRequest, CheckEligibilityResponse, ConfirmTenderRequirementRequest, ConfirmTenderRequirementResponse, GetCompanyDossierRequest, GetCompanyDossierResponse, ListTenderRequirementsRequest, ListTenderRequirementsResponse, PutCertificationRequest, PutCertificationResponse, PutFinancialYearRequest, PutFinancialYearResponse, PutPastContractRequest, PutPastContractResponse, PutRegistrationRequest, PutRegistrationResponse, PutSoaCategoryRequest, PutSoaCategoryResponse, RemoveCertificationRequest, RemoveCertificationResponse, RemoveFinancialYearRequest, RemoveFinancialYearResponse, RemovePastContractRequest, RemovePastContractResponse, RemoveRegistrationRequest, RemoveRegistrationResponse, RemoveSoaCategoryRequest, RemoveSoaCategoryResponse, RemoveTenderRequirementRequest, RemoveTenderRequirementResponse, UpdateCompanyIdentityRequest, UpdateCompanyIdentityResponse } from "./company_pb.js";
+import { CheckEligibilityRequest, CheckEligibilityResponse, ConfirmTenderRequirementRequest, ConfirmTenderRequirementResponse, GetCompanyDossierRequest, GetCompanyDossierResponse, ListTenderRequirementsRequest, ListTenderRequirementsResponse, PutCertificationRequest, PutCertificationResponse, PutDeclarationRequest, PutDeclarationResponse, PutFinancialYearRequest, PutFinancialYearResponse, PutNationalGroundRequest, PutNationalGroundResponse, PutPastContractRequest, PutPastContractResponse, PutRegistrationRequest, PutRegistrationResponse, PutRepresentativeRequest, PutRepresentativeResponse, PutSoaCategoryRequest, PutSoaCategoryResponse, RemoveCertificationRequest, RemoveCertificationResponse, RemoveDeclarationRequest, RemoveDeclarationResponse, RemoveFinancialYearRequest, RemoveFinancialYearResponse, RemoveNationalGroundRequest, RemoveNationalGroundResponse, RemovePastContractRequest, RemovePastContractResponse, RemoveRegistrationRequest, RemoveRegistrationResponse, RemoveRepresentativeRequest, RemoveRepresentativeResponse, RemoveSoaCategoryRequest, RemoveSoaCategoryResponse, RemoveTenderRequirementRequest, RemoveTenderRequirementResponse, UpdateCompanyIdentityRequest, UpdateCompanyIdentityResponse } from "./company_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -144,6 +144,66 @@ export declare const CompanyService: {
       readonly name: "RemoveRegistration",
       readonly I: typeof RemoveRegistrationRequest,
       readonly O: typeof RemoveRegistrationResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * ESPD/DGUE sections: who signs (Part II.B) and what the operator declares
+     * about the exclusion grounds (Part III). Same write rule as the rest of the
+     * dossier (PermManageWorkspace), plus one the server enforces on its own:
+     * a declaration is always recorded as user_stated — there is no way to
+     * import or infer one.
+     *
+     * @generated from rpc company.v1.CompanyService.PutRepresentative
+     */
+    readonly putRepresentative: {
+      readonly name: "PutRepresentative",
+      readonly I: typeof PutRepresentativeRequest,
+      readonly O: typeof PutRepresentativeResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc company.v1.CompanyService.RemoveRepresentative
+     */
+    readonly removeRepresentative: {
+      readonly name: "RemoveRepresentative",
+      readonly I: typeof RemoveRepresentativeRequest,
+      readonly O: typeof RemoveRepresentativeResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc company.v1.CompanyService.PutDeclaration
+     */
+    readonly putDeclaration: {
+      readonly name: "PutDeclaration",
+      readonly I: typeof PutDeclarationRequest,
+      readonly O: typeof PutDeclarationResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc company.v1.CompanyService.RemoveDeclaration
+     */
+    readonly removeDeclaration: {
+      readonly name: "RemoveDeclaration",
+      readonly I: typeof RemoveDeclarationRequest,
+      readonly O: typeof RemoveDeclarationResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc company.v1.CompanyService.PutNationalGround
+     */
+    readonly putNationalGround: {
+      readonly name: "PutNationalGround",
+      readonly I: typeof PutNationalGroundRequest,
+      readonly O: typeof PutNationalGroundResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc company.v1.CompanyService.RemoveNationalGround
+     */
+    readonly removeNationalGround: {
+      readonly name: "RemoveNationalGround",
+      readonly I: typeof RemoveNationalGroundRequest,
+      readonly O: typeof RemoveNationalGroundResponse,
       readonly kind: MethodKind.Unary,
     },
     /**

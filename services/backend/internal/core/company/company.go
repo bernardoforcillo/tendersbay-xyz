@@ -195,11 +195,19 @@ const (
 	FieldCountry     FieldKey = "country"
 	FieldNUTS        FieldKey = "nuts"
 	FieldFoundedYear FieldKey = "founded_year"
+	// FieldIsSME is the SME self-classification a DGUE Part II.A asks for
+	// ("L'operatore economico è una microimpresa, oppure un'impresa piccola o
+	// media?"). It is a stated fact like the others, not a value derived from
+	// headcount and turnover: Recommendation 2003/361/EC also counts linked and
+	// partner enterprises, which the dossier does not know about, so deriving
+	// it would present a guess as an answer the operator signs.
+	FieldIsSME FieldKey = "is_sme"
 )
 
 var validFieldKeys = map[FieldKey]bool{
 	FieldLegalName: true, FieldVATNumber: true, FieldFiscalCode: true, FieldLegalForm: true,
 	FieldCCIAA: true, FieldCountry: true, FieldNUTS: true, FieldFoundedYear: true,
+	FieldIsSME: true,
 }
 
 // ValidFieldKey reports whether k names an identity scalar. Exported because
@@ -225,6 +233,11 @@ type Identity struct {
 	Country     string // alpha-2, matching clientprofile.Countries' convention
 	NUTS        string // uppercase NUTS code of the legal seat
 	FoundedYear *int32
+	// IsSME is the operator's own SME classification (DGUE Part II.A). Whether
+	// anyone has ever answered is read from Attribution[FieldIsSME], not from
+	// the bool: false with no entry is "never asked", false with an entry is
+	// "asked, and the answer was no".
+	IsSME bool
 	// Attribution is per-field, keyed by the FieldKey constants above. A field
 	// with no entry has never been asserted by anyone — which is a different
 	// state from an empty string the user deliberately cleared.
@@ -649,6 +662,127 @@ func (r Registration) validate() error {
 	return r.Attribution.validate()
 }
 
+// ── Representatives (DGUE Part II.B) ────────────────────────────────────────
+
+// Representative is one natural person entitled to represent the operator for
+// the purposes of a procurement procedure — the legale rappresentante, a
+// procuratore, a direttore tecnico. It is personal data of a third party (the
+// person, not the account holder), so it is the one dossier record the PII rule
+// in .claude/rules/pii.md applies to: never in analytics, never in a log line,
+// gone with the workspace.
+type Representative struct {
+	ID              string
+	Role            string // "legale_rappresentante", "procuratore", "direttore_tecnico", free text
+	GivenName       string
+	FamilyName      string
+	BirthDate       *time.Time
+	BirthPlace      string
+	Address         string
+	Email           string
+	PowerOfAttorney bool // acts under a procura rather than by office
+	Attribution
+}
+
+const (
+	maxNameLen    = 200
+	maxAddressLen = 500
+)
+
+func (r Representative) validate() error {
+	if strings.TrimSpace(r.Role) == "" {
+		return fmt.Errorf("%w: representative role is required", ErrInvalidArgument)
+	}
+	if strings.TrimSpace(r.GivenName) == "" || strings.TrimSpace(r.FamilyName) == "" {
+		return fmt.Errorf("%w: representative given and family name are required", ErrInvalidArgument)
+	}
+	if len(r.GivenName) > maxNameLen || len(r.FamilyName) > maxNameLen || len(r.Role) > maxNameLen || len(r.BirthPlace) > maxNameLen {
+		return fmt.Errorf("%w: representative name fields must be %d characters or fewer", ErrInvalidArgument, maxNameLen)
+	}
+	if len(r.Address) > maxAddressLen {
+		return fmt.Errorf("%w: representative address must be %d characters or fewer", ErrInvalidArgument, maxAddressLen)
+	}
+	if r.Email != "" && !strings.Contains(r.Email, "@") {
+		return fmt.Errorf("%w: representative email is malformed", ErrInvalidArgument)
+	}
+	return r.Attribution.validate()
+}
+
+// ── Declarations (DGUE Part III.A–C) ────────────────────────────────────────
+
+// Declaration is the operator's answer to ONE exclusion-ground question of
+// Part III: "does this ground apply to you?". Criterion is the stable key the
+// espd domain defines (kept a plain string here so company never imports espd
+// — the dependency runs the other way).
+//
+// Answer true means the ground APPLIES — the operator has been convicted, has
+// unpaid taxes, is in insolvency proceedings — and SelfCleaning then carries
+// the measures taken under Art. 57(6) of Directive 2014/24/EU. This is the one
+// record kind where the product's provenance rule is a legal wall rather than a
+// scoring nuance: a Part III answer is a self-declaration the signatory is
+// criminally liable for, so it can only ever be user_stated or user_confirmed.
+// validate enforces that; no import, no agent inference and no derivation can
+// produce one.
+type Declaration struct {
+	ID           string
+	Criterion    string // = espd.CriterionKey
+	Answer       bool   // true: the exclusion ground applies
+	SelfCleaning string // measures taken; only meaningful when Answer
+	Attribution
+}
+
+const maxSelfCleaningLen = 4000
+
+func (d Declaration) validate() error {
+	if strings.TrimSpace(d.Criterion) == "" {
+		return fmt.Errorf("%w: declaration criterion is required", ErrInvalidArgument)
+	}
+	if !d.Answer && strings.TrimSpace(d.SelfCleaning) != "" {
+		return fmt.Errorf("%w: self-cleaning measures describe a ground that applies; answer is false", ErrInvalidArgument)
+	}
+	if len(d.SelfCleaning) > maxSelfCleaningLen {
+		return fmt.Errorf("%w: self-cleaning must be %d characters or fewer", ErrInvalidArgument, maxSelfCleaningLen)
+	}
+	if err := d.Attribution.validate(); err != nil {
+		return err
+	}
+	if !d.Attribution.Authoritative() {
+		return fmt.Errorf("%w: %s", ErrDeclarationNotAuthoritative, d.Provenance)
+	}
+	return nil
+}
+
+// NationalGround is a Part III.D answer: a purely national exclusion ground,
+// which exists per Member State and per criterion (Italy alone lists a dozen
+// under Art. 94–98 of d.lgs. 36/2023). It carries the same liability as a
+// Declaration and therefore the same provenance wall.
+type NationalGround struct {
+	ID        string
+	Country   string // alpha-2 of the Member State whose law defines the ground
+	Criterion string // national code, e.g. "it.art94.c1" — stable, ours
+	Answer    bool
+	Note      string
+	Attribution
+}
+
+func (g NationalGround) validate() error {
+	if !countryRe.MatchString(g.Country) {
+		return fmt.Errorf("%w: national ground country must be an uppercase ISO-3166-1 alpha-2 code", ErrInvalidArgument)
+	}
+	if strings.TrimSpace(g.Criterion) == "" {
+		return fmt.Errorf("%w: national ground criterion is required", ErrInvalidArgument)
+	}
+	if len(g.Note) > maxSelfCleaningLen {
+		return fmt.Errorf("%w: note must be %d characters or fewer", ErrInvalidArgument, maxSelfCleaningLen)
+	}
+	if err := g.Attribution.validate(); err != nil {
+		return err
+	}
+	if !g.Attribution.Authoritative() {
+		return fmt.Errorf("%w: %s", ErrDeclarationNotAuthoritative, g.Provenance)
+	}
+	return nil
+}
+
 // ── The dossier ─────────────────────────────────────────────────────────────
 
 // Dossier is the whole company, one per workspace. There is deliberately no
@@ -664,7 +798,25 @@ type Dossier struct {
 	FinancialYears []FinancialYear // newest first
 	PastContracts  []PastContract
 	Registrations  []Registration
-	UpdatedAt      time.Time
+	// The ESPD/DGUE sections the eligibility engine never reads: who signs
+	// (Part II.B) and what the operator declares about exclusion grounds (Part
+	// III). They live on the dossier because they are facts about the company
+	// with the same provenance envelope, not because Evaluate uses them.
+	Representatives []Representative
+	Declarations    []Declaration
+	NationalGrounds []NationalGround
+	UpdatedAt       time.Time
+}
+
+// DeclarationFor returns the operator's answer for one Part III criterion, and
+// false when the question has never been answered.
+func (d Dossier) DeclarationFor(criterion string) (Declaration, bool) {
+	for _, dec := range d.Declarations {
+		if dec.Criterion == criterion {
+			return dec, true
+		}
+	}
+	return Declaration{}, false
 }
 
 // Empty reports whether nothing has ever been asserted about this company. It
@@ -674,7 +826,8 @@ type Dossier struct {
 func (d Dossier) Empty() bool {
 	return d.Identity.LegalName == "" && d.Identity.VATNumber == "" && d.Identity.FiscalCode == "" &&
 		len(d.SOA) == 0 && len(d.Certifications) == 0 && len(d.FinancialYears) == 0 &&
-		len(d.PastContracts) == 0 && len(d.Registrations) == 0
+		len(d.PastContracts) == 0 && len(d.Registrations) == 0 &&
+		len(d.Representatives) == 0 && len(d.Declarations) == 0 && len(d.NationalGrounds) == 0
 }
 
 // ── Facts (the just-in-time capture unit) ───────────────────────────────────
@@ -753,6 +906,10 @@ var (
 	ErrUnknownFieldKey    = errors.New("company: unknown identity field key")
 	ErrInvalidSOACategory = errors.New("company: SOA category must be OG1-OG13 or OS1-OS35")
 	ErrInvalidClassifica  = errors.New("company: classifica must be I-VIII (incl. III-bis, IV-bis)")
+	// ErrDeclarationNotAuthoritative wraps ErrInvalidArgument: a Part III
+	// declaration whose provenance is agent_inferred or imported is not a
+	// declaration at all, and the write is refused rather than downgraded.
+	ErrDeclarationNotAuthoritative = fmt.Errorf("%w: a Part III declaration must be stated or confirmed by a human", ErrInvalidArgument)
 )
 
 // ── Shared normalisation helpers ────────────────────────────────────────────

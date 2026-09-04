@@ -148,10 +148,16 @@ type CompanyIdentity struct {
 	FoundedYearSet bool   `protobuf:"varint,10,opt,name=founded_year_set,json=foundedYearSet,proto3" json:"founded_year_set,omitempty"`
 	// attribution is per-field, keyed by the identity field name: legal_name |
 	// vat_number | fiscal_code | legal_form | cciaa | country | nuts |
-	// founded_year. A field with NO entry has never been asserted by anyone,
-	// which is a different state from an empty string a human deliberately
-	// cleared — so a missing key must not be rendered as "unknown provenance".
-	Attribution   map[string]*Attribution `protobuf:"bytes,11,rep,name=attribution,proto3" json:"attribution,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// founded_year | is_sme. A field with NO entry has never been asserted by
+	// anyone, which is a different state from an empty string a human
+	// deliberately cleared — so a missing key must not be rendered as "unknown
+	// provenance".
+	Attribution map[string]*Attribution `protobuf:"bytes,11,rep,name=attribution,proto3" json:"attribution,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	// is_sme is the operator's SME self-classification (DGUE Part II.A). It is
+	// asked, never derived from headcount and turnover: the EU definition also
+	// counts linked and partner enterprises the dossier knows nothing about.
+	// Whether it was ever answered is attribution["is_sme"], not the bool.
+	IsSme         bool `protobuf:"varint,12,opt,name=is_sme,json=isSme,proto3" json:"is_sme,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -263,6 +269,297 @@ func (x *CompanyIdentity) GetAttribution() map[string]*Attribution {
 	return nil
 }
 
+func (x *CompanyIdentity) GetIsSme() bool {
+	if x != nil {
+		return x.IsSme
+	}
+	return false
+}
+
+// Representative is one natural person entitled to represent the operator
+// (DGUE Part II.B). Personal data of a third party: never enters analytics.
+type Representative struct {
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Id              string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Role            string                 `protobuf:"bytes,2,opt,name=role,proto3" json:"role,omitempty"` // legale_rappresentante | procuratore | direttore_tecnico | free text
+	GivenName       string                 `protobuf:"bytes,3,opt,name=given_name,json=givenName,proto3" json:"given_name,omitempty"`
+	FamilyName      string                 `protobuf:"bytes,4,opt,name=family_name,json=familyName,proto3" json:"family_name,omitempty"`
+	BirthDate       string                 `protobuf:"bytes,5,opt,name=birth_date,json=birthDate,proto3" json:"birth_date,omitempty"` // RFC3339, "" = unstated
+	BirthPlace      string                 `protobuf:"bytes,6,opt,name=birth_place,json=birthPlace,proto3" json:"birth_place,omitempty"`
+	Address         string                 `protobuf:"bytes,7,opt,name=address,proto3" json:"address,omitempty"`
+	Email           string                 `protobuf:"bytes,8,opt,name=email,proto3" json:"email,omitempty"`
+	PowerOfAttorney bool                   `protobuf:"varint,9,opt,name=power_of_attorney,json=powerOfAttorney,proto3" json:"power_of_attorney,omitempty"` // acts under a procura rather than by office
+	Attribution     *Attribution           `protobuf:"bytes,10,opt,name=attribution,proto3" json:"attribution,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
+}
+
+func (x *Representative) Reset() {
+	*x = Representative{}
+	mi := &file_company_v1_company_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Representative) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Representative) ProtoMessage() {}
+
+func (x *Representative) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Representative.ProtoReflect.Descriptor instead.
+func (*Representative) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *Representative) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Representative) GetRole() string {
+	if x != nil {
+		return x.Role
+	}
+	return ""
+}
+
+func (x *Representative) GetGivenName() string {
+	if x != nil {
+		return x.GivenName
+	}
+	return ""
+}
+
+func (x *Representative) GetFamilyName() string {
+	if x != nil {
+		return x.FamilyName
+	}
+	return ""
+}
+
+func (x *Representative) GetBirthDate() string {
+	if x != nil {
+		return x.BirthDate
+	}
+	return ""
+}
+
+func (x *Representative) GetBirthPlace() string {
+	if x != nil {
+		return x.BirthPlace
+	}
+	return ""
+}
+
+func (x *Representative) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *Representative) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
+}
+
+func (x *Representative) GetPowerOfAttorney() bool {
+	if x != nil {
+		return x.PowerOfAttorney
+	}
+	return false
+}
+
+func (x *Representative) GetAttribution() *Attribution {
+	if x != nil {
+		return x.Attribution
+	}
+	return nil
+}
+
+// Declaration is the operator's answer to ONE Part III.A–C exclusion-ground
+// question. answer=true means the ground APPLIES; self_cleaning then carries
+// the Art. 57(6) measures. The server records it as user_stated whatever the
+// request says — a Part III answer cannot be imported or inferred.
+type Declaration struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Criterion     string                 `protobuf:"bytes,2,opt,name=criterion,proto3" json:"criterion,omitempty"` // stable key, e.g. "iii.a.fraud" — see espd.v1
+	Answer        bool                   `protobuf:"varint,3,opt,name=answer,proto3" json:"answer,omitempty"`
+	SelfCleaning  string                 `protobuf:"bytes,4,opt,name=self_cleaning,json=selfCleaning,proto3" json:"self_cleaning,omitempty"`
+	Attribution   *Attribution           `protobuf:"bytes,5,opt,name=attribution,proto3" json:"attribution,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Declaration) Reset() {
+	*x = Declaration{}
+	mi := &file_company_v1_company_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Declaration) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Declaration) ProtoMessage() {}
+
+func (x *Declaration) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Declaration.ProtoReflect.Descriptor instead.
+func (*Declaration) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Declaration) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Declaration) GetCriterion() string {
+	if x != nil {
+		return x.Criterion
+	}
+	return ""
+}
+
+func (x *Declaration) GetAnswer() bool {
+	if x != nil {
+		return x.Answer
+	}
+	return false
+}
+
+func (x *Declaration) GetSelfCleaning() string {
+	if x != nil {
+		return x.SelfCleaning
+	}
+	return ""
+}
+
+func (x *Declaration) GetAttribution() *Attribution {
+	if x != nil {
+		return x.Attribution
+	}
+	return nil
+}
+
+// NationalGround is a Part III.D answer: a purely national exclusion ground,
+// per Member State and per criterion.
+type NationalGround struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Country       string                 `protobuf:"bytes,2,opt,name=country,proto3" json:"country,omitempty"`     // alpha-2
+	Criterion     string                 `protobuf:"bytes,3,opt,name=criterion,proto3" json:"criterion,omitempty"` // national code, e.g. "art94.c1"
+	Answer        bool                   `protobuf:"varint,4,opt,name=answer,proto3" json:"answer,omitempty"`
+	Note          string                 `protobuf:"bytes,5,opt,name=note,proto3" json:"note,omitempty"`
+	Attribution   *Attribution           `protobuf:"bytes,6,opt,name=attribution,proto3" json:"attribution,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *NationalGround) Reset() {
+	*x = NationalGround{}
+	mi := &file_company_v1_company_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *NationalGround) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NationalGround) ProtoMessage() {}
+
+func (x *NationalGround) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NationalGround.ProtoReflect.Descriptor instead.
+func (*NationalGround) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *NationalGround) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *NationalGround) GetCountry() string {
+	if x != nil {
+		return x.Country
+	}
+	return ""
+}
+
+func (x *NationalGround) GetCriterion() string {
+	if x != nil {
+		return x.Criterion
+	}
+	return ""
+}
+
+func (x *NationalGround) GetAnswer() bool {
+	if x != nil {
+		return x.Answer
+	}
+	return false
+}
+
+func (x *NationalGround) GetNote() string {
+	if x != nil {
+		return x.Note
+	}
+	return ""
+}
+
+func (x *NationalGround) GetAttribution() *Attribution {
+	if x != nil {
+		return x.Attribution
+	}
+	return nil
+}
+
 // SoaCategory is one attestazione SOA line.
 type SoaCategory struct {
 	state      protoimpl.MessageState `protogen:"open.v1"`
@@ -283,7 +580,7 @@ type SoaCategory struct {
 
 func (x *SoaCategory) Reset() {
 	*x = SoaCategory{}
-	mi := &file_company_v1_company_proto_msgTypes[2]
+	mi := &file_company_v1_company_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -295,7 +592,7 @@ func (x *SoaCategory) String() string {
 func (*SoaCategory) ProtoMessage() {}
 
 func (x *SoaCategory) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[2]
+	mi := &file_company_v1_company_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -308,7 +605,7 @@ func (x *SoaCategory) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SoaCategory.ProtoReflect.Descriptor instead.
 func (*SoaCategory) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{2}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *SoaCategory) GetId() string {
@@ -377,7 +674,7 @@ type Certification struct {
 
 func (x *Certification) Reset() {
 	*x = Certification{}
-	mi := &file_company_v1_company_proto_msgTypes[3]
+	mi := &file_company_v1_company_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -389,7 +686,7 @@ func (x *Certification) String() string {
 func (*Certification) ProtoMessage() {}
 
 func (x *Certification) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[3]
+	mi := &file_company_v1_company_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -402,7 +699,7 @@ func (x *Certification) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Certification.ProtoReflect.Descriptor instead.
 func (*Certification) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{3}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Certification) GetId() string {
@@ -481,7 +778,7 @@ type FinancialYear struct {
 
 func (x *FinancialYear) Reset() {
 	*x = FinancialYear{}
-	mi := &file_company_v1_company_proto_msgTypes[4]
+	mi := &file_company_v1_company_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -493,7 +790,7 @@ func (x *FinancialYear) String() string {
 func (*FinancialYear) ProtoMessage() {}
 
 func (x *FinancialYear) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[4]
+	mi := &file_company_v1_company_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -506,7 +803,7 @@ func (x *FinancialYear) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FinancialYear.ProtoReflect.Descriptor instead.
 func (*FinancialYear) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{4}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *FinancialYear) GetYear() int32 {
@@ -596,7 +893,7 @@ type PastContract struct {
 
 func (x *PastContract) Reset() {
 	*x = PastContract{}
-	mi := &file_company_v1_company_proto_msgTypes[5]
+	mi := &file_company_v1_company_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -608,7 +905,7 @@ func (x *PastContract) String() string {
 func (*PastContract) ProtoMessage() {}
 
 func (x *PastContract) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[5]
+	mi := &file_company_v1_company_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -621,7 +918,7 @@ func (x *PastContract) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PastContract.ProtoReflect.Descriptor instead.
 func (*PastContract) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{5}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *PastContract) GetId() string {
@@ -732,7 +1029,7 @@ type Registration struct {
 
 func (x *Registration) Reset() {
 	*x = Registration{}
-	mi := &file_company_v1_company_proto_msgTypes[6]
+	mi := &file_company_v1_company_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -744,7 +1041,7 @@ func (x *Registration) String() string {
 func (*Registration) ProtoMessage() {}
 
 func (x *Registration) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[6]
+	mi := &file_company_v1_company_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -757,7 +1054,7 @@ func (x *Registration) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Registration.ProtoReflect.Descriptor instead.
 func (*Registration) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{6}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *Registration) GetId() string {
@@ -820,22 +1117,25 @@ func (x *Registration) GetAttribution() *Attribution {
 // no company id: the workspace IS the company, exactly as it IS the client for
 // the client profile.
 type CompanyDossier struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	WorkspaceId    string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
-	Identity       *CompanyIdentity       `protobuf:"bytes,2,opt,name=identity,proto3" json:"identity,omitempty"`
-	Soa            []*SoaCategory         `protobuf:"bytes,3,rep,name=soa,proto3" json:"soa,omitempty"`
-	Certifications []*Certification       `protobuf:"bytes,4,rep,name=certifications,proto3" json:"certifications,omitempty"`
-	FinancialYears []*FinancialYear       `protobuf:"bytes,5,rep,name=financial_years,json=financialYears,proto3" json:"financial_years,omitempty"` // newest first
-	PastContracts  []*PastContract        `protobuf:"bytes,6,rep,name=past_contracts,json=pastContracts,proto3" json:"past_contracts,omitempty"`
-	Registrations  []*Registration        `protobuf:"bytes,7,rep,name=registrations,proto3" json:"registrations,omitempty"`
-	UpdatedAt      string                 `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"` // RFC3339
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId     string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	Identity        *CompanyIdentity       `protobuf:"bytes,2,opt,name=identity,proto3" json:"identity,omitempty"`
+	Soa             []*SoaCategory         `protobuf:"bytes,3,rep,name=soa,proto3" json:"soa,omitempty"`
+	Certifications  []*Certification       `protobuf:"bytes,4,rep,name=certifications,proto3" json:"certifications,omitempty"`
+	FinancialYears  []*FinancialYear       `protobuf:"bytes,5,rep,name=financial_years,json=financialYears,proto3" json:"financial_years,omitempty"` // newest first
+	PastContracts   []*PastContract        `protobuf:"bytes,6,rep,name=past_contracts,json=pastContracts,proto3" json:"past_contracts,omitempty"`
+	Registrations   []*Registration        `protobuf:"bytes,7,rep,name=registrations,proto3" json:"registrations,omitempty"`
+	UpdatedAt       string                 `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"` // RFC3339
+	Representatives []*Representative      `protobuf:"bytes,9,rep,name=representatives,proto3" json:"representatives,omitempty"`
+	Declarations    []*Declaration         `protobuf:"bytes,10,rep,name=declarations,proto3" json:"declarations,omitempty"`
+	NationalGrounds []*NationalGround      `protobuf:"bytes,11,rep,name=national_grounds,json=nationalGrounds,proto3" json:"national_grounds,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *CompanyDossier) Reset() {
 	*x = CompanyDossier{}
-	mi := &file_company_v1_company_proto_msgTypes[7]
+	mi := &file_company_v1_company_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -847,7 +1147,7 @@ func (x *CompanyDossier) String() string {
 func (*CompanyDossier) ProtoMessage() {}
 
 func (x *CompanyDossier) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[7]
+	mi := &file_company_v1_company_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -860,7 +1160,7 @@ func (x *CompanyDossier) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CompanyDossier.ProtoReflect.Descriptor instead.
 func (*CompanyDossier) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{7}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *CompanyDossier) GetWorkspaceId() string {
@@ -919,6 +1219,27 @@ func (x *CompanyDossier) GetUpdatedAt() string {
 	return ""
 }
 
+func (x *CompanyDossier) GetRepresentatives() []*Representative {
+	if x != nil {
+		return x.Representatives
+	}
+	return nil
+}
+
+func (x *CompanyDossier) GetDeclarations() []*Declaration {
+	if x != nil {
+		return x.Declarations
+	}
+	return nil
+}
+
+func (x *CompanyDossier) GetNationalGrounds() []*NationalGround {
+	if x != nil {
+		return x.NationalGrounds
+	}
+	return nil
+}
+
 // TenderRequirement is one participation requirement captured for one tender by
 // one workspace. It is workspace-scoped and not corpus-shared: one workspace's
 // mis-extraction must not decide another workspace's go/no-go.
@@ -951,7 +1272,7 @@ type TenderRequirement struct {
 
 func (x *TenderRequirement) Reset() {
 	*x = TenderRequirement{}
-	mi := &file_company_v1_company_proto_msgTypes[8]
+	mi := &file_company_v1_company_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -963,7 +1284,7 @@ func (x *TenderRequirement) String() string {
 func (*TenderRequirement) ProtoMessage() {}
 
 func (x *TenderRequirement) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[8]
+	mi := &file_company_v1_company_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -976,7 +1297,7 @@ func (x *TenderRequirement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TenderRequirement.ProtoReflect.Descriptor instead.
 func (*TenderRequirement) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{8}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *TenderRequirement) GetId() string {
@@ -1091,7 +1412,7 @@ type EligibilityGap struct {
 
 func (x *EligibilityGap) Reset() {
 	*x = EligibilityGap{}
-	mi := &file_company_v1_company_proto_msgTypes[9]
+	mi := &file_company_v1_company_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1103,7 +1424,7 @@ func (x *EligibilityGap) String() string {
 func (*EligibilityGap) ProtoMessage() {}
 
 func (x *EligibilityGap) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[9]
+	mi := &file_company_v1_company_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1116,7 +1437,7 @@ func (x *EligibilityGap) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EligibilityGap.ProtoReflect.Descriptor instead.
 func (*EligibilityGap) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{9}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *EligibilityGap) GetRequirement() *TenderRequirement {
@@ -1205,7 +1526,7 @@ type EligibilityAssessment struct {
 
 func (x *EligibilityAssessment) Reset() {
 	*x = EligibilityAssessment{}
-	mi := &file_company_v1_company_proto_msgTypes[10]
+	mi := &file_company_v1_company_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1217,7 +1538,7 @@ func (x *EligibilityAssessment) String() string {
 func (*EligibilityAssessment) ProtoMessage() {}
 
 func (x *EligibilityAssessment) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[10]
+	mi := &file_company_v1_company_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1230,7 +1551,7 @@ func (x *EligibilityAssessment) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EligibilityAssessment.ProtoReflect.Descriptor instead.
 func (*EligibilityAssessment) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{10}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *EligibilityAssessment) GetTenderId() string {
@@ -1326,7 +1647,7 @@ type GetCompanyDossierRequest struct {
 
 func (x *GetCompanyDossierRequest) Reset() {
 	*x = GetCompanyDossierRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[11]
+	mi := &file_company_v1_company_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1338,7 +1659,7 @@ func (x *GetCompanyDossierRequest) String() string {
 func (*GetCompanyDossierRequest) ProtoMessage() {}
 
 func (x *GetCompanyDossierRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[11]
+	mi := &file_company_v1_company_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1351,7 +1672,7 @@ func (x *GetCompanyDossierRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCompanyDossierRequest.ProtoReflect.Descriptor instead.
 func (*GetCompanyDossierRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{11}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetCompanyDossierRequest) GetWorkspaceId() string {
@@ -1374,7 +1695,7 @@ type GetCompanyDossierResponse struct {
 
 func (x *GetCompanyDossierResponse) Reset() {
 	*x = GetCompanyDossierResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[12]
+	mi := &file_company_v1_company_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1386,7 +1707,7 @@ func (x *GetCompanyDossierResponse) String() string {
 func (*GetCompanyDossierResponse) ProtoMessage() {}
 
 func (x *GetCompanyDossierResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[12]
+	mi := &file_company_v1_company_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1399,7 +1720,7 @@ func (x *GetCompanyDossierResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetCompanyDossierResponse.ProtoReflect.Descriptor instead.
 func (*GetCompanyDossierResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{12}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetCompanyDossierResponse) GetDossier() *CompanyDossier {
@@ -1433,7 +1754,7 @@ type UpdateCompanyIdentityRequest struct {
 
 func (x *UpdateCompanyIdentityRequest) Reset() {
 	*x = UpdateCompanyIdentityRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[13]
+	mi := &file_company_v1_company_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1445,7 +1766,7 @@ func (x *UpdateCompanyIdentityRequest) String() string {
 func (*UpdateCompanyIdentityRequest) ProtoMessage() {}
 
 func (x *UpdateCompanyIdentityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[13]
+	mi := &file_company_v1_company_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1458,7 +1779,7 @@ func (x *UpdateCompanyIdentityRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateCompanyIdentityRequest.ProtoReflect.Descriptor instead.
 func (*UpdateCompanyIdentityRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{13}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *UpdateCompanyIdentityRequest) GetWorkspaceId() string {
@@ -1491,7 +1812,7 @@ type UpdateCompanyIdentityResponse struct {
 
 func (x *UpdateCompanyIdentityResponse) Reset() {
 	*x = UpdateCompanyIdentityResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[14]
+	mi := &file_company_v1_company_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1503,7 +1824,7 @@ func (x *UpdateCompanyIdentityResponse) String() string {
 func (*UpdateCompanyIdentityResponse) ProtoMessage() {}
 
 func (x *UpdateCompanyIdentityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[14]
+	mi := &file_company_v1_company_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1516,7 +1837,7 @@ func (x *UpdateCompanyIdentityResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateCompanyIdentityResponse.ProtoReflect.Descriptor instead.
 func (*UpdateCompanyIdentityResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{14}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *UpdateCompanyIdentityResponse) GetIdentity() *CompanyIdentity {
@@ -1536,7 +1857,7 @@ type PutSoaCategoryRequest struct {
 
 func (x *PutSoaCategoryRequest) Reset() {
 	*x = PutSoaCategoryRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[15]
+	mi := &file_company_v1_company_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1548,7 +1869,7 @@ func (x *PutSoaCategoryRequest) String() string {
 func (*PutSoaCategoryRequest) ProtoMessage() {}
 
 func (x *PutSoaCategoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[15]
+	mi := &file_company_v1_company_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1561,7 +1882,7 @@ func (x *PutSoaCategoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutSoaCategoryRequest.ProtoReflect.Descriptor instead.
 func (*PutSoaCategoryRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{15}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *PutSoaCategoryRequest) GetWorkspaceId() string {
@@ -1587,7 +1908,7 @@ type PutSoaCategoryResponse struct {
 
 func (x *PutSoaCategoryResponse) Reset() {
 	*x = PutSoaCategoryResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[16]
+	mi := &file_company_v1_company_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1599,7 +1920,7 @@ func (x *PutSoaCategoryResponse) String() string {
 func (*PutSoaCategoryResponse) ProtoMessage() {}
 
 func (x *PutSoaCategoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[16]
+	mi := &file_company_v1_company_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1612,7 +1933,7 @@ func (x *PutSoaCategoryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutSoaCategoryResponse.ProtoReflect.Descriptor instead.
 func (*PutSoaCategoryResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{16}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *PutSoaCategoryResponse) GetSoa() *SoaCategory {
@@ -1632,7 +1953,7 @@ type RemoveSoaCategoryRequest struct {
 
 func (x *RemoveSoaCategoryRequest) Reset() {
 	*x = RemoveSoaCategoryRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[17]
+	mi := &file_company_v1_company_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1644,7 +1965,7 @@ func (x *RemoveSoaCategoryRequest) String() string {
 func (*RemoveSoaCategoryRequest) ProtoMessage() {}
 
 func (x *RemoveSoaCategoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[17]
+	mi := &file_company_v1_company_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1657,7 +1978,7 @@ func (x *RemoveSoaCategoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveSoaCategoryRequest.ProtoReflect.Descriptor instead.
 func (*RemoveSoaCategoryRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{17}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *RemoveSoaCategoryRequest) GetWorkspaceId() string {
@@ -1682,7 +2003,7 @@ type RemoveSoaCategoryResponse struct {
 
 func (x *RemoveSoaCategoryResponse) Reset() {
 	*x = RemoveSoaCategoryResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[18]
+	mi := &file_company_v1_company_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1694,7 +2015,7 @@ func (x *RemoveSoaCategoryResponse) String() string {
 func (*RemoveSoaCategoryResponse) ProtoMessage() {}
 
 func (x *RemoveSoaCategoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[18]
+	mi := &file_company_v1_company_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1707,7 +2028,7 @@ func (x *RemoveSoaCategoryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveSoaCategoryResponse.ProtoReflect.Descriptor instead.
 func (*RemoveSoaCategoryResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{18}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{21}
 }
 
 type PutCertificationRequest struct {
@@ -1720,7 +2041,7 @@ type PutCertificationRequest struct {
 
 func (x *PutCertificationRequest) Reset() {
 	*x = PutCertificationRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[19]
+	mi := &file_company_v1_company_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1732,7 +2053,7 @@ func (x *PutCertificationRequest) String() string {
 func (*PutCertificationRequest) ProtoMessage() {}
 
 func (x *PutCertificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[19]
+	mi := &file_company_v1_company_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1745,7 +2066,7 @@ func (x *PutCertificationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutCertificationRequest.ProtoReflect.Descriptor instead.
 func (*PutCertificationRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{19}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *PutCertificationRequest) GetWorkspaceId() string {
@@ -1771,7 +2092,7 @@ type PutCertificationResponse struct {
 
 func (x *PutCertificationResponse) Reset() {
 	*x = PutCertificationResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[20]
+	mi := &file_company_v1_company_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1783,7 +2104,7 @@ func (x *PutCertificationResponse) String() string {
 func (*PutCertificationResponse) ProtoMessage() {}
 
 func (x *PutCertificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[20]
+	mi := &file_company_v1_company_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1796,7 +2117,7 @@ func (x *PutCertificationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutCertificationResponse.ProtoReflect.Descriptor instead.
 func (*PutCertificationResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{20}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *PutCertificationResponse) GetCertification() *Certification {
@@ -1816,7 +2137,7 @@ type RemoveCertificationRequest struct {
 
 func (x *RemoveCertificationRequest) Reset() {
 	*x = RemoveCertificationRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[21]
+	mi := &file_company_v1_company_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1828,7 +2149,7 @@ func (x *RemoveCertificationRequest) String() string {
 func (*RemoveCertificationRequest) ProtoMessage() {}
 
 func (x *RemoveCertificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[21]
+	mi := &file_company_v1_company_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1841,7 +2162,7 @@ func (x *RemoveCertificationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveCertificationRequest.ProtoReflect.Descriptor instead.
 func (*RemoveCertificationRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{21}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *RemoveCertificationRequest) GetWorkspaceId() string {
@@ -1866,7 +2187,7 @@ type RemoveCertificationResponse struct {
 
 func (x *RemoveCertificationResponse) Reset() {
 	*x = RemoveCertificationResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[22]
+	mi := &file_company_v1_company_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1878,7 +2199,7 @@ func (x *RemoveCertificationResponse) String() string {
 func (*RemoveCertificationResponse) ProtoMessage() {}
 
 func (x *RemoveCertificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[22]
+	mi := &file_company_v1_company_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1891,7 +2212,7 @@ func (x *RemoveCertificationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveCertificationResponse.ProtoReflect.Descriptor instead.
 func (*RemoveCertificationResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{22}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{25}
 }
 
 type PutFinancialYearRequest struct {
@@ -1904,7 +2225,7 @@ type PutFinancialYearRequest struct {
 
 func (x *PutFinancialYearRequest) Reset() {
 	*x = PutFinancialYearRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[23]
+	mi := &file_company_v1_company_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1916,7 +2237,7 @@ func (x *PutFinancialYearRequest) String() string {
 func (*PutFinancialYearRequest) ProtoMessage() {}
 
 func (x *PutFinancialYearRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[23]
+	mi := &file_company_v1_company_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1929,7 +2250,7 @@ func (x *PutFinancialYearRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutFinancialYearRequest.ProtoReflect.Descriptor instead.
 func (*PutFinancialYearRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{23}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *PutFinancialYearRequest) GetWorkspaceId() string {
@@ -1955,7 +2276,7 @@ type PutFinancialYearResponse struct {
 
 func (x *PutFinancialYearResponse) Reset() {
 	*x = PutFinancialYearResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[24]
+	mi := &file_company_v1_company_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1967,7 +2288,7 @@ func (x *PutFinancialYearResponse) String() string {
 func (*PutFinancialYearResponse) ProtoMessage() {}
 
 func (x *PutFinancialYearResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[24]
+	mi := &file_company_v1_company_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1980,7 +2301,7 @@ func (x *PutFinancialYearResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutFinancialYearResponse.ProtoReflect.Descriptor instead.
 func (*PutFinancialYearResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{24}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *PutFinancialYearResponse) GetFinancialYear() *FinancialYear {
@@ -2002,7 +2323,7 @@ type RemoveFinancialYearRequest struct {
 
 func (x *RemoveFinancialYearRequest) Reset() {
 	*x = RemoveFinancialYearRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[25]
+	mi := &file_company_v1_company_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2014,7 +2335,7 @@ func (x *RemoveFinancialYearRequest) String() string {
 func (*RemoveFinancialYearRequest) ProtoMessage() {}
 
 func (x *RemoveFinancialYearRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[25]
+	mi := &file_company_v1_company_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2027,7 +2348,7 @@ func (x *RemoveFinancialYearRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveFinancialYearRequest.ProtoReflect.Descriptor instead.
 func (*RemoveFinancialYearRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{25}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *RemoveFinancialYearRequest) GetWorkspaceId() string {
@@ -2052,7 +2373,7 @@ type RemoveFinancialYearResponse struct {
 
 func (x *RemoveFinancialYearResponse) Reset() {
 	*x = RemoveFinancialYearResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[26]
+	mi := &file_company_v1_company_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2064,7 +2385,7 @@ func (x *RemoveFinancialYearResponse) String() string {
 func (*RemoveFinancialYearResponse) ProtoMessage() {}
 
 func (x *RemoveFinancialYearResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[26]
+	mi := &file_company_v1_company_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2077,7 +2398,7 @@ func (x *RemoveFinancialYearResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveFinancialYearResponse.ProtoReflect.Descriptor instead.
 func (*RemoveFinancialYearResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{26}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{29}
 }
 
 type PutPastContractRequest struct {
@@ -2090,7 +2411,7 @@ type PutPastContractRequest struct {
 
 func (x *PutPastContractRequest) Reset() {
 	*x = PutPastContractRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[27]
+	mi := &file_company_v1_company_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2102,7 +2423,7 @@ func (x *PutPastContractRequest) String() string {
 func (*PutPastContractRequest) ProtoMessage() {}
 
 func (x *PutPastContractRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[27]
+	mi := &file_company_v1_company_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2115,7 +2436,7 @@ func (x *PutPastContractRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutPastContractRequest.ProtoReflect.Descriptor instead.
 func (*PutPastContractRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{27}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *PutPastContractRequest) GetWorkspaceId() string {
@@ -2141,7 +2462,7 @@ type PutPastContractResponse struct {
 
 func (x *PutPastContractResponse) Reset() {
 	*x = PutPastContractResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[28]
+	mi := &file_company_v1_company_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2153,7 +2474,7 @@ func (x *PutPastContractResponse) String() string {
 func (*PutPastContractResponse) ProtoMessage() {}
 
 func (x *PutPastContractResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[28]
+	mi := &file_company_v1_company_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2166,7 +2487,7 @@ func (x *PutPastContractResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutPastContractResponse.ProtoReflect.Descriptor instead.
 func (*PutPastContractResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{28}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *PutPastContractResponse) GetPastContract() *PastContract {
@@ -2186,7 +2507,7 @@ type RemovePastContractRequest struct {
 
 func (x *RemovePastContractRequest) Reset() {
 	*x = RemovePastContractRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[29]
+	mi := &file_company_v1_company_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2198,7 +2519,7 @@ func (x *RemovePastContractRequest) String() string {
 func (*RemovePastContractRequest) ProtoMessage() {}
 
 func (x *RemovePastContractRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[29]
+	mi := &file_company_v1_company_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2211,7 +2532,7 @@ func (x *RemovePastContractRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemovePastContractRequest.ProtoReflect.Descriptor instead.
 func (*RemovePastContractRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{29}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *RemovePastContractRequest) GetWorkspaceId() string {
@@ -2236,7 +2557,7 @@ type RemovePastContractResponse struct {
 
 func (x *RemovePastContractResponse) Reset() {
 	*x = RemovePastContractResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[30]
+	mi := &file_company_v1_company_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2248,7 +2569,7 @@ func (x *RemovePastContractResponse) String() string {
 func (*RemovePastContractResponse) ProtoMessage() {}
 
 func (x *RemovePastContractResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[30]
+	mi := &file_company_v1_company_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2261,7 +2582,7 @@ func (x *RemovePastContractResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemovePastContractResponse.ProtoReflect.Descriptor instead.
 func (*RemovePastContractResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{30}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{33}
 }
 
 type PutRegistrationRequest struct {
@@ -2274,7 +2595,7 @@ type PutRegistrationRequest struct {
 
 func (x *PutRegistrationRequest) Reset() {
 	*x = PutRegistrationRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[31]
+	mi := &file_company_v1_company_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2286,7 +2607,7 @@ func (x *PutRegistrationRequest) String() string {
 func (*PutRegistrationRequest) ProtoMessage() {}
 
 func (x *PutRegistrationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[31]
+	mi := &file_company_v1_company_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2299,7 +2620,7 @@ func (x *PutRegistrationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutRegistrationRequest.ProtoReflect.Descriptor instead.
 func (*PutRegistrationRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{31}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *PutRegistrationRequest) GetWorkspaceId() string {
@@ -2325,7 +2646,7 @@ type PutRegistrationResponse struct {
 
 func (x *PutRegistrationResponse) Reset() {
 	*x = PutRegistrationResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[32]
+	mi := &file_company_v1_company_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2337,7 +2658,7 @@ func (x *PutRegistrationResponse) String() string {
 func (*PutRegistrationResponse) ProtoMessage() {}
 
 func (x *PutRegistrationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[32]
+	mi := &file_company_v1_company_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2350,7 +2671,7 @@ func (x *PutRegistrationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PutRegistrationResponse.ProtoReflect.Descriptor instead.
 func (*PutRegistrationResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{32}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *PutRegistrationResponse) GetRegistration() *Registration {
@@ -2370,7 +2691,7 @@ type RemoveRegistrationRequest struct {
 
 func (x *RemoveRegistrationRequest) Reset() {
 	*x = RemoveRegistrationRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[33]
+	mi := &file_company_v1_company_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2382,7 +2703,7 @@ func (x *RemoveRegistrationRequest) String() string {
 func (*RemoveRegistrationRequest) ProtoMessage() {}
 
 func (x *RemoveRegistrationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[33]
+	mi := &file_company_v1_company_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2395,7 +2716,7 @@ func (x *RemoveRegistrationRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveRegistrationRequest.ProtoReflect.Descriptor instead.
 func (*RemoveRegistrationRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{33}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *RemoveRegistrationRequest) GetWorkspaceId() string {
@@ -2420,7 +2741,7 @@ type RemoveRegistrationResponse struct {
 
 func (x *RemoveRegistrationResponse) Reset() {
 	*x = RemoveRegistrationResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[34]
+	mi := &file_company_v1_company_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2432,7 +2753,7 @@ func (x *RemoveRegistrationResponse) String() string {
 func (*RemoveRegistrationResponse) ProtoMessage() {}
 
 func (x *RemoveRegistrationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[34]
+	mi := &file_company_v1_company_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2445,7 +2766,559 @@ func (x *RemoveRegistrationResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveRegistrationResponse.ProtoReflect.Descriptor instead.
 func (*RemoveRegistrationResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{34}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{37}
+}
+
+type PutRepresentativeRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId    string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	Representative *Representative        `protobuf:"bytes,2,opt,name=representative,proto3" json:"representative,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *PutRepresentativeRequest) Reset() {
+	*x = PutRepresentativeRequest{}
+	mi := &file_company_v1_company_proto_msgTypes[38]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutRepresentativeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutRepresentativeRequest) ProtoMessage() {}
+
+func (x *PutRepresentativeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[38]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutRepresentativeRequest.ProtoReflect.Descriptor instead.
+func (*PutRepresentativeRequest) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{38}
+}
+
+func (x *PutRepresentativeRequest) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+func (x *PutRepresentativeRequest) GetRepresentative() *Representative {
+	if x != nil {
+		return x.Representative
+	}
+	return nil
+}
+
+type PutRepresentativeResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Representative *Representative        `protobuf:"bytes,1,opt,name=representative,proto3" json:"representative,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *PutRepresentativeResponse) Reset() {
+	*x = PutRepresentativeResponse{}
+	mi := &file_company_v1_company_proto_msgTypes[39]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutRepresentativeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutRepresentativeResponse) ProtoMessage() {}
+
+func (x *PutRepresentativeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[39]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutRepresentativeResponse.ProtoReflect.Descriptor instead.
+func (*PutRepresentativeResponse) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{39}
+}
+
+func (x *PutRepresentativeResponse) GetRepresentative() *Representative {
+	if x != nil {
+		return x.Representative
+	}
+	return nil
+}
+
+type RemoveRepresentativeRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId   string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveRepresentativeRequest) Reset() {
+	*x = RemoveRepresentativeRequest{}
+	mi := &file_company_v1_company_proto_msgTypes[40]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveRepresentativeRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveRepresentativeRequest) ProtoMessage() {}
+
+func (x *RemoveRepresentativeRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[40]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveRepresentativeRequest.ProtoReflect.Descriptor instead.
+func (*RemoveRepresentativeRequest) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{40}
+}
+
+func (x *RemoveRepresentativeRequest) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+func (x *RemoveRepresentativeRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type RemoveRepresentativeResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveRepresentativeResponse) Reset() {
+	*x = RemoveRepresentativeResponse{}
+	mi := &file_company_v1_company_proto_msgTypes[41]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveRepresentativeResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveRepresentativeResponse) ProtoMessage() {}
+
+func (x *RemoveRepresentativeResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[41]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveRepresentativeResponse.ProtoReflect.Descriptor instead.
+func (*RemoveRepresentativeResponse) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{41}
+}
+
+type PutDeclarationRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId   string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	Declaration   *Declaration           `protobuf:"bytes,2,opt,name=declaration,proto3" json:"declaration,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutDeclarationRequest) Reset() {
+	*x = PutDeclarationRequest{}
+	mi := &file_company_v1_company_proto_msgTypes[42]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutDeclarationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutDeclarationRequest) ProtoMessage() {}
+
+func (x *PutDeclarationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[42]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutDeclarationRequest.ProtoReflect.Descriptor instead.
+func (*PutDeclarationRequest) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{42}
+}
+
+func (x *PutDeclarationRequest) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+func (x *PutDeclarationRequest) GetDeclaration() *Declaration {
+	if x != nil {
+		return x.Declaration
+	}
+	return nil
+}
+
+type PutDeclarationResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Declaration   *Declaration           `protobuf:"bytes,1,opt,name=declaration,proto3" json:"declaration,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutDeclarationResponse) Reset() {
+	*x = PutDeclarationResponse{}
+	mi := &file_company_v1_company_proto_msgTypes[43]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutDeclarationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutDeclarationResponse) ProtoMessage() {}
+
+func (x *PutDeclarationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[43]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutDeclarationResponse.ProtoReflect.Descriptor instead.
+func (*PutDeclarationResponse) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{43}
+}
+
+func (x *PutDeclarationResponse) GetDeclaration() *Declaration {
+	if x != nil {
+		return x.Declaration
+	}
+	return nil
+}
+
+type RemoveDeclarationRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId   string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveDeclarationRequest) Reset() {
+	*x = RemoveDeclarationRequest{}
+	mi := &file_company_v1_company_proto_msgTypes[44]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveDeclarationRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveDeclarationRequest) ProtoMessage() {}
+
+func (x *RemoveDeclarationRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[44]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveDeclarationRequest.ProtoReflect.Descriptor instead.
+func (*RemoveDeclarationRequest) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{44}
+}
+
+func (x *RemoveDeclarationRequest) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+func (x *RemoveDeclarationRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type RemoveDeclarationResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveDeclarationResponse) Reset() {
+	*x = RemoveDeclarationResponse{}
+	mi := &file_company_v1_company_proto_msgTypes[45]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveDeclarationResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveDeclarationResponse) ProtoMessage() {}
+
+func (x *RemoveDeclarationResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[45]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveDeclarationResponse.ProtoReflect.Descriptor instead.
+func (*RemoveDeclarationResponse) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{45}
+}
+
+type PutNationalGroundRequest struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId    string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	NationalGround *NationalGround        `protobuf:"bytes,2,opt,name=national_ground,json=nationalGround,proto3" json:"national_ground,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *PutNationalGroundRequest) Reset() {
+	*x = PutNationalGroundRequest{}
+	mi := &file_company_v1_company_proto_msgTypes[46]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutNationalGroundRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutNationalGroundRequest) ProtoMessage() {}
+
+func (x *PutNationalGroundRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[46]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutNationalGroundRequest.ProtoReflect.Descriptor instead.
+func (*PutNationalGroundRequest) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{46}
+}
+
+func (x *PutNationalGroundRequest) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+func (x *PutNationalGroundRequest) GetNationalGround() *NationalGround {
+	if x != nil {
+		return x.NationalGround
+	}
+	return nil
+}
+
+type PutNationalGroundResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	NationalGround *NationalGround        `protobuf:"bytes,1,opt,name=national_ground,json=nationalGround,proto3" json:"national_ground,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *PutNationalGroundResponse) Reset() {
+	*x = PutNationalGroundResponse{}
+	mi := &file_company_v1_company_proto_msgTypes[47]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutNationalGroundResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutNationalGroundResponse) ProtoMessage() {}
+
+func (x *PutNationalGroundResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[47]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutNationalGroundResponse.ProtoReflect.Descriptor instead.
+func (*PutNationalGroundResponse) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{47}
+}
+
+func (x *PutNationalGroundResponse) GetNationalGround() *NationalGround {
+	if x != nil {
+		return x.NationalGround
+	}
+	return nil
+}
+
+type RemoveNationalGroundRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkspaceId   string                 `protobuf:"bytes,1,opt,name=workspace_id,json=workspaceId,proto3" json:"workspace_id,omitempty"`
+	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveNationalGroundRequest) Reset() {
+	*x = RemoveNationalGroundRequest{}
+	mi := &file_company_v1_company_proto_msgTypes[48]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveNationalGroundRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveNationalGroundRequest) ProtoMessage() {}
+
+func (x *RemoveNationalGroundRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[48]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveNationalGroundRequest.ProtoReflect.Descriptor instead.
+func (*RemoveNationalGroundRequest) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{48}
+}
+
+func (x *RemoveNationalGroundRequest) GetWorkspaceId() string {
+	if x != nil {
+		return x.WorkspaceId
+	}
+	return ""
+}
+
+func (x *RemoveNationalGroundRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type RemoveNationalGroundResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveNationalGroundResponse) Reset() {
+	*x = RemoveNationalGroundResponse{}
+	mi := &file_company_v1_company_proto_msgTypes[49]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveNationalGroundResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveNationalGroundResponse) ProtoMessage() {}
+
+func (x *RemoveNationalGroundResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_company_v1_company_proto_msgTypes[49]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveNationalGroundResponse.ProtoReflect.Descriptor instead.
+func (*RemoveNationalGroundResponse) Descriptor() ([]byte, []int) {
+	return file_company_v1_company_proto_rawDescGZIP(), []int{49}
 }
 
 type CheckEligibilityRequest struct {
@@ -2459,7 +3332,7 @@ type CheckEligibilityRequest struct {
 
 func (x *CheckEligibilityRequest) Reset() {
 	*x = CheckEligibilityRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[35]
+	mi := &file_company_v1_company_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2471,7 +3344,7 @@ func (x *CheckEligibilityRequest) String() string {
 func (*CheckEligibilityRequest) ProtoMessage() {}
 
 func (x *CheckEligibilityRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[35]
+	mi := &file_company_v1_company_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2484,7 +3357,7 @@ func (x *CheckEligibilityRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckEligibilityRequest.ProtoReflect.Descriptor instead.
 func (*CheckEligibilityRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{35}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *CheckEligibilityRequest) GetWorkspaceId() string {
@@ -2517,7 +3390,7 @@ type CheckEligibilityResponse struct {
 
 func (x *CheckEligibilityResponse) Reset() {
 	*x = CheckEligibilityResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[36]
+	mi := &file_company_v1_company_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2529,7 +3402,7 @@ func (x *CheckEligibilityResponse) String() string {
 func (*CheckEligibilityResponse) ProtoMessage() {}
 
 func (x *CheckEligibilityResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[36]
+	mi := &file_company_v1_company_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2542,7 +3415,7 @@ func (x *CheckEligibilityResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CheckEligibilityResponse.ProtoReflect.Descriptor instead.
 func (*CheckEligibilityResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{36}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *CheckEligibilityResponse) GetAssessment() *EligibilityAssessment {
@@ -2562,7 +3435,7 @@ type ListTenderRequirementsRequest struct {
 
 func (x *ListTenderRequirementsRequest) Reset() {
 	*x = ListTenderRequirementsRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[37]
+	mi := &file_company_v1_company_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2574,7 +3447,7 @@ func (x *ListTenderRequirementsRequest) String() string {
 func (*ListTenderRequirementsRequest) ProtoMessage() {}
 
 func (x *ListTenderRequirementsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[37]
+	mi := &file_company_v1_company_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2587,7 +3460,7 @@ func (x *ListTenderRequirementsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTenderRequirementsRequest.ProtoReflect.Descriptor instead.
 func (*ListTenderRequirementsRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{37}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *ListTenderRequirementsRequest) GetWorkspaceId() string {
@@ -2613,7 +3486,7 @@ type ListTenderRequirementsResponse struct {
 
 func (x *ListTenderRequirementsResponse) Reset() {
 	*x = ListTenderRequirementsResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[38]
+	mi := &file_company_v1_company_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2625,7 +3498,7 @@ func (x *ListTenderRequirementsResponse) String() string {
 func (*ListTenderRequirementsResponse) ProtoMessage() {}
 
 func (x *ListTenderRequirementsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[38]
+	mi := &file_company_v1_company_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2638,7 +3511,7 @@ func (x *ListTenderRequirementsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListTenderRequirementsResponse.ProtoReflect.Descriptor instead.
 func (*ListTenderRequirementsResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{38}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{53}
 }
 
 func (x *ListTenderRequirementsResponse) GetRequirements() []*TenderRequirement {
@@ -2658,7 +3531,7 @@ type ConfirmTenderRequirementRequest struct {
 
 func (x *ConfirmTenderRequirementRequest) Reset() {
 	*x = ConfirmTenderRequirementRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[39]
+	mi := &file_company_v1_company_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2670,7 +3543,7 @@ func (x *ConfirmTenderRequirementRequest) String() string {
 func (*ConfirmTenderRequirementRequest) ProtoMessage() {}
 
 func (x *ConfirmTenderRequirementRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[39]
+	mi := &file_company_v1_company_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2683,7 +3556,7 @@ func (x *ConfirmTenderRequirementRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfirmTenderRequirementRequest.ProtoReflect.Descriptor instead.
 func (*ConfirmTenderRequirementRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{39}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *ConfirmTenderRequirementRequest) GetWorkspaceId() string {
@@ -2709,7 +3582,7 @@ type ConfirmTenderRequirementResponse struct {
 
 func (x *ConfirmTenderRequirementResponse) Reset() {
 	*x = ConfirmTenderRequirementResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[40]
+	mi := &file_company_v1_company_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2721,7 +3594,7 @@ func (x *ConfirmTenderRequirementResponse) String() string {
 func (*ConfirmTenderRequirementResponse) ProtoMessage() {}
 
 func (x *ConfirmTenderRequirementResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[40]
+	mi := &file_company_v1_company_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2734,7 +3607,7 @@ func (x *ConfirmTenderRequirementResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfirmTenderRequirementResponse.ProtoReflect.Descriptor instead.
 func (*ConfirmTenderRequirementResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{40}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{55}
 }
 
 func (x *ConfirmTenderRequirementResponse) GetRequirement() *TenderRequirement {
@@ -2754,7 +3627,7 @@ type RemoveTenderRequirementRequest struct {
 
 func (x *RemoveTenderRequirementRequest) Reset() {
 	*x = RemoveTenderRequirementRequest{}
-	mi := &file_company_v1_company_proto_msgTypes[41]
+	mi := &file_company_v1_company_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2766,7 +3639,7 @@ func (x *RemoveTenderRequirementRequest) String() string {
 func (*RemoveTenderRequirementRequest) ProtoMessage() {}
 
 func (x *RemoveTenderRequirementRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[41]
+	mi := &file_company_v1_company_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2779,7 +3652,7 @@ func (x *RemoveTenderRequirementRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveTenderRequirementRequest.ProtoReflect.Descriptor instead.
 func (*RemoveTenderRequirementRequest) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{41}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *RemoveTenderRequirementRequest) GetWorkspaceId() string {
@@ -2804,7 +3677,7 @@ type RemoveTenderRequirementResponse struct {
 
 func (x *RemoveTenderRequirementResponse) Reset() {
 	*x = RemoveTenderRequirementResponse{}
-	mi := &file_company_v1_company_proto_msgTypes[42]
+	mi := &file_company_v1_company_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2816,7 +3689,7 @@ func (x *RemoveTenderRequirementResponse) String() string {
 func (*RemoveTenderRequirementResponse) ProtoMessage() {}
 
 func (x *RemoveTenderRequirementResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_company_v1_company_proto_msgTypes[42]
+	mi := &file_company_v1_company_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2829,7 +3702,7 @@ func (x *RemoveTenderRequirementResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RemoveTenderRequirementResponse.ProtoReflect.Descriptor instead.
 func (*RemoveTenderRequirementResponse) Descriptor() ([]byte, []int) {
-	return file_company_v1_company_proto_rawDescGZIP(), []int{42}
+	return file_company_v1_company_proto_rawDescGZIP(), []int{57}
 }
 
 var File_company_v1_company_proto protoreflect.FileDescriptor
@@ -2852,7 +3725,7 @@ const file_company_v1_company_proto_rawDesc = "" +
 	"promptedBy\x121\n" +
 	"\x15prompted_by_tender_id\x18\a \x01(\tR\x12promptedByTenderId\x12\x1f\n" +
 	"\vsource_note\x18\b \x01(\tR\n" +
-	"sourceNote\"\xf9\x03\n" +
+	"sourceNote\"\x90\x04\n" +
 	"\x0fCompanyIdentity\x12\x1d\n" +
 	"\n" +
 	"legal_name\x18\x01 \x01(\tR\tlegalName\x12\x1d\n" +
@@ -2869,10 +3742,40 @@ const file_company_v1_company_proto_rawDesc = "" +
 	"\ffounded_year\x18\t \x01(\x05R\vfoundedYear\x12(\n" +
 	"\x10founded_year_set\x18\n" +
 	" \x01(\bR\x0efoundedYearSet\x12N\n" +
-	"\vattribution\x18\v \x03(\v2,.company.v1.CompanyIdentity.AttributionEntryR\vattribution\x1aW\n" +
+	"\vattribution\x18\v \x03(\v2,.company.v1.CompanyIdentity.AttributionEntryR\vattribution\x12\x15\n" +
+	"\x06is_sme\x18\f \x01(\bR\x05isSme\x1aW\n" +
 	"\x10AttributionEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x12-\n" +
-	"\x05value\x18\x02 \x01(\v2\x17.company.v1.AttributionR\x05value:\x028\x01\"\xf9\x01\n" +
+	"\x05value\x18\x02 \x01(\v2\x17.company.v1.AttributionR\x05value:\x028\x01\"\xcb\x02\n" +
+	"\x0eRepresentative\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04role\x18\x02 \x01(\tR\x04role\x12\x1d\n" +
+	"\n" +
+	"given_name\x18\x03 \x01(\tR\tgivenName\x12\x1f\n" +
+	"\vfamily_name\x18\x04 \x01(\tR\n" +
+	"familyName\x12\x1d\n" +
+	"\n" +
+	"birth_date\x18\x05 \x01(\tR\tbirthDate\x12\x1f\n" +
+	"\vbirth_place\x18\x06 \x01(\tR\n" +
+	"birthPlace\x12\x18\n" +
+	"\aaddress\x18\a \x01(\tR\aaddress\x12\x14\n" +
+	"\x05email\x18\b \x01(\tR\x05email\x12*\n" +
+	"\x11power_of_attorney\x18\t \x01(\bR\x0fpowerOfAttorney\x129\n" +
+	"\vattribution\x18\n" +
+	" \x01(\v2\x17.company.v1.AttributionR\vattribution\"\xb3\x01\n" +
+	"\vDeclaration\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1c\n" +
+	"\tcriterion\x18\x02 \x01(\tR\tcriterion\x12\x16\n" +
+	"\x06answer\x18\x03 \x01(\bR\x06answer\x12#\n" +
+	"\rself_cleaning\x18\x04 \x01(\tR\fselfCleaning\x129\n" +
+	"\vattribution\x18\x05 \x01(\v2\x17.company.v1.AttributionR\vattribution\"\xbf\x01\n" +
+	"\x0eNationalGround\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
+	"\acountry\x18\x02 \x01(\tR\acountry\x12\x1c\n" +
+	"\tcriterion\x18\x03 \x01(\tR\tcriterion\x12\x16\n" +
+	"\x06answer\x18\x04 \x01(\bR\x06answer\x12\x12\n" +
+	"\x04note\x18\x05 \x01(\tR\x04note\x129\n" +
+	"\vattribution\x18\x06 \x01(\v2\x17.company.v1.AttributionR\vattribution\"\xf9\x01\n" +
 	"\vSoaCategory\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1a\n" +
 	"\bcategory\x18\x02 \x01(\tR\bcategory\x12\x1e\n" +
@@ -2935,7 +3838,7 @@ const file_company_v1_company_proto_rawDesc = "" +
 	"valid_from\x18\x06 \x01(\tR\tvalidFrom\x12\x1f\n" +
 	"\vvalid_until\x18\a \x01(\tR\n" +
 	"validUntil\x129\n" +
-	"\vattribution\x18\b \x01(\v2\x17.company.v1.AttributionR\vattribution\"\xbe\x03\n" +
+	"\vattribution\x18\b \x01(\v2\x17.company.v1.AttributionR\vattribution\"\x88\x05\n" +
 	"\x0eCompanyDossier\x12!\n" +
 	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x127\n" +
 	"\bidentity\x18\x02 \x01(\v2\x1b.company.v1.CompanyIdentityR\bidentity\x12)\n" +
@@ -2945,7 +3848,11 @@ const file_company_v1_company_proto_rawDesc = "" +
 	"\x0epast_contracts\x18\x06 \x03(\v2\x18.company.v1.PastContractR\rpastContracts\x12>\n" +
 	"\rregistrations\x18\a \x03(\v2\x18.company.v1.RegistrationR\rregistrations\x12\x1d\n" +
 	"\n" +
-	"updated_at\x18\b \x01(\tR\tupdatedAt\"\xfd\x02\n" +
+	"updated_at\x18\b \x01(\tR\tupdatedAt\x12D\n" +
+	"\x0frepresentatives\x18\t \x03(\v2\x1a.company.v1.RepresentativeR\x0frepresentatives\x12;\n" +
+	"\fdeclarations\x18\n" +
+	" \x03(\v2\x17.company.v1.DeclarationR\fdeclarations\x12E\n" +
+	"\x10national_grounds\x18\v \x03(\v2\x1a.company.v1.NationalGroundR\x0fnationalGrounds\"\xfd\x02\n" +
 	"\x11TenderRequirement\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1b\n" +
 	"\ttender_id\x18\x02 \x01(\tR\btenderId\x12\x17\n" +
@@ -3038,7 +3945,34 @@ const file_company_v1_company_proto_rawDesc = "" +
 	"\x19RemoveRegistrationRequest\x12!\n" +
 	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\tR\x02id\"\x1c\n" +
-	"\x1aRemoveRegistrationResponse\"r\n" +
+	"\x1aRemoveRegistrationResponse\"\x81\x01\n" +
+	"\x18PutRepresentativeRequest\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12B\n" +
+	"\x0erepresentative\x18\x02 \x01(\v2\x1a.company.v1.RepresentativeR\x0erepresentative\"_\n" +
+	"\x19PutRepresentativeResponse\x12B\n" +
+	"\x0erepresentative\x18\x01 \x01(\v2\x1a.company.v1.RepresentativeR\x0erepresentative\"P\n" +
+	"\x1bRemoveRepresentativeRequest\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id\"\x1e\n" +
+	"\x1cRemoveRepresentativeResponse\"u\n" +
+	"\x15PutDeclarationRequest\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x129\n" +
+	"\vdeclaration\x18\x02 \x01(\v2\x17.company.v1.DeclarationR\vdeclaration\"S\n" +
+	"\x16PutDeclarationResponse\x129\n" +
+	"\vdeclaration\x18\x01 \x01(\v2\x17.company.v1.DeclarationR\vdeclaration\"M\n" +
+	"\x18RemoveDeclarationRequest\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id\"\x1b\n" +
+	"\x19RemoveDeclarationResponse\"\x82\x01\n" +
+	"\x18PutNationalGroundRequest\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12C\n" +
+	"\x0fnational_ground\x18\x02 \x01(\v2\x1a.company.v1.NationalGroundR\x0enationalGround\"`\n" +
+	"\x19PutNationalGroundResponse\x12C\n" +
+	"\x0fnational_ground\x18\x01 \x01(\v2\x1a.company.v1.NationalGroundR\x0enationalGround\"P\n" +
+	"\x1bRemoveNationalGroundRequest\x12!\n" +
+	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id\"\x1e\n" +
+	"\x1cRemoveNationalGroundResponse\"r\n" +
 	"\x17CheckEligibilityRequest\x12!\n" +
 	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12\x1b\n" +
 	"\ttender_id\x18\x02 \x01(\tR\btenderId\x12\x17\n" +
@@ -3060,7 +3994,7 @@ const file_company_v1_company_proto_rawDesc = "" +
 	"\x1eRemoveTenderRequirementRequest\x12!\n" +
 	"\fworkspace_id\x18\x01 \x01(\tR\vworkspaceId\x12%\n" +
 	"\x0erequirement_id\x18\x02 \x01(\tR\rrequirementId\"!\n" +
-	"\x1fRemoveTenderRequirementResponse2\xe6\f\n" +
+	"\x1fRemoveTenderRequirementResponse2\xbb\x11\n" +
 	"\x0eCompanyService\x12`\n" +
 	"\x11GetCompanyDossier\x12$.company.v1.GetCompanyDossierRequest\x1a%.company.v1.GetCompanyDossierResponse\x12l\n" +
 	"\x15UpdateCompanyIdentity\x12(.company.v1.UpdateCompanyIdentityRequest\x1a).company.v1.UpdateCompanyIdentityResponse\x12W\n" +
@@ -3073,7 +4007,13 @@ const file_company_v1_company_proto_rawDesc = "" +
 	"\x0fPutPastContract\x12\".company.v1.PutPastContractRequest\x1a#.company.v1.PutPastContractResponse\x12c\n" +
 	"\x12RemovePastContract\x12%.company.v1.RemovePastContractRequest\x1a&.company.v1.RemovePastContractResponse\x12Z\n" +
 	"\x0fPutRegistration\x12\".company.v1.PutRegistrationRequest\x1a#.company.v1.PutRegistrationResponse\x12c\n" +
-	"\x12RemoveRegistration\x12%.company.v1.RemoveRegistrationRequest\x1a&.company.v1.RemoveRegistrationResponse\x12]\n" +
+	"\x12RemoveRegistration\x12%.company.v1.RemoveRegistrationRequest\x1a&.company.v1.RemoveRegistrationResponse\x12`\n" +
+	"\x11PutRepresentative\x12$.company.v1.PutRepresentativeRequest\x1a%.company.v1.PutRepresentativeResponse\x12i\n" +
+	"\x14RemoveRepresentative\x12'.company.v1.RemoveRepresentativeRequest\x1a(.company.v1.RemoveRepresentativeResponse\x12W\n" +
+	"\x0ePutDeclaration\x12!.company.v1.PutDeclarationRequest\x1a\".company.v1.PutDeclarationResponse\x12`\n" +
+	"\x11RemoveDeclaration\x12$.company.v1.RemoveDeclarationRequest\x1a%.company.v1.RemoveDeclarationResponse\x12`\n" +
+	"\x11PutNationalGround\x12$.company.v1.PutNationalGroundRequest\x1a%.company.v1.PutNationalGroundResponse\x12i\n" +
+	"\x14RemoveNationalGround\x12'.company.v1.RemoveNationalGroundRequest\x1a(.company.v1.RemoveNationalGroundResponse\x12]\n" +
 	"\x10CheckEligibility\x12#.company.v1.CheckEligibilityRequest\x1a$.company.v1.CheckEligibilityResponse\x12o\n" +
 	"\x16ListTenderRequirements\x12).company.v1.ListTenderRequirementsRequest\x1a*.company.v1.ListTenderRequirementsResponse\x12u\n" +
 	"\x18ConfirmTenderRequirement\x12+.company.v1.ConfirmTenderRequirementRequest\x1a,.company.v1.ConfirmTenderRequirementResponse\x12r\n" +
@@ -3091,123 +4031,162 @@ func file_company_v1_company_proto_rawDescGZIP() []byte {
 	return file_company_v1_company_proto_rawDescData
 }
 
-var file_company_v1_company_proto_msgTypes = make([]protoimpl.MessageInfo, 44)
+var file_company_v1_company_proto_msgTypes = make([]protoimpl.MessageInfo, 59)
 var file_company_v1_company_proto_goTypes = []any{
 	(*Attribution)(nil),                      // 0: company.v1.Attribution
 	(*CompanyIdentity)(nil),                  // 1: company.v1.CompanyIdentity
-	(*SoaCategory)(nil),                      // 2: company.v1.SoaCategory
-	(*Certification)(nil),                    // 3: company.v1.Certification
-	(*FinancialYear)(nil),                    // 4: company.v1.FinancialYear
-	(*PastContract)(nil),                     // 5: company.v1.PastContract
-	(*Registration)(nil),                     // 6: company.v1.Registration
-	(*CompanyDossier)(nil),                   // 7: company.v1.CompanyDossier
-	(*TenderRequirement)(nil),                // 8: company.v1.TenderRequirement
-	(*EligibilityGap)(nil),                   // 9: company.v1.EligibilityGap
-	(*EligibilityAssessment)(nil),            // 10: company.v1.EligibilityAssessment
-	(*GetCompanyDossierRequest)(nil),         // 11: company.v1.GetCompanyDossierRequest
-	(*GetCompanyDossierResponse)(nil),        // 12: company.v1.GetCompanyDossierResponse
-	(*UpdateCompanyIdentityRequest)(nil),     // 13: company.v1.UpdateCompanyIdentityRequest
-	(*UpdateCompanyIdentityResponse)(nil),    // 14: company.v1.UpdateCompanyIdentityResponse
-	(*PutSoaCategoryRequest)(nil),            // 15: company.v1.PutSoaCategoryRequest
-	(*PutSoaCategoryResponse)(nil),           // 16: company.v1.PutSoaCategoryResponse
-	(*RemoveSoaCategoryRequest)(nil),         // 17: company.v1.RemoveSoaCategoryRequest
-	(*RemoveSoaCategoryResponse)(nil),        // 18: company.v1.RemoveSoaCategoryResponse
-	(*PutCertificationRequest)(nil),          // 19: company.v1.PutCertificationRequest
-	(*PutCertificationResponse)(nil),         // 20: company.v1.PutCertificationResponse
-	(*RemoveCertificationRequest)(nil),       // 21: company.v1.RemoveCertificationRequest
-	(*RemoveCertificationResponse)(nil),      // 22: company.v1.RemoveCertificationResponse
-	(*PutFinancialYearRequest)(nil),          // 23: company.v1.PutFinancialYearRequest
-	(*PutFinancialYearResponse)(nil),         // 24: company.v1.PutFinancialYearResponse
-	(*RemoveFinancialYearRequest)(nil),       // 25: company.v1.RemoveFinancialYearRequest
-	(*RemoveFinancialYearResponse)(nil),      // 26: company.v1.RemoveFinancialYearResponse
-	(*PutPastContractRequest)(nil),           // 27: company.v1.PutPastContractRequest
-	(*PutPastContractResponse)(nil),          // 28: company.v1.PutPastContractResponse
-	(*RemovePastContractRequest)(nil),        // 29: company.v1.RemovePastContractRequest
-	(*RemovePastContractResponse)(nil),       // 30: company.v1.RemovePastContractResponse
-	(*PutRegistrationRequest)(nil),           // 31: company.v1.PutRegistrationRequest
-	(*PutRegistrationResponse)(nil),          // 32: company.v1.PutRegistrationResponse
-	(*RemoveRegistrationRequest)(nil),        // 33: company.v1.RemoveRegistrationRequest
-	(*RemoveRegistrationResponse)(nil),       // 34: company.v1.RemoveRegistrationResponse
-	(*CheckEligibilityRequest)(nil),          // 35: company.v1.CheckEligibilityRequest
-	(*CheckEligibilityResponse)(nil),         // 36: company.v1.CheckEligibilityResponse
-	(*ListTenderRequirementsRequest)(nil),    // 37: company.v1.ListTenderRequirementsRequest
-	(*ListTenderRequirementsResponse)(nil),   // 38: company.v1.ListTenderRequirementsResponse
-	(*ConfirmTenderRequirementRequest)(nil),  // 39: company.v1.ConfirmTenderRequirementRequest
-	(*ConfirmTenderRequirementResponse)(nil), // 40: company.v1.ConfirmTenderRequirementResponse
-	(*RemoveTenderRequirementRequest)(nil),   // 41: company.v1.RemoveTenderRequirementRequest
-	(*RemoveTenderRequirementResponse)(nil),  // 42: company.v1.RemoveTenderRequirementResponse
-	nil,                                      // 43: company.v1.CompanyIdentity.AttributionEntry
+	(*Representative)(nil),                   // 2: company.v1.Representative
+	(*Declaration)(nil),                      // 3: company.v1.Declaration
+	(*NationalGround)(nil),                   // 4: company.v1.NationalGround
+	(*SoaCategory)(nil),                      // 5: company.v1.SoaCategory
+	(*Certification)(nil),                    // 6: company.v1.Certification
+	(*FinancialYear)(nil),                    // 7: company.v1.FinancialYear
+	(*PastContract)(nil),                     // 8: company.v1.PastContract
+	(*Registration)(nil),                     // 9: company.v1.Registration
+	(*CompanyDossier)(nil),                   // 10: company.v1.CompanyDossier
+	(*TenderRequirement)(nil),                // 11: company.v1.TenderRequirement
+	(*EligibilityGap)(nil),                   // 12: company.v1.EligibilityGap
+	(*EligibilityAssessment)(nil),            // 13: company.v1.EligibilityAssessment
+	(*GetCompanyDossierRequest)(nil),         // 14: company.v1.GetCompanyDossierRequest
+	(*GetCompanyDossierResponse)(nil),        // 15: company.v1.GetCompanyDossierResponse
+	(*UpdateCompanyIdentityRequest)(nil),     // 16: company.v1.UpdateCompanyIdentityRequest
+	(*UpdateCompanyIdentityResponse)(nil),    // 17: company.v1.UpdateCompanyIdentityResponse
+	(*PutSoaCategoryRequest)(nil),            // 18: company.v1.PutSoaCategoryRequest
+	(*PutSoaCategoryResponse)(nil),           // 19: company.v1.PutSoaCategoryResponse
+	(*RemoveSoaCategoryRequest)(nil),         // 20: company.v1.RemoveSoaCategoryRequest
+	(*RemoveSoaCategoryResponse)(nil),        // 21: company.v1.RemoveSoaCategoryResponse
+	(*PutCertificationRequest)(nil),          // 22: company.v1.PutCertificationRequest
+	(*PutCertificationResponse)(nil),         // 23: company.v1.PutCertificationResponse
+	(*RemoveCertificationRequest)(nil),       // 24: company.v1.RemoveCertificationRequest
+	(*RemoveCertificationResponse)(nil),      // 25: company.v1.RemoveCertificationResponse
+	(*PutFinancialYearRequest)(nil),          // 26: company.v1.PutFinancialYearRequest
+	(*PutFinancialYearResponse)(nil),         // 27: company.v1.PutFinancialYearResponse
+	(*RemoveFinancialYearRequest)(nil),       // 28: company.v1.RemoveFinancialYearRequest
+	(*RemoveFinancialYearResponse)(nil),      // 29: company.v1.RemoveFinancialYearResponse
+	(*PutPastContractRequest)(nil),           // 30: company.v1.PutPastContractRequest
+	(*PutPastContractResponse)(nil),          // 31: company.v1.PutPastContractResponse
+	(*RemovePastContractRequest)(nil),        // 32: company.v1.RemovePastContractRequest
+	(*RemovePastContractResponse)(nil),       // 33: company.v1.RemovePastContractResponse
+	(*PutRegistrationRequest)(nil),           // 34: company.v1.PutRegistrationRequest
+	(*PutRegistrationResponse)(nil),          // 35: company.v1.PutRegistrationResponse
+	(*RemoveRegistrationRequest)(nil),        // 36: company.v1.RemoveRegistrationRequest
+	(*RemoveRegistrationResponse)(nil),       // 37: company.v1.RemoveRegistrationResponse
+	(*PutRepresentativeRequest)(nil),         // 38: company.v1.PutRepresentativeRequest
+	(*PutRepresentativeResponse)(nil),        // 39: company.v1.PutRepresentativeResponse
+	(*RemoveRepresentativeRequest)(nil),      // 40: company.v1.RemoveRepresentativeRequest
+	(*RemoveRepresentativeResponse)(nil),     // 41: company.v1.RemoveRepresentativeResponse
+	(*PutDeclarationRequest)(nil),            // 42: company.v1.PutDeclarationRequest
+	(*PutDeclarationResponse)(nil),           // 43: company.v1.PutDeclarationResponse
+	(*RemoveDeclarationRequest)(nil),         // 44: company.v1.RemoveDeclarationRequest
+	(*RemoveDeclarationResponse)(nil),        // 45: company.v1.RemoveDeclarationResponse
+	(*PutNationalGroundRequest)(nil),         // 46: company.v1.PutNationalGroundRequest
+	(*PutNationalGroundResponse)(nil),        // 47: company.v1.PutNationalGroundResponse
+	(*RemoveNationalGroundRequest)(nil),      // 48: company.v1.RemoveNationalGroundRequest
+	(*RemoveNationalGroundResponse)(nil),     // 49: company.v1.RemoveNationalGroundResponse
+	(*CheckEligibilityRequest)(nil),          // 50: company.v1.CheckEligibilityRequest
+	(*CheckEligibilityResponse)(nil),         // 51: company.v1.CheckEligibilityResponse
+	(*ListTenderRequirementsRequest)(nil),    // 52: company.v1.ListTenderRequirementsRequest
+	(*ListTenderRequirementsResponse)(nil),   // 53: company.v1.ListTenderRequirementsResponse
+	(*ConfirmTenderRequirementRequest)(nil),  // 54: company.v1.ConfirmTenderRequirementRequest
+	(*ConfirmTenderRequirementResponse)(nil), // 55: company.v1.ConfirmTenderRequirementResponse
+	(*RemoveTenderRequirementRequest)(nil),   // 56: company.v1.RemoveTenderRequirementRequest
+	(*RemoveTenderRequirementResponse)(nil),  // 57: company.v1.RemoveTenderRequirementResponse
+	nil,                                      // 58: company.v1.CompanyIdentity.AttributionEntry
 }
 var file_company_v1_company_proto_depIdxs = []int32{
-	43, // 0: company.v1.CompanyIdentity.attribution:type_name -> company.v1.CompanyIdentity.AttributionEntry
-	0,  // 1: company.v1.SoaCategory.attribution:type_name -> company.v1.Attribution
-	0,  // 2: company.v1.Certification.attribution:type_name -> company.v1.Attribution
-	0,  // 3: company.v1.FinancialYear.attribution:type_name -> company.v1.Attribution
-	0,  // 4: company.v1.PastContract.attribution:type_name -> company.v1.Attribution
-	0,  // 5: company.v1.Registration.attribution:type_name -> company.v1.Attribution
-	1,  // 6: company.v1.CompanyDossier.identity:type_name -> company.v1.CompanyIdentity
-	2,  // 7: company.v1.CompanyDossier.soa:type_name -> company.v1.SoaCategory
-	3,  // 8: company.v1.CompanyDossier.certifications:type_name -> company.v1.Certification
-	4,  // 9: company.v1.CompanyDossier.financial_years:type_name -> company.v1.FinancialYear
-	5,  // 10: company.v1.CompanyDossier.past_contracts:type_name -> company.v1.PastContract
-	6,  // 11: company.v1.CompanyDossier.registrations:type_name -> company.v1.Registration
-	8,  // 12: company.v1.EligibilityGap.requirement:type_name -> company.v1.TenderRequirement
-	9,  // 13: company.v1.EligibilityAssessment.gaps:type_name -> company.v1.EligibilityGap
-	7,  // 14: company.v1.GetCompanyDossierResponse.dossier:type_name -> company.v1.CompanyDossier
-	1,  // 15: company.v1.UpdateCompanyIdentityRequest.identity:type_name -> company.v1.CompanyIdentity
-	0,  // 16: company.v1.UpdateCompanyIdentityRequest.attribution:type_name -> company.v1.Attribution
-	1,  // 17: company.v1.UpdateCompanyIdentityResponse.identity:type_name -> company.v1.CompanyIdentity
-	2,  // 18: company.v1.PutSoaCategoryRequest.soa:type_name -> company.v1.SoaCategory
-	2,  // 19: company.v1.PutSoaCategoryResponse.soa:type_name -> company.v1.SoaCategory
-	3,  // 20: company.v1.PutCertificationRequest.certification:type_name -> company.v1.Certification
-	3,  // 21: company.v1.PutCertificationResponse.certification:type_name -> company.v1.Certification
-	4,  // 22: company.v1.PutFinancialYearRequest.financial_year:type_name -> company.v1.FinancialYear
-	4,  // 23: company.v1.PutFinancialYearResponse.financial_year:type_name -> company.v1.FinancialYear
-	5,  // 24: company.v1.PutPastContractRequest.past_contract:type_name -> company.v1.PastContract
-	5,  // 25: company.v1.PutPastContractResponse.past_contract:type_name -> company.v1.PastContract
-	6,  // 26: company.v1.PutRegistrationRequest.registration:type_name -> company.v1.Registration
-	6,  // 27: company.v1.PutRegistrationResponse.registration:type_name -> company.v1.Registration
-	10, // 28: company.v1.CheckEligibilityResponse.assessment:type_name -> company.v1.EligibilityAssessment
-	8,  // 29: company.v1.ListTenderRequirementsResponse.requirements:type_name -> company.v1.TenderRequirement
-	8,  // 30: company.v1.ConfirmTenderRequirementResponse.requirement:type_name -> company.v1.TenderRequirement
-	0,  // 31: company.v1.CompanyIdentity.AttributionEntry.value:type_name -> company.v1.Attribution
-	11, // 32: company.v1.CompanyService.GetCompanyDossier:input_type -> company.v1.GetCompanyDossierRequest
-	13, // 33: company.v1.CompanyService.UpdateCompanyIdentity:input_type -> company.v1.UpdateCompanyIdentityRequest
-	15, // 34: company.v1.CompanyService.PutSoaCategory:input_type -> company.v1.PutSoaCategoryRequest
-	17, // 35: company.v1.CompanyService.RemoveSoaCategory:input_type -> company.v1.RemoveSoaCategoryRequest
-	19, // 36: company.v1.CompanyService.PutCertification:input_type -> company.v1.PutCertificationRequest
-	21, // 37: company.v1.CompanyService.RemoveCertification:input_type -> company.v1.RemoveCertificationRequest
-	23, // 38: company.v1.CompanyService.PutFinancialYear:input_type -> company.v1.PutFinancialYearRequest
-	25, // 39: company.v1.CompanyService.RemoveFinancialYear:input_type -> company.v1.RemoveFinancialYearRequest
-	27, // 40: company.v1.CompanyService.PutPastContract:input_type -> company.v1.PutPastContractRequest
-	29, // 41: company.v1.CompanyService.RemovePastContract:input_type -> company.v1.RemovePastContractRequest
-	31, // 42: company.v1.CompanyService.PutRegistration:input_type -> company.v1.PutRegistrationRequest
-	33, // 43: company.v1.CompanyService.RemoveRegistration:input_type -> company.v1.RemoveRegistrationRequest
-	35, // 44: company.v1.CompanyService.CheckEligibility:input_type -> company.v1.CheckEligibilityRequest
-	37, // 45: company.v1.CompanyService.ListTenderRequirements:input_type -> company.v1.ListTenderRequirementsRequest
-	39, // 46: company.v1.CompanyService.ConfirmTenderRequirement:input_type -> company.v1.ConfirmTenderRequirementRequest
-	41, // 47: company.v1.CompanyService.RemoveTenderRequirement:input_type -> company.v1.RemoveTenderRequirementRequest
-	12, // 48: company.v1.CompanyService.GetCompanyDossier:output_type -> company.v1.GetCompanyDossierResponse
-	14, // 49: company.v1.CompanyService.UpdateCompanyIdentity:output_type -> company.v1.UpdateCompanyIdentityResponse
-	16, // 50: company.v1.CompanyService.PutSoaCategory:output_type -> company.v1.PutSoaCategoryResponse
-	18, // 51: company.v1.CompanyService.RemoveSoaCategory:output_type -> company.v1.RemoveSoaCategoryResponse
-	20, // 52: company.v1.CompanyService.PutCertification:output_type -> company.v1.PutCertificationResponse
-	22, // 53: company.v1.CompanyService.RemoveCertification:output_type -> company.v1.RemoveCertificationResponse
-	24, // 54: company.v1.CompanyService.PutFinancialYear:output_type -> company.v1.PutFinancialYearResponse
-	26, // 55: company.v1.CompanyService.RemoveFinancialYear:output_type -> company.v1.RemoveFinancialYearResponse
-	28, // 56: company.v1.CompanyService.PutPastContract:output_type -> company.v1.PutPastContractResponse
-	30, // 57: company.v1.CompanyService.RemovePastContract:output_type -> company.v1.RemovePastContractResponse
-	32, // 58: company.v1.CompanyService.PutRegistration:output_type -> company.v1.PutRegistrationResponse
-	34, // 59: company.v1.CompanyService.RemoveRegistration:output_type -> company.v1.RemoveRegistrationResponse
-	36, // 60: company.v1.CompanyService.CheckEligibility:output_type -> company.v1.CheckEligibilityResponse
-	38, // 61: company.v1.CompanyService.ListTenderRequirements:output_type -> company.v1.ListTenderRequirementsResponse
-	40, // 62: company.v1.CompanyService.ConfirmTenderRequirement:output_type -> company.v1.ConfirmTenderRequirementResponse
-	42, // 63: company.v1.CompanyService.RemoveTenderRequirement:output_type -> company.v1.RemoveTenderRequirementResponse
-	48, // [48:64] is the sub-list for method output_type
-	32, // [32:48] is the sub-list for method input_type
-	32, // [32:32] is the sub-list for extension type_name
-	32, // [32:32] is the sub-list for extension extendee
-	0,  // [0:32] is the sub-list for field type_name
+	58, // 0: company.v1.CompanyIdentity.attribution:type_name -> company.v1.CompanyIdentity.AttributionEntry
+	0,  // 1: company.v1.Representative.attribution:type_name -> company.v1.Attribution
+	0,  // 2: company.v1.Declaration.attribution:type_name -> company.v1.Attribution
+	0,  // 3: company.v1.NationalGround.attribution:type_name -> company.v1.Attribution
+	0,  // 4: company.v1.SoaCategory.attribution:type_name -> company.v1.Attribution
+	0,  // 5: company.v1.Certification.attribution:type_name -> company.v1.Attribution
+	0,  // 6: company.v1.FinancialYear.attribution:type_name -> company.v1.Attribution
+	0,  // 7: company.v1.PastContract.attribution:type_name -> company.v1.Attribution
+	0,  // 8: company.v1.Registration.attribution:type_name -> company.v1.Attribution
+	1,  // 9: company.v1.CompanyDossier.identity:type_name -> company.v1.CompanyIdentity
+	5,  // 10: company.v1.CompanyDossier.soa:type_name -> company.v1.SoaCategory
+	6,  // 11: company.v1.CompanyDossier.certifications:type_name -> company.v1.Certification
+	7,  // 12: company.v1.CompanyDossier.financial_years:type_name -> company.v1.FinancialYear
+	8,  // 13: company.v1.CompanyDossier.past_contracts:type_name -> company.v1.PastContract
+	9,  // 14: company.v1.CompanyDossier.registrations:type_name -> company.v1.Registration
+	2,  // 15: company.v1.CompanyDossier.representatives:type_name -> company.v1.Representative
+	3,  // 16: company.v1.CompanyDossier.declarations:type_name -> company.v1.Declaration
+	4,  // 17: company.v1.CompanyDossier.national_grounds:type_name -> company.v1.NationalGround
+	11, // 18: company.v1.EligibilityGap.requirement:type_name -> company.v1.TenderRequirement
+	12, // 19: company.v1.EligibilityAssessment.gaps:type_name -> company.v1.EligibilityGap
+	10, // 20: company.v1.GetCompanyDossierResponse.dossier:type_name -> company.v1.CompanyDossier
+	1,  // 21: company.v1.UpdateCompanyIdentityRequest.identity:type_name -> company.v1.CompanyIdentity
+	0,  // 22: company.v1.UpdateCompanyIdentityRequest.attribution:type_name -> company.v1.Attribution
+	1,  // 23: company.v1.UpdateCompanyIdentityResponse.identity:type_name -> company.v1.CompanyIdentity
+	5,  // 24: company.v1.PutSoaCategoryRequest.soa:type_name -> company.v1.SoaCategory
+	5,  // 25: company.v1.PutSoaCategoryResponse.soa:type_name -> company.v1.SoaCategory
+	6,  // 26: company.v1.PutCertificationRequest.certification:type_name -> company.v1.Certification
+	6,  // 27: company.v1.PutCertificationResponse.certification:type_name -> company.v1.Certification
+	7,  // 28: company.v1.PutFinancialYearRequest.financial_year:type_name -> company.v1.FinancialYear
+	7,  // 29: company.v1.PutFinancialYearResponse.financial_year:type_name -> company.v1.FinancialYear
+	8,  // 30: company.v1.PutPastContractRequest.past_contract:type_name -> company.v1.PastContract
+	8,  // 31: company.v1.PutPastContractResponse.past_contract:type_name -> company.v1.PastContract
+	9,  // 32: company.v1.PutRegistrationRequest.registration:type_name -> company.v1.Registration
+	9,  // 33: company.v1.PutRegistrationResponse.registration:type_name -> company.v1.Registration
+	2,  // 34: company.v1.PutRepresentativeRequest.representative:type_name -> company.v1.Representative
+	2,  // 35: company.v1.PutRepresentativeResponse.representative:type_name -> company.v1.Representative
+	3,  // 36: company.v1.PutDeclarationRequest.declaration:type_name -> company.v1.Declaration
+	3,  // 37: company.v1.PutDeclarationResponse.declaration:type_name -> company.v1.Declaration
+	4,  // 38: company.v1.PutNationalGroundRequest.national_ground:type_name -> company.v1.NationalGround
+	4,  // 39: company.v1.PutNationalGroundResponse.national_ground:type_name -> company.v1.NationalGround
+	13, // 40: company.v1.CheckEligibilityResponse.assessment:type_name -> company.v1.EligibilityAssessment
+	11, // 41: company.v1.ListTenderRequirementsResponse.requirements:type_name -> company.v1.TenderRequirement
+	11, // 42: company.v1.ConfirmTenderRequirementResponse.requirement:type_name -> company.v1.TenderRequirement
+	0,  // 43: company.v1.CompanyIdentity.AttributionEntry.value:type_name -> company.v1.Attribution
+	14, // 44: company.v1.CompanyService.GetCompanyDossier:input_type -> company.v1.GetCompanyDossierRequest
+	16, // 45: company.v1.CompanyService.UpdateCompanyIdentity:input_type -> company.v1.UpdateCompanyIdentityRequest
+	18, // 46: company.v1.CompanyService.PutSoaCategory:input_type -> company.v1.PutSoaCategoryRequest
+	20, // 47: company.v1.CompanyService.RemoveSoaCategory:input_type -> company.v1.RemoveSoaCategoryRequest
+	22, // 48: company.v1.CompanyService.PutCertification:input_type -> company.v1.PutCertificationRequest
+	24, // 49: company.v1.CompanyService.RemoveCertification:input_type -> company.v1.RemoveCertificationRequest
+	26, // 50: company.v1.CompanyService.PutFinancialYear:input_type -> company.v1.PutFinancialYearRequest
+	28, // 51: company.v1.CompanyService.RemoveFinancialYear:input_type -> company.v1.RemoveFinancialYearRequest
+	30, // 52: company.v1.CompanyService.PutPastContract:input_type -> company.v1.PutPastContractRequest
+	32, // 53: company.v1.CompanyService.RemovePastContract:input_type -> company.v1.RemovePastContractRequest
+	34, // 54: company.v1.CompanyService.PutRegistration:input_type -> company.v1.PutRegistrationRequest
+	36, // 55: company.v1.CompanyService.RemoveRegistration:input_type -> company.v1.RemoveRegistrationRequest
+	38, // 56: company.v1.CompanyService.PutRepresentative:input_type -> company.v1.PutRepresentativeRequest
+	40, // 57: company.v1.CompanyService.RemoveRepresentative:input_type -> company.v1.RemoveRepresentativeRequest
+	42, // 58: company.v1.CompanyService.PutDeclaration:input_type -> company.v1.PutDeclarationRequest
+	44, // 59: company.v1.CompanyService.RemoveDeclaration:input_type -> company.v1.RemoveDeclarationRequest
+	46, // 60: company.v1.CompanyService.PutNationalGround:input_type -> company.v1.PutNationalGroundRequest
+	48, // 61: company.v1.CompanyService.RemoveNationalGround:input_type -> company.v1.RemoveNationalGroundRequest
+	50, // 62: company.v1.CompanyService.CheckEligibility:input_type -> company.v1.CheckEligibilityRequest
+	52, // 63: company.v1.CompanyService.ListTenderRequirements:input_type -> company.v1.ListTenderRequirementsRequest
+	54, // 64: company.v1.CompanyService.ConfirmTenderRequirement:input_type -> company.v1.ConfirmTenderRequirementRequest
+	56, // 65: company.v1.CompanyService.RemoveTenderRequirement:input_type -> company.v1.RemoveTenderRequirementRequest
+	15, // 66: company.v1.CompanyService.GetCompanyDossier:output_type -> company.v1.GetCompanyDossierResponse
+	17, // 67: company.v1.CompanyService.UpdateCompanyIdentity:output_type -> company.v1.UpdateCompanyIdentityResponse
+	19, // 68: company.v1.CompanyService.PutSoaCategory:output_type -> company.v1.PutSoaCategoryResponse
+	21, // 69: company.v1.CompanyService.RemoveSoaCategory:output_type -> company.v1.RemoveSoaCategoryResponse
+	23, // 70: company.v1.CompanyService.PutCertification:output_type -> company.v1.PutCertificationResponse
+	25, // 71: company.v1.CompanyService.RemoveCertification:output_type -> company.v1.RemoveCertificationResponse
+	27, // 72: company.v1.CompanyService.PutFinancialYear:output_type -> company.v1.PutFinancialYearResponse
+	29, // 73: company.v1.CompanyService.RemoveFinancialYear:output_type -> company.v1.RemoveFinancialYearResponse
+	31, // 74: company.v1.CompanyService.PutPastContract:output_type -> company.v1.PutPastContractResponse
+	33, // 75: company.v1.CompanyService.RemovePastContract:output_type -> company.v1.RemovePastContractResponse
+	35, // 76: company.v1.CompanyService.PutRegistration:output_type -> company.v1.PutRegistrationResponse
+	37, // 77: company.v1.CompanyService.RemoveRegistration:output_type -> company.v1.RemoveRegistrationResponse
+	39, // 78: company.v1.CompanyService.PutRepresentative:output_type -> company.v1.PutRepresentativeResponse
+	41, // 79: company.v1.CompanyService.RemoveRepresentative:output_type -> company.v1.RemoveRepresentativeResponse
+	43, // 80: company.v1.CompanyService.PutDeclaration:output_type -> company.v1.PutDeclarationResponse
+	45, // 81: company.v1.CompanyService.RemoveDeclaration:output_type -> company.v1.RemoveDeclarationResponse
+	47, // 82: company.v1.CompanyService.PutNationalGround:output_type -> company.v1.PutNationalGroundResponse
+	49, // 83: company.v1.CompanyService.RemoveNationalGround:output_type -> company.v1.RemoveNationalGroundResponse
+	51, // 84: company.v1.CompanyService.CheckEligibility:output_type -> company.v1.CheckEligibilityResponse
+	53, // 85: company.v1.CompanyService.ListTenderRequirements:output_type -> company.v1.ListTenderRequirementsResponse
+	55, // 86: company.v1.CompanyService.ConfirmTenderRequirement:output_type -> company.v1.ConfirmTenderRequirementResponse
+	57, // 87: company.v1.CompanyService.RemoveTenderRequirement:output_type -> company.v1.RemoveTenderRequirementResponse
+	66, // [66:88] is the sub-list for method output_type
+	44, // [44:66] is the sub-list for method input_type
+	44, // [44:44] is the sub-list for extension type_name
+	44, // [44:44] is the sub-list for extension extendee
+	0,  // [0:44] is the sub-list for field type_name
 }
 
 func init() { file_company_v1_company_proto_init() }
@@ -3221,7 +4200,7 @@ func file_company_v1_company_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_company_v1_company_proto_rawDesc), len(file_company_v1_company_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   44,
+			NumMessages:   59,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
