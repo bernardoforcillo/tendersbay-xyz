@@ -16,8 +16,11 @@ describe('the event catalogue', () => {
   });
 
   it('names every event snake_case object_verb in the past tense', () => {
+    // A closed verb list, widened deliberately rather than loosened to `\w+ed`:
+    // the point of the rule is that two people naming the same act pick the same
+    // word, and a regex that accepts any past participle stops enforcing that.
     const pastTense =
-      /^[a-z0-9]+(_[a-z0-9]+)*_(shown|opened|recommended|overridden|recorded|answered|skipped|confirmed|viewed)$/;
+      /^[a-z0-9]+(_[a-z0-9]+)*_(shown|opened|recommended|overridden|recorded|answered|skipped|confirmed|viewed|filled|reconfirmed|exported|imported|completed)$/;
     for (const name of ANALYTICS_EVENT_NAMES) {
       expect(name, name).toMatch(pastTense);
     }
