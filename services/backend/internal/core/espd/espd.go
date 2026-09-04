@@ -434,4 +434,57 @@ var (
 	ErrNotReady           = errors.New("espd: response has open gaps or unconfirmed declarations")
 	ErrRequestNotFound    = errors.New("espd: no buyer request stored for this bid")
 	ErrUnsupportedRequest = errors.New("espd: unsupported request document")
+	// ErrNotEntitled is the export refusal: the workspace's plan does not carry
+	// espd.export, or the feature is switched off. It is deliberately NOT the
+	// same error as a permission failure — the caller may write to this
+	// workbench, the PLAN is what says no — so the transport can answer with a
+	// reason a person can act on ("upgrade") rather than a bare 403.
+	ErrNotEntitled = errors.New("espd: the workspace's plan does not include the ESPD export")
+	// ErrCriterionUnsupported means a serializer has no code-list entry for a
+	// criterion in the target version. It is an error and never a silently
+	// omitted element: a DGUE missing a criterion the buyer asked about is
+	// worse than no DGUE, because it looks complete.
+	ErrCriterionUnsupported = errors.New("espd: criterion is not expressible in this ESPD version")
 )
+
+// NotReadyError carries WHY the document could not be exported, so the client
+// renders the same gap list the preview shows rather than a bare refusal.
+type NotReadyError struct {
+	Gaps                  []Gap
+	DeclarationsConfirmed bool
+}
+
+func (e *NotReadyError) Error() string {
+	return fmt.Sprintf("espd: %d open gap(s), declarations confirmed: %t", len(e.Gaps), e.DeclarationsConfirmed)
+}
+
+func (e *NotReadyError) Is(target error) bool { return target == ErrNotReady }
+
+// NotEntitledError carries featurelayer's reason for the refusal, which is what
+// tells "not on your plan" apart from "switched off for everyone".
+type NotEntitledError struct {
+	Reason string
+	Detail string
+}
+
+func (e *NotEntitledError) Error() string {
+	if e.Detail != "" {
+		return fmt.Sprintf("espd: export not entitled (%s: %s)", e.Reason, e.Detail)
+	}
+	return fmt.Sprintf("espd: export not entitled (%s)", e.Reason)
+}
+
+func (e *NotEntitledError) Is(target error) bool { return target == ErrNotEntitled }
+
+// CriterionUnsupportedError names the criterion and the version that cannot
+// express it, because "which one" is the whole content of the bug report.
+type CriterionUnsupportedError struct {
+	Key     CriterionKey
+	Version Version
+}
+
+func (e *CriterionUnsupportedError) Error() string {
+	return fmt.Sprintf("espd: criterion %q has no code-list entry in %s", e.Key, e.Version)
+}
+
+func (e *CriterionUnsupportedError) Is(target error) bool { return target == ErrCriterionUnsupported }
