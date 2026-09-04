@@ -854,3 +854,54 @@ func TestCheckEligibilityIncludesPublishedCriteria(t *testing.T) {
 		t.Error("assessment is not self-consistent with the published criterion present")
 	}
 }
+
+// ── ESPD sections on the fake ───────────────────────────────────────────────
+
+func (f *fakeRepo) PutRepresentative(_ context.Context, workspaceID string, r Representative) (Representative, error) {
+	d := f.ensure(workspaceID)
+	f.putCalls++
+	if r.ID == "" {
+		r.ID = "rep-1"
+	}
+	d.Representatives = append(d.Representatives, r)
+	return r, nil
+}
+
+func (f *fakeRepo) DeleteRepresentative(_ context.Context, _ string, _ string) error { return nil }
+
+func (f *fakeRepo) PutDeclaration(_ context.Context, workspaceID string, dec Declaration) (Declaration, error) {
+	d := f.ensure(workspaceID)
+	f.putCalls++
+	if !dec.Authoritative() {
+		return Declaration{}, ErrDeclarationNotAuthoritative
+	}
+	for i, stored := range d.Declarations {
+		if stored.Criterion == dec.Criterion {
+			dec.ID = stored.ID
+			d.Declarations[i] = dec
+			return dec, nil
+		}
+	}
+	if dec.ID == "" {
+		dec.ID = "dec-" + dec.Criterion
+	}
+	d.Declarations = append(d.Declarations, dec)
+	return dec, nil
+}
+
+func (f *fakeRepo) DeleteDeclaration(_ context.Context, _ string, _ string) error { return nil }
+
+func (f *fakeRepo) PutNationalGround(_ context.Context, workspaceID string, g NationalGround) (NationalGround, error) {
+	d := f.ensure(workspaceID)
+	f.putCalls++
+	if !g.Authoritative() {
+		return NationalGround{}, ErrDeclarationNotAuthoritative
+	}
+	if g.ID == "" {
+		g.ID = "ng-" + g.Country + "-" + g.Criterion
+	}
+	d.NationalGrounds = append(d.NationalGrounds, g)
+	return g, nil
+}
+
+func (f *fakeRepo) DeleteNationalGround(_ context.Context, _ string, _ string) error { return nil }

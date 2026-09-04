@@ -34,6 +34,17 @@ type Repository interface {
 	DeletePastContract(ctx context.Context, workspaceID, id string) error
 	PutRegistration(ctx context.Context, workspaceID string, r Registration) (Registration, error)
 	DeleteRegistration(ctx context.Context, workspaceID, id string) error
+
+	// The ESPD sections. Representatives key on the row id (two people can
+	// share a name); declarations upsert on (workspace_id, criterion) and
+	// national grounds on (workspace_id, country, criterion) — an operator has
+	// exactly one current answer per question, and a re-answer is a correction.
+	PutRepresentative(ctx context.Context, workspaceID string, r Representative) (Representative, error)
+	DeleteRepresentative(ctx context.Context, workspaceID, id string) error
+	PutDeclaration(ctx context.Context, workspaceID string, d Declaration) (Declaration, error)
+	DeleteDeclaration(ctx context.Context, workspaceID, id string) error
+	PutNationalGround(ctx context.Context, workspaceID string, g NationalGround) (NationalGround, error)
+	DeleteNationalGround(ctx context.Context, workspaceID, id string) error
 }
 
 // RequirementRepository is separate from Repository and not folded into it,
