@@ -131,7 +131,15 @@ type Engine struct{ e *featurelayer.Engine }
 // and every gated feature skips its commercial check, which would hand every
 // workspace an unmetered agent.
 func New(subs entitlement.SubscriptionStore, usage entitlement.UsageStore) (*Engine, error) {
-	snap, err := featurelayer.NewSnapshot(Config())
+	return newEngine(Config(), subs, usage)
+}
+
+// newEngine is New with the definitions passed in rather than taken from
+// Config. It exists so a test can build an engine over a catalog this product
+// does not ship — a flag with a rollout, say — and check that the methods above
+// agree with each other about the caller.
+func newEngine(cfg featurelayer.Config, subs entitlement.SubscriptionStore, usage entitlement.UsageStore) (*Engine, error) {
+	snap, err := featurelayer.NewSnapshot(cfg)
 	if err != nil {
 		return nil, fmt.Errorf("features: invalid definitions: %w", err)
 	}
@@ -174,8 +182,16 @@ func (e *Engine) Evaluate(ctx context.Context, key catalog.Key, workspaceID, use
 }
 
 // Usage reads a metered feature's counter without spending any of it.
-func (e *Engine) Usage(ctx context.Context, key catalog.Key, workspaceID string) (featurelayer.Decision, error) {
-	return e.e.Usage(ctx, key, evalContext(workspaceID, ""))
+//
+// It takes the user id even though a counter is per workspace, because a metered
+// feature resolves its whole dependency chain on the way to the meter — and
+// AgentTokens depends on AgentChat, which is flagged. A flag is evaluated
+// against the caller, so a rollout percentage or a segment rule (the shapes the
+// Flags declaration invites) would answer one way here with no user to test and
+// another way in Consume with one. The turn would pass the gate, stream, cost
+// real money, and then be refused when it came to spend.
+func (e *Engine) Usage(ctx context.Context, key catalog.Key, workspaceID, userID string) (featurelayer.Decision, error) {
+	return e.e.Usage(ctx, key, evalContext(workspaceID, userID))
 }
 
 // Consume spends n units of a metered feature. A refusal — the limit is

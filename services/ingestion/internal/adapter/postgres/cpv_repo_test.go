@@ -150,8 +150,18 @@ func TestRecomputeLabels_FillsLabelsFromTheVocabulary(t *testing.T) {
 		}
 	}
 
-	// And the generated search_vector must now match a German word even though
-	// the tender's own text is entirely Italian. That is the bridge working.
+	// The labels must NOT reach the generated search_vector. Migration 0008 put
+	// them there; 0009 took them out again on measured evidence — the toggle's
+	// shipped default degraded every lexical search to a sequential scan (88 ms
+	// → 2,987 ms on the live dev table), and the expansion itself moved none of
+	// the cross-language cells off zero while ranking worse — and kept the
+	// column only as denormalised text for a future, differently-shaped bridge.
+	// This assertion is 0009's guard: a migration that re-added cpv_labels to
+	// the vector would fail here before it re-created that seq scan.
+	//
+	// (Until CI had a database this test still asserted 0008's behaviour and
+	// nobody saw it fail — which is the state of affairs the assertion below
+	// exists to end.)
 	var matches bool
 	if err := sqlDB.QueryRow(`
 		SELECT search_vector @@ websearch_to_tsquery('simple', 'testdienstleistungen')
@@ -159,7 +169,7 @@ func TestRecomputeLabels_FillsLabelsFromTheVocabulary(t *testing.T) {
 		"test-cpv-labels", "r-1").Scan(&matches); err != nil {
 		t.Fatalf("query vector: %v", err)
 	}
-	if !matches {
-		t.Error("search_vector does not match the German CPV label — index-side expansion is not reaching the vector")
+	if matches {
+		t.Error("search_vector matches the German CPV label — cpv_labels is back in the indexed vector, which migration 0009 removed for the reasons in its header")
 	}
 }

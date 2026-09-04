@@ -121,8 +121,13 @@ type CheckResult struct {
 // comes back as the zero CheckResult: OK false, and not Unavailable, because
 // nothing is switched off — it simply has no entitlement. That is the same
 // answer a workspace with no credits row got before featurelayer.
-func (s *Service) Check(ctx context.Context, workspaceID string) (CheckResult, error) {
-	d, err := s.features.Usage(ctx, features.AgentTokens, workspaceID)
+//
+// userID is not there to identify the budget, which is the workspace's. It is
+// there because the chain this evaluates runs through the agent's kill switch,
+// and a flag answers about a caller: gating without one and spending with one
+// is how a turn gets admitted and then refused mid-flight.
+func (s *Service) Check(ctx context.Context, workspaceID, userID string) (CheckResult, error) {
+	d, err := s.features.Usage(ctx, features.AgentTokens, workspaceID, userID)
 	if err != nil {
 		return CheckResult{}, err
 	}

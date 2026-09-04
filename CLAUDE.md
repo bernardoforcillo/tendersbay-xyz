@@ -50,6 +50,18 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, standalone backend se
   `TEST_AUTH_CONTRACT_DATABASE_URL` — a **scratch** database they truncate and reset,
   deliberately not the `TEST_DATABASE_URL` the rest of the suite seeds into. Without it
   they skip.
+- **A full `TEST_DATABASE_URL` needs BOTH migration chains.** `services/backend` migrates
+  the `public` tables; the `tenders` schema its search, document, detail and eForms
+  repositories read is owned and migrated by `services/ingestion`. Point that service at
+  the same database once (`cd services/ingestion && TEST_DATABASE_URL=… go test
+  ./internal/adapter/postgres/ -run TestNew`) or those tests skip, naming the command.
+  `cpv_lexicon_test.go` additionally wants the vocabulary seeded (`go run ./cmd/seed-cpv`
+  from `services/ingestion`).
+- **End-to-end tests** live in `services/backend/e2e/`: the production wiring behind an
+  `httptest` server, driven over HTTP with the generated ConnectRPC clients (each account
+  gets its own cookie jar, since the refresh token is an HttpOnly cookie). Only the mailer,
+  the rate limiter and the absent agent provider are substituted. They run on
+  `TEST_DATABASE_URL`, add only their own rows, and skip without it.
 - **Features & entitlements:** [`featurelayer`](https://github.com/bernardoforcillo/featurelayer)
   — the feature catalog, flags and plan-based metered limits. Definitions live in code
   (`internal/core/features`); the per-workspace half (subscription, usage counters) is in
