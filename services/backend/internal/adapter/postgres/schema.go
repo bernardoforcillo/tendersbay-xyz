@@ -692,6 +692,10 @@ var (
 	CoCountry          = pg.Add(WorkspaceCompanies, pg.Text("country").NotNull().Default("''"))
 	CoNUTS             = pg.Add(WorkspaceCompanies, pg.Text("nuts").NotNull().Default("''"))
 	CoFoundedYear      = pg.Add(WorkspaceCompanies, pg.Integer("founded_year")) // nullable
+	// CoIsSME was added by 0016. Whether it was ever ANSWERED is read from the
+	// attribution map under company.FieldIsSME, not from the column: false with
+	// no entry is "never asked".
+	CoIsSME = pg.Add(WorkspaceCompanies, pg.Boolean("is_sme").NotNull().Default("false"))
 	// CoAttribution is the per-FIELD provenance map, keyed by company.FieldKey.
 	// It is JSONB rather than seven more column groups because the identity is a
 	// fixed set of scalars whose provenance is read as a whole by the dossier UI
@@ -835,6 +839,7 @@ type DBCompany struct {
 	Country     string          `drop:"country"`
 	NUTS        string          `drop:"nuts"`
 	FoundedYear *int32          `drop:"founded_year"`
+	IsSME       bool            `drop:"is_sme"`
 	Attribution json.RawMessage `drop:"attribution"`
 	UpdatedAt   time.Time       `drop:"updated_at"`
 }
@@ -947,4 +952,227 @@ type DBTenderRequirement struct {
 	ConfirmedAt *time.Time       `drop:"confirmed_at"`
 	CreatedAt   time.Time        `drop:"created_at"`
 	UpdatedAt   time.Time        `drop:"updated_at"`
+}
+
+// ── ESPD / DGUE tables (migration 0016) ─────────────────────────────────────
+//
+// Three more dossier sections (workspace-scoped, cascading with the workspace,
+// each with the per-fact provenance column set the other company_* tables
+// carry) and the per-bid ESPD data (bid-scoped, cascading with the bid, no
+// provenance: they are the operator's choices for one gara, not facts a buyer
+// can demand a certificate for). The two bid_espd_* tables are the buyer's
+// request (a small XML kept so the response can be recomputed — the one
+// motivated exception to "no blobs in the relational store") and the export
+// audit trail (the FACT of an export, never its bytes).
+var (
+	// CompanyRepresentatives is PII of natural persons other than the account
+	// holder — see .claude/rules/pii.md. Never selected into analytics or logs.
+	CompanyRepresentatives = pg.NewTable("company_representatives")
+	RepID                  = pg.Add(CompanyRepresentatives, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	RepWorkspaceID         = pg.Add(CompanyRepresentatives, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	RepRole                = pg.Add(CompanyRepresentatives, pg.Text("role").NotNull())
+	RepGivenName           = pg.Add(CompanyRepresentatives, pg.Text("given_name").NotNull())
+	RepFamilyName          = pg.Add(CompanyRepresentatives, pg.Text("family_name").NotNull())
+	RepBirthDate           = pg.Add(CompanyRepresentatives, pg.Timestamp("birth_date", true)) // nullable
+	RepBirthPlace          = pg.Add(CompanyRepresentatives, pg.Text("birth_place").NotNull().Default("''"))
+	RepAddress             = pg.Add(CompanyRepresentatives, pg.Text("address").NotNull().Default("''"))
+	RepEmail               = pg.Add(CompanyRepresentatives, pg.Text("email").NotNull().Default("''"))
+	RepPowerOfAttorney     = pg.Add(CompanyRepresentatives, pg.Boolean("power_of_attorney").NotNull().Default("false"))
+	RepProvenance          = pg.Add(CompanyRepresentatives, pg.Text("provenance").NotNull())
+	RepConfidence          = pg.Add(CompanyRepresentatives, pg.DoublePrecision("confidence")) // nullable
+	RepStatedBy            = pg.Add(CompanyRepresentatives, pg.UUID("stated_by"))             // nullable
+	RepStatedAt            = pg.Add(CompanyRepresentatives, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	RepPromptedBy          = pg.Add(CompanyRepresentatives, pg.Text("prompted_by").NotNull().Default("''"))
+	RepPromptedByTender    = pg.Add(CompanyRepresentatives, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	RepSourceNote          = pg.Add(CompanyRepresentatives, pg.Text("source_note").NotNull().Default("''"))
+
+	// CompanyDeclarations is Part III.A–C: one row per (workspace, criterion).
+	// provenance is NOT NULL like every sibling, and the domain additionally
+	// refuses anything but user_stated/user_confirmed before a row is written.
+	CompanyDeclarations = pg.NewTable("company_declarations")
+	DecID               = pg.Add(CompanyDeclarations, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	DecWorkspaceID      = pg.Add(CompanyDeclarations, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	DecCriterion        = pg.Add(CompanyDeclarations, pg.Text("criterion").NotNull())
+	DecAnswer           = pg.Add(CompanyDeclarations, pg.Boolean("answer").NotNull().Default("false"))
+	DecSelfCleaning     = pg.Add(CompanyDeclarations, pg.Text("self_cleaning").NotNull().Default("''"))
+	DecProvenance       = pg.Add(CompanyDeclarations, pg.Text("provenance").NotNull())
+	DecConfidence       = pg.Add(CompanyDeclarations, pg.DoublePrecision("confidence")) // nullable, always NULL in practice
+	DecStatedBy         = pg.Add(CompanyDeclarations, pg.UUID("stated_by"))             // nullable in the schema, set by the domain
+	DecStatedAt         = pg.Add(CompanyDeclarations, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	DecPromptedBy       = pg.Add(CompanyDeclarations, pg.Text("prompted_by").NotNull().Default("''"))
+	DecPromptedByTender = pg.Add(CompanyDeclarations, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	DecSourceNote       = pg.Add(CompanyDeclarations, pg.Text("source_note").NotNull().Default("''"))
+
+	// CompanyNationalGrounds is Part III.D: one row per (workspace, country,
+	// criterion).
+	CompanyNationalGrounds = pg.NewTable("company_national_grounds")
+	NGID                   = pg.Add(CompanyNationalGrounds, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	NGWorkspaceID          = pg.Add(CompanyNationalGrounds, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	NGCountry              = pg.Add(CompanyNationalGrounds, pg.Text("country").NotNull())
+	NGCriterion            = pg.Add(CompanyNationalGrounds, pg.Text("criterion").NotNull())
+	NGAnswer               = pg.Add(CompanyNationalGrounds, pg.Boolean("answer").NotNull().Default("false"))
+	NGNote                 = pg.Add(CompanyNationalGrounds, pg.Text("note").NotNull().Default("''"))
+	NGProvenance           = pg.Add(CompanyNationalGrounds, pg.Text("provenance").NotNull())
+	NGConfidence           = pg.Add(CompanyNationalGrounds, pg.DoublePrecision("confidence")) // nullable
+	NGStatedBy             = pg.Add(CompanyNationalGrounds, pg.UUID("stated_by"))             // nullable
+	NGStatedAt             = pg.Add(CompanyNationalGrounds, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	NGPromptedBy           = pg.Add(CompanyNationalGrounds, pg.Text("prompted_by").NotNull().Default("''"))
+	NGPromptedByTender     = pg.Add(CompanyNationalGrounds, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	NGSourceNote           = pg.Add(CompanyNationalGrounds, pg.Text("source_note").NotNull().Default("''"))
+
+	// Per-bid ESPD data.
+	BidLots     = pg.NewTable("bid_lots")
+	LotID       = pg.Add(BidLots, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	LotBidID    = pg.Add(BidLots, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	LotRef      = pg.Add(BidLots, pg.Text("lot_ref").NotNull())
+	LotPosition = pg.Add(BidLots, pg.Integer("position").NotNull().Default("0"))
+
+	BidSubcontractors = pg.NewTable("bid_subcontractors")
+	SubID             = pg.Add(BidSubcontractors, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	SubBidID          = pg.Add(BidSubcontractors, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	SubName           = pg.Add(BidSubcontractors, pg.Text("name").NotNull())
+	SubVAT            = pg.Add(BidSubcontractors, pg.Text("vat").NotNull())
+	SubCountry        = pg.Add(BidSubcontractors, pg.Text("country").NotNull().Default("''"))
+	SubShare          = pg.Add(BidSubcontractors, pg.SmallInt("share")) // nullable: percent, NULL = unstated
+
+	BidReliances  = pg.NewTable("bid_reliances")
+	RelID         = pg.Add(BidReliances, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	RelBidID      = pg.Add(BidReliances, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	RelEntityName = pg.Add(BidReliances, pg.Text("entity_name").NotNull())
+	RelVAT        = pg.Add(BidReliances, pg.Text("vat").NotNull())
+	RelCriterion  = pg.Add(BidReliances, pg.Text("criterion").NotNull())
+
+	// BidDeclarationConfirmations: bid_id IS the primary key — the latest
+	// confirmation wins, since the only question the row answers is "does the
+	// current set of declarations have a signature for this bid".
+	BidDeclarationConfirmations = pg.NewTable("bid_declaration_confirmations")
+	DCBidID                     = pg.Add(BidDeclarationConfirmations, pg.UUID("bid_id").PrimaryKey().References(BidID, pg.OnDelete("CASCADE")))
+	DCUserID                    = pg.Add(BidDeclarationConfirmations, pg.UUID("user_id").NotNull())
+	DCConfirmedAt               = pg.Add(BidDeclarationConfirmations, pg.Timestamp("confirmed_at", true).NotNull().Default("now()"))
+	DCDeclarationsHash          = pg.Add(BidDeclarationConfirmations, pg.Text("declarations_hash").NotNull())
+
+	// BidEspdRequests keeps the buyer's request XML (tens of KB) per bid so the
+	// response can be recomposed and re-exported. If requests ever grow past
+	// that, this moves to object storage — see the system-design rule.
+	BidEspdRequests = pg.NewTable("bid_espd_requests")
+	ERBidID         = pg.Add(BidEspdRequests, pg.UUID("bid_id").PrimaryKey().References(BidID, pg.OnDelete("CASCADE")))
+	ERVersion       = pg.Add(BidEspdRequests, pg.Text("version").NotNull())
+	ERXML           = pg.Add(BidEspdRequests, pg.Text("xml").NotNull())
+	ERSHA256        = pg.Add(BidEspdRequests, pg.Text("sha256").NotNull())
+	ERImportedBy    = pg.Add(BidEspdRequests, pg.UUID("imported_by").NotNull())
+	ERImportedAt    = pg.Add(BidEspdRequests, pg.Timestamp("imported_at", true).NotNull().Default("now()"))
+
+	// BidEspdExports is the audit trail: who exported what, when, resting on
+	// which confirmation. Content is identified by hash only.
+	BidEspdExports            = pg.NewTable("bid_espd_exports")
+	EXID                      = pg.Add(BidEspdExports, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	EXBidID                   = pg.Add(BidEspdExports, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	EXUserID                  = pg.Add(BidEspdExports, pg.UUID("exported_by").NotNull())
+	EXVersion                 = pg.Add(BidEspdExports, pg.Text("version").NotNull())
+	EXFormat                  = pg.Add(BidEspdExports, pg.Text("format").NotNull())
+	EXContentSHA256           = pg.Add(BidEspdExports, pg.Text("content_sha256").NotNull())
+	EXDeclarationsConfirmedAt = pg.Add(BidEspdExports, pg.Timestamp("declarations_confirmed_at", true).NotNull())
+	EXExportedAt              = pg.Add(BidEspdExports, pg.Timestamp("exported_at", true).NotNull().Default("now()"))
+)
+
+type DBRepresentative struct {
+	ID                 string     `drop:"id"`
+	WorkspaceID        string     `drop:"workspace_id"`
+	Role               string     `drop:"role"`
+	GivenName          string     `drop:"given_name"`
+	FamilyName         string     `drop:"family_name"`
+	BirthDate          *time.Time `drop:"birth_date"`
+	BirthPlace         string     `drop:"birth_place"`
+	Address            string     `drop:"address"`
+	Email              string     `drop:"email"`
+	PowerOfAttorney    bool       `drop:"power_of_attorney"`
+	Provenance         string     `drop:"provenance"`
+	Confidence         *float64   `drop:"confidence"`
+	StatedBy           *string    `drop:"stated_by"`
+	StatedAt           time.Time  `drop:"stated_at"`
+	PromptedBy         string     `drop:"prompted_by"`
+	PromptedByTenderID *int64     `drop:"prompted_by_tender_id"`
+	SourceNote         string     `drop:"source_note"`
+}
+
+type DBDeclaration struct {
+	ID                 string    `drop:"id"`
+	WorkspaceID        string    `drop:"workspace_id"`
+	Criterion          string    `drop:"criterion"`
+	Answer             bool      `drop:"answer"`
+	SelfCleaning       string    `drop:"self_cleaning"`
+	Provenance         string    `drop:"provenance"`
+	Confidence         *float64  `drop:"confidence"`
+	StatedBy           *string   `drop:"stated_by"`
+	StatedAt           time.Time `drop:"stated_at"`
+	PromptedBy         string    `drop:"prompted_by"`
+	PromptedByTenderID *int64    `drop:"prompted_by_tender_id"`
+	SourceNote         string    `drop:"source_note"`
+}
+
+type DBNationalGround struct {
+	ID                 string    `drop:"id"`
+	WorkspaceID        string    `drop:"workspace_id"`
+	Country            string    `drop:"country"`
+	Criterion          string    `drop:"criterion"`
+	Answer             bool      `drop:"answer"`
+	Note               string    `drop:"note"`
+	Provenance         string    `drop:"provenance"`
+	Confidence         *float64  `drop:"confidence"`
+	StatedBy           *string   `drop:"stated_by"`
+	StatedAt           time.Time `drop:"stated_at"`
+	PromptedBy         string    `drop:"prompted_by"`
+	PromptedByTenderID *int64    `drop:"prompted_by_tender_id"`
+	SourceNote         string    `drop:"source_note"`
+}
+
+type DBLot struct {
+	ID       string `drop:"id"`
+	BidID    string `drop:"bid_id"`
+	LotRef   string `drop:"lot_ref"`
+	Position int32  `drop:"position"`
+}
+
+type DBSubcontractor struct {
+	ID      string `drop:"id"`
+	BidID   string `drop:"bid_id"`
+	Name    string `drop:"name"`
+	VAT     string `drop:"vat"`
+	Country string `drop:"country"`
+	Share   *int16 `drop:"share"`
+}
+
+type DBReliance struct {
+	ID         string `drop:"id"`
+	BidID      string `drop:"bid_id"`
+	EntityName string `drop:"entity_name"`
+	VAT        string `drop:"vat"`
+	Criterion  string `drop:"criterion"`
+}
+
+type DBDeclarationConfirmation struct {
+	BidID            string    `drop:"bid_id"`
+	UserID           string    `drop:"user_id"`
+	ConfirmedAt      time.Time `drop:"confirmed_at"`
+	DeclarationsHash string    `drop:"declarations_hash"`
+}
+
+type DBEspdRequest struct {
+	BidID      string    `drop:"bid_id"`
+	Version    string    `drop:"version"`
+	XML        string    `drop:"xml"`
+	SHA256     string    `drop:"sha256"`
+	ImportedBy string    `drop:"imported_by"`
+	ImportedAt time.Time `drop:"imported_at"`
+}
+
+type DBEspdExport struct {
+	ID                      string    `drop:"id"`
+	BidID                   string    `drop:"bid_id"`
+	ExportedBy              string    `drop:"exported_by"`
+	Version                 string    `drop:"version"`
+	Format                  string    `drop:"format"`
+	ContentSHA256           string    `drop:"content_sha256"`
+	DeclarationsConfirmedAt time.Time `drop:"declarations_confirmed_at"`
+	ExportedAt              time.Time `drop:"exported_at"`
 }
