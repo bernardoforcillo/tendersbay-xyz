@@ -4,15 +4,16 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"connectrpc.com/connect"
-	"github.com/bernardoforcillo/tendersbay-xyz/go-services/token"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/espd"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -33,6 +34,27 @@ func UserIDFromContext(ctx context.Context) (string, bool) {
 // standing up a real JWT.
 func ContextWithUserID(ctx context.Context, userID string) context.Context {
 	return context.WithValue(ctx, userIDKey, userID)
+}
+
+const sessionIDKey contextKey = "session_id"
+
+// SessionIDFromContext extracts the refresh session the caller's access token
+// was minted for, injected by JWTMiddleware from the token's `sid` claim.
+//
+// It exists because authlayer's sensitive account operations (change password,
+// change email, delete account) take the caller's OWN session id so they can
+// revoke every other session without signing the caller out of the tab they
+// are working in. An empty value is not an error — it simply means nothing is
+// spared, which is the safe direction.
+func SessionIDFromContext(ctx context.Context) string {
+	id, _ := ctx.Value(sessionIDKey).(string)
+	return id
+}
+
+// ContextWithSession injects both identifiers the way JWTMiddleware does, for
+// tests that exercise a handler needing the session id as well as the user id.
+func ContextWithSession(ctx context.Context, userID, sessionID string) context.Context {
+	return context.WithValue(ContextWithUserID(ctx, userID), sessionIDKey, sessionID)
 }
 
 const clientIPKey contextKey = "client_ip"
@@ -74,17 +96,28 @@ func ClientIPMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// JWTMiddleware parses the Bearer token and injects user_id into the request context.
-// Unauthenticated requests pass through — handlers that require auth check UserIDFromContext.
-func JWTMiddleware(secret string) func(http.Handler) http.Handler {
+// TokenVerifier is the one thing this transport needs from the auth domain:
+// turn a bearer string into verified claims, or refuse it. Satisfied by
+// *auth.Service, which delegates to authlayer's HS256 verifier.
+//
+// It is an interface rather than the concrete service so the middleware keeps
+// the transport layer's job description — validate and delegate — without
+// pulling the whole auth service into every test that needs a signed request.
+type TokenVerifier interface {
+	VerifyAccessToken(raw string) (auth.Claims, error)
+}
+
+// JWTMiddleware parses the Bearer token and injects the user and session ids
+// into the request context. Unauthenticated requests pass through — handlers
+// that require auth check UserIDFromContext.
+func JWTMiddleware(verifier TokenVerifier) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			header := r.Header.Get("Authorization")
 			if strings.HasPrefix(header, "Bearer ") {
 				raw := strings.TrimPrefix(header, "Bearer ")
-				if claims, err := token.ParseJWT(raw, secret); err == nil {
-					ctx := context.WithValue(r.Context(), userIDKey, claims.UserID)
-					r = r.WithContext(ctx)
+				if claims, err := verifier.VerifyAccessToken(raw); err == nil {
+					r = r.WithContext(ContextWithSession(r.Context(), claims.Subject, claims.SessionID))
 				}
 			}
 			next.ServeHTTP(w, r)
@@ -207,9 +240,44 @@ func toConnectError(err error) error {
 	case errors.Is(err, bid.ErrInvalidArgument):
 		return connect.NewError(connect.CodeInvalidArgument, err)
 
+	// ── ESPD / DGUE ──
+	//
+	// Four refusals that read very differently to a person, so they must not
+	// collapse into one code:
+	//
+	//   - not entitled: the plan does not carry the export. The caller MAY
+	//     write to this workbench, so this is not an access failure; the
+	//     x-error-code lets the client offer an upgrade instead of an apology.
+	//   - not ready: the document has open gaps or unconfirmed Part III
+	//     declarations. FailedPrecondition, with the count in the metadata so a
+	//     client can say what is missing without a second round trip.
+	//   - unsupported criterion / request: a bug report and a bad input
+	//     respectively, and both name what they could not express.
+	case errors.Is(err, espd.ErrNotEntitled):
+		e := connect.NewError(connect.CodePermissionDenied, err)
+		e.Meta().Set("x-error-code", "ESPD_EXPORT_NOT_ENTITLED")
+		return e
+	case errors.Is(err, espd.ErrNotReady):
+		e := connect.NewError(connect.CodeFailedPrecondition, err)
+		e.Meta().Set("x-error-code", "ESPD_NOT_READY")
+		var notReady *espd.NotReadyError
+		if errors.As(err, &notReady) {
+			e.Meta().Set("x-espd-open-gaps", strconv.Itoa(len(notReady.Gaps)))
+		}
+		return e
+	case errors.Is(err, espd.ErrCriterionUnsupported):
+		return connect.NewError(connect.CodeInternal, err)
+	case errors.Is(err, espd.ErrUnsupportedRequest),
+		errors.Is(err, espd.ErrInvalidArgument):
+		return connect.NewError(connect.CodeInvalidArgument, err)
+	case errors.Is(err, espd.ErrRequestNotFound):
+		return connect.NewError(connect.CodeNotFound, err)
+
 	// Agent domain
 	case errors.Is(err, agent.ErrInsufficientCredits):
 		return connect.NewError(connect.CodeResourceExhausted, err)
+	case errors.Is(err, agent.ErrAgentUnavailable):
+		return connect.NewError(connect.CodeUnavailable, err)
 	case errors.Is(err, agent.ErrChoiceNotPending):
 		return connect.NewError(connect.CodeFailedPrecondition, err)
 	case errors.Is(err, agent.ErrEmptyMessage):

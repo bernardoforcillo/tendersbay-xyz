@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Az Ön EEKD-ja",
+      "progress": "{{ready}} / {{total}} mező kész",
+      "ready": "Exportálásra kész. Semmi sem hiányzik.",
+      "companyTodo": "Egyszer kell kitölteni — minden eljárásra érvényes",
+      "companyTodoHint": "Ezek a cégére vonatkozó adatok. Válaszolja meg egyszer, és átkerülnek a következő eljárásba.",
+      "bidTodo": "Ehhez az eljáráshoz",
+      "noneLeft": "Itt már semmi sem hiányzik.",
+      "reviewDeclarations": "Nyilatkozatok áttekintése",
+      "confirmDeclarations": "Nyilatkozatok megerősítése",
+      "export": "Exportálás",
+      "exportHint": "Az exportálás akkor nyílik meg, ha semmi sem hiányzik."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Erre még senki nem válaszolt.",
+        "not_authoritative": "Van érték, de senki nem nyilatkozott róla — ez a dokumentum csak ember által megerősített tényeket tartalmaz.",
+        "stale": "Megválaszolva, de a legutóbbi változás óta nem lett újra megerősítve ehhez az eljáráshoz."
+      },
+      "openDossier": "Cégdosszié megnyitása",
+      "openBid": "Kitöltés ehhez az eljáráshoz"
+    },
+    "declarations": {
+      "title": "III. rész — kizáró okok",
+      "incomplete": "Néhány okra soha nem érkezett válasz. Válaszolja meg a cégdossziéban — egyszer, minden eljáráshoz.",
+      "openDossier": "Cégdosszié megnyitása",
+      "declaredOn": "Ehhez az eljáráshoz {{when}} napján megerősítve.",
+      "neverConfirmed": "Ezeket a válaszokat még nem erősítette meg ehhez az eljáráshoz.",
+      "stale": "Egy válasz a legutóbbi megerősítés után megváltozott. Olvassa el újra őket, és erősítse meg.",
+      "appliesTitle": "Az Ön szerint fennálló okok",
+      "selfCleaning": "Megtett intézkedések",
+      "allTitle": "Minden ok",
+      "applies": "Fennáll",
+      "doesNotApply": "Nem áll fenn",
+      "unanswered": "Megválaszolatlan",
+      "confirm": "Igen — ehhez az eljáráshoz továbbra is igaz",
+      "confirming": "Megerősítés…",
+      "changed": "Valami megváltozott",
+      "error": "A megerősítés nem sikerült — próbálja újra."
+    },
+    "export": {
+      "title": "Exportálás",
+      "notReadyHint": "Az exportálás akkor nyílik meg, ha semmi sem hiányzik, és nyilatkozatai meg vannak erősítve ehhez az eljáráshoz.",
+      "exporting": "Előkészítés…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — az aláírandó dokumentum",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Teljes, az Ön nyelvén",
+        "xml": "Újrafelhasználáshoz és importhoz, ahol támogatott"
+      },
+      "nextStep": "Következő lépés: a cégjegyzésre jogosult elektronikusan aláírja, majd Ön feltölti az ajánlatkérő portáljára {{when}} előtt.",
+      "nextStepNoDeadline": "Következő lépés: a cégjegyzésre jogosult elektronikusan aláírja, majd Ön feltölti az ajánlatkérő portáljára.",
+      "history": "Korábbi exportok",
+      "historyHint": "Azt rögzítjük, hogy exportált, magát a fájlt soha. Az újabb export a mai dossziéból épül fel.",
+      "notEntitled": "Az EEKD-export a Pro csomag része. Minden, amit fent lát, ingyenes marad.",
+      "notReady": "Valami még hiányzik, vagy a nyilatkozatokat újra meg kell erősíteni ehhez az eljáráshoz.",
+      "error": "Az exportálás nem sikerült — próbálja újra."
+    },
+    "dossier": {
+      "title": "Kizáró okok (EEKD III. rész)",
+      "progress": "{{answered}} / {{total}} megválaszolva",
+      "intro": "Válaszolja meg egyszer. Minden eljárás újra használja — Ön csak megerősíti, hogy még mindig igazak.",
+      "applies": "Ránk vonatkozik",
+      "doesNotApply": "Ránk nem vonatkozik",
+      "unanswered": "Még nincs válasz",
+      "selfCleaning": "Megtett intézkedések (self-cleaning)",
+      "selfCleaningHint": "Mit tettek az ügyben — 57. cikk (6) bekezdés. Az ajánlatkérő ezt elolvassa, mielőtt a kizárásról dönt.",
+      "statedAt": "Nyilatkozat kelte: {{when}}",
+      "error": "A mentés nem sikerült — próbálja újra."
+    },
+    "fields": {
+      "is_sme": "KKV-státusz",
+      "representative": "Cégjegyzésre jogosult",
+      "buyer_name": "Ajánlatkérő",
+      "reference": "Az eljárás hivatkozási száma",
+      "lot_ref": "Rész",
+      "confirmation": "Megerősítés ehhez az eljáráshoz",
+      "criterion": "Az ajánlatkérő kéri"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Az eljárás",
+        "lots": "Részek, amelyekre ajánlatot tesz"
+      },
+      "ii": {
+        "a": {
+          "identity": "A cég azonosítása"
+        },
+        "b": {
+          "representatives": "Cégjegyzésre jogosultak"
+        },
+        "c": {
+          "reliance": "Más szervezetek kapacitásaira támaszkodás"
+        },
+        "d": {
+          "subcontracting": "Alvállalkozás"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA-tanúsítvány (hivatalos jegyzék)",
+          "references": "Referenciák meghatározott munkákról",
+          "average_annual_manpower": "Átlagos éves munkaerő-állomány"
+        },
+        "a": {
+          "enrolment_professional_register": "Szerepel a vonatkozó szakmai jegyzékben",
+          "enrolment_trade_register": "Szerepel a vonatkozó cégnyilvántartásban",
+          "other_registration": "A szolgáltatási szerződésekhez szükséges engedély vagy szervezeti tagság"
+        },
+        "b": {
+          "general_yearly_turnover": "Általános éves árbevétel",
+          "specific_yearly_turnover": "Specifikus éves árbevétel"
+        },
+        "d": {
+          "quality_assurance_certificates": "Független testületek által kiállított igazolás a minőségbiztosítási szabványoknak való megfelelésről",
+          "environmental_management_certificates": "Független testületek által kiállított igazolás a környezetgazdálkodási rendszereknek vagy környezetgazdálkodási szabványoknak való megfelelésről"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Bűnszervezetben való részvétel",
+          "corruption": "Korrupció",
+          "fraud": "Csalás",
+          "terrorist_offences": "Terrorista bűncselekmény vagy terrorista tevékenységekkel összefüggő bűncselekmény",
+          "money_laundering": "Pénzmosás vagy terrorizmus finanszírozása",
+          "child_labour_human_trafficking": "Gyermekmunka és az emberkereskedelem más formái"
+        },
+        "b": {
+          "payment_of_taxes": "Az adófizetési kötelezettség megszegése",
+          "payment_of_social_security": "A társadalombiztosítási járulékfizetési kötelezettség megszegése"
+        },
+        "c": {
+          "breach_environmental_obligations": "Környezetvédelmi jogszabályokban előírt kötelezettségek megszegése",
+          "breach_social_obligations": "Szociális jogszabályokban előírt kötelezettségek megszegése",
+          "breach_labour_obligations": "Munkajogi kötelezettségek megszegése",
+          "bankruptcy": "Csőd",
+          "insolvency": "Fizetésképtelenség",
+          "arrangement_with_creditors": "Csődegyezség hitelezőkkel",
+          "analogous_situation": "A nemzeti törvények értelmében a csődhöz hasonló helyzet",
+          "assets_administered_by_liquidator": "Felszámoló által kezelt vagyon",
+          "business_activities_suspended": "Üzleti tevékenység felfüggesztése",
+          "grave_professional_misconduct": "Súlyos szakmai kötelességszegés",
+          "agreements_distorting_competition": "A verseny torzítását célzó megállapodás más gazdasági szereplőkkel",
+          "conflict_of_interest": "A közbeszerzési eljárásban való részvételből fakadó összeférhetetlenség",
+          "involvement_in_preparation": "Közvetlen vagy közvetett részvétel a közbeszerzési eljárás előkészítésében",
+          "early_termination": "Lejárat előtti megszüntetés, kártérítési követelés vagy egyéb hasonló szankciók",
+          "misrepresentation": "Hamis nyilatkozattétel, információk visszatartása vagy a megkívánt iratok be nem mutatása, illetve bizalmas információk szerzése az eljárásról"
+        },
+        "d": {
+          "purely_national_grounds": "Tisztán nemzeti kizáró okok"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Büntetőeljárásban hozott ítéletekkel kapcsolatos okok",
+        "B": "Adófizetési vagy társadalombiztosítási járulékfizetési kötelezettség megszegésével kapcsolatos okok",
+        "C": "Fizetésképtelenséggel, összeférhetetlenséggel vagy szakmai kötelességszegéssel kapcsolatos okok"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Bejelentkezés",

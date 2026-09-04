@@ -318,6 +318,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Vaš ESPD",
+      "progress": "Spremno {{ready}} od {{total}} polja",
+      "ready": "Spremno za izvoz. Ništa ne nedostaje.",
+      "companyTodo": "Ispunjava se jednom — vrijedi za svaki natječaj",
+      "companyTodoHint": "Ovo su podaci o vašoj tvrtki. Odgovorite jednom i prenose se na sljedeći natječaj.",
+      "bidTodo": "Za ovaj natječaj",
+      "noneLeft": "Ovdje više ništa ne nedostaje.",
+      "reviewDeclarations": "Pregledajte izjave",
+      "confirmDeclarations": "Potvrdite izjave",
+      "export": "Izvoz",
+      "exportHint": "Izvoz se otključava kada ništa ne nedostaje."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Na ovo još nitko nije odgovorio.",
+        "not_authoritative": "Vrijednost postoji, ali nitko je nije izjavio — ovaj dokument nosi samo činjenice koje je potvrdila osoba.",
+        "stale": "Odgovoreno, ali nije ponovno potvrđeno za ovaj natječaj nakon posljednje promjene."
+      },
+      "openDossier": "Otvori dosje tvrtke",
+      "openBid": "Ispuni za ovaj natječaj"
+    },
+    "declarations": {
+      "title": "Dio III. — osnove za isključenje",
+      "incomplete": "Na neke osnove nikada nije odgovoreno. Odgovorite u dosjeu tvrtke — jednom, za sve natječaje.",
+      "openDossier": "Otvori dosje tvrtke",
+      "declaredOn": "Potvrđeno za ovaj natječaj {{when}}.",
+      "neverConfirmed": "Ovi odgovori još nisu potvrđeni za ovaj natječaj.",
+      "stale": "Odgovor se promijenio nakon posljednje potvrde. Pročitajte ih ponovno i potvrdite.",
+      "appliesTitle": "Osnove za koje ste izjavili da se primjenjuju",
+      "selfCleaning": "Poduzete mjere",
+      "allTitle": "Sve osnove",
+      "applies": "Primjenjuje se",
+      "doesNotApply": "Ne primjenjuje se",
+      "unanswered": "Bez odgovora",
+      "confirm": "Da — i dalje vrijedi za ovaj natječaj",
+      "confirming": "Potvrđujem…",
+      "changed": "Nešto se promijenilo",
+      "error": "Potvrda nije uspjela — pokušajte ponovno."
+    },
+    "export": {
+      "title": "Izvoz",
+      "notReadyHint": "Izvoz se otključava kada ništa ne nedostaje i kada su izjave potvrđene za ovaj natječaj.",
+      "exporting": "Priprema…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — dokument za potpis",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Potpun, na vašem jeziku",
+        "xml": "Za ponovnu upotrebu i uvoz gdje je podržan"
+      },
+      "nextStep": "Sljedeći korak: zakonski zastupnik ga elektronički potpisuje, a zatim ga učitate na portal naručitelja prije {{when}}.",
+      "nextStepNoDeadline": "Sljedeći korak: zakonski zastupnik ga elektronički potpisuje, a zatim ga učitate na portal naručitelja.",
+      "history": "Prethodni izvozi",
+      "historyHint": "Bilježimo da ste izvezli, nikada samu datoteku. Novi izvoz gradi se iz današnjeg dosjea.",
+      "notEntitled": "Izvoz ESPD-a dio je plana Pro. Sve što vidite iznad ostaje besplatno.",
+      "notReady": "Nešto još nedostaje ili izjave treba ponovno potvrditi za ovaj natječaj.",
+      "error": "Izvoz nije uspio — pokušajte ponovno."
+    },
+    "dossier": {
+      "title": "Osnove za isključenje (ESPD dio III.)",
+      "progress": "Odgovoreno {{answered}} od {{total}}",
+      "intro": "Odgovorite jednom. Svaki natječaj ih ponovno koristi — samo potvrđujete da još vrijede.",
+      "applies": "Odnosi se na nas",
+      "doesNotApply": "Ne odnosi se na nas",
+      "unanswered": "Još bez odgovora",
+      "selfCleaning": "Poduzete mjere (self-cleaning)",
+      "selfCleaningHint": "Što ste poduzeli — članak 57. stavak 6. Naručitelj to čita prije odluke o isključenju.",
+      "statedAt": "Izjavljeno {{when}}",
+      "error": "Spremanje nije uspjelo — pokušajte ponovno."
+    },
+    "fields": {
+      "is_sme": "Status MSP-a",
+      "representative": "Zakonski zastupnik",
+      "buyer_name": "Naručitelj",
+      "reference": "Referentni broj postupka",
+      "lot_ref": "Grupa",
+      "confirmation": "Potvrda za ovaj natječaj",
+      "criterion": "Traži naručitelj"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Postupak",
+        "lots": "Grupe na koje se javljate"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identifikacija tvrtke"
+        },
+        "b": {
+          "representatives": "Zakonski zastupnici"
+        },
+        "c": {
+          "reliance": "Oslanjanje na sposobnosti drugih subjekata"
+        },
+        "d": {
+          "subcontracting": "Podugovaranje"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA potvrda (službeni popis)",
+          "references": "Upućivanja na određene radove",
+          "average_annual_manpower": "Prosječni godišnji broj radnika"
+        },
+        "a": {
+          "enrolment_professional_register": "Upis u relevantni strukovni registar",
+          "enrolment_trade_register": "Upis u trgovački registar",
+          "other_registration": "Ovlaštenje ili članstvo u određenoj organizaciji potrebno za izvršenje ugovora o uslugama"
+        },
+        "b": {
+          "general_yearly_turnover": "Opći godišnji promet",
+          "specific_yearly_turnover": "Određeni godišnji promet"
+        },
+        "d": {
+          "quality_assurance_certificates": "Potvrde neovisnih tijela o normama osiguravanja kvalitete",
+          "environmental_management_certificates": "Potvrde neovisnih tijela o sustavima ili normama upravljanja okolišem"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Sudjelovanje u zločinačkoj organizaciji",
+          "corruption": "Korupcija",
+          "fraud": "Prijevara",
+          "terrorist_offences": "Kaznena djela terorizma ili kaznena djela povezana s terorističkim aktivnostima",
+          "money_laundering": "Pranje novca ili financiranje terorizma",
+          "child_labour_human_trafficking": "Dječji rad i drugi oblici trgovanja ljudima"
+        },
+        "b": {
+          "payment_of_taxes": "Kršenje obveze plaćanja poreza",
+          "payment_of_social_security": "Kršenje obveze plaćanja doprinosa za socijalno osiguranje"
+        },
+        "c": {
+          "breach_environmental_obligations": "Kršenje obveza u području prava o okolišu",
+          "breach_social_obligations": "Kršenje obveza u području socijalnog prava",
+          "breach_labour_obligations": "Kršenje obveza u području radnog prava",
+          "bankruptcy": "Stečaj",
+          "insolvency": "Nesolventnost",
+          "arrangement_with_creditors": "Nagodba s vjerovnicima",
+          "analogous_situation": "Situacije istovrsne stečaju prema nacionalnim zakonima",
+          "assets_administered_by_liquidator": "Imovinom subjekta upravlja stečajni upravitelj",
+          "business_activities_suspended": "Suspendirane poslovne aktivnosti",
+          "grave_professional_misconduct": "Teški poslovni prekršaj",
+          "agreements_distorting_competition": "Sporazumi s drugim gospodarskim subjektima u cilju narušavanja tržišnog natjecanja",
+          "conflict_of_interest": "Sukob interesa koji proizlazi iz sudjelovanja u postupku javne nabave",
+          "involvement_in_preparation": "Izravno ili neizravno sudjelovanje u pripremi ovog postupka javne nabave",
+          "early_termination": "Prijevremeni raskid, naknada štete ili druge usporedive sankcije",
+          "misrepresentation": "Lažno prikazivanje, prikrivanje informacija, nemogućnost podnošenja traženih dokumenata ili prikupljanje povjerljivih informacija o ovom postupku"
+        },
+        "d": {
+          "purely_national_grounds": "Isključivo nacionalne osnove za isključenje"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Osnove povezane s kaznenim presudama",
+        "B": "Osnove povezane s plaćanjem poreza ili doprinosa za socijalno osiguranje",
+        "C": "Osnove povezane s insolventnošću, sukobima interesa ili poslovnim prekršajem"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Prijava",

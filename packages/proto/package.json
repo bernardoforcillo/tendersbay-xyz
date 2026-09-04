@@ -17,7 +17,10 @@
     "./tender/v1/tender_pb": "./src/gen/tender/v1/tender_pb.js",
     "./tender/v1/tender_connect": "./src/gen/tender/v1/tender_connect.js",
     "./bid/v1/bid_pb": "./src/gen/bid/v1/bid_pb.js",
-    "./company/v1/company_pb": "./src/gen/company/v1/company_pb.js"
+    "./company/v1/company_pb": "./src/gen/company/v1/company_pb.js",
+    "./company/v1/company_connect": "./src/gen/company/v1/company_connect.js",
+    "./espd/v1/espd_pb": "./src/gen/espd/v1/espd_pb.js",
+    "./espd/v1/espd_connect": "./src/gen/espd/v1/espd_connect.js"
   },
   "peerDependencies": {
     "@bufbuild/protobuf": "^2.0.0",

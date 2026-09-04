@@ -2,637 +2,799 @@ package workspace_test
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 
+	"github.com/bernardoforcillo/authlayer/scope"
+	memstore "github.com/bernardoforcillo/authlayer/store/memory"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
 )
 
-// ── in-memory state shared by the fake repos and the fake unit of work ───────
+// ── fakes ───────────────────────────────────────────────────────────────────
 
-type state struct {
-	ws    map[string]workspace.Workspace
-	roles map[string]workspace.Role
-	mem   map[string]workspace.Member // key: workspaceID + "|" + userID
-	einv  map[string]workspace.EmailInvitation
-	links map[string]workspace.InviteLink
-	users map[string]auth.User // by id
-	n     int
+// testStore is authlayer's in-memory scope store plus the one thing it
+// deliberately does not model: the slug UNIQUE constraint. In production that
+// constraint lives in Postgres and is what turns a duplicate into
+// scope.ErrConflict, so the mapping to ErrSlugTaken would otherwise be
+// untestable without a database.
+//
+// It doubles as workspace.Repository, because the queries that port covers read
+// and write the very same workspaces row this store does.
+type testStore struct {
+	workspace.Store
+
+	mu     sync.Mutex
+	bySlug map[string]string
+	byID   map[string]workspace.Workspace
 }
 
-func newState() *state {
-	return &state{
-		ws:    map[string]workspace.Workspace{},
-		roles: map[string]workspace.Role{},
-		mem:   map[string]workspace.Member{},
-		einv:  map[string]workspace.EmailInvitation{},
-		links: map[string]workspace.InviteLink{},
-		users: map[string]auth.User{},
+func newTestStore() *testStore {
+	return &testStore{
+		Store:  memstore.New[workspace.Workspace, workspace.Member](),
+		bySlug: map[string]string{},
+		byID:   map[string]workspace.Workspace{},
 	}
 }
 
-func (s *state) id() string { s.n++; return fmt.Sprintf("id-%d", s.n) }
+func (s *testStore) CreateContainer(ctx context.Context, w workspace.Workspace) (workspace.Workspace, error) {
+	s.mu.Lock()
+	if id, taken := s.bySlug[w.Slug]; taken && id != w.ID {
+		s.mu.Unlock()
+		return workspace.Workspace{}, scope.ErrConflict
+	}
+	s.mu.Unlock()
 
-func memKey(ws, user string) string { return ws + "|" + user }
-
-func (s *state) addUser(id, email, name string) {
-	s.users[id] = auth.User{ID: id, Email: email, DisplayName: name}
+	created, err := s.Store.CreateContainer(ctx, w)
+	if err != nil {
+		return workspace.Workspace{}, err
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.bySlug[created.Slug] = created.ID
+	s.byID[created.ID] = created
+	return created, nil
 }
 
-// ── fakes ────────────────────────────────────────────────────────────────────
-
-type wsRepo struct{ s *state }
-
-func (r wsRepo) Create(_ context.Context, w workspace.Workspace) (workspace.Workspace, error) {
-	w.ID = r.s.id()
-	w.CreatedAt, w.UpdatedAt = time.Now(), time.Now()
-	r.s.ws[w.ID] = w
-	return w, nil
+// WithTx hands the WRAPPER to the closure, not the embedded memory store.
+// authlayer's CreateContainer seeds the owner's membership in one transaction,
+// so without this the inner CreateContainer would be the memory store's and the
+// slug constraint above would never run.
+func (s *testStore) WithTx(_ context.Context, fn func(workspace.Store) error) error {
+	return fn(s)
 }
-func (r wsRepo) FindByID(_ context.Context, id string) (workspace.Workspace, error) {
-	w, ok := r.s.ws[id]
+
+func (s *testStore) FindBySlug(_ context.Context, slug string) (workspace.Workspace, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	id, ok := s.bySlug[slug]
 	if !ok {
 		return workspace.Workspace{}, workspace.ErrWorkspaceNotFound
 	}
-	return w, nil
+	return s.byID[id], nil
 }
-func (r wsRepo) FindBySlug(_ context.Context, slug string) (workspace.Workspace, error) {
-	for _, w := range r.s.ws {
-		if w.Slug == slug {
-			return w, nil
-		}
-	}
-	return workspace.Workspace{}, workspace.ErrWorkspaceNotFound
-}
-func (r wsRepo) ListByUserID(_ context.Context, userID string) ([]workspace.Workspace, error) {
-	var out []workspace.Workspace
-	for _, m := range r.s.mem {
-		if m.UserID == userID {
-			out = append(out, r.s.ws[m.WorkspaceID])
-		}
-	}
-	return out, nil
-}
-func (r wsRepo) Update(_ context.Context, id, name, slug string) (workspace.Workspace, error) {
-	w := r.s.ws[id]
-	w.Name, w.Slug, w.UpdatedAt = name, slug, time.Now()
-	r.s.ws[id] = w
-	return w, nil
-}
-func (r wsRepo) UpdateOwner(_ context.Context, id, newOwnerID string) error {
-	w := r.s.ws[id]
-	w.OwnerID = newOwnerID
-	r.s.ws[id] = w
-	return nil
-}
-func (r wsRepo) Delete(_ context.Context, id string) error { delete(r.s.ws, id); return nil }
 
-type roleRepo struct{ s *state }
-
-func (r roleRepo) Create(_ context.Context, role workspace.Role) (workspace.Role, error) {
-	role.ID = r.s.id()
-	role.CreatedAt = time.Now()
-	r.s.roles[role.ID] = role
-	return role, nil
-}
-func (r roleRepo) FindByID(_ context.Context, id string) (workspace.Role, error) {
-	role, ok := r.s.roles[id]
+// UpdateNameSlug writes the workspaces row. The scope store's own copy of the
+// container is not refreshed here because authlayer's memory store exposes no
+// container update — in production both read the same row, so only the fake
+// can see them diverge.
+func (s *testStore) UpdateNameSlug(_ context.Context, id, name, slug string) (workspace.Workspace, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	ws, ok := s.byID[id]
 	if !ok {
-		return workspace.Role{}, workspace.ErrRoleNotFound
+		return workspace.Workspace{}, workspace.ErrWorkspaceNotFound
 	}
-	return role, nil
-}
-func (r roleRepo) ListByWorkspace(_ context.Context, workspaceID string) ([]workspace.Role, error) {
-	var out []workspace.Role
-	for _, role := range r.s.roles {
-		if role.WorkspaceID == workspaceID {
-			out = append(out, role)
-		}
-	}
-	return out, nil
-}
-func (r roleRepo) Update(_ context.Context, id, name string, perms workspace.Permission) (workspace.Role, error) {
-	role := r.s.roles[id]
-	role.Name, role.Permissions = name, perms
-	r.s.roles[id] = role
-	return role, nil
-}
-func (r roleRepo) Delete(_ context.Context, id string) error { delete(r.s.roles, id); return nil }
-func (r roleRepo) CountMembersUsing(_ context.Context, roleID string) (int64, error) {
-	var n int64
-	for _, m := range r.s.mem {
-		if m.RoleID == roleID {
-			n++
-		}
-	}
-	return n, nil
+	delete(s.bySlug, ws.Slug)
+	ws.Name, ws.Slug = name, slug
+	s.byID[id] = ws
+	s.bySlug[slug] = id
+	return ws, nil
 }
 
-type memRepo struct{ s *state }
-
-func (r memRepo) Add(_ context.Context, m workspace.Member) (workspace.Member, error) {
-	m.JoinedAt = time.Now()
-	r.s.mem[memKey(m.WorkspaceID, m.UserID)] = m
-	return m, nil
-}
-func (r memRepo) Find(_ context.Context, workspaceID, userID string) (workspace.Member, error) {
-	m, ok := r.s.mem[memKey(workspaceID, userID)]
-	if !ok {
-		return workspace.Member{}, workspace.ErrNotMember
-	}
-	return m, nil
-}
-func (r memRepo) LoadMembership(_ context.Context, workspaceID, userID string) (workspace.Membership, error) {
-	m, ok := r.s.mem[memKey(workspaceID, userID)]
-	if !ok {
-		return workspace.Membership{}, workspace.ErrNotMember
-	}
-	return workspace.Membership{Member: m, Role: r.s.roles[m.RoleID]}, nil
-}
-func (r memRepo) ListByWorkspace(_ context.Context, workspaceID string) ([]workspace.Member, error) {
-	var out []workspace.Member
-	for _, m := range r.s.mem {
-		if m.WorkspaceID == workspaceID {
-			out = append(out, m)
-		}
-	}
-	return out, nil
-}
-func (r memRepo) UpdateRole(_ context.Context, workspaceID, userID, roleID string) error {
-	k := memKey(workspaceID, userID)
-	m := r.s.mem[k]
-	m.RoleID = roleID
-	r.s.mem[k] = m
-	return nil
-}
-func (r memRepo) Remove(_ context.Context, workspaceID, userID string) error {
-	delete(r.s.mem, memKey(workspaceID, userID))
-	return nil
-}
-func (r memRepo) CountByWorkspace(_ context.Context, workspaceID string) (int64, error) {
-	var n int64
-	for _, m := range r.s.mem {
-		if m.WorkspaceID == workspaceID {
-			n++
-		}
-	}
-	return n, nil
-}
-
-type einvRepo struct{ s *state }
-
-func (r einvRepo) Create(_ context.Context, inv workspace.EmailInvitation) (workspace.EmailInvitation, error) {
-	inv.ID = r.s.id()
-	inv.CreatedAt = time.Now()
-	r.s.einv[inv.ID] = inv
-	return inv, nil
-}
-func (r einvRepo) FindByTokenHash(_ context.Context, hash string) (workspace.EmailInvitation, error) {
-	for _, inv := range r.s.einv {
-		if inv.TokenHash == hash {
-			return inv, nil
-		}
-	}
-	return workspace.EmailInvitation{}, workspace.ErrInviteInvalid
-}
-func (r einvRepo) FindByID(_ context.Context, id string) (workspace.EmailInvitation, error) {
-	inv, ok := r.s.einv[id]
-	if !ok {
-		return workspace.EmailInvitation{}, workspace.ErrInviteInvalid
-	}
-	return inv, nil
-}
-func (r einvRepo) ListByWorkspace(_ context.Context, workspaceID string) ([]workspace.EmailInvitation, error) {
-	var out []workspace.EmailInvitation
-	for _, inv := range r.s.einv {
-		if inv.WorkspaceID == workspaceID {
-			out = append(out, inv)
-		}
-	}
-	return out, nil
-}
-func (r einvRepo) Delete(_ context.Context, id string) error { delete(r.s.einv, id); return nil }
-func (r einvRepo) DeleteByWorkspaceEmail(_ context.Context, workspaceID, email string) error {
-	for id, inv := range r.s.einv {
-		if inv.WorkspaceID == workspaceID && inv.Email == email {
-			delete(r.s.einv, id)
-		}
+func (s *testStore) Delete(_ context.Context, id string) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if ws, ok := s.byID[id]; ok {
+		delete(s.bySlug, ws.Slug)
+		delete(s.byID, id)
 	}
 	return nil
 }
 
-type linkRepo struct{ s *state }
+type fakeUsers struct{ byID map[string]auth.User }
 
-func (r linkRepo) Create(_ context.Context, l workspace.InviteLink) (workspace.InviteLink, error) {
-	l.ID = r.s.id()
-	l.CreatedAt = time.Now()
-	r.s.links[l.ID] = l
-	return l, nil
-}
-func (r linkRepo) FindByCode(_ context.Context, code string) (workspace.InviteLink, error) {
-	for _, l := range r.s.links {
-		if l.Code == code {
-			return l, nil
-		}
+func newFakeUsers(ids ...string) *fakeUsers {
+	u := &fakeUsers{byID: map[string]auth.User{}}
+	for _, id := range ids {
+		u.byID[id] = auth.User{ID: id, Email: id + "@example.com", DisplayName: strings.ToUpper(id)}
 	}
-	return workspace.InviteLink{}, workspace.ErrLinkInvalid
-}
-func (r linkRepo) FindByID(_ context.Context, id string) (workspace.InviteLink, error) {
-	l, ok := r.s.links[id]
-	if !ok {
-		return workspace.InviteLink{}, workspace.ErrLinkInvalid
-	}
-	return l, nil
-}
-func (r linkRepo) ListByWorkspace(_ context.Context, workspaceID string) ([]workspace.InviteLink, error) {
-	var out []workspace.InviteLink
-	for _, l := range r.s.links {
-		if l.WorkspaceID == workspaceID {
-			out = append(out, l)
-		}
-	}
-	return out, nil
-}
-func (r linkRepo) IncrementUse(_ context.Context, id string) error {
-	l := r.s.links[id]
-	l.UseCount++
-	r.s.links[id] = l
-	return nil
-}
-func (r linkRepo) Revoke(_ context.Context, id string) error {
-	l := r.s.links[id]
-	l.Revoked = true
-	r.s.links[id] = l
-	return nil
+	return u
 }
 
-type userLookup struct{ s *state }
-
-func (u userLookup) FindByID(_ context.Context, id string) (auth.User, error) {
-	usr, ok := u.s.users[id]
+func (f *fakeUsers) FindByID(_ context.Context, id string) (auth.User, error) {
+	u, ok := f.byID[id]
 	if !ok {
 		return auth.User{}, auth.ErrNotFound
 	}
-	return usr, nil
+	return u, nil
 }
-func (u userLookup) FindByEmail(_ context.Context, email string) (auth.User, error) {
-	for _, usr := range u.s.users {
-		if usr.Email == email {
-			return usr, nil
+
+func (f *fakeUsers) FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error) {
+	out := make(map[string]auth.User, len(ids))
+	for _, id := range ids {
+		u, err := f.FindByID(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+		out[id] = u
+	}
+	return out, nil
+}
+
+func (f *fakeUsers) FindByEmail(_ context.Context, email string) (auth.User, error) {
+	for _, u := range f.byID {
+		if u.Email == email {
+			return u, nil
 		}
 	}
 	return auth.User{}, auth.ErrNotFound
 }
 
-type fakeEmail struct {
-	sent     []string
-	lastLink string
-}
+type sentInvite struct{ to, workspaceName, inviter, link string }
 
-func (e *fakeEmail) SendWorkspaceInvite(_ context.Context, to, _, _, link string) error {
-	e.sent = append(e.sent, to)
-	e.lastLink = link
+type fakeMailer struct{ sent []sentInvite }
+
+func (m *fakeMailer) SendWorkspaceInvite(_ context.Context, to, workspaceName, inviter, link string) error {
+	m.sent = append(m.sent, sentInvite{to, workspaceName, inviter, link})
 	return nil
 }
 
-type fakeUow struct{ s *state }
+// ── fixture ─────────────────────────────────────────────────────────────────
 
-func (u fakeUow) Do(_ context.Context, fn func(workspace.Repos) error) error {
-	return fn(workspace.Repos{
-		Workspaces: wsRepo{u.s},
-		Roles:      roleRepo{u.s},
-		Members:    memRepo{u.s},
-		EmailInvs:  einvRepo{u.s},
-		Links:      linkRepo{u.s},
-	})
+type fixture struct {
+	svc   *workspace.Service
+	store *testStore
+	users *fakeUsers
+	mail  *fakeMailer
 }
 
-// ── helpers ──────────────────────────────────────────────────────────────────
-
-func newService(inviteExpiry time.Duration) (*workspace.Service, *state, *fakeEmail) {
-	s := newState()
-	em := &fakeEmail{}
+func newFixture(t *testing.T, inviteExpiry time.Duration, userIDs ...string) *fixture {
+	t.Helper()
+	store := newTestStore()
+	users := newFakeUsers(userIDs...)
+	mail := &fakeMailer{}
 	svc := workspace.NewService(
-		wsRepo{s}, roleRepo{s}, memRepo{s}, einvRepo{s}, linkRepo{s},
-		userLookup{s}, em, fakeUow{s},
+		workspace.NewAccess(),
+		store,
+		memstore.NewInviteStore(),
+		store,
+		users,
+		mail,
 		workspace.Config{AppBaseURL: "https://app.test", InviteExpiry: inviteExpiry},
 	)
-	return svc, s, em
+	return &fixture{svc: svc, store: store, users: users, mail: mail}
 }
 
-// rolesOf returns the seeded admin (non-default) and member (default) roles.
-func rolesOf(s *state, wsID string) (admin, member workspace.Role) {
-	for _, r := range s.roles {
-		if r.WorkspaceID != wsID {
-			continue
-		}
-		if r.IsDefault {
-			member = r
-		} else {
-			admin = r
-		}
-	}
-	return
-}
-
-func tokenFromLink(link string) string {
-	_, tok, _ := strings.Cut(link, "token=")
-	return tok
-}
-
-// ── tests ────────────────────────────────────────────────────────────────────
-
-func TestCreateWorkspace_SeedsRolesAndOwnerMember(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	s.addUser("owner", "owner@test", "Owner")
-
-	ws, err := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
+func (f *fixture) workspace(t *testing.T, ownerID, name string) workspace.Workspace {
+	t.Helper()
+	ws, err := f.svc.CreateWorkspace(context.Background(), ownerID, name, "")
 	if err != nil {
 		t.Fatalf("CreateWorkspace: %v", err)
 	}
+	return ws
+}
+
+// tokenOf pulls the invitation token out of the link the service mailed.
+func tokenOf(t *testing.T, link string) string {
+	t.Helper()
+	_, tok, ok := strings.Cut(link, "token=")
+	if !ok {
+		t.Fatalf("no token in link %q", link)
+	}
+	return tok
+}
+
+// ── the permission codec ────────────────────────────────────────────────────
+
+// Every bit the client can send must survive the round trip through authlayer's
+// grant set, or a role editor would silently drop capabilities on save.
+func TestPermissionMaskRoundTrip(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "member")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+
+	for _, bit := range []workspace.Permission{
+		workspace.PermManageWorkspace,
+		workspace.PermManageMembers,
+		workspace.PermManageRoles,
+		workspace.PermCreateInvite,
+		workspace.PermManageInvites,
+		workspace.PermViewWorkbenches,
+		workspace.PermCreateWorkbench,
+		workspace.PermManageWorkbenches,
+	} {
+		role, err := f.svc.CreateRole(ctx, "owner", ws.ID, "Probe", bit)
+		if err != nil {
+			t.Fatalf("CreateRole(%d): %v", bit, err)
+		}
+		if !role.Permissions.Has(bit) {
+			t.Fatalf("bit %d did not survive the round trip: got %d", bit, role.Permissions)
+		}
+		if role.Permissions.Has(workspace.PermAdministrator) {
+			t.Fatalf("a single-capability role must not read as administrator: %d", role.Permissions)
+		}
+		if err := f.svc.DeleteRole(ctx, "owner", ws.ID, role.ID); err != nil {
+			t.Fatalf("DeleteRole: %v", err)
+		}
+	}
+}
+
+// PermAdministrator is not a grant but a standing: a role holding every grant
+// is what authlayer treats as elevated.
+func TestCreateRole_AdministratorGrantsEverything(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner")
+	ws := f.workspace(t, "owner", "Acme")
+	role, err := f.svc.CreateRole(context.Background(), "owner", ws.ID, "Boss", workspace.PermAdministrator)
+	if err != nil {
+		t.Fatalf("CreateRole: %v", err)
+	}
+	for _, bit := range []workspace.Permission{
+		workspace.PermAdministrator, workspace.PermManageWorkspace, workspace.PermManageMembers,
+		workspace.PermManageRoles, workspace.PermCreateInvite, workspace.PermManageInvites,
+		workspace.PermViewWorkbenches, workspace.PermCreateWorkbench, workspace.PermManageWorkbenches,
+	} {
+		if !role.Permissions.Has(bit) {
+			t.Fatalf("administrator role is missing bit %d (got %d)", bit, role.Permissions)
+		}
+	}
+}
+
+// ── workspace lifecycle ─────────────────────────────────────────────────────
+
+func TestCreateWorkspace_OwnerIsAnElevatedMember(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner")
+	ws := f.workspace(t, "owner", "Acme")
 	if ws.OwnerID != "owner" {
-		t.Errorf("owner_id = %q, want owner", ws.OwnerID)
+		t.Fatalf("owner = %q", ws.OwnerID)
 	}
-	admin, member := rolesOf(s, ws.ID)
-	if admin.ID == "" || member.ID == "" {
-		t.Fatalf("expected seeded Admin + Member roles, got admin=%q member=%q", admin.Name, member.Name)
+	got, perms, err := f.svc.GetWorkspace(context.Background(), "owner", ws.ID)
+	if err != nil {
+		t.Fatalf("GetWorkspace: %v", err)
 	}
-	if !member.IsDefault {
-		t.Errorf("Member role should be default")
+	if got.Name != "Acme" {
+		t.Fatalf("name = %q", got.Name)
 	}
-	if admin.Permissions != workspace.PermViewWorkspace|workspace.PermManageWorkspace|workspace.PermManageMembers|
-		workspace.PermManageRoles|workspace.PermCreateInvite|workspace.PermManageInvites|workspace.PermAdministrator|
-		workspace.PermViewWorkbenches|workspace.PermCreateWorkbench|workspace.PermManageWorkbenches {
-		t.Errorf("Admin role missing permissions: %b", admin.Permissions)
-	}
-	m, err := memRepo{s}.Find(context.Background(), ws.ID, "owner")
-	if err != nil || m.RoleID != admin.ID {
-		t.Errorf("owner should be a member with the Admin role, got %+v err=%v", m, err)
+	if !perms.Has(workspace.PermAdministrator) || !perms.Has(workspace.PermViewWorkspace) {
+		t.Fatalf("owner permissions = %d, want administrator + view", perms)
 	}
 }
 
 func TestCreateWorkspace_DerivesSlug(t *testing.T) {
-	svc, _, _ := newService(time.Hour)
-	ws, err := svc.CreateWorkspace(context.Background(), "owner", "My Cool Team!", "")
-	if err != nil {
-		t.Fatalf("CreateWorkspace: %v", err)
-	}
-	if ws.Slug != "my-cool-team" {
-		t.Errorf("slug = %q, want my-cool-team", ws.Slug)
+	f := newFixture(t, time.Hour, "owner")
+	ws := f.workspace(t, "owner", "Acme  Corp!")
+	if ws.Slug != "acme-corp" {
+		t.Fatalf("slug = %q, want acme-corp", ws.Slug)
 	}
 }
 
 func TestCreateWorkspace_SlugTaken(t *testing.T) {
-	svc, _, _ := newService(time.Hour)
-	if _, err := svc.CreateWorkspace(context.Background(), "owner", "Acme", "acme"); err != nil {
-		t.Fatalf("first create: %v", err)
-	}
-	if _, err := svc.CreateWorkspace(context.Background(), "owner2", "Acme Two", "acme"); err != workspace.ErrSlugTaken {
-		t.Errorf("err = %v, want ErrSlugTaken", err)
-	}
-}
-
-func TestAuthorize_OwnerBypassesBitCheck(t *testing.T) {
-	svc, _, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	// Owner can manage the workspace even though bit checks are irrelevant to them.
-	if _, err := svc.UpdateWorkspace(context.Background(), "owner", ws.ID, "Renamed", ""); err != nil {
-		t.Errorf("owner UpdateWorkspace: %v", err)
+	f := newFixture(t, time.Hour, "owner")
+	f.workspace(t, "owner", "Acme")
+	_, err := f.svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
+	if !errors.Is(err, workspace.ErrSlugTaken) {
+		t.Fatalf("err = %v, want ErrSlugTaken", err)
 	}
 }
 
-func TestAuthorize_MissingBitForbidden(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	_, member := rolesOf(s, ws.ID)
-	// Bob joins with the default (VIEW-only) role.
-	memRepo{s}.Add(context.Background(), workspace.Member{WorkspaceID: ws.ID, UserID: "bob", RoleID: member.ID})
+func TestListMyWorkspaces(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "stranger")
+	f.workspace(t, "owner", "Acme")
+	f.workspace(t, "owner", "Beta")
 
-	if _, err := svc.CreateRole(context.Background(), "bob", ws.ID, "Hacker", workspace.PermViewWorkspace); err != workspace.ErrForbidden {
-		t.Errorf("err = %v, want ErrForbidden", err)
-	}
-}
-
-func TestAuthorize_AdministratorBypass(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	adminRole, _ := rolesOf(s, ws.ID)
-	// Bob gets the Admin role (has ADMINISTRATOR) — bypasses the ManageRoles check.
-	memRepo{s}.Add(context.Background(), workspace.Member{WorkspaceID: ws.ID, UserID: "bob", RoleID: adminRole.ID})
-
-	if _, err := svc.CreateRole(context.Background(), "bob", ws.ID, "Editor", workspace.PermViewWorkspace); err != nil {
-		t.Errorf("administrator CreateRole: %v", err)
-	}
-}
-
-func TestAuthorize_NotMember(t *testing.T) {
-	svc, _, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	if _, _, err := svc.GetWorkspace(context.Background(), "stranger", ws.ID); err != workspace.ErrNotMember {
-		t.Errorf("err = %v, want ErrNotMember", err)
-	}
-}
-
-func TestChangeMemberRole_OneRolePerMember(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	admin, member := rolesOf(s, ws.ID)
-	memRepo{s}.Add(context.Background(), workspace.Member{WorkspaceID: ws.ID, UserID: "bob", RoleID: member.ID})
-	s.addUser("bob", "bob@test", "Bob")
-
-	mv, err := svc.ChangeMemberRole(context.Background(), "owner", ws.ID, "bob", admin.ID)
+	mine, err := f.svc.ListMyWorkspaces(context.Background(), "owner")
 	if err != nil {
-		t.Fatalf("ChangeMemberRole: %v", err)
+		t.Fatalf("ListMyWorkspaces: %v", err)
 	}
-	if mv.Role.ID != admin.ID {
-		t.Errorf("view role = %q, want admin", mv.Role.ID)
+	if len(mine) != 2 {
+		t.Fatalf("got %d workspaces, want 2", len(mine))
 	}
-	// Exactly one membership row, now pointing at the admin role.
-	got, _ := memRepo{s}.Find(context.Background(), ws.ID, "bob")
-	if got.RoleID != admin.ID {
-		t.Errorf("stored role = %q, want admin (role replaced, not appended)", got.RoleID)
+	theirs, err := f.svc.ListMyWorkspaces(context.Background(), "stranger")
+	if err != nil {
+		t.Fatalf("ListMyWorkspaces: %v", err)
 	}
-}
-
-func TestChangeMemberRole_PrivilegeEscalationBlocked(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	_, member := rolesOf(s, ws.ID)
-	// Manager has ManageMembers + View but NOT ManageRoles.
-	mgrRole, _ := roleRepo{s}.Create(context.Background(), workspace.Role{
-		WorkspaceID: ws.ID, Name: "Manager",
-		Permissions: workspace.PermViewWorkspace | workspace.PermManageMembers,
-	})
-	// A powerful role that carries a bit the manager lacks.
-	powerful, _ := roleRepo{s}.Create(context.Background(), workspace.Role{
-		WorkspaceID: ws.ID, Name: "Power",
-		Permissions: workspace.PermViewWorkspace | workspace.PermManageRoles,
-	})
-	memRepo{s}.Add(context.Background(), workspace.Member{WorkspaceID: ws.ID, UserID: "mgr", RoleID: mgrRole.ID})
-	memRepo{s}.Add(context.Background(), workspace.Member{WorkspaceID: ws.ID, UserID: "bob", RoleID: member.ID})
-	s.addUser("bob", "bob@test", "Bob")
-
-	if _, err := svc.ChangeMemberRole(context.Background(), "mgr", ws.ID, "bob", powerful.ID); err != workspace.ErrPrivilegeEscalation {
-		t.Errorf("err = %v, want ErrPrivilegeEscalation", err)
+	if len(theirs) != 0 {
+		t.Fatalf("a stranger sees %d workspaces, want 0", len(theirs))
 	}
 }
 
-func TestRemoveMember_CannotRemoveOwner(t *testing.T) {
-	svc, _, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	if err := svc.RemoveMember(context.Background(), "owner", ws.ID, "owner"); err != workspace.ErrLastOwner {
-		t.Errorf("err = %v, want ErrLastOwner", err)
+func TestUpdateWorkspace_OwnerBypassesTheGrantCheck(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner")
+	ws := f.workspace(t, "owner", "Acme")
+	got, err := f.svc.UpdateWorkspace(context.Background(), "owner", ws.ID, "Acme Two", "")
+	if err != nil {
+		t.Fatalf("UpdateWorkspace: %v", err)
+	}
+	if got.Name != "Acme Two" || got.Slug != "acme-two" {
+		t.Fatalf("got %+v", got)
+	}
+}
+
+// The baseline member role can see and create workbenches — that is what the
+// seeded "Member" role granted before authlayer — and nothing else.
+func TestUpdateWorkspace_PlainMemberForbidden(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+
+	_, err := f.svc.UpdateWorkspace(ctx, "bob", ws.ID, "Hijacked", "")
+	if !errors.Is(err, workspace.ErrForbidden) {
+		t.Fatalf("err = %v, want ErrForbidden", err)
+	}
+	_, perms, err := f.svc.GetWorkspace(ctx, "bob", ws.ID)
+	if err != nil {
+		t.Fatalf("GetWorkspace: %v", err)
+	}
+	if !perms.Has(workspace.PermViewWorkbenches) || !perms.Has(workspace.PermCreateWorkbench) {
+		t.Fatalf("member permissions = %d, want the workbench baseline", perms)
+	}
+	if perms.Has(workspace.PermManageWorkspace) || perms.Has(workspace.PermAdministrator) {
+		t.Fatalf("member permissions = %d, want no management bits", perms)
+	}
+}
+
+func TestGetWorkspace_NotMember(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "stranger")
+	ws := f.workspace(t, "owner", "Acme")
+	if _, _, err := f.svc.GetWorkspace(context.Background(), "stranger", ws.ID); !errors.Is(err, workspace.ErrNotMember) {
+		t.Fatalf("err = %v, want ErrNotMember", err)
+	}
+}
+
+func TestDeleteWorkspace_OwnerOnly(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "admin")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "admin", workspace.RoleAdmin)
+
+	// An admin is elevated for every grant, and still may not delete: deletion
+	// is not a grant at all.
+	if err := f.svc.DeleteWorkspace(ctx, "admin", ws.ID); !errors.Is(err, workspace.ErrOwnerOnly) {
+		t.Fatalf("err = %v, want ErrOwnerOnly", err)
+	}
+	if err := f.svc.DeleteWorkspace(ctx, "owner", ws.ID); err != nil {
+		t.Fatalf("DeleteWorkspace: %v", err)
 	}
 }
 
 func TestLeaveWorkspace_OwnerBlocked(t *testing.T) {
-	svc, _, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	if err := svc.LeaveWorkspace(context.Background(), "owner", ws.ID); err != workspace.ErrLastOwner {
-		t.Errorf("err = %v, want ErrLastOwner", err)
-	}
-}
-
-func TestDeleteRole_DefaultAndInUse(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	admin, member := rolesOf(s, ws.ID)
-
-	if err := svc.DeleteRole(context.Background(), "owner", ws.ID, member.ID); err != workspace.ErrDefaultRole {
-		t.Errorf("delete default: err = %v, want ErrDefaultRole", err)
-	}
-	// Admin role is assigned to the owner member -> in use.
-	if err := svc.DeleteRole(context.Background(), "owner", ws.ID, admin.ID); err != workspace.ErrRoleInUse {
-		t.Errorf("delete in-use: err = %v, want ErrRoleInUse", err)
-	}
-}
-
-func TestInviteByEmail_SendsEmailAndAccept(t *testing.T) {
-	svc, s, em := newService(time.Hour)
-	s.addUser("owner", "owner@test", "Owner")
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	_, member := rolesOf(s, ws.ID)
-
-	if _, err := svc.InviteByEmail(context.Background(), "owner", ws.ID, "new@test", member.ID, "en-ie"); err != nil {
-		t.Fatalf("InviteByEmail: %v", err)
-	}
-	if len(em.sent) != 1 || em.sent[0] != "new@test" {
-		t.Fatalf("expected one invite email to new@test, got %v", em.sent)
-	}
-	token := tokenFromLink(em.lastLink)
-	if token == "" {
-		t.Fatalf("no token in link %q", em.lastLink)
-	}
-	// A signed-up user accepts.
-	got, err := svc.AcceptEmailInvite(context.Background(), "newuser", token)
-	if err != nil {
-		t.Fatalf("AcceptEmailInvite: %v", err)
-	}
-	if got.ID != ws.ID {
-		t.Errorf("accepted into %q, want %q", got.ID, ws.ID)
-	}
-	if _, err := (memRepo{s}).Find(context.Background(), ws.ID, "newuser"); err != nil {
-		t.Errorf("new user should be a member: %v", err)
-	}
-}
-
-func TestInviteByEmail_AlreadyMember(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	s.addUser("owner", "owner@test", "Owner")
-	_, member := rolesOf(s, ws.ID)
-	if _, err := svc.InviteByEmail(context.Background(), "owner", ws.ID, "owner@test", member.ID, "en-ie"); err != workspace.ErrAlreadyMember {
-		t.Errorf("err = %v, want ErrAlreadyMember", err)
-	}
-}
-
-func TestAcceptEmailInvite_Expired(t *testing.T) {
-	svc, s, em := newService(-time.Hour) // invites are born expired
-	s.addUser("owner", "owner@test", "Owner")
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	_, member := rolesOf(s, ws.ID)
-	svc.InviteByEmail(context.Background(), "owner", ws.ID, "new@test", member.ID, "en-ie")
-	token := tokenFromLink(em.lastLink)
-	if _, err := svc.AcceptEmailInvite(context.Background(), "newuser", token); err != workspace.ErrInviteExpired {
-		t.Errorf("err = %v, want ErrInviteExpired", err)
-	}
-}
-
-func TestInviteLink_MaxUsesExhausted(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	_, member := rolesOf(s, ws.ID)
-	link, err := svc.CreateInviteLink(context.Background(), "owner", ws.ID, member.ID, 1, nil)
-	if err != nil {
-		t.Fatalf("CreateInviteLink: %v", err)
-	}
-	if _, err := svc.JoinViaInviteLink(context.Background(), "bob", link.Code); err != nil {
-		t.Fatalf("first join: %v", err)
-	}
-	if _, err := svc.JoinViaInviteLink(context.Background(), "carol", link.Code); err != workspace.ErrLinkExhausted {
-		t.Errorf("second join err = %v, want ErrLinkExhausted", err)
-	}
-}
-
-func TestInviteLink_Revoked(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	_, member := rolesOf(s, ws.ID)
-	link, _ := svc.CreateInviteLink(context.Background(), "owner", ws.ID, member.ID, 0, nil)
-	if err := svc.RevokeInviteLink(context.Background(), "owner", ws.ID, link.ID); err != nil {
-		t.Fatalf("RevokeInviteLink: %v", err)
-	}
-	if _, err := svc.JoinViaInviteLink(context.Background(), "bob", link.Code); err != workspace.ErrLinkInvalid {
-		t.Errorf("err = %v, want ErrLinkInvalid", err)
-	}
-}
-
-func TestJoinViaInviteLink_AlreadyMemberNoIncrement(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	_, member := rolesOf(s, ws.ID)
-	link, _ := svc.CreateInviteLink(context.Background(), "owner", ws.ID, member.ID, 5, nil)
-	// The owner is already a member; joining must not consume a use.
-	if _, err := svc.JoinViaInviteLink(context.Background(), "owner", link.Code); err != nil {
-		t.Fatalf("owner join: %v", err)
-	}
-	got, _ := linkRepo{s}.FindByID(context.Background(), link.ID)
-	if got.UseCount != 0 {
-		t.Errorf("use_count = %d, want 0 (already a member)", got.UseCount)
-	}
-}
-
-func TestCreateWorkspace_SeedsWorkbenchBitsOnDefaultRole(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, err := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	if err != nil {
-		t.Fatalf("CreateWorkspace: %v", err)
-	}
-	_, member := rolesOf(s, ws.ID)
-	if !member.Permissions.Has(workspace.PermViewWorkbenches) || !member.Permissions.Has(workspace.PermCreateWorkbench) {
-		t.Fatalf("default role missing workbench bits: %b", member.Permissions)
-	}
-	if member.Permissions.Has(workspace.PermManageWorkbenches) {
-		t.Fatalf("default role must not have ManageWorkbenches")
+	f := newFixture(t, time.Hour, "owner")
+	ws := f.workspace(t, "owner", "Acme")
+	if err := f.svc.LeaveWorkspace(context.Background(), "owner", ws.ID); !errors.Is(err, workspace.ErrLastOwner) {
+		t.Fatalf("err = %v, want ErrLastOwner", err)
 	}
 }
 
 func TestTransferOwnership_RequiresMember(t *testing.T) {
-	svc, s, _ := newService(time.Hour)
-	ws, _ := svc.CreateWorkspace(context.Background(), "owner", "Acme", "")
-	if err := svc.TransferOwnership(context.Background(), "owner", ws.ID, "stranger"); err != workspace.ErrNotMember {
-		t.Fatalf("transfer to non-member err = %v, want ErrNotMember", err)
+	f := newFixture(t, time.Hour, "owner", "bob", "stranger")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+
+	if err := f.svc.TransferOwnership(ctx, "owner", ws.ID, "stranger"); err == nil {
+		t.Fatal("transferring to a non-member must fail")
 	}
-	_, member := rolesOf(s, ws.ID)
-	memRepo{s}.Add(context.Background(), workspace.Member{WorkspaceID: ws.ID, UserID: "bob", RoleID: member.ID})
-	if err := svc.TransferOwnership(context.Background(), "owner", ws.ID, "bob"); err != nil {
-		t.Fatalf("transfer to member: %v", err)
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+	if err := f.svc.TransferOwnership(ctx, "owner", ws.ID, "bob"); err != nil {
+		t.Fatalf("TransferOwnership: %v", err)
 	}
-	got, _ := wsRepo{s}.FindByID(context.Background(), ws.ID)
+	got, _, err := f.svc.GetWorkspace(ctx, "bob", ws.ID)
+	if err != nil {
+		t.Fatalf("GetWorkspace: %v", err)
+	}
 	if got.OwnerID != "bob" {
-		t.Errorf("owner = %q, want bob", got.OwnerID)
+		t.Fatalf("owner = %q, want bob", got.OwnerID)
+	}
+}
+
+// ── members ─────────────────────────────────────────────────────────────────
+
+// addMember admits a user through an invite link, which is the only way in
+// besides creating the workspace.
+func addMember(t *testing.T, f *fixture, workspaceID, userID, roleKey string) {
+	t.Helper()
+	ctx := context.Background()
+	owner, _, err := f.svc.GetWorkspace(ctx, ownerOf(t, f, workspaceID), workspaceID)
+	if err != nil {
+		t.Fatalf("GetWorkspace: %v", err)
+	}
+	link, err := f.svc.CreateInviteLink(ctx, owner.OwnerID, workspaceID, roleKey, 0, nil)
+	if err != nil {
+		t.Fatalf("CreateInviteLink: %v", err)
+	}
+	if _, err := f.svc.JoinViaInviteLink(ctx, userID, link.Code); err != nil {
+		t.Fatalf("JoinViaInviteLink: %v", err)
+	}
+}
+
+func ownerOf(t *testing.T, f *fixture, workspaceID string) string {
+	t.Helper()
+	f.store.mu.Lock()
+	defer f.store.mu.Unlock()
+	ws, ok := f.store.byID[workspaceID]
+	if !ok {
+		t.Fatalf("unknown workspace %q", workspaceID)
+	}
+	return ws.OwnerID
+}
+
+func TestListMembers(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+
+	views, err := f.svc.ListMembers(ctx, "owner", ws.ID)
+	if err != nil {
+		t.Fatalf("ListMembers: %v", err)
+	}
+	if len(views) != 2 {
+		t.Fatalf("got %d members, want 2", len(views))
+	}
+	for _, v := range views {
+		if v.User.DisplayName == "" {
+			t.Fatalf("member %q has no profile joined in", v.Member.UserID)
+		}
+		if v.Member.ContainerID != ws.ID {
+			t.Fatalf("member carries container %q, want %q", v.Member.ContainerID, ws.ID)
+		}
+	}
+}
+
+func TestChangeMemberRole_OneRolePerMember(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+
+	view, err := f.svc.ChangeMemberRole(ctx, "owner", ws.ID, "bob", workspace.RoleAdmin)
+	if err != nil {
+		t.Fatalf("ChangeMemberRole: %v", err)
+	}
+	if view.Member.RoleKey != workspace.RoleAdmin {
+		t.Fatalf("role = %q, want admin", view.Member.RoleKey)
+	}
+	_, perms, err := f.svc.GetWorkspace(ctx, "bob", ws.ID)
+	if err != nil {
+		t.Fatalf("GetWorkspace: %v", err)
+	}
+	if !perms.Has(workspace.PermManageMembers) {
+		t.Fatalf("promoted member permissions = %d", perms)
+	}
+}
+
+// A member manager may not hand out more than they hold themselves.
+func TestChangeMemberRole_PrivilegeEscalationBlocked(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "mod", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+
+	mod, err := f.svc.CreateRole(ctx, "owner", ws.ID, "Moderator",
+		workspace.PermManageMembers|workspace.PermViewWorkbenches)
+	if err != nil {
+		t.Fatalf("CreateRole: %v", err)
+	}
+	addMember(t, f, ws.ID, "mod", mod.ID)
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+
+	if _, err := f.svc.ChangeMemberRole(ctx, "mod", ws.ID, "bob", workspace.RoleAdmin); !errors.Is(err, workspace.ErrPrivilegeEscalation) {
+		t.Fatalf("err = %v, want ErrPrivilegeEscalation", err)
+	}
+}
+
+func TestRemoveMember_CannotRemoveOwner(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "admin")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "admin", workspace.RoleAdmin)
+
+	if err := f.svc.RemoveMember(ctx, "admin", ws.ID, "owner"); !errors.Is(err, workspace.ErrLastOwner) {
+		t.Fatalf("err = %v, want ErrLastOwner", err)
+	}
+}
+
+func TestLoadMembership(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob", "stranger")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+
+	m, err := f.svc.LoadMembership(ctx, ws.ID, "bob")
+	if err != nil {
+		t.Fatalf("LoadMembership: %v", err)
+	}
+	if m.Member.UserID != "bob" || m.Member.ContainerID != ws.ID {
+		t.Fatalf("membership = %+v", m.Member)
+	}
+	if !m.Role.Permissions.Has(workspace.PermViewWorkspace) {
+		t.Fatalf("permissions = %d, want at least view", m.Role.Permissions)
+	}
+	if _, err := f.svc.LoadMembership(ctx, ws.ID, "stranger"); !errors.Is(err, workspace.ErrNotMember) {
+		t.Fatalf("err = %v, want ErrNotMember", err)
+	}
+}
+
+func TestStanding_ReportsMembershipAndPermissions(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob", "stranger")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+
+	own, err := f.svc.Standing(ctx, ws.ID, "owner")
+	if err != nil {
+		t.Fatalf("Standing: %v", err)
+	}
+	if !own.IsMember || !own.Permissions.Has(workspace.PermManageWorkbenches) {
+		t.Fatalf("owner standing = %+v, want a member who administers workbenches", own)
+	}
+
+	member, err := f.svc.Standing(ctx, ws.ID, "bob")
+	if err != nil {
+		t.Fatalf("Standing: %v", err)
+	}
+	if !member.IsMember || member.Permissions.Has(workspace.PermManageWorkbenches) {
+		t.Fatalf("member standing = %+v, want a member who does not administer workbenches", member)
+	}
+
+	out, err := f.svc.Standing(ctx, ws.ID, "stranger")
+	if err != nil {
+		t.Fatalf("Standing for a non-member must not be an error: %v", err)
+	}
+	if out.IsMember || out.Permissions != 0 {
+		t.Fatalf("stranger standing = %+v", out)
+	}
+
+	if _, err := f.svc.Standing(ctx, "no-such-workspace", "owner"); !errors.Is(err, workspace.ErrWorkspaceNotFound) {
+		t.Fatalf("err = %v, want ErrWorkspaceNotFound — a missing workspace is not a non-member", err)
+	}
+}
+
+// ── roles ───────────────────────────────────────────────────────────────────
+
+func TestListRoles_IncludesTheCodeDefinedOnes(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner")
+	ws := f.workspace(t, "owner", "Acme")
+	roles, err := f.svc.ListRoles(context.Background(), "owner", ws.ID)
+	if err != nil {
+		t.Fatalf("ListRoles: %v", err)
+	}
+	seen := map[string]workspace.Role{}
+	for _, r := range roles {
+		seen[r.ID] = r
+	}
+	for _, key := range []string{workspace.RoleOwner, workspace.RoleAdmin, workspace.RoleMember} {
+		r, ok := seen[key]
+		if !ok {
+			t.Fatalf("role %q missing from %v", key, seen)
+		}
+		if !r.IsDefault {
+			t.Fatalf("role %q should be marked default", key)
+		}
+	}
+}
+
+func TestDeleteRole_DefaultRefusedAndInUseRefused(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+
+	if err := f.svc.DeleteRole(ctx, "owner", ws.ID, workspace.RoleMember); !errors.Is(err, workspace.ErrDefaultRole) {
+		t.Fatalf("err = %v, want ErrDefaultRole", err)
+	}
+
+	custom, err := f.svc.CreateRole(ctx, "owner", ws.ID, "Reviewer", workspace.PermViewWorkbenches)
+	if err != nil {
+		t.Fatalf("CreateRole: %v", err)
+	}
+	addMember(t, f, ws.ID, "bob", custom.ID)
+	if err := f.svc.DeleteRole(ctx, "owner", ws.ID, custom.ID); !errors.Is(err, workspace.ErrRoleInUse) {
+		t.Fatalf("err = %v, want ErrRoleInUse", err)
+	}
+}
+
+func TestCreateRole_KeyDerivedFromName(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner")
+	role, err := f.svc.CreateRole(context.Background(), "owner", f.workspace(t, "owner", "Acme").ID,
+		"Bid Reviewer", workspace.PermViewWorkbenches)
+	if err != nil {
+		t.Fatalf("CreateRole: %v", err)
+	}
+	if role.ID != "bid-reviewer" {
+		t.Fatalf("role key = %q, want bid-reviewer", role.ID)
+	}
+}
+
+// ── email invitations ───────────────────────────────────────────────────────
+
+func TestInviteByEmail_SendsMailAndAdmits(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+
+	inv, err := f.svc.InviteByEmail(ctx, "owner", ws.ID, "Bob@Example.com", workspace.RoleMember, "it-it")
+	if err != nil {
+		t.Fatalf("InviteByEmail: %v", err)
+	}
+	if inv.Email != "bob@example.com" {
+		t.Fatalf("invitation address = %q, want it normalized", inv.Email)
+	}
+	if len(f.mail.sent) != 1 {
+		t.Fatalf("sent %d emails, want 1", len(f.mail.sent))
+	}
+	sent := f.mail.sent[0]
+	if sent.workspaceName != "Acme" || !strings.HasPrefix(sent.link, "https://app.test/it-it/workspace/accept-invite?token=") {
+		t.Fatalf("mail = %+v", sent)
+	}
+
+	joined, err := f.svc.AcceptEmailInvite(ctx, "bob", tokenOf(t, sent.link))
+	if err != nil {
+		t.Fatalf("AcceptEmailInvite: %v", err)
+	}
+	if joined.ID != ws.ID {
+		t.Fatalf("joined %q, want %q", joined.ID, ws.ID)
+	}
+	if _, err := f.svc.LoadMembership(ctx, ws.ID, "bob"); err != nil {
+		t.Fatalf("invitee is not a member: %v", err)
+	}
+	// The token is spent.
+	if _, err := f.svc.AcceptEmailInvite(ctx, "bob", tokenOf(t, sent.link)); !errors.Is(err, workspace.ErrInviteInvalid) {
+		t.Fatalf("replayed invite err = %v, want ErrInviteInvalid", err)
+	}
+}
+
+func TestInviteByEmail_AlreadyMember(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+
+	_, err := f.svc.InviteByEmail(ctx, "owner", ws.ID, "bob@example.com", workspace.RoleMember, "en-ie")
+	if !errors.Is(err, workspace.ErrAlreadyMember) {
+		t.Fatalf("err = %v, want ErrAlreadyMember", err)
+	}
+}
+
+func TestAcceptEmailInvite_Expired(t *testing.T) {
+	// 1ns, not a negative duration: authlayer ignores a non-positive
+	// expiry rather than minting an already-dead invite.
+	f := newFixture(t, time.Nanosecond, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	if _, err := f.svc.InviteByEmail(ctx, "owner", ws.ID, "bob@example.com", workspace.RoleMember, "en-ie"); err != nil {
+		t.Fatalf("InviteByEmail: %v", err)
+	}
+	_, err := f.svc.AcceptEmailInvite(ctx, "bob", tokenOf(t, f.mail.sent[0].link))
+	if !errors.Is(err, workspace.ErrInviteExpired) {
+		t.Fatalf("err = %v, want ErrInviteExpired", err)
+	}
+}
+
+func TestPreviewEmailInvite(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	if _, err := f.svc.InviteByEmail(ctx, "owner", ws.ID, "bob@example.com", workspace.RoleMember, "en-ie"); err != nil {
+		t.Fatalf("InviteByEmail: %v", err)
+	}
+	p, err := f.svc.PreviewEmailInvite(ctx, tokenOf(t, f.mail.sent[0].link))
+	if err != nil {
+		t.Fatalf("PreviewEmailInvite: %v", err)
+	}
+	if !p.Valid || p.WorkspaceName != "Acme" || p.Email != "bob@example.com" {
+		t.Fatalf("preview = %+v", p)
+	}
+
+	unknown, err := f.svc.PreviewEmailInvite(ctx, "never-issued")
+	if err != nil {
+		t.Fatalf("an unknown token is not an error, it is an invalid preview: %v", err)
+	}
+	if unknown.Valid {
+		t.Fatal("unknown token previewed as valid")
+	}
+}
+
+// ── invite links ────────────────────────────────────────────────────────────
+
+func TestInviteLink_MaxUsesExhausted(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob", "carol")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+
+	link, err := f.svc.CreateInviteLink(ctx, "owner", ws.ID, workspace.RoleMember, 1, nil)
+	if err != nil {
+		t.Fatalf("CreateInviteLink: %v", err)
+	}
+	if _, err := f.svc.JoinViaInviteLink(ctx, "bob", link.Code); err != nil {
+		t.Fatalf("first join: %v", err)
+	}
+	if _, err := f.svc.JoinViaInviteLink(ctx, "carol", link.Code); !errors.Is(err, workspace.ErrLinkExhausted) {
+		t.Fatalf("err = %v, want ErrLinkExhausted", err)
+	}
+}
+
+func TestInviteLink_Revoked(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+
+	link, err := f.svc.CreateInviteLink(ctx, "owner", ws.ID, workspace.RoleMember, 0, nil)
+	if err != nil {
+		t.Fatalf("CreateInviteLink: %v", err)
+	}
+	if err := f.svc.RevokeInviteLink(ctx, "owner", ws.ID, link.ID); err != nil {
+		t.Fatalf("RevokeInviteLink: %v", err)
+	}
+	if _, err := f.svc.JoinViaInviteLink(ctx, "bob", link.Code); !errors.Is(err, workspace.ErrLinkInvalid) {
+		t.Fatalf("err = %v, want ErrLinkInvalid", err)
+	}
+	links, err := f.svc.ListInviteLinks(ctx, "owner", ws.ID)
+	if err != nil {
+		t.Fatalf("ListInviteLinks: %v", err)
+	}
+	if len(links) != 1 || !links[0].Revoked {
+		t.Fatalf("links = %+v, want one revoked", links)
+	}
+}
+
+func TestInviteLink_Expired(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	past := time.Now().Add(-time.Hour)
+
+	link, err := f.svc.CreateInviteLink(ctx, "owner", ws.ID, workspace.RoleMember, 0, &past)
+	if err != nil {
+		t.Fatalf("CreateInviteLink: %v", err)
+	}
+	if _, err := f.svc.JoinViaInviteLink(ctx, "bob", link.Code); !errors.Is(err, workspace.ErrLinkExpired) {
+		t.Fatalf("err = %v, want ErrLinkExpired", err)
+	}
+}
+
+// Re-following a link you already used must not burn one of its uses.
+func TestJoinViaInviteLink_AlreadyMemberDoesNotConsumeAUse(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+
+	link, err := f.svc.CreateInviteLink(ctx, "owner", ws.ID, workspace.RoleMember, 2, nil)
+	if err != nil {
+		t.Fatalf("CreateInviteLink: %v", err)
+	}
+	for range 2 {
+		if _, err := f.svc.JoinViaInviteLink(ctx, "bob", link.Code); err != nil {
+			t.Fatalf("JoinViaInviteLink: %v", err)
+		}
+	}
+	links, err := f.svc.ListInviteLinks(ctx, "owner", ws.ID)
+	if err != nil {
+		t.Fatalf("ListInviteLinks: %v", err)
+	}
+	if links[0].UseCount != 1 {
+		t.Fatalf("use count = %d, want 1", links[0].UseCount)
+	}
+}
+
+func TestInviteLink_PlainMemberCannotCreate(t *testing.T) {
+	f := newFixture(t, time.Hour, "owner", "bob")
+	ctx := context.Background()
+	ws := f.workspace(t, "owner", "Acme")
+	addMember(t, f, ws.ID, "bob", workspace.RoleMember)
+
+	if _, err := f.svc.CreateInviteLink(ctx, "bob", ws.ID, workspace.RoleMember, 0, nil); !errors.Is(err, workspace.ErrForbidden) {
+		t.Fatalf("err = %v, want ErrForbidden", err)
 	}
 }

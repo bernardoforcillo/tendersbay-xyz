@@ -72,4 +72,22 @@ type Repository interface {
 	SeedChecklist(ctx context.Context, bidID string, seeds []ChecklistItemSeed) error
 	ListChecklistItems(ctx context.Context, bidID string) ([]ChecklistItem, error)
 	UpsertChecklistItem(ctx context.Context, bidID, itemCode, status, note string) (ChecklistItem, error)
+
+	// ESPD per-bid data. Every method is bid-scoped: the service resolves the
+	// bid through FindBidByID(workbenchID, bidID) first, so a bid id from
+	// another workbench never reaches these. Lots upsert on (bid_id, lot_ref),
+	// subcontractors on (bid_id, vat), reliances on (bid_id, vat, criterion).
+	PutLot(ctx context.Context, bidID string, l Lot) (Lot, error)
+	DeleteLot(ctx context.Context, bidID, id string) error
+	PutSubcontractor(ctx context.Context, bidID string, s Subcontractor) (Subcontractor, error)
+	DeleteSubcontractor(ctx context.Context, bidID, id string) error
+	PutReliance(ctx context.Context, bidID string, r Reliance) (Reliance, error)
+	DeleteReliance(ctx context.Context, bidID, id string) error
+	ListEspdData(ctx context.Context, bidID string) (EspdData, error)
+	// PutDeclarationConfirmation upserts on bid_id: the latest confirmation
+	// wins, since the only question it answers is "does the CURRENT set of
+	// declarations have a signature for this bid".
+	PutDeclarationConfirmation(ctx context.Context, c DeclarationConfirmation) (DeclarationConfirmation, error)
+	// GetDeclarationConfirmation returns ErrConfirmationNotFound when none exists.
+	GetDeclarationConfirmation(ctx context.Context, bidID string) (DeclarationConfirmation, error)
 }

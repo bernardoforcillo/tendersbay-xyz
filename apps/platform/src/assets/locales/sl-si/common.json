@@ -322,6 +322,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Vaš ESPD",
+      "progress": "Pripravljenih {{ready}} od {{total}} polj",
+      "ready": "Pripravljeno za izvoz. Nič ne manjka.",
+      "companyTodo": "Izpolni se enkrat — velja za vsak razpis",
+      "companyTodoHint": "To so podatki o vašem podjetju. Odgovorite enkrat in se prenesejo na naslednji razpis.",
+      "bidTodo": "Za ta razpis",
+      "noneLeft": "Tu ne manjka nič več.",
+      "reviewDeclarations": "Preglejte izjave",
+      "confirmDeclarations": "Potrdite izjave",
+      "export": "Izvoz",
+      "exportHint": "Izvoz se odklene, ko nič ne manjka."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Na to še nihče ni odgovoril.",
+        "not_authoritative": "Vrednost obstaja, a je nihče ni izjavil — ta dokument nosi le dejstva, ki jih je potrdila oseba.",
+        "stale": "Odgovorjeno, a po zadnji spremembi ni bilo znova potrjeno za ta razpis."
+      },
+      "openDossier": "Odpri dosje podjetja",
+      "openBid": "Izpolni za ta razpis"
+    },
+    "declarations": {
+      "title": "Del III — razlogi za izključitev",
+      "incomplete": "Na nekatere razloge ni bilo nikoli odgovorjeno. Odgovorite v dosjeju podjetja — enkrat, za vse razpise.",
+      "openDossier": "Odpri dosje podjetja",
+      "declaredOn": "Potrjeno za ta razpis dne {{when}}.",
+      "neverConfirmed": "Ti odgovori za ta razpis še niso bili potrjeni.",
+      "stale": "Odgovor se je po zadnji potrditvi spremenil. Preberite jih znova in potrdite.",
+      "appliesTitle": "Razlogi, za katere ste izjavili, da veljajo",
+      "selfCleaning": "Sprejeti ukrepi",
+      "allTitle": "Vsi razlogi",
+      "applies": "Velja",
+      "doesNotApply": "Ne velja",
+      "unanswered": "Brez odgovora",
+      "confirm": "Da — še vedno drži za ta razpis",
+      "confirming": "Potrjujem…",
+      "changed": "Nekaj se je spremenilo",
+      "error": "Potrditev ni uspela — poskusite znova."
+    },
+    "export": {
+      "title": "Izvoz",
+      "notReadyHint": "Izvoz se odklene, ko nič ne manjka in so vaše izjave potrjene za ta razpis.",
+      "exporting": "Pripravljam…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — dokument za podpis",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Popoln, v vašem jeziku",
+        "xml": "Za ponovno uporabo in uvoz, kjer je podprt"
+      },
+      "nextStep": "Naslednji korak: zakoniti zastopnik ga elektronsko podpiše, nato pa ga naložite na portal naročnika pred {{when}}.",
+      "nextStepNoDeadline": "Naslednji korak: zakoniti zastopnik ga elektronsko podpiše, nato pa ga naložite na portal naročnika.",
+      "history": "Prejšnji izvozi",
+      "historyHint": "Zabeležimo, da ste izvozili, nikoli datoteke same. Nov izvoz se sestavi iz današnjega dosjeja.",
+      "notEntitled": "Izvoz ESPD je del načrta Pro. Vse, kar vidite zgoraj, ostaja brezplačno.",
+      "notReady": "Nekaj še manjka ali pa je treba izjave za ta razpis znova potrditi.",
+      "error": "Izvoz ni uspel — poskusite znova."
+    },
+    "dossier": {
+      "title": "Razlogi za izključitev (ESPD del III)",
+      "progress": "Odgovorjenih {{answered}} od {{total}}",
+      "intro": "Odgovorite enkrat. Vsak razpis jih znova uporabi — le potrdite, da še držijo.",
+      "applies": "Velja za nas",
+      "doesNotApply": "Za nas ne velja",
+      "unanswered": "Še brez odgovora",
+      "selfCleaning": "Sprejeti ukrepi (self-cleaning)",
+      "selfCleaningHint": "Kaj ste glede tega storili — člen 57(6). Naročnik to prebere, preden odloči o izključitvi.",
+      "statedAt": "Izjavljeno dne {{when}}",
+      "error": "Shranjevanje ni uspelo — poskusite znova."
+    },
+    "fields": {
+      "is_sme": "Status MSP",
+      "representative": "Zakoniti zastopnik",
+      "buyer_name": "Naročnik",
+      "reference": "Referenčna številka postopka",
+      "lot_ref": "Sklop",
+      "confirmation": "Potrditev za ta razpis",
+      "criterion": "Zahteva naročnik"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Postopek",
+        "lots": "Sklopi, na katere se prijavljate"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identifikacija podjetja"
+        },
+        "b": {
+          "representatives": "Zakoniti zastopniki"
+        },
+        "c": {
+          "reliance": "Uporaba zmogljivosti drugih subjektov"
+        },
+        "d": {
+          "subcontracting": "Podizvajanje"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Potrdilo SOA (uradni seznam)",
+          "references": "Sklicevanja na določena dela",
+          "average_annual_manpower": "Povprečno letno število zaposlenih"
+        },
+        "a": {
+          "enrolment_professional_register": "Vpis v ustrezen poklicni register",
+          "enrolment_trade_register": "Vpis v poslovni register",
+          "other_registration": "Dovoljenje ali članstvo v določeni organizaciji, potrebno za pogodbe o izvajanju storitev"
+        },
+        "b": {
+          "general_yearly_turnover": "Splošni letni promet",
+          "specific_yearly_turnover": "Posebni letni promet"
+        },
+        "d": {
+          "quality_assurance_certificates": "Potrdila neodvisnih organov o standardih za zagotavljanje kakovosti",
+          "environmental_management_certificates": "Potrdila neodvisnih organov o sistemih oziroma standardih za okoljsko ravnanje"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Sodelovanje v hudodelski združbi",
+          "corruption": "Korupcija",
+          "fraud": "Goljufije",
+          "terrorist_offences": "Teroristična kazniva dejanja ali kazniva dejanja, povezana s terorističnimi dejavnostmi",
+          "money_laundering": "Pranje denarja ali financiranje terorizma",
+          "child_labour_human_trafficking": "Delo otrok in druge oblike trgovine z ljudmi"
+        },
+        "b": {
+          "payment_of_taxes": "Kršitev obveznosti v zvezi s plačilom davkov",
+          "payment_of_social_security": "Kršitev obveznosti v zvezi s plačilom prispevkov za socialno varnost"
+        },
+        "c": {
+          "breach_environmental_obligations": "Kršitev obveznosti na področju okoljskega prava",
+          "breach_social_obligations": "Kršitev obveznosti na področju socialnega prava",
+          "breach_labour_obligations": "Kršitev obveznosti na področju delovnega prava",
+          "bankruptcy": "Stečaj",
+          "insolvency": "Plačilna nesposobnost",
+          "arrangement_with_creditors": "Dogovor z upniki",
+          "analogous_situation": "Položaj, ki je v skladu z nacionalno zakonodajo podoben stečaju",
+          "assets_administered_by_liquidator": "Sredstva upravlja stečajni upravitelj",
+          "business_activities_suspended": "Poslovne dejavnosti so začasno ustavljene",
+          "grave_professional_misconduct": "Huda kršitev poklicnih pravil",
+          "agreements_distorting_competition": "Dogovori z drugimi gospodarskimi subjekti z namenom izkrivljanja konkurence",
+          "conflict_of_interest": "Nasprotje interesov zaradi njegovega sodelovanja v postopku oddaje javnega naročila",
+          "involvement_in_preparation": "Neposredno ali posredno sodelovanje pri pripravi tega postopka oddaje javnega naročila",
+          "early_termination": "Predčasna odpoved pogodbe, odškodnina ali druge primerljive sankcije",
+          "misrepresentation": "Napačno prikazovanje, prikrivanje informacij, nezmožnost predložitve zahtevane dokumentacije ali pridobivanje zaupnih informacij o tem postopku"
+        },
+        "d": {
+          "purely_national_grounds": "Izključno nacionalni razlogi za izključitev"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Razlogi, povezani s kazenskimi obsodbami",
+        "B": "Razlogi, povezani s plačilom davkov ali prispevkov za socialno varnost",
+        "C": "Razlogi, povezani z insolventnostjo, nasprotjem interesov ali kršitvijo poklicnih pravil"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Prijava",

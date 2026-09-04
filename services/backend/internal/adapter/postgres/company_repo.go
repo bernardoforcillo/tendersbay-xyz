@@ -71,7 +71,7 @@ func fromStoredAttribution(s storedAttribution) company.Attribution {
 
 // ── Dossier read ────────────────────────────────────────────────────────────
 
-// GetDossier loads the identity row and all five child collections.
+// GetDossier loads the identity row and all eight child collections.
 //
 // ErrDossierNotFound is returned only when NOTHING exists — no identity row and
 // no child record. A workspace whose first captured fact was a SOA line
@@ -111,9 +111,17 @@ func (r *CompanyRepo) GetDossier(ctx context.Context, workspaceID string) (compa
 	if d.Registrations, err = r.listRegistrations(ctx, workspaceID); err != nil {
 		return company.Dossier{}, err
 	}
+	if d.Representatives, err = r.listRepresentatives(ctx, workspaceID); err != nil {
+		return company.Dossier{}, err
+	}
+	if d.Declarations, err = r.listDeclarations(ctx, workspaceID); err != nil {
+		return company.Dossier{}, err
+	}
+	if d.NationalGrounds, err = r.listNationalGrounds(ctx, workspaceID); err != nil {
+		return company.Dossier{}, err
+	}
 
-	if !hasIdentity && len(d.SOA) == 0 && len(d.Certifications) == 0 &&
-		len(d.FinancialYears) == 0 && len(d.PastContracts) == 0 && len(d.Registrations) == 0 {
+	if !hasIdentity && d.Empty() {
 		return company.Dossier{}, company.ErrDossierNotFound
 	}
 	return d, nil
@@ -147,6 +155,7 @@ func (r *CompanyRepo) UpsertIdentity(ctx context.Context, workspaceID string, id
 		CoCountry.Val(id.Country),
 		CoNUTS.Val(id.NUTS),
 		foundedYearCol(id.FoundedYear),
+		CoIsSME.Val(id.IsSME),
 		CoAttribution.Val(attrJSON),
 		CoUpdatedAt.Val(now),
 	}
@@ -168,7 +177,7 @@ func (r *CompanyRepo) UpsertIdentity(ctx context.Context, workspaceID string, id
 func companyColumns() []drops.Expression {
 	return []drops.Expression{
 		CoWorkspaceID, CoLegalName, CoVATNumber, CoFiscalCode, CoLegalForm,
-		CoCCIAAOffice, CoCCIAANumber, CoCountry, CoNUTS, CoFoundedYear,
+		CoCCIAAOffice, CoCCIAANumber, CoCountry, CoNUTS, CoFoundedYear, CoIsSME,
 		CoAttribution, CoUpdatedAt,
 	}
 }
@@ -204,6 +213,7 @@ func dbCompanyToIdentity(row DBCompany) (company.Identity, error) {
 		Country:     row.Country,
 		NUTS:        row.NUTS,
 		FoundedYear: row.FoundedYear,
+		IsSME:       row.IsSME,
 		Attribution: attribution,
 	}, nil
 }

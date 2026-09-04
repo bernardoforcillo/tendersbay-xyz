@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Ditt ESPD",
+      "progress": "{{ready}} av {{total}} fält klara",
+      "ready": "Klart att exportera. Inget saknas.",
+      "companyTodo": "Fylls i en gång — gäller varje upphandling",
+      "companyTodoHint": "Det här är uppgifter om ditt företag. Svara en gång så följer de med till nästa upphandling.",
+      "bidTodo": "För den här upphandlingen",
+      "noneLeft": "Inget saknas här.",
+      "reviewDeclarations": "Granska dina försäkringar",
+      "confirmDeclarations": "Bekräfta dina försäkringar",
+      "export": "Exportera",
+      "exportHint": "Exporten låses upp när inget saknas."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Ingen har svarat på detta än.",
+        "not_authoritative": "Ett värde finns, men ingen har försäkrat det — det här dokumentet bär bara uppgifter som en person bekräftat.",
+        "stale": "Besvarat, men inte bekräftat på nytt för den här upphandlingen sedan det senast ändrades."
+      },
+      "openDossier": "Öppna företagsakten",
+      "openBid": "Fyll i för den här upphandlingen"
+    },
+    "declarations": {
+      "title": "Del III — uteslutningsgrunder",
+      "incomplete": "Vissa grunder har aldrig besvarats. Svara i företagsakten — en gång, för alla upphandlingar.",
+      "openDossier": "Öppna företagsakten",
+      "declaredOn": "Bekräftade för den här upphandlingen den {{when}}.",
+      "neverConfirmed": "Svaren har ännu inte bekräftats för den här upphandlingen.",
+      "stale": "Ett svar har ändrats efter den senaste bekräftelsen. Läs igenom dem igen och bekräfta.",
+      "appliesTitle": "Grunder du försäkrat är tillämpliga",
+      "selfCleaning": "Vidtagna åtgärder",
+      "allTitle": "Alla grunder",
+      "applies": "Tillämplig",
+      "doesNotApply": "Inte tillämplig",
+      "unanswered": "Obesvarad",
+      "confirm": "Ja — fortfarande sant för den här upphandlingen",
+      "confirming": "Bekräftar…",
+      "changed": "Något har ändrats",
+      "error": "Kunde inte bekräfta — försök igen."
+    },
+    "export": {
+      "title": "Exportera",
+      "notReadyHint": "Exporten låses upp när inget saknas och dina försäkringar är bekräftade för den här upphandlingen.",
+      "exporting": "Förbereder…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — dokumentet som ska undertecknas",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Fullständigt, på ditt språk",
+        "xml": "För återanvändning och import där det stöds"
+      },
+      "nextStep": "Nästa steg: din firmatecknare undertecknar det elektroniskt och sedan laddar du upp det i den upphandlande myndighetens portal före {{when}}.",
+      "nextStepNoDeadline": "Nästa steg: din firmatecknare undertecknar det elektroniskt och sedan laddar du upp det i den upphandlande myndighetens portal.",
+      "history": "Tidigare exporter",
+      "historyHint": "Vi noterar att du exporterat, aldrig själva filen. En ny export byggs upp från dagens företagsakt.",
+      "notEntitled": "ESPD-exporten ingår i Pro-planen. Allt du ser ovan förblir kostnadsfritt.",
+      "notReady": "Något saknas fortfarande, eller så behöver dina försäkringar bekräftas på nytt för den här upphandlingen.",
+      "error": "Kunde inte exportera — försök igen."
+    },
+    "dossier": {
+      "title": "Uteslutningsgrunder (ESPD del III)",
+      "progress": "{{answered}} av {{total}} besvarade",
+      "intro": "Svara en gång. Varje upphandling återanvänder svaren — du bekräftar bara att de fortfarande stämmer.",
+      "applies": "Gäller oss",
+      "doesNotApply": "Gäller oss inte",
+      "unanswered": "Ännu obesvarad",
+      "selfCleaning": "Vidtagna åtgärder (self-cleaning)",
+      "selfCleaningHint": "Vad ni gjorde åt saken — artikel 57.6. Den upphandlande myndigheten läser detta innan den beslutar om uteslutning.",
+      "statedAt": "Försäkrat den {{when}}",
+      "error": "Kunde inte spara — försök igen."
+    },
+    "fields": {
+      "is_sme": "Status som litet eller medelstort företag",
+      "representative": "Firmatecknare",
+      "buyer_name": "Upphandlande myndighet",
+      "reference": "Upphandlingens referens",
+      "lot_ref": "Del",
+      "confirmation": "Bekräftelse för den här upphandlingen",
+      "criterion": "Begärt av den upphandlande myndigheten"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Upphandlingen",
+        "lots": "Delar du lämnar anbud på"
+      },
+      "ii": {
+        "a": {
+          "identity": "Uppgifter om företaget"
+        },
+        "b": {
+          "representatives": "Firmatecknare"
+        },
+        "c": {
+          "reliance": "Åberopande av andra företags kapacitet"
+        },
+        "d": {
+          "subcontracting": "Underleverantörer"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA-intyg (officiell förteckning)",
+          "references": "Referenser för angivna arbeten",
+          "average_annual_manpower": "Antal anställda i medeltal per år"
+        },
+        "a": {
+          "enrolment_professional_register": "Inskrivning i yrkesregister",
+          "enrolment_trade_register": "Inskrivning i handelsregister",
+          "other_registration": "Auktorisation eller medlemskap i en viss organisation som krävs för tjänstekontrakt"
+        },
+        "b": {
+          "general_yearly_turnover": "Total årsomsättning",
+          "specific_yearly_turnover": "Specifik årsomsättning"
+        },
+        "d": {
+          "quality_assurance_certificates": "Intyg från oberoende organ om kvalitetssäkringsstandarder",
+          "environmental_management_certificates": "Intyg från oberoende organ om miljöledningssystem eller miljöledningsstandarder"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Deltagande i en kriminell organisation",
+          "corruption": "Korruption",
+          "fraud": "Bedrägerier",
+          "terrorist_offences": "Terroristbrott eller brott med anknytning till terroristverksamhet",
+          "money_laundering": "Penningtvätt eller finansiering av terrorism",
+          "child_labour_human_trafficking": "Barnarbete och andra former av människohandel"
+        },
+        "b": {
+          "payment_of_taxes": "Åsidosättande av skyldigheten att betala skatter",
+          "payment_of_social_security": "Åsidosättande av skyldigheten att betala sociala avgifter"
+        },
+        "c": {
+          "breach_environmental_obligations": "Åsidosättande av skyldigheter enligt miljölagstiftningen",
+          "breach_social_obligations": "Åsidosättande av skyldigheter enligt sociallagstiftningen",
+          "breach_labour_obligations": "Åsidosättande av skyldigheter enligt arbetsrätten",
+          "bankruptcy": "Konkurs",
+          "insolvency": "Insolvens",
+          "arrangement_with_creditors": "Ackordsuppgörelse med borgenärer",
+          "analogous_situation": "Situation som enligt nationell lagstiftning motsvarar konkurs",
+          "assets_administered_by_liquidator": "Tvångsförvaltning",
+          "business_activities_suspended": "Avbruten näringsverksamhet",
+          "grave_professional_misconduct": "Allvarligt fel i yrkesutövningen",
+          "agreements_distorting_competition": "Avtal med andra ekonomiska aktörer med syfte att snedvrida konkurrensen",
+          "conflict_of_interest": "Intressekonflikt på grund av deltagande i upphandlingsförfarandet",
+          "involvement_in_preparation": "Direkt eller indirekt deltagande i förberedelserna av detta upphandlingsförfarande",
+          "early_termination": "Förtida uppsägning, skadestånd eller andra jämförbara sanktioner",
+          "misrepresentation": "Har lämnat oriktiga uppgifter, har undanhållit information, kan inte förete de handlingar som krävs eller har tillägnat sig konfidentiell information om förfarandet"
+        },
+        "d": {
+          "purely_national_grounds": "Nationella uteslutningsgrunder"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Skäl som rör fällande dom i brottmål",
+        "B": "Skäl som rör betalning av skatter eller sociala avgifter",
+        "C": "Skäl som rör insolvens, intressekonflikter eller allvarliga fel i yrkesutövningen"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Logga in",

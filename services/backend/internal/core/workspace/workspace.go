@@ -1,86 +1,70 @@
-// Package workspace implements multi-user workspaces with Discord-like bitwise
-// RBAC (one role per member), membership management, and invitations. A user may
-// belong to many workspaces; each membership carries exactly one role whose
-// permission bitmask decides what the member may do. The workspace owner and any
-// role bearing the ADMINISTRATOR bit bypass permission checks.
+// Package workspace implements multi-user workspaces: RBAC (one role per
+// member), membership management, and invitations.
+//
+// The authorization engine is github.com/bernardoforcillo/authlayer — scope for
+// containers, members, roles and the privilege-escalation guard, invite for
+// email invitations and shareable links, both persisted by authlayer's own
+// drops store. What this package owns is everything around that: the product's
+// permission vocabulary (see permissions.go), slug rules, localized invitation
+// mail, and the sentinel errors connectapi maps to ConnectRPC codes.
+//
+// The service's method set is unchanged from the hand-rolled implementation it
+// replaced, deliberately: the transport, the proto and the client all speak the
+// same shapes they always did.
 package workspace
 
 import (
 	"context"
-	"crypto/rand"
-	"crypto/sha256"
-	"encoding/hex"
 	"errors"
-	"strings"
 	"time"
 
+	"github.com/bernardoforcillo/authlayer/access"
+	"github.com/bernardoforcillo/authlayer/invite"
+	"github.com/bernardoforcillo/authlayer/scope"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/rbac"
 )
-
-// ── Permissions ─────────────────────────────────────────────────────────────
-
-// Permission is a bitmask of workspace capabilities. New capabilities take the
-// next free bit; bits 1<<20 and up are reserved for the future workbench so it
-// ships without a schema change.
-type Permission uint64
-
-const (
-	PermViewWorkspace   Permission = 1 << 0 // see the workspace (the default role)
-	PermManageWorkspace Permission = 1 << 1 // rename / change slug
-	PermManageMembers   Permission = 1 << 2 // change member roles, remove members
-	PermManageRoles     Permission = 1 << 3 // create / update / delete roles
-	PermCreateInvite    Permission = 1 << 4 // create email invites and invite links
-	PermManageInvites   Permission = 1 << 5 // list / revoke invites and links
-	PermAdministrator   Permission = 1 << 6 // bypass all non-owner-only checks
-
-	// 1<<20.. — workbench feature bits (see internal/core/workbench).
-	PermViewWorkbenches   Permission = 1 << 20 // see shared workbenches in the workspace
-	PermCreateWorkbench   Permission = 1 << 21 // create new workbenches
-	PermManageWorkbenches Permission = 1 << 22 // admin over all workbenches (bypass per-workbench ACL)
-)
-
-// permAdminRole is every currently-defined bit; the seeded "Admin" role and the
-// workspace owner both hold this mask.
-const permAdminRole = PermViewWorkspace | PermManageWorkspace | PermManageMembers |
-	PermManageRoles | PermCreateInvite | PermManageInvites | PermAdministrator |
-	PermViewWorkbenches | PermCreateWorkbench | PermManageWorkbenches
-
-// Has reports whether p contains every bit in need.
-func (p Permission) Has(need Permission) bool { return p&need == need }
-
-// subsetOf reports whether every bit in p is also set in other — i.e. p grants
-// nothing other doesn't already have. Used for the privilege-escalation guard.
-func (p Permission) subsetOf(other Permission) bool { return p&^other == 0 }
 
 // ── Entities ────────────────────────────────────────────────────────────────
 
+// Workspace is the scope container. The id, owner and timestamps come from
+// scope.ContainerBase and are stamped by the engine on create; Name and Slug
+// are this product's. The slug's "unique" tag is what the drops store turns
+// into the UNIQUE constraint behind ErrSlugTaken.
 type Workspace struct {
-	ID        string
-	Name      string
-	Slug      string
-	OwnerID   string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	scope.ContainerBase
+	Name string `drop:"name"`
+	Slug string `drop:"slug,unique"`
 }
 
+// Member is a workspace membership. It carries nothing beyond scope.MemberBase
+// — the workspace id, the user id, the role KEY, and when they joined.
+type Member struct {
+	scope.MemberBase
+}
+
+// Role is the product's view of a role: authlayer keys roles by a string that
+// is unique per workspace, and that key is what travels the wire as the role
+// id. CreatedAt is absent because scope.RoleView does not carry it — the
+// registry's code-defined roles have no row to have been created.
 type Role struct {
-	ID          string
+	ID          string // authlayer's role key
 	WorkspaceID string
 	Name        string
 	Permissions Permission
-	IsDefault   bool
-	CreatedAt   time.Time
+	// IsDefault marks a code-defined role (owner/admin/member). Such a role
+	// exists in every workspace without a stored row and cannot be edited or
+	// deleted, which is what the old is_default column effectively guarded too.
+	IsDefault bool
 }
 
-type Member struct {
-	WorkspaceID string
-	UserID      string
-	RoleID      string
-	JoinedAt    time.Time
-}
-
-// Membership is a member together with the role it holds — the unit the
-// authorizer loads to decide a request.
+// Membership is a member together with the permissions it holds — the unit a
+// permission check loads.
+//
+// LoadMembership fills Member.ContainerID, Member.UserID and Role.Permissions,
+// and leaves Role.ID and Role.Name empty: resolving the role's key and label
+// costs a second read that no caller of this method needs, and ListMembers is
+// the API that returns whole role rows.
 type Membership struct {
 	Member Member
 	Role   Role
@@ -98,7 +82,6 @@ type EmailInvitation struct {
 	WorkspaceID string
 	Email       string
 	RoleID      string
-	TokenHash   string
 	InvitedBy   string
 	ExpiresAt   time.Time
 	CreatedAt   time.Time
@@ -132,7 +115,10 @@ type LinkPreview struct {
 }
 
 // ── Sentinel errors ─────────────────────────────────────────────────────────
-
+//
+// These are the vocabulary connectapi.toConnectError maps, kept stable across
+// the authlayer migration: mapLibraryError translates every scope and invite
+// sentinel into one of them.
 var (
 	ErrWorkspaceNotFound   = errors.New("workspace not found")
 	ErrNotMember           = errors.New("not a member of this workspace")
@@ -150,82 +136,40 @@ var (
 	ErrLinkExpired         = errors.New("invite link expired")
 	ErrLinkExhausted       = errors.New("invite link has reached its maximum uses")
 	ErrSlugTaken           = errors.New("workspace slug already taken")
+	ErrRoleKeyTaken        = errors.New("a role with this name already exists")
 )
 
 // ── Ports ───────────────────────────────────────────────────────────────────
 
-type WorkspaceRepository interface {
-	Create(ctx context.Context, w Workspace) (Workspace, error)
-	FindByID(ctx context.Context, id string) (Workspace, error)
+// Store is authlayer's scope persistence port, typed for this product.
+// *dropsstore.Store[Workspace, Member] satisfies it in production and
+// memory.New[Workspace, Member]() in tests.
+type Store = scope.Store[Workspace, Member]
+
+// InviteStore is authlayer's invitation persistence port.
+type InviteStore = invite.Store
+
+// Repository is the handful of workspace queries authlayer's scope store does
+// not cover, because they are about this product's own columns rather than
+// about containment: looking a workspace up by slug, renaming it, deleting it.
+type Repository interface {
 	FindBySlug(ctx context.Context, slug string) (Workspace, error)
-	ListByUserID(ctx context.Context, userID string) ([]Workspace, error)
-	Update(ctx context.Context, id, name, slug string) (Workspace, error)
-	UpdateOwner(ctx context.Context, id, newOwnerID string) error
+	UpdateNameSlug(ctx context.Context, id, name, slug string) (Workspace, error)
 	Delete(ctx context.Context, id string) error
 }
 
-type RoleRepository interface {
-	Create(ctx context.Context, r Role) (Role, error)
-	FindByID(ctx context.Context, id string) (Role, error)
-	ListByWorkspace(ctx context.Context, workspaceID string) ([]Role, error)
-	Update(ctx context.Context, id, name string, perms Permission) (Role, error)
-	Delete(ctx context.Context, id string) error
-	CountMembersUsing(ctx context.Context, roleID string) (int64, error)
-}
-
-type MemberRepository interface {
-	Add(ctx context.Context, m Member) (Member, error)
-	Find(ctx context.Context, workspaceID, userID string) (Member, error)
-	LoadMembership(ctx context.Context, workspaceID, userID string) (Membership, error)
-	ListByWorkspace(ctx context.Context, workspaceID string) ([]Member, error)
-	UpdateRole(ctx context.Context, workspaceID, userID, roleID string) error
-	Remove(ctx context.Context, workspaceID, userID string) error
-	CountByWorkspace(ctx context.Context, workspaceID string) (int64, error)
-}
-
-type EmailInvitationRepository interface {
-	Create(ctx context.Context, inv EmailInvitation) (EmailInvitation, error)
-	FindByTokenHash(ctx context.Context, hash string) (EmailInvitation, error)
-	FindByID(ctx context.Context, id string) (EmailInvitation, error)
-	ListByWorkspace(ctx context.Context, workspaceID string) ([]EmailInvitation, error)
-	Delete(ctx context.Context, id string) error
-	DeleteByWorkspaceEmail(ctx context.Context, workspaceID, email string) error
-}
-
-type InviteLinkRepository interface {
-	Create(ctx context.Context, l InviteLink) (InviteLink, error)
-	FindByCode(ctx context.Context, code string) (InviteLink, error)
-	FindByID(ctx context.Context, id string) (InviteLink, error)
-	ListByWorkspace(ctx context.Context, workspaceID string) ([]InviteLink, error)
-	IncrementUse(ctx context.Context, id string) error
-	Revoke(ctx context.Context, id string) error
-}
-
-// UserLookup is the narrow slice of the auth user store the workspace service
-// needs; the existing postgres UserRepo satisfies it.
+// UserLookup is the narrow slice of the user profile store this service needs.
+// FindByIDs is what a member listing uses: one query for the whole page rather
+// than one per row.
 type UserLookup interface {
 	FindByID(ctx context.Context, id string) (auth.User, error)
 	FindByEmail(ctx context.Context, email string) (auth.User, error)
+	FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error)
 }
 
 // EmailSender delivers workspace invitation emails.
 type EmailSender interface {
 	SendWorkspaceInvite(ctx context.Context, to, workspaceName, inviterName, link string) error
-}
-
-// Repos is the set of tx-scoped repositories handed to a UnitOfWork closure.
-type Repos struct {
-	Workspaces WorkspaceRepository
-	Roles      RoleRepository
-	Members    MemberRepository
-	EmailInvs  EmailInvitationRepository
-	Links      InviteLinkRepository
-}
-
-// UnitOfWork runs fn inside a single database transaction, providing tx-scoped
-// repositories so multi-row writes commit or roll back atomically.
-type UnitOfWork interface {
-	Do(ctx context.Context, fn func(Repos) error) error
 }
 
 // ── Service ─────────────────────────────────────────────────────────────────
@@ -235,78 +179,163 @@ type Config struct {
 	InviteExpiry time.Duration
 }
 
+type scopeService = scope.Service[Workspace, Member, *Workspace, *Member]
+type inviteService = invite.Service[Workspace, Member, *Workspace, *Member]
+
 type Service struct {
-	workspaces WorkspaceRepository
-	roles      RoleRepository
-	members    MemberRepository
-	emailInvs  EmailInvitationRepository
-	links      InviteLinkRepository
-	users      UserLookup
-	email      EmailSender
-	uow        UnitOfWork
-	cfg        Config
+	sc    *scopeService
+	inv   *inviteService
+	store Store
+	repo  Repository
+	users UserLookup
+	email EmailSender
+	cfg   Config
 }
 
+// NewService wires the authlayer engines and this product's own dependencies.
+// ac comes from NewAccess and is shared process-wide.
 func NewService(
-	workspaces WorkspaceRepository,
-	roles RoleRepository,
-	members MemberRepository,
-	emailInvs EmailInvitationRepository,
-	links InviteLinkRepository,
+	ac *access.Access,
+	store Store,
+	inviteStore InviteStore,
+	repo Repository,
 	users UserLookup,
 	email EmailSender,
-	uow UnitOfWork,
 	cfg Config,
 ) *Service {
-	return &Service{
-		workspaces: workspaces,
-		roles:      roles,
-		members:    members,
-		emailInvs:  emailInvs,
-		links:      links,
-		users:      users,
-		email:      email,
-		uow:        uow,
-		cfg:        cfg,
+	sc := scope.New[Workspace, Member](ac, store,
+		scope.WithContainerResource(ResourceWorkspace),
+	)
+	inv := invite.New(sc, inviteStore, invite.WithInviteExpiry(cfg.InviteExpiry))
+	return &Service{sc: sc, inv: inv, store: store, repo: repo, users: users, email: email, cfg: cfg}
+}
+
+// Scope exposes the underlying engine for the adapters that need to ask it a
+// question directly — the workbench domain's workspace-standing lookup, and any
+// future query guard built from scope.PermissionGuard.
+func (s *Service) Scope() *scopeService { return s.sc }
+
+// actor builds the context authlayer's engines read: who is asking, and which
+// workspace they are asking about.
+func actor(ctx context.Context, userID, workspaceID string) context.Context {
+	return scope.WithScope(scope.WithSubject(ctx, userID), workspaceID)
+}
+
+// scopeErrors is this domain's vocabulary for authlayer's scope sentinels.
+// The translation itself is rbac.Errors.Translate; what is declared here is
+// only which of this package's errors each condition means.
+var scopeErrors = rbac.Errors{
+	NotFound:            ErrWorkspaceNotFound,
+	NotMember:           ErrNotMember,
+	Forbidden:           ErrForbidden,
+	PrivilegeEscalation: ErrPrivilegeEscalation,
+	RoleNotFound:        ErrRoleNotFound,
+	RoleInUse:           ErrRoleInUse,
+	DefaultRole:         ErrDefaultRole,
+	LastOwner:           ErrLastOwner,
+	OwnerOnly:           ErrOwnerOnly,
+	AlreadyMember:       ErrAlreadyMember,
+	RoleKeyTaken:        ErrRoleKeyTaken,
+	// The only unique constraint a workspace can violate is its slug.
+	Conflict: ErrSlugTaken,
+}
+
+// mapLibraryError translates authlayer's sentinels into this package's, so
+// connectapi.toConnectError keeps its existing switch and the wire status codes
+// do not move. Anything unrecognised is passed through untouched and surfaces
+// as CodeInternal, which is the correct answer for a store or transport failure.
+func mapLibraryError(err error) error {
+	switch {
+	case err == nil:
+		return nil
+	case errors.Is(err, invite.ErrInviteNotFound):
+		return ErrInviteInvalid
+	case errors.Is(err, invite.ErrInviteExpired):
+		return ErrInviteExpired
+	case errors.Is(err, invite.ErrLinkNotFound), errors.Is(err, invite.ErrLinkRevoked):
+		return ErrLinkInvalid
+	case errors.Is(err, invite.ErrLinkExpired):
+		return ErrLinkExpired
+	case errors.Is(err, invite.ErrLinkExhausted):
+		return ErrLinkExhausted
+	default:
+		return scopeErrors.Translate(err)
 	}
 }
 
-// authz is the outcome of an authorization check.
-type authz struct {
-	ws       Workspace
-	role     Role       // caller's role (zero value for the owner)
-	perms    Permission // effective permissions (all bits for owner/administrator)
-	elevated bool       // owner or administrator — bypasses the subset guard
+// ── Workspace lifecycle ─────────────────────────────────────────────────────
+
+// CreateWorkspace creates a workspace owned by userID, who becomes its first
+// member with the owner role. No role rows are seeded: owner, admin and member
+// are code-defined and exist in every workspace (see NewAccess).
+func (s *Service) CreateWorkspace(ctx context.Context, userID, name, slug string) (Workspace, error) {
+	slug = normalizeSlug(slug, name)
+	ws, err := s.sc.CreateContainer(actor(ctx, userID, ""), Workspace{Name: name, Slug: slug})
+	if err != nil {
+		return Workspace{}, mapLibraryError(err)
+	}
+	return ws, nil
 }
 
-// authorize loads the caller's workspace + membership and verifies the required
-// permission bit. The owner bypasses everything; an ADMINISTRATOR role bypasses
-// non-owner-only checks.
-func (s *Service) authorize(ctx context.Context, workspaceID, userID string, need Permission) (authz, error) {
-	ws, err := s.workspaces.FindByID(ctx, workspaceID)
+func (s *Service) ListMyWorkspaces(ctx context.Context, userID string) ([]Workspace, error) {
+	wss, err := s.store.ListUserContainers(ctx, userID)
 	if err != nil {
-		return authz{}, err
+		return nil, mapLibraryError(err)
 	}
-	if ws.OwnerID == userID {
-		return authz{ws: ws, perms: permAdminRole, elevated: true}, nil
-	}
-	m, err := s.members.LoadMembership(ctx, workspaceID, userID)
-	if err != nil {
-		return authz{}, err
-	}
-	perms := m.Role.Permissions
-	elevated := perms.Has(PermAdministrator)
-	if !elevated && !perms.Has(need) {
-		return authz{}, ErrForbidden
-	}
-	return authz{ws: ws, role: m.Role, perms: perms, elevated: elevated}, nil
+	return wss, nil
 }
 
-// requireOwner asserts the caller owns the workspace (for owner-only actions).
-func (s *Service) requireOwner(ctx context.Context, workspaceID, userID string) (Workspace, error) {
-	ws, err := s.workspaces.FindByID(ctx, workspaceID)
+// GetWorkspace returns the workspace and the caller's effective permissions.
+// Membership alone is the read right, so there is no grant to check here — a
+// caller with no standing gets ErrNotMember from Standing itself.
+func (s *Service) GetWorkspace(ctx context.Context, userID, workspaceID string) (Workspace, Permission, error) {
+	perms, elevated, err := s.sc.Standing(ctx, workspaceID, userID)
 	if err != nil {
+		return Workspace{}, 0, mapLibraryError(err)
+	}
+	ws, err := s.sc.Container(ctx, workspaceID)
+	if err != nil {
+		return Workspace{}, 0, mapLibraryError(err)
+	}
+	return ws, maskOf(perms, elevated), nil
+}
+
+func (s *Service) UpdateWorkspace(ctx context.Context, userID, workspaceID, name, slug string) (Workspace, error) {
+	if err := s.sc.Authorize(actor(ctx, userID, workspaceID), ResourceWorkspace, scope.ActionUpdate); err != nil {
+		return Workspace{}, mapLibraryError(err)
+	}
+	slug = normalizeSlug(slug, name)
+	if existing, err := s.repo.FindBySlug(ctx, slug); err == nil {
+		if existing.ID != workspaceID {
+			return Workspace{}, ErrSlugTaken
+		}
+	} else if !errors.Is(err, ErrWorkspaceNotFound) {
 		return Workspace{}, err
+	}
+	return s.repo.UpdateNameSlug(ctx, workspaceID, name, slug)
+}
+
+// DeleteWorkspace is owner-only. It is not expressed as a grant — see
+// permissionGrants' note on why "workspace" declares only update.
+func (s *Service) DeleteWorkspace(ctx context.Context, userID, workspaceID string) error {
+	if _, err := s.requireOwner(ctx, workspaceID, userID); err != nil {
+		return err
+	}
+	return s.repo.Delete(ctx, workspaceID)
+}
+
+func (s *Service) TransferOwnership(ctx context.Context, userID, workspaceID, newOwnerUserID string) error {
+	return mapLibraryError(s.sc.TransferOwnership(actor(ctx, userID, workspaceID), newOwnerUserID))
+}
+
+func (s *Service) LeaveWorkspace(ctx context.Context, userID, workspaceID string) error {
+	return mapLibraryError(s.sc.LeaveContainer(actor(ctx, userID, workspaceID)))
+}
+
+func (s *Service) requireOwner(ctx context.Context, workspaceID, userID string) (Workspace, error) {
+	ws, err := s.sc.Container(ctx, workspaceID)
+	if err != nil {
+		return Workspace{}, mapLibraryError(err)
 	}
 	if ws.OwnerID != userID {
 		return Workspace{}, ErrOwnerOnly
@@ -314,540 +343,388 @@ func (s *Service) requireOwner(ctx context.Context, workspaceID, userID string) 
 	return ws, nil
 }
 
-// ── Workspace lifecycle ─────────────────────────────────────────────────────
+// ── Membership checks ───────────────────────────────────────────────────────
 
-// CreateWorkspace creates a workspace, seeds it with "Admin" and "Member" roles,
-// and adds the creator as an Admin member — all in one transaction.
-func (s *Service) CreateWorkspace(ctx context.Context, userID, name, slug string) (Workspace, error) {
-	slug = normalizeSlug(slug, name)
-	if _, err := s.workspaces.FindBySlug(ctx, slug); err == nil {
-		return Workspace{}, ErrSlugTaken
-	} else if !errors.Is(err, ErrWorkspaceNotFound) {
-		return Workspace{}, err
-	}
-
-	var created Workspace
-	err := s.uow.Do(ctx, func(r Repos) error {
-		ws, err := r.Workspaces.Create(ctx, Workspace{Name: name, Slug: slug, OwnerID: userID})
-		if err != nil {
-			return err
-		}
-		admin, err := r.Roles.Create(ctx, Role{WorkspaceID: ws.ID, Name: "Admin", Permissions: permAdminRole})
-		if err != nil {
-			return err
-		}
-		if _, err := r.Roles.Create(ctx, Role{WorkspaceID: ws.ID, Name: "Member", Permissions: PermViewWorkspace | PermViewWorkbenches | PermCreateWorkbench, IsDefault: true}); err != nil {
-			return err
-		}
-		if _, err := r.Members.Add(ctx, Member{WorkspaceID: ws.ID, UserID: userID, RoleID: admin.ID}); err != nil {
-			return err
-		}
-		created = ws
-		return nil
-	})
+// LoadMembership reports a caller's standing in a workspace, refusing a
+// non-member. It is the port the agent, company, client-profile and
+// tender-search paths gate on.
+//
+// It is Standing in the shape those callers speak — one query either way, one
+// implementation of the ladder. The two differ only in what a non-member means:
+// an error here, because these callers are gating; a false flag there, because
+// the workbench domain has to tell "not a member" from "no such workspace".
+func (s *Service) LoadMembership(ctx context.Context, workspaceID, userID string) (Membership, error) {
+	st, err := s.Standing(ctx, workspaceID, userID)
 	if err != nil {
-		return Workspace{}, err
+		return Membership{}, err
 	}
-	return created, nil
+	if !st.IsMember {
+		return Membership{}, ErrNotMember
+	}
+	m := Membership{Role: Role{WorkspaceID: workspaceID, Permissions: st.Permissions}}
+	m.Member.ContainerID = workspaceID
+	m.Member.UserID = userID
+	return m, nil
 }
 
-func (s *Service) ListMyWorkspaces(ctx context.Context, userID string) ([]Workspace, error) {
-	return s.workspaces.ListByUserID(ctx, userID)
+// Standing is a caller's position in a workspace, for the domains that gate on
+// it without being part of it — today the workbench domain, whose own scope is
+// nested in this one.
+//
+// It carries no workspace name and no owner flag. Both were here, and neither
+// was read: ownership reaches the workbench domain as elevation through the
+// nesting, and the breadcrumb name is a separate one-column read. Keeping them
+// cost a container lookup on every call, for two fields nobody consulted.
+type Standing struct {
+	IsMember    bool
+	Permissions Permission
 }
 
-func (s *Service) GetWorkspace(ctx context.Context, userID, workspaceID string) (Workspace, Permission, error) {
-	a, err := s.authorize(ctx, workspaceID, userID, PermViewWorkspace)
+// Standing reports userID's position in a workspace. A non-member is not an
+// error: the caller gets IsMember false and decides what that means, which is
+// what lets the workbench domain distinguish "no such workspace" from "you may
+// not see this workbench".
+func (s *Service) Standing(ctx context.Context, workspaceID, userID string) (Standing, error) {
+	perms, elevated, err := s.sc.Standing(ctx, workspaceID, userID)
+	if errors.Is(err, scope.ErrNotMember) {
+		return Standing{}, nil
+	}
 	if err != nil {
-		return Workspace{}, 0, err
+		return Standing{}, mapLibraryError(err)
 	}
-	return a.ws, a.perms, nil
-}
-
-func (s *Service) UpdateWorkspace(ctx context.Context, userID, workspaceID, name, slug string) (Workspace, error) {
-	if _, err := s.authorize(ctx, workspaceID, userID, PermManageWorkspace); err != nil {
-		return Workspace{}, err
-	}
-	slug = normalizeSlug(slug, name)
-	if existing, err := s.workspaces.FindBySlug(ctx, slug); err == nil {
-		if existing.ID != workspaceID {
-			return Workspace{}, ErrSlugTaken
-		}
-	} else if !errors.Is(err, ErrWorkspaceNotFound) {
-		return Workspace{}, err
-	}
-	return s.workspaces.Update(ctx, workspaceID, name, slug)
-}
-
-func (s *Service) DeleteWorkspace(ctx context.Context, userID, workspaceID string) error {
-	if _, err := s.requireOwner(ctx, workspaceID, userID); err != nil {
-		return err
-	}
-	return s.workspaces.Delete(ctx, workspaceID)
-}
-
-func (s *Service) TransferOwnership(ctx context.Context, userID, workspaceID, newOwnerUserID string) error {
-	if _, err := s.requireOwner(ctx, workspaceID, userID); err != nil {
-		return err
-	}
-	if _, err := s.members.Find(ctx, workspaceID, newOwnerUserID); err != nil {
-		return err // NoRows -> ErrNotMember
-	}
-	return s.workspaces.UpdateOwner(ctx, workspaceID, newOwnerUserID)
-}
-
-func (s *Service) LeaveWorkspace(ctx context.Context, userID, workspaceID string) error {
-	ws, err := s.workspaces.FindByID(ctx, workspaceID)
-	if err != nil {
-		return err
-	}
-	if ws.OwnerID == userID {
-		return ErrLastOwner
-	}
-	if _, err := s.members.Find(ctx, workspaceID, userID); err != nil {
-		return err
-	}
-	return s.members.Remove(ctx, workspaceID, userID)
+	return Standing{IsMember: true, Permissions: maskOf(perms, elevated)}, nil
 }
 
 // ── Members ─────────────────────────────────────────────────────────────────
 
+// ListMembers returns the workspace's members with their roles and profiles.
+//
+// It resolves the caller's standing ONCE, in LoadMembership, and reads through
+// the store from there. Going through scope.ListMembers and scope.ListRoles
+// instead would re-resolve it twice more — each of those authorizes on its own
+// — for three ladders down the same container on one page.
 func (s *Service) ListMembers(ctx context.Context, userID, workspaceID string) ([]MemberView, error) {
-	if _, err := s.authorize(ctx, workspaceID, userID, PermViewWorkspace); err != nil {
+	if _, err := s.LoadMembership(ctx, workspaceID, userID); err != nil {
 		return nil, err
 	}
-	members, err := s.members.ListByWorkspace(ctx, workspaceID)
+	members, err := s.store.ListMembers(ctx, workspaceID)
+	if err != nil {
+		return nil, mapLibraryError(err)
+	}
+	roles, err := s.rolesByKey(ctx, workspaceID)
 	if err != nil {
 		return nil, err
 	}
-	roles, err := s.roles.ListByWorkspace(ctx, workspaceID)
+
+	ids := make([]string, len(members))
+	for i, m := range members {
+		ids[i] = m.UserID
+	}
+	profiles, err := s.users.FindByIDs(ctx, ids)
 	if err != nil {
 		return nil, err
 	}
-	byID := make(map[string]Role, len(roles))
-	for _, r := range roles {
-		byID[r.ID] = r
-	}
+
 	views := make([]MemberView, 0, len(members))
 	for _, m := range members {
-		u, err := s.users.FindByID(ctx, m.UserID)
-		if err != nil {
-			return nil, err
+		u, ok := profiles[m.UserID]
+		if !ok {
+			// A membership pointing at a user that is gone. The foreign key
+			// makes it impossible, so it means the two tables disagree — which
+			// is worth failing on rather than rendering as a blank name.
+			return nil, auth.ErrNotFound
 		}
-		views = append(views, MemberView{Member: m, Role: byID[m.RoleID], User: u})
+		views = append(views, MemberView{Member: m, Role: roles[m.RoleKey], User: u})
 	}
 	return views, nil
 }
 
 func (s *Service) ChangeMemberRole(ctx context.Context, userID, workspaceID, targetUserID, roleID string) (MemberView, error) {
-	a, err := s.authorize(ctx, workspaceID, userID, PermManageMembers)
+	if err := s.sc.ChangeMemberRole(actor(ctx, userID, workspaceID), targetUserID, roleID); err != nil {
+		return MemberView{}, mapLibraryError(err)
+	}
+	role, err := s.role(ctx, workspaceID, roleID)
 	if err != nil {
-		return MemberView{}, err
-	}
-	if targetUserID == a.ws.OwnerID {
-		return MemberView{}, ErrLastOwner
-	}
-	role, err := s.roleInWorkspace(ctx, workspaceID, roleID)
-	if err != nil {
-		return MemberView{}, err
-	}
-	if !a.elevated && !role.Permissions.subsetOf(a.perms) {
-		return MemberView{}, ErrPrivilegeEscalation
-	}
-	if _, err := s.members.Find(ctx, workspaceID, targetUserID); err != nil {
-		return MemberView{}, err
-	}
-	if err := s.members.UpdateRole(ctx, workspaceID, targetUserID, roleID); err != nil {
 		return MemberView{}, err
 	}
 	u, err := s.users.FindByID(ctx, targetUserID)
 	if err != nil {
 		return MemberView{}, err
 	}
-	return MemberView{
-		Member: Member{WorkspaceID: workspaceID, UserID: targetUserID, RoleID: roleID},
-		Role:   role,
-		User:   u,
-	}, nil
+	view := MemberView{Role: role, User: u}
+	view.Member.ContainerID = workspaceID
+	view.Member.UserID = targetUserID
+	view.Member.RoleKey = roleID
+	return view, nil
 }
 
 func (s *Service) RemoveMember(ctx context.Context, userID, workspaceID, targetUserID string) error {
-	a, err := s.authorize(ctx, workspaceID, userID, PermManageMembers)
-	if err != nil {
-		return err
-	}
-	if targetUserID == a.ws.OwnerID {
-		return ErrLastOwner
-	}
-	target, err := s.members.LoadMembership(ctx, workspaceID, targetUserID)
-	if err != nil {
-		return err
-	}
-	if !a.elevated && !target.Role.Permissions.subsetOf(a.perms) {
-		return ErrPrivilegeEscalation
-	}
-	return s.members.Remove(ctx, workspaceID, targetUserID)
+	return mapLibraryError(s.sc.RemoveMember(actor(ctx, userID, workspaceID), targetUserID))
 }
 
 // ── Roles ───────────────────────────────────────────────────────────────────
 
 func (s *Service) ListRoles(ctx context.Context, userID, workspaceID string) ([]Role, error) {
-	if _, err := s.authorize(ctx, workspaceID, userID, PermViewWorkspace); err != nil {
+	if _, err := s.LoadMembership(ctx, workspaceID, userID); err != nil {
 		return nil, err
 	}
-	return s.roles.ListByWorkspace(ctx, workspaceID)
+	return s.roleViews(ctx, workspaceID)
 }
 
 func (s *Service) CreateRole(ctx context.Context, userID, workspaceID, name string, perms Permission) (Role, error) {
-	a, err := s.authorize(ctx, workspaceID, userID, PermManageRoles)
+	view, err := s.sc.CreateRole(actor(ctx, userID, workspaceID), rbac.RoleKey(name), name, grantsFor(perms))
 	if err != nil {
-		return Role{}, err
+		return Role{}, mapLibraryError(err)
 	}
-	if !a.elevated && !perms.subsetOf(a.perms) {
-		return Role{}, ErrPrivilegeEscalation
-	}
-	return s.roles.Create(ctx, Role{WorkspaceID: workspaceID, Name: name, Permissions: perms})
+	return roleFromView(workspaceID, codec.View(view)), nil
 }
 
 func (s *Service) UpdateRole(ctx context.Context, userID, workspaceID, roleID, name string, perms Permission) (Role, error) {
-	a, err := s.authorize(ctx, workspaceID, userID, PermManageRoles)
+	view, err := s.sc.UpdateRole(actor(ctx, userID, workspaceID), roleID, name, grantsFor(perms))
 	if err != nil {
-		return Role{}, err
+		return Role{}, mapLibraryError(err)
 	}
-	if _, err := s.roleInWorkspace(ctx, workspaceID, roleID); err != nil {
-		return Role{}, err
-	}
-	if !a.elevated && !perms.subsetOf(a.perms) {
-		return Role{}, ErrPrivilegeEscalation
-	}
-	return s.roles.Update(ctx, roleID, name, perms)
+	return roleFromView(workspaceID, codec.View(view)), nil
 }
 
 func (s *Service) DeleteRole(ctx context.Context, userID, workspaceID, roleID string) error {
-	a, err := s.authorize(ctx, workspaceID, userID, PermManageRoles)
+	return mapLibraryError(s.sc.DeleteRole(actor(ctx, userID, workspaceID), roleID))
+}
+
+func roleFromView(workspaceID string, v rbac.RoleView[Permission]) Role {
+	return Role{
+		ID:          v.Key,
+		WorkspaceID: workspaceID,
+		Name:        v.Name,
+		Permissions: v.Permissions,
+		IsDefault:   v.IsDefault,
+	}
+}
+
+// roleViews lists the workspace's roles: the code-defined three plus its own
+// stored ones. It reads the store directly rather than through
+// scope.ListRoles, which would resolve the caller's standing a second time —
+// every caller has already been gated by the time it gets here.
+func (s *Service) roleViews(ctx context.Context, workspaceID string) ([]Role, error) {
+	records, err := s.store.ListRoles(ctx, workspaceID)
 	if err != nil {
-		return err
+		return nil, mapLibraryError(err)
 	}
-	role, err := s.roleInWorkspace(ctx, workspaceID, roleID)
+	views, err := codec.Roles(records)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if role.IsDefault {
-		return ErrDefaultRole
+	out := make([]Role, len(views))
+	for i, v := range views {
+		out[i] = roleFromView(workspaceID, v)
 	}
-	if !a.elevated && !role.Permissions.subsetOf(a.perms) {
-		return ErrPrivilegeEscalation
-	}
-	count, err := s.roles.CountMembersUsing(ctx, roleID)
+	return out, nil
+}
+
+func (s *Service) rolesByKey(ctx context.Context, workspaceID string) (map[string]Role, error) {
+	roles, err := s.roleViews(ctx, workspaceID)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if count > 0 {
-		return ErrRoleInUse
+	out := make(map[string]Role, len(roles))
+	for _, r := range roles {
+		out[r.ID] = r
 	}
-	return s.roles.Delete(ctx, roleID)
+	return out, nil
+}
+
+func (s *Service) role(ctx context.Context, workspaceID, key string) (Role, error) {
+	byKey, err := s.rolesByKey(ctx, workspaceID)
+	if err != nil {
+		return Role{}, err
+	}
+	r, ok := byKey[key]
+	if !ok {
+		return Role{}, ErrRoleNotFound
+	}
+	return r, nil
 }
 
 // ── Email invitations ───────────────────────────────────────────────────────
 
 func (s *Service) InviteByEmail(ctx context.Context, userID, workspaceID, email, roleID, locale string) (EmailInvitation, error) {
 	email = auth.NormalizeEmail(email)
-	a, err := s.authorize(ctx, workspaceID, userID, PermCreateInvite)
-	if err != nil {
-		return EmailInvitation{}, err
-	}
-	role, err := s.roleInWorkspace(ctx, workspaceID, roleID)
-	if err != nil {
-		return EmailInvitation{}, err
-	}
-	if !a.elevated && !role.Permissions.subsetOf(a.perms) {
-		return EmailInvitation{}, ErrPrivilegeEscalation
-	}
+	ac := actor(ctx, userID, workspaceID)
+	// Refusing to invite an existing member is this product's rule, not
+	// authlayer's — the library is happy to mint an invitation that would be a
+	// no-op on acceptance.
 	if u, err := s.users.FindByEmail(ctx, email); err == nil {
-		if _, err := s.members.Find(ctx, workspaceID, u.ID); err == nil {
+		if _, err := s.store.FindMember(ctx, workspaceID, u.ID); err == nil {
 			return EmailInvitation{}, ErrAlreadyMember
 		}
 	}
-	if err := s.emailInvs.DeleteByWorkspaceEmail(ctx, workspaceID, email); err != nil {
-		return EmailInvitation{}, err
-	}
-	plain, hash, err := generateOpaque()
+	stored, plain, err := s.inv.InviteByEmail(ac, email, roleID)
 	if err != nil {
-		return EmailInvitation{}, err
+		return EmailInvitation{}, mapLibraryError(err)
 	}
-	inv, err := s.emailInvs.Create(ctx, EmailInvitation{
-		WorkspaceID: workspaceID,
-		Email:       email,
-		RoleID:      roleID,
-		TokenHash:   hash,
-		InvitedBy:   userID,
-		ExpiresAt:   time.Now().Add(s.cfg.InviteExpiry),
-	})
+	ws, err := s.sc.Container(ctx, workspaceID)
 	if err != nil {
-		return EmailInvitation{}, err
+		return EmailInvitation{}, mapLibraryError(err)
 	}
-	inviterName := a.ws.Name
+	inviterName := ws.Name
 	if u, err := s.users.FindByID(ctx, userID); err == nil {
 		inviterName = u.DisplayName
 	}
 	link := s.cfg.AppBaseURL + "/" + locale + "/workspace/accept-invite?token=" + plain
-	if err := s.email.SendWorkspaceInvite(ctx, email, a.ws.Name, inviterName, link); err != nil {
+	if err := s.email.SendWorkspaceInvite(ctx, email, ws.Name, inviterName, link); err != nil {
 		return EmailInvitation{}, err
 	}
-	return inv, nil
+	return emailInvitationOf(stored), nil
 }
 
 func (s *Service) ListEmailInvitations(ctx context.Context, userID, workspaceID string) ([]EmailInvitation, error) {
-	if _, err := s.authorize(ctx, workspaceID, userID, PermManageInvites); err != nil {
-		return nil, err
+	invs, err := s.inv.ListInvites(actor(ctx, userID, workspaceID))
+	if err != nil {
+		return nil, mapLibraryError(err)
 	}
-	return s.emailInvs.ListByWorkspace(ctx, workspaceID)
+	out := make([]EmailInvitation, len(invs))
+	for i, inv := range invs {
+		out[i] = emailInvitationOf(inv)
+	}
+	return out, nil
 }
 
 func (s *Service) RevokeEmailInvitation(ctx context.Context, userID, workspaceID, invitationID string) error {
-	if _, err := s.authorize(ctx, workspaceID, userID, PermManageInvites); err != nil {
-		return err
-	}
-	inv, err := s.emailInvs.FindByID(ctx, invitationID)
-	if err != nil {
-		return err
-	}
-	if inv.WorkspaceID != workspaceID {
-		return ErrInviteInvalid
-	}
-	return s.emailInvs.Delete(ctx, invitationID)
+	return mapLibraryError(s.inv.RevokeInvite(actor(ctx, userID, workspaceID), invitationID))
 }
 
 func (s *Service) AcceptEmailInvite(ctx context.Context, userID, token string) (Workspace, error) {
-	inv, err := s.emailInvs.FindByTokenHash(ctx, hashOpaque(token))
+	ws, err := s.inv.AcceptInvite(scope.WithSubject(ctx, userID), token)
 	if err != nil {
-		if errors.Is(err, ErrInviteInvalid) {
-			return Workspace{}, ErrInviteInvalid
-		}
-		return Workspace{}, err
+		return Workspace{}, mapLibraryError(err)
 	}
-	if inv.ExpiresAt.Before(time.Now()) {
-		return Workspace{}, ErrInviteExpired
-	}
-	err = s.uow.Do(ctx, func(r Repos) error {
-		if _, err := r.Members.Find(ctx, inv.WorkspaceID, userID); err != nil {
-			if !errors.Is(err, ErrNotMember) {
-				return err
-			}
-			if _, err := r.Members.Add(ctx, Member{WorkspaceID: inv.WorkspaceID, UserID: userID, RoleID: inv.RoleID}); err != nil {
-				return err
-			}
-		}
-		return r.EmailInvs.Delete(ctx, inv.ID)
-	})
-	if err != nil {
-		return Workspace{}, err
-	}
-	return s.workspaces.FindByID(ctx, inv.WorkspaceID)
+	return ws, nil
 }
 
 func (s *Service) PreviewEmailInvite(ctx context.Context, token string) (InvitePreview, error) {
-	inv, err := s.emailInvs.FindByTokenHash(ctx, hashOpaque(token))
-	if err != nil {
-		if errors.Is(err, ErrInviteInvalid) {
-			return InvitePreview{Valid: false}, nil
-		}
-		return InvitePreview{}, err
-	}
-	if inv.ExpiresAt.Before(time.Now()) {
+	p, err := s.inv.PreviewInvite(ctx, token)
+	if errors.Is(err, invite.ErrInviteNotFound) {
 		return InvitePreview{Valid: false}, nil
 	}
-	ws, err := s.workspaces.FindByID(ctx, inv.WorkspaceID)
+	if err != nil {
+		return InvitePreview{}, mapLibraryError(err)
+	}
+	if !p.Valid {
+		return InvitePreview{Email: p.Email, Valid: false}, nil
+	}
+	name, roleName, err := s.previewNames(ctx, p.ContainerID, p.RoleKey)
 	if err != nil {
 		return InvitePreview{}, err
 	}
-	role, err := s.roles.FindByID(ctx, inv.RoleID)
-	if err != nil {
-		return InvitePreview{}, err
-	}
-	return InvitePreview{WorkspaceName: ws.Name, RoleName: role.Name, Email: inv.Email, Valid: true}, nil
+	return InvitePreview{WorkspaceName: name, RoleName: roleName, Email: p.Email, Valid: true}, nil
 }
 
 // ── Invite links ────────────────────────────────────────────────────────────
 
 func (s *Service) CreateInviteLink(ctx context.Context, userID, workspaceID, roleID string, maxUses int32, expiresAt *time.Time) (InviteLink, error) {
-	a, err := s.authorize(ctx, workspaceID, userID, PermCreateInvite)
-	if err != nil {
-		return InviteLink{}, err
-	}
-	role, err := s.roleInWorkspace(ctx, workspaceID, roleID)
-	if err != nil {
-		return InviteLink{}, err
-	}
-	if !a.elevated && !role.Permissions.subsetOf(a.perms) {
-		return InviteLink{}, ErrPrivilegeEscalation
-	}
-	code, err := generateCode()
-	if err != nil {
-		return InviteLink{}, err
-	}
 	if maxUses < 0 {
 		maxUses = 0
 	}
-	return s.links.Create(ctx, InviteLink{
-		WorkspaceID: workspaceID,
-		Code:        code,
-		RoleID:      roleID,
-		CreatedBy:   userID,
-		MaxUses:     maxUses,
-		ExpiresAt:   expiresAt,
-	})
+	l, _, err := s.inv.CreateLink(actor(ctx, userID, workspaceID), roleID, int(maxUses), expiresAt)
+	if err != nil {
+		return InviteLink{}, mapLibraryError(err)
+	}
+	return inviteLinkOf(l), nil
 }
 
 func (s *Service) ListInviteLinks(ctx context.Context, userID, workspaceID string) ([]InviteLink, error) {
-	if _, err := s.authorize(ctx, workspaceID, userID, PermManageInvites); err != nil {
-		return nil, err
+	links, err := s.inv.ListLinks(actor(ctx, userID, workspaceID))
+	if err != nil {
+		return nil, mapLibraryError(err)
 	}
-	return s.links.ListByWorkspace(ctx, workspaceID)
+	out := make([]InviteLink, len(links))
+	for i, l := range links {
+		out[i] = inviteLinkOf(l)
+	}
+	return out, nil
 }
 
 func (s *Service) RevokeInviteLink(ctx context.Context, userID, workspaceID, linkID string) error {
-	if _, err := s.authorize(ctx, workspaceID, userID, PermManageInvites); err != nil {
-		return err
-	}
-	link, err := s.links.FindByID(ctx, linkID)
-	if err != nil {
-		return err
-	}
-	if link.WorkspaceID != workspaceID {
-		return ErrLinkInvalid
-	}
-	return s.links.Revoke(ctx, linkID)
+	return mapLibraryError(s.inv.RevokeLink(actor(ctx, userID, workspaceID), linkID))
 }
 
 func (s *Service) PreviewInviteLink(ctx context.Context, code string) (LinkPreview, error) {
-	link, err := s.links.FindByCode(ctx, code)
-	if err != nil {
-		if errors.Is(err, ErrLinkInvalid) {
-			return LinkPreview{Valid: false}, nil
-		}
-		return LinkPreview{}, err
-	}
-	if !linkUsable(link) {
+	p, err := s.inv.PreviewLink(ctx, code)
+	if errors.Is(err, invite.ErrLinkNotFound) {
 		return LinkPreview{Valid: false}, nil
 	}
-	ws, err := s.workspaces.FindByID(ctx, link.WorkspaceID)
+	if err != nil {
+		return LinkPreview{}, mapLibraryError(err)
+	}
+	if !p.Valid {
+		return LinkPreview{Valid: false}, nil
+	}
+	name, roleName, err := s.previewNames(ctx, p.ContainerID, p.RoleKey)
 	if err != nil {
 		return LinkPreview{}, err
 	}
-	role, err := s.roles.FindByID(ctx, link.RoleID)
-	if err != nil {
-		return LinkPreview{}, err
-	}
-	return LinkPreview{WorkspaceName: ws.Name, RoleName: role.Name, Valid: true}, nil
+	return LinkPreview{WorkspaceName: name, RoleName: roleName, Valid: true}, nil
+}
+
+// PurgeExpiredInvites deletes every email invitation and invite link that
+// expired before the given instant, and reports how many rows went. Same
+// reasoning as auth.Service.PurgeExpired: an expired invitation is refused on
+// redemption but never removed, so the table only grew.
+func (s *Service) PurgeExpiredInvites(ctx context.Context, before time.Time) (int, error) {
+	return s.inv.PurgeExpired(ctx, before)
 }
 
 func (s *Service) JoinViaInviteLink(ctx context.Context, userID, code string) (Workspace, error) {
-	link, err := s.links.FindByCode(ctx, code)
+	ws, err := s.inv.JoinViaLink(scope.WithSubject(ctx, userID), code)
 	if err != nil {
-		return Workspace{}, err
+		return Workspace{}, mapLibraryError(err)
 	}
-	if link.Revoked {
-		return Workspace{}, ErrLinkInvalid
-	}
-	if link.ExpiresAt != nil && link.ExpiresAt.Before(time.Now()) {
-		return Workspace{}, ErrLinkExpired
-	}
-	if link.MaxUses > 0 && link.UseCount >= link.MaxUses {
-		return Workspace{}, ErrLinkExhausted
-	}
-	// Already a member? Return the workspace without consuming a use.
-	if _, err := s.members.Find(ctx, link.WorkspaceID, userID); err == nil {
-		return s.workspaces.FindByID(ctx, link.WorkspaceID)
-	} else if !errors.Is(err, ErrNotMember) {
-		return Workspace{}, err
-	}
-	err = s.uow.Do(ctx, func(r Repos) error {
-		if _, err := r.Members.Add(ctx, Member{WorkspaceID: link.WorkspaceID, UserID: userID, RoleID: link.RoleID}); err != nil {
-			return err
-		}
-		return r.Links.IncrementUse(ctx, link.ID)
-	})
+	return ws, nil
+}
+
+// previewNames resolves the workspace and role labels an unauthenticated
+// preview shows. It skips ListRoles' gate deliberately: a preview is by
+// definition served to someone who is not yet a member.
+//
+// The role label comes from the same place a member list's does. It used to be
+// the raw key when the role was code-defined, so an invitation to the "member"
+// role previewed as "member" while the role list beside it said "Member" — two
+// answers to one question, which is exactly what having one label source fixes.
+func (s *Service) previewNames(ctx context.Context, workspaceID, key string) (workspaceName, roleName string, err error) {
+	ws, err := s.sc.Container(ctx, workspaceID)
 	if err != nil {
-		return Workspace{}, err
+		return "", "", mapLibraryError(err)
 	}
-	return s.workspaces.FindByID(ctx, link.WorkspaceID)
+	roleName = codec.Label(key)
+	if rec, err := s.store.FindRole(ctx, workspaceID, key); err == nil && rec.Name != "" {
+		roleName = rec.Name
+	}
+	return ws.Name, roleName, nil
 }
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
-
-// roleInWorkspace loads a role and asserts it belongs to the workspace.
-func (s *Service) roleInWorkspace(ctx context.Context, workspaceID, roleID string) (Role, error) {
-	role, err := s.roles.FindByID(ctx, roleID)
-	if err != nil {
-		return Role{}, err
+func emailInvitationOf(inv invite.EmailInvite) EmailInvitation {
+	return EmailInvitation{
+		ID:          inv.ID,
+		WorkspaceID: inv.ContainerID,
+		Email:       inv.Email,
+		RoleID:      inv.RoleKey,
+		InvitedBy:   inv.InvitedBy,
+		ExpiresAt:   inv.ExpiresAt,
+		CreatedAt:   inv.CreatedAt,
 	}
-	if role.WorkspaceID != workspaceID {
-		return Role{}, ErrRoleNotFound
-	}
-	return role, nil
 }
 
-func linkUsable(l InviteLink) bool {
-	if l.Revoked {
-		return false
+func inviteLinkOf(l invite.Link) InviteLink {
+	return InviteLink{
+		ID:          l.ID,
+		WorkspaceID: l.ContainerID,
+		Code:        l.Code,
+		RoleID:      l.RoleKey,
+		CreatedBy:   l.CreatedBy,
+		MaxUses:     int32(l.MaxUses),
+		UseCount:    int32(l.UseCount),
+		ExpiresAt:   l.ExpiresAt,
+		Revoked:     l.RevokedAt != nil,
+		CreatedAt:   l.CreatedAt,
 	}
-	if l.ExpiresAt != nil && l.ExpiresAt.Before(time.Now()) {
-		return false
-	}
-	if l.MaxUses > 0 && l.UseCount >= l.MaxUses {
-		return false
-	}
-	return true
-}
-
-func normalizeSlug(slug, name string) string {
-	s := slug
-	if s == "" {
-		s = name
-	}
-	s = strings.ToLower(strings.TrimSpace(s))
-	var b strings.Builder
-	lastDash := false
-	for _, r := range s {
-		switch {
-		case (r >= 'a' && r <= 'z') || (r >= '0' && r <= '9'):
-			b.WriteRune(r)
-			lastDash = false
-		default:
-			if !lastDash {
-				b.WriteByte('-')
-				lastDash = true
-			}
-		}
-	}
-	out := strings.Trim(b.String(), "-")
-	if out == "" {
-		out = "workspace"
-	}
-	return out
-}
-
-// generateOpaque mirrors token.GenerateOpaque: a plain token for the invitee and
-// its sha256 hash for storage.
-func generateOpaque() (plain, hash string, err error) {
-	b := make([]byte, 32)
-	if _, err = rand.Read(b); err != nil {
-		return "", "", err
-	}
-	plain = hex.EncodeToString(b)
-	return plain, hashOpaque(plain), nil
-}
-
-// generateCode returns a short, URL-safe code shown in shareable invite links.
-func generateCode() (string, error) {
-	b := make([]byte, 9)
-	if _, err := rand.Read(b); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(b), nil
-}
-
-func hashOpaque(plain string) string {
-	sum := sha256.Sum256([]byte(plain))
-	return hex.EncodeToString(sum[:])
 }

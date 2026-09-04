@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QualificationApplicationResponse xmlns="urn:oasis:names:specification:ubl:schema:xsd:QualificationApplicationResponse-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:UBLVersionID>2.3</cbc:UBLVersionID>
+  <cbc:ProfileExecutionID>ESPD-EDMv4.1.0</cbc:ProfileExecutionID>
+  <cbc:ID>DGUE-88d64ed0dd</cbc:ID>
+  <cbc:CopyIndicator>false</cbc:CopyIndicator>
+  <cbc:UUID>8b8178d1-d064-5b84-a073-ddbc81d8720b</cbc:UUID>
+  <cbc:ContractFolderID>A0B1C2D3E4</cbc:ContractFolderID>
+  <cbc:IssueDate>2026-09-04</cbc:IssueDate>
+  <cbc:IssueTime>10:30:00Z</cbc:IssueTime>
+  <cbc:VersionID>4.1.0</cbc:VersionID>
+  <cac:ContractingParty>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>Comune di Milano</cbc:Name>
+      </cac:PartyName>
+    </cac:Party>
+  </cac:ContractingParty>
+  <cac:EconomicOperatorParty>
+    <cac:Party>
+      <cbc:IndustryClassificationCode>SME</cbc:IndustryClassificationCode>
+      <cac:PartyIdentification>
+        <cbc:ID>IT01234567890</cbc:ID>
+      </cac:PartyIdentification>
+      <cac:PartyName>
+        <cbc:Name>Acme Costruzioni Srl</cbc:Name>
+      </cac:PartyName>
+      <cac:PostalAddress>
+        <cac:Country>
+          <cbc:IdentificationCode>IT</cbc:IdentificationCode>
+        </cac:Country>
+      </cac:PostalAddress>
+      <cac:PowerOfAttorney>
+        <cbc:Description>legale_rappresentante</cbc:Description>
+        <cac:AgentParty>
+          <cac:Person>
+            <cbc:FirstName>Anna</cbc:FirstName>
+            <cbc:FamilyName>Rossi</cbc:FamilyName>
+            <cbc:BirthDate>1974-03-12</cbc:BirthDate>
+            <cbc:BirthplaceName>Milano</cbc:BirthplaceName>
+            <cac:Contact>
+              <cbc:ElectronicMail>anna.rossi@acme.example</cbc:ElectronicMail>
+            </cac:Contact>
+          </cac:Person>
+        </cac:AgentParty>
+      </cac:PowerOfAttorney>
+    </cac:Party>
+  </cac:EconomicOperatorParty>
+  <cac:ProcurementProject>
+    <cbc:Name>Manutenzione strade 2027</cbc:Name>
+  </cac:ProcurementProject>
+  <cac:ProcurementProjectLot>
+    <cbc:ID>LOT-0001</cbc:ID>
+  </cac:ProcurementProjectLot>
+  <cac:TenderingCriterion uuid="C60_OT_relied" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="C61_OT_subco-ent" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="d789d01a-fe03-4ccd-9898-73f9cfa080d1" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="c27b7c4e-c837-4529-b867-ed55ce639db5" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="297d2323-3ede-424e-94bc-a91561e6f320" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="47112079-6fec-47a3-988f-e561668c3aef" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="005eb9ed-1347-4ca3-bb29-9bc0db64e1ab" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="d486fb70-86b3-4e75-97f2-0d71b5697c7d" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="7d85e333-bbab-49c0-be8d-c36d71a72f5e" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="b61bbeb7-690e-4a40-bc68-d6d4ecfaa3d4" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="56d13e3d-76e8-4f23-8af6-13e60a2ee356" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="daffa2a9-9f8f-4568-8be8-7b8bf306d096" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="68918c7a-f5bc-4a1a-a62f-ad8983600d48" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="8fda202a-0c37-41bb-9d7d-de3f49edbfcb" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="d3732c09-7d62-4edc-a172-241da6636e7c" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="a80ddb62-d25b-4e4e-ae22-3968460dc0a9" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="a34b70d6-c43d-4726-9a88-8e2b438424bf" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="a261a395-ed17-4939-9c75-b9ff1109ca6e" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="166536e2-77f7-455c-b018-70582474e4f6" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="b1b5ac18-f393-4280-9659-1367943c1a2e" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="3293e92b-7f3e-42f1-bee6-a7641bb04251" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="514d3fde-1e3e-4dcd-b02a-9f984d5bbda3" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="396f288a-e267-4c20-851a-ed4f7498f137" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="61874050-5130-4f1c-a174-720939c7b483" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="696a75b2-6107-428f-8b74-82affb67e184" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="63adb07d-db1b-4ef0-a14e-a99785cf8cf6" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="87b3fa26-3549-4f92-b8e0-3fd8f04bf5c7" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="9eeb6d5c-0eb8-48e8-a4c5-5087a7c095a4" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="499efc97-2ac1-4af2-9e84-323c2ca67747" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="1f49b3f0-d50f-43f6-8b30-4bafab108b9b" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="cdd3bb3e-34a5-43d5-b668-2aab86a73822" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="C58_OT_registered" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="8ed65e48-fd0d-444f-97bd-4f58da632999" redacted="vendored definition"/>
+  <cac:TenderingCriterion uuid="d726bac9-e153-4e75-bfca-c5385587766d" redacted="vendored definition"/>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>d9ef0ffd-0880-5ba8-b932-c3fa8d40b669</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C60_OT_relied/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>05cad609-a226-5dd8-a0d5-969b3534a9b9</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>7e4efea8-5b57-53c5-a33e-9febacf00d61</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C61_OT_subco-ent/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>00fc7c5b-7cc4-5839-bd87-e5e7217572bd</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>3739f332-f7e9-5c0b-bf9d-a8eddf3e35d8</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C6_EG_human-traffic/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>c809fa34-68e2-54b5-a206-27104b7938f8</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>1ee61edc-cad5-5146-a5f7-8cd7a0218ebd</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C2_EG_corruption/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>1cdc0f2d-fd66-5378-adb2-40ac39ef93c3</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>e93e3e1d-962a-5199-af41-4793f99eec8d</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C3_EG_fraud/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>1da893c7-b903-5d22-96ab-e4681354a9a3</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>9376c55c-29e3-577f-9894-5f8c0bceed50</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C5_EG_finan-laund/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>cd600159-9a96-524f-bfec-3c038c5e29b7</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>8c13106f-24fe-53aa-adfb-745a1fdc79b8</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C1_EG_crime-org/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>40a89a0c-6410-5185-a0a1-c56d384524d0</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>07984f26-eec7-591d-a286-70c0a531ae13</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C4_EG_terr-offence/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>71f7c6fb-0753-5ac2-a52e-9f10b7a85411</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>532a2dfb-6b6a-554d-83fb-954028eefc10</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C8_EG_socsec-pay/RG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>9eb6f306-2d7b-521c-ac4e-e8e1582ce31e</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>a7ffc0af-8a7a-5bc1-9b18-ceb0d1f7b83b</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C7_EG_tax-pay/RG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>01d300fc-4943-5ee4-a371-07b4a803cbc8</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>50dbafc0-556a-51ca-9071-61f8249bba01</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C19_EG_distorsion/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>4b2fd62a-4be8-5047-be88-3a78dc49be6e</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>8c7a0e37-5e26-585e-9e47-8895a414887d</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C15_EG_bankr-nat/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>d72076f8-b6fa-58f5-bb45-f3a0527a3a3c</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>6b33cf0d-d42e-5264-9b41-4ba72246e2dd</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C14_EG_cred-arran/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>ebaf9993-e5c7-5b90-bba9-2807d8acd9a0</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>9b11beac-a086-53ba-8072-2c4cd0e03506</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C16_EG_liq-admin/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>9d951eec-210c-5d5c-97ea-7ba7b9fb5772</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>d79d17d9-2c34-5318-9c23-cab614cb27cd</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C12_EG_bankruptcy/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>244e180d-e1e5-5cfa-9229-a914ca66fc91</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>18edba23-9c8f-5c94-b713-978c0563a7e9</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C9_EG_envir-law/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>c2870383-c7bb-5ca1-9df3-7ccda9ea9a85</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>bc5fe171-8880-5307-8a86-0da29f9fe0f0</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C11_EG_labour-law/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>0fd401a2-7dce-5e32-a329-703830c099af</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>538ec84e-28ec-5c9c-8687-95acba8dca76</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C10_EG_socsec-law/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>400842ab-f0aa-566e-ae15-0f494bc86f36</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>56ebc7be-81f4-584c-83ce-7ee20fe9c410</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C17_EG_susp-act/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>41e02f0c-b045-53a2-98d0-a0bb969a6a31</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>b66a47f2-00db-5985-a88f-32a74a3231c1</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C20_EG_partic-confl/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>cd7dcf3c-c8f9-588e-a200-623249661420</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>24705b6e-4d6d-5cfe-8937-ea7078d0ebc5</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C22_EG_sanction/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>9970c264-e88d-549e-8d68-2208afc363dd</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>e1b9f839-b02f-567f-a8ce-f42d7ca00fb9</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C18_EG_prof-misconduct/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>45a1568c-357a-5730-848f-4747b8a7b398</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>1db4bb6c-3385-56fc-a1c5-be97a8db6f55</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C13_EG_insolvency/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>ae2f68d3-e341-5506-8dc9-717f0466f6ff</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>75ecc849-544a-5fdb-aba0-bdab7562d648</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C21_EG_prep-confl/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>87d58fe0-049e-58e6-a452-56b14e1699a7</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>3681149d-62f7-51ad-a4f7-98d5ea0a8db8</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C23_EG_misrepresent/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>e80ce213-08d1-5042-8a39-fdb3a6f35582</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>00864e95-aa62-5f2f-b963-a4a7e3a28597</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C24_EG_nati-ground/QG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>57c9566b-5a63-5764-b258-98852abe96d8</cbc:ID>
+      <cbc:ResponseIndicator>false</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>970b9b59-70f4-5d84-a54a-272fc24a7b28</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C26_SC_trade-regist/RG1/RSG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>eff0edf0-c769-59f6-bf62-e699523dcb1c</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>a9e2f61f-305a-5b77-94dd-8b5a3eae198f</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C27_SC_authorisation/RG1/RSG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>497c15a9-2d4c-5226-bdd5-1be3d76017d4</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>88c04c30-cea0-52dc-bd10-9fa4fc524a43</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C29_SC_gen-year-to/RG1/RSG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>b634233c-46fc-5346-aed5-b5fe0f522c33</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>cdcd0494-48ad-562c-8ef2-cbb53f32e33e</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C50_SC_year-manpower/RG1/RSG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>bfbb74b6-3c9a-5346-b130-4287f2a53f3e</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>2e7dad1d-0111-55d6-a15b-0986f76580da</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C37_SC_work-perform/RG1/RSG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>fe50d607-f29e-5bf5-8a47-641e628152bd</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>a1ecff07-ff4e-5ad1-ab61-08d07a5a5758</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C58_OT_registered/QG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>1d63919a-e234-519e-9b84-39a04cf1f9c9</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>b68d7bb8-f3fb-59b9-9b97-0a204bf378b2</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C56_SC_envir-certif-indep/RG1/RSG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>c3985169-5cb5-54d6-b018-89eb25213050</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+  <cac:TenderingCriterionResponse>
+    <cbc:ID>6312b7cb-8397-5c6a-9609-4df12ed87149</cbc:ID>
+    <cbc:ValidatedCriterionPropertyID>C55_SC_qu-certif-indep/RG1/RSG1/QSG1/Q1</cbc:ValidatedCriterionPropertyID>
+    <cac:ResponseValue>
+      <cbc:ID>40046d40-9703-521d-b23a-40b84f87d58c</cbc:ID>
+      <cbc:ResponseIndicator>true</cbc:ResponseIndicator>
+    </cac:ResponseValue>
+  </cac:TenderingCriterionResponse>
+</QualificationApplicationResponse>

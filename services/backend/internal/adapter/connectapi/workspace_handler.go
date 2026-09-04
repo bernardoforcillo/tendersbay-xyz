@@ -444,15 +444,18 @@ func toProtoRole(r workspace.Role) *workspacev1.Role {
 		Name:        r.Name,
 		Permissions: uint64(r.Permissions),
 		IsDefault:   r.IsDefault,
-		CreatedAt:   r.CreatedAt.Format(time.RFC3339),
+		// authlayer's role view carries no creation timestamp: a code-defined
+		// role has no row to have been created, and a custom one is identified
+		// by its key rather than by when it appeared.
+		CreatedAt: "",
 	}
 }
 
 func toProtoMember(mv workspace.MemberView) *workspacev1.Member {
 	return &workspacev1.Member{
 		UserId:      mv.Member.UserID,
-		WorkspaceId: mv.Member.WorkspaceID,
-		RoleId:      mv.Member.RoleID,
+		WorkspaceId: mv.Member.ContainerID,
+		RoleId:      mv.Member.RoleKey,
 		RoleName:    mv.Role.Name,
 		Permissions: uint64(mv.Role.Permissions),
 		User:        toProtoUser(mv.User),

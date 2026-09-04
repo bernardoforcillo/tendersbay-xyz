@@ -60,6 +60,94 @@ type AwardCriterion struct {
 // invariant documented on Weight stays visible in the reading code.
 func (c AwardCriterion) HasWeight() bool { return c.Weight != nil }
 
+// SelectionCriterion is one entry of a notice's *selection* grid: a condition a
+// bidder must satisfy to be admitted to the procedure at all. It answers "may we
+// bid", where AwardCriterion answers "where are the points won" — two different
+// questions the same notice publishes side by side, which is why they are two
+// types rather than one with a discriminator. Folding them together would let a
+// consumer average a weight across both and get a number that means nothing.
+//
+// It deliberately carries NO weight and NO machine-comparable threshold, and
+// both absences are load-bearing:
+//
+//   - No weight, because selection is pass/fail. Nothing scores a selection
+//     criterion, so a Weight here would be absent on every row ever written —
+//     structurally unlike AwardCriterion.Weight, where the absence is a fact
+//     about that particular notice and worth representing.
+//
+//   - No threshold, because no source observed publishes one. Spain's PLACSP
+//     ships prose ("Los licitadores deberán acreditar un volumen anual de
+//     negocios referido al año de mayor volumen…"); TED's eForms qualification
+//     block, where it appears at all, is a POINTER — selection-criteria-source =
+//     epo-sub-espd, meaning "the criteria are in the ESPD document" — and
+//     carries no name, amount or category. A Threshold field would therefore be
+//     nil on every row this type can currently be built from: a column that
+//     reads as a measurement while measuring nothing, which is the error a
+//     docs_coverage enum was rejected for in 0011. Recovering a comparable
+//     threshold is a document-extraction problem and belongs to whichever pass
+//     earns the right to claim one.
+//
+// Unlike AwardCriterion, lot-scoped entries are NOT held on their Lot. They stay
+// in one flat list on NoticeDetail keyed by LotRef. The award split exists
+// because criteria are scored per lot and their aggregates (CriteriaCount,
+// WeightedCount, GridUsable) are stored and cross-checked against the child
+// rows, so both halves must partition cleanly. Selection criteria have no such
+// aggregate to keep in agreement, so a second partition invariant would be cost
+// without a reader.
+type SelectionCriterion struct {
+	// LotRef ties the criterion to a lot by that lot's own identifier; "" means
+	// it is notice-level and applies to the whole procurement. As on
+	// AwardCriterion this is the notice's identifier, not a foreign key, so a
+	// criteria set can be written without first resolving lot rows.
+	LotRef string
+
+	// Ordinal is the criterion's position as published, within its LotRef. It is
+	// the stable sort key and, with LotRef, what identifies an entry — nothing
+	// else about a selection criterion is reliably distinct, since two notices
+	// routinely publish the same boilerplate requirement verbatim.
+	Ordinal int
+
+	// Category is the requirement family, normalized because every source
+	// observed splits selection the same way: "technical" (capacity to perform),
+	// "financial" (economic standing), "declaration" (a statement the bidder
+	// must make). "" when the source publishes a requirement it does not file
+	// under any of them.
+	//
+	// It is separate from Type because Type alone is ambiguous. PLACSP publishes
+	// the bare code "5" under a FinancialCapabilityTypeCode list and the bare
+	// code "1" under a DeclarationTypeCode list; without the family, both are
+	// integers that collide. The family is what makes the code readable, so
+	// storing one without the other stores a datum nothing can interpret.
+	Category string
+
+	// Type is the source's own classification code within Category, kept
+	// verbatim rather than normalized: PLACSP emits CODICE codes ("OSR-TECH",
+	// "OSR-COMPTASK", "5", "1"), eForms a criterion-type code. Mapping these onto
+	// a domain RequirementKind is a decision for the reader that owns that
+	// vocabulary — this layer records what was published, in the form it was
+	// published in.
+	Type string
+
+	// Name and Description are alternatives, not a pair: a source publishes one
+	// or the other and leaves the second empty. PLACSP carries only a prose
+	// Description; eForms BT-749 would carry a Name. Neither is guaranteed.
+	Name        string
+	Description string
+
+	// Origin names the reading that produced this entry — the provider or pass,
+	// e.g. "es-placsp". It exists so a reader can grade trust per entry without
+	// this layer deciding what trust means: prose scraped from a search feed and
+	// a structured code parsed from a notice document are not equally strong
+	// evidence, and the difference has to survive persistence. The authority
+	// ceiling itself lives with the domain that owns admissibility, never here.
+	Origin string
+
+	// Lang is the language of Name/Description as the source declared it, in ISO
+	// 639-2/T ("SPA", "ITA"). Same reason as AwardCriterion.Lang: without it, a
+	// language choice cannot be told apart from a parser accident.
+	Lang string
+}
+
 // Organization is a party named in the notice. Beyond the buyer, notices name
 // the bodies a bidder needs in order to challenge an award — which is only
 // actionable if the contact details travel with the notice rather than being
@@ -99,6 +187,12 @@ type NoticeDetail struct {
 	// the union in the order it should be persisted.
 	Lots     []Lot
 	Criteria []AwardCriterion
+
+	// SelectionCriteria are the notice's admissibility conditions, at every
+	// level — notice-scoped and lot-scoped entries share this list and are told
+	// apart by SelectionCriterion.LotRef. See that type for why they are not
+	// split onto Lot the way award criteria are.
+	SelectionCriteria []SelectionCriterion
 
 	Organizations []Organization
 

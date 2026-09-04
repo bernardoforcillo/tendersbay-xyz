@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Il tuo DGUE",
+      "progress": "{{ready}} campi su {{total}} pronti",
+      "ready": "Pronto da esportare. Non manca nulla.",
+      "companyTodo": "Da fare una volta sola — vale per ogni gara",
+      "companyTodoHint": "Sono fatti sulla tua azienda. Rispondi una volta e valgono anche per le gare successive.",
+      "bidTodo": "Per questa gara",
+      "noneLeft": "Qui non manca nulla.",
+      "reviewDeclarations": "Rivedi le dichiarazioni",
+      "confirmDeclarations": "Conferma le dichiarazioni",
+      "export": "Esporta",
+      "exportHint": "L'export si sblocca quando non manca più nulla."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Nessuno ha ancora risposto.",
+        "not_authoritative": "Un valore c’è, ma nessuno lo ha dichiarato: questo documento porta solo fatti confermati da una persona.",
+        "stale": "Già risposto, ma non riconfermato per questa gara dopo l’ultima modifica."
+      },
+      "openDossier": "Apri il dossier",
+      "openBid": "Compila per questa gara"
+    },
+    "declarations": {
+      "title": "Parte III — motivi di esclusione",
+      "incomplete": "Alcuni motivi non hanno mai avuto risposta. Rispondi nel dossier aziendale: una volta sola, per tutte le gare.",
+      "openDossier": "Apri il dossier",
+      "declaredOn": "Confermate per questa gara il {{when}}.",
+      "neverConfirmed": "Queste risposte non sono ancora state confermate per questa gara.",
+      "stale": "Una risposta è cambiata dopo l’ultima conferma. Rileggile e conferma di nuovo.",
+      "appliesTitle": "Motivi che hai dichiarato applicabili",
+      "selfCleaning": "Misure adottate",
+      "allTitle": "Tutti i motivi",
+      "applies": "Si applica",
+      "doesNotApply": "Non si applica",
+      "unanswered": "Senza risposta",
+      "confirm": "Sì — ancora vero per questa gara",
+      "confirming": "Conferma in corso…",
+      "changed": "Qualcosa è cambiato",
+      "error": "Non è stato possibile confermare: riprova."
+    },
+    "export": {
+      "title": "Esporta",
+      "notReadyHint": "L’export si sblocca quando non manca nulla e le dichiarazioni sono confermate per questa gara.",
+      "exporting": "Preparazione…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — il documento da firmare",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Completo, nella tua lingua",
+        "xml": "Per riuso e import dove supportato"
+      },
+      "nextStep": "Prossimo passo: il legale rappresentante lo firma digitalmente, poi lo carichi sul portale della stazione appaltante entro il {{when}}.",
+      "nextStepNoDeadline": "Prossimo passo: il legale rappresentante lo firma digitalmente, poi lo carichi sul portale della stazione appaltante.",
+      "history": "Export precedenti",
+      "historyHint": "Registriamo che hai esportato, mai il file. Esportando di nuovo il documento viene ricostruito dal dossier di oggi.",
+      "notEntitled": "L’export del DGUE fa parte del piano Pro. Tutto quello che vedi qui sopra resta gratuito.",
+      "notReady": "Manca ancora qualcosa, oppure le dichiarazioni vanno riconfermate per questa gara.",
+      "error": "Non è stato possibile esportare: riprova."
+    },
+    "dossier": {
+      "title": "Motivi di esclusione (DGUE Parte III)",
+      "progress": "{{answered}} su {{total}} con risposta",
+      "intro": "Rispondi una volta sola. Ogni gara le riusa: dovrai solo riconfermare che siano ancora vere.",
+      "applies": "Si applica a noi",
+      "doesNotApply": "Non si applica a noi",
+      "unanswered": "Ancora senza risposta",
+      "selfCleaning": "Misure adottate (self-cleaning)",
+      "selfCleaningHint": "Che cosa avete fatto — articolo 57(6). La stazione appaltante lo legge prima di decidere se escludervi.",
+      "statedAt": "Dichiarato il {{when}}",
+      "error": "Non è stato possibile salvare: riprova."
+    },
+    "fields": {
+      "is_sme": "Qualifica di PMI",
+      "representative": "Legale rappresentante",
+      "buyer_name": "Stazione appaltante",
+      "reference": "Riferimento della procedura",
+      "lot_ref": "Lotto",
+      "confirmation": "Conferma per questa gara",
+      "criterion": "Richiesto dalla stazione appaltante"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "La procedura",
+        "lots": "Lotti per cui concorri"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identificazione dell’azienda"
+        },
+        "b": {
+          "representatives": "Legali rappresentanti"
+        },
+        "c": {
+          "reliance": "Avvalimento di altri soggetti"
+        },
+        "d": {
+          "subcontracting": "Subappalto"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Attestazione SOA (elenco ufficiale)",
+          "references": "Riferimenti a lavori specifici",
+          "average_annual_manpower": "Organico medio annuo"
+        },
+        "a": {
+          "enrolment_professional_register": "Iscrizione in un registro professionale pertinente",
+          "enrolment_trade_register": "Iscrizione in un registro commerciale",
+          "other_registration": "Autorizzazione o appartenenza a una particolare organizzazione necessaria per gli appalti di servizi"
+        },
+        "b": {
+          "general_yearly_turnover": "Fatturato annuo generale",
+          "specific_yearly_turnover": "Fatturato annuo specifico"
+        },
+        "d": {
+          "quality_assurance_certificates": "Certificati rilasciati da organismi indipendenti a conferma delle norme di garanzia della qualità",
+          "environmental_management_certificates": "Certificati rilasciati da organismi indipendenti su sistemi o norme di gestione ambientale"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Partecipazione a un'organizzazione criminale",
+          "corruption": "Corruzione",
+          "fraud": "Frode",
+          "terrorist_offences": "Reati terroristici o reati connessi alle attività terroristiche",
+          "money_laundering": "Riciclaggio di proventi di attività criminose o finanziamento del terrorismo",
+          "child_labour_human_trafficking": "Lavoro minorile e altre forme di tratta di esseri umani"
+        },
+        "b": {
+          "payment_of_taxes": "Violazione dell'obbligo di pagamento delle imposte",
+          "payment_of_social_security": "Violazione dell'obbligo di pagamento dei contributi previdenziali"
+        },
+        "c": {
+          "breach_environmental_obligations": "Violazione di obblighi in materia di diritto ambientale",
+          "breach_social_obligations": "Violazione degli obblighi in materia di diritto sociale",
+          "breach_labour_obligations": "Violazione degli obblighi in materia di diritto del lavoro",
+          "bankruptcy": "Fallimento",
+          "insolvency": "Insolvenza",
+          "arrangement_with_creditors": "Concordato preventivo con i creditori",
+          "analogous_situation": "Situazione analoga al fallimento ai sensi della normativa nazionale",
+          "assets_administered_by_liquidator": "Amministrazione controllata",
+          "business_activities_suspended": "Cessazione di attività",
+          "grave_professional_misconduct": "Grave illecito professionale",
+          "agreements_distorting_competition": "Accordi con altri operatori economici intesi a falsare la concorrenza",
+          "conflict_of_interest": "Conflitto di interessi legato alla partecipazione alla procedura di appalto",
+          "involvement_in_preparation": "Partecipazione diretta o indiretta alla preparazione della procedura di appalto",
+          "early_termination": "Cessazione anticipata, risarcimento danni o altre sanzioni comparabili",
+          "misrepresentation": "False dichiarazioni, omessa informazione, incapacità di fornire i documenti richiesti o acquisizione di informazioni confidenziali in merito alla procedura in questione"
+        },
+        "d": {
+          "purely_national_grounds": "Motivi di esclusione previsti esclusivamente dalla legislazione nazionale"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Motivi legati a condanne penali",
+        "B": "Motivi legati al pagamento di imposte o contributi previdenziali",
+        "C": "Motivi legati a insolvenza, conflitto di interessi o illeciti professionali"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Accedi",

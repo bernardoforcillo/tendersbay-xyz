@@ -34,6 +34,38 @@ A pnpm + Turborepo monorepo. Applications live in `apps/`, standalone backend se
 - **Git hooks:** Husky 9 — `pre-commit` runs `pnpm lint`, `commit-msg` runs commitlint
 - **Node:** `>=24` (see `.nvmrc`)
 - **Backend:** Go `1.26` — `apps/platform` serves the embedded frontend via `net/http`
+- **Auth & RBAC:** [`authlayer`](https://github.com/bernardoforcillo/authlayer) — `services/backend`
+  uses its `auth` (users, credentials, session families with refresh rotation, verification
+  tokens), `scope` + `access` (workspace RBAC, custom roles, the privilege-escalation guard)
+  and `invite` (email invitations, shareable links) packages, all persisted by its own
+  `store/drops` PostgreSQL backend. `internal/core/{auth,user,workspace,workbench}` are thin
+  domain layers over it: they own the product's rules (display names, localized links,
+  rate-limit budgets, slug rules, workbench visibility, the permission bitmask the proto
+  speaks) and delegate the rest. `workbench` is a NESTED scope with `workspace` as its
+  parent, so "may create a workbench" and "administers every workbench" are the workspace's
+  own grants rather than a bitmask copied between the two.
+  The migrated schema is checked against the libraries' own conformance suites
+  (`auth/authtest`, `invite/invitetest`) in `internal/adapter/postgres`, alongside a test
+  that runs migrations 0012–0015 over seeded pre-authlayer rows. Both need
+  `TEST_AUTH_CONTRACT_DATABASE_URL` — a **scratch** database they truncate and reset,
+  deliberately not the `TEST_DATABASE_URL` the rest of the suite seeds into. Without it
+  they skip.
+- **A full `TEST_DATABASE_URL` needs BOTH migration chains.** `services/backend` migrates
+  the `public` tables; the `tenders` schema its search, document, detail and eForms
+  repositories read is owned and migrated by `services/ingestion`. Point that service at
+  the same database once (`cd services/ingestion && TEST_DATABASE_URL=… go test
+  ./internal/adapter/postgres/ -run TestNew`) or those tests skip, naming the command.
+  `cpv_lexicon_test.go` additionally wants the vocabulary seeded (`go run ./cmd/seed-cpv`
+  from `services/ingestion`).
+- **End-to-end tests** live in `services/backend/e2e/`: the production wiring behind an
+  `httptest` server, driven over HTTP with the generated ConnectRPC clients (each account
+  gets its own cookie jar, since the refresh token is an HttpOnly cookie). Only the mailer,
+  the rate limiter and the absent agent provider are substituted. They run on
+  `TEST_DATABASE_URL`, add only their own rows, and skip without it.
+- **Features & entitlements:** [`featurelayer`](https://github.com/bernardoforcillo/featurelayer)
+  — the feature catalog, flags and plan-based metered limits. Definitions live in code
+  (`internal/core/features`); the per-workspace half (subscription, usage counters) is in
+  Postgres. `internal/core/credits` is the agent's token budget on top of it.
 - **Go hot reload:** Air — `pnpm dev` runs Vite + Air concurrently (install once with
   `go install github.com/air-verse/air@latest`; ensure `air` is on `PATH`)
 - **Frontend:** Vite 6 + React 19 + Tailwind CSS v4 (`@tailwindcss/vite`)
@@ -57,6 +89,9 @@ is documented in @.claude/rules/frontend.md.
 - App components live under `src/features/<name>/…`; the shared `@tendersbay/components`
   library keeps `src/<feature>/…`. App routing/i18n infra (`src/routes/`, `src/i18n/`,
   `src/assets/locales/`) stays outside `features/`.
+
+Personal data (account holders vs. third parties named in the dossier, purpose binding,
+lifecycle, what may never reach analytics or logs) is documented in @.claude/rules/pii.md.
 
 Branching and the canary release policy (`feature → dev → main`, and the Docker
 image tags each branch publishes) are documented in @.claude/rules/git-flow.md.

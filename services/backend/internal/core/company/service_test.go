@@ -167,22 +167,23 @@ func (f fakeMembers) LoadMembership(_ context.Context, workspaceID, userID strin
 	if f.err != nil {
 		return workspace.Membership{}, f.err
 	}
-	return workspace.Membership{
-		Member: workspace.Member{WorkspaceID: workspaceID, UserID: userID},
-		Role:   workspace.Role{Permissions: f.perms},
-	}, nil
+	m := workspace.Membership{Role: workspace.Role{Permissions: f.perms}}
+	m.Member.ContainerID = workspaceID
+	m.Member.UserID = userID
+	return m, nil
 }
 
 type fakeTenders struct {
-	deadline *time.Time
-	err      error
+	deadline  *time.Time
+	selection []tender.SelectionCriterion
+	err       error
 }
 
 func (f fakeTenders) GetTender(_ context.Context, p tender.GetTenderParams) (tender.TenderDetail, error) {
 	if f.err != nil {
 		return tender.TenderDetail{}, f.err
 	}
-	return tender.TenderDetail{ID: p.ID, Deadline: f.deadline}, nil
+	return tender.TenderDetail{ID: p.ID, Deadline: f.deadline, SelectionCriteria: f.selection}, nil
 }
 
 type fakeDocuments struct {
@@ -798,3 +799,109 @@ func TestPutMergesWithTheRecordOnFile(t *testing.T) {
 		}
 	})
 }
+
+// TestCheckEligibilityIncludesPublishedCriteria proves the last link of the
+// Spanish chain: criteria PLACSP published reach the assessment the UI renders,
+// and reach it WITHOUT changing what the engine is willing to conclude.
+func TestCheckEligibilityIncludesPublishedCriteria(t *testing.T) {
+	ctx := context.Background()
+	deadline := evalNow.AddDate(0, 0, 20)
+	repo := &fakeRepo{dossier: &Dossier{SOA: []SOACategory{
+		{Category: "OG1", Classifica: ClassificaIII, Attribution: stated()},
+	}}}
+	// One captured requirement the dossier satisfies, so the verdict has
+	// somewhere to land other than insufficient_data.
+	reqs := &fakeReqRepo{stored: []Requirement{
+		{ID: "r1", Kind: RequirementSOA, Source: RequirementUserStated, Blocking: true,
+			Text: "SOA OG1 III", SOA: &SOARequirement{Category: "OG1", Classifica: ClassificaIII}},
+	}}
+	docs := fakeDocuments{availability: document.Availability{
+		Coverage: document.CoverageNotice, Reason: document.ReasonBodyNotRetrieved,
+		NoticeRead: true, KnownDocumentLinks: 1,
+	}}
+	tenders := fakeTenders{deadline: &deadline, selection: []tender.SelectionCriterion{
+		{Ordinal: 0, Category: "financial", Origin: "es-placsp",
+			Description: "Volumen anual de negocios igual o superior a 309.552,00 EUR."},
+	}}
+	s := newTestService(repo, reqs, viewer(), tenders, docs)
+
+	a, err := s.CheckEligibility(ctx, testUser, testWS, 545620, "")
+	if err != nil {
+		t.Fatalf("CheckEligibility: %v", err)
+	}
+
+	var found bool
+	for _, g := range a.Gaps {
+		if g.Requirement.Source == RequirementNoticePublished {
+			found = true
+			if g.Status != GapUnknown {
+				t.Errorf("published criterion status = %q, want unknown — it is never machine-decided", g.Status)
+			}
+			if g.Question == nil {
+				t.Error("published criterion carries no capture question, so the user has no way to act on it")
+			}
+		}
+	}
+	if !found {
+		t.Fatal("the published criterion never reached the assessment — the chain is not wired")
+	}
+
+	// And it did not cost the verdict: a satisfied dossier still reaches go.
+	if a.Verdict != VerdictGo {
+		t.Errorf("verdict = %q, want go — published prose must not degrade a verdict the dossier supports", a.Verdict)
+	}
+	if !a.Consistent() {
+		t.Error("assessment is not self-consistent with the published criterion present")
+	}
+}
+
+// ── ESPD sections on the fake ───────────────────────────────────────────────
+
+func (f *fakeRepo) PutRepresentative(_ context.Context, workspaceID string, r Representative) (Representative, error) {
+	d := f.ensure(workspaceID)
+	f.putCalls++
+	if r.ID == "" {
+		r.ID = "rep-1"
+	}
+	d.Representatives = append(d.Representatives, r)
+	return r, nil
+}
+
+func (f *fakeRepo) DeleteRepresentative(_ context.Context, _ string, _ string) error { return nil }
+
+func (f *fakeRepo) PutDeclaration(_ context.Context, workspaceID string, dec Declaration) (Declaration, error) {
+	d := f.ensure(workspaceID)
+	f.putCalls++
+	if !dec.Authoritative() {
+		return Declaration{}, ErrDeclarationNotAuthoritative
+	}
+	for i, stored := range d.Declarations {
+		if stored.Criterion == dec.Criterion {
+			dec.ID = stored.ID
+			d.Declarations[i] = dec
+			return dec, nil
+		}
+	}
+	if dec.ID == "" {
+		dec.ID = "dec-" + dec.Criterion
+	}
+	d.Declarations = append(d.Declarations, dec)
+	return dec, nil
+}
+
+func (f *fakeRepo) DeleteDeclaration(_ context.Context, _ string, _ string) error { return nil }
+
+func (f *fakeRepo) PutNationalGround(_ context.Context, workspaceID string, g NationalGround) (NationalGround, error) {
+	d := f.ensure(workspaceID)
+	f.putCalls++
+	if !g.Authoritative() {
+		return NationalGround{}, ErrDeclarationNotAuthoritative
+	}
+	if g.ID == "" {
+		g.ID = "ng-" + g.Country + "-" + g.Criterion
+	}
+	d.NationalGrounds = append(d.NationalGrounds, g)
+	return g, nil
+}
+
+func (f *fakeRepo) DeleteNationalGround(_ context.Context, _ string, _ string) error { return nil }

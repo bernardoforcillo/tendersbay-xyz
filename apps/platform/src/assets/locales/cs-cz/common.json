@@ -318,6 +318,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Vaše JEP",
+      "progress": "Připraveno {{ready}} z {{total}} polí",
+      "ready": "Připraveno k exportu. Nic nechybí.",
+      "companyTodo": "Vyplní se jednou — platí pro každou zakázku",
+      "companyTodoHint": "Jde o údaje o vaší firmě. Odpovězte jednou a přenesou se do další zakázky.",
+      "bidTodo": "Pro tuto zakázku",
+      "noneLeft": "Tady už nic nechybí.",
+      "reviewDeclarations": "Zkontrolovat prohlášení",
+      "confirmDeclarations": "Potvrdit prohlášení",
+      "export": "Exportovat",
+      "exportHint": "Export se odemkne, až nic nebude chybět."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Na to zatím nikdo neodpověděl.",
+        "not_authoritative": "Hodnota existuje, ale nikdo ji neprohlásil — tento dokument nese jen údaje potvrzené člověkem.",
+        "stale": "Zodpovězeno, ale po poslední změně nepotvrzeno znovu pro tuto zakázku."
+      },
+      "openDossier": "Otevřít složku firmy",
+      "openBid": "Vyplnit pro tuto zakázku"
+    },
+    "declarations": {
+      "title": "Část III — důvody pro vyloučení",
+      "incomplete": "Některé důvody nebyly nikdy zodpovězeny. Odpovězte na ně ve složce firmy — jednou, pro všechny zakázky.",
+      "openDossier": "Otevřít složku firmy",
+      "declaredOn": "Potvrzeno pro tuto zakázku dne {{when}}.",
+      "neverConfirmed": "Tyto odpovědi zatím nebyly pro tuto zakázku potvrzeny.",
+      "stale": "Po posledním potvrzení se jedna odpověď změnila. Přečtěte si je znovu a potvrďte.",
+      "appliesTitle": "Důvody, které jste označili za platné",
+      "selfCleaning": "Přijatá opatření",
+      "allTitle": "Všechny důvody",
+      "applies": "Platí",
+      "doesNotApply": "Neplatí",
+      "unanswered": "Bez odpovědi",
+      "confirm": "Ano — pro tuto zakázku stále platí",
+      "confirming": "Potvrzuji…",
+      "changed": "Něco se změnilo",
+      "error": "Potvrzení se nezdařilo — zkuste to znovu."
+    },
+    "export": {
+      "title": "Export",
+      "notReadyHint": "Export se odemkne, až nic nebude chybět a vaše prohlášení budou pro tuto zakázku potvrzena.",
+      "exporting": "Připravuji…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — dokument k podpisu",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Kompletní, ve vašem jazyce",
+        "xml": "K opakovanému použití a importu tam, kde je podporován"
+      },
+      "nextStep": "Dále: statutární zástupce dokument elektronicky podepíše a poté jej nahrajete na portál zadavatele do {{when}}.",
+      "nextStepNoDeadline": "Dále: statutární zástupce dokument elektronicky podepíše a poté jej nahrajete na portál zadavatele.",
+      "history": "Předchozí exporty",
+      "historyHint": "Zaznamenáváme, že jste exportovali, nikdy samotný soubor. Další export se sestaví z dnešní složky firmy.",
+      "notEntitled": "Export JEP patří k tarifu Pro. Vše výše uvedené zůstává zdarma.",
+      "notReady": "Něco ještě chybí, nebo je třeba pro tuto zakázku znovu potvrdit prohlášení.",
+      "error": "Export se nezdařil — zkuste to znovu."
+    },
+    "dossier": {
+      "title": "Důvody pro vyloučení (JEP část III)",
+      "progress": "Zodpovězeno {{answered}} z {{total}}",
+      "intro": "Odpovězte jednou. Každá zakázka je použije znovu — jen potvrdíte, že stále platí.",
+      "applies": "Na nás se vztahuje",
+      "doesNotApply": "Na nás se nevztahuje",
+      "unanswered": "Zatím bez odpovědi",
+      "selfCleaning": "Přijatá opatření (self-cleaning)",
+      "selfCleaningHint": "Co jste s tím udělali — čl. 57 odst. 6. Zadavatel si to přečte, než rozhodne o vyloučení.",
+      "statedAt": "Prohlášeno dne {{when}}",
+      "error": "Uložení se nezdařilo — zkuste to znovu."
+    },
+    "fields": {
+      "is_sme": "Status malého či středního podniku",
+      "representative": "Statutární zástupce",
+      "buyer_name": "Zadavatel",
+      "reference": "Číslo jednací zakázky",
+      "lot_ref": "Část",
+      "confirmation": "Potvrzení pro tuto zakázku",
+      "criterion": "Požadováno zadavatelem"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Zadávací řízení",
+        "lots": "Části, do kterých se hlásíte"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identifikace firmy"
+        },
+        "b": {
+          "representatives": "Statutární zástupci"
+        },
+        "c": {
+          "reliance": "Využití kapacit jiných subjektů"
+        },
+        "d": {
+          "subcontracting": "Poddodávky"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Osvědčení SOA (úřední seznam)",
+          "references": "Doklady o konkrétních stavebních pracích",
+          "average_annual_manpower": "Průměrný roční počet zaměstnanců"
+        },
+        "a": {
+          "enrolment_professional_register": "Zápis v některém z profesních rejstříků",
+          "enrolment_trade_register": "Zápis v některém z obchodních rejstříků",
+          "other_registration": "Oprávnění od určité organizace pro účely zakázek na služby nebo členství v takové organizaci"
+        },
+        "b": {
+          "general_yearly_turnover": "Roční obrat obecně",
+          "specific_yearly_turnover": "Zvláštní roční obrat"
+        },
+        "d": {
+          "quality_assurance_certificates": "Osvědčení vydaná nezávislými subjekty o normách zajišťování jakosti",
+          "environmental_management_certificates": "Osvědčení vydaná nezávislými subjekty o normách či systémech environmentálního řízení"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Účast na zločinném spolčení",
+          "corruption": "Korupce",
+          "fraud": "Podvody",
+          "terrorist_offences": "Teroristické trestné činy nebo trestné činy spojené s teroristickými činnostmi",
+          "money_laundering": "Praní peněz nebo financování terorismu",
+          "child_labour_human_trafficking": "Dětská práce a jiné formy obchodování s lidmi"
+        },
+        "b": {
+          "payment_of_taxes": "Porušení povinnosti týkající se placení daní",
+          "payment_of_social_security": "Porušení povinnosti týkající se placení příspěvků na sociální zabezpečení"
+        },
+        "c": {
+          "breach_environmental_obligations": "Porušení povinností vyplývajících z právních předpisů o ochraně životního prostředí",
+          "breach_social_obligations": "Porušení povinností vyplývajících ze sociálněprávních předpisů",
+          "breach_labour_obligations": "Porušení povinností vyplývajících z pracovněprávních předpisů",
+          "bankruptcy": "Úpadek",
+          "insolvency": "Platební neschopnost",
+          "arrangement_with_creditors": "Dohoda o vyrovnání s věřiteli",
+          "analogous_situation": "Srovnatelná situace jako úpadek podle vnitrostátních právních předpisů",
+          "assets_administered_by_liquidator": "Majetek spravuje likvidátor",
+          "business_activities_suspended": "Obchodní činnost je pozastavena",
+          "grave_professional_misconduct": "Vážné profesní pochybení",
+          "agreements_distorting_competition": "Dohody s jinými hospodářskými subjekty, jejichž cílem je narušení hospodářské soutěže",
+          "conflict_of_interest": "Střet zájmů související s účastí v zadávacím řízení",
+          "involvement_in_preparation": "Přímý nebo nepřímý podíl na přípravě tohoto zadávacího řízení",
+          "early_termination": "Předčasné ukončení, náhrada škody nebo jiné srovnatelné sankce",
+          "misrepresentation": "Zkreslení informací, zadržení informací, neschopnost poskytnout požadované podklady nebo získání důvěrných informací o tomto řízení"
+        },
+        "d": {
+          "purely_national_grounds": "Čistě vnitrostátní důvody pro vyloučení"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Důvody týkající se odsouzení pro trestný čin",
+        "B": "Důvody týkající se placení daní nebo příspěvků na sociální zabezpečení",
+        "C": "Důvody týkající se úpadku, střetu zájmů nebo profesního pochybení"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Přihlásit se",

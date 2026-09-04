@@ -25,6 +25,12 @@ import (
 
 var ErrInsufficientCredits = errors.New("insufficient credits")
 
+// ErrAgentUnavailable is the agent surface being switched off — the feature
+// flag in internal/core/features, not a fault. It is a distinct sentinel from
+// ErrInsufficientCredits because the two need different answers from the
+// client: one is "top up", the other is "try again later".
+var ErrAgentUnavailable = errors.New("the agent is temporarily unavailable")
+
 var ErrChoiceNotPending = errors.New("agent: choice already answered or not found")
 
 // ErrEmptyMessage rejects a turn that carries no text.

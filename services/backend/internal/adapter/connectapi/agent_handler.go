@@ -24,6 +24,29 @@ func NewAgentHandler(svc *agent.Service, creditSvc *credits.Service, members age
 	return &AgentHandler{svc: svc, creditSvc: creditSvc, members: members}
 }
 
+// mayRun asks the one question a turn has to pass: is the agent on here, and is
+// there budget left. credits.Check answers both off a single read — the kill
+// switch reaches the meter through the feature catalog — and the two refusals
+// stay distinct, because "the agent is off" must never reach the client as
+// "top up".
+//
+// It passes the caller, not only the workspace: the kill switch is a flag, and
+// a flag is evaluated against a caller. Gating the turn without one and spending
+// with one is how a rollout admits a turn and then refuses it mid-stream.
+func (h *AgentHandler) mayRun(ctx context.Context, workspaceID, userID string) (credits.CheckResult, error) {
+	check, err := h.creditSvc.Check(ctx, workspaceID, userID)
+	if err != nil {
+		return credits.CheckResult{}, toConnectError(err)
+	}
+	if check.Unavailable {
+		return credits.CheckResult{}, connect.NewError(connect.CodeUnavailable, agent.ErrAgentUnavailable)
+	}
+	if !check.OK {
+		return credits.CheckResult{}, connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
+	}
+	return check, nil
+}
+
 var _ agentv1connect.AgentServiceHandler = (*AgentHandler)(nil)
 
 func (h *AgentHandler) CreateChat(ctx context.Context, req *connect.Request[agentv1.CreateChatRequest]) (*connect.Response[agentv1.CreateChatResponse], error) {
@@ -254,12 +277,9 @@ func (h *AgentHandler) ChatStream(ctx context.Context, req *connect.Request[agen
 		return toConnectError(err)
 	}
 
-	check, err := h.creditSvc.Check(ctx, session.WorkspaceID)
+	check, err := h.mayRun(ctx, session.WorkspaceID, uid)
 	if err != nil {
-		return toConnectError(err)
-	}
-	if !check.OK {
-		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
+		return err
 	}
 
 	sendToken, sendChoice, sendTenderResults, sendToolCall := newStreamCallbacks(stream)
@@ -280,12 +300,9 @@ func (h *AgentHandler) SubmitChoice(ctx context.Context, req *connect.Request[ag
 		return toConnectError(err)
 	}
 
-	check, err := h.creditSvc.Check(ctx, session.WorkspaceID)
+	check, err := h.mayRun(ctx, session.WorkspaceID, uid)
 	if err != nil {
-		return toConnectError(err)
-	}
-	if !check.OK {
-		return connect.NewError(connect.CodeResourceExhausted, agent.ErrInsufficientCredits)
+		return err
 	}
 
 	sendToken, sendChoice, sendTenderResults, sendToolCall := newStreamCallbacks(stream)
@@ -304,12 +321,19 @@ func (h *AgentHandler) GetCredits(ctx context.Context, req *connect.Request[agen
 		return nil, toConnectError(err)
 	}
 
-	check, err := h.creditSvc.Check(ctx, req.Msg.WorkspaceId)
+	check, err := h.creditSvc.Check(ctx, req.Msg.WorkspaceId, uid)
 	if err != nil {
 		return nil, toConnectError(err)
 	}
 
-	resetDate := nextMonthStart(check.CurrentCycleStart)
+	// The reset date now comes from the entitlement period itself rather than
+	// being recomputed as "the first of next month": featurelayer anchors the
+	// period to the workspace's billing anchor, so a workspace that started
+	// mid-month resets mid-month, and guessing would be wrong for it.
+	resetDate := ""
+	if !check.ResetsAt.IsZero() {
+		resetDate = check.ResetsAt.UTC().Format("2006-01-02")
+	}
 
 	return connect.NewResponse(&agentv1.GetCreditsResponse{
 		Remaining:  check.Remaining,
@@ -368,9 +392,4 @@ func toProtoChoicePrompt(cp agent.ChoicePrompt) *agentv1.ChoicePrompt {
 		Options:     options,
 		AllowCustom: cp.AllowCustom,
 	}
-}
-
-func nextMonthStart(t time.Time) string {
-	y, m, _ := t.Date()
-	return time.Date(y, m+1, 1, 0, 0, 0, 0, t.Location()).Format("2006-01-02")
 }

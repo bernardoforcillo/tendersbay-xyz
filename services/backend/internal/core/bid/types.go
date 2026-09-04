@@ -7,6 +7,9 @@ package bid
 
 import (
 	"errors"
+	"fmt"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
@@ -158,3 +161,121 @@ var (
 	// (spec §7). Without that case these validation errors would 500.
 	ErrInvalidArgument = errors.New("bid: invalid argument")
 )
+
+// ── ESPD per-bid data (Part I lots, II.C reliance, II.D subcontracting) ──────
+//
+// These are facts about ONE bid, not about the company: which lots we tender
+// for, whose capacities we rely on (avvalimento), whom we subcontract to. They
+// carry no provenance envelope because they are not facts a buyer can demand a
+// certificate for — they are the operator's choices for this gara, made in the
+// workbench by a member who may manage it.
+
+// Lot is one lot of the procedure this bid tenders for. LotRef is the buyer's
+// lot identifier as published (eForms "LOT-0001", or a free "1" / "A" on an
+// Italian portal); Position is display order.
+type Lot struct {
+	ID       string
+	BidID    string
+	LotRef   string
+	Position int32
+}
+
+// Subcontractor is a Part II.D entry. VAT is the natural key within a bid: a
+// portal that lists the same subcontractor twice describes one relationship.
+// Share is the percentage of the contract subcontracted, nil when unstated.
+type Subcontractor struct {
+	ID      string
+	BidID   string
+	Name    string
+	VAT     string
+	Country string // alpha-2, "" when unstated
+	Share   *int32 // percent, [0,100]
+}
+
+// Reliance is a Part II.C entry: this bid relies on another entity's capacity
+// for one selection criterion (avvalimento, Art. 63 of Directive 2014/24/EU).
+// Criterion is the espd.CriterionKey the reliance covers, a string here so bid
+// never imports espd.
+type Reliance struct {
+	ID         string
+	BidID      string
+	EntityName string
+	VAT        string
+	Criterion  string
+}
+
+// DeclarationConfirmation records that a member re-confirmed, for THIS bid,
+// every Part III declaration the dossier held at that moment. DeclarationsHash
+// is the espd.HashDeclarations of that set: when the dossier's declarations
+// change afterwards the hash no longer matches, the confirmation is stale, and
+// the composed response reports a gap rather than silently exporting an answer
+// nobody re-read. No cron and no flag — staleness is recomputed on every read.
+type DeclarationConfirmation struct {
+	BidID            string
+	UserID           string
+	ConfirmedAt      time.Time
+	DeclarationsHash string
+}
+
+// EspdData is the per-bid ESPD input read back as one unit, which is how the
+// scheda gara renders it and how espd.Compose consumes it.
+type EspdData struct {
+	Lots           []Lot
+	Subcontractors []Subcontractor
+	Reliances      []Reliance
+}
+
+const (
+	maxLotRefLen  = 64
+	maxPartyLen   = 200
+	maxVATLen     = 32
+	maxCriterion  = 128
+	maxShareValue = 100
+)
+
+func (l Lot) validate() error {
+	ref := strings.TrimSpace(l.LotRef)
+	if ref == "" || len(ref) > maxLotRefLen {
+		return fmt.Errorf("%w: lot_ref is required and at most %d characters", ErrInvalidArgument, maxLotRefLen)
+	}
+	if l.Position < 0 {
+		return fmt.Errorf("%w: lot position must not be negative", ErrInvalidArgument)
+	}
+	return nil
+}
+
+func (s Subcontractor) validate() error {
+	if strings.TrimSpace(s.Name) == "" || len(s.Name) > maxPartyLen {
+		return fmt.Errorf("%w: subcontractor name is required and at most %d characters", ErrInvalidArgument, maxPartyLen)
+	}
+	if strings.TrimSpace(s.VAT) == "" || len(s.VAT) > maxVATLen {
+		return fmt.Errorf("%w: subcontractor vat is required and at most %d characters", ErrInvalidArgument, maxVATLen)
+	}
+	if s.Country != "" && !alpha2Re.MatchString(s.Country) {
+		return fmt.Errorf("%w: subcontractor country must be an uppercase ISO-3166-1 alpha-2 code", ErrInvalidArgument)
+	}
+	if s.Share != nil && (*s.Share < 0 || *s.Share > maxShareValue) {
+		return fmt.Errorf("%w: subcontracted share %d outside [0,%d]", ErrInvalidArgument, *s.Share, maxShareValue)
+	}
+	return nil
+}
+
+func (r Reliance) validate() error {
+	if strings.TrimSpace(r.EntityName) == "" || len(r.EntityName) > maxPartyLen {
+		return fmt.Errorf("%w: relied-on entity name is required and at most %d characters", ErrInvalidArgument, maxPartyLen)
+	}
+	if strings.TrimSpace(r.VAT) == "" || len(r.VAT) > maxVATLen {
+		return fmt.Errorf("%w: relied-on entity vat is required and at most %d characters", ErrInvalidArgument, maxVATLen)
+	}
+	if strings.TrimSpace(r.Criterion) == "" || len(r.Criterion) > maxCriterion {
+		return fmt.Errorf("%w: reliance criterion is required and at most %d characters", ErrInvalidArgument, maxCriterion)
+	}
+	return nil
+}
+
+var alpha2Re = regexp.MustCompile(`^[A-Z]{2}$`)
+
+// ErrConfirmationNotFound is returned by GetDeclarationConfirmation when the
+// bid's Part III declarations have never been confirmed. It is a normal state
+// on a fresh bid, not a failure; Compose turns it into a Stale gap.
+var ErrConfirmationNotFound = errors.New("bid: declarations not yet confirmed for this bid")

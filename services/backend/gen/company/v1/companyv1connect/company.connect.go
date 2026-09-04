@@ -69,6 +69,24 @@ const (
 	// CompanyServiceRemoveRegistrationProcedure is the fully-qualified name of the CompanyService's
 	// RemoveRegistration RPC.
 	CompanyServiceRemoveRegistrationProcedure = "/company.v1.CompanyService/RemoveRegistration"
+	// CompanyServicePutRepresentativeProcedure is the fully-qualified name of the CompanyService's
+	// PutRepresentative RPC.
+	CompanyServicePutRepresentativeProcedure = "/company.v1.CompanyService/PutRepresentative"
+	// CompanyServiceRemoveRepresentativeProcedure is the fully-qualified name of the CompanyService's
+	// RemoveRepresentative RPC.
+	CompanyServiceRemoveRepresentativeProcedure = "/company.v1.CompanyService/RemoveRepresentative"
+	// CompanyServicePutDeclarationProcedure is the fully-qualified name of the CompanyService's
+	// PutDeclaration RPC.
+	CompanyServicePutDeclarationProcedure = "/company.v1.CompanyService/PutDeclaration"
+	// CompanyServiceRemoveDeclarationProcedure is the fully-qualified name of the CompanyService's
+	// RemoveDeclaration RPC.
+	CompanyServiceRemoveDeclarationProcedure = "/company.v1.CompanyService/RemoveDeclaration"
+	// CompanyServicePutNationalGroundProcedure is the fully-qualified name of the CompanyService's
+	// PutNationalGround RPC.
+	CompanyServicePutNationalGroundProcedure = "/company.v1.CompanyService/PutNationalGround"
+	// CompanyServiceRemoveNationalGroundProcedure is the fully-qualified name of the CompanyService's
+	// RemoveNationalGround RPC.
+	CompanyServiceRemoveNationalGroundProcedure = "/company.v1.CompanyService/RemoveNationalGround"
 	// CompanyServiceCheckEligibilityProcedure is the fully-qualified name of the CompanyService's
 	// CheckEligibility RPC.
 	CompanyServiceCheckEligibilityProcedure = "/company.v1.CompanyService/CheckEligibility"
@@ -98,6 +116,17 @@ type CompanyServiceClient interface {
 	RemovePastContract(context.Context, *connect.Request[v1.RemovePastContractRequest]) (*connect.Response[v1.RemovePastContractResponse], error)
 	PutRegistration(context.Context, *connect.Request[v1.PutRegistrationRequest]) (*connect.Response[v1.PutRegistrationResponse], error)
 	RemoveRegistration(context.Context, *connect.Request[v1.RemoveRegistrationRequest]) (*connect.Response[v1.RemoveRegistrationResponse], error)
+	// ESPD/DGUE sections: who signs (Part II.B) and what the operator declares
+	// about the exclusion grounds (Part III). Same write rule as the rest of the
+	// dossier (PermManageWorkspace), plus one the server enforces on its own:
+	// a declaration is always recorded as user_stated — there is no way to
+	// import or infer one.
+	PutRepresentative(context.Context, *connect.Request[v1.PutRepresentativeRequest]) (*connect.Response[v1.PutRepresentativeResponse], error)
+	RemoveRepresentative(context.Context, *connect.Request[v1.RemoveRepresentativeRequest]) (*connect.Response[v1.RemoveRepresentativeResponse], error)
+	PutDeclaration(context.Context, *connect.Request[v1.PutDeclarationRequest]) (*connect.Response[v1.PutDeclarationResponse], error)
+	RemoveDeclaration(context.Context, *connect.Request[v1.RemoveDeclarationRequest]) (*connect.Response[v1.RemoveDeclarationResponse], error)
+	PutNationalGround(context.Context, *connect.Request[v1.PutNationalGroundRequest]) (*connect.Response[v1.PutNationalGroundResponse], error)
+	RemoveNationalGround(context.Context, *connect.Request[v1.RemoveNationalGroundRequest]) (*connect.Response[v1.RemoveNationalGroundResponse], error)
 	// Eligibility
 	CheckEligibility(context.Context, *connect.Request[v1.CheckEligibilityRequest]) (*connect.Response[v1.CheckEligibilityResponse], error)
 	ListTenderRequirements(context.Context, *connect.Request[v1.ListTenderRequirementsRequest]) (*connect.Response[v1.ListTenderRequirementsResponse], error)
@@ -188,6 +217,42 @@ func NewCompanyServiceClient(httpClient connect.HTTPClient, baseURL string, opts
 			connect.WithSchema(companyServiceMethods.ByName("RemoveRegistration")),
 			connect.WithClientOptions(opts...),
 		),
+		putRepresentative: connect.NewClient[v1.PutRepresentativeRequest, v1.PutRepresentativeResponse](
+			httpClient,
+			baseURL+CompanyServicePutRepresentativeProcedure,
+			connect.WithSchema(companyServiceMethods.ByName("PutRepresentative")),
+			connect.WithClientOptions(opts...),
+		),
+		removeRepresentative: connect.NewClient[v1.RemoveRepresentativeRequest, v1.RemoveRepresentativeResponse](
+			httpClient,
+			baseURL+CompanyServiceRemoveRepresentativeProcedure,
+			connect.WithSchema(companyServiceMethods.ByName("RemoveRepresentative")),
+			connect.WithClientOptions(opts...),
+		),
+		putDeclaration: connect.NewClient[v1.PutDeclarationRequest, v1.PutDeclarationResponse](
+			httpClient,
+			baseURL+CompanyServicePutDeclarationProcedure,
+			connect.WithSchema(companyServiceMethods.ByName("PutDeclaration")),
+			connect.WithClientOptions(opts...),
+		),
+		removeDeclaration: connect.NewClient[v1.RemoveDeclarationRequest, v1.RemoveDeclarationResponse](
+			httpClient,
+			baseURL+CompanyServiceRemoveDeclarationProcedure,
+			connect.WithSchema(companyServiceMethods.ByName("RemoveDeclaration")),
+			connect.WithClientOptions(opts...),
+		),
+		putNationalGround: connect.NewClient[v1.PutNationalGroundRequest, v1.PutNationalGroundResponse](
+			httpClient,
+			baseURL+CompanyServicePutNationalGroundProcedure,
+			connect.WithSchema(companyServiceMethods.ByName("PutNationalGround")),
+			connect.WithClientOptions(opts...),
+		),
+		removeNationalGround: connect.NewClient[v1.RemoveNationalGroundRequest, v1.RemoveNationalGroundResponse](
+			httpClient,
+			baseURL+CompanyServiceRemoveNationalGroundProcedure,
+			connect.WithSchema(companyServiceMethods.ByName("RemoveNationalGround")),
+			connect.WithClientOptions(opts...),
+		),
 		checkEligibility: connect.NewClient[v1.CheckEligibilityRequest, v1.CheckEligibilityResponse](
 			httpClient,
 			baseURL+CompanyServiceCheckEligibilityProcedure,
@@ -229,6 +294,12 @@ type companyServiceClient struct {
 	removePastContract       *connect.Client[v1.RemovePastContractRequest, v1.RemovePastContractResponse]
 	putRegistration          *connect.Client[v1.PutRegistrationRequest, v1.PutRegistrationResponse]
 	removeRegistration       *connect.Client[v1.RemoveRegistrationRequest, v1.RemoveRegistrationResponse]
+	putRepresentative        *connect.Client[v1.PutRepresentativeRequest, v1.PutRepresentativeResponse]
+	removeRepresentative     *connect.Client[v1.RemoveRepresentativeRequest, v1.RemoveRepresentativeResponse]
+	putDeclaration           *connect.Client[v1.PutDeclarationRequest, v1.PutDeclarationResponse]
+	removeDeclaration        *connect.Client[v1.RemoveDeclarationRequest, v1.RemoveDeclarationResponse]
+	putNationalGround        *connect.Client[v1.PutNationalGroundRequest, v1.PutNationalGroundResponse]
+	removeNationalGround     *connect.Client[v1.RemoveNationalGroundRequest, v1.RemoveNationalGroundResponse]
 	checkEligibility         *connect.Client[v1.CheckEligibilityRequest, v1.CheckEligibilityResponse]
 	listTenderRequirements   *connect.Client[v1.ListTenderRequirementsRequest, v1.ListTenderRequirementsResponse]
 	confirmTenderRequirement *connect.Client[v1.ConfirmTenderRequirementRequest, v1.ConfirmTenderRequirementResponse]
@@ -295,6 +366,36 @@ func (c *companyServiceClient) RemoveRegistration(ctx context.Context, req *conn
 	return c.removeRegistration.CallUnary(ctx, req)
 }
 
+// PutRepresentative calls company.v1.CompanyService.PutRepresentative.
+func (c *companyServiceClient) PutRepresentative(ctx context.Context, req *connect.Request[v1.PutRepresentativeRequest]) (*connect.Response[v1.PutRepresentativeResponse], error) {
+	return c.putRepresentative.CallUnary(ctx, req)
+}
+
+// RemoveRepresentative calls company.v1.CompanyService.RemoveRepresentative.
+func (c *companyServiceClient) RemoveRepresentative(ctx context.Context, req *connect.Request[v1.RemoveRepresentativeRequest]) (*connect.Response[v1.RemoveRepresentativeResponse], error) {
+	return c.removeRepresentative.CallUnary(ctx, req)
+}
+
+// PutDeclaration calls company.v1.CompanyService.PutDeclaration.
+func (c *companyServiceClient) PutDeclaration(ctx context.Context, req *connect.Request[v1.PutDeclarationRequest]) (*connect.Response[v1.PutDeclarationResponse], error) {
+	return c.putDeclaration.CallUnary(ctx, req)
+}
+
+// RemoveDeclaration calls company.v1.CompanyService.RemoveDeclaration.
+func (c *companyServiceClient) RemoveDeclaration(ctx context.Context, req *connect.Request[v1.RemoveDeclarationRequest]) (*connect.Response[v1.RemoveDeclarationResponse], error) {
+	return c.removeDeclaration.CallUnary(ctx, req)
+}
+
+// PutNationalGround calls company.v1.CompanyService.PutNationalGround.
+func (c *companyServiceClient) PutNationalGround(ctx context.Context, req *connect.Request[v1.PutNationalGroundRequest]) (*connect.Response[v1.PutNationalGroundResponse], error) {
+	return c.putNationalGround.CallUnary(ctx, req)
+}
+
+// RemoveNationalGround calls company.v1.CompanyService.RemoveNationalGround.
+func (c *companyServiceClient) RemoveNationalGround(ctx context.Context, req *connect.Request[v1.RemoveNationalGroundRequest]) (*connect.Response[v1.RemoveNationalGroundResponse], error) {
+	return c.removeNationalGround.CallUnary(ctx, req)
+}
+
 // CheckEligibility calls company.v1.CompanyService.CheckEligibility.
 func (c *companyServiceClient) CheckEligibility(ctx context.Context, req *connect.Request[v1.CheckEligibilityRequest]) (*connect.Response[v1.CheckEligibilityResponse], error) {
 	return c.checkEligibility.CallUnary(ctx, req)
@@ -330,6 +431,17 @@ type CompanyServiceHandler interface {
 	RemovePastContract(context.Context, *connect.Request[v1.RemovePastContractRequest]) (*connect.Response[v1.RemovePastContractResponse], error)
 	PutRegistration(context.Context, *connect.Request[v1.PutRegistrationRequest]) (*connect.Response[v1.PutRegistrationResponse], error)
 	RemoveRegistration(context.Context, *connect.Request[v1.RemoveRegistrationRequest]) (*connect.Response[v1.RemoveRegistrationResponse], error)
+	// ESPD/DGUE sections: who signs (Part II.B) and what the operator declares
+	// about the exclusion grounds (Part III). Same write rule as the rest of the
+	// dossier (PermManageWorkspace), plus one the server enforces on its own:
+	// a declaration is always recorded as user_stated — there is no way to
+	// import or infer one.
+	PutRepresentative(context.Context, *connect.Request[v1.PutRepresentativeRequest]) (*connect.Response[v1.PutRepresentativeResponse], error)
+	RemoveRepresentative(context.Context, *connect.Request[v1.RemoveRepresentativeRequest]) (*connect.Response[v1.RemoveRepresentativeResponse], error)
+	PutDeclaration(context.Context, *connect.Request[v1.PutDeclarationRequest]) (*connect.Response[v1.PutDeclarationResponse], error)
+	RemoveDeclaration(context.Context, *connect.Request[v1.RemoveDeclarationRequest]) (*connect.Response[v1.RemoveDeclarationResponse], error)
+	PutNationalGround(context.Context, *connect.Request[v1.PutNationalGroundRequest]) (*connect.Response[v1.PutNationalGroundResponse], error)
+	RemoveNationalGround(context.Context, *connect.Request[v1.RemoveNationalGroundRequest]) (*connect.Response[v1.RemoveNationalGroundResponse], error)
 	// Eligibility
 	CheckEligibility(context.Context, *connect.Request[v1.CheckEligibilityRequest]) (*connect.Response[v1.CheckEligibilityResponse], error)
 	ListTenderRequirements(context.Context, *connect.Request[v1.ListTenderRequirementsRequest]) (*connect.Response[v1.ListTenderRequirementsResponse], error)
@@ -416,6 +528,42 @@ func NewCompanyServiceHandler(svc CompanyServiceHandler, opts ...connect.Handler
 		connect.WithSchema(companyServiceMethods.ByName("RemoveRegistration")),
 		connect.WithHandlerOptions(opts...),
 	)
+	companyServicePutRepresentativeHandler := connect.NewUnaryHandler(
+		CompanyServicePutRepresentativeProcedure,
+		svc.PutRepresentative,
+		connect.WithSchema(companyServiceMethods.ByName("PutRepresentative")),
+		connect.WithHandlerOptions(opts...),
+	)
+	companyServiceRemoveRepresentativeHandler := connect.NewUnaryHandler(
+		CompanyServiceRemoveRepresentativeProcedure,
+		svc.RemoveRepresentative,
+		connect.WithSchema(companyServiceMethods.ByName("RemoveRepresentative")),
+		connect.WithHandlerOptions(opts...),
+	)
+	companyServicePutDeclarationHandler := connect.NewUnaryHandler(
+		CompanyServicePutDeclarationProcedure,
+		svc.PutDeclaration,
+		connect.WithSchema(companyServiceMethods.ByName("PutDeclaration")),
+		connect.WithHandlerOptions(opts...),
+	)
+	companyServiceRemoveDeclarationHandler := connect.NewUnaryHandler(
+		CompanyServiceRemoveDeclarationProcedure,
+		svc.RemoveDeclaration,
+		connect.WithSchema(companyServiceMethods.ByName("RemoveDeclaration")),
+		connect.WithHandlerOptions(opts...),
+	)
+	companyServicePutNationalGroundHandler := connect.NewUnaryHandler(
+		CompanyServicePutNationalGroundProcedure,
+		svc.PutNationalGround,
+		connect.WithSchema(companyServiceMethods.ByName("PutNationalGround")),
+		connect.WithHandlerOptions(opts...),
+	)
+	companyServiceRemoveNationalGroundHandler := connect.NewUnaryHandler(
+		CompanyServiceRemoveNationalGroundProcedure,
+		svc.RemoveNationalGround,
+		connect.WithSchema(companyServiceMethods.ByName("RemoveNationalGround")),
+		connect.WithHandlerOptions(opts...),
+	)
 	companyServiceCheckEligibilityHandler := connect.NewUnaryHandler(
 		CompanyServiceCheckEligibilityProcedure,
 		svc.CheckEligibility,
@@ -466,6 +614,18 @@ func NewCompanyServiceHandler(svc CompanyServiceHandler, opts ...connect.Handler
 			companyServicePutRegistrationHandler.ServeHTTP(w, r)
 		case CompanyServiceRemoveRegistrationProcedure:
 			companyServiceRemoveRegistrationHandler.ServeHTTP(w, r)
+		case CompanyServicePutRepresentativeProcedure:
+			companyServicePutRepresentativeHandler.ServeHTTP(w, r)
+		case CompanyServiceRemoveRepresentativeProcedure:
+			companyServiceRemoveRepresentativeHandler.ServeHTTP(w, r)
+		case CompanyServicePutDeclarationProcedure:
+			companyServicePutDeclarationHandler.ServeHTTP(w, r)
+		case CompanyServiceRemoveDeclarationProcedure:
+			companyServiceRemoveDeclarationHandler.ServeHTTP(w, r)
+		case CompanyServicePutNationalGroundProcedure:
+			companyServicePutNationalGroundHandler.ServeHTTP(w, r)
+		case CompanyServiceRemoveNationalGroundProcedure:
+			companyServiceRemoveNationalGroundHandler.ServeHTTP(w, r)
 		case CompanyServiceCheckEligibilityProcedure:
 			companyServiceCheckEligibilityHandler.ServeHTTP(w, r)
 		case CompanyServiceListTenderRequirementsProcedure:
@@ -529,6 +689,30 @@ func (UnimplementedCompanyServiceHandler) PutRegistration(context.Context, *conn
 
 func (UnimplementedCompanyServiceHandler) RemoveRegistration(context.Context, *connect.Request[v1.RemoveRegistrationRequest]) (*connect.Response[v1.RemoveRegistrationResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("company.v1.CompanyService.RemoveRegistration is not implemented"))
+}
+
+func (UnimplementedCompanyServiceHandler) PutRepresentative(context.Context, *connect.Request[v1.PutRepresentativeRequest]) (*connect.Response[v1.PutRepresentativeResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("company.v1.CompanyService.PutRepresentative is not implemented"))
+}
+
+func (UnimplementedCompanyServiceHandler) RemoveRepresentative(context.Context, *connect.Request[v1.RemoveRepresentativeRequest]) (*connect.Response[v1.RemoveRepresentativeResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("company.v1.CompanyService.RemoveRepresentative is not implemented"))
+}
+
+func (UnimplementedCompanyServiceHandler) PutDeclaration(context.Context, *connect.Request[v1.PutDeclarationRequest]) (*connect.Response[v1.PutDeclarationResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("company.v1.CompanyService.PutDeclaration is not implemented"))
+}
+
+func (UnimplementedCompanyServiceHandler) RemoveDeclaration(context.Context, *connect.Request[v1.RemoveDeclarationRequest]) (*connect.Response[v1.RemoveDeclarationResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("company.v1.CompanyService.RemoveDeclaration is not implemented"))
+}
+
+func (UnimplementedCompanyServiceHandler) PutNationalGround(context.Context, *connect.Request[v1.PutNationalGroundRequest]) (*connect.Response[v1.PutNationalGroundResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("company.v1.CompanyService.PutNationalGround is not implemented"))
+}
+
+func (UnimplementedCompanyServiceHandler) RemoveNationalGround(context.Context, *connect.Request[v1.RemoveNationalGroundRequest]) (*connect.Response[v1.RemoveNationalGroundResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("company.v1.CompanyService.RemoveNationalGround is not implemented"))
 }
 
 func (UnimplementedCompanyServiceHandler) CheckEligibility(context.Context, *connect.Request[v1.CheckEligibilityRequest]) (*connect.Response[v1.CheckEligibilityResponse], error) {

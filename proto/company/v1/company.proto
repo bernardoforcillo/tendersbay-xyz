@@ -41,6 +41,18 @@ service CompanyService {
   rpc PutRegistration(PutRegistrationRequest) returns (PutRegistrationResponse);
   rpc RemoveRegistration(RemoveRegistrationRequest) returns (RemoveRegistrationResponse);
 
+  // ESPD/DGUE sections: who signs (Part II.B) and what the operator declares
+  // about the exclusion grounds (Part III). Same write rule as the rest of the
+  // dossier (PermManageWorkspace), plus one the server enforces on its own:
+  // a declaration is always recorded as user_stated — there is no way to
+  // import or infer one.
+  rpc PutRepresentative(PutRepresentativeRequest) returns (PutRepresentativeResponse);
+  rpc RemoveRepresentative(RemoveRepresentativeRequest) returns (RemoveRepresentativeResponse);
+  rpc PutDeclaration(PutDeclarationRequest) returns (PutDeclarationResponse);
+  rpc RemoveDeclaration(RemoveDeclarationRequest) returns (RemoveDeclarationResponse);
+  rpc PutNationalGround(PutNationalGroundRequest) returns (PutNationalGroundResponse);
+  rpc RemoveNationalGround(RemoveNationalGroundRequest) returns (RemoveNationalGroundResponse);
+
   // Eligibility
   rpc CheckEligibility(CheckEligibilityRequest) returns (CheckEligibilityResponse);
   rpc ListTenderRequirements(ListTenderRequirementsRequest) returns (ListTenderRequirementsResponse);
@@ -85,10 +97,54 @@ message CompanyIdentity {
   bool   founded_year_set = 10;
   // attribution is per-field, keyed by the identity field name: legal_name |
   // vat_number | fiscal_code | legal_form | cciaa | country | nuts |
-  // founded_year. A field with NO entry has never been asserted by anyone,
-  // which is a different state from an empty string a human deliberately
-  // cleared — so a missing key must not be rendered as "unknown provenance".
+  // founded_year | is_sme. A field with NO entry has never been asserted by
+  // anyone, which is a different state from an empty string a human
+  // deliberately cleared — so a missing key must not be rendered as "unknown
+  // provenance".
   map<string, Attribution> attribution = 11;
+  // is_sme is the operator's SME self-classification (DGUE Part II.A). It is
+  // asked, never derived from headcount and turnover: the EU definition also
+  // counts linked and partner enterprises the dossier knows nothing about.
+  // Whether it was ever answered is attribution["is_sme"], not the bool.
+  bool   is_sme = 12;
+}
+
+// Representative is one natural person entitled to represent the operator
+// (DGUE Part II.B). Personal data of a third party: never enters analytics.
+message Representative {
+  string id = 1;
+  string role = 2;                    // legale_rappresentante | procuratore | direttore_tecnico | free text
+  string given_name = 3;
+  string family_name = 4;
+  string birth_date = 5;              // RFC3339, "" = unstated
+  string birth_place = 6;
+  string address = 7;
+  string email = 8;
+  bool   power_of_attorney = 9;       // acts under a procura rather than by office
+  Attribution attribution = 10;
+}
+
+// Declaration is the operator's answer to ONE Part III.A–C exclusion-ground
+// question. answer=true means the ground APPLIES; self_cleaning then carries
+// the Art. 57(6) measures. The server records it as user_stated whatever the
+// request says — a Part III answer cannot be imported or inferred.
+message Declaration {
+  string id = 1;
+  string criterion = 2;               // stable key, e.g. "iii.a.fraud" — see espd.v1
+  bool   answer = 3;
+  string self_cleaning = 4;
+  Attribution attribution = 5;
+}
+
+// NationalGround is a Part III.D answer: a purely national exclusion ground,
+// per Member State and per criterion.
+message NationalGround {
+  string id = 1;
+  string country = 2;                 // alpha-2
+  string criterion = 3;               // national code, e.g. "art94.c1"
+  bool   answer = 4;
+  string note = 5;
+  Attribution attribution = 6;
 }
 
 // SoaCategory is one attestazione SOA line.
@@ -176,6 +232,9 @@ message CompanyDossier {
   repeated PastContract past_contracts = 6;
   repeated Registration registrations = 7;
   string updated_at = 8;              // RFC3339
+  repeated Representative representatives = 9;
+  repeated Declaration declarations = 10;
+  repeated NationalGround national_grounds = 11;
 }
 
 // TenderRequirement is one participation requirement captured for one tender by
@@ -300,6 +359,21 @@ message PutRegistrationRequest { string workspace_id = 1; Registration registrat
 message PutRegistrationResponse { Registration registration = 1; }
 message RemoveRegistrationRequest { string workspace_id = 1; string id = 2; }
 message RemoveRegistrationResponse {}
+
+message PutRepresentativeRequest { string workspace_id = 1; Representative representative = 2; }
+message PutRepresentativeResponse { Representative representative = 1; }
+message RemoveRepresentativeRequest { string workspace_id = 1; string id = 2; }
+message RemoveRepresentativeResponse {}
+
+message PutDeclarationRequest { string workspace_id = 1; Declaration declaration = 2; }
+message PutDeclarationResponse { Declaration declaration = 1; }
+message RemoveDeclarationRequest { string workspace_id = 1; string id = 2; }
+message RemoveDeclarationResponse {}
+
+message PutNationalGroundRequest { string workspace_id = 1; NationalGround national_ground = 2; }
+message PutNationalGroundResponse { NationalGround national_ground = 1; }
+message RemoveNationalGroundRequest { string workspace_id = 1; string id = 2; }
+message RemoveNationalGroundResponse {}
 
 // ── Eligibility ─────────────────────────────────────────────────────────────
 

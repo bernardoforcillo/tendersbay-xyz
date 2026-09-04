@@ -9,36 +9,20 @@ import (
 
 // Table and column definitions — single source of truth for all repositories.
 var (
+	// Users is the profile half of the users table. authlayer's
+	// store/drops.AuthStore owns the credential half (email, password_hash,
+	// email_verified_at, deleted_at) and the sessions and verifications
+	// tables outright — see internal/core/auth. What stays here is the one
+	// column authlayer has no opinion about, display_name, plus the columns
+	// UserRepo reads back alongside it so a member list can render a name.
 	Users               = pg.NewTable("users")
 	UserID              = pg.Add(Users, pg.Text("id").PrimaryKey())
 	UserEmail           = pg.Add(Users, pg.Text("email").NotNull())
-	UserPasswordHash    = pg.Add(Users, pg.Text("password_hash").NotNull())
 	UserDisplayName     = pg.Add(Users, pg.Text("display_name").NotNull())
 	UserEmailVerifiedAt = pg.Add(Users, pg.Timestamp("email_verified_at", true))
 	UserCreatedAt       = pg.Add(Users, pg.Timestamp("created_at", true).NotNull())
 	UserUpdatedAt       = pg.Add(Users, pg.Timestamp("updated_at", true).NotNull())
-
-	Sessions         = pg.NewTable("sessions")
-	SessionID        = pg.Add(Sessions, pg.Text("id").PrimaryKey())
-	SessionUserID    = pg.Add(Sessions, pg.Text("user_id").NotNull())
-	SessionTokenHash = pg.Add(Sessions, pg.Text("token_hash").NotNull())
-	SessionExpiresAt = pg.Add(Sessions, pg.Timestamp("expires_at", true).NotNull())
-	SessionCreatedAt = pg.Add(Sessions, pg.Timestamp("created_at", true).NotNull())
-
-	EmailVerifications = pg.NewTable("email_verifications")
-	EVID               = pg.Add(EmailVerifications, pg.Text("id").PrimaryKey())
-	EVUserID           = pg.Add(EmailVerifications, pg.Text("user_id").NotNull())
-	EVNewEmail         = pg.Add(EmailVerifications, pg.Text("new_email").NotNull())
-	EVTokenHash        = pg.Add(EmailVerifications, pg.Text("token_hash").NotNull())
-	EVExpiresAt        = pg.Add(EmailVerifications, pg.Timestamp("expires_at", true).NotNull())
-	EVCreatedAt        = pg.Add(EmailVerifications, pg.Timestamp("created_at", true).NotNull())
-
-	PasswordResets = pg.NewTable("password_resets")
-	PRID           = pg.Add(PasswordResets, pg.Text("id").PrimaryKey())
-	PRUserID       = pg.Add(PasswordResets, pg.Text("user_id").NotNull())
-	PRTokenHash    = pg.Add(PasswordResets, pg.Text("token_hash").NotNull())
-	PRExpiresAt    = pg.Add(PasswordResets, pg.Timestamp("expires_at", true).NotNull())
-	PRCreatedAt    = pg.Add(PasswordResets, pg.Timestamp("created_at", true).NotNull())
+	UserDeletedAt       = pg.Add(Users, pg.Timestamp("deleted_at", true))
 )
 
 // DB scan targets — drops maps fields by `drop` tag.
@@ -46,45 +30,30 @@ var (
 type DBUser struct {
 	ID              string     `drop:"id"`
 	Email           string     `drop:"email"`
-	PasswordHash    string     `drop:"password_hash"`
 	DisplayName     string     `drop:"display_name"`
 	EmailVerifiedAt *time.Time `drop:"email_verified_at"`
 	CreatedAt       time.Time  `drop:"created_at"`
 	UpdatedAt       time.Time  `drop:"updated_at"`
-}
-
-type DBSession struct {
-	ID        string    `drop:"id"`
-	UserID    string    `drop:"user_id"`
-	TokenHash string    `drop:"token_hash"`
-	ExpiresAt time.Time `drop:"expires_at"`
-	CreatedAt time.Time `drop:"created_at"`
-}
-
-type DBEmailVerification struct {
-	ID        string    `drop:"id"`
-	UserID    string    `drop:"user_id"`
-	NewEmail  string    `drop:"new_email"`
-	TokenHash string    `drop:"token_hash"`
-	ExpiresAt time.Time `drop:"expires_at"`
-	CreatedAt time.Time `drop:"created_at"`
-}
-
-type DBPasswordReset struct {
-	ID        string    `drop:"id"`
-	UserID    string    `drop:"user_id"`
-	TokenHash string    `drop:"token_hash"`
-	ExpiresAt time.Time `drop:"expires_at"`
-	CreatedAt time.Time `drop:"created_at"`
+	DeletedAt       *time.Time `drop:"deleted_at"`
 }
 
 // ── Workspace tables ────────────────────────────────────────────────────────
 // These columns carry full DDL constraints (types, NOT NULL, UNIQUE, DEFAULT,
-// FOREIGN KEY) so drops generates the CREATE TABLE for the 0002 migration from
-// the same handles the repositories query with. Composite constraints (the
-// members composite PK and the (workspace_id, name)/(workspace_id, email)
-// uniques) are added as raw ALTER TABLE in migrate_workspaces.go — drops does
-// not emit them inline.
+// FOREIGN KEY) so drops generates the CREATE TABLE for the 0002 migration.
+// Composite constraints (the members composite PK and the (workspace_id,
+// name)/(workspace_id, email) uniques) are added as raw ALTER TABLE in
+// migrate_workspaces.go — drops does not emit them inline.
+//
+// FROZEN AT 0002. Everything below workspaces itself — the roles, members and
+// invitation handles and their DB structs — describes the shape migration 0002
+// creates, NOT the shape the database ends up in: migration 0013 rewrites those
+// three tables for authlayer (role_id -> role_key, workspace_id -> container_id,
+// the permission bitmask -> encoded grants), and from there on authlayer's own
+// schema is the source of truth and nothing here queries them. They are kept
+// verbatim because 0002 still generates its DDL from them and because 0013
+// reads the old columns by name before transforming them; edit them and you
+// change history, not the live schema. Workspaces itself is still live — see
+// WorkspaceRepo.
 var (
 	Workspaces         = pg.NewTable("workspaces")
 	WorkspaceID        = pg.Add(Workspaces, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
@@ -192,11 +161,20 @@ type DBMembership struct {
 }
 
 // ── Workbench tables ────────────────────────────────────────────────────────
-// Mirrors the workspace tables above: full DDL constraints on the drops
-// handles so the 0003 migration generates CREATE TABLE from the same columns
-// the repositories query with. Composite constraints (the members composite
-// PK and the (workbench_id, name) unique) are added as raw ALTER TABLE in
-// migrate_workbenches.go — drops does not emit them inline.
+// Mirrors the workspace tables above: full DDL constraints on the drops handles
+// so the 0003 migration generates CREATE TABLE from the same columns.
+// Composite constraints (the members composite PK and the (workbench_id, name)
+// unique) are added as raw ALTER TABLE in migrate_workbenches.go — drops does
+// not emit them inline.
+//
+// PARTLY FROZEN AT 0003, the same way the workspace block above is: migration
+// 0015 rewrites workbench_roles and workbench_members for authlayer's nested
+// scope (role_id -> role_key, workbench_id -> container_id, added_at ->
+// joined_at, the bitmask -> encoded grants), after which authlayer's own schema
+// owns them and nothing here queries them. The Workbenches handles below are
+// still LIVE — WorkbenchRepo uses them, and workbenches.workspace_id keeps its
+// name because core/workbench satisfies scope.Nested with a method rather than
+// by embedding NestedBase.
 var (
 	Workbenches   = pg.NewTable("workbenches")
 	WBID          = pg.Add(Workbenches, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
@@ -283,6 +261,11 @@ var (
 	ChatMessageTenders   = pg.Add(ChatMessages, pg.JSONB("tenders"))
 	ChatMessageCreatedAt = pg.Add(ChatMessages, pg.Timestamp("created_at", true).NotNull().Default("now()"))
 
+	// FROZEN AT 0004. workspace_credits is created by migrate_agent and DROPPED
+	// by migration 0014, which moved the agent's token budget onto
+	// featurelayer: the allowance is a plan's, the counter is feature_usage's.
+	// The handles stay because 0004 still generates its DDL from them and 0014
+	// still reads the old columns to carry each workspace's cycle across.
 	WorkspaceCredits              = pg.NewTable("workspace_credits")
 	WCreditsID                    = pg.Add(WorkspaceCredits, pg.UUID("id").Default("gen_random_uuid()").PrimaryKey())
 	WCreditsWorkspaceID           = pg.Add(WorkspaceCredits, pg.UUID("workspace_id").NotNull().Unique().References(WorkspaceID, pg.OnDelete("CASCADE")))
@@ -335,14 +318,41 @@ type DBChatMessage struct {
 	CreatedAt time.Time        `drop:"created_at"`
 }
 
-type DBWorkspaceCredits struct {
-	ID                 string    `drop:"id"`
-	WorkspaceID        string    `drop:"workspace_id"`
-	MonthlyAllowance   int64     `drop:"monthly_token_allowance"`
-	CurrentCycleStart  time.Time `drop:"current_cycle_start"`
-	CurrentCycleTokens int64     `drop:"current_cycle_tokens"`
-	CreatedAt          time.Time `drop:"created_at"`
-	UpdatedAt          time.Time `drop:"updated_at"`
+// ── Feature management (featurelayer) ───────────────────────────────────────
+// Two per-tenant tables behind featurelayer's entitlement ports: what a
+// workspace is subscribed to, and how much of each metered feature it has used
+// in the current period. The DEFINITIONS those are evaluated against — the
+// feature catalog, the plans, their limits — are code, in internal/core/features.
+var (
+	WorkspaceSubscriptions = pg.NewTable("workspace_subscriptions")
+	WSubWorkspaceID        = pg.Add(WorkspaceSubscriptions, pg.UUID("workspace_id").PrimaryKey().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	WSubPlan               = pg.Add(WorkspaceSubscriptions, pg.Text("plan").NotNull())
+	WSubAddOns             = pg.Add(WorkspaceSubscriptions, pg.JSONB("add_ons").NotNull().Default("'[]'::jsonb"))
+	WSubTrial              = pg.Add(WorkspaceSubscriptions, pg.JSONB("trial"))
+	WSubGrants             = pg.Add(WorkspaceSubscriptions, pg.JSONB("grants").NotNull().Default("'[]'::jsonb"))
+	WSubBillingAnchor      = pg.Add(WorkspaceSubscriptions, pg.Timestamp("billing_anchor", true).NotNull().Default("now()"))
+	WSubCreatedAt          = pg.Add(WorkspaceSubscriptions, pg.Timestamp("created_at", true).NotNull().Default("now()"))
+	WSubUpdatedAt          = pg.Add(WorkspaceSubscriptions, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+
+	// FeatureUsage is one counter per (workspace, feature, period). period is
+	// featurelayer's period key — the period start in RFC3339 UTC, or the empty
+	// string for a limit with no period — so a new month simply starts writing
+	// to a new row and no reset job has to run.
+	FeatureUsage      = pg.NewTable("feature_usage")
+	FUsageWorkspaceID = pg.Add(FeatureUsage, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	FUsageFeature     = pg.Add(FeatureUsage, pg.Text("feature").NotNull())
+	FUsagePeriod      = pg.Add(FeatureUsage, pg.Text("period").NotNull())
+	FUsageUsed        = pg.Add(FeatureUsage, pg.BigInt("used").NotNull().Default("0"))
+	FUsageUpdatedAt   = pg.Add(FeatureUsage, pg.Timestamp("updated_at", true).NotNull().Default("now()"))
+)
+
+type DBWorkspaceSubscription struct {
+	WorkspaceID   string           `drop:"workspace_id"`
+	Plan          string           `drop:"plan"`
+	AddOns        json.RawMessage  `drop:"add_ons"`
+	Trial         *json.RawMessage `drop:"trial"`
+	Grants        json.RawMessage  `drop:"grants"`
+	BillingAnchor time.Time        `drop:"billing_anchor"`
 }
 
 type DBAgentPricing struct {
@@ -682,6 +692,10 @@ var (
 	CoCountry          = pg.Add(WorkspaceCompanies, pg.Text("country").NotNull().Default("''"))
 	CoNUTS             = pg.Add(WorkspaceCompanies, pg.Text("nuts").NotNull().Default("''"))
 	CoFoundedYear      = pg.Add(WorkspaceCompanies, pg.Integer("founded_year")) // nullable
+	// CoIsSME was added by 0016. Whether it was ever ANSWERED is read from the
+	// attribution map under company.FieldIsSME, not from the column: false with
+	// no entry is "never asked".
+	CoIsSME = pg.Add(WorkspaceCompanies, pg.Boolean("is_sme").NotNull().Default("false"))
 	// CoAttribution is the per-FIELD provenance map, keyed by company.FieldKey.
 	// It is JSONB rather than seven more column groups because the identity is a
 	// fixed set of scalars whose provenance is read as a whole by the dossier UI
@@ -825,6 +839,7 @@ type DBCompany struct {
 	Country     string          `drop:"country"`
 	NUTS        string          `drop:"nuts"`
 	FoundedYear *int32          `drop:"founded_year"`
+	IsSME       bool            `drop:"is_sme"`
 	Attribution json.RawMessage `drop:"attribution"`
 	UpdatedAt   time.Time       `drop:"updated_at"`
 }
@@ -937,4 +952,227 @@ type DBTenderRequirement struct {
 	ConfirmedAt *time.Time       `drop:"confirmed_at"`
 	CreatedAt   time.Time        `drop:"created_at"`
 	UpdatedAt   time.Time        `drop:"updated_at"`
+}
+
+// ── ESPD / DGUE tables (migration 0016) ─────────────────────────────────────
+//
+// Three more dossier sections (workspace-scoped, cascading with the workspace,
+// each with the per-fact provenance column set the other company_* tables
+// carry) and the per-bid ESPD data (bid-scoped, cascading with the bid, no
+// provenance: they are the operator's choices for one gara, not facts a buyer
+// can demand a certificate for). The two bid_espd_* tables are the buyer's
+// request (a small XML kept so the response can be recomputed — the one
+// motivated exception to "no blobs in the relational store") and the export
+// audit trail (the FACT of an export, never its bytes).
+var (
+	// CompanyRepresentatives is PII of natural persons other than the account
+	// holder — see .claude/rules/pii.md. Never selected into analytics or logs.
+	CompanyRepresentatives = pg.NewTable("company_representatives")
+	RepID                  = pg.Add(CompanyRepresentatives, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	RepWorkspaceID         = pg.Add(CompanyRepresentatives, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	RepRole                = pg.Add(CompanyRepresentatives, pg.Text("role").NotNull())
+	RepGivenName           = pg.Add(CompanyRepresentatives, pg.Text("given_name").NotNull())
+	RepFamilyName          = pg.Add(CompanyRepresentatives, pg.Text("family_name").NotNull())
+	RepBirthDate           = pg.Add(CompanyRepresentatives, pg.Timestamp("birth_date", true)) // nullable
+	RepBirthPlace          = pg.Add(CompanyRepresentatives, pg.Text("birth_place").NotNull().Default("''"))
+	RepAddress             = pg.Add(CompanyRepresentatives, pg.Text("address").NotNull().Default("''"))
+	RepEmail               = pg.Add(CompanyRepresentatives, pg.Text("email").NotNull().Default("''"))
+	RepPowerOfAttorney     = pg.Add(CompanyRepresentatives, pg.Boolean("power_of_attorney").NotNull().Default("false"))
+	RepProvenance          = pg.Add(CompanyRepresentatives, pg.Text("provenance").NotNull())
+	RepConfidence          = pg.Add(CompanyRepresentatives, pg.DoublePrecision("confidence")) // nullable
+	RepStatedBy            = pg.Add(CompanyRepresentatives, pg.UUID("stated_by"))             // nullable
+	RepStatedAt            = pg.Add(CompanyRepresentatives, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	RepPromptedBy          = pg.Add(CompanyRepresentatives, pg.Text("prompted_by").NotNull().Default("''"))
+	RepPromptedByTender    = pg.Add(CompanyRepresentatives, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	RepSourceNote          = pg.Add(CompanyRepresentatives, pg.Text("source_note").NotNull().Default("''"))
+
+	// CompanyDeclarations is Part III.A–C: one row per (workspace, criterion).
+	// provenance is NOT NULL like every sibling, and the domain additionally
+	// refuses anything but user_stated/user_confirmed before a row is written.
+	CompanyDeclarations = pg.NewTable("company_declarations")
+	DecID               = pg.Add(CompanyDeclarations, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	DecWorkspaceID      = pg.Add(CompanyDeclarations, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	DecCriterion        = pg.Add(CompanyDeclarations, pg.Text("criterion").NotNull())
+	DecAnswer           = pg.Add(CompanyDeclarations, pg.Boolean("answer").NotNull().Default("false"))
+	DecSelfCleaning     = pg.Add(CompanyDeclarations, pg.Text("self_cleaning").NotNull().Default("''"))
+	DecProvenance       = pg.Add(CompanyDeclarations, pg.Text("provenance").NotNull())
+	DecConfidence       = pg.Add(CompanyDeclarations, pg.DoublePrecision("confidence")) // nullable, always NULL in practice
+	DecStatedBy         = pg.Add(CompanyDeclarations, pg.UUID("stated_by"))             // nullable in the schema, set by the domain
+	DecStatedAt         = pg.Add(CompanyDeclarations, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	DecPromptedBy       = pg.Add(CompanyDeclarations, pg.Text("prompted_by").NotNull().Default("''"))
+	DecPromptedByTender = pg.Add(CompanyDeclarations, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	DecSourceNote       = pg.Add(CompanyDeclarations, pg.Text("source_note").NotNull().Default("''"))
+
+	// CompanyNationalGrounds is Part III.D: one row per (workspace, country,
+	// criterion).
+	CompanyNationalGrounds = pg.NewTable("company_national_grounds")
+	NGID                   = pg.Add(CompanyNationalGrounds, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	NGWorkspaceID          = pg.Add(CompanyNationalGrounds, pg.UUID("workspace_id").NotNull().References(WorkspaceID, pg.OnDelete("CASCADE")))
+	NGCountry              = pg.Add(CompanyNationalGrounds, pg.Text("country").NotNull())
+	NGCriterion            = pg.Add(CompanyNationalGrounds, pg.Text("criterion").NotNull())
+	NGAnswer               = pg.Add(CompanyNationalGrounds, pg.Boolean("answer").NotNull().Default("false"))
+	NGNote                 = pg.Add(CompanyNationalGrounds, pg.Text("note").NotNull().Default("''"))
+	NGProvenance           = pg.Add(CompanyNationalGrounds, pg.Text("provenance").NotNull())
+	NGConfidence           = pg.Add(CompanyNationalGrounds, pg.DoublePrecision("confidence")) // nullable
+	NGStatedBy             = pg.Add(CompanyNationalGrounds, pg.UUID("stated_by"))             // nullable
+	NGStatedAt             = pg.Add(CompanyNationalGrounds, pg.Timestamp("stated_at", true).NotNull().Default("now()"))
+	NGPromptedBy           = pg.Add(CompanyNationalGrounds, pg.Text("prompted_by").NotNull().Default("''"))
+	NGPromptedByTender     = pg.Add(CompanyNationalGrounds, pg.BigInt("prompted_by_tender_id")) // nullable, NO FK
+	NGSourceNote           = pg.Add(CompanyNationalGrounds, pg.Text("source_note").NotNull().Default("''"))
+
+	// Per-bid ESPD data.
+	BidLots     = pg.NewTable("bid_lots")
+	LotID       = pg.Add(BidLots, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	LotBidID    = pg.Add(BidLots, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	LotRef      = pg.Add(BidLots, pg.Text("lot_ref").NotNull())
+	LotPosition = pg.Add(BidLots, pg.Integer("position").NotNull().Default("0"))
+
+	BidSubcontractors = pg.NewTable("bid_subcontractors")
+	SubID             = pg.Add(BidSubcontractors, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	SubBidID          = pg.Add(BidSubcontractors, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	SubName           = pg.Add(BidSubcontractors, pg.Text("name").NotNull())
+	SubVAT            = pg.Add(BidSubcontractors, pg.Text("vat").NotNull())
+	SubCountry        = pg.Add(BidSubcontractors, pg.Text("country").NotNull().Default("''"))
+	SubShare          = pg.Add(BidSubcontractors, pg.SmallInt("share")) // nullable: percent, NULL = unstated
+
+	BidReliances  = pg.NewTable("bid_reliances")
+	RelID         = pg.Add(BidReliances, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	RelBidID      = pg.Add(BidReliances, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	RelEntityName = pg.Add(BidReliances, pg.Text("entity_name").NotNull())
+	RelVAT        = pg.Add(BidReliances, pg.Text("vat").NotNull())
+	RelCriterion  = pg.Add(BidReliances, pg.Text("criterion").NotNull())
+
+	// BidDeclarationConfirmations: bid_id IS the primary key — the latest
+	// confirmation wins, since the only question the row answers is "does the
+	// current set of declarations have a signature for this bid".
+	BidDeclarationConfirmations = pg.NewTable("bid_declaration_confirmations")
+	DCBidID                     = pg.Add(BidDeclarationConfirmations, pg.UUID("bid_id").PrimaryKey().References(BidID, pg.OnDelete("CASCADE")))
+	DCUserID                    = pg.Add(BidDeclarationConfirmations, pg.UUID("user_id").NotNull())
+	DCConfirmedAt               = pg.Add(BidDeclarationConfirmations, pg.Timestamp("confirmed_at", true).NotNull().Default("now()"))
+	DCDeclarationsHash          = pg.Add(BidDeclarationConfirmations, pg.Text("declarations_hash").NotNull())
+
+	// BidEspdRequests keeps the buyer's request XML (tens of KB) per bid so the
+	// response can be recomposed and re-exported. If requests ever grow past
+	// that, this moves to object storage — see the system-design rule.
+	BidEspdRequests = pg.NewTable("bid_espd_requests")
+	ERBidID         = pg.Add(BidEspdRequests, pg.UUID("bid_id").PrimaryKey().References(BidID, pg.OnDelete("CASCADE")))
+	ERVersion       = pg.Add(BidEspdRequests, pg.Text("version").NotNull())
+	ERXML           = pg.Add(BidEspdRequests, pg.Text("xml").NotNull())
+	ERSHA256        = pg.Add(BidEspdRequests, pg.Text("sha256").NotNull())
+	ERImportedBy    = pg.Add(BidEspdRequests, pg.UUID("imported_by").NotNull())
+	ERImportedAt    = pg.Add(BidEspdRequests, pg.Timestamp("imported_at", true).NotNull().Default("now()"))
+
+	// BidEspdExports is the audit trail: who exported what, when, resting on
+	// which confirmation. Content is identified by hash only.
+	BidEspdExports            = pg.NewTable("bid_espd_exports")
+	EXID                      = pg.Add(BidEspdExports, pg.UUID("id").PrimaryKey().Default("gen_random_uuid()"))
+	EXBidID                   = pg.Add(BidEspdExports, pg.UUID("bid_id").NotNull().References(BidID, pg.OnDelete("CASCADE")))
+	EXUserID                  = pg.Add(BidEspdExports, pg.UUID("exported_by").NotNull())
+	EXVersion                 = pg.Add(BidEspdExports, pg.Text("version").NotNull())
+	EXFormat                  = pg.Add(BidEspdExports, pg.Text("format").NotNull())
+	EXContentSHA256           = pg.Add(BidEspdExports, pg.Text("content_sha256").NotNull())
+	EXDeclarationsConfirmedAt = pg.Add(BidEspdExports, pg.Timestamp("declarations_confirmed_at", true).NotNull())
+	EXExportedAt              = pg.Add(BidEspdExports, pg.Timestamp("exported_at", true).NotNull().Default("now()"))
+)
+
+type DBRepresentative struct {
+	ID                 string     `drop:"id"`
+	WorkspaceID        string     `drop:"workspace_id"`
+	Role               string     `drop:"role"`
+	GivenName          string     `drop:"given_name"`
+	FamilyName         string     `drop:"family_name"`
+	BirthDate          *time.Time `drop:"birth_date"`
+	BirthPlace         string     `drop:"birth_place"`
+	Address            string     `drop:"address"`
+	Email              string     `drop:"email"`
+	PowerOfAttorney    bool       `drop:"power_of_attorney"`
+	Provenance         string     `drop:"provenance"`
+	Confidence         *float64   `drop:"confidence"`
+	StatedBy           *string    `drop:"stated_by"`
+	StatedAt           time.Time  `drop:"stated_at"`
+	PromptedBy         string     `drop:"prompted_by"`
+	PromptedByTenderID *int64     `drop:"prompted_by_tender_id"`
+	SourceNote         string     `drop:"source_note"`
+}
+
+type DBDeclaration struct {
+	ID                 string    `drop:"id"`
+	WorkspaceID        string    `drop:"workspace_id"`
+	Criterion          string    `drop:"criterion"`
+	Answer             bool      `drop:"answer"`
+	SelfCleaning       string    `drop:"self_cleaning"`
+	Provenance         string    `drop:"provenance"`
+	Confidence         *float64  `drop:"confidence"`
+	StatedBy           *string   `drop:"stated_by"`
+	StatedAt           time.Time `drop:"stated_at"`
+	PromptedBy         string    `drop:"prompted_by"`
+	PromptedByTenderID *int64    `drop:"prompted_by_tender_id"`
+	SourceNote         string    `drop:"source_note"`
+}
+
+type DBNationalGround struct {
+	ID                 string    `drop:"id"`
+	WorkspaceID        string    `drop:"workspace_id"`
+	Country            string    `drop:"country"`
+	Criterion          string    `drop:"criterion"`
+	Answer             bool      `drop:"answer"`
+	Note               string    `drop:"note"`
+	Provenance         string    `drop:"provenance"`
+	Confidence         *float64  `drop:"confidence"`
+	StatedBy           *string   `drop:"stated_by"`
+	StatedAt           time.Time `drop:"stated_at"`
+	PromptedBy         string    `drop:"prompted_by"`
+	PromptedByTenderID *int64    `drop:"prompted_by_tender_id"`
+	SourceNote         string    `drop:"source_note"`
+}
+
+type DBLot struct {
+	ID       string `drop:"id"`
+	BidID    string `drop:"bid_id"`
+	LotRef   string `drop:"lot_ref"`
+	Position int32  `drop:"position"`
+}
+
+type DBSubcontractor struct {
+	ID      string `drop:"id"`
+	BidID   string `drop:"bid_id"`
+	Name    string `drop:"name"`
+	VAT     string `drop:"vat"`
+	Country string `drop:"country"`
+	Share   *int16 `drop:"share"`
+}
+
+type DBReliance struct {
+	ID         string `drop:"id"`
+	BidID      string `drop:"bid_id"`
+	EntityName string `drop:"entity_name"`
+	VAT        string `drop:"vat"`
+	Criterion  string `drop:"criterion"`
+}
+
+type DBDeclarationConfirmation struct {
+	BidID            string    `drop:"bid_id"`
+	UserID           string    `drop:"user_id"`
+	ConfirmedAt      time.Time `drop:"confirmed_at"`
+	DeclarationsHash string    `drop:"declarations_hash"`
+}
+
+type DBEspdRequest struct {
+	BidID      string    `drop:"bid_id"`
+	Version    string    `drop:"version"`
+	XML        string    `drop:"xml"`
+	SHA256     string    `drop:"sha256"`
+	ImportedBy string    `drop:"imported_by"`
+	ImportedAt time.Time `drop:"imported_at"`
+}
+
+type DBEspdExport struct {
+	ID                      string    `drop:"id"`
+	BidID                   string    `drop:"bid_id"`
+	ExportedBy              string    `drop:"exported_by"`
+	Version                 string    `drop:"version"`
+	Format                  string    `drop:"format"`
+	ContentSHA256           string    `drop:"content_sha256"`
+	DeclarationsConfirmedAt time.Time `drop:"declarations_confirmed_at"`
+	ExportedAt              time.Time `drop:"exported_at"`
 }

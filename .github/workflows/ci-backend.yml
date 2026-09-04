@@ -18,6 +18,33 @@ on:
 jobs:
   quality:
     runs-on: ubuntu-latest
+
+    # A real PostgreSQL, so the database-backed tests RUN here rather than
+    # skip. Without it every test gated on TEST_DATABASE_URL — the store
+    # contracts, the legacy-data migration run, the e2e journeys — passes
+    # trivially, and CI is green over a suite that never executed.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tendersbay_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      # The shared database the suite seeds rows into.
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/tendersbay_test?sslmode=disable
+      # A SCRATCH database: the authlayer store contracts truncate users (which
+      # cascades to nearly everything) and the migration test drops the public
+      # schema. Deliberately not the same database as above.
+      TEST_AUTH_CONTRACT_DATABASE_URL: postgres://postgres:postgres@localhost:5432/tendersbay_contract?sslmode=disable
+
     steps:
       - uses: actions/checkout@v4
 
@@ -37,6 +64,22 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Create the scratch database
+        run: psql "postgres://postgres:postgres@localhost:5432/postgres" -c 'CREATE DATABASE tendersbay_contract'
+
+      # The tenders schema this service's search, document, detail and eForms
+      # repositories read is owned and migrated by services/ingestion. Pointing
+      # that service's migrator at the same database once is what makes those
+      # tests run instead of skip; the CPV vocabulary is embedded in the seeder,
+      # so no network is needed. See CLAUDE.md, "BOTH migration chains".
+      - name: Migrate the ingestion schema and seed the CPV vocabulary
+        working-directory: services/ingestion
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+        run: |
+          go test ./internal/adapter/postgres/ -run '^TestNew$' -count=1
+          go run ./cmd/seed-cpv
 
       - name: Lint + test (Go via Turbo)
         run: pnpm exec turbo run lint test --filter backend

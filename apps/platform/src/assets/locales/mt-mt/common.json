@@ -322,6 +322,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "L-ESPD tiegħek",
+      "progress": "{{ready}} minn {{total}} oqsma lesti",
+      "ready": "Lest għall-esportazzjoni. Ma jonqos xejn.",
+      "companyTodo": "Timtela darba — tgħodd għal kull sejħa",
+      "companyTodoHint": "Dawn huma fatti dwar il-kumpanija tiegħek. Wieġeb darba u jgħaddu għas-sejħa li jmiss.",
+      "bidTodo": "Għal din is-sejħa",
+      "noneLeft": "Hawn ma jonqos xejn iżjed.",
+      "reviewDeclarations": "Irrevedi d-dikjarazzjonijiet",
+      "confirmDeclarations": "Ikkonferma d-dikjarazzjonijiet",
+      "export": "Esporta",
+      "exportHint": "L-esportazzjoni tinfetaħ meta ma jonqos xejn."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Ħadd għadu ma wieġeb dan.",
+        "not_authoritative": "Hemm valur, imma ħadd ma ddikjarah — dan id-dokument iġorr biss fatti kkonfermati minn persuna.",
+        "stale": "Imwieġeb, imma ma ġiex ikkonfermat mill-ġdid għal din is-sejħa wara l-aħħar bidla."
+      },
+      "openDossier": "Iftaħ id-dossier tal-kumpanija",
+      "openBid": "Imla għal din is-sejħa"
+    },
+    "declarations": {
+      "title": "Parti III — raġunijiet għall-esklużjoni",
+      "incomplete": "Xi raġunijiet qatt ma ġew imwieġba. Wieġebhom fid-dossier tal-kumpanija — darba, għas-sejħiet kollha.",
+      "openDossier": "Iftaħ id-dossier tal-kumpanija",
+      "declaredOn": "Ikkonfermati għal din is-sejħa fi {{when}}.",
+      "neverConfirmed": "Dawn it-tweġibiet għadhom ma ġewx ikkonfermati għal din is-sejħa.",
+      "stale": "Tweġiba nbidlet wara l-aħħar konferma. Aqrahom mill-ġdid u kkonferma.",
+      "appliesTitle": "Raġunijiet li ddikjarajt li japplikaw",
+      "selfCleaning": "Miżuri meħuda",
+      "allTitle": "Ir-raġunijiet kollha",
+      "applies": "Tapplika",
+      "doesNotApply": "Ma tapplikax",
+      "unanswered": "Bla tweġiba",
+      "confirm": "Iva — għadha vera għal din is-sejħa",
+      "confirming": "Qed tikkonferma…",
+      "changed": "Xi ħaġa nbidlet",
+      "error": "Ma rnexxielekx tikkonferma — erġa’ pprova."
+    },
+    "export": {
+      "title": "Esportazzjoni",
+      "notReadyHint": "L-esportazzjoni tinfetaħ meta ma jonqos xejn u d-dikjarazzjonijiet ikunu kkonfermati għal din is-sejħa.",
+      "exporting": "Qed jitħejja…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — id-dokument li għandu jiġi ffirmat",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Komplut, bil-lingwa tiegħek",
+        "xml": "Għal użu mill-ġdid u importazzjoni fejn appoġġjat"
+      },
+      "nextStep": "Imbagħad: ir-rappreżentant legali tiegħek jiffirmah elettronikament, u mbagħad ittellgħu fil-portal tal-awtorità kontraenti qabel {{when}}.",
+      "nextStepNoDeadline": "Imbagħad: ir-rappreżentant legali tiegħek jiffirmah elettronikament, u mbagħad ittellgħu fil-portal tal-awtorità kontraenti.",
+      "history": "Esportazzjonijiet preċedenti",
+      "historyHint": "Nirreġistraw li esportajt, qatt il-fajl innifsu. Esportazzjoni ġdida tinbena mid-dossier tal-lum.",
+      "notEntitled": "L-esportazzjoni tal-ESPD hija parti mill-pjan Pro. Kulma tara hawn fuq jibqa’ bla ħlas.",
+      "notReady": "Għad jonqos xi ħaġa, jew id-dikjarazzjonijiet iridu jiġu kkonfermati mill-ġdid għal din is-sejħa.",
+      "error": "Ma rnexxielekx tesporta — erġa’ pprova."
+    },
+    "dossier": {
+      "title": "Raġunijiet għall-esklużjoni (ESPD Parti III)",
+      "progress": "{{answered}} minn {{total}} imwieġba",
+      "intro": "Wieġeb darba. Kull sejħa terġa’ tużahom — int tikkonferma biss li għadhom veri.",
+      "applies": "Tapplika għalina",
+      "doesNotApply": "Ma tapplikax għalina",
+      "unanswered": "Għadha bla tweġiba",
+      "selfCleaning": "Miżuri meħuda (self-cleaning)",
+      "selfCleaningHint": "X’għamiltu dwarha — l-Artikolu 57(6). L-awtorità kontraenti taqra dan qabel tiddeċiedi jekk teskludikomx.",
+      "statedAt": "Iddikjarat fi {{when}}",
+      "error": "Ma rnexxielekx tissejvja — erġa’ pprova."
+    },
+    "fields": {
+      "is_sme": "Status ta’ SME",
+      "representative": "Rappreżentant legali",
+      "buyer_name": "Awtorità kontraenti",
+      "reference": "Referenza tal-proċedura",
+      "lot_ref": "Lott",
+      "confirmation": "Konferma għal din is-sejħa",
+      "criterion": "Mitlub mill-awtorità kontraenti"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Il-proċedura",
+        "lots": "Lottijiet li qed tapplika għalihom"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identifikazzjoni tal-kumpanija"
+        },
+        "b": {
+          "representatives": "Rappreżentanti legali"
+        },
+        "c": {
+          "reliance": "Serħan fuq il-kapaċitajiet ta’ entitajiet oħra"
+        },
+        "d": {
+          "subcontracting": "Sottokuntrattar"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Attestazzjoni SOA (lista uffiċjali)",
+          "references": "Referenzi dwar xogħlijiet speċifikati",
+          "average_annual_manpower": "Manodopera annwali medja"
+        },
+        "a": {
+          "enrolment_professional_register": "Reġistrazzjoni f’reġistru professjonali rilevanti",
+          "enrolment_trade_register": "Reġistrazzjoni f’reġistru kummerċjali",
+          "other_registration": "Awtorizzazzjoni jew sħubija f’organizzazzjoni partikolari meħtieġa għall-kuntratti ta’ servizz"
+        },
+        "b": {
+          "general_yearly_turnover": "Fatturat annwali ġenerali",
+          "specific_yearly_turnover": "Fatturat annwali speċifiku"
+        },
+        "d": {
+          "quality_assurance_certificates": "Ċertifikati minn korpi indipendenti dwar l-istandards għall-garanzija tal-kwalità",
+          "environmental_management_certificates": "Ċertifikati minn korpi indipendenti dwar is-sistemi jew l-istandards għall-ġestjoni ambjentali"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Parteċipazzjoni f’organizzazzjoni kriminali",
+          "corruption": "Il-korruzzjoni",
+          "fraud": "Frodi",
+          "terrorist_offences": "Reati terroristiċi jew reati marbuta ma’ attivitajiet terroristiċi",
+          "money_laundering": "Ħasil tal-flus jew finanzjament tat-terroriżmu",
+          "child_labour_human_trafficking": "Tħaddim tat-tfal u forom oħra ta’ traffikar tal-bnedmin"
+        },
+        "b": {
+          "payment_of_taxes": "Ksur tal-obbligu relatat mal-ħlas tat-taxxi",
+          "payment_of_social_security": "Ksur tal-obbligu relatat mal-ħlas tal-kontribuzzjonijiet tas-sigurtà soċjali"
+        },
+        "c": {
+          "breach_environmental_obligations": "Ksur tal-obbligi fl-oqsma tal-liġi ambjentali",
+          "breach_social_obligations": "Ksur tal-obbligi fl-oqsma tal-liġi soċjali",
+          "breach_labour_obligations": "Ksur tal-obbligi fl-oqsma tal-liġi tax-xogħol",
+          "bankruptcy": "Falliment",
+          "insolvency": "Insolvenza",
+          "arrangement_with_creditors": "Arranġament mal-kredituri",
+          "analogous_situation": "Sitwazzjoni analoga bħal falliment skont il-liġi nazzjonali",
+          "assets_administered_by_liquidator": "Assijiet amministrati minn likwidatur",
+          "business_activities_suspended": "L-attivitajiet kummerċjali huma sospiżi",
+          "grave_professional_misconduct": "Imġiba professjonali serjament ħażina",
+          "agreements_distorting_competition": "Ftehimiet ma’ operaturi ekonomiċi oħrajn li għandhom l-għan li jikkawżaw distorsjoni tal-kompetizzjoni",
+          "conflict_of_interest": "Kunflitt ta’ interess minħabba l-parteċipazzjoni tiegħu fil-proċedura ta’ akkwist",
+          "involvement_in_preparation": "Involviment dirett jew indirett fit-tħejjija ta’ din il-proċedura ta’ akkwist",
+          "early_termination": "Terminazzjoni bikrija, danni jew sanzjonijiet komparabbli oħra",
+          "misrepresentation": "Dikjarazzjoni falza, informazzjoni moħbija, ma setgħux jiġu pprovduti d-dokumenti meħtieġa jew inkisbet informazzjoni kunfidenzjali ta’ din il-proċedura"
+        },
+        "d": {
+          "purely_national_grounds": "Raġunijiet purament nazzjonali għall-esklużjoni"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Raġunijiet relatati ma’ kundanni kriminali",
+        "B": "Raġunijiet relatati mal-ħlas tat-taxxi jew tal-kontribuzzjonijiet tas-sigurtà soċjali",
+        "C": "Raġunijiet relatati ma' insolvenza, kunflitti ta’ interess jew imġiba professjonali ħażina"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Idħol",

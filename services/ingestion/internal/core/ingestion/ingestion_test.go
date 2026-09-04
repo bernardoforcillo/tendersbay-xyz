@@ -34,10 +34,12 @@ func (b *blockingSource) Fetch(ctx context.Context) ([]tender.Tender, error) {
 }
 
 type fakeSink struct {
-	mu      sync.Mutex
-	saved   [][]tender.Tender
-	runs    []ingestion.RunRecord
-	saveErr error
+	mu          sync.Mutex
+	saved       [][]tender.Tender
+	runs        []ingestion.RunRecord
+	saveErr     error
+	criteria    map[string]map[string][]tender.SelectionCriterion
+	criteriaErr error
 }
 
 func (f *fakeSink) Save(_ context.Context, tenders []tender.Tender) (ingestion.SaveResult, error) {
@@ -48,6 +50,19 @@ func (f *fakeSink) Save(_ context.Context, tenders []tender.Tender) (ingestion.S
 	}
 	f.saved = append(f.saved, tenders)
 	return ingestion.SaveResult{Inserted: len(tenders)}, nil
+}
+
+func (f *fakeSink) SaveSelectionCriteria(_ context.Context, source string, bySourceRef map[string][]tender.SelectionCriterion) error {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	if f.criteriaErr != nil {
+		return f.criteriaErr
+	}
+	if f.criteria == nil {
+		f.criteria = map[string]map[string][]tender.SelectionCriterion{}
+	}
+	f.criteria[source] = bySourceRef
+	return nil
 }
 
 func (f *fakeSink) RecordRun(_ context.Context, rec ingestion.RunRecord) error {
@@ -134,5 +149,80 @@ func TestRunOnce_StopsFetchWhenContextCancelled(t *testing.T) {
 	report := <-done
 	if !report.Failed() {
 		t.Fatal("Failed() = false, want true after ctx cancellation")
+	}
+}
+
+// detailedSource is a provider that carries selection criteria in its search
+// feed, the shape ingestion.DetailedSource exists for.
+type detailedSource struct {
+	name     string
+	tenders  []tender.Tender
+	criteria map[string][]tender.SelectionCriterion
+}
+
+func (d *detailedSource) Name() string { return d.name }
+func (d *detailedSource) Fetch(ctx context.Context) ([]tender.Tender, error) {
+	t, _, err := d.FetchWithDetail(ctx)
+	return t, err
+}
+func (d *detailedSource) FetchWithDetail(context.Context) ([]tender.Tender, map[string][]tender.SelectionCriterion, error) {
+	return d.tenders, d.criteria, nil
+}
+
+func TestRunOnce_DetailedSourceCriteriaReachTheSink(t *testing.T) {
+	src := &detailedSource{
+		name:    "es-placsp",
+		tenders: []tender.Tender{{Source: "es-placsp", SourceRef: "104/2026"}},
+		criteria: map[string][]tender.SelectionCriterion{
+			"104/2026": {{Ordinal: 0, Category: "financial", Type: "5", Description: "Volumen anual"}},
+		},
+	}
+	sink := &fakeSink{}
+	report := ingestion.NewService([]ingestion.Source{src}, sink).RunOnce(context.Background())
+
+	if report.Failed() {
+		t.Fatalf("run failed: %+v", report.Providers)
+	}
+	got := sink.criteria["es-placsp"]["104/2026"]
+	if len(got) != 1 || got[0].Category != "financial" {
+		t.Fatalf("sink received %+v, want one financial criterion keyed by source ref", got)
+	}
+}
+
+// TestRunOnce_PlainSourceWritesNoCriteria pins the fallback: a provider that
+// does not implement DetailedSource must not cause a criteria write at all.
+// Calling the sink with an empty map would make every provider look like it had
+// published an empty criteria set, which replace-semantics would then apply.
+func TestRunOnce_PlainSourceWritesNoCriteria(t *testing.T) {
+	src := &fakeSource{name: "ted", tenders: []tender.Tender{{Source: "ted", SourceRef: "1-2026"}}}
+	sink := &fakeSink{}
+	report := ingestion.NewService([]ingestion.Source{src}, sink).RunOnce(context.Background())
+
+	if report.Failed() {
+		t.Fatalf("run failed: %+v", report.Providers)
+	}
+	if sink.criteria != nil {
+		t.Errorf("sink.criteria = %+v, want no call at all for a plain Source", sink.criteria)
+	}
+}
+
+// TestRunOnce_CriteriaFailureKeepsTenderCounts pins the ordering documented in
+// runSource: a criteria write that fails is reported, but the audit row still
+// says truthfully how many tenders landed.
+func TestRunOnce_CriteriaFailureKeepsTenderCounts(t *testing.T) {
+	src := &detailedSource{
+		name:     "es-placsp",
+		tenders:  []tender.Tender{{Source: "es-placsp", SourceRef: "104/2026"}},
+		criteria: map[string][]tender.SelectionCriterion{"104/2026": {{Ordinal: 0}}},
+	}
+	sink := &fakeSink{criteriaErr: errors.New("criteria write failed")}
+	report := ingestion.NewService([]ingestion.Source{src}, sink).RunOnce(context.Background())
+
+	if !report.Failed() {
+		t.Fatal("run reported success despite a failed criteria write")
+	}
+	p := report.Providers[0]
+	if p.Fetched != 1 {
+		t.Errorf("Fetched = %d, want 1 — tender counts must survive a criteria failure", p.Fetched)
 	}
 }

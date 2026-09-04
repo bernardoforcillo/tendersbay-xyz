@@ -30,16 +30,18 @@ func toProtoWorkbenchRole(r workbench.Role) *workbenchv1.Role {
 	return &workbenchv1.Role{
 		Id: r.ID, WorkbenchId: r.WorkbenchID, Name: r.Name,
 		Permissions: uint64(r.Permissions), IsDefault: r.IsDefault,
-		CreatedAt: r.CreatedAt.Format(time.RFC3339),
+		// authlayer's role view carries no creation timestamp; see the same
+		// note on the workspace handler's toProtoRole.
+		CreatedAt: "",
 	}
 }
 
 func toProtoWorkbenchMember(m workbench.MemberView) *workbenchv1.Member {
 	return &workbenchv1.Member{
-		UserId: m.Member.UserID, WorkbenchId: m.Member.WorkbenchID, RoleId: m.Member.RoleID,
+		UserId: m.Member.UserID, WorkbenchId: m.Member.ContainerID, RoleId: m.Member.RoleKey,
 		RoleName: m.Role.Name, Permissions: uint64(m.Role.Permissions),
 		User:    toProtoUser(m.User), // reuse the existing workspace-handler mapper
-		AddedAt: m.Member.AddedAt.Format(time.RFC3339),
+		AddedAt: m.Member.JoinedAt.Format(time.RFC3339),
 	}
 }
 

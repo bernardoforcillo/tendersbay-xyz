@@ -8,10 +8,10 @@ import (
 
 	"connectrpc.com/connect"
 
-	"github.com/bernardoforcillo/drops/pg"
-	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
+	"github.com/bernardoforcillo/featurelayer/entitlement"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/agent"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
@@ -49,68 +49,88 @@ func TestToProtoToolCall_MapsNameAndStatus(t *testing.T) {
 // user nothing. These cover both halves of the fix: the drain-and-deduct, and
 // the non-blocking read that keeps it from being a deadlock.
 
-// fakeCreditRepo records every deduction. Each method fails on a cancelled
-// context, the way a real query does — that is what makes the detached-context
-// test below mean something.
-type fakeCreditRepo struct {
-	deducted []int64
-	err      error
+// The billing fixture runs the REAL credits service over featurelayer's
+// in-memory entitlement stores, so these tests exercise the metering path a
+// deployed turn takes rather than a stand-in for it.
+
+// countingUsage is featurelayer's in-memory usage store with two additions a
+// test needs: it records every increment, and it fails on a cancelled context
+// the way a real query does — which is what makes the detached-context test
+// below mean anything.
+type countingUsage struct {
+	inner      *entitlement.MemUsage
+	increments []int64
+	err        error
 }
 
-func (f *fakeCreditRepo) FindByWorkspace(ctx context.Context, _ string) (postgres.DBWorkspaceCredits, error) {
+func newCountingUsage() *countingUsage {
+	return &countingUsage{inner: entitlement.NewMemUsage()}
+}
+
+func (u *countingUsage) Get(ctx context.Context, key entitlement.UsageKey) (int64, error) {
 	if err := ctx.Err(); err != nil {
-		return postgres.DBWorkspaceCredits{}, err
+		return 0, err
 	}
-	return postgres.DBWorkspaceCredits{MonthlyAllowance: credits.DefaultMonthlyTokenAllowance}, nil
+	return u.inner.Get(ctx, key)
 }
 
-func (f *fakeCreditRepo) Deduct(ctx context.Context, _ string, tokens int64) (postgres.DBWorkspaceCredits, bool, error) {
+func (u *countingUsage) Increment(ctx context.Context, key entitlement.UsageKey, delta, max int64) (int64, bool, error) {
 	if err := ctx.Err(); err != nil {
-		return postgres.DBWorkspaceCredits{}, false, err
+		return 0, false, err
 	}
-	if f.err != nil {
-		return postgres.DBWorkspaceCredits{}, false, f.err
+	if u.err != nil {
+		return 0, false, u.err
 	}
-	f.deducted = append(f.deducted, tokens)
-	return postgres.DBWorkspaceCredits{
-		MonthlyAllowance:   credits.DefaultMonthlyTokenAllowance,
-		CurrentCycleTokens: tokens,
-	}, true, nil
+	u.increments = append(u.increments, delta)
+	return u.inner.Increment(ctx, key, delta, max)
 }
 
-func (f *fakeCreditRepo) ResetCycle(context.Context, string) (postgres.DBWorkspaceCredits, error) {
-	return postgres.DBWorkspaceCredits{}, nil
-}
+// fakeLedger stands in for the token ledger. It is the only collaborator that
+// is still a stand-in: the ledger is a plain append with nothing to model.
+type fakeLedger struct{ rows []credits.UsageLog }
 
-func (f *fakeCreditRepo) Upsert(context.Context, string, int64) (postgres.DBWorkspaceCredits, error) {
-	return postgres.DBWorkspaceCredits{}, nil
-}
-
-// fakePricingRepo has no row for any agent type, so credits.Service falls back
-// to its 1:1 cost — the weighted deduction is then just input+output.
-type fakePricingRepo struct{}
-
-func (fakePricingRepo) FindByAgentType(context.Context, string) (postgres.DBAgentPricing, error) {
-	return postgres.DBAgentPricing{}, pg.ErrNoRows
-}
-
-type fakeUsageRepo struct {
-	rows []postgres.DBTokenUsage
-}
-
-func (f *fakeUsageRepo) Insert(ctx context.Context, log postgres.DBTokenUsage) (postgres.DBTokenUsage, error) {
+func (f *fakeLedger) Insert(ctx context.Context, log credits.UsageLog) error {
 	if err := ctx.Err(); err != nil {
-		return postgres.DBTokenUsage{}, err
+		return err
 	}
 	f.rows = append(f.rows, log)
-	return log, nil
+	return nil
+}
+
+// noPricing has no row for any agent type, so credits.Service falls back to its
+// 1:1 cost — the weighted deduction is then just input+output.
+type noPricing struct{}
+
+func (noPricing) FindByAgentType(context.Context, string) (credits.Pricing, error) {
+	return credits.Pricing{}, errors.New("no pricing row")
+}
+
+// memSubscriptions is the writable half of the subscription port; Seed is the
+// only thing that uses it and these tests never call Seed.
+type memSubscriptions struct{ *entitlement.MemSubscriptions }
+
+func (m memSubscriptions) Upsert(_ context.Context, sub entitlement.Subscription) error {
+	m.Set(sub)
+	return nil
 }
 
 // newBillingHandler builds an AgentHandler with only the credits collaborator
 // wired: runAndFinish's error path touches nothing else, and the stream is
 // never written to on it.
-func newBillingHandler(creditRepo *fakeCreditRepo, usageRepo *fakeUsageRepo) *AgentHandler {
-	return NewAgentHandler(nil, credits.NewService(creditRepo, fakePricingRepo{}, usageRepo), nil)
+func newBillingHandler(t *testing.T, usage *countingUsage, ledger *fakeLedger) *AgentHandler {
+	t.Helper()
+	subs := entitlement.NewMemSubscriptions()
+	subs.Set(entitlement.Subscription{
+		TenantID:      "ws-1",
+		Plan:          features.PlanFree,
+		BillingAnchor: time.Now().UTC(),
+	})
+	engine, err := features.New(subs, usage)
+	if err != nil {
+		t.Fatalf("features.New: %v", err)
+	}
+	svc := credits.NewService(engine, memSubscriptions{subs}, noPricing{}, ledger)
+	return NewAgentHandler(nil, svc, nil)
 }
 
 // oneTurnOfUsage is what runTurn reports for a turn that reached the provider.
@@ -124,14 +144,14 @@ var oneTurnOfUsage = credits.Usage{
 }
 
 func TestRunAndFinish_DeductsOnError(t *testing.T) {
-	creditRepo := &fakeCreditRepo{}
-	usageRepo := &fakeUsageRepo{}
-	h := newBillingHandler(creditRepo, usageRepo)
+	usage := newCountingUsage()
+	ledger := &fakeLedger{}
+	h := newBillingHandler(t, usage, ledger)
 
 	// Any error with a code of its own: the point is that the caller still sees
 	// the failure that actually happened, not a billing artefact.
 	runErr := agent.ErrChoiceNotPending
-	err := h.runAndFinish(context.Background(), "user-1", "ws-1", credits.DefaultMonthlyTokenAllowance, nil,
+	err := h.runAndFinish(context.Background(), "user-1", "ws-1", features.FreeMonthlyTokenAllowance, nil,
 		func(usageCh chan<- credits.Usage) error {
 			usageCh <- oneTurnOfUsage
 			return runErr
@@ -140,14 +160,14 @@ func TestRunAndFinish_DeductsOnError(t *testing.T) {
 	if got := connect.CodeOf(err); got != connect.CodeFailedPrecondition {
 		t.Fatalf("code = %v, want %v; billing must not mask the turn's own failure", got, connect.CodeFailedPrecondition)
 	}
-	if len(creditRepo.deducted) != 1 || creditRepo.deducted[0] != 42 {
-		t.Fatalf("deductions = %v, want exactly one of 42 (12 in + 30 out at the fallback 1:1 cost)", creditRepo.deducted)
+	if len(usage.increments) != 1 || usage.increments[0] != 42 {
+		t.Fatalf("increments = %v, want exactly one of 42 (12 in + 30 out at the fallback 1:1 cost)", usage.increments)
 	}
-	if len(usageRepo.rows) != 1 {
-		t.Fatalf("usage log rows = %d, want 1", len(usageRepo.rows))
+	if len(ledger.rows) != 1 {
+		t.Fatalf("ledger rows = %d, want 1", len(ledger.rows))
 	}
-	if usageRepo.rows[0].WorkspaceID != "ws-1" || usageRepo.rows[0].UserID != "user-1" {
-		t.Fatalf("usage row = %+v, want it attributed to user-1 in ws-1", usageRepo.rows[0])
+	if ledger.rows[0].WorkspaceID != "ws-1" || ledger.rows[0].UserID != "user-1" {
+		t.Fatalf("ledger row = %+v, want it attributed to user-1 in ws-1", ledger.rows[0])
 	}
 }
 
@@ -156,13 +176,13 @@ func TestRunAndFinish_DeductsOnError(t *testing.T) {
 // that failed before it reached the provider sends nothing, so a blocking read
 // would hang the handler — and with it the request goroutine — forever.
 func TestRunAndFinish_NoUsageDoesNotBlock(t *testing.T) {
-	creditRepo := &fakeCreditRepo{}
-	usageRepo := &fakeUsageRepo{}
-	h := newBillingHandler(creditRepo, usageRepo)
+	usage := newCountingUsage()
+	ledger := &fakeLedger{}
+	h := newBillingHandler(t, usage, ledger)
 
 	done := make(chan error, 1)
 	go func() {
-		done <- h.runAndFinish(context.Background(), "user-1", "ws-1", credits.DefaultMonthlyTokenAllowance, nil,
+		done <- h.runAndFinish(context.Background(), "user-1", "ws-1", features.FreeMonthlyTokenAllowance, nil,
 			func(chan<- credits.Usage) error { return agent.ErrChoiceNotPending })
 	}()
 
@@ -175,8 +195,8 @@ func TestRunAndFinish_NoUsageDoesNotBlock(t *testing.T) {
 		t.Fatal("runAndFinish blocked waiting for usage that was never reported")
 	}
 
-	if len(creditRepo.deducted) != 0 || len(usageRepo.rows) != 0 {
-		t.Fatalf("deductions = %v, usage rows = %d; a turn that never reached the provider spent nothing", creditRepo.deducted, len(usageRepo.rows))
+	if len(usage.increments) != 0 || len(ledger.rows) != 0 {
+		t.Fatalf("increments = %v, ledger rows = %d; a turn that never reached the provider spent nothing", usage.increments, len(ledger.rows))
 	}
 }
 
@@ -185,12 +205,12 @@ func TestRunAndFinish_NoUsageDoesNotBlock(t *testing.T) {
 // cancels the request context — so if billing ran on that context it would
 // fail on every occurrence of exactly the scenario it was written for.
 func TestRunAndFinish_BillsAnAbortedTurnOnACancelledContext(t *testing.T) {
-	creditRepo := &fakeCreditRepo{}
-	usageRepo := &fakeUsageRepo{}
-	h := newBillingHandler(creditRepo, usageRepo)
+	usage := newCountingUsage()
+	ledger := &fakeLedger{}
+	h := newBillingHandler(t, usage, ledger)
 
 	ctx, cancel := context.WithCancel(context.Background())
-	err := h.runAndFinish(ctx, "user-1", "ws-1", credits.DefaultMonthlyTokenAllowance, nil,
+	err := h.runAndFinish(ctx, "user-1", "ws-1", features.FreeMonthlyTokenAllowance, nil,
 		func(usageCh chan<- credits.Usage) error {
 			usageCh <- oneTurnOfUsage
 			cancel() // the browser tab closes mid-stream
@@ -201,22 +221,23 @@ func TestRunAndFinish_BillsAnAbortedTurnOnACancelledContext(t *testing.T) {
 	if err == nil {
 		t.Fatal("err = nil, want the aborted turn's failure")
 	}
-	if len(creditRepo.deducted) != 1 {
-		t.Fatalf("deductions = %v, want one; a disconnect must not make the turn free", creditRepo.deducted)
+	if len(usage.increments) != 1 {
+		t.Fatalf("increments = %v, want one; a disconnect must not make the turn free", usage.increments)
 	}
-	if len(usageRepo.rows) != 1 {
-		t.Fatalf("usage log rows = %d, want 1", len(usageRepo.rows))
+	if len(ledger.rows) != 1 {
+		t.Fatalf("ledger rows = %d, want 1", len(ledger.rows))
 	}
 }
 
 // A failed deduction is logged and swallowed: the caller is already returning
 // the turn's own error, and an accounting fault must not overwrite it.
 func TestRunAndFinish_BillingFailureLeavesTheOriginalErrorIntact(t *testing.T) {
-	creditRepo := &fakeCreditRepo{err: errors.New("credits table unreachable")}
-	usageRepo := &fakeUsageRepo{}
-	h := newBillingHandler(creditRepo, usageRepo)
+	usage := newCountingUsage()
+	usage.err = errors.New("usage counter unreachable")
+	ledger := &fakeLedger{}
+	h := newBillingHandler(t, usage, ledger)
 
-	err := h.runAndFinish(context.Background(), "user-1", "ws-1", credits.DefaultMonthlyTokenAllowance, nil,
+	err := h.runAndFinish(context.Background(), "user-1", "ws-1", features.FreeMonthlyTokenAllowance, nil,
 		func(usageCh chan<- credits.Usage) error {
 			usageCh <- oneTurnOfUsage
 			return agent.ErrChoiceNotPending
@@ -225,7 +246,7 @@ func TestRunAndFinish_BillingFailureLeavesTheOriginalErrorIntact(t *testing.T) {
 	if got := connect.CodeOf(err); got != connect.CodeFailedPrecondition {
 		t.Fatalf("code = %v, want %v", got, connect.CodeFailedPrecondition)
 	}
-	if len(usageRepo.rows) != 0 {
-		t.Fatalf("usage log rows = %d, want 0 — the deduction never got that far", len(usageRepo.rows))
+	if len(ledger.rows) != 0 {
+		t.Fatalf("ledger rows = %d, want 0 — the deduction never got that far", len(ledger.rows))
 	}
 }

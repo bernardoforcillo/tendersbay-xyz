@@ -137,6 +137,7 @@ func toProtoIdentity(id company.Identity) *companyv1.CompanyIdentity {
 		CciaaNumber: id.CCIAANumber,
 		Country:     id.Country,
 		Nuts:        id.NUTS,
+		IsSme:       id.IsSME,
 		Attribution: make(map[string]*companyv1.Attribution, len(id.Attribution)),
 	}
 	if id.FoundedYear != nil {
@@ -166,6 +167,7 @@ func fromProtoIdentity(id *companyv1.CompanyIdentity) company.Identity {
 		CCIAANumber: id.CciaaNumber,
 		Country:     id.Country,
 		NUTS:        id.Nuts,
+		IsSME:       id.IsSme,
 	}
 	if id.FoundedYearSet {
 		y := id.FoundedYear
@@ -427,6 +429,15 @@ func toProtoDossier(d company.Dossier) *companyv1.CompanyDossier {
 		PastContracts:  make([]*companyv1.PastContract, len(d.PastContracts)),
 		Registrations:  make([]*companyv1.Registration, len(d.Registrations)),
 		UpdatedAt:      d.UpdatedAt.Format(time.RFC3339),
+	}
+	for _, r := range d.Representatives {
+		out.Representatives = append(out.Representatives, toProtoRepresentative(r))
+	}
+	for _, dec := range d.Declarations {
+		out.Declarations = append(out.Declarations, toProtoDeclaration(dec))
+	}
+	for _, g := range d.NationalGrounds {
+		out.NationalGrounds = append(out.NationalGrounds, toProtoNationalGround(g))
 	}
 	for i, c := range d.SOA {
 		out.Soa[i] = toProtoSOA(c)

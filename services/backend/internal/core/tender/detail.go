@@ -83,8 +83,13 @@ type TenderDetail struct {
 	// Criteria holds the notice-level and every lot's criteria in ONE flat
 	// list, sorted by (lot_ref, ordinal). Use CriteriaForLot for the per-lot
 	// view; see its comment for why nesting them inside Lot would be wrong.
-	Criteria      []AwardCriterion
-	Organizations []Organization
+	Criteria []AwardCriterion
+	// SelectionCriteria are the admissibility conditions the notice or the
+	// source's feed published, notice-level and lot-scoped together in one flat
+	// list keyed by LotRef. Empty is the common case: only sources that publish
+	// qualification inline carry them, which today means Spain's PLACSP.
+	SelectionCriteria []SelectionCriterion
+	Organizations     []Organization
 }
 
 // TenderRef is one sitemap entry.

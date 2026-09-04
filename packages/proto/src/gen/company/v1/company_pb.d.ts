@@ -162,13 +162,24 @@ export declare type CompanyIdentity = Message<"company.v1.CompanyIdentity"> & {
   /**
    * attribution is per-field, keyed by the identity field name: legal_name |
    * vat_number | fiscal_code | legal_form | cciaa | country | nuts |
-   * founded_year. A field with NO entry has never been asserted by anyone,
-   * which is a different state from an empty string a human deliberately
-   * cleared — so a missing key must not be rendered as "unknown provenance".
+   * founded_year | is_sme. A field with NO entry has never been asserted by
+   * anyone, which is a different state from an empty string a human
+   * deliberately cleared — so a missing key must not be rendered as "unknown
+   * provenance".
    *
    * @generated from field: map<string, company.v1.Attribution> attribution = 11;
    */
   attribution: { [key: string]: Attribution };
+
+  /**
+   * is_sme is the operator's SME self-classification (DGUE Part II.A). It is
+   * asked, never derived from headcount and turnover: the EU definition also
+   * counts linked and partner enterprises the dossier knows nothing about.
+   * Whether it was ever answered is attribution["is_sme"], not the bool.
+   *
+   * @generated from field: bool is_sme = 12;
+   */
+  isSme: boolean;
 };
 
 /**
@@ -176,6 +187,167 @@ export declare type CompanyIdentity = Message<"company.v1.CompanyIdentity"> & {
  * Use `create(CompanyIdentitySchema)` to create a new message.
  */
 export declare const CompanyIdentitySchema: GenMessage<CompanyIdentity>;
+
+/**
+ * Representative is one natural person entitled to represent the operator
+ * (DGUE Part II.B). Personal data of a third party: never enters analytics.
+ *
+ * @generated from message company.v1.Representative
+ */
+export declare type Representative = Message<"company.v1.Representative"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * legale_rappresentante | procuratore | direttore_tecnico | free text
+   *
+   * @generated from field: string role = 2;
+   */
+  role: string;
+
+  /**
+   * @generated from field: string given_name = 3;
+   */
+  givenName: string;
+
+  /**
+   * @generated from field: string family_name = 4;
+   */
+  familyName: string;
+
+  /**
+   * RFC3339, "" = unstated
+   *
+   * @generated from field: string birth_date = 5;
+   */
+  birthDate: string;
+
+  /**
+   * @generated from field: string birth_place = 6;
+   */
+  birthPlace: string;
+
+  /**
+   * @generated from field: string address = 7;
+   */
+  address: string;
+
+  /**
+   * @generated from field: string email = 8;
+   */
+  email: string;
+
+  /**
+   * acts under a procura rather than by office
+   *
+   * @generated from field: bool power_of_attorney = 9;
+   */
+  powerOfAttorney: boolean;
+
+  /**
+   * @generated from field: company.v1.Attribution attribution = 10;
+   */
+  attribution?: Attribution | undefined;
+};
+
+/**
+ * Describes the message company.v1.Representative.
+ * Use `create(RepresentativeSchema)` to create a new message.
+ */
+export declare const RepresentativeSchema: GenMessage<Representative>;
+
+/**
+ * Declaration is the operator's answer to ONE Part III.A–C exclusion-ground
+ * question. answer=true means the ground APPLIES; self_cleaning then carries
+ * the Art. 57(6) measures. The server records it as user_stated whatever the
+ * request says — a Part III answer cannot be imported or inferred.
+ *
+ * @generated from message company.v1.Declaration
+ */
+export declare type Declaration = Message<"company.v1.Declaration"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * stable key, e.g. "iii.a.fraud" — see espd.v1
+   *
+   * @generated from field: string criterion = 2;
+   */
+  criterion: string;
+
+  /**
+   * @generated from field: bool answer = 3;
+   */
+  answer: boolean;
+
+  /**
+   * @generated from field: string self_cleaning = 4;
+   */
+  selfCleaning: string;
+
+  /**
+   * @generated from field: company.v1.Attribution attribution = 5;
+   */
+  attribution?: Attribution | undefined;
+};
+
+/**
+ * Describes the message company.v1.Declaration.
+ * Use `create(DeclarationSchema)` to create a new message.
+ */
+export declare const DeclarationSchema: GenMessage<Declaration>;
+
+/**
+ * NationalGround is a Part III.D answer: a purely national exclusion ground,
+ * per Member State and per criterion.
+ *
+ * @generated from message company.v1.NationalGround
+ */
+export declare type NationalGround = Message<"company.v1.NationalGround"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * alpha-2
+   *
+   * @generated from field: string country = 2;
+   */
+  country: string;
+
+  /**
+   * national code, e.g. "art94.c1"
+   *
+   * @generated from field: string criterion = 3;
+   */
+  criterion: string;
+
+  /**
+   * @generated from field: bool answer = 4;
+   */
+  answer: boolean;
+
+  /**
+   * @generated from field: string note = 5;
+   */
+  note: string;
+
+  /**
+   * @generated from field: company.v1.Attribution attribution = 6;
+   */
+  attribution?: Attribution | undefined;
+};
+
+/**
+ * Describes the message company.v1.NationalGround.
+ * Use `create(NationalGroundSchema)` to create a new message.
+ */
+export declare const NationalGroundSchema: GenMessage<NationalGround>;
 
 /**
  * SoaCategory is one attestazione SOA line.
@@ -575,6 +747,21 @@ export declare type CompanyDossier = Message<"company.v1.CompanyDossier"> & {
    * @generated from field: string updated_at = 8;
    */
   updatedAt: string;
+
+  /**
+   * @generated from field: repeated company.v1.Representative representatives = 9;
+   */
+  representatives: Representative[];
+
+  /**
+   * @generated from field: repeated company.v1.Declaration declarations = 10;
+   */
+  declarations: Declaration[];
+
+  /**
+   * @generated from field: repeated company.v1.NationalGround national_grounds = 11;
+   */
+  nationalGrounds: NationalGround[];
 };
 
 /**
@@ -1298,6 +1485,216 @@ export declare type RemoveRegistrationResponse = Message<"company.v1.RemoveRegis
 export declare const RemoveRegistrationResponseSchema: GenMessage<RemoveRegistrationResponse>;
 
 /**
+ * @generated from message company.v1.PutRepresentativeRequest
+ */
+export declare type PutRepresentativeRequest = Message<"company.v1.PutRepresentativeRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: company.v1.Representative representative = 2;
+   */
+  representative?: Representative | undefined;
+};
+
+/**
+ * Describes the message company.v1.PutRepresentativeRequest.
+ * Use `create(PutRepresentativeRequestSchema)` to create a new message.
+ */
+export declare const PutRepresentativeRequestSchema: GenMessage<PutRepresentativeRequest>;
+
+/**
+ * @generated from message company.v1.PutRepresentativeResponse
+ */
+export declare type PutRepresentativeResponse = Message<"company.v1.PutRepresentativeResponse"> & {
+  /**
+   * @generated from field: company.v1.Representative representative = 1;
+   */
+  representative?: Representative | undefined;
+};
+
+/**
+ * Describes the message company.v1.PutRepresentativeResponse.
+ * Use `create(PutRepresentativeResponseSchema)` to create a new message.
+ */
+export declare const PutRepresentativeResponseSchema: GenMessage<PutRepresentativeResponse>;
+
+/**
+ * @generated from message company.v1.RemoveRepresentativeRequest
+ */
+export declare type RemoveRepresentativeRequest = Message<"company.v1.RemoveRepresentativeRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: string id = 2;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message company.v1.RemoveRepresentativeRequest.
+ * Use `create(RemoveRepresentativeRequestSchema)` to create a new message.
+ */
+export declare const RemoveRepresentativeRequestSchema: GenMessage<RemoveRepresentativeRequest>;
+
+/**
+ * @generated from message company.v1.RemoveRepresentativeResponse
+ */
+export declare type RemoveRepresentativeResponse = Message<"company.v1.RemoveRepresentativeResponse"> & {
+};
+
+/**
+ * Describes the message company.v1.RemoveRepresentativeResponse.
+ * Use `create(RemoveRepresentativeResponseSchema)` to create a new message.
+ */
+export declare const RemoveRepresentativeResponseSchema: GenMessage<RemoveRepresentativeResponse>;
+
+/**
+ * @generated from message company.v1.PutDeclarationRequest
+ */
+export declare type PutDeclarationRequest = Message<"company.v1.PutDeclarationRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: company.v1.Declaration declaration = 2;
+   */
+  declaration?: Declaration | undefined;
+};
+
+/**
+ * Describes the message company.v1.PutDeclarationRequest.
+ * Use `create(PutDeclarationRequestSchema)` to create a new message.
+ */
+export declare const PutDeclarationRequestSchema: GenMessage<PutDeclarationRequest>;
+
+/**
+ * @generated from message company.v1.PutDeclarationResponse
+ */
+export declare type PutDeclarationResponse = Message<"company.v1.PutDeclarationResponse"> & {
+  /**
+   * @generated from field: company.v1.Declaration declaration = 1;
+   */
+  declaration?: Declaration | undefined;
+};
+
+/**
+ * Describes the message company.v1.PutDeclarationResponse.
+ * Use `create(PutDeclarationResponseSchema)` to create a new message.
+ */
+export declare const PutDeclarationResponseSchema: GenMessage<PutDeclarationResponse>;
+
+/**
+ * @generated from message company.v1.RemoveDeclarationRequest
+ */
+export declare type RemoveDeclarationRequest = Message<"company.v1.RemoveDeclarationRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: string id = 2;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message company.v1.RemoveDeclarationRequest.
+ * Use `create(RemoveDeclarationRequestSchema)` to create a new message.
+ */
+export declare const RemoveDeclarationRequestSchema: GenMessage<RemoveDeclarationRequest>;
+
+/**
+ * @generated from message company.v1.RemoveDeclarationResponse
+ */
+export declare type RemoveDeclarationResponse = Message<"company.v1.RemoveDeclarationResponse"> & {
+};
+
+/**
+ * Describes the message company.v1.RemoveDeclarationResponse.
+ * Use `create(RemoveDeclarationResponseSchema)` to create a new message.
+ */
+export declare const RemoveDeclarationResponseSchema: GenMessage<RemoveDeclarationResponse>;
+
+/**
+ * @generated from message company.v1.PutNationalGroundRequest
+ */
+export declare type PutNationalGroundRequest = Message<"company.v1.PutNationalGroundRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: company.v1.NationalGround national_ground = 2;
+   */
+  nationalGround?: NationalGround | undefined;
+};
+
+/**
+ * Describes the message company.v1.PutNationalGroundRequest.
+ * Use `create(PutNationalGroundRequestSchema)` to create a new message.
+ */
+export declare const PutNationalGroundRequestSchema: GenMessage<PutNationalGroundRequest>;
+
+/**
+ * @generated from message company.v1.PutNationalGroundResponse
+ */
+export declare type PutNationalGroundResponse = Message<"company.v1.PutNationalGroundResponse"> & {
+  /**
+   * @generated from field: company.v1.NationalGround national_ground = 1;
+   */
+  nationalGround?: NationalGround | undefined;
+};
+
+/**
+ * Describes the message company.v1.PutNationalGroundResponse.
+ * Use `create(PutNationalGroundResponseSchema)` to create a new message.
+ */
+export declare const PutNationalGroundResponseSchema: GenMessage<PutNationalGroundResponse>;
+
+/**
+ * @generated from message company.v1.RemoveNationalGroundRequest
+ */
+export declare type RemoveNationalGroundRequest = Message<"company.v1.RemoveNationalGroundRequest"> & {
+  /**
+   * @generated from field: string workspace_id = 1;
+   */
+  workspaceId: string;
+
+  /**
+   * @generated from field: string id = 2;
+   */
+  id: string;
+};
+
+/**
+ * Describes the message company.v1.RemoveNationalGroundRequest.
+ * Use `create(RemoveNationalGroundRequestSchema)` to create a new message.
+ */
+export declare const RemoveNationalGroundRequestSchema: GenMessage<RemoveNationalGroundRequest>;
+
+/**
+ * @generated from message company.v1.RemoveNationalGroundResponse
+ */
+export declare type RemoveNationalGroundResponse = Message<"company.v1.RemoveNationalGroundResponse"> & {
+};
+
+/**
+ * Describes the message company.v1.RemoveNationalGroundResponse.
+ * Use `create(RemoveNationalGroundResponseSchema)` to create a new message.
+ */
+export declare const RemoveNationalGroundResponseSchema: GenMessage<RemoveNationalGroundResponse>;
+
+/**
  * @generated from message company.v1.CheckEligibilityRequest
  */
 export declare type CheckEligibilityRequest = Message<"company.v1.CheckEligibilityRequest"> & {
@@ -1571,6 +1968,60 @@ export declare const CompanyService: GenService<{
     methodKind: "unary";
     input: typeof RemoveRegistrationRequestSchema;
     output: typeof RemoveRegistrationResponseSchema;
+  },
+  /**
+   * ESPD/DGUE sections: who signs (Part II.B) and what the operator declares
+   * about the exclusion grounds (Part III). Same write rule as the rest of the
+   * dossier (PermManageWorkspace), plus one the server enforces on its own:
+   * a declaration is always recorded as user_stated — there is no way to
+   * import or infer one.
+   *
+   * @generated from rpc company.v1.CompanyService.PutRepresentative
+   */
+  putRepresentative: {
+    methodKind: "unary";
+    input: typeof PutRepresentativeRequestSchema;
+    output: typeof PutRepresentativeResponseSchema;
+  },
+  /**
+   * @generated from rpc company.v1.CompanyService.RemoveRepresentative
+   */
+  removeRepresentative: {
+    methodKind: "unary";
+    input: typeof RemoveRepresentativeRequestSchema;
+    output: typeof RemoveRepresentativeResponseSchema;
+  },
+  /**
+   * @generated from rpc company.v1.CompanyService.PutDeclaration
+   */
+  putDeclaration: {
+    methodKind: "unary";
+    input: typeof PutDeclarationRequestSchema;
+    output: typeof PutDeclarationResponseSchema;
+  },
+  /**
+   * @generated from rpc company.v1.CompanyService.RemoveDeclaration
+   */
+  removeDeclaration: {
+    methodKind: "unary";
+    input: typeof RemoveDeclarationRequestSchema;
+    output: typeof RemoveDeclarationResponseSchema;
+  },
+  /**
+   * @generated from rpc company.v1.CompanyService.PutNationalGround
+   */
+  putNationalGround: {
+    methodKind: "unary";
+    input: typeof PutNationalGroundRequestSchema;
+    output: typeof PutNationalGroundResponseSchema;
+  },
+  /**
+   * @generated from rpc company.v1.CompanyService.RemoveNationalGround
+   */
+  removeNationalGround: {
+    methodKind: "unary";
+    input: typeof RemoveNationalGroundRequestSchema;
+    output: typeof RemoveNationalGroundResponseSchema;
   },
   /**
    * Eligibility

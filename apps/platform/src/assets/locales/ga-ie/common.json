@@ -326,6 +326,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Do DSAE",
+      "progress": "{{ready}} as {{total}} réimse réidh",
+      "ready": "Réidh le heaspórtáil. Níl aon rud in easnamh.",
+      "companyTodo": "Líon isteach uair amháin — bíonn feidhm aige do gach tairiscint",
+      "companyTodoHint": "Fíricí faoi do chuideachta atá anseo. Freagair uair amháin agus leanfaidh siad ar aghaidh go dtí an chéad tairiscint eile.",
+      "bidTodo": "Don tairiscint seo",
+      "noneLeft": "Níl aon rud fágtha anseo.",
+      "reviewDeclarations": "Déan athbhreithniú ar do dhearbhuithe",
+      "confirmDeclarations": "Deimhnigh do dhearbhuithe",
+      "export": "Easpórtáil",
+      "exportHint": "Osclófar an easpórtáil nuair nach mbeidh aon rud in easnamh."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Níor fhreagair aon duine é seo go fóill.",
+        "not_authoritative": "Tá luach ann, ach níor dhearbhaigh aon duine é — ní iompraíonn an cháipéis seo ach fíricí a dheimhnigh duine.",
+        "stale": "Freagartha, ach níor deimhníodh arís é don tairiscint seo ó athraíodh é."
+      },
+      "openDossier": "Oscail dossier na cuideachta",
+      "openBid": "Líon isteach don tairiscint seo"
+    },
+    "declarations": {
+      "title": "Cuid III — forais eisiaimh",
+      "incomplete": "Níor freagraíodh roinnt forais riamh. Freagair iad i ndossier na cuideachta — uair amháin, do gach tairiscint.",
+      "openDossier": "Oscail dossier na cuideachta",
+      "declaredOn": "Deimhnithe don tairiscint seo ar {{when}}.",
+      "neverConfirmed": "Níor deimhníodh na freagraí seo don tairiscint seo go fóill.",
+      "stale": "D’athraigh freagra tar éis an deimhnithe dheireanaigh. Léigh arís iad agus deimhnigh.",
+      "appliesTitle": "Forais a dhearbhaigh tú a bheith infheidhme",
+      "selfCleaning": "Bearta a rinneadh",
+      "allTitle": "Gach foras",
+      "applies": "Infheidhme",
+      "doesNotApply": "Níl infheidhme",
+      "unanswered": "Gan freagra",
+      "confirm": "Tá — fíor fós don tairiscint seo",
+      "confirming": "Á dheimhniú…",
+      "changed": "Tá rud éigin athraithe",
+      "error": "Níorbh fhéidir deimhniú — bain triail eile as."
+    },
+    "export": {
+      "title": "Easpórtáil",
+      "notReadyHint": "Osclófar an easpórtáil nuair nach mbeidh aon rud in easnamh agus do dhearbhuithe deimhnithe don tairiscint seo.",
+      "exporting": "Á ullmhú…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — an cháipéis le síniú",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Iomlán, i do theanga féin",
+        "xml": "Le hathúsáid agus iompórtáil mar a dtacaítear leis"
+      },
+      "nextStep": "Ansin: síníonn d’ionadaí dlíthiúil go leictreonach é, agus ansin uaslódálann tú é chuig tairseach an údaráis chonarthaigh roimh {{when}}.",
+      "nextStepNoDeadline": "Ansin: síníonn d’ionadaí dlíthiúil go leictreonach é, agus ansin uaslódálann tú é chuig tairseach an údaráis chonarthaigh.",
+      "history": "Easpórtálacha roimhe seo",
+      "historyHint": "Taifeadaimid gur easpórtáil tú, ná an comhad féin riamh. Tógtar easpórtáil nua ó dhossier an lae inniu.",
+      "notEntitled": "Tá easpórtáil an DSAE mar chuid den phlean Pro. Fanann gach rud thuas saor in aisce.",
+      "notReady": "Tá rud éigin fós in easnamh, nó ní mór do dhearbhuithe a dheimhniú arís don tairiscint seo.",
+      "error": "Níorbh fhéidir easpórtáil — bain triail eile as."
+    },
+    "dossier": {
+      "title": "Forais eisiaimh (DSAE Cuid III)",
+      "progress": "{{answered}} as {{total}} freagartha",
+      "intro": "Freagair uair amháin iad. Úsáideann gach tairiscint arís iad — ní dhéanann tú ach a dheimhniú go bhfuil siad fíor fós.",
+      "applies": "Baineann sé linn",
+      "doesNotApply": "Ní bhaineann sé linn",
+      "unanswered": "Gan freagra fós",
+      "selfCleaning": "Bearta a rinneadh (self-cleaning)",
+      "selfCleaningHint": "Cad a rinne tú faoi — Airteagal 57(6). Léann an t-údarás conarthach é seo sula gcinneann sé tú a eisiamh.",
+      "statedAt": "Dearbhaithe ar {{when}}",
+      "error": "Níorbh fhéidir sábháil — bain triail eile as."
+    },
+    "fields": {
+      "is_sme": "Stádas FBM",
+      "representative": "Ionadaí dlíthiúil",
+      "buyer_name": "Údarás conarthach",
+      "reference": "Tagairt an nós imeachta",
+      "lot_ref": "Beart",
+      "confirmation": "Deimhniú don tairiscint seo",
+      "criterion": "Iarrtha ag an údarás conarthach"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "An nós imeachta",
+        "lots": "Bearta a bhfuil tú ag tairiscint orthu"
+      },
+      "ii": {
+        "a": {
+          "identity": "Aitheantas na cuideachta"
+        },
+        "b": {
+          "representatives": "Ionadaithe dlíthiúla"
+        },
+        "c": {
+          "reliance": "Ag brath ar chumas eintiteas eile"
+        },
+        "d": {
+          "subcontracting": "Fochonraitheoireacht"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Fianú SOA (liosta oifigiúil)",
+          "references": "Tagairtí maidir le hoibreacha sonraithe",
+          "average_annual_manpower": "Meán-daonchumhacht bhliantúil"
+        },
+        "a": {
+          "enrolment_professional_register": "Clárú i gclár gairmiúil iomchuí",
+          "enrolment_trade_register": "Clárú i gclár trádála",
+          "other_registration": "Údarú nó ballraíocht in eagraíocht ar leith a theastaíonn le haghaidh conarthaí seirbhíse"
+        },
+        "b": {
+          "general_yearly_turnover": "Láimhdeachas bliantúil ginearálta",
+          "specific_yearly_turnover": "Láimhdeachas bliantúil sonrach"
+        },
+        "d": {
+          "quality_assurance_certificates": "Deimhnithe ó chomhlachtaí neamhspleácha maidir le caighdeáin dearbhaithe cáilíochta",
+          "environmental_management_certificates": "Deimhnithe ó chomhlachtaí neamhspleácha maidir le córais nó caighdeáin bainistithe comhshaoil"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Rannpháirtíocht in eagraíocht choiriúil",
+          "corruption": "Éilliú",
+          "fraud": "Calaois",
+          "terrorist_offences": "Cionta sceimhlitheoireachta nó cionta a bhaineann le gníomhaíochtaí sceimhlitheoireachta",
+          "money_laundering": "Sciúradh airgid nó maoiniú na sceimhlitheoireachta",
+          "child_labour_human_trafficking": "Fostú páistí agus cineálacha eile gáinneála ar dhaoine"
+        },
+        "b": {
+          "payment_of_taxes": "Sárú oibleagáide a bhaineann le cánacha a íoc",
+          "payment_of_social_security": "Sárú oibleagáide a bhaineann le ranníocaíochtaí slándála sóisialta a íoc"
+        },
+        "c": {
+          "breach_environmental_obligations": "Sárú oibleagáidí i réimsí an dlí comhshaoil",
+          "breach_social_obligations": "Sárú oibleagáidí i réimsí an dlí shóisialta",
+          "breach_labour_obligations": "Sárú oibleagáidí i réimsí an dlí saothair",
+          "bankruptcy": "Féimheacht",
+          "insolvency": "Dócmhainneacht",
+          "arrangement_with_creditors": "Socrú le creidiúnaithe",
+          "analogous_situation": "Cás cosúil le féimheacht faoin dlí náisiúnta",
+          "assets_administered_by_liquidator": "Sócmhainní atá á riaradh ag leachtaitheoir",
+          "business_activities_suspended": "Cuirtear ar fionraí gníomhaíochtaí gnó",
+          "grave_professional_misconduct": "Mí‑iompar gairmiúil tromchúiseach",
+          "agreements_distorting_competition": "Comhaontuithe le hoibreoirí eacnamaíocha eile arb é is aidhm dóibh an iomaíocht a shaobhadh",
+          "conflict_of_interest": "Coinbhleacht leasa mar gheall ar a rannpháirtíocht sa nós imeachta soláthair",
+          "involvement_in_preparation": "Rannpháirtíocht dhíreach nó indíreach in ullmhú an nós imeachta soláthair seo",
+          "early_termination": "Foirceannadh luath, damáistí nó smachtbhannaí inchomparáide eile",
+          "misrepresentation": "Mífhaisnéis, faisnéis a coinníodh siar, gan bheith in ann doiciméid riachtanacha a sholáthar nó faisnéis rúnda a fuarthas maidir leis an nós imeachta seo"
+        },
+        "d": {
+          "purely_national_grounds": "Foras eisiaimh náisiúnta amháin"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Forais a bhaineann le ciontuithe coiriúla",
+        "B": "Forais a bhaineann le cánacha nó ranníocaíochtaí slándála sóisialta a íoc",
+        "C": "Forais a bhaineann le dócmhainneacht, coinbhleachtaí leasa nó mí-iompar gairmiúil"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Sínigh isteach",

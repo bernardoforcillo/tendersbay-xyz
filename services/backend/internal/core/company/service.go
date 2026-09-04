@@ -186,6 +186,8 @@ func identityFieldValue(id Identity, k FieldKey) string {
 			return ""
 		}
 		return strconv.FormatInt(int64(*id.FoundedYear), 10)
+	case FieldIsSME:
+		return strconv.FormatBool(id.IsSME)
 	default:
 		return ""
 	}
@@ -451,6 +453,83 @@ func (s *Service) DeleteRegistration(ctx context.Context, userID, workspaceID, i
 	return s.repo.DeleteRegistration(ctx, workspaceID, id)
 }
 
+// ── ESPD sections: representatives and Part III declarations ────────────────
+
+// PutRepresentative inserts a signatory, or updates one when r.ID is set.
+func (s *Service) PutRepresentative(ctx context.Context, userID, workspaceID string, r Representative) (Representative, error) {
+	if err := s.requireManage(ctx, workspaceID, userID); err != nil {
+		return Representative{}, err
+	}
+	r.Attribution = s.stampAttribution(r.Attribution, ProvenanceUserStated, userID, s.now())
+	if err := r.validate(); err != nil {
+		return Representative{}, err
+	}
+	return s.repo.PutRepresentative(ctx, workspaceID, r)
+}
+
+// DeleteRepresentative removes one signatory.
+func (s *Service) DeleteRepresentative(ctx context.Context, userID, workspaceID, id string) error {
+	if err := s.requireManage(ctx, workspaceID, userID); err != nil {
+		return err
+	}
+	if strings.TrimSpace(id) == "" {
+		return fmt.Errorf("%w: record id is required", ErrInvalidArgument)
+	}
+	return s.repo.DeleteRepresentative(ctx, workspaceID, id)
+}
+
+// PutDeclaration records the operator's answer to one Part III exclusion
+// ground, upserting on the criterion. The provenance is stamped user_stated
+// here and re-checked by validate, so the only way a non-authoritative
+// declaration could reach the repository is a caller that bypassed this
+// service — and the repository port carries the same validate for that case.
+func (s *Service) PutDeclaration(ctx context.Context, userID, workspaceID string, d Declaration) (Declaration, error) {
+	if err := s.requireManage(ctx, workspaceID, userID); err != nil {
+		return Declaration{}, err
+	}
+	d.Attribution = s.stampAttribution(d.Attribution, ProvenanceUserStated, userID, s.now())
+	if err := d.validate(); err != nil {
+		return Declaration{}, err
+	}
+	return s.repo.PutDeclaration(ctx, workspaceID, d)
+}
+
+// DeleteDeclaration withdraws an answer; the question becomes unanswered again.
+func (s *Service) DeleteDeclaration(ctx context.Context, userID, workspaceID, id string) error {
+	if err := s.requireManage(ctx, workspaceID, userID); err != nil {
+		return err
+	}
+	if strings.TrimSpace(id) == "" {
+		return fmt.Errorf("%w: record id is required", ErrInvalidArgument)
+	}
+	return s.repo.DeleteDeclaration(ctx, workspaceID, id)
+}
+
+// PutNationalGround records a Part III.D answer, upserting on (country,
+// criterion). Same provenance wall as PutDeclaration.
+func (s *Service) PutNationalGround(ctx context.Context, userID, workspaceID string, g NationalGround) (NationalGround, error) {
+	if err := s.requireManage(ctx, workspaceID, userID); err != nil {
+		return NationalGround{}, err
+	}
+	g.Country = strings.ToUpper(strings.TrimSpace(g.Country))
+	g.Attribution = s.stampAttribution(g.Attribution, ProvenanceUserStated, userID, s.now())
+	if err := g.validate(); err != nil {
+		return NationalGround{}, err
+	}
+	return s.repo.PutNationalGround(ctx, workspaceID, g)
+}
+
+// DeleteNationalGround withdraws a Part III.D answer.
+func (s *Service) DeleteNationalGround(ctx context.Context, userID, workspaceID, id string) error {
+	if err := s.requireManage(ctx, workspaceID, userID); err != nil {
+		return err
+	}
+	if strings.TrimSpace(id) == "" {
+		return fmt.Errorf("%w: record id is required", ErrInvalidArgument)
+	}
+	return s.repo.DeleteNationalGround(ctx, workspaceID, id)
+}
+
 // ── Just-in-time capture ────────────────────────────────────────────────────
 
 // RecordFact is the JIT capture entry point shared by the agent tool and the
@@ -612,6 +691,12 @@ func applyIdentityField(id *Identity, fact IdentityFact) error {
 		}
 		y32 := int32(y)
 		id.FoundedYear = &y32
+	case FieldIsSME:
+		b, err := strconv.ParseBool(strings.ToLower(v))
+		if err != nil {
+			return fmt.Errorf("%w: is_sme %q is not a boolean", ErrInvalidArgument, fact.Value)
+		}
+		id.IsSME = b
 	default:
 		return fmt.Errorf("%w: %q", ErrUnknownFieldKey, fact.Key)
 	}
@@ -741,6 +826,24 @@ func (s *Service) CheckEligibility(ctx context.Context, userID, workspaceID stri
 	if err != nil {
 		return Assessment{}, err
 	}
+
+	// The criteria the source itself published, merged in after the captured
+	// ones. They are derived on read from tender-owned rows rather than stored
+	// per workspace: the notice's requirement is a fact about the tender, true
+	// for every tenant, so persisting a copy per workspace would duplicate rows
+	// and mis-model who owns them.
+	//
+	// No attempt is made to dedupe them against captured requirements. A
+	// published entry is prose and a captured one is a parsed payload; matching
+	// the two would mean deciding that "volumen anual de negocios igual o
+	// superior a 309.552,00 €" is the same requirement as a turnover threshold
+	// somebody typed, which is the extraction problem this whole path declines
+	// to pretend it has solved. Showing both, clearly sourced, is the honest
+	// shape.
+	reqs = append(reqs, filterByLot(
+		RequirementsFromSelectionCriteria(workspaceID, tenderID, detail.SelectionCriteria),
+		lotRef,
+	)...)
 
 	a := Evaluate(reqs, dossier, detail.Deadline, s.now())
 	a.TenderID = tenderID

@@ -28,7 +28,7 @@ func (h *AuthHandler) SignUp(ctx context.Context, req *connect.Request[authv1.Si
 }
 
 func (h *AuthHandler) Login(ctx context.Context, req *connect.Request[authv1.LoginRequest]) (*connect.Response[authv1.LoginResponse], error) {
-	result, err := h.svc.Login(ctx, req.Msg.Email, req.Msg.Password, ClientIPFromContext(ctx))
+	result, err := h.svc.Login(ctx, req.Msg.Email, req.Msg.Password, ClientIPFromContext(ctx), req.Header().Get("User-Agent"))
 	if err != nil {
 		return nil, toConnectError(err)
 	}

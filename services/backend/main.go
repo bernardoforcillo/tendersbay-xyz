@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	dropsstore "github.com/bernardoforcillo/authlayer/store/drops"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/knowledge"
 	"github.com/bernardoforcillo/tendersbay-xyz/go-services/telemetry"
 	"github.com/joho/godotenv"
@@ -18,12 +19,16 @@ import (
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
 	bidv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1/bidv1connect"
 	companyv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/company/v1/companyv1connect"
+	espdv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/espd/v1/espdv1connect"
 	tenderv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
 	workspacev1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1/workspacev1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/email"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/edm21"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/edm4"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/pdf"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/httpapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/probe"
@@ -36,6 +41,8 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/espd"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
@@ -79,23 +86,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	// authStore is authlayer's own PostgreSQL store, pointed at the users,
+	// sessions and verifications tables migration 0012 shaped for it. It owns
+	// every credential column; userRepo below owns display_name and nothing
+	// else, so no column has two writers.
+	authStore := dropsstore.NewAuthStore(db)
 	userRepo := postgres.NewUserRepo(db)
-	sessionRepo := postgres.NewSessionRepo(db)
-	evRepo := postgres.NewEVRepo(db)
-	prRepo := postgres.NewPRRepo(db)
-
-	workspaceRepo := postgres.NewWorkspaceRepo(db)
-	roleRepo := postgres.NewRoleRepo(db)
-	memberRepo := postgres.NewMemberRepo(db)
-	emailInviteRepo := postgres.NewEmailInviteRepo(db)
-	inviteLinkRepo := postgres.NewInviteLinkRepo(db)
-	workspaceUow := postgres.NewUnitOfWork(db)
-
-	// Client profile (per-client bid-qualification agent, v1.0) — built here,
-	// before both tenderSvc and agentSvc, since tenderSvc.RecommendForClient
-	// needs it as a ProfileSource.
-	clientProfileRepo := postgres.NewClientProfileRepo(db)
-	clientProfileSvc := clientprofile.NewService(clientProfileRepo, memberRepo)
 
 	var mailer interface {
 		SendVerification(ctx context.Context, to, displayName, link string) error
@@ -138,23 +134,52 @@ func main() {
 		AppBaseURL:    cfg.AppBaseURL,
 	}
 
-	authSvc := auth.NewService(userRepo, sessionRepo, evRepo, prRepo, mailer, rl, authCfg)
-	userSvc := user.NewService(userRepo, sessionRepo, evRepo, mailer, authCfg)
+	authSvc := auth.NewService(authStore, userRepo, mailer, rl, authCfg)
+	// core/user shares authSvc's underlying authlayer service rather than
+	// building a second one over the same store — see user.NewService.
+	userSvc := user.NewService(authSvc.Authlayer(), userRepo, mailer, authCfg)
+
+	// Workspace RBAC and invitations run on authlayer's scope and invite
+	// engines over its drops store. The access engine is built once and shared:
+	// it holds the declared permission surface and the code-defined roles, and
+	// two of them would be two vocabularies.
 	workspaceSvc := workspace.NewService(
-		workspaceRepo, roleRepo, memberRepo, emailInviteRepo, inviteLinkRepo,
-		userRepo, mailer, workspaceUow,
+		workspace.NewAccess(),
+		postgres.NewWorkspaceScopeStore(db),
+		postgres.NewWorkspaceInviteStore(db),
+		postgres.NewWorkspaceRepo(db),
+		userRepo, mailer,
 		workspace.Config{AppBaseURL: cfg.AppBaseURL, InviteExpiry: cfg.WorkspaceInviteExpiry},
 	)
 
-	workbenchWSAccess := postgres.NewWorkbenchWorkspaceAccess(db)
-	workbenchUow := postgres.NewWorkbenchUnitOfWork(db)
+	// Feature management: what a workspace may use and how much of it. The
+	// definitions live in code (internal/core/features); the two stores here
+	// hold the per-workspace half — its subscription and its usage counters.
+	// A failure is fatal rather than degraded: without the entitlement engine
+	// every metered feature would be unmetered.
+	subscriptionRepo := postgres.NewSubscriptionRepo(db)
+	featureEngine, err := features.New(subscriptionRepo, postgres.NewFeatureUsageRepo(db))
+	if err != nil {
+		slog.Error("failed to build the feature engine", "error", err)
+		os.Exit(1)
+	}
+
+	// Client profile (per-client bid-qualification agent, v1.0) — built here,
+	// before both tenderSvc and agentSvc, since tenderSvc.RecommendForClient
+	// needs it as a ProfileSource.
+	clientProfileRepo := postgres.NewClientProfileRepo(db)
+	clientProfileSvc := clientprofile.NewService(clientProfileRepo, workspaceSvc)
+
+	// Workbenches are a NESTED authlayer scope: workspaceSvc.Scope() is the
+	// parent, so "may administer every workbench" and "may create one" are
+	// resolved from the workspace's own grants rather than re-derived here.
 	workbenchSvc := workbench.NewService(
+		workbench.NewAccess(),
+		workspaceSvc.Scope(),
+		postgres.NewWorkbenchScopeStore(db),
 		postgres.NewWorkbenchRepo(db),
-		postgres.NewWorkbenchRoleRepo(db),
-		postgres.NewWorkbenchMemberRepo(db),
 		userRepo, // satisfies workbench.UserLookup (FindByID)
-		workbenchWSAccess,
-		workbenchUow,
+		workspaceAccess{workspaceSvc},
 	)
 
 	// Tender search — Qdrant/Ollama/Redis unreachable at startup is logged,
@@ -229,15 +254,16 @@ func main() {
 	// serves the scheda gara's coverage strip and passage reads from it. The two
 	// belong on one service for the client: a passage without the coverage that
 	// qualifies it is exactly the pairing core/document refuses to break.
-	tenderHandler := connectapi.NewTenderHandler(tenderSvc, memberRepo, documentSvc)
+	tenderHandler := connectapi.NewTenderHandler(tenderSvc, workspaceSvc, documentSvc)
 
 	// Company dossier + eligibility. tenderSvc supplies the submission deadline
 	// (without it an expiring attestation reads as met) and documentSvc supplies
 	// the coverage the assessment carries, so ignorance is reported as ignorance
 	// rather than as a clean bill of health.
+	companyRepo := postgres.NewCompanyRepo(db)
 	companySvc := company.NewService(
-		postgres.NewCompanyRepo(db), postgres.NewRequirementRepo(db),
-		memberRepo, tenderSvc, documentSvc,
+		companyRepo, postgres.NewRequirementRepo(db),
+		workspaceSvc, tenderSvc, documentSvc,
 	)
 
 	// Bid lifecycle (workbench-bando-hub) — consumes workbenchSvc for access
@@ -248,7 +274,6 @@ func main() {
 
 	// Agent / chat service
 	chatRepo := postgres.NewChatRepo(db)
-	creditRepo := postgres.NewWorkspaceCreditRepo(db)
 	pricingRepo := postgres.NewAgentPricingRepo(db)
 	usageRepo := postgres.NewTokenUsageRepo(db)
 
@@ -266,16 +291,41 @@ func main() {
 		slog.Warn("could not determine the pod name; agent turns will record an empty pod", "error", err)
 	}
 
-	creditSvc := credits.NewService(creditRepo, pricingRepo, usageRepo)
-	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, memberRepo, workbenchSvc, tenderSvc, documentSvc, companySvc, clientProfileSvc, pod)
+	creditSvc := credits.NewService(featureEngine, subscriptionRepo, pricingRepo, usageRepo)
+	agentSvc := agent.NewService(agentRegistry, chatRepo, creditSvc, workspaceSvc, workbenchSvc, tenderSvc, documentSvc, companySvc, clientProfileSvc, pod)
 
 	authHandler := connectapi.NewAuthHandler(authSvc, int(cfg.RefreshExpiry.Seconds()))
 	userHandler := connectapi.NewUserHandler(userSvc)
 	workspaceHandler := connectapi.NewWorkspaceHandler(workspaceSvc, creditSvc, clientProfileSvc)
 	workbenchHandler := connectapi.NewWorkbenchHandler(workbenchSvc)
-	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, memberRepo)
+	agentHandler := connectapi.NewAgentHandler(agentSvc, creditSvc, workspaceSvc)
 	bidHandler := connectapi.NewBidHandler(bidSvc)
 	companyHandler := connectapi.NewCompanyHandler(companySvc)
+
+	// ESPD / DGUE. The service reads the dossier through companySvc and the
+	// per-bid data through the bid repository, authorizes through workbenchSvc
+	// exactly as bidSvc does, and gates the EXPORT (never the preview) on the
+	// espd.export entitlement.
+	//
+	// Two serializers and one renderer: the same composed document goes out as
+	// ESPD-EDM 2.1.1 for Italian platforms, as 4.1.0 for eForms-era buyers, and
+	// as the PDF a legal representative signs.
+	espdStore := postgres.NewEspdStore(db)
+	// The dossier is read through the REPOSITORY and not through companySvc:
+	// the workbench gate has already run, and workbench membership implies
+	// workspace membership (the workbench scope is nested under the workspace),
+	// so re-asking the workspace would be a second answer to a settled
+	// question — and one the ESPD service has no user-facing way to explain.
+	espdSvc, err := espd.NewService(
+		companyRepo, bidRepo, espdStore, espdStore,
+		workbenchSvc, tenderSvc, featureEngine,
+		[]espd.Serializer{edm21.New(), edm4.New()}, pdf.New(),
+	)
+	if err != nil {
+		slog.Error("wire the ESPD service", "error", err)
+		os.Exit(1)
+	}
+	espdHandler := connectapi.NewEspdHandler(espdSvc)
 
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
@@ -285,6 +335,7 @@ func main() {
 	tenderPath, tenderRPC := tenderv1connect.NewTenderServiceHandler(tenderHandler)
 	bidPath, bidRPC := bidv1connect.NewBidServiceHandler(bidHandler)
 	companyPath, companyRPC := companyv1connect.NewCompanyServiceHandler(companyHandler)
+	espdPath, espdRPC := espdv1connect.NewEspdServiceHandler(espdHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
@@ -297,9 +348,10 @@ func main() {
 	mux.Handle(tenderPath, tenderRPC)
 	mux.Handle(bidPath, bidRPC)
 	mux.Handle(companyPath, companyRPC)
+	mux.Handle(espdPath, espdRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
-	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(cfg.JWTSecret)(connectapi.ClientIPMiddleware(mux)))
+	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(authSvc)(connectapi.ClientIPMiddleware(mux)))
 
 	srv := &http.Server{
 		Addr:         ":" + cfg.Port,
@@ -308,6 +360,15 @@ func main() {
 		WriteTimeout: 5 * time.Minute,
 		IdleTimeout:  120 * time.Second,
 	}
+
+	// Housekeeping: authlayer refuses an expired session, verification or
+	// invitation on read but never removes it, so without this the three tables
+	// only grow. Started after everything it sweeps is built, and stopped by
+	// the same context the server is.
+	startHousekeeping(ctx, housekeepingInterval,
+		namedPurge{"auth", authSvc.PurgeExpired},
+		namedPurge{"invites", workspaceSvc.PurgeExpiredInvites},
+	)
 
 	srvErr := make(chan error, 1)
 	go func() {
@@ -330,6 +391,72 @@ func main() {
 			os.Exit(1)
 		}
 	}
+}
+
+// housekeepingInterval is how often the expired-row sweeps run. Hourly is far
+// more often than it needs to be for correctness — nothing depends on a dead
+// row being gone — and cheap enough that the tables never accumulate a backlog
+// worth noticing.
+const housekeepingInterval = time.Hour
+
+// housekeepingGrace is how long an expired row is kept before being swept.
+//
+// Sweeping at exactly now() would be correct and would read badly: the services
+// answer ErrInviteExpired, ErrLinkExpired and ErrVerificationExpired from the
+// row itself, so deleting it the moment it expires turns "this invitation
+// expired, ask for a new one" into "this invitation does not exist" for anyone
+// arriving after the next tick — and a password-reset link is most often
+// followed exactly then. Thirty days keeps the specific answer for as long as
+// anyone is plausibly still holding the mail, and still bounds the tables:
+// what grows without limit is rows kept forever, not rows kept for a month.
+const housekeepingGrace = 30 * 24 * time.Hour
+
+// namedPurge is one sweep and the name it is logged under.
+type namedPurge struct {
+	name string
+	run  func(ctx context.Context, before time.Time) (int, error)
+}
+
+// startHousekeeping runs each sweep on a ticker until ctx is done. It runs one
+// round immediately: a process that restarts more often than the interval would
+// otherwise never sweep at all.
+//
+// A failing sweep is logged and retried on the next tick, never fatal — falling
+// behind on deleting dead rows is not a reason to take the service down. Each
+// round gets its own timeout so a slow delete cannot wedge the loop.
+func startHousekeeping(ctx context.Context, every time.Duration, purges ...namedPurge) {
+	run := func() {
+		for _, p := range purges {
+			// Shutdown cancels ctx; a sweep started here would only fail on it
+			// and log a warning that says nothing about the service's health.
+			if ctx.Err() != nil {
+				return
+			}
+			roundCtx, cancel := context.WithTimeout(ctx, time.Minute)
+			n, err := p.run(roundCtx, time.Now().UTC().Add(-housekeepingGrace))
+			cancel()
+			if err != nil {
+				slog.WarnContext(ctx, "housekeeping sweep failed", "sweep", p.name, "error", err)
+				continue
+			}
+			if n > 0 {
+				slog.InfoContext(ctx, "housekeeping swept expired rows", "sweep", p.name, "rows", n)
+			}
+		}
+	}
+	go func() {
+		ticker := time.NewTicker(every)
+		defer ticker.Stop()
+		run()
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ticker.C:
+				run()
+			}
+		}
+	}()
 }
 
 // embeddingCacheTTL bounds how long a memoised query embedding lives. Long
@@ -401,6 +528,35 @@ func (a knowledgeBaseAdapter) RelatedByDocID(ctx context.Context, docID string, 
 		out[i] = tender.ScoredChunk{DocID: r.DocID, Score: r.Score}
 	}
 	return out, nil
+}
+
+// workspaceAccess adapts the workspace domain to workbench.WorkspaceAccess.
+// It lives here, in the composition root, rather than in either domain: the
+// workbench package deliberately does not import the workspace package (see
+// its WorkspaceAccess doc), and the workspace package must not learn about
+// workbenches to satisfy it.
+type workspaceAccess struct{ svc *workspace.Service }
+
+func (a workspaceAccess) Lookup(ctx context.Context, workspaceID, userID string) (workbench.WorkspaceInfo, error) {
+	st, err := a.svc.Standing(ctx, workspaceID, userID)
+	if err != nil {
+		return workbench.WorkspaceInfo{}, err
+	}
+	return workbench.WorkspaceInfo{
+		IsMember:      st.IsMember,
+		MayViewShared: st.Permissions.Has(workspace.PermViewWorkbenches),
+		MayManageAll:  st.Permissions.Has(workspace.PermManageWorkbenches),
+	}, nil
+}
+
+// WorkspaceName reads the one column a workbench breadcrumb needs, without the
+// membership and role lookups a standing resolution costs.
+func (a workspaceAccess) WorkspaceName(ctx context.Context, workspaceID string) (string, error) {
+	ws, err := a.svc.Scope().Container(ctx, workspaceID)
+	if err != nil {
+		return "", err
+	}
+	return ws.Name, nil
 }
 
 // unavailableRateLimiter denies every request with an explanatory error,

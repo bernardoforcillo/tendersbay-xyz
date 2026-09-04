@@ -9,29 +9,21 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
 )
 
+// UserRepo is the profile half of the users table: the columns authlayer's
+// auth.Store has no opinion about (display_name) plus the ones a caller needs
+// alongside a name to render a member row. Everything credential-shaped —
+// creating the row, moving the address, rotating the hash, stamping
+// verification, anonymizing — belongs to authlayer's store and is deliberately
+// absent here, so there is exactly one writer per column.
 type UserRepo struct{ db *pg.DB }
 
 func NewUserRepo(db *pg.DB) *UserRepo { return &UserRepo{db: db} }
 
-func (r *UserRepo) Create(ctx context.Context, u auth.User) (auth.User, error) {
-	var row DBUser
-	err := r.db.Insert(Users).
-		Row(
-			UserEmail.Val(u.Email),
-			UserPasswordHash.Val(u.PasswordHash),
-			UserDisplayName.Val(u.DisplayName),
-		).
-		Returning(UserID, UserEmail, UserPasswordHash, UserDisplayName, UserEmailVerifiedAt, UserCreatedAt, UserUpdatedAt).
-		One(ctx, &row)
-	if err != nil {
-		return auth.User{}, err
-	}
-	return dbUserToDomain(row), nil
-}
+var _ auth.UserRepository = (*UserRepo)(nil)
 
 func (r *UserRepo) FindByEmail(ctx context.Context, email string) (auth.User, error) {
 	var row DBUser
-	err := r.db.Select().From(Users).Where(UserEmail.Eq(email)).One(ctx, &row)
+	err := r.db.Select().From(Users).Where(UserEmail.Eq(auth.NormalizeEmail(email))).One(ctx, &row)
 	if errors.Is(err, pg.ErrNoRows) {
 		return auth.User{}, auth.ErrNotFound
 	}
@@ -53,51 +45,57 @@ func (r *UserRepo) FindByID(ctx context.Context, id string) (auth.User, error) {
 	return dbUserToDomain(row), nil
 }
 
-func (r *UserRepo) UpdatePassword(ctx context.Context, id, hash string) error {
-	_, err := r.db.Update(Users).
-		Set(UserPasswordHash.Val(hash), UserUpdatedAt.Val(time.Now())).
-		Where(UserID.Eq(id)).
-		Exec(ctx)
-	return err
+// FindByIDs resolves many profiles in one query, keyed by id. Missing ids are
+// simply absent from the map — the caller decides whether that is an error.
+//
+// It exists because the member listings had it the other way round: one query
+// per member, on a page whose whole job is to show all of them.
+func (r *UserRepo) FindByIDs(ctx context.Context, ids []string) (map[string]auth.User, error) {
+	out := make(map[string]auth.User, len(ids))
+	if len(ids) == 0 {
+		return out, nil
+	}
+	var rows []DBUser
+	if err := r.db.Select().From(Users).Where(UserID.In(ids...)).All(ctx, &rows); err != nil {
+		return nil, err
+	}
+	for _, row := range rows {
+		out[row.ID] = dbUserToDomain(row)
+	}
+	return out, nil
 }
 
-func (r *UserRepo) UpdateEmail(ctx context.Context, id, email string) error {
-	_, err := r.db.Update(Users).
-		Set(UserEmail.Val(email), UserUpdatedAt.Val(time.Now())).
-		Where(UserID.Eq(id)).
-		Exec(ctx)
-	return err
-}
-
+// UpdateDisplayName is the only write this repository still owns. It does not
+// touch updated_at's credential meaning — authlayer stamps that column on every
+// write of its own — but it does bump it, because a renamed profile is a
+// changed row and leaving the stamp behind would make the two writers disagree
+// about when the row last moved.
 func (r *UserRepo) UpdateDisplayName(ctx context.Context, id, displayName string) error {
-	_, err := r.db.Update(Users).
-		Set(UserDisplayName.Val(displayName), UserUpdatedAt.Val(time.Now())).
+	res, err := r.db.Update(Users).
+		Set(UserDisplayName.Val(displayName), UserUpdatedAt.Val(time.Now().UTC())).
 		Where(UserID.Eq(id)).
 		Exec(ctx)
-	return err
-}
-
-func (r *UserRepo) MarkEmailVerified(ctx context.Context, id string, at time.Time) error {
-	_, err := r.db.Update(Users).
-		Set(UserEmailVerifiedAt.Val(at), UserUpdatedAt.Val(time.Now())).
-		Where(UserID.Eq(id)).
-		Exec(ctx)
-	return err
-}
-
-func (r *UserRepo) Delete(ctx context.Context, id string) error {
-	_, err := r.db.Delete(Users).Where(UserID.Eq(id)).Exec(ctx)
-	return err
+	if err != nil {
+		return err
+	}
+	n, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return auth.ErrNotFound
+	}
+	return nil
 }
 
 func dbUserToDomain(row DBUser) auth.User {
 	return auth.User{
 		ID:              row.ID,
 		Email:           row.Email,
-		PasswordHash:    row.PasswordHash,
 		DisplayName:     row.DisplayName,
 		EmailVerifiedAt: row.EmailVerifiedAt,
 		CreatedAt:       row.CreatedAt,
 		UpdatedAt:       row.UpdatedAt,
+		DeletedAt:       row.DeletedAt,
 	}
 }

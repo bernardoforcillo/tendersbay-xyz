@@ -318,6 +318,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Jūsu ESPD",
+      "progress": "Gatavi {{ready}} no {{total}} laukiem",
+      "ready": "Gatavs eksportēšanai. Nekas netrūkst.",
+      "companyTodo": "Aizpilda vienreiz — attiecas uz katru iepirkumu",
+      "companyTodoHint": "Šie ir dati par jūsu uzņēmumu. Atbildiet vienreiz, un tie pāries uz nākamo iepirkumu.",
+      "bidTodo": "Šim iepirkumam",
+      "noneLeft": "Šeit vairs nekas netrūkst.",
+      "reviewDeclarations": "Pārskatīt apliecinājumus",
+      "confirmDeclarations": "Apstiprināt apliecinājumus",
+      "export": "Eksportēt",
+      "exportHint": "Eksports kļūst pieejams, kad nekas netrūkst."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Uz to vēl neviens nav atbildējis.",
+        "not_authoritative": "Vērtība pastāv, bet neviens to nav apliecinājis — šajā dokumentā ir tikai cilvēka apstiprināti fakti.",
+        "stale": "Atbildēts, bet pēc pēdējām izmaiņām nav atkārtoti apstiprināts šim iepirkumam."
+      },
+      "openDossier": "Atvērt uzņēmuma lietu",
+      "openBid": "Aizpildīt šim iepirkumam"
+    },
+    "declarations": {
+      "title": "III daļa — izslēgšanas pamati",
+      "incomplete": "Uz dažiem pamatiem nekad nav atbildēts. Atbildiet uzņēmuma lietā — vienreiz, visiem iepirkumiem.",
+      "openDossier": "Atvērt uzņēmuma lietu",
+      "declaredOn": "Apstiprināts šim iepirkumam {{when}}.",
+      "neverConfirmed": "Šīs atbildes vēl nav apstiprinātas šim iepirkumam.",
+      "stale": "Pēc pēdējā apstiprinājuma kāda atbilde mainījās. Izlasiet tās vēlreiz un apstipriniet.",
+      "appliesTitle": "Pamati, kurus norādījāt kā piemērojamus",
+      "selfCleaning": "Veiktie pasākumi",
+      "allTitle": "Visi pamati",
+      "applies": "Piemērojams",
+      "doesNotApply": "Nav piemērojams",
+      "unanswered": "Bez atbildes",
+      "confirm": "Jā — joprojām spēkā šim iepirkumam",
+      "confirming": "Apstiprina…",
+      "changed": "Kaut kas ir mainījies",
+      "error": "Neizdevās apstiprināt — mēģiniet vēlreiz."
+    },
+    "export": {
+      "title": "Eksports",
+      "notReadyHint": "Eksports kļūst pieejams, kad nekas netrūkst un apliecinājumi ir apstiprināti šim iepirkumam.",
+      "exporting": "Sagatavo…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — parakstāmais dokuments",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Pilnīgs, jūsu valodā",
+        "xml": "Atkārtotai izmantošanai un importam, kur tas tiek atbalstīts"
+      },
+      "nextStep": "Tālāk: jūsu likumiskais pārstāvis to paraksta elektroniski, un pēc tam jūs to augšupielādējat pasūtītāja portālā pirms {{when}}.",
+      "nextStepNoDeadline": "Tālāk: jūsu likumiskais pārstāvis to paraksta elektroniski, un pēc tam jūs to augšupielādējat pasūtītāja portālā.",
+      "history": "Iepriekšējie eksporti",
+      "historyHint": "Mēs reģistrējam, ka esat eksportējis, nekad pašu failu. Jauns eksports tiek izveidots no šodienas lietas.",
+      "notEntitled": "ESPD eksports ietilpst Pro plānā. Viss, ko redzat augstāk, paliek bez maksas.",
+      "notReady": "Kaut kas vēl trūkst, vai arī apliecinājumi šim iepirkumam ir jāapstiprina atkārtoti.",
+      "error": "Neizdevās eksportēt — mēģiniet vēlreiz."
+    },
+    "dossier": {
+      "title": "Izslēgšanas pamati (ESPD III daļa)",
+      "progress": "Atbildēts {{answered}} no {{total}}",
+      "intro": "Atbildiet vienreiz. Katrs iepirkums tos izmanto atkārtoti — jūs tikai apstiprināt, ka tie joprojām ir spēkā.",
+      "applies": "Attiecas uz mums",
+      "doesNotApply": "Uz mums neattiecas",
+      "unanswered": "Vēl bez atbildes",
+      "selfCleaning": "Veiktie pasākumi (self-cleaning)",
+      "selfCleaningHint": "Ko jūs esat darījuši šajā sakarā — 57. panta 6. punkts. Pasūtītājs to izlasa pirms lēmuma par izslēgšanu.",
+      "statedAt": "Apliecināts {{when}}",
+      "error": "Neizdevās saglabāt — mēģiniet vēlreiz."
+    },
+    "fields": {
+      "is_sme": "MVU statuss",
+      "representative": "Likumiskais pārstāvis",
+      "buyer_name": "Pasūtītājs",
+      "reference": "Iepirkuma identifikācijas numurs",
+      "lot_ref": "Daļa",
+      "confirmation": "Apstiprinājums šim iepirkumam",
+      "criterion": "Pieprasa pasūtītājs"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Iepirkuma procedūra",
+        "lots": "Daļas, uz kurām piesakāties"
+      },
+      "ii": {
+        "a": {
+          "identity": "Uzņēmuma identifikācija"
+        },
+        "b": {
+          "representatives": "Likumiskie pārstāvji"
+        },
+        "c": {
+          "reliance": "Paļaušanās uz citu subjektu spējām"
+        },
+        "d": {
+          "subcontracting": "Apakšuzņēmuma līgumi"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA apliecinājums (oficiālais saraksts)",
+          "references": "Atsauces uz konkrētiem būvdarbiem",
+          "average_annual_manpower": "Vidējais gadā nodarbināto skaits"
+        },
+        "a": {
+          "enrolment_professional_register": "Reģistrācija attiecīgajā profesionālajā reģistrā",
+          "enrolment_trade_register": "Reģistrācija komercreģistrā",
+          "other_registration": "Pakalpojumu līgumiem nepieciešamā atļauja vai dalība konkrētā organizācijā"
+        },
+        "b": {
+          "general_yearly_turnover": "Gada vispārējais apgrozījums",
+          "specific_yearly_turnover": "Konkrēts gada apgrozījums"
+        },
+        "d": {
+          "quality_assurance_certificates": "Neatkarīgu struktūru sertifikāti par kvalitātes nodrošināšanas standartiem",
+          "environmental_management_certificates": "Neatkarīgu struktūru sertifikāti par vides vadības sistēmām vai standartiem"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Dalība noziedzīgā organizācijā",
+          "corruption": "Korupcija",
+          "fraud": "Krāpšana",
+          "terrorist_offences": "Teroristu nodarījumi vai nodarījumi, kas saistīti ar teroristu darbībām",
+          "money_laundering": "Nelikumīgi iegūtu līdzekļu legalizēšana vai teroristu finansēšana",
+          "child_labour_human_trafficking": "Bērnu darbs un citi cilvēku tirdzniecības veidi"
+        },
+        "b": {
+          "payment_of_taxes": "Nodokļu maksāšanas pienākuma pārkāpums",
+          "payment_of_social_security": "Sociālā nodrošinājuma iemaksu maksāšanas pienākuma pārkāpums"
+        },
+        "c": {
+          "breach_environmental_obligations": "Pienākumu neizpilde vides tiesību jomā",
+          "breach_social_obligations": "Pienākumu neizpilde sociālo tiesību jomā",
+          "breach_labour_obligations": "Pienākumu neizpilde darba tiesību jomā",
+          "bankruptcy": "Bankrots",
+          "insolvency": "Maksātnespēja",
+          "arrangement_with_creditors": "Vienošanās ar kreditoriem",
+          "analogous_situation": "Līdzīga situācija kā bankrots saskaņā ar valsts tiesību aktiem",
+          "assets_administered_by_liquidator": "Aktīvi, kurus pārvalda likvidators",
+          "business_activities_suspended": "Uzņēmējdarbību aptur",
+          "grave_professional_misconduct": "Smags pārkāpums saistībā ar profesionālo rīcību",
+          "agreements_distorting_competition": "Nolīgumi ar citiem ekonomikas dalībniekiem, kuru mērķis ir izkropļot konkurenci",
+          "conflict_of_interest": "Interešu konflikts saistībā ar tās dalību iepirkuma procedūrā",
+          "involvement_in_preparation": "Tieša vai netieša iesaistīšanās šīs iepirkuma procedūras sagatavošanā;",
+          "early_termination": "Pirmstermiņa izbeigšana, zaudējumu atlīdzināšana vai citas līdzīgas sankcijas",
+          "misrepresentation": "Nepatiesas informācijas sniegšana, informācijas noklusēšana, nespēja sniegt pieprasītos dokumentus vai iegūta konfidenciāla informācija šajā procedūrā"
+        },
+        "d": {
+          "purely_national_grounds": "Tikai valsts tiesību normās paredzēti izslēgšanas iemesli"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Ar krimināli notiesājošu spriedumu saistīti iemesli",
+        "B": "Ar nodokļu vai sociālā nodrošinājuma iemaksu maksājumiem saistīti iemesli",
+        "C": "Ar maksātnespēju, interešu konfliktiem vai profesionālās darbības pārkāpumiem saistīti iemesli"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Pieteikties",

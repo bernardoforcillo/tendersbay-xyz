@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Uw UEA",
+      "progress": "{{ready}} van {{total}} velden klaar",
+      "ready": "Klaar om te exporteren. Er ontbreekt niets.",
+      "companyTodo": "Eenmalig invullen — geldt voor elke aanbesteding",
+      "companyTodoHint": "Dit zijn gegevens over uw onderneming. Eenmaal beantwoord gelden ze ook voor de volgende aanbesteding.",
+      "bidTodo": "Voor deze aanbesteding",
+      "noneLeft": "Hier ontbreekt niets meer.",
+      "reviewDeclarations": "Verklaringen nakijken",
+      "confirmDeclarations": "Verklaringen bevestigen",
+      "export": "Exporteren",
+      "exportHint": "De export komt vrij zodra er niets meer ontbreekt."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Dit heeft nog niemand beantwoord.",
+        "not_authoritative": "Er is een waarde, maar niemand heeft die verklaard — dit document bevat alleen feiten die een persoon heeft bevestigd.",
+        "stale": "Beantwoord, maar sinds de laatste wijziging niet opnieuw bevestigd voor deze aanbesteding."
+      },
+      "openDossier": "Bedrijfsdossier openen",
+      "openBid": "Invullen voor deze aanbesteding"
+    },
+    "declarations": {
+      "title": "Deel III — uitsluitingsgronden",
+      "incomplete": "Sommige gronden zijn nooit beantwoord. Beantwoord ze in het bedrijfsdossier — één keer, voor alle aanbestedingen.",
+      "openDossier": "Bedrijfsdossier openen",
+      "declaredOn": "Op {{when}} bevestigd voor deze aanbesteding.",
+      "neverConfirmed": "Deze antwoorden zijn nog niet bevestigd voor deze aanbesteding.",
+      "stale": "Een antwoord is na de laatste bevestiging gewijzigd. Lees ze opnieuw en bevestig.",
+      "appliesTitle": "Gronden die u van toepassing hebt verklaard",
+      "selfCleaning": "Genomen maatregelen",
+      "allTitle": "Alle gronden",
+      "applies": "Van toepassing",
+      "doesNotApply": "Niet van toepassing",
+      "unanswered": "Onbeantwoord",
+      "confirm": "Ja — nog steeds juist voor deze aanbesteding",
+      "confirming": "Bevestigen…",
+      "changed": "Er is iets veranderd",
+      "error": "Bevestigen mislukt — probeer het opnieuw."
+    },
+    "export": {
+      "title": "Exporteren",
+      "notReadyHint": "De export komt vrij zodra er niets meer ontbreekt en uw verklaringen voor deze aanbesteding zijn bevestigd.",
+      "exporting": "Voorbereiden…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — het document dat u ondertekent",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Volledig, in uw taal",
+        "xml": "Voor hergebruik en import waar ondersteund"
+      },
+      "nextStep": "Daarna: uw wettelijke vertegenwoordiger ondertekent het elektronisch en vervolgens uploadt u het vóór {{when}} in het portaal van de aanbestedende dienst.",
+      "nextStepNoDeadline": "Daarna: uw wettelijke vertegenwoordiger ondertekent het elektronisch en vervolgens uploadt u het in het portaal van de aanbestedende dienst.",
+      "history": "Eerdere exports",
+      "historyHint": "We leggen vast dát u hebt geëxporteerd, nooit het bestand zelf. Opnieuw exporteren bouwt het op uit het dossier van vandaag.",
+      "notEntitled": "De UEA-export hoort bij het Pro-abonnement. Alles hierboven blijft gratis.",
+      "notReady": "Er ontbreekt nog iets, of uw verklaringen moeten opnieuw worden bevestigd voor deze aanbesteding.",
+      "error": "Exporteren mislukt — probeer het opnieuw."
+    },
+    "dossier": {
+      "title": "Uitsluitingsgronden (UEA deel III)",
+      "progress": "{{answered}} van {{total}} beantwoord",
+      "intro": "Beantwoord ze één keer. Elke aanbesteding hergebruikt ze — u bevestigt alleen dat ze nog kloppen.",
+      "applies": "Op ons van toepassing",
+      "doesNotApply": "Niet op ons van toepassing",
+      "unanswered": "Nog niet beantwoord",
+      "selfCleaning": "Genomen maatregelen (self-cleaning)",
+      "selfCleaningHint": "Wat u eraan hebt gedaan — artikel 57, lid 6. De aanbestedende dienst leest dit voordat hij besluit u uit te sluiten.",
+      "statedAt": "Verklaard op {{when}}",
+      "error": "Opslaan mislukt — probeer het opnieuw."
+    },
+    "fields": {
+      "is_sme": "Mkb-status",
+      "representative": "Wettelijke vertegenwoordiger",
+      "buyer_name": "Aanbestedende dienst",
+      "reference": "Kenmerk van de procedure",
+      "lot_ref": "Perceel",
+      "confirmation": "Bevestiging voor deze aanbesteding",
+      "criterion": "Gevraagd door de aanbestedende dienst"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "De procedure",
+        "lots": "Percelen waarop u inschrijft"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identificatie van de onderneming"
+        },
+        "b": {
+          "representatives": "Wettelijke vertegenwoordigers"
+        },
+        "c": {
+          "reliance": "Beroep op de draagkracht van andere entiteiten"
+        },
+        "d": {
+          "subcontracting": "Onderaanneming"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA-attest (officiële lijst)",
+          "references": "Referenties ten aanzien van de vastgestelde werken",
+          "average_annual_manpower": "Gemiddelde jaarlijkse personeelsbezetting"
+        },
+        "a": {
+          "enrolment_professional_register": "Inschrijving in een relevant beroepsregister",
+          "enrolment_trade_register": "Inschrijving in een handelsregister",
+          "other_registration": "Vergunning of lidmaatschap van een bepaalde organisatie die nodig is voor opdrachten voor diensten"
+        },
+        "b": {
+          "general_yearly_turnover": "Algemene jaaromzet",
+          "specific_yearly_turnover": "Specifieke jaaromzet"
+        },
+        "d": {
+          "quality_assurance_certificates": "Door onafhankelijke instanties opgestelde certificaten over kwaliteitsnormen",
+          "environmental_management_certificates": "Door onafhankelijke instanties opgestelde certificaten over systemen of normen inzake milieubeheer"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Deelname aan een criminele organisatie",
+          "corruption": "Corruptie",
+          "fraud": "Fraude",
+          "terrorist_offences": "Terroristische misdrijven of strafbare feiten in verband met terroristische activiteiten",
+          "money_laundering": "Witwassen van geld of financiering van terrorisme",
+          "child_labour_human_trafficking": "Kinderarbeid en andere vormen van mensenhandel"
+        },
+        "b": {
+          "payment_of_taxes": "Niet-nakoming van de verplichting tot betaling van belastingen",
+          "payment_of_social_security": "Niet-nakoming van de verplichting tot betaling van socialezekerheidsbijdragen"
+        },
+        "c": {
+          "breach_environmental_obligations": "Niet-nakoming van verplichtingen op het gebied van milieurecht",
+          "breach_social_obligations": "Niet-nakoming van verplichtingen op het gebied van sociaal recht",
+          "breach_labour_obligations": "Niet-nakoming van verplichtingen op het gebied van arbeidsrecht",
+          "bankruptcy": "Faillissement",
+          "insolvency": "Insolventie",
+          "arrangement_with_creditors": "Regeling met schuldeisers",
+          "analogous_situation": "Met faillissement vergelijkbare toestand uit hoofde van nationale recht",
+          "assets_administered_by_liquidator": "Activa beheerd door vereffenaar",
+          "business_activities_suspended": "Staking van bedrijfsactiviteiten",
+          "grave_professional_misconduct": "Ernstige beroepsfout",
+          "agreements_distorting_competition": "Vervalsing van de mededinging",
+          "conflict_of_interest": "Belangenconflict als gevolg van deelneming aan de aanbestedingsprocedure",
+          "involvement_in_preparation": "Directe of indirecte betrokkenheid bij de voorbereiding van deze aanbestedingsprocedure",
+          "early_termination": "Voortijdige beëindiging, schadevergoeding of andere vergelijkbare sancties",
+          "misrepresentation": "Gaf valse verklaringen af, hield informatie achter, was niet in staat vereiste documenten te verstrekken of verkreeg vertrouwelijke informatie over deze procedure"
+        },
+        "d": {
+          "purely_national_grounds": "Louter nationale uitsluitingsgronden"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Gronden die verband houden met strafrechtelijke veroordelingen",
+        "B": "Gronden die verband houden met de betaling van belastingen of sociale premies",
+        "C": "Gronden met betrekking tot insolventie, belangenconflicten of beroepsfouten"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Inloggen",
