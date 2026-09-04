@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"connectrpc.com/connect"
@@ -12,6 +13,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/clientprofile"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/espd"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -237,6 +239,39 @@ func toConnectError(err error) error {
 		return connect.NewError(connect.CodeFailedPrecondition, err)
 	case errors.Is(err, bid.ErrInvalidArgument):
 		return connect.NewError(connect.CodeInvalidArgument, err)
+
+	// ── ESPD / DGUE ──
+	//
+	// Four refusals that read very differently to a person, so they must not
+	// collapse into one code:
+	//
+	//   - not entitled: the plan does not carry the export. The caller MAY
+	//     write to this workbench, so this is not an access failure; the
+	//     x-error-code lets the client offer an upgrade instead of an apology.
+	//   - not ready: the document has open gaps or unconfirmed Part III
+	//     declarations. FailedPrecondition, with the count in the metadata so a
+	//     client can say what is missing without a second round trip.
+	//   - unsupported criterion / request: a bug report and a bad input
+	//     respectively, and both name what they could not express.
+	case errors.Is(err, espd.ErrNotEntitled):
+		e := connect.NewError(connect.CodePermissionDenied, err)
+		e.Meta().Set("x-error-code", "ESPD_EXPORT_NOT_ENTITLED")
+		return e
+	case errors.Is(err, espd.ErrNotReady):
+		e := connect.NewError(connect.CodeFailedPrecondition, err)
+		e.Meta().Set("x-error-code", "ESPD_NOT_READY")
+		var notReady *espd.NotReadyError
+		if errors.As(err, &notReady) {
+			e.Meta().Set("x-espd-open-gaps", strconv.Itoa(len(notReady.Gaps)))
+		}
+		return e
+	case errors.Is(err, espd.ErrCriterionUnsupported):
+		return connect.NewError(connect.CodeInternal, err)
+	case errors.Is(err, espd.ErrUnsupportedRequest),
+		errors.Is(err, espd.ErrInvalidArgument):
+		return connect.NewError(connect.CodeInvalidArgument, err)
+	case errors.Is(err, espd.ErrRequestNotFound):
+		return connect.NewError(connect.CodeNotFound, err)
 
 	// Agent domain
 	case errors.Is(err, agent.ErrInsufficientCredits):

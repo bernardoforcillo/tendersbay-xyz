@@ -46,19 +46,11 @@ func (s *EspdStore) Get(ctx context.Context, bidID string) (espd.Request, error)
 	return req, nil
 }
 
-// Put upserts the request for a bid. Raw is the XML the Request was parsed
-// from; it is what gets stored, because the parsed struct is derived and the
-// bytes are the source of truth.
-func (s *EspdStore) Put(ctx context.Context, bidID string, r espd.Request) error {
-	return s.PutRaw(ctx, bidID, r, nil)
-}
-
-// PutRaw is Put with the original bytes. The port's Put has no place for them
-// (Request carries only the hash), so the service calls this method on the
-// concrete store; Put without raw stores the hash and an empty body, which Get
-// then refuses to parse — a deliberate loud failure rather than a silent
-// recomposition from nothing.
-func (s *EspdStore) PutRaw(ctx context.Context, bidID string, r espd.Request, raw []byte) error {
+// Put upserts the request for a bid. raw is the XML the Request was parsed
+// from, and it is what gets stored: the parsed struct is derived, the bytes are
+// the source of truth, and Get re-parses them so a request imported before we
+// learned a criterion code is re-read with the newer mapping.
+func (s *EspdStore) Put(ctx context.Context, bidID string, r espd.Request, raw []byte) error {
 	importedAt := r.ImportedAt
 	if importedAt.IsZero() {
 		importedAt = time.Now()

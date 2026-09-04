@@ -258,8 +258,8 @@ func TestEspdStore_RequestAndExportLog(t *testing.T) {
 		t.Fatalf("ParseRequest: %v", err)
 	}
 	req.ImportedBy = userID
-	if err := store.PutRaw(ctx, bidID, req, raw); err != nil {
-		t.Fatalf("PutRaw: %v", err)
+	if err := store.Put(ctx, bidID, req, raw); err != nil {
+		t.Fatalf("Put: %v", err)
 	}
 	got, err := store.Get(ctx, bidID)
 	if err != nil || got.ProcedureReference != "CIG1" || got.SHA256 != req.SHA256 || got.ImportedBy != userID || got.ImportedAt.IsZero() {
@@ -269,8 +269,8 @@ func TestEspdStore_RequestAndExportLog(t *testing.T) {
 	raw2 := []byte(strings.Replace(string(raw), "CIG1", "CIG2", 1))
 	req2, _ := espd.ParseRequest(raw2)
 	req2.ImportedBy = userID
-	if err := store.PutRaw(ctx, bidID, req2, raw2); err != nil {
-		t.Fatalf("PutRaw again: %v", err)
+	if err := store.Put(ctx, bidID, req2, raw2); err != nil {
+		t.Fatalf("Put again: %v", err)
 	}
 	if got, _ := store.Get(ctx, bidID); got.ProcedureReference != "CIG2" {
 		t.Errorf("re-import did not replace: %+v", got)

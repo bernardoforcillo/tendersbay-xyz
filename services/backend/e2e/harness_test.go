@@ -20,6 +20,7 @@ package e2e
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"net/http"
@@ -36,14 +37,24 @@ import (
 	dropsstore "github.com/bernardoforcillo/authlayer/store/drops"
 	agentv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/agent/v1/agentv1connect"
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
+	bidv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1/bidv1connect"
+	companyv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/company/v1/companyv1connect"
+	espdv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/espd/v1/espdv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
 	workspacev1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1/workspacev1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/edm21"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/edm4"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/pdf"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/auth"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/espd"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/user"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workbench"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/workspace"
@@ -56,6 +67,11 @@ import (
 type stack struct {
 	url  string
 	mail *mailbox
+	// sqlDB is the one back door these tests have, and it exists for exactly
+	// one thing: moving a workspace onto a paid plan. The product has no
+	// upgrade RPC yet — billing is not built — so a journey that needs a Pro
+	// workspace has no front door to walk through. See upgradeToPro.
+	sqlDB *sql.DB
 
 	// anon is a client with no jar and no token, for the calls a signed-out
 	// visitor makes.
@@ -69,6 +85,9 @@ type clients struct {
 	workspace workspacev1connect.WorkspaceServiceClient
 	workbench workbenchv1connect.WorkbenchServiceClient
 	agent     agentv1connect.AgentServiceClient
+	company   companyv1connect.CompanyServiceClient
+	bid       bidv1connect.BidServiceClient
+	espd      espdv1connect.EspdServiceClient
 	jar       http.CookieJar
 	url       string
 }
@@ -88,6 +107,9 @@ func (s *stack) newClients(t *testing.T) clients {
 		workspace: workspacev1connect.NewWorkspaceServiceClient(hc, s.url),
 		workbench: workbenchv1connect.NewWorkbenchServiceClient(hc, s.url),
 		agent:     agentv1connect.NewAgentServiceClient(hc, s.url),
+		company:   companyv1connect.NewCompanyServiceClient(hc, s.url),
+		bid:       bidv1connect.NewBidServiceClient(hc, s.url),
+		espd:      espdv1connect.NewEspdServiceClient(hc, s.url),
 		jar:       jar,
 		url:       s.url,
 	}
@@ -183,6 +205,26 @@ func newStack(t *testing.T) *stack {
 	creditSvc := credits.NewService(featureEngine, subscriptionRepo,
 		postgres.NewAgentPricingRepo(db), postgres.NewTokenUsageRepo(db))
 
+	// The company dossier and the ESPD generator. companySvc's tender and
+	// document ports are nil because only CheckEligibility reads them and no
+	// journey here runs it; the dossier writes these tests drive do not touch
+	// them.
+	companyRepo := postgres.NewCompanyRepo(db)
+	companySvc := company.NewService(companyRepo, postgres.NewRequirementRepo(db), workspaceSvc, nil, nil)
+
+	bidRepo := postgres.NewBidRepo(db)
+	bidSvc := bid.NewService(bidRepo, workbenchSvc, stubTenders{}, companySvc)
+
+	espdStore := postgres.NewEspdStore(db)
+	espdSvc, err := espd.NewService(
+		companyRepo, bidRepo, espdStore, espdStore,
+		workbenchSvc, stubTenders{}, featureEngine,
+		[]espd.Serializer{edm21.New(), edm4.New()}, pdf.New(),
+	)
+	if err != nil {
+		t.Fatalf("espd.NewService: %v", err)
+	}
+
 	mux := http.NewServeMux()
 	for _, h := range []struct {
 		path    string
@@ -198,6 +240,9 @@ func newStack(t *testing.T) *stack {
 		// it reads the membership and the entitlement — which is the one thing
 		// on this handler the entitlement flow has to go through.
 		mount(agentv1connect.NewAgentServiceHandler(connectapi.NewAgentHandler(nil, creditSvc, workspaceSvc))),
+		mount(companyv1connect.NewCompanyServiceHandler(connectapi.NewCompanyHandler(companySvc))),
+		mount(bidv1connect.NewBidServiceHandler(connectapi.NewBidHandler(bidSvc))),
+		mount(espdv1connect.NewEspdServiceHandler(connectapi.NewEspdHandler(espdSvc))),
 	} {
 		mux.Handle(h.path, h.handler)
 	}
@@ -208,7 +253,7 @@ func newStack(t *testing.T) *stack {
 	srv := httptest.NewServer(connectapi.JWTMiddleware(authSvc)(connectapi.ClientIPMiddleware(mux)))
 	t.Cleanup(srv.Close)
 
-	s := &stack{url: srv.URL, mail: mail}
+	s := &stack{url: srv.URL, mail: mail, sqlDB: sqlDB}
 	s.anon = s.newClients(t)
 	return s
 }
@@ -368,4 +413,70 @@ func codeOf(err error) connect.Code {
 		return cerr.Code()
 	}
 	return connect.CodeUnknown
+}
+
+// stubTenders is the FOURTH substitution, alongside the mailer, the rate
+// limiter and the absent agent provider.
+//
+// The tender corpus lives in the `tenders` schema, which services/ingestion
+// owns and migrates; a backend e2e that needed real notices would have to seed
+// another service's tables, which is exactly the coupling the two migration
+// chains exist to avoid. What these journeys need from a tender is Part I —
+// who is buying, under which reference — so that is what this returns, keyed by
+// the id the bid carries.
+//
+// It is deliberately NOT a fake with behaviour: no fit scoring, no
+// availability. A test that needed those would be testing the tender domain,
+// which has its own tests.
+type stubTenders struct{}
+
+func (stubTenders) GetTender(_ context.Context, p tender.GetTenderParams) (tender.TenderDetail, error) {
+	return tender.TenderDetail{
+		ID:                p.ID,
+		Title:             "Manutenzione strade comunali 2027",
+		BuyerName:         "Comune di Milano",
+		SourceRef:         "CIG" + p.ID,
+		PublicationNumber: "2026/S 100-" + p.ID,
+		Country:           "IT",
+		Status:            "open",
+	}, nil
+}
+
+func (stubTenders) SummariesByIDs(_ context.Context, ids []int64) (map[int64]tender.TenderSummary, error) {
+	out := make(map[int64]tender.TenderSummary, len(ids))
+	for _, id := range ids {
+		out[id] = tender.TenderSummary{
+			ID: id, Title: "Manutenzione strade comunali 2027",
+			BuyerName: "Comune di Milano", Country: "IT", Status: "open",
+		}
+	}
+	return out, nil
+}
+
+func (stubTenders) FitForTenders(_ context.Context, _, _ string, ids []int64) (map[int64]tender.TenderFitResult, error) {
+	return map[int64]tender.TenderFitResult{}, nil
+}
+
+// upgradeToPro moves a workspace onto the Pro plan.
+//
+// It writes the subscription row directly because there is no RPC that does
+// this: the product has no billing flow yet, and CreateWorkspace seeds every
+// workspace on Free. Everything downstream of the row — featurelayer reading
+// it back through the Postgres store, resolving the plan's entitlements — is
+// exercised for real, which is the part these journeys are about.
+func (s *stack) upgradeToPro(t *testing.T, workspaceID string) {
+	t.Helper()
+	res, err := s.sqlDB.ExecContext(context.Background(),
+		`UPDATE workspace_subscriptions SET plan = $1, updated_at = now() WHERE workspace_id = $2`,
+		string(features.PlanPro), workspaceID)
+	if err != nil {
+		t.Fatalf("upgrade %s to pro: %v", workspaceID, err)
+	}
+	n, err := res.RowsAffected()
+	if err != nil {
+		t.Fatalf("rows affected: %v", err)
+	}
+	if n != 1 {
+		t.Fatalf("upgrading %s touched %d rows; CreateWorkspace should have seeded exactly one", workspaceID, n)
+	}
 }

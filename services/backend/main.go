@@ -19,12 +19,16 @@ import (
 	authv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/auth/v1/authv1connect"
 	bidv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1/bidv1connect"
 	companyv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/company/v1/companyv1connect"
+	espdv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/espd/v1/espdv1connect"
 	tenderv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/tender/v1/tenderv1connect"
 	userv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/user/v1/userv1connect"
 	workbenchv1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workbench/v1/workbenchv1connect"
 	workspacev1connect "github.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/workspace/v1/workspacev1connect"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/connectapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/email"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/edm21"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/edm4"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/espd/pdf"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/httpapi"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/postgres"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/adapter/probe"
@@ -37,6 +41,7 @@ import (
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/credits"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/document"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/espd"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/features"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/health"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
@@ -255,8 +260,9 @@ func main() {
 	// (without it an expiring attestation reads as met) and documentSvc supplies
 	// the coverage the assessment carries, so ignorance is reported as ignorance
 	// rather than as a clean bill of health.
+	companyRepo := postgres.NewCompanyRepo(db)
 	companySvc := company.NewService(
-		postgres.NewCompanyRepo(db), postgres.NewRequirementRepo(db),
+		companyRepo, postgres.NewRequirementRepo(db),
 		workspaceSvc, tenderSvc, documentSvc,
 	)
 
@@ -296,6 +302,31 @@ func main() {
 	bidHandler := connectapi.NewBidHandler(bidSvc)
 	companyHandler := connectapi.NewCompanyHandler(companySvc)
 
+	// ESPD / DGUE. The service reads the dossier through companySvc and the
+	// per-bid data through the bid repository, authorizes through workbenchSvc
+	// exactly as bidSvc does, and gates the EXPORT (never the preview) on the
+	// espd.export entitlement.
+	//
+	// Two serializers and one renderer: the same composed document goes out as
+	// ESPD-EDM 2.1.1 for Italian platforms, as 4.1.0 for eForms-era buyers, and
+	// as the PDF a legal representative signs.
+	espdStore := postgres.NewEspdStore(db)
+	// The dossier is read through the REPOSITORY and not through companySvc:
+	// the workbench gate has already run, and workbench membership implies
+	// workspace membership (the workbench scope is nested under the workspace),
+	// so re-asking the workspace would be a second answer to a settled
+	// question — and one the ESPD service has no user-facing way to explain.
+	espdSvc, err := espd.NewService(
+		companyRepo, bidRepo, espdStore, espdStore,
+		workbenchSvc, tenderSvc, featureEngine,
+		[]espd.Serializer{edm21.New(), edm4.New()}, pdf.New(),
+	)
+	if err != nil {
+		slog.Error("wire the ESPD service", "error", err)
+		os.Exit(1)
+	}
+	espdHandler := connectapi.NewEspdHandler(espdSvc)
+
 	authPath, authRPC := authv1connect.NewAuthServiceHandler(authHandler)
 	userPath, userRPC := userv1connect.NewUserServiceHandler(userHandler)
 	workspacePath, workspaceRPC := workspacev1connect.NewWorkspaceServiceHandler(workspaceHandler)
@@ -304,6 +335,7 @@ func main() {
 	tenderPath, tenderRPC := tenderv1connect.NewTenderServiceHandler(tenderHandler)
 	bidPath, bidRPC := bidv1connect.NewBidServiceHandler(bidHandler)
 	companyPath, companyRPC := companyv1connect.NewCompanyServiceHandler(companyHandler)
+	espdPath, espdRPC := espdv1connect.NewEspdServiceHandler(espdHandler)
 
 	healthSvc := health.New(probe.NewReady(), probe.NewDB(sqlDB))
 
@@ -316,6 +348,7 @@ func main() {
 	mux.Handle(tenderPath, tenderRPC)
 	mux.Handle(bidPath, bidRPC)
 	mux.Handle(companyPath, companyRPC)
+	mux.Handle(espdPath, espdRPC)
 	mux.Handle("/", httpapi.New(healthSvc))
 
 	handler := connectapi.NewCORS(cfg.CORSOrigins)(connectapi.JWTMiddleware(authSvc)(connectapi.ClientIPMiddleware(mux)))

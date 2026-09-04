@@ -5,6 +5,7 @@ import (
 
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/bid"
 	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/company"
+	"github.com/bernardoforcillo/tendersbay-xyz/services/backend/internal/core/tender"
 )
 
 // CompanyReader is the one dossier read Compose needs. Satisfied by
@@ -28,9 +29,35 @@ type BidReader interface {
 
 // RequestStore keeps the buyer's ESPD request attached to a bid (Approach C).
 // Get returns ErrRequestNotFound when none was imported.
+//
+// Put takes the RAW bytes alongside the parsed Request because the bytes are
+// the source of truth and the struct is derived: storing only the struct would
+// freeze the criterion taxonomy at import time, so a request imported before we
+// learned a new criterion code could never be re-read with the newer mapping.
 type RequestStore interface {
 	Get(ctx context.Context, bidID string) (Request, error)
-	Put(ctx context.Context, bidID string, r Request) error
+	Put(ctx context.Context, bidID string, r Request, raw []byte) error
+}
+
+// WorkbenchAccess is the workbench RBAC slice this domain needs — the same
+// shape and the same rationale as bid.WorkbenchAccess, satisfied by
+// *workbench.Service unchanged. Authorization for an ESPD read or write is the
+// WORKBENCH's, never re-derived here: the document belongs to a bid, and a bid
+// lives in a workbench.
+type WorkbenchAccess interface {
+	CanAccessWorkbench(ctx context.Context, userID, workbenchID string) error
+	CanManageWorkbench(ctx context.Context, userID, workbenchID string) error
+	WorkspaceOf(ctx context.Context, workbenchID string) (string, error)
+}
+
+// Tenders supplies the Part I facts a bid knows only through its tender: who is
+// buying and under which reference. Satisfied by *tender.Service unchanged.
+//
+// A failure here is NOT fatal to a preview: a tender that cannot be read leaves
+// Part I to the gap list, which is a truthful "we do not know the buyer yet"
+// rather than a refused document.
+type Tenders interface {
+	GetTender(ctx context.Context, p tender.GetTenderParams) (tender.TenderDetail, error)
 }
 
 // Serializer turns a Response into one XML version. Each implementation owns

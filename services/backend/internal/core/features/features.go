@@ -48,6 +48,15 @@ const (
 	// TenderSearch is free: it is served to anonymous callers, so it must not
 	// depend on a subscription existing.
 	TenderSearch catalog.Key = "tender.search"
+	// EspdExport is the ESPD/DGUE artefact — the XML a portal ingests and the
+	// PDF a legal representative signs. It is NOT metered: an export costs us
+	// nothing per call, so a counter would only invent a ceiling to explain.
+	//
+	// Composing and previewing the document are deliberately free and carry no
+	// check at all: the value of the dossier is visible before anyone pays, and
+	// a workspace that cannot see its own readiness has no reason to buy the
+	// artefact. What the plan gates is the file that leaves the building.
+	EspdExport catalog.Key = "espd.export"
 )
 
 // Plans.
@@ -80,6 +89,8 @@ func Config() featurelayer.Config {
 			{Key: AgentChat, Name: "Agent chat", Lifecycle: catalog.GA},
 			{Key: TenderSearch, Name: "Tender search", Lifecycle: catalog.GA, Free: true,
 				Description: "Served to anonymous callers, so it carries no entitlement check."},
+			{Key: EspdExport, Name: "ESPD/DGUE export", Lifecycle: catalog.GA,
+				Description: "The generated ESPD/DGUE artefact (XML 2.1.1 and 4.x, PDF). The preview is free."},
 		},
 		// One flag, and it earns its place: a kill switch on the only surface
 		// that spends real money per request. Enabled:true with an On default
@@ -105,6 +116,10 @@ func Config() featurelayer.Config {
 				Extends: PlanFree,
 				Entitlements: []entitlement.Entitlement{
 					entitlement.Limited(AgentTokens, ProMonthlyTokenAllowance, entitlement.Month),
+					// The free plan deliberately does NOT list EspdExport: the
+					// preview shows the whole document and its gaps, the export
+					// is what Pro buys.
+					{Feature: EspdExport},
 				},
 			},
 		},
