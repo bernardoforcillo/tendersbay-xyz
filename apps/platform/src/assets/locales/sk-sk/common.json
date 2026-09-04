@@ -318,6 +318,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Váš JED",
+      "progress": "Pripravených {{ready}} z {{total}} polí",
+      "ready": "Pripravené na export. Nič nechýba.",
+      "companyTodo": "Vypĺňa sa raz — platí pre každú zákazku",
+      "companyTodoHint": "Sú to údaje o vašej firme. Odpovedzte raz a prenesú sa do ďalšej zákazky.",
+      "bidTodo": "Pre túto zákazku",
+      "noneLeft": "Tu už nič nechýba.",
+      "reviewDeclarations": "Skontrolovať vyhlásenia",
+      "confirmDeclarations": "Potvrdiť vyhlásenia",
+      "export": "Exportovať",
+      "exportHint": "Export sa odomkne, keď nič nebude chýbať."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Na toto zatiaľ nikto neodpovedal.",
+        "not_authoritative": "Hodnota existuje, ale nikto ju nevyhlásil — tento dokument nesie len údaje potvrdené človekom.",
+        "stale": "Zodpovedané, ale po poslednej zmene znovu nepotvrdené pre túto zákazku."
+      },
+      "openDossier": "Otvoriť zložku firmy",
+      "openBid": "Vyplniť pre túto zákazku"
+    },
+    "declarations": {
+      "title": "Časť III — dôvody na vylúčenie",
+      "incomplete": "Na niektoré dôvody sa nikdy neodpovedalo. Odpovedzte v zložke firmy — raz, pre všetky zákazky.",
+      "openDossier": "Otvoriť zložku firmy",
+      "declaredOn": "Potvrdené pre túto zákazku dňa {{when}}.",
+      "neverConfirmed": "Tieto odpovede ešte neboli pre túto zákazku potvrdené.",
+      "stale": "Po poslednom potvrdení sa jedna odpoveď zmenila. Prečítajte si ich znova a potvrďte.",
+      "appliesTitle": "Dôvody, ktoré ste označili za platné",
+      "selfCleaning": "Prijaté opatrenia",
+      "allTitle": "Všetky dôvody",
+      "applies": "Platí",
+      "doesNotApply": "Neplatí",
+      "unanswered": "Bez odpovede",
+      "confirm": "Áno — pre túto zákazku stále platí",
+      "confirming": "Potvrdzujem…",
+      "changed": "Niečo sa zmenilo",
+      "error": "Potvrdenie zlyhalo — skúste to znova."
+    },
+    "export": {
+      "title": "Export",
+      "notReadyHint": "Export sa odomkne, keď nič nebude chýbať a vaše vyhlásenia budú pre túto zákazku potvrdené.",
+      "exporting": "Pripravuje sa…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — dokument na podpis",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Kompletný, vo vašom jazyku",
+        "xml": "Na opakované použitie a import tam, kde je podporovaný"
+      },
+      "nextStep": "Ďalej: štatutárny zástupca ho elektronicky podpíše a potom ho nahráte na portál obstarávateľa do {{when}}.",
+      "nextStepNoDeadline": "Ďalej: štatutárny zástupca ho elektronicky podpíše a potom ho nahráte na portál obstarávateľa.",
+      "history": "Predchádzajúce exporty",
+      "historyHint": "Zaznamenávame, že ste exportovali, nikdy samotný súbor. Ďalší export sa zostaví z dnešnej zložky firmy.",
+      "notEntitled": "Export JED patrí k plánu Pro. Všetko vyššie zostáva bezplatné.",
+      "notReady": "Niečo ešte chýba, alebo treba pre túto zákazku znova potvrdiť vyhlásenia.",
+      "error": "Export zlyhal — skúste to znova."
+    },
+    "dossier": {
+      "title": "Dôvody na vylúčenie (JED časť III)",
+      "progress": "Zodpovedaných {{answered}} z {{total}}",
+      "intro": "Odpovedzte raz. Každá zákazka ich použije znova — len potvrdíte, že stále platia.",
+      "applies": "Vzťahuje sa na nás",
+      "doesNotApply": "Nevzťahuje sa na nás",
+      "unanswered": "Zatiaľ bez odpovede",
+      "selfCleaning": "Prijaté opatrenia (self-cleaning)",
+      "selfCleaningHint": "Čo ste s tým urobili — čl. 57 ods. 6. Obstarávateľ si to prečíta pred rozhodnutím o vylúčení.",
+      "statedAt": "Vyhlásené dňa {{when}}",
+      "error": "Uloženie zlyhalo — skúste to znova."
+    },
+    "fields": {
+      "is_sme": "Status malého alebo stredného podniku",
+      "representative": "Štatutárny zástupca",
+      "buyer_name": "Obstarávateľ",
+      "reference": "Číslo konania",
+      "lot_ref": "Časť",
+      "confirmation": "Potvrdenie pre túto zákazku",
+      "criterion": "Požadované obstarávateľom"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Verejné obstarávanie",
+        "lots": "Časti, do ktorých sa hlásite"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identifikácia firmy"
+        },
+        "b": {
+          "representatives": "Štatutárni zástupcovia"
+        },
+        "c": {
+          "reliance": "Využitie kapacít iných subjektov"
+        },
+        "d": {
+          "subcontracting": "Subdodávky"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Osvedčenie SOA (úradný zoznam)",
+          "references": "Referencie týkajúce sa špecifických prác",
+          "average_annual_manpower": "Ročný priemerný počet zamestnancov"
+        },
+        "a": {
+          "enrolment_professional_register": "Zápis v príslušnom profesijnom registri",
+          "enrolment_trade_register": "Zápis v obchodnom registri",
+          "other_registration": "Povolenie od konkrétnej organizácie potrebné pre zákazky na poskytnutie služieb alebo členstvo v takejto organizácii"
+        },
+        "b": {
+          "general_yearly_turnover": "Všeobecný ročný obrat",
+          "specific_yearly_turnover": "Osobitný ročný obrat"
+        },
+        "d": {
+          "quality_assurance_certificates": "Osvedčenia od nezávislých orgánov o normách zabezpečenia kvality",
+          "environmental_management_certificates": "Osvedčenia od nezávislých orgánov o systémoch alebo normách environmentálneho manažérstva"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Účasť v zločineckej organizácii",
+          "corruption": "Korupcia",
+          "fraud": "Podvod",
+          "terrorist_offences": "Teroristické trestné činy alebo trestné činy spojené s teroristickými činnosťami",
+          "money_laundering": "Pranie špinavých peňazí alebo financovanie terorizmu",
+          "child_labour_human_trafficking": "Detská práca a iné formy obchodovania s ľuďmi"
+        },
+        "b": {
+          "payment_of_taxes": "Porušenie povinnosti platiť dane",
+          "payment_of_social_security": "Porušenie povinnosti platiť príspevky na sociálne zabezpečenie"
+        },
+        "c": {
+          "breach_environmental_obligations": "Porušenie povinností v oblasti environmentálneho práva",
+          "breach_social_obligations": "Porušenie povinností v oblasti sociálneho práva",
+          "breach_labour_obligations": "Porušenie povinností v oblasti pracovného práva",
+          "bankruptcy": "Konkurz",
+          "insolvency": "Platobná neschopnosť",
+          "arrangement_with_creditors": "Dohoda s veriteľmi",
+          "analogous_situation": "Podobná situácia ako úpadok podľa vnútroštátneho práva",
+          "assets_administered_by_liquidator": "Aktíva spravované likvidátorom",
+          "business_activities_suspended": "Pozastavené podnikateľské činnosti",
+          "grave_professional_misconduct": "Závažné odborné pochybenie",
+          "agreements_distorting_competition": "Dohody s inými hospodárskymi subjektmi s cieľom narušiť hospodársku súťaž",
+          "conflict_of_interest": "Konflikt záujmov z dôvodu účasti na postupe obstarávania",
+          "involvement_in_preparation": "Priama alebo nepriama účasť na príprave tohto postupu obstarávania",
+          "early_termination": "Predčasné ukončenie zmluvy, škody alebo iné porovnateľné sankcie",
+          "misrepresentation": "Nepravdivé informácie, neposkytnutie informácií, neschopnosť predložiť požadované dokumenty alebo získanie dôverných informácií o tomto postupe"
+        },
+        "d": {
+          "purely_national_grounds": "Čisto vnútroštátne dôvody vylúčenia"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Dôvody týkajúce sa odsúdení za trestný čin",
+        "B": "Dôvody týkajúce sa platby daní alebo príspevkov na sociálne zabezpečenie",
+        "C": "Dôvody týkajúce sa konkurzu, konfliktu záujmov alebo odborného pochybenia"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Prihlásiť sa",

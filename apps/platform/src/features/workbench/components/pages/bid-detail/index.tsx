@@ -1,7 +1,8 @@
 import { Link, useParams } from '@tanstack/react-router';
 import { Banner, Card, cn, Pill } from '@tendersbay/components/core';
 import type { Bid } from '@tendersbay/proto/bid/v1/bid_pb';
-import { useEffect } from 'react';
+import { useFeatureFlagEnabled } from 'posthog-js/react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { AnalyticsLocation } from '~/analytics';
 import {
@@ -13,6 +14,13 @@ import {
 } from '~/features/account/components/organisms/tender-feed';
 import { EligibilityGapList } from '~/features/company/components/organisms';
 import { useEligibility } from '~/features/company/hooks';
+import {
+  DeclarationsReconfirm,
+  DgueExportSheet,
+  DgueReadinessCard,
+  useEspdExports,
+  useEspdPreview,
+} from '~/features/espd';
 import { AwardCriteriaGrid, TenderCoverage } from '~/features/tenders/components/organisms';
 import type { TenderCriteriaSource } from '~/features/tenders/constants';
 import { useTenderAvailability, useTenderDetail } from '~/features/tenders/hooks';
@@ -58,6 +66,20 @@ export function BidDetailPage() {
   const { data: bid, loading, error, refetch: refetchBid } = useBid(bidId);
   const { data: items, refetch: refetchChecklist } = useChecklist(bidId);
 
+  // The DGUE generator replaces the status-and-note checklist, and does so
+  // behind a flag until it is complete. Both are mounted from the same slot:
+  // the template owns the ORDER, and swapping which component fills a slot must
+  // not move anything else on the page.
+  //
+  // `undefined` while the flags load is treated as OFF on purpose. Rendering the
+  // new card and then swapping it for the old one a beat later is worse than
+  // showing the familiar one throughout.
+  const dgueEnabled = useFeatureFlagEnabled('dgue-generator') === true;
+  const { data: preview, refetch: refetchPreview } = useEspdPreview(workbenchId, bidId);
+  const { data: exportHistory, refetch: refetchExports } = useEspdExports(workbenchId, bidId);
+  const declarationsRef = useRef<HTMLDivElement>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
+
   const tenderId = bid?.tenderId ?? '';
   const { data: assessment, refetch: refetchAssessment } = useEligibility(workspaceId, tenderId);
   const { data: availability } = useTenderAvailability(tenderId);
@@ -84,6 +106,27 @@ export function BidDetailPage() {
   function refetchAfterCapture() {
     refetchAssessment();
     refetchBid();
+    // The DGUE reads the same dossier the eligibility check does, so an answer
+    // captured in a gap row has to move both counters or the page contradicts
+    // itself about what is still missing.
+    refetchPreview();
+  }
+
+  /**
+   * Sends a reader to where a gap is actually closed.
+   *
+   * A company gap goes to the dossier, in a new tab: this page is mid-task, and
+   * navigating away from a gara someone is deciding on to fix a fact would lose
+   * their place. A bid gap has nowhere else to go — the lots and the parties are
+   * edited on this page — so it scrolls to the declarations block, which is the
+   * only bid-scoped thing this phase can fix.
+   */
+  function openGap(gap: { scope: string }) {
+    if (gap.scope === 'company') {
+      window.open(`/workspaces/${workspaceId}/settings/company`, '_blank', 'noopener');
+      return;
+    }
+    declarationsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   const criteriaSource: TenderCriteriaSource | null = tender;
@@ -143,19 +186,67 @@ export function BidDetailPage() {
           ) : undefined
         }
         checklist={
-          <BidChecklist
-            workbenchId={workbenchId}
-            bidId={bidId}
-            items={items ?? []}
-            done={bid.checklistDone}
-            total={bid.checklistTotal}
-            canManage={canManage}
-            location={LOCATION}
-            onChanged={() => {
-              refetchChecklist();
-              refetchBid();
-            }}
-          />
+          dgueEnabled && preview ? (
+            <div className="flex flex-col gap-4">
+              <DgueReadinessCard
+                preview={preview}
+                location={LOCATION}
+                onOpenGap={openGap}
+                onReconfirm={() =>
+                  declarationsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }
+                onExport={() =>
+                  exportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }
+              />
+              {preview.declarations && (
+                <div ref={declarationsRef}>
+                  <DeclarationsReconfirm
+                    workbenchId={workbenchId}
+                    bidId={bidId}
+                    declarations={preview.declarations}
+                    canManage={canManage}
+                    location={LOCATION}
+                    onOpenDossier={() =>
+                      window.open(
+                        `/workspaces/${workspaceId}/settings/company`,
+                        '_blank',
+                        'noopener',
+                      )
+                    }
+                    onConfirmed={refetchPreview}
+                  />
+                </div>
+              )}
+              <div ref={exportRef}>
+                <DgueExportSheet
+                  workbenchId={workbenchId}
+                  bidId={bidId}
+                  ready={preview.ready}
+                  requestKnown={preview.requestKnown}
+                  canManage={canManage}
+                  deadline={bid.tenderDeadline}
+                  exports={exportHistory ?? []}
+                  location={LOCATION}
+                  onExported={refetchExports}
+                />
+              </div>
+            </div>
+          ) : (
+            <BidChecklist
+              workbenchId={workbenchId}
+              bidId={bidId}
+              items={items ?? []}
+              done={bid.checklistDone}
+              total={bid.checklistTotal}
+              canManage={canManage}
+              location={LOCATION}
+              onChanged={() => {
+                refetchChecklist();
+                refetchBid();
+              }}
+            />
+          )
         }
         stage={
           <BidStageStepper

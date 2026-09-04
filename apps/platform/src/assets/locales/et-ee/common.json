@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Teie ESPD",
+      "progress": "{{ready}} / {{total}} välja valmis",
+      "ready": "Valmis eksportimiseks. Midagi ei puudu.",
+      "companyTodo": "Täidetakse üks kord — kehtib igal hankel",
+      "companyTodoHint": "Need on andmed teie ettevõtte kohta. Vastake üks kord ja need kanduvad järgmisele hankele.",
+      "bidTodo": "Selle hanke jaoks",
+      "noneLeft": "Siin ei puudu enam midagi.",
+      "reviewDeclarations": "Vaadake kinnitused üle",
+      "confirmDeclarations": "Kinnitage oma kinnitused",
+      "export": "Ekspordi",
+      "exportHint": "Eksport avaneb, kui midagi enam ei puudu."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Sellele pole veel keegi vastanud.",
+        "not_authoritative": "Väärtus on olemas, kuid keegi pole seda kinnitanud — see dokument kannab ainult inimese kinnitatud fakte.",
+        "stale": "Vastatud, kuid pärast viimast muudatust pole selle hanke jaoks uuesti kinnitatud."
+      },
+      "openDossier": "Ava ettevõtte toimik",
+      "openBid": "Täida selle hanke jaoks"
+    },
+    "declarations": {
+      "title": "III osa — kõrvaldamise alused",
+      "incomplete": "Mõnele alusele pole kunagi vastatud. Vastake ettevõtte toimikus — üks kord, kõigi hangete jaoks.",
+      "openDossier": "Ava ettevõtte toimik",
+      "declaredOn": "Selle hanke jaoks kinnitatud {{when}}.",
+      "neverConfirmed": "Neid vastuseid pole selle hanke jaoks veel kinnitatud.",
+      "stale": "Vastus muutus pärast viimast kinnitamist. Lugege need uuesti läbi ja kinnitage.",
+      "appliesTitle": "Alused, mille kohta te märkisite, et need kehtivad",
+      "selfCleaning": "Võetud meetmed",
+      "allTitle": "Kõik alused",
+      "applies": "Kehtib",
+      "doesNotApply": "Ei kehti",
+      "unanswered": "Vastamata",
+      "confirm": "Jah — kehtib endiselt selle hanke jaoks",
+      "confirming": "Kinnitan…",
+      "changed": "Midagi on muutunud",
+      "error": "Kinnitamine ebaõnnestus — proovige uuesti."
+    },
+    "export": {
+      "title": "Eksport",
+      "notReadyHint": "Eksport avaneb, kui midagi ei puudu ja teie kinnitused on selle hanke jaoks kinnitatud.",
+      "exporting": "Valmistan ette…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — allkirjastatav dokument",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Täielik, teie keeles",
+        "xml": "Taaskasutuseks ja impordiks seal, kus seda toetatakse"
+      },
+      "nextStep": "Järgmiseks: teie seaduslik esindaja allkirjastab selle elektrooniliselt ja seejärel laadite selle hankija portaali enne {{when}}.",
+      "nextStepNoDeadline": "Järgmiseks: teie seaduslik esindaja allkirjastab selle elektrooniliselt ja seejärel laadite selle hankija portaali.",
+      "history": "Varasemad eksportimised",
+      "historyHint": "Salvestame, et te eksportisite, mitte kunagi faili ennast. Uus eksport koostatakse tänasest toimikust.",
+      "notEntitled": "ESPD eksport kuulub Pro paketti. Kõik, mida ülal näete, jääb tasuta.",
+      "notReady": "Midagi on veel puudu või tuleb kinnitused selle hanke jaoks uuesti kinnitada.",
+      "error": "Eksport ebaõnnestus — proovige uuesti."
+    },
+    "dossier": {
+      "title": "Kõrvaldamise alused (ESPD III osa)",
+      "progress": "Vastatud {{answered}} / {{total}}",
+      "intro": "Vastake üks kord. Iga hange kasutab neid uuesti — te üksnes kinnitate, et need endiselt kehtivad.",
+      "applies": "Kehtib meie kohta",
+      "doesNotApply": "Ei kehti meie kohta",
+      "unanswered": "Veel vastamata",
+      "selfCleaning": "Võetud meetmed (self-cleaning)",
+      "selfCleaningHint": "Mida te selle suhtes tegite — artikli 57 lõige 6. Hankija loeb seda enne kõrvaldamise otsustamist.",
+      "statedAt": "Kinnitatud {{when}}",
+      "error": "Salvestamine ebaõnnestus — proovige uuesti."
+    },
+    "fields": {
+      "is_sme": "VKE staatus",
+      "representative": "Seaduslik esindaja",
+      "buyer_name": "Hankija",
+      "reference": "Hanke viitenumber",
+      "lot_ref": "Osa",
+      "confirmation": "Kinnitus selle hanke jaoks",
+      "criterion": "Hankija nõue"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Hankemenetlus",
+        "lots": "Osad, millele pakkumuse esitate"
+      },
+      "ii": {
+        "a": {
+          "identity": "Ettevõtte identifitseerimine"
+        },
+        "b": {
+          "representatives": "Seaduslikud esindajad"
+        },
+        "c": {
+          "reliance": "Teiste üksuste võimekusele tuginemine"
+        },
+        "d": {
+          "subcontracting": "Allhange"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA tõend (ametlik nimekiri)",
+          "references": "Viited kindlaksmääratud tööde kohta",
+          "average_annual_manpower": "Aasta keskmine töötajate arv"
+        },
+        "a": {
+          "enrolment_professional_register": "Kuulumine asjakohasesse kutseregistrisse",
+          "enrolment_trade_register": "Kuulumine äriregistrisse",
+          "other_registration": "Teenuslepingute jaoks vajalik luba või kuulumine konkreetsesse organisatsiooni"
+        },
+        "b": {
+          "general_yearly_turnover": "Üldine aastakäive",
+          "specific_yearly_turnover": "Konkreetne aastakäive"
+        },
+        "d": {
+          "quality_assurance_certificates": "Kvaliteedistandardite kohta sõltumatute asutuste väljastatud tõendid",
+          "environmental_management_certificates": "Keskkonnajuhtimissüsteemide või -standardite kohta sõltumatute asutuste väljastatud tõendid"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Kuritegelikus ühenduses osalemine",
+          "corruption": "Korruptsioon",
+          "fraud": "Pettus",
+          "terrorist_offences": "Terroriakti toimepanek või terroristliku tegevusega seotud õigusrikkumised",
+          "money_laundering": "Rahapesu või terrorismi rahastamine",
+          "child_labour_human_trafficking": "Laste tööjõu kasutamine ja muud inimkaubanduse vormid"
+        },
+        "b": {
+          "payment_of_taxes": "Maksude tasumise kohustuse rikkumine",
+          "payment_of_social_security": "Sotsiaalkindlustusmaksete tasumise kohustuse rikkumine"
+        },
+        "c": {
+          "breach_environmental_obligations": "Keskkonnaõiguse valdkonnas kohaldatavate kohustuste täitmata jätmine",
+          "breach_social_obligations": "Sotsiaalõiguse valdkonnas kohaldatavate kohustuste täitmata jätmine",
+          "breach_labour_obligations": "Tööõiguse valdkonnas kohaldatavate kohustuste täitmata jätmine",
+          "bankruptcy": "Pankrot",
+          "insolvency": "Maksejõuetus",
+          "arrangement_with_creditors": "Kokkulepe võlausaldajatega",
+          "analogous_situation": "Siseriikliku õiguse kohane samalaadne olukord, näiteks pankrot",
+          "assets_administered_by_liquidator": "Vara haldab likvideerija",
+          "business_activities_suspended": "Äritegevus on peatatud",
+          "grave_professional_misconduct": "Tõsine ametialane rikkumine",
+          "agreements_distorting_competition": "Konkurentsi moonutamise eesmärgil teiste ettevõtjatega sõlmitud kokkulepped",
+          "conflict_of_interest": "Hankemenetluses osalemisega kaasnev huvide konflikt",
+          "involvement_in_preparation": "Otsene või kaude osalemine käesoleva hankemenetluse ettevalmistamisel",
+          "early_termination": "Ennetähtaegne lõpetamine, kahjutasu või võrreldavad sanktsioonid",
+          "misrepresentation": "Valeandmete esitamine, teabe esitamata jätmine, suutmatus nõutud dokumente esitada või selle menetluse kohta konfidentsiaalse teabe saamine"
+        },
+        "d": {
+          "purely_national_grounds": "Ainult siseriiklikest õigusaktidest tulenevad kõrvalejätmise alused"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Kõrvalejätmise alused seoses kriminaalasjas tehtud süüdimõistva otsusega",
+        "B": "Kõrvalejätmise alused seoses maksude või sotsiaalkindlustusmaksete tasumisega",
+        "C": "Kõrvalejätmise alused seoses maksejõuetusega, huvide konfliktiga või ametialaste käitumisreeglite rikkumisega"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Logi sisse",

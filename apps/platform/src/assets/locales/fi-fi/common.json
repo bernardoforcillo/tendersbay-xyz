@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "ESPD-lomakkeesi",
+      "progress": "{{ready}} / {{total}} kenttää valmiina",
+      "ready": "Valmis vietäväksi. Mitään ei puutu.",
+      "companyTodo": "Täytetään kerran — pätee jokaiseen kilpailutukseen",
+      "companyTodoHint": "Nämä ovat tietoja yrityksestäsi. Vastaa kerran, niin ne siirtyvät seuraavaan kilpailutukseen.",
+      "bidTodo": "Tähän kilpailutukseen",
+      "noneLeft": "Täällä ei puutu mitään.",
+      "reviewDeclarations": "Tarkista vakuutuksesi",
+      "confirmDeclarations": "Vahvista vakuutuksesi",
+      "export": "Vie",
+      "exportHint": "Vienti avautuu, kun mitään ei puutu."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Kukaan ei ole vielä vastannut tähän.",
+        "not_authoritative": "Arvo on olemassa, mutta kukaan ei ole vakuuttanut sitä — tämä asiakirja sisältää vain ihmisen vahvistamia tietoja.",
+        "stale": "Vastattu, mutta ei vahvistettu uudelleen tähän kilpailutukseen viimeisimmän muutoksen jälkeen."
+      },
+      "openDossier": "Avaa yritystiedot",
+      "openBid": "Täytä tätä kilpailutusta varten"
+    },
+    "declarations": {
+      "title": "Osa III — poissulkemisperusteet",
+      "incomplete": "Joihinkin perusteisiin ei ole koskaan vastattu. Vastaa yritystiedoissa — kerran, kaikkia kilpailutuksia varten.",
+      "openDossier": "Avaa yritystiedot",
+      "declaredOn": "Vahvistettu tähän kilpailutukseen {{when}}.",
+      "neverConfirmed": "Näitä vastauksia ei ole vielä vahvistettu tähän kilpailutukseen.",
+      "stale": "Vastaus muuttui viimeisimmän vahvistuksen jälkeen. Lue ne uudelleen ja vahvista.",
+      "appliesTitle": "Perusteet, joiden ilmoitit koskevan teitä",
+      "selfCleaning": "Toteutetut toimenpiteet",
+      "allTitle": "Kaikki perusteet",
+      "applies": "Koskee",
+      "doesNotApply": "Ei koske",
+      "unanswered": "Ei vastausta",
+      "confirm": "Kyllä — pätee edelleen tähän kilpailutukseen",
+      "confirming": "Vahvistetaan…",
+      "changed": "Jokin on muuttunut",
+      "error": "Vahvistus ei onnistunut — yritä uudelleen."
+    },
+    "export": {
+      "title": "Vienti",
+      "notReadyHint": "Vienti avautuu, kun mitään ei puutu ja vakuutuksesi on vahvistettu tähän kilpailutukseen.",
+      "exporting": "Valmistellaan…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — allekirjoitettava asiakirja",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Täydellinen, omalla kielelläsi",
+        "xml": "Uudelleenkäyttöön ja tuontiin siellä, missä sitä tuetaan"
+      },
+      "nextStep": "Seuraavaksi: nimenkirjoittaja allekirjoittaa sen sähköisesti, minkä jälkeen lataat sen hankintayksikön portaaliin ennen {{when}}.",
+      "nextStepNoDeadline": "Seuraavaksi: nimenkirjoittaja allekirjoittaa sen sähköisesti, minkä jälkeen lataat sen hankintayksikön portaaliin.",
+      "history": "Aiemmat viennit",
+      "historyHint": "Kirjaamme, että veit tiedoston, emme koskaan tiedostoa itseään. Uusi vienti rakennetaan tämän päivän yritystiedoista.",
+      "notEntitled": "ESPD-vienti kuuluu Pro-tilaukseen. Kaikki yllä näkyvä pysyy maksuttomana.",
+      "notReady": "Jokin puuttuu vielä, tai vakuutuksesi on vahvistettava uudelleen tähän kilpailutukseen.",
+      "error": "Vienti ei onnistunut — yritä uudelleen."
+    },
+    "dossier": {
+      "title": "Poissulkemisperusteet (ESPD osa III)",
+      "progress": "{{answered}} / {{total}} vastattu",
+      "intro": "Vastaa kerran. Jokainen kilpailutus käyttää vastauksia uudelleen — vahvistat vain, että ne pitävät yhä paikkansa.",
+      "applies": "Koskee meitä",
+      "doesNotApply": "Ei koske meitä",
+      "unanswered": "Ei vielä vastattu",
+      "selfCleaning": "Toteutetut toimenpiteet (self-cleaning)",
+      "selfCleaningHint": "Mitä asialle tehtiin — 57 artiklan 6 kohta. Hankintayksikkö lukee tämän ennen poissulkemispäätöstä.",
+      "statedAt": "Ilmoitettu {{when}}",
+      "error": "Tallennus ei onnistunut — yritä uudelleen."
+    },
+    "fields": {
+      "is_sme": "Pk-yrityksen asema",
+      "representative": "Nimenkirjoittaja",
+      "buyer_name": "Hankintayksikkö",
+      "reference": "Hankinnan viitenumero",
+      "lot_ref": "Osa",
+      "confirmation": "Vahvistus tähän kilpailutukseen",
+      "criterion": "Hankintayksikön pyytämä"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Hankintamenettely",
+        "lots": "Osat, joihin osallistut"
+      },
+      "ii": {
+        "a": {
+          "identity": "Yrityksen tunnistetiedot"
+        },
+        "b": {
+          "representatives": "Nimenkirjoittajat"
+        },
+        "c": {
+          "reliance": "Muiden yksiköiden voimavarojen käyttö"
+        },
+        "d": {
+          "subcontracting": "Alihankinta"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA-todistus (virallinen luettelo)",
+          "references": "Määritettyjä urakoita koskevat referenssit",
+          "average_annual_manpower": "Keskimääräinen vuosittainen työvoima"
+        },
+        "a": {
+          "enrolment_professional_register": "Asiaankuuluvaan ammattirekisteriin merkitseminen",
+          "enrolment_trade_register": "Toimialarekisteriin merkitseminen",
+          "other_registration": "Palvelunhankintasopimusta varten tarvittava lupa tai tietyn organisaation jäsenyys"
+        },
+        "b": {
+          "general_yearly_turnover": "Yleinen vuotuinen liikevaihto",
+          "specific_yearly_turnover": "Erityinen vuotuinen liikevaihto"
+        },
+        "d": {
+          "quality_assurance_certificates": "Riippumattomien laitosten laadunvarmistusstandardeista antamat todistukset",
+          "environmental_management_certificates": "Riippumattomien laitosten ympäristöasioiden hallintajärjestelmistä tai standardeista antamat todistukset"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Rikollisjärjestön toimintaan osallistuminen",
+          "corruption": "Korruptio",
+          "fraud": "Petos",
+          "terrorist_offences": "Terrorismirikokset tai terroritoimintaan liittyvät rikokset",
+          "money_laundering": "Rahanpesu tai terrorismin rahoitus",
+          "child_labour_human_trafficking": "Lapsityövoima ja muut ihmiskaupan muodot"
+        },
+        "b": {
+          "payment_of_taxes": "Verojen maksamiseen liittyvän velvoitteen rikkominen",
+          "payment_of_social_security": "Sosiaaliturvamaksujen maksamiseen liittyvän velvoitteen rikkominen"
+        },
+        "c": {
+          "breach_environmental_obligations": "Ympäristölainsäädännön mukaisten velvoitteiden rikkominen",
+          "breach_social_obligations": "Sosiaalilainsäädännön mukaisten velvoitteiden rikkominen",
+          "breach_labour_obligations": "Työlainsäädännön mukaisten velvoitteiden rikkominen",
+          "bankruptcy": "Konkurssi",
+          "insolvency": "Maksukyvyttömyys",
+          "arrangement_with_creditors": "Järjestelyt velkojien kanssa",
+          "analogous_situation": "Kansallisesta lainsäädännöstä johtuva konkurssia tai muuta sellaista vastaava tilanne",
+          "assets_administered_by_liquidator": "Varat selvitysmiehen hallinnassa",
+          "business_activities_suspended": "Liiketoiminta on keskeytetty",
+          "grave_professional_misconduct": "Ammatin harjoittamiseen liittyvä vakava virhe",
+          "agreements_distorting_competition": "Toisten talouden toimijoiden kanssa kilpailun vääristämiseksi tehdyt sopimukset",
+          "conflict_of_interest": "Talouden toimijan hankintamenettelyyn osallistumisesta johtuvat eturistiriidat",
+          "involvement_in_preparation": "Välitön tai välillinen osallistuminen tämän hankintamenettelyn valmisteluun",
+          "early_termination": "Ennenaikainen irtisanominen, vahingonkorvaukset tai muut vastaavat seuraamukset",
+          "misrepresentation": "Väärien tietojen antaminen, tietojen salaaminen, vaadittujen asiakirjojen toimittamatta jättäminen tai tätä menettelyä koskevien luottamuksellisten tietojen saaminen"
+        },
+        "d": {
+          "purely_national_grounds": "Puhtaasti kansalliset poissulkemisperusteet"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Tuomioihin liittyvät perusteet",
+        "B": "Verojen tai sosiaaliturvamaksujen maksamiseen liittyvät perusteet",
+        "C": "Maksukyvyttömyyteen, eturistiriitoihin tai ammatin harjoittamisessa tapahtuneeseen virheeseen liittyvät perusteet"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Kirjaudu sisään",

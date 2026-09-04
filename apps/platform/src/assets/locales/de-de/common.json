@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Ihre EEE",
+      "progress": "{{ready}} von {{total}} Feldern fertig",
+      "ready": "Bereit zum Export. Es fehlt nichts.",
+      "companyTodo": "Einmal ausfüllen — gilt für jede Ausschreibung",
+      "companyTodoHint": "Das sind Angaben zu Ihrem Unternehmen. Einmal beantwortet, gelten sie auch für die nächste Ausschreibung.",
+      "bidTodo": "Für diese Ausschreibung",
+      "noneLeft": "Hier fehlt nichts mehr.",
+      "reviewDeclarations": "Erklärungen prüfen",
+      "confirmDeclarations": "Erklärungen bestätigen",
+      "export": "Exportieren",
+      "exportHint": "Der Export wird freigeschaltet, sobald nichts mehr fehlt."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Das hat noch niemand beantwortet.",
+        "not_authoritative": "Ein Wert liegt vor, aber niemand hat ihn erklärt — dieses Dokument enthält nur von einer Person bestätigte Angaben.",
+        "stale": "Beantwortet, aber seit der letzten Änderung nicht erneut für diese Ausschreibung bestätigt."
+      },
+      "openDossier": "Unternehmensakte öffnen",
+      "openBid": "Für diese Ausschreibung ausfüllen"
+    },
+    "declarations": {
+      "title": "Teil III — Ausschlussgründe",
+      "incomplete": "Einige Gründe wurden nie beantwortet. Beantworten Sie sie in der Unternehmensakte — einmal, für alle Ausschreibungen.",
+      "openDossier": "Unternehmensakte öffnen",
+      "declaredOn": "Am {{when}} für diese Ausschreibung bestätigt.",
+      "neverConfirmed": "Diese Antworten wurden für diese Ausschreibung noch nicht bestätigt.",
+      "stale": "Eine Antwort hat sich nach der letzten Bestätigung geändert. Bitte erneut lesen und bestätigen.",
+      "appliesTitle": "Gründe, die Sie als zutreffend erklärt haben",
+      "selfCleaning": "Ergriffene Maßnahmen",
+      "allTitle": "Alle Gründe",
+      "applies": "Trifft zu",
+      "doesNotApply": "Trifft nicht zu",
+      "unanswered": "Unbeantwortet",
+      "confirm": "Ja — gilt weiterhin für diese Ausschreibung",
+      "confirming": "Wird bestätigt…",
+      "changed": "Etwas hat sich geändert",
+      "error": "Bestätigung fehlgeschlagen — bitte erneut versuchen."
+    },
+    "export": {
+      "title": "Exportieren",
+      "notReadyHint": "Der Export wird freigeschaltet, sobald nichts mehr fehlt und Ihre Erklärungen für diese Ausschreibung bestätigt sind.",
+      "exporting": "Wird vorbereitet…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — das zu unterzeichnende Dokument",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Vollständig, in Ihrer Sprache",
+        "xml": "Zur Wiederverwendung und zum Import, wo unterstützt"
+      },
+      "nextStep": "Als Nächstes: Ihr gesetzlicher Vertreter unterschreibt elektronisch, dann laden Sie das Dokument bis zum {{when}} im Portal des Auftraggebers hoch.",
+      "nextStepNoDeadline": "Als Nächstes: Ihr gesetzlicher Vertreter unterschreibt elektronisch, dann laden Sie das Dokument im Portal des Auftraggebers hoch.",
+      "history": "Frühere Exporte",
+      "historyHint": "Wir halten fest, dass Sie exportiert haben, nie die Datei selbst. Ein erneuter Export wird aus der heutigen Unternehmensakte erstellt.",
+      "notEntitled": "Der EEE-Export gehört zum Pro-Tarif. Alles oben Sichtbare bleibt kostenlos.",
+      "notReady": "Es fehlt noch etwas, oder Ihre Erklärungen müssen für diese Ausschreibung erneut bestätigt werden.",
+      "error": "Export fehlgeschlagen — bitte erneut versuchen."
+    },
+    "dossier": {
+      "title": "Ausschlussgründe (EEE Teil III)",
+      "progress": "{{answered}} von {{total}} beantwortet",
+      "intro": "Einmal beantworten. Jede Ausschreibung verwendet sie wieder — Sie bestätigen nur, dass sie noch zutreffen.",
+      "applies": "Trifft auf uns zu",
+      "doesNotApply": "Trifft auf uns nicht zu",
+      "unanswered": "Noch nicht beantwortet",
+      "selfCleaning": "Ergriffene Maßnahmen (Selbstreinigung)",
+      "selfCleaningHint": "Was Sie unternommen haben — Artikel 57 Absatz 6. Der Auftraggeber liest dies, bevor er über einen Ausschluss entscheidet.",
+      "statedAt": "Erklärt am {{when}}",
+      "error": "Speichern fehlgeschlagen — bitte erneut versuchen."
+    },
+    "fields": {
+      "is_sme": "KMU-Status",
+      "representative": "Gesetzlicher Vertreter",
+      "buyer_name": "Öffentlicher Auftraggeber",
+      "reference": "Aktenzeichen des Verfahrens",
+      "lot_ref": "Los",
+      "confirmation": "Bestätigung für diese Ausschreibung",
+      "criterion": "Vom Auftraggeber verlangt"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Das Verfahren",
+        "lots": "Lose, für die Sie bieten"
+      },
+      "ii": {
+        "a": {
+          "identity": "Angaben zum Unternehmen"
+        },
+        "b": {
+          "representatives": "Gesetzliche Vertreter"
+        },
+        "c": {
+          "reliance": "Inanspruchnahme der Kapazitäten anderer Unternehmen"
+        },
+        "d": {
+          "subcontracting": "Unteraufträge"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA-Bescheinigung (amtliches Verzeichnis)",
+          "references": "Nachweise über die betreffenden Arbeiten",
+          "average_annual_manpower": "Durchschnittliche jährliche Beschäftigtenzahl"
+        },
+        "a": {
+          "enrolment_professional_register": "Eintragung in einem einschlägigen Berufsregister",
+          "enrolment_trade_register": "Eintragung in einem Handelsregister",
+          "other_registration": "Für Dienstleistungsaufträge erforderliche Berechtigung oder Mitgliedschaft in einer bestimmten Organisation"
+        },
+        "b": {
+          "general_yearly_turnover": "Allgemeiner Jahresumsatz",
+          "specific_yearly_turnover": "Spezifischer Jahresumsatz"
+        },
+        "d": {
+          "quality_assurance_certificates": "Bescheinigungen unabhängiger Stellen über Qualitätssicherungsnormen",
+          "environmental_management_certificates": "Bescheinigungen unabhängiger Stellen über Umweltmanagementsysteme oder -normen"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Beteiligung an einer kriminellen Vereinigung",
+          "corruption": "Korruption",
+          "fraud": "Betrug",
+          "terrorist_offences": "Terroristische Straftaten oder Straftaten im Zusammenhang mit terroristischen Aktivitäten",
+          "money_laundering": "Geldwäsche oder Terrorismusfinanzierung",
+          "child_labour_human_trafficking": "Kinderarbeit und andere Formen des Menschenhandels"
+        },
+        "b": {
+          "payment_of_taxes": "Verstoß gegen die Verpflichtung zur Entrichtung von Steuern",
+          "payment_of_social_security": "Verstoß gegen die Verpflichtung zur Entrichtung von Sozialversicherungsbeiträgen"
+        },
+        "c": {
+          "breach_environmental_obligations": "Verstoß gegen umweltrechtliche Verpflichtungen",
+          "breach_social_obligations": "Verstoß gegen sozialrechtliche Verpflichtungen",
+          "breach_labour_obligations": "Verstoß gegen arbeitsrechtliche Verpflichtungen",
+          "bankruptcy": "Konkurs",
+          "insolvency": "Zahlungsunfähigkeit",
+          "arrangement_with_creditors": "Vergleichsverfahren",
+          "analogous_situation": "Der Zahlungsunfähigkeit vergleichbare Lage gemäß nationaler Rechtsvorschriften",
+          "assets_administered_by_liquidator": "Verwaltung der Vermögenswerte durch einen Insolvenzverwalter",
+          "business_activities_suspended": "Einstellung der gewerblichen Tätigkeit",
+          "grave_professional_misconduct": "Schwerwiegendes berufliches Fehlverhalten",
+          "agreements_distorting_competition": "Vereinbarungen mit anderen Wirtschaftsteilnehmern zur Verzerrung des Wettbewerbs",
+          "conflict_of_interest": "Interessenkonflikt aufgrund seiner Teilnahme an dem Vergabeverfahren",
+          "involvement_in_preparation": "Direkte oder indirekte Beteiligung an der Vorbereitung des Vergabeverfahrens",
+          "early_termination": "Vorzeitige Beendigung, Schadensersatz oder andere vergleichbare Sanktionen",
+          "misrepresentation": "Täuschung, Zurückhaltung von Informationen, Unfähigkeit zur Vorlage erforderlicher Unterlagen oder Erlangung vertraulicher Informationen zu dem Verfahren"
+        },
+        "d": {
+          "purely_national_grounds": "Rein innerstaatliche Ausschlussgründe"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Gründe im Zusammenhang mit einer strafrechtlichen Verurteilung",
+        "B": "Gründe im Zusammenhang mit der Entrichtung von Steuern oder Sozialversicherungsbeiträgen",
+        "C": "Gründe im Zusammenhang mit Insolvenz, Interessenkonflikten oder beruflichem Fehlverhalten"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Anmelden",

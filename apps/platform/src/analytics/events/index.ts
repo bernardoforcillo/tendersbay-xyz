@@ -8,6 +8,16 @@ import {
   type Verdict,
 } from '~/features/company/constants';
 import {
+  ESPD_FORMATS,
+  ESPD_VERSIONS,
+  type EspdFormat,
+  type EspdVersion,
+  GAP_REASONS,
+  GAP_SCOPES,
+  type GapReason,
+  type GapScope,
+} from '~/features/espd/constants';
+import {
   COVERAGE_REASONS,
   COVERAGE_VALUES,
   type Coverage,
@@ -130,6 +140,15 @@ export type ReportedCoverageReason = CoverageReason | '';
 export type ReportedVerdict = Verdict | '';
 export type ReportedRequirementKind = RequirementKind | '';
 export type ReportedRequirementSource = RequirementSource | '';
+/**
+ * The ESPD reads. Scope and reason come off the wire and can be empty; a
+ * version or a format is chosen by the export sheet's own buttons, so neither
+ * has an empty arm — an empty one there would be a bug, and is scrubbed.
+ */
+export type ReportedGapScope = GapScope | '';
+export type ReportedGapReason = GapReason | '';
+export type ReportedEspdVersion = EspdVersion;
+export type ReportedEspdFormat = EspdFormat;
 export type ReportedFieldCategory = DossierFieldCategory | '';
 
 /**
@@ -245,6 +264,81 @@ export type AnalyticsEventProps = {
     location: AnalyticsLocation;
     seeded_from: ChatSeed;
   };
+
+  // ── ESPD / DGUE ───────────────────────────────────────────────────────────
+  //
+  // The readiness numbers travel as COUNTS and never as a percentage: a
+  // percentage cannot tell "3 of 4" from "300 of 400", and the whole point of
+  // splitting the to-do list is that the two denominators move differently.
+  // Nothing here carries a criterion key, a buyer, a reference or a filename —
+  // a criterion key is a statement about a company's legal standing, and the
+  // fact that a workspace answered "yes" to a conviction ground must not be
+  // reconstructable from analytics.
+
+  /**
+   * The readiness card was shown. `company_gap_count` and `bid_gap_count` are
+   * separate because they answer different product questions: the first decays
+   * to zero across a workspace's whole life, the second resets every gara.
+   */
+  dgue_readiness_viewed: {
+    location: AnalyticsLocation;
+    ready: boolean;
+    ready_field_count: number;
+    gap_count: number;
+    company_gap_count: number;
+    bid_gap_count: number;
+    declarations_complete: boolean;
+    declarations_confirmed: boolean;
+    request_known: boolean;
+  };
+  /**
+   * A gap was closed from the readiness card. `scope` and `reason` are what
+   * make this joinable to the card above; the criterion itself is not sent.
+   */
+  dgue_gap_filled: {
+    location: AnalyticsLocation;
+    scope: ReportedGapScope;
+    reason: ReportedGapReason;
+  };
+  /**
+   * The Part III declarations were re-confirmed for a gara. `was_stale`
+   * separates the first confirmation from a re-confirmation after a change —
+   * the second is the friction the reconfirmation screen exists to measure.
+   */
+  part_iii_reconfirmed: {
+    location: AnalyticsLocation;
+    declaration_count: number;
+    applies_count: number;
+    was_stale: boolean;
+  };
+  /** A file left the building. */
+  dgue_exported: {
+    location: AnalyticsLocation;
+    version: ReportedEspdVersion;
+    format: ReportedEspdFormat;
+    request_known: boolean;
+  };
+  /**
+   * A buyer's ESPD request was imported. `unmapped_criteria_count` is the read
+   * on our own taxonomy coverage: a non-zero bucket means buyers are asking for
+   * criteria this product cannot yet name.
+   */
+  dgue_request_imported: {
+    location: AnalyticsLocation;
+    version: ReportedEspdVersion;
+    criteria_count: number;
+    unmapped_criteria_count: number;
+    lot_count: number;
+  };
+  /**
+   * The dossier reached zero company-scoped gaps. The moment the compounding
+   * half of the proposition pays off, and the one event here that reports on
+   * the WORKSPACE rather than on a gara.
+   */
+  dossier_completed: {
+    location: AnalyticsLocation;
+    ready_field_count: number;
+  };
 };
 
 export type AnalyticsEventName = keyof AnalyticsEventProps;
@@ -336,6 +430,45 @@ export const EVENT_SPECS: {
   repair_chat_opened: {
     location: LOCATION,
     seeded_from: { kind: 'enum', values: CHAT_SEEDS },
+  },
+  dgue_readiness_viewed: {
+    location: LOCATION,
+    ready: BOOL,
+    ready_field_count: COUNT,
+    gap_count: COUNT,
+    company_gap_count: COUNT,
+    bid_gap_count: COUNT,
+    declarations_complete: BOOL,
+    declarations_confirmed: BOOL,
+    request_known: BOOL,
+  },
+  dgue_gap_filled: {
+    location: LOCATION,
+    scope: { kind: 'enum', values: GAP_SCOPES, allowEmpty: true },
+    reason: { kind: 'enum', values: GAP_REASONS, allowEmpty: true },
+  },
+  part_iii_reconfirmed: {
+    location: LOCATION,
+    declaration_count: COUNT,
+    applies_count: COUNT,
+    was_stale: BOOL,
+  },
+  dgue_exported: {
+    location: LOCATION,
+    version: { kind: 'enum', values: ESPD_VERSIONS },
+    format: { kind: 'enum', values: ESPD_FORMATS },
+    request_known: BOOL,
+  },
+  dgue_request_imported: {
+    location: LOCATION,
+    version: { kind: 'enum', values: ESPD_VERSIONS, allowEmpty: true },
+    criteria_count: COUNT,
+    unmapped_criteria_count: COUNT,
+    lot_count: COUNT,
+  },
+  dossier_completed: {
+    location: LOCATION,
+    ready_field_count: COUNT,
   },
 };
 

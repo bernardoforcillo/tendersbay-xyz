@@ -1,6 +1,7 @@
 import { Banner } from '@tendersbay/components/core';
 import { useTranslation } from 'react-i18next';
-import { CompanyDossierForm } from '~/features/company/components/organisms';
+import type { AnalyticsLocation } from '~/analytics';
+import { CompanyDossierForm, DeclarationsForm } from '~/features/company/components/organisms';
 import { useCompanyDossier } from '~/features/company/hooks';
 import { useWorkspaceContext } from '~/features/workspace/context';
 
@@ -16,6 +17,10 @@ import { useWorkspaceContext } from '~/features/workspace/context';
  * Nothing routes a blocked user here. A gap on a scheda gara is answered in the
  * gap row; this page is for deliberate correction.
  */
+// Typed against the catalogue's closed set, so a renamed surface fails here at
+// compile time rather than scrubbing every event this page fires to `invalid`.
+const LOCATION: AnalyticsLocation = 'company_settings';
+
 export function WorkspaceCompanyDossierPage() {
   const { t } = useTranslation();
   const { workspaceId } = useWorkspaceContext();
@@ -40,11 +45,25 @@ export function WorkspaceCompanyDossierPage() {
       {loading ? (
         <p className="text-sm text-ink-500">{t('workspace.common.loading', 'Loading…')}</p>
       ) : (
-        <CompanyDossierForm
-          workspaceId={workspaceId}
-          dossier={data?.dossier ?? null}
-          onChanged={refetch}
-        />
+        <>
+          <CompanyDossierForm
+            workspaceId={workspaceId}
+            dossier={data?.dossier ?? null}
+            onChanged={refetch}
+          />
+          {/* Part III sits UNDER the facts, not above them: a person arriving to
+              correct a turnover figure should not have to scroll past twenty-three
+              criminal-conviction questions to reach it. */}
+          {data?.dossier && (
+            <DeclarationsForm
+              workspaceId={workspaceId}
+              dossier={data.dossier}
+              canManage
+              location={LOCATION}
+              onSaved={refetch}
+            />
+          )}
+        </>
       )}
     </div>
   );

@@ -318,6 +318,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Jūsų EBVPD",
+      "progress": "Paruošta {{ready}} iš {{total}} laukų",
+      "ready": "Paruošta eksportuoti. Nieko netrūksta.",
+      "companyTodo": "Užpildoma vieną kartą — galioja kiekvienam pirkimui",
+      "companyTodoHint": "Tai duomenys apie jūsų įmonę. Atsakykite vieną kartą ir jie persikels į kitą pirkimą.",
+      "bidTodo": "Šiam pirkimui",
+      "noneLeft": "Čia daugiau nieko netrūksta.",
+      "reviewDeclarations": "Peržiūrėkite deklaracijas",
+      "confirmDeclarations": "Patvirtinkite deklaracijas",
+      "export": "Eksportuoti",
+      "exportHint": "Eksportas atrakinamas, kai nieko netrūksta."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Į tai dar niekas neatsakė.",
+        "not_authoritative": "Reikšmė yra, bet niekas jos nedeklaravo — šiame dokumente yra tik žmogaus patvirtinti faktai.",
+        "stale": "Atsakyta, bet po paskutinio pakeitimo šiam pirkimui iš naujo nepatvirtinta."
+      },
+      "openDossier": "Atverti įmonės bylą",
+      "openBid": "Užpildyti šiam pirkimui"
+    },
+    "declarations": {
+      "title": "III dalis — pašalinimo pagrindai",
+      "incomplete": "Į kai kuriuos pagrindus niekada nebuvo atsakyta. Atsakykite įmonės byloje — vieną kartą, visiems pirkimams.",
+      "openDossier": "Atverti įmonės bylą",
+      "declaredOn": "Patvirtinta šiam pirkimui {{when}}.",
+      "neverConfirmed": "Šie atsakymai šiam pirkimui dar nepatvirtinti.",
+      "stale": "Po paskutinio patvirtinimo atsakymas pasikeitė. Perskaitykite juos dar kartą ir patvirtinkite.",
+      "appliesTitle": "Pagrindai, kuriuos nurodėte kaip taikomus",
+      "selfCleaning": "Priemonės, kurių imtasi",
+      "allTitle": "Visi pagrindai",
+      "applies": "Taikoma",
+      "doesNotApply": "Netaikoma",
+      "unanswered": "Neatsakyta",
+      "confirm": "Taip — šiam pirkimui tebegalioja",
+      "confirming": "Patvirtinama…",
+      "changed": "Kažkas pasikeitė",
+      "error": "Nepavyko patvirtinti — bandykite dar kartą."
+    },
+    "export": {
+      "title": "Eksportas",
+      "notReadyHint": "Eksportas atrakinamas, kai nieko netrūksta ir deklaracijos patvirtintos šiam pirkimui.",
+      "exporting": "Ruošiama…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — pasirašomas dokumentas",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Išsamus, jūsų kalba",
+        "xml": "Pakartotiniam naudojimui ir importui, kur palaikoma"
+      },
+      "nextStep": "Toliau: jūsų teisinis atstovas pasirašo jį elektroniniu būdu, tada įkeliate jį į perkančiosios organizacijos portalą iki {{when}}.",
+      "nextStepNoDeadline": "Toliau: jūsų teisinis atstovas pasirašo jį elektroniniu būdu, tada įkeliate jį į perkančiosios organizacijos portalą.",
+      "history": "Ankstesni eksportai",
+      "historyHint": "Fiksuojame, kad eksportavote, niekada paties failo. Naujas eksportas sudaromas iš šiandienos bylos.",
+      "notEntitled": "EBVPD eksportas priklauso Pro planui. Viskas, ką matote viršuje, lieka nemokama.",
+      "notReady": "Kažko dar trūksta arba deklaracijas reikia iš naujo patvirtinti šiam pirkimui.",
+      "error": "Nepavyko eksportuoti — bandykite dar kartą."
+    },
+    "dossier": {
+      "title": "Pašalinimo pagrindai (EBVPD III dalis)",
+      "progress": "Atsakyta {{answered}} iš {{total}}",
+      "intro": "Atsakykite vieną kartą. Kiekvienas pirkimas juos naudoja pakartotinai — tik patvirtinate, kad jie tebegalioja.",
+      "applies": "Mums taikoma",
+      "doesNotApply": "Mums netaikoma",
+      "unanswered": "Dar neatsakyta",
+      "selfCleaning": "Priemonės, kurių imtasi (self-cleaning)",
+      "selfCleaningHint": "Ką dėl to padarėte — 57 straipsnio 6 dalis. Perkančioji organizacija tai perskaito prieš spręsdama dėl pašalinimo.",
+      "statedAt": "Deklaruota {{when}}",
+      "error": "Nepavyko išsaugoti — bandykite dar kartą."
+    },
+    "fields": {
+      "is_sme": "MVĮ statusas",
+      "representative": "Teisinis atstovas",
+      "buyer_name": "Perkančioji organizacija",
+      "reference": "Pirkimo numeris",
+      "lot_ref": "Dalis",
+      "confirmation": "Patvirtinimas šiam pirkimui",
+      "criterion": "Reikalauja perkančioji organizacija"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Pirkimo procedūra",
+        "lots": "Dalys, kurioms teikiate pasiūlymą"
+      },
+      "ii": {
+        "a": {
+          "identity": "Įmonės identifikavimas"
+        },
+        "b": {
+          "representatives": "Teisiniai atstovai"
+        },
+        "c": {
+          "reliance": "Rėmimasis kitų subjektų pajėgumais"
+        },
+        "d": {
+          "subcontracting": "Subranga"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA pažymėjimas (oficialus sąrašas)",
+          "references": "Nuorodos į nurodytus darbus",
+          "average_annual_manpower": "Vidutinis metinis darbuotojų skaičius"
+        },
+        "a": {
+          "enrolment_professional_register": "Įtraukimas į atitinkamą profesinį registrą",
+          "enrolment_trade_register": "Įtraukimas į prekybos registrą",
+          "other_registration": "Konkrečios organizacijos leidimas arba narystė joje, kurių reikia paslaugų sutartims sudaryti"
+        },
+        "b": {
+          "general_yearly_turnover": "Bendra metinė apyvarta",
+          "specific_yearly_turnover": "Konkreti metinė apyvarta"
+        },
+        "d": {
+          "quality_assurance_certificates": "Nepriklausomų įstaigų išduoti kokybės užtikrinimo standartų sertifikatai",
+          "environmental_management_certificates": "Nepriklausomų įstaigų išduoti aplinkosaugos vadybos sistemų arba standartų sertifikatai"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Dalyvavimas nusikalstamoje organizacijoje",
+          "corruption": "Korupcija",
+          "fraud": "Sukčiavimas",
+          "terrorist_offences": "Teroristiniai nusikaltimai arba su teroristine veikla susiję nusikaltimai",
+          "money_laundering": "Pinigų plovimas arba teroristų finansavimas",
+          "child_labour_human_trafficking": "Vaikų darbas ir kitos prekybos žmonėmis formos"
+        },
+        "b": {
+          "payment_of_taxes": "Pareigos mokėti mokesčius pažeidimas",
+          "payment_of_social_security": "Pareigos mokėti socialinio draudimo įmokas pažeidimas"
+        },
+        "c": {
+          "breach_environmental_obligations": "Pareigų aplinkos teisės srityje pažeidimas",
+          "breach_social_obligations": "Pareigų socialinės teisės srityje pažeidimas",
+          "breach_labour_obligations": "Pareigų darbo teisės srityje pažeidimas",
+          "bankruptcy": "Bankrotas",
+          "insolvency": "Nemokumas",
+          "arrangement_with_creditors": "Susitarimas su kreditoriais",
+          "analogous_situation": "Bankrotui prilygstanti situacija pagal nacionalinius įstatymus",
+          "assets_administered_by_liquidator": "Likvidatoriaus administruojamas turtas",
+          "business_activities_suspended": "Sustabdyta verslo veikla",
+          "grave_professional_misconduct": "Sunkus profesinis nusižengimas",
+          "agreements_distorting_competition": "Su kitais ekonominės veiklos vykdytojais sudaryti susitarimai, kuriais siekta iškraipyti konkurenciją",
+          "conflict_of_interest": "Interesų konfliktas dėl dalyvavimo pirkimo procedūroje",
+          "involvement_in_preparation": "Tiesioginis arba netiesioginis dalyvavimas rengiant šią pirkimo procedūrą",
+          "early_termination": "Sutarties nutraukimas anksčiau laiko, žala ar kitos panašios sankcijos",
+          "misrepresentation": "Faktų iškraipymas, nuslėpta informacija, negalėjimas pateikti reikalaujamų dokumentų ar su šia procedūra susijusios konfidencialios informacijos gavimas"
+        },
+        "d": {
+          "purely_national_grounds": "Išimtinai nacionaliniai pašalinimo pagrindai"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Su baudžiamaisiais nuosprendžiais susiję pagrindai",
+        "B": "Su mokesčių ar socialinio draudimo įmokų mokėjimu susiję pagrindai",
+        "C": "Su nemokumu, interesų konfliktu ar profesiniais nusižengimais susiję pagrindai"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Prisijungti",

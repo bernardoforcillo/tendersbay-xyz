@@ -322,6 +322,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Twój JEDZ",
+      "progress": "Gotowe pola: {{ready}} z {{total}}",
+      "ready": "Gotowe do eksportu. Niczego nie brakuje.",
+      "companyTodo": "Wypełnia się raz — działa w każdym postępowaniu",
+      "companyTodoHint": "To fakty o Twojej firmie. Odpowiedz raz, a przeniosą się na kolejne postępowanie.",
+      "bidTodo": "Dla tego postępowania",
+      "noneLeft": "Tu już niczego nie brakuje.",
+      "reviewDeclarations": "Przejrzyj oświadczenia",
+      "confirmDeclarations": "Potwierdź oświadczenia",
+      "export": "Eksportuj",
+      "exportHint": "Eksport odblokuje się, gdy niczego nie zabraknie."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Nikt jeszcze na to nie odpowiedział.",
+        "not_authoritative": "Wartość istnieje, ale nikt jej nie oświadczył — ten dokument zawiera wyłącznie fakty potwierdzone przez człowieka.",
+        "stale": "Odpowiedziano, ale nie potwierdzono ponownie dla tego postępowania po ostatniej zmianie."
+      },
+      "openDossier": "Otwórz dossier firmy",
+      "openBid": "Uzupełnij dla tego postępowania"
+    },
+    "declarations": {
+      "title": "Część III — podstawy wykluczenia",
+      "incomplete": "Na niektóre podstawy nigdy nie udzielono odpowiedzi. Odpowiedz w dossier firmy — raz, dla wszystkich postępowań.",
+      "openDossier": "Otwórz dossier firmy",
+      "declaredOn": "Potwierdzone dla tego postępowania dnia {{when}}.",
+      "neverConfirmed": "Te odpowiedzi nie zostały jeszcze potwierdzone dla tego postępowania.",
+      "stale": "Po ostatnim potwierdzeniu zmieniła się jedna z odpowiedzi. Przeczytaj je ponownie i potwierdź.",
+      "appliesTitle": "Podstawy uznane przez Ciebie za mające zastosowanie",
+      "selfCleaning": "Podjęte środki",
+      "allTitle": "Wszystkie podstawy",
+      "applies": "Ma zastosowanie",
+      "doesNotApply": "Nie ma zastosowania",
+      "unanswered": "Bez odpowiedzi",
+      "confirm": "Tak — nadal aktualne dla tego postępowania",
+      "confirming": "Potwierdzanie…",
+      "changed": "Coś się zmieniło",
+      "error": "Nie udało się potwierdzić — spróbuj ponownie."
+    },
+    "export": {
+      "title": "Eksport",
+      "notReadyHint": "Eksport odblokuje się, gdy niczego nie zabraknie, a oświadczenia będą potwierdzone dla tego postępowania.",
+      "exporting": "Przygotowywanie…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — dokument do podpisu",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Kompletny, w Twoim języku",
+        "xml": "Do ponownego użycia i importu tam, gdzie jest obsługiwany"
+      },
+      "nextStep": "Dalej: przedstawiciel prawny podpisuje go elektronicznie, a następnie wgrywasz go na portal zamawiającego przed {{when}}.",
+      "nextStepNoDeadline": "Dalej: przedstawiciel prawny podpisuje go elektronicznie, a następnie wgrywasz go na portal zamawiającego.",
+      "history": "Poprzednie eksporty",
+      "historyHint": "Zapisujemy fakt eksportu, nigdy sam plik. Kolejny eksport odtwarza dokument z dzisiejszego dossier.",
+      "notEntitled": "Eksport JEDZ należy do planu Pro. Wszystko powyżej pozostaje bezpłatne.",
+      "notReady": "Czegoś jeszcze brakuje albo oświadczenia wymagają ponownego potwierdzenia dla tego postępowania.",
+      "error": "Nie udało się wyeksportować — spróbuj ponownie."
+    },
+    "dossier": {
+      "title": "Podstawy wykluczenia (JEDZ część III)",
+      "progress": "Odpowiedzi: {{answered}} z {{total}}",
+      "intro": "Odpowiedz raz. Każde postępowanie je wykorzysta — potwierdzisz tylko, że nadal są aktualne.",
+      "applies": "Ma do nas zastosowanie",
+      "doesNotApply": "Nie ma do nas zastosowania",
+      "unanswered": "Jeszcze bez odpowiedzi",
+      "selfCleaning": "Podjęte środki (self-cleaning)",
+      "selfCleaningHint": "Co w tej sprawie zrobiono — art. 57 ust. 6. Zamawiający czyta to, zanim zdecyduje o wykluczeniu.",
+      "statedAt": "Oświadczono dnia {{when}}",
+      "error": "Nie udało się zapisać — spróbuj ponownie."
+    },
+    "fields": {
+      "is_sme": "Status MŚP",
+      "representative": "Przedstawiciel prawny",
+      "buyer_name": "Zamawiający",
+      "reference": "Znak sprawy",
+      "lot_ref": "Część",
+      "confirmation": "Potwierdzenie dla tego postępowania",
+      "criterion": "Wymagane przez zamawiającego"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Postępowanie",
+        "lots": "Części, na które składasz ofertę"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identyfikacja wykonawcy"
+        },
+        "b": {
+          "representatives": "Przedstawiciele prawni"
+        },
+        "c": {
+          "reliance": "Poleganie na zdolnościach innych podmiotów"
+        },
+        "d": {
+          "subcontracting": "Podwykonawstwo"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Atestacja SOA (wykaz urzędowy)",
+          "references": "Odniesienia do określonych robót budowlanych",
+          "average_annual_manpower": "Średnie roczne zatrudnienie"
+        },
+        "a": {
+          "enrolment_professional_register": "Wpis do odpowiedniego rejestru zawodowego",
+          "enrolment_trade_register": "Wpis do rejestru handlowego",
+          "other_registration": "Posiadanie określonego zezwolenia lub bycie członkiem określonej organizacji niezbędne do celów świadczenie usług"
+        },
+        "b": {
+          "general_yearly_turnover": "Ogólny roczny obrót",
+          "specific_yearly_turnover": "Roczny obrót w danym obszarze"
+        },
+        "d": {
+          "quality_assurance_certificates": "Zaświadczenia sporządzone przez niezależne jednostki odnośnie do norm zapewniania jakości",
+          "environmental_management_certificates": "Zaświadczenia sporządzone przez niezależne jednostki odnośnie do systemów lub norm zarządzania środowiskowego"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Udział w organizacji przestępczej",
+          "corruption": "Korupcja",
+          "fraud": "Nadużycia",
+          "terrorist_offences": "Przestępstwa terrorystyczne lub przestępstwa związane z działalnością terrorystyczną",
+          "money_laundering": "Pranie pieniędzy lub finansowanie terroryzmu",
+          "child_labour_human_trafficking": "Praca dzieci i inne formy handlu ludźmi"
+        },
+        "b": {
+          "payment_of_taxes": "Naruszenie obowiązku płatności podatków",
+          "payment_of_social_security": "Naruszenie obowiązku opłacenia składek na ubezpieczenie społeczne"
+        },
+        "c": {
+          "breach_environmental_obligations": "Naruszenie obowiązków w dziedzinie prawa ochrony środowiska",
+          "breach_social_obligations": "Naruszenie obowiązków w dziedzinie prawa socjalnego",
+          "breach_labour_obligations": "Naruszenie obowiązków w dziedzinie prawa pracy",
+          "bankruptcy": "Upadłość",
+          "insolvency": "Niewypłacalność",
+          "arrangement_with_creditors": "Układ z wierzycielami",
+          "analogous_situation": "Inna sytuacja podobna do upadłości wynikająca z prawa krajowego",
+          "assets_administered_by_liquidator": "Aktywami zarządza likwidator",
+          "business_activities_suspended": "Działalność gospodarcza jest zawieszona",
+          "grave_professional_misconduct": "Poważne wykroczenie zawodowe",
+          "agreements_distorting_competition": "Porozumienia z innymi wykonawcami mające na celu zakłócenie konkurencji",
+          "conflict_of_interest": "Konflikt interesów spowodowany udziałem w postępowaniu o udzielenie zamówienia",
+          "involvement_in_preparation": "Bezpośrednie lub pośrednie zaangażowanie w przygotowanie przedmiotowego postępowania o udzielenie zamówienia",
+          "early_termination": "Rozwiązanie umowy przed czasem, odszkodowania lub inne porównywalne sankcje",
+          "misrepresentation": "Wprowadzenie w błąd, zatajenie informacji, niemożność przedstawienia wymaganych dokumentów lub uzyskanie poufnych informacji na temat przedmiotowego postępowania"
+        },
+        "d": {
+          "purely_national_grounds": "Podstawy wykluczenia o charakterze wyłącznie krajowym"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Podstawy związane z wyrokami skazującymi za przestępstwo",
+        "B": "Podstawy związane z płatnością podatków lub składek na ubezpieczenie społeczne",
+        "C": "Podstawy związane z niewypłacalnością, konfliktem interesów lub wykroczeniami zawodowymi"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Zaloguj się",

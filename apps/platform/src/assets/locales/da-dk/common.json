@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Dit ESPD",
+      "progress": "{{ready}} af {{total}} felter klar",
+      "ready": "Klar til eksport. Der mangler ikke noget.",
+      "companyTodo": "Udfyldes én gang — gælder hvert udbud",
+      "companyTodoHint": "Det er oplysninger om din virksomhed. Svar én gang, så følger de med til næste udbud.",
+      "bidTodo": "Til dette udbud",
+      "noneLeft": "Her mangler der ikke noget.",
+      "reviewDeclarations": "Gennemgå dine erklæringer",
+      "confirmDeclarations": "Bekræft dine erklæringer",
+      "export": "Eksportér",
+      "exportHint": "Eksporten låses op, når der ikke mangler noget."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Ingen har svaret på dette endnu.",
+        "not_authoritative": "Der findes en værdi, men ingen har erklæret den — dette dokument bærer kun oplysninger, en person har bekræftet.",
+        "stale": "Besvaret, men ikke bekræftet igen til dette udbud efter den seneste ændring."
+      },
+      "openDossier": "Åbn virksomhedsdossieret",
+      "openBid": "Udfyld til dette udbud"
+    },
+    "declarations": {
+      "title": "Del III — udelukkelsesgrunde",
+      "incomplete": "Nogle grunde er aldrig besvaret. Besvar dem i virksomhedsdossieret — én gang, til alle udbud.",
+      "openDossier": "Åbn virksomhedsdossieret",
+      "declaredOn": "Bekræftet til dette udbud den {{when}}.",
+      "neverConfirmed": "Svarene er endnu ikke bekræftet til dette udbud.",
+      "stale": "Et svar er ændret efter den seneste bekræftelse. Læs dem igennem igen, og bekræft.",
+      "appliesTitle": "Grunde, du har erklæret gældende",
+      "selfCleaning": "Trufne foranstaltninger",
+      "allTitle": "Alle grunde",
+      "applies": "Gælder",
+      "doesNotApply": "Gælder ikke",
+      "unanswered": "Ubesvaret",
+      "confirm": "Ja — stadig korrekt til dette udbud",
+      "confirming": "Bekræfter…",
+      "changed": "Noget har ændret sig",
+      "error": "Kunne ikke bekræfte — prøv igen."
+    },
+    "export": {
+      "title": "Eksportér",
+      "notReadyHint": "Eksporten låses op, når der ikke mangler noget, og dine erklæringer er bekræftet til dette udbud.",
+      "exporting": "Forbereder…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — dokumentet, der skal underskrives",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Fuldstændigt, på dit sprog",
+        "xml": "Til genbrug og import, hvor det understøttes"
+      },
+      "nextStep": "Næste skridt: din tegningsberettigede underskriver det elektronisk, og derefter uploader du det i ordregiverens portal inden {{when}}.",
+      "nextStepNoDeadline": "Næste skridt: din tegningsberettigede underskriver det elektronisk, og derefter uploader du det i ordregiverens portal.",
+      "history": "Tidligere eksporter",
+      "historyHint": "Vi registrerer, at du har eksporteret, aldrig selve filen. En ny eksport bygges ud fra dagens dossier.",
+      "notEntitled": "ESPD-eksporten er en del af Pro-planen. Alt ovenfor forbliver gratis.",
+      "notReady": "Der mangler stadig noget, eller dine erklæringer skal bekræftes igen til dette udbud.",
+      "error": "Kunne ikke eksportere — prøv igen."
+    },
+    "dossier": {
+      "title": "Udelukkelsesgrunde (ESPD del III)",
+      "progress": "{{answered}} af {{total}} besvaret",
+      "intro": "Svar én gang. Hvert udbud genbruger svarene — du bekræfter blot, at de stadig gælder.",
+      "applies": "Gælder os",
+      "doesNotApply": "Gælder os ikke",
+      "unanswered": "Endnu ikke besvaret",
+      "selfCleaning": "Trufne foranstaltninger (self-cleaning)",
+      "selfCleaningHint": "Hvad I gjorde ved det — artikel 57, stk. 6. Ordregiveren læser dette, før der træffes beslutning om udelukkelse.",
+      "statedAt": "Erklæret den {{when}}",
+      "error": "Kunne ikke gemme — prøv igen."
+    },
+    "fields": {
+      "is_sme": "SMV-status",
+      "representative": "Tegningsberettiget",
+      "buyer_name": "Ordregiver",
+      "reference": "Udbuddets referencenummer",
+      "lot_ref": "Delkontrakt",
+      "confirmation": "Bekræftelse til dette udbud",
+      "criterion": "Anmodet af ordregiveren"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Udbuddet",
+        "lots": "Delkontrakter, du byder på"
+      },
+      "ii": {
+        "a": {
+          "identity": "Oplysninger om virksomheden"
+        },
+        "b": {
+          "representatives": "Tegningsberettigede"
+        },
+        "c": {
+          "reliance": "Brug af andre enheders kapacitet"
+        },
+        "d": {
+          "subcontracting": "Underleverandører"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA-attest (officiel liste)",
+          "references": "Referencer til specificerede arbejder",
+          "average_annual_manpower": "Årligt gennemsnitligt antal beskæftigede"
+        },
+        "a": {
+          "enrolment_professional_register": "Optagelse i et relevant fagligt register",
+          "enrolment_trade_register": "Optagelse i et handelsregister",
+          "other_registration": "Krav om autorisation eller medlemskab af en bestemt organisation i forbindelse med tjenesteydelseskontrakter"
+        },
+        "b": {
+          "general_yearly_turnover": "Samlet årsomsætning",
+          "specific_yearly_turnover": "Specifik årsomsætning"
+        },
+        "d": {
+          "quality_assurance_certificates": "Certifikater udstedt af uafhængige organer vedrørende kvalitetssikringsstandarder",
+          "environmental_management_certificates": "Certifikater udstedt af uafhængige organer vedrørende miljøledelsessystemer eller -standarder"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Deltagelse i en kriminel organisation",
+          "corruption": "Korruption",
+          "fraud": "Svig",
+          "terrorist_offences": "Terrorhandlinger eller strafbare handlinger med forbindelse til terroraktivitet",
+          "money_laundering": "Hvidvaskning af penge eller finansiering af terrorisme",
+          "child_labour_human_trafficking": "Børnearbejde og andre former for menneskehandel"
+        },
+        "b": {
+          "payment_of_taxes": "Tilsidesættelse af forpligtelser vedrørende betaling af skatter og afgifter",
+          "payment_of_social_security": "Tilsidesættelse af forpligtelser vedrørende betaling af bidrag til sociale sikringsordninger"
+        },
+        "c": {
+          "breach_environmental_obligations": "Tilsidesættelse af forpligtelser på miljølovgivningsområdet",
+          "breach_social_obligations": "Tilsidesættelse af forpligtelser på sociallovgivningsområdet",
+          "breach_labour_obligations": "Tilsidesættelse af forpligtelser på det arbejdsretlige område",
+          "bankruptcy": "Konkurs",
+          "insolvency": "Insolvens",
+          "arrangement_with_creditors": "Tvangsakkord uden for konkurs",
+          "analogous_situation": "En situation, der svarer til konkurs i henhold til national ret",
+          "assets_administered_by_liquidator": "Aktiver, der administreres af en kurator",
+          "business_activities_suspended": "Erhvervsvirksomheden er indstillet",
+          "grave_professional_misconduct": "Alvorlige forsømmelser i forbindelse med udøvelsen af erhvervet",
+          "agreements_distorting_competition": "Aftaler med andre økonomiske aktører med henblik på konkurrencefordrejning",
+          "conflict_of_interest": "Interessekonflikt som følge af deltagelse i udbudsproceduren",
+          "involvement_in_preparation": "Direkte eller indirekte involvering i forberedelsen af denne udbudsprocedure",
+          "early_termination": "Ophævelse eller en lignende sanktion",
+          "misrepresentation": "Afgivelse af urigtige oplysninger, tilbageholdelse af oplysninger, ude af stand til at fremlægge de dokumenter, der anmodes om, eller indhentede fortrolige oplysninger i forbindelse med denne procedure"
+        },
+        "d": {
+          "purely_national_grounds": "Rent nationale udelukkelsesgrunde"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Grunde vedrørende straffedomme",
+        "B": "Grunde vedrørende betaling af skatter og afgifter eller bidrag til sociale sikringsordninger",
+        "C": "Grunde, der vedrører insolvens, interessekonflikter eller forsømmelse i forbindelse med udøvelsen af erhvervet"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Log ind",
