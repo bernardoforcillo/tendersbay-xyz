@@ -3,7 +3,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { AddBidRequest, AddBidResponse, AdvanceStageRequest, AdvanceStageResponse, GetBidRequest, GetBidResponse, ListBidsRequest, ListBidsResponse, ListChecklistItemsRequest, ListChecklistItemsResponse, RecordOutcomeRequest, RecordOutcomeResponse, RemoveBidRequest, RemoveBidResponse, SetGoNoGoRequest, SetGoNoGoResponse, UpsertChecklistAnswerRequest, UpsertChecklistAnswerResponse } from "./bid_pb.js";
+import { AddBidRequest, AddBidResponse, AdvanceStageRequest, AdvanceStageResponse, GetBidRequest, GetBidResponse, ListBidsRequest, ListBidsResponse, ListChecklistItemsRequest, ListChecklistItemsResponse, ListEspdDataRequest, ListEspdDataResponse, PutLotRequest, PutLotResponse, PutRelianceRequest, PutRelianceResponse, PutSubcontractorRequest, PutSubcontractorResponse, RecordOutcomeRequest, RecordOutcomeResponse, RemoveBidRequest, RemoveBidResponse, RemoveLotRequest, RemoveLotResponse, RemoveRelianceRequest, RemoveRelianceResponse, RemoveSubcontractorRequest, RemoveSubcontractorResponse, SetGoNoGoRequest, SetGoNoGoResponse, UpsertChecklistAnswerRequest, UpsertChecklistAnswerResponse } from "./bid_pb.js";
 import { MethodKind } from "@bufbuild/protobuf";
 
 /**
@@ -96,6 +96,73 @@ export declare const BidService: {
       readonly name: "RemoveBid",
       readonly I: typeof RemoveBidRequest,
       readonly O: typeof RemoveBidResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * ESPD per-bid data: the lots tendered for (Part I), reliance on other
+     * entities (Part II.C) and subcontractors (Part II.D). Reads follow
+     * CanAccessWorkbench, writes CanManageWorkbench, like the checklist.
+     *
+     * @generated from rpc bid.v1.BidService.ListEspdData
+     */
+    readonly listEspdData: {
+      readonly name: "ListEspdData",
+      readonly I: typeof ListEspdDataRequest,
+      readonly O: typeof ListEspdDataResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc bid.v1.BidService.PutLot
+     */
+    readonly putLot: {
+      readonly name: "PutLot",
+      readonly I: typeof PutLotRequest,
+      readonly O: typeof PutLotResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc bid.v1.BidService.RemoveLot
+     */
+    readonly removeLot: {
+      readonly name: "RemoveLot",
+      readonly I: typeof RemoveLotRequest,
+      readonly O: typeof RemoveLotResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc bid.v1.BidService.PutSubcontractor
+     */
+    readonly putSubcontractor: {
+      readonly name: "PutSubcontractor",
+      readonly I: typeof PutSubcontractorRequest,
+      readonly O: typeof PutSubcontractorResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc bid.v1.BidService.RemoveSubcontractor
+     */
+    readonly removeSubcontractor: {
+      readonly name: "RemoveSubcontractor",
+      readonly I: typeof RemoveSubcontractorRequest,
+      readonly O: typeof RemoveSubcontractorResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc bid.v1.BidService.PutReliance
+     */
+    readonly putReliance: {
+      readonly name: "PutReliance",
+      readonly I: typeof PutRelianceRequest,
+      readonly O: typeof PutRelianceResponse,
+      readonly kind: MethodKind.Unary,
+    },
+    /**
+     * @generated from rpc bid.v1.BidService.RemoveReliance
+     */
+    readonly removeReliance: {
+      readonly name: "RemoveReliance",
+      readonly I: typeof RemoveRelianceRequest,
+      readonly O: typeof RemoveRelianceResponse,
       readonly kind: MethodKind.Unary,
     },
   }

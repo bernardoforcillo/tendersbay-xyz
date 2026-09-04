@@ -1269,6 +1269,930 @@ func (*RemoveBidResponse) Descriptor() ([]byte, []int) {
 	return file_bid_v1_bid_proto_rawDescGZIP(), []int{19}
 }
 
+type Lot struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	LotRef        string                 `protobuf:"bytes,2,opt,name=lot_ref,json=lotRef,proto3" json:"lot_ref,omitempty"` // the buyer's lot id as published ("LOT-0001", "1", "A")
+	Position      int32                  `protobuf:"varint,3,opt,name=position,proto3" json:"position,omitempty"`          // display order
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Lot) Reset() {
+	*x = Lot{}
+	mi := &file_bid_v1_bid_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Lot) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Lot) ProtoMessage() {}
+
+func (x *Lot) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Lot.ProtoReflect.Descriptor instead.
+func (*Lot) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *Lot) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Lot) GetLotRef() string {
+	if x != nil {
+		return x.LotRef
+	}
+	return ""
+}
+
+func (x *Lot) GetPosition() int32 {
+	if x != nil {
+		return x.Position
+	}
+	return 0
+}
+
+type Subcontractor struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Vat           string                 `protobuf:"bytes,3,opt,name=vat,proto3" json:"vat,omitempty"`
+	Country       string                 `protobuf:"bytes,4,opt,name=country,proto3" json:"country,omitempty"`                    // alpha-2, "" = unstated
+	SharePct      int32                  `protobuf:"varint,5,opt,name=share_pct,json=sharePct,proto3" json:"share_pct,omitempty"` // meaningful only if share_pct_set
+	SharePctSet   bool                   `protobuf:"varint,6,opt,name=share_pct_set,json=sharePctSet,proto3" json:"share_pct_set,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Subcontractor) Reset() {
+	*x = Subcontractor{}
+	mi := &file_bid_v1_bid_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Subcontractor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Subcontractor) ProtoMessage() {}
+
+func (x *Subcontractor) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Subcontractor.ProtoReflect.Descriptor instead.
+func (*Subcontractor) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *Subcontractor) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Subcontractor) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Subcontractor) GetVat() string {
+	if x != nil {
+		return x.Vat
+	}
+	return ""
+}
+
+func (x *Subcontractor) GetCountry() string {
+	if x != nil {
+		return x.Country
+	}
+	return ""
+}
+
+func (x *Subcontractor) GetSharePct() int32 {
+	if x != nil {
+		return x.SharePct
+	}
+	return 0
+}
+
+func (x *Subcontractor) GetSharePctSet() bool {
+	if x != nil {
+		return x.SharePctSet
+	}
+	return false
+}
+
+type Reliance struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	EntityName    string                 `protobuf:"bytes,2,opt,name=entity_name,json=entityName,proto3" json:"entity_name,omitempty"`
+	Vat           string                 `protobuf:"bytes,3,opt,name=vat,proto3" json:"vat,omitempty"`
+	Criterion     string                 `protobuf:"bytes,4,opt,name=criterion,proto3" json:"criterion,omitempty"` // the espd criterion key relied on, e.g. "iv.b.general_yearly_turnover"
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Reliance) Reset() {
+	*x = Reliance{}
+	mi := &file_bid_v1_bid_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Reliance) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Reliance) ProtoMessage() {}
+
+func (x *Reliance) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Reliance.ProtoReflect.Descriptor instead.
+func (*Reliance) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *Reliance) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Reliance) GetEntityName() string {
+	if x != nil {
+		return x.EntityName
+	}
+	return ""
+}
+
+func (x *Reliance) GetVat() string {
+	if x != nil {
+		return x.Vat
+	}
+	return ""
+}
+
+func (x *Reliance) GetCriterion() string {
+	if x != nil {
+		return x.Criterion
+	}
+	return ""
+}
+
+type ListEspdDataRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkbenchId   string                 `protobuf:"bytes,1,opt,name=workbench_id,json=workbenchId,proto3" json:"workbench_id,omitempty"`
+	BidId         string                 `protobuf:"bytes,2,opt,name=bid_id,json=bidId,proto3" json:"bid_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListEspdDataRequest) Reset() {
+	*x = ListEspdDataRequest{}
+	mi := &file_bid_v1_bid_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListEspdDataRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListEspdDataRequest) ProtoMessage() {}
+
+func (x *ListEspdDataRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListEspdDataRequest.ProtoReflect.Descriptor instead.
+func (*ListEspdDataRequest) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *ListEspdDataRequest) GetWorkbenchId() string {
+	if x != nil {
+		return x.WorkbenchId
+	}
+	return ""
+}
+
+func (x *ListEspdDataRequest) GetBidId() string {
+	if x != nil {
+		return x.BidId
+	}
+	return ""
+}
+
+type ListEspdDataResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Lots           []*Lot                 `protobuf:"bytes,1,rep,name=lots,proto3" json:"lots,omitempty"`
+	Subcontractors []*Subcontractor       `protobuf:"bytes,2,rep,name=subcontractors,proto3" json:"subcontractors,omitempty"`
+	Reliances      []*Reliance            `protobuf:"bytes,3,rep,name=reliances,proto3" json:"reliances,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *ListEspdDataResponse) Reset() {
+	*x = ListEspdDataResponse{}
+	mi := &file_bid_v1_bid_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListEspdDataResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListEspdDataResponse) ProtoMessage() {}
+
+func (x *ListEspdDataResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListEspdDataResponse.ProtoReflect.Descriptor instead.
+func (*ListEspdDataResponse) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *ListEspdDataResponse) GetLots() []*Lot {
+	if x != nil {
+		return x.Lots
+	}
+	return nil
+}
+
+func (x *ListEspdDataResponse) GetSubcontractors() []*Subcontractor {
+	if x != nil {
+		return x.Subcontractors
+	}
+	return nil
+}
+
+func (x *ListEspdDataResponse) GetReliances() []*Reliance {
+	if x != nil {
+		return x.Reliances
+	}
+	return nil
+}
+
+type PutLotRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkbenchId   string                 `protobuf:"bytes,1,opt,name=workbench_id,json=workbenchId,proto3" json:"workbench_id,omitempty"`
+	BidId         string                 `protobuf:"bytes,2,opt,name=bid_id,json=bidId,proto3" json:"bid_id,omitempty"`
+	Lot           *Lot                   `protobuf:"bytes,3,opt,name=lot,proto3" json:"lot,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutLotRequest) Reset() {
+	*x = PutLotRequest{}
+	mi := &file_bid_v1_bid_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutLotRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutLotRequest) ProtoMessage() {}
+
+func (x *PutLotRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutLotRequest.ProtoReflect.Descriptor instead.
+func (*PutLotRequest) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *PutLotRequest) GetWorkbenchId() string {
+	if x != nil {
+		return x.WorkbenchId
+	}
+	return ""
+}
+
+func (x *PutLotRequest) GetBidId() string {
+	if x != nil {
+		return x.BidId
+	}
+	return ""
+}
+
+func (x *PutLotRequest) GetLot() *Lot {
+	if x != nil {
+		return x.Lot
+	}
+	return nil
+}
+
+type PutLotResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Lot           *Lot                   `protobuf:"bytes,1,opt,name=lot,proto3" json:"lot,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutLotResponse) Reset() {
+	*x = PutLotResponse{}
+	mi := &file_bid_v1_bid_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutLotResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutLotResponse) ProtoMessage() {}
+
+func (x *PutLotResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutLotResponse.ProtoReflect.Descriptor instead.
+func (*PutLotResponse) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *PutLotResponse) GetLot() *Lot {
+	if x != nil {
+		return x.Lot
+	}
+	return nil
+}
+
+type RemoveLotRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkbenchId   string                 `protobuf:"bytes,1,opt,name=workbench_id,json=workbenchId,proto3" json:"workbench_id,omitempty"`
+	BidId         string                 `protobuf:"bytes,2,opt,name=bid_id,json=bidId,proto3" json:"bid_id,omitempty"`
+	Id            string                 `protobuf:"bytes,3,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveLotRequest) Reset() {
+	*x = RemoveLotRequest{}
+	mi := &file_bid_v1_bid_proto_msgTypes[27]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveLotRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveLotRequest) ProtoMessage() {}
+
+func (x *RemoveLotRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[27]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveLotRequest.ProtoReflect.Descriptor instead.
+func (*RemoveLotRequest) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{27}
+}
+
+func (x *RemoveLotRequest) GetWorkbenchId() string {
+	if x != nil {
+		return x.WorkbenchId
+	}
+	return ""
+}
+
+func (x *RemoveLotRequest) GetBidId() string {
+	if x != nil {
+		return x.BidId
+	}
+	return ""
+}
+
+func (x *RemoveLotRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type RemoveLotResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveLotResponse) Reset() {
+	*x = RemoveLotResponse{}
+	mi := &file_bid_v1_bid_proto_msgTypes[28]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveLotResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveLotResponse) ProtoMessage() {}
+
+func (x *RemoveLotResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[28]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveLotResponse.ProtoReflect.Descriptor instead.
+func (*RemoveLotResponse) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{28}
+}
+
+type PutSubcontractorRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkbenchId   string                 `protobuf:"bytes,1,opt,name=workbench_id,json=workbenchId,proto3" json:"workbench_id,omitempty"`
+	BidId         string                 `protobuf:"bytes,2,opt,name=bid_id,json=bidId,proto3" json:"bid_id,omitempty"`
+	Subcontractor *Subcontractor         `protobuf:"bytes,3,opt,name=subcontractor,proto3" json:"subcontractor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutSubcontractorRequest) Reset() {
+	*x = PutSubcontractorRequest{}
+	mi := &file_bid_v1_bid_proto_msgTypes[29]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutSubcontractorRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutSubcontractorRequest) ProtoMessage() {}
+
+func (x *PutSubcontractorRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[29]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutSubcontractorRequest.ProtoReflect.Descriptor instead.
+func (*PutSubcontractorRequest) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *PutSubcontractorRequest) GetWorkbenchId() string {
+	if x != nil {
+		return x.WorkbenchId
+	}
+	return ""
+}
+
+func (x *PutSubcontractorRequest) GetBidId() string {
+	if x != nil {
+		return x.BidId
+	}
+	return ""
+}
+
+func (x *PutSubcontractorRequest) GetSubcontractor() *Subcontractor {
+	if x != nil {
+		return x.Subcontractor
+	}
+	return nil
+}
+
+type PutSubcontractorResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Subcontractor *Subcontractor         `protobuf:"bytes,1,opt,name=subcontractor,proto3" json:"subcontractor,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutSubcontractorResponse) Reset() {
+	*x = PutSubcontractorResponse{}
+	mi := &file_bid_v1_bid_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutSubcontractorResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutSubcontractorResponse) ProtoMessage() {}
+
+func (x *PutSubcontractorResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutSubcontractorResponse.ProtoReflect.Descriptor instead.
+func (*PutSubcontractorResponse) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{30}
+}
+
+func (x *PutSubcontractorResponse) GetSubcontractor() *Subcontractor {
+	if x != nil {
+		return x.Subcontractor
+	}
+	return nil
+}
+
+type RemoveSubcontractorRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkbenchId   string                 `protobuf:"bytes,1,opt,name=workbench_id,json=workbenchId,proto3" json:"workbench_id,omitempty"`
+	BidId         string                 `protobuf:"bytes,2,opt,name=bid_id,json=bidId,proto3" json:"bid_id,omitempty"`
+	Id            string                 `protobuf:"bytes,3,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveSubcontractorRequest) Reset() {
+	*x = RemoveSubcontractorRequest{}
+	mi := &file_bid_v1_bid_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveSubcontractorRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveSubcontractorRequest) ProtoMessage() {}
+
+func (x *RemoveSubcontractorRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveSubcontractorRequest.ProtoReflect.Descriptor instead.
+func (*RemoveSubcontractorRequest) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *RemoveSubcontractorRequest) GetWorkbenchId() string {
+	if x != nil {
+		return x.WorkbenchId
+	}
+	return ""
+}
+
+func (x *RemoveSubcontractorRequest) GetBidId() string {
+	if x != nil {
+		return x.BidId
+	}
+	return ""
+}
+
+func (x *RemoveSubcontractorRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type RemoveSubcontractorResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveSubcontractorResponse) Reset() {
+	*x = RemoveSubcontractorResponse{}
+	mi := &file_bid_v1_bid_proto_msgTypes[32]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveSubcontractorResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveSubcontractorResponse) ProtoMessage() {}
+
+func (x *RemoveSubcontractorResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[32]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveSubcontractorResponse.ProtoReflect.Descriptor instead.
+func (*RemoveSubcontractorResponse) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{32}
+}
+
+type PutRelianceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkbenchId   string                 `protobuf:"bytes,1,opt,name=workbench_id,json=workbenchId,proto3" json:"workbench_id,omitempty"`
+	BidId         string                 `protobuf:"bytes,2,opt,name=bid_id,json=bidId,proto3" json:"bid_id,omitempty"`
+	Reliance      *Reliance              `protobuf:"bytes,3,opt,name=reliance,proto3" json:"reliance,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutRelianceRequest) Reset() {
+	*x = PutRelianceRequest{}
+	mi := &file_bid_v1_bid_proto_msgTypes[33]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutRelianceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutRelianceRequest) ProtoMessage() {}
+
+func (x *PutRelianceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[33]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutRelianceRequest.ProtoReflect.Descriptor instead.
+func (*PutRelianceRequest) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{33}
+}
+
+func (x *PutRelianceRequest) GetWorkbenchId() string {
+	if x != nil {
+		return x.WorkbenchId
+	}
+	return ""
+}
+
+func (x *PutRelianceRequest) GetBidId() string {
+	if x != nil {
+		return x.BidId
+	}
+	return ""
+}
+
+func (x *PutRelianceRequest) GetReliance() *Reliance {
+	if x != nil {
+		return x.Reliance
+	}
+	return nil
+}
+
+type PutRelianceResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Reliance      *Reliance              `protobuf:"bytes,1,opt,name=reliance,proto3" json:"reliance,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PutRelianceResponse) Reset() {
+	*x = PutRelianceResponse{}
+	mi := &file_bid_v1_bid_proto_msgTypes[34]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PutRelianceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PutRelianceResponse) ProtoMessage() {}
+
+func (x *PutRelianceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[34]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PutRelianceResponse.ProtoReflect.Descriptor instead.
+func (*PutRelianceResponse) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{34}
+}
+
+func (x *PutRelianceResponse) GetReliance() *Reliance {
+	if x != nil {
+		return x.Reliance
+	}
+	return nil
+}
+
+type RemoveRelianceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	WorkbenchId   string                 `protobuf:"bytes,1,opt,name=workbench_id,json=workbenchId,proto3" json:"workbench_id,omitempty"`
+	BidId         string                 `protobuf:"bytes,2,opt,name=bid_id,json=bidId,proto3" json:"bid_id,omitempty"`
+	Id            string                 `protobuf:"bytes,3,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveRelianceRequest) Reset() {
+	*x = RemoveRelianceRequest{}
+	mi := &file_bid_v1_bid_proto_msgTypes[35]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveRelianceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveRelianceRequest) ProtoMessage() {}
+
+func (x *RemoveRelianceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[35]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveRelianceRequest.ProtoReflect.Descriptor instead.
+func (*RemoveRelianceRequest) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{35}
+}
+
+func (x *RemoveRelianceRequest) GetWorkbenchId() string {
+	if x != nil {
+		return x.WorkbenchId
+	}
+	return ""
+}
+
+func (x *RemoveRelianceRequest) GetBidId() string {
+	if x != nil {
+		return x.BidId
+	}
+	return ""
+}
+
+func (x *RemoveRelianceRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type RemoveRelianceResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RemoveRelianceResponse) Reset() {
+	*x = RemoveRelianceResponse{}
+	mi := &file_bid_v1_bid_proto_msgTypes[36]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RemoveRelianceResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RemoveRelianceResponse) ProtoMessage() {}
+
+func (x *RemoveRelianceResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_bid_v1_bid_proto_msgTypes[36]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RemoveRelianceResponse.ProtoReflect.Descriptor instead.
+func (*RemoveRelianceResponse) Descriptor() ([]byte, []int) {
+	return file_bid_v1_bid_proto_rawDescGZIP(), []int{36}
+}
+
 var File_bid_v1_bid_proto protoreflect.FileDescriptor
 
 const file_bid_v1_bid_proto_rawDesc = "" +
@@ -1360,7 +2284,64 @@ const file_bid_v1_bid_proto_rawDesc = "" +
 	"\x10RemoveBidRequest\x12!\n" +
 	"\fworkbench_id\x18\x01 \x01(\tR\vworkbenchId\x12\x15\n" +
 	"\x06bid_id\x18\x02 \x01(\tR\x05bidId\"\x13\n" +
-	"\x11RemoveBidResponse2\x9d\x05\n" +
+	"\x11RemoveBidResponse\"J\n" +
+	"\x03Lot\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\alot_ref\x18\x02 \x01(\tR\x06lotRef\x12\x1a\n" +
+	"\bposition\x18\x03 \x01(\x05R\bposition\"\xa0\x01\n" +
+	"\rSubcontractor\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x10\n" +
+	"\x03vat\x18\x03 \x01(\tR\x03vat\x12\x18\n" +
+	"\acountry\x18\x04 \x01(\tR\acountry\x12\x1b\n" +
+	"\tshare_pct\x18\x05 \x01(\x05R\bsharePct\x12\"\n" +
+	"\rshare_pct_set\x18\x06 \x01(\bR\vsharePctSet\"k\n" +
+	"\bReliance\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
+	"\ventity_name\x18\x02 \x01(\tR\n" +
+	"entityName\x12\x10\n" +
+	"\x03vat\x18\x03 \x01(\tR\x03vat\x12\x1c\n" +
+	"\tcriterion\x18\x04 \x01(\tR\tcriterion\"O\n" +
+	"\x13ListEspdDataRequest\x12!\n" +
+	"\fworkbench_id\x18\x01 \x01(\tR\vworkbenchId\x12\x15\n" +
+	"\x06bid_id\x18\x02 \x01(\tR\x05bidId\"\xa6\x01\n" +
+	"\x14ListEspdDataResponse\x12\x1f\n" +
+	"\x04lots\x18\x01 \x03(\v2\v.bid.v1.LotR\x04lots\x12=\n" +
+	"\x0esubcontractors\x18\x02 \x03(\v2\x15.bid.v1.SubcontractorR\x0esubcontractors\x12.\n" +
+	"\treliances\x18\x03 \x03(\v2\x10.bid.v1.RelianceR\treliances\"h\n" +
+	"\rPutLotRequest\x12!\n" +
+	"\fworkbench_id\x18\x01 \x01(\tR\vworkbenchId\x12\x15\n" +
+	"\x06bid_id\x18\x02 \x01(\tR\x05bidId\x12\x1d\n" +
+	"\x03lot\x18\x03 \x01(\v2\v.bid.v1.LotR\x03lot\"/\n" +
+	"\x0ePutLotResponse\x12\x1d\n" +
+	"\x03lot\x18\x01 \x01(\v2\v.bid.v1.LotR\x03lot\"\\\n" +
+	"\x10RemoveLotRequest\x12!\n" +
+	"\fworkbench_id\x18\x01 \x01(\tR\vworkbenchId\x12\x15\n" +
+	"\x06bid_id\x18\x02 \x01(\tR\x05bidId\x12\x0e\n" +
+	"\x02id\x18\x03 \x01(\tR\x02id\"\x13\n" +
+	"\x11RemoveLotResponse\"\x90\x01\n" +
+	"\x17PutSubcontractorRequest\x12!\n" +
+	"\fworkbench_id\x18\x01 \x01(\tR\vworkbenchId\x12\x15\n" +
+	"\x06bid_id\x18\x02 \x01(\tR\x05bidId\x12;\n" +
+	"\rsubcontractor\x18\x03 \x01(\v2\x15.bid.v1.SubcontractorR\rsubcontractor\"W\n" +
+	"\x18PutSubcontractorResponse\x12;\n" +
+	"\rsubcontractor\x18\x01 \x01(\v2\x15.bid.v1.SubcontractorR\rsubcontractor\"f\n" +
+	"\x1aRemoveSubcontractorRequest\x12!\n" +
+	"\fworkbench_id\x18\x01 \x01(\tR\vworkbenchId\x12\x15\n" +
+	"\x06bid_id\x18\x02 \x01(\tR\x05bidId\x12\x0e\n" +
+	"\x02id\x18\x03 \x01(\tR\x02id\"\x1d\n" +
+	"\x1bRemoveSubcontractorResponse\"|\n" +
+	"\x12PutRelianceRequest\x12!\n" +
+	"\fworkbench_id\x18\x01 \x01(\tR\vworkbenchId\x12\x15\n" +
+	"\x06bid_id\x18\x02 \x01(\tR\x05bidId\x12,\n" +
+	"\breliance\x18\x03 \x01(\v2\x10.bid.v1.RelianceR\breliance\"C\n" +
+	"\x13PutRelianceResponse\x12,\n" +
+	"\breliance\x18\x01 \x01(\v2\x10.bid.v1.RelianceR\breliance\"a\n" +
+	"\x15RemoveRelianceRequest\x12!\n" +
+	"\fworkbench_id\x18\x01 \x01(\tR\vworkbenchId\x12\x15\n" +
+	"\x06bid_id\x18\x02 \x01(\tR\x05bidId\x12\x0e\n" +
+	"\x02id\x18\x03 \x01(\tR\x02id\"\x18\n" +
+	"\x16RemoveRelianceResponse2\xb3\t\n" +
 	"\n" +
 	"BidService\x127\n" +
 	"\x06AddBid\x12\x15.bid.v1.AddBidRequest\x1a\x16.bid.v1.AddBidResponse\x12=\n" +
@@ -1371,7 +2352,14 @@ const file_bid_v1_bid_proto_rawDesc = "" +
 	"\rRecordOutcome\x12\x1c.bid.v1.RecordOutcomeRequest\x1a\x1d.bid.v1.RecordOutcomeResponse\x12[\n" +
 	"\x12ListChecklistItems\x12!.bid.v1.ListChecklistItemsRequest\x1a\".bid.v1.ListChecklistItemsResponse\x12d\n" +
 	"\x15UpsertChecklistAnswer\x12$.bid.v1.UpsertChecklistAnswerRequest\x1a%.bid.v1.UpsertChecklistAnswerResponse\x12@\n" +
-	"\tRemoveBid\x12\x18.bid.v1.RemoveBidRequest\x1a\x19.bid.v1.RemoveBidResponseBNZLgithub.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1;bidv1b\x06proto3"
+	"\tRemoveBid\x12\x18.bid.v1.RemoveBidRequest\x1a\x19.bid.v1.RemoveBidResponse\x12I\n" +
+	"\fListEspdData\x12\x1b.bid.v1.ListEspdDataRequest\x1a\x1c.bid.v1.ListEspdDataResponse\x127\n" +
+	"\x06PutLot\x12\x15.bid.v1.PutLotRequest\x1a\x16.bid.v1.PutLotResponse\x12@\n" +
+	"\tRemoveLot\x12\x18.bid.v1.RemoveLotRequest\x1a\x19.bid.v1.RemoveLotResponse\x12U\n" +
+	"\x10PutSubcontractor\x12\x1f.bid.v1.PutSubcontractorRequest\x1a .bid.v1.PutSubcontractorResponse\x12^\n" +
+	"\x13RemoveSubcontractor\x12\".bid.v1.RemoveSubcontractorRequest\x1a#.bid.v1.RemoveSubcontractorResponse\x12F\n" +
+	"\vPutReliance\x12\x1a.bid.v1.PutRelianceRequest\x1a\x1b.bid.v1.PutRelianceResponse\x12O\n" +
+	"\x0eRemoveReliance\x12\x1d.bid.v1.RemoveRelianceRequest\x1a\x1e.bid.v1.RemoveRelianceResponseBNZLgithub.com/bernardoforcillo/tendersbay-xyz/services/backend/gen/bid/v1;bidv1b\x06proto3"
 
 var (
 	file_bid_v1_bid_proto_rawDescOnce sync.Once
@@ -1385,7 +2373,7 @@ func file_bid_v1_bid_proto_rawDescGZIP() []byte {
 	return file_bid_v1_bid_proto_rawDescData
 }
 
-var file_bid_v1_bid_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+var file_bid_v1_bid_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_bid_v1_bid_proto_goTypes = []any{
 	(*Bid)(nil),                           // 0: bid.v1.Bid
 	(*ChecklistItem)(nil),                 // 1: bid.v1.ChecklistItem
@@ -1407,10 +2395,27 @@ var file_bid_v1_bid_proto_goTypes = []any{
 	(*UpsertChecklistAnswerResponse)(nil), // 17: bid.v1.UpsertChecklistAnswerResponse
 	(*RemoveBidRequest)(nil),              // 18: bid.v1.RemoveBidRequest
 	(*RemoveBidResponse)(nil),             // 19: bid.v1.RemoveBidResponse
-	(*v1.ReasonSignals)(nil),              // 20: tender.v1.ReasonSignals
+	(*Lot)(nil),                           // 20: bid.v1.Lot
+	(*Subcontractor)(nil),                 // 21: bid.v1.Subcontractor
+	(*Reliance)(nil),                      // 22: bid.v1.Reliance
+	(*ListEspdDataRequest)(nil),           // 23: bid.v1.ListEspdDataRequest
+	(*ListEspdDataResponse)(nil),          // 24: bid.v1.ListEspdDataResponse
+	(*PutLotRequest)(nil),                 // 25: bid.v1.PutLotRequest
+	(*PutLotResponse)(nil),                // 26: bid.v1.PutLotResponse
+	(*RemoveLotRequest)(nil),              // 27: bid.v1.RemoveLotRequest
+	(*RemoveLotResponse)(nil),             // 28: bid.v1.RemoveLotResponse
+	(*PutSubcontractorRequest)(nil),       // 29: bid.v1.PutSubcontractorRequest
+	(*PutSubcontractorResponse)(nil),      // 30: bid.v1.PutSubcontractorResponse
+	(*RemoveSubcontractorRequest)(nil),    // 31: bid.v1.RemoveSubcontractorRequest
+	(*RemoveSubcontractorResponse)(nil),   // 32: bid.v1.RemoveSubcontractorResponse
+	(*PutRelianceRequest)(nil),            // 33: bid.v1.PutRelianceRequest
+	(*PutRelianceResponse)(nil),           // 34: bid.v1.PutRelianceResponse
+	(*RemoveRelianceRequest)(nil),         // 35: bid.v1.RemoveRelianceRequest
+	(*RemoveRelianceResponse)(nil),        // 36: bid.v1.RemoveRelianceResponse
+	(*v1.ReasonSignals)(nil),              // 37: tender.v1.ReasonSignals
 }
 var file_bid_v1_bid_proto_depIdxs = []int32{
-	20, // 0: bid.v1.Bid.reason:type_name -> tender.v1.ReasonSignals
+	37, // 0: bid.v1.Bid.reason:type_name -> tender.v1.ReasonSignals
 	0,  // 1: bid.v1.AddBidResponse.bid:type_name -> bid.v1.Bid
 	0,  // 2: bid.v1.ListBidsResponse.bids:type_name -> bid.v1.Bid
 	0,  // 3: bid.v1.GetBidResponse.bid:type_name -> bid.v1.Bid
@@ -1419,29 +2424,52 @@ var file_bid_v1_bid_proto_depIdxs = []int32{
 	0,  // 6: bid.v1.RecordOutcomeResponse.bid:type_name -> bid.v1.Bid
 	1,  // 7: bid.v1.ListChecklistItemsResponse.items:type_name -> bid.v1.ChecklistItem
 	1,  // 8: bid.v1.UpsertChecklistAnswerResponse.item:type_name -> bid.v1.ChecklistItem
-	2,  // 9: bid.v1.BidService.AddBid:input_type -> bid.v1.AddBidRequest
-	4,  // 10: bid.v1.BidService.ListBids:input_type -> bid.v1.ListBidsRequest
-	6,  // 11: bid.v1.BidService.GetBid:input_type -> bid.v1.GetBidRequest
-	8,  // 12: bid.v1.BidService.SetGoNoGo:input_type -> bid.v1.SetGoNoGoRequest
-	10, // 13: bid.v1.BidService.AdvanceStage:input_type -> bid.v1.AdvanceStageRequest
-	12, // 14: bid.v1.BidService.RecordOutcome:input_type -> bid.v1.RecordOutcomeRequest
-	14, // 15: bid.v1.BidService.ListChecklistItems:input_type -> bid.v1.ListChecklistItemsRequest
-	16, // 16: bid.v1.BidService.UpsertChecklistAnswer:input_type -> bid.v1.UpsertChecklistAnswerRequest
-	18, // 17: bid.v1.BidService.RemoveBid:input_type -> bid.v1.RemoveBidRequest
-	3,  // 18: bid.v1.BidService.AddBid:output_type -> bid.v1.AddBidResponse
-	5,  // 19: bid.v1.BidService.ListBids:output_type -> bid.v1.ListBidsResponse
-	7,  // 20: bid.v1.BidService.GetBid:output_type -> bid.v1.GetBidResponse
-	9,  // 21: bid.v1.BidService.SetGoNoGo:output_type -> bid.v1.SetGoNoGoResponse
-	11, // 22: bid.v1.BidService.AdvanceStage:output_type -> bid.v1.AdvanceStageResponse
-	13, // 23: bid.v1.BidService.RecordOutcome:output_type -> bid.v1.RecordOutcomeResponse
-	15, // 24: bid.v1.BidService.ListChecklistItems:output_type -> bid.v1.ListChecklistItemsResponse
-	17, // 25: bid.v1.BidService.UpsertChecklistAnswer:output_type -> bid.v1.UpsertChecklistAnswerResponse
-	19, // 26: bid.v1.BidService.RemoveBid:output_type -> bid.v1.RemoveBidResponse
-	18, // [18:27] is the sub-list for method output_type
-	9,  // [9:18] is the sub-list for method input_type
-	9,  // [9:9] is the sub-list for extension type_name
-	9,  // [9:9] is the sub-list for extension extendee
-	0,  // [0:9] is the sub-list for field type_name
+	20, // 9: bid.v1.ListEspdDataResponse.lots:type_name -> bid.v1.Lot
+	21, // 10: bid.v1.ListEspdDataResponse.subcontractors:type_name -> bid.v1.Subcontractor
+	22, // 11: bid.v1.ListEspdDataResponse.reliances:type_name -> bid.v1.Reliance
+	20, // 12: bid.v1.PutLotRequest.lot:type_name -> bid.v1.Lot
+	20, // 13: bid.v1.PutLotResponse.lot:type_name -> bid.v1.Lot
+	21, // 14: bid.v1.PutSubcontractorRequest.subcontractor:type_name -> bid.v1.Subcontractor
+	21, // 15: bid.v1.PutSubcontractorResponse.subcontractor:type_name -> bid.v1.Subcontractor
+	22, // 16: bid.v1.PutRelianceRequest.reliance:type_name -> bid.v1.Reliance
+	22, // 17: bid.v1.PutRelianceResponse.reliance:type_name -> bid.v1.Reliance
+	2,  // 18: bid.v1.BidService.AddBid:input_type -> bid.v1.AddBidRequest
+	4,  // 19: bid.v1.BidService.ListBids:input_type -> bid.v1.ListBidsRequest
+	6,  // 20: bid.v1.BidService.GetBid:input_type -> bid.v1.GetBidRequest
+	8,  // 21: bid.v1.BidService.SetGoNoGo:input_type -> bid.v1.SetGoNoGoRequest
+	10, // 22: bid.v1.BidService.AdvanceStage:input_type -> bid.v1.AdvanceStageRequest
+	12, // 23: bid.v1.BidService.RecordOutcome:input_type -> bid.v1.RecordOutcomeRequest
+	14, // 24: bid.v1.BidService.ListChecklistItems:input_type -> bid.v1.ListChecklistItemsRequest
+	16, // 25: bid.v1.BidService.UpsertChecklistAnswer:input_type -> bid.v1.UpsertChecklistAnswerRequest
+	18, // 26: bid.v1.BidService.RemoveBid:input_type -> bid.v1.RemoveBidRequest
+	23, // 27: bid.v1.BidService.ListEspdData:input_type -> bid.v1.ListEspdDataRequest
+	25, // 28: bid.v1.BidService.PutLot:input_type -> bid.v1.PutLotRequest
+	27, // 29: bid.v1.BidService.RemoveLot:input_type -> bid.v1.RemoveLotRequest
+	29, // 30: bid.v1.BidService.PutSubcontractor:input_type -> bid.v1.PutSubcontractorRequest
+	31, // 31: bid.v1.BidService.RemoveSubcontractor:input_type -> bid.v1.RemoveSubcontractorRequest
+	33, // 32: bid.v1.BidService.PutReliance:input_type -> bid.v1.PutRelianceRequest
+	35, // 33: bid.v1.BidService.RemoveReliance:input_type -> bid.v1.RemoveRelianceRequest
+	3,  // 34: bid.v1.BidService.AddBid:output_type -> bid.v1.AddBidResponse
+	5,  // 35: bid.v1.BidService.ListBids:output_type -> bid.v1.ListBidsResponse
+	7,  // 36: bid.v1.BidService.GetBid:output_type -> bid.v1.GetBidResponse
+	9,  // 37: bid.v1.BidService.SetGoNoGo:output_type -> bid.v1.SetGoNoGoResponse
+	11, // 38: bid.v1.BidService.AdvanceStage:output_type -> bid.v1.AdvanceStageResponse
+	13, // 39: bid.v1.BidService.RecordOutcome:output_type -> bid.v1.RecordOutcomeResponse
+	15, // 40: bid.v1.BidService.ListChecklistItems:output_type -> bid.v1.ListChecklistItemsResponse
+	17, // 41: bid.v1.BidService.UpsertChecklistAnswer:output_type -> bid.v1.UpsertChecklistAnswerResponse
+	19, // 42: bid.v1.BidService.RemoveBid:output_type -> bid.v1.RemoveBidResponse
+	24, // 43: bid.v1.BidService.ListEspdData:output_type -> bid.v1.ListEspdDataResponse
+	26, // 44: bid.v1.BidService.PutLot:output_type -> bid.v1.PutLotResponse
+	28, // 45: bid.v1.BidService.RemoveLot:output_type -> bid.v1.RemoveLotResponse
+	30, // 46: bid.v1.BidService.PutSubcontractor:output_type -> bid.v1.PutSubcontractorResponse
+	32, // 47: bid.v1.BidService.RemoveSubcontractor:output_type -> bid.v1.RemoveSubcontractorResponse
+	34, // 48: bid.v1.BidService.PutReliance:output_type -> bid.v1.PutRelianceResponse
+	36, // 49: bid.v1.BidService.RemoveReliance:output_type -> bid.v1.RemoveRelianceResponse
+	34, // [34:50] is the sub-list for method output_type
+	18, // [18:34] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_bid_v1_bid_proto_init() }
@@ -1455,7 +2483,7 @@ func file_bid_v1_bid_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_bid_v1_bid_proto_rawDesc), len(file_bid_v1_bid_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   20,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
