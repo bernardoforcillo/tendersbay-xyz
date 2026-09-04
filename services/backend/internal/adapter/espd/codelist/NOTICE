@@ -1,0 +1,12 @@
+The files edm211.xml, edm4.xml and tables_gen.go in this directory contain
+criterion definitions extracted from the official ESPD Exchange Data Model:
+
+    https://github.com/OP-TED/espd-edm
+    © European Union
+    Licensed under the European Union Public Licence (EUPL) v1.2
+
+They are redistributed here under that licence, unmodified in substance: the
+generator selects the criteria this service supports and copies each
+<cac:TenderingCriterion> element verbatim.
+
+Everything else in this repository is under the repository's own licence.
