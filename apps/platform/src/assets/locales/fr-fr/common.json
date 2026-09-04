@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Votre DUME",
+      "progress": "{{ready}} champs sur {{total}} prêts",
+      "ready": "Prêt à exporter. Rien ne manque.",
+      "companyTodo": "À remplir une fois — valable pour chaque marché",
+      "companyTodoHint": "Ce sont des faits sur votre entreprise. Répondez une fois et ils valent pour les marchés suivants.",
+      "bidTodo": "Pour ce marché",
+      "noneLeft": "Plus rien ici.",
+      "reviewDeclarations": "Revoir vos déclarations",
+      "confirmDeclarations": "Confirmer vos déclarations",
+      "export": "Exporter",
+      "exportHint": "L’export se débloque lorsque plus rien ne manque."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Personne n’y a encore répondu.",
+        "not_authoritative": "Une valeur existe, mais personne ne l’a déclarée — ce document ne porte que des faits confirmés par une personne.",
+        "stale": "Répondu, mais non reconfirmé pour ce marché depuis la dernière modification."
+      },
+      "openDossier": "Ouvrir le dossier",
+      "openBid": "Compléter pour ce marché"
+    },
+    "declarations": {
+      "title": "Partie III — motifs d’exclusion",
+      "incomplete": "Certains motifs n’ont jamais reçu de réponse. Répondez-y dans le dossier d’entreprise — une fois, pour tous les marchés.",
+      "openDossier": "Ouvrir le dossier",
+      "declaredOn": "Confirmées pour ce marché le {{when}}.",
+      "neverConfirmed": "Ces réponses n’ont pas encore été confirmées pour ce marché.",
+      "stale": "Une réponse a changé après la dernière confirmation. Relisez-les et confirmez.",
+      "appliesTitle": "Motifs que vous avez déclarés applicables",
+      "selfCleaning": "Mesures prises",
+      "allTitle": "Tous les motifs",
+      "applies": "S’applique",
+      "doesNotApply": "Ne s’applique pas",
+      "unanswered": "Sans réponse",
+      "confirm": "Oui — toujours vrai pour ce marché",
+      "confirming": "Confirmation…",
+      "changed": "Quelque chose a changé",
+      "error": "Confirmation impossible — réessayez."
+    },
+    "export": {
+      "title": "Exporter",
+      "notReadyHint": "L’export se débloque lorsque plus rien ne manque et que vos déclarations sont confirmées pour ce marché.",
+      "exporting": "Préparation…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — le document à signer",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Complet, dans votre langue",
+        "xml": "Pour réutilisation et import là où c’est pris en charge"
+      },
+      "nextStep": "Ensuite : votre représentant légal le signe électroniquement, puis vous le déposez sur le portail de l’acheteur avant le {{when}}.",
+      "nextStepNoDeadline": "Ensuite : votre représentant légal le signe électroniquement, puis vous le déposez sur le portail de l’acheteur.",
+      "history": "Exports précédents",
+      "historyHint": "Nous enregistrons que vous avez exporté, jamais le fichier. Un nouvel export est reconstruit à partir du dossier d’aujourd’hui.",
+      "notEntitled": "L’export du DUME fait partie de l’offre Pro. Tout ce que vous voyez ci-dessus reste gratuit.",
+      "notReady": "Il manque encore quelque chose, ou vos déclarations doivent être reconfirmées pour ce marché.",
+      "error": "Export impossible — réessayez."
+    },
+    "dossier": {
+      "title": "Motifs d’exclusion (DUME partie III)",
+      "progress": "{{answered}} sur {{total}} renseignés",
+      "intro": "Répondez une seule fois. Chaque marché les réutilise — vous confirmez seulement qu’ils sont toujours vrais.",
+      "applies": "S’applique à nous",
+      "doesNotApply": "Ne s’applique pas à nous",
+      "unanswered": "Pas encore renseigné",
+      "selfCleaning": "Mesures prises (self-cleaning)",
+      "selfCleaningHint": "Ce que vous avez fait — article 57, paragraphe 6. L’acheteur le lit avant de décider de vous exclure ou non.",
+      "statedAt": "Déclaré le {{when}}",
+      "error": "Enregistrement impossible — réessayez."
+    },
+    "fields": {
+      "is_sme": "Statut de PME",
+      "representative": "Représentant légal",
+      "buyer_name": "Acheteur public",
+      "reference": "Référence de la procédure",
+      "lot_ref": "Lot",
+      "confirmation": "Confirmation pour ce marché",
+      "criterion": "Demandé par l’acheteur"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "La procédure",
+        "lots": "Lots pour lesquels vous soumissionnez"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identification de l’entreprise"
+        },
+        "b": {
+          "representatives": "Représentants légaux"
+        },
+        "c": {
+          "reliance": "Recours aux capacités d’autres entités"
+        },
+        "d": {
+          "subcontracting": "Sous-traitance"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Attestation SOA (liste officielle)",
+          "references": "Références de travaux spécifiques",
+          "average_annual_manpower": "Effectifs moyens annuels"
+        },
+        "a": {
+          "enrolment_professional_register": "Inscription sur un registre professionnel pertinent",
+          "enrolment_trade_register": "Inscription sur un registre du commerce",
+          "other_registration": "Autorisation ou appartenance à une organisation particulière"
+        },
+        "b": {
+          "general_yearly_turnover": "Chiffre d’affaires annuel général",
+          "specific_yearly_turnover": "Chiffre d’affaires annuel spécifique"
+        },
+        "d": {
+          "quality_assurance_certificates": "Certificats établis par des organismes indépendants concernant les normes d’assurance de la qualité",
+          "environmental_management_certificates": "Certificats établis par des organismes indépendants concernant les systèmes ou normes de gestion environnementale"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Participation à une organisation criminelle",
+          "corruption": "Corruption",
+          "fraud": "Fraude",
+          "terrorist_offences": "Infractions terroristes ou infractions liées aux activités terroristes",
+          "money_laundering": "Blanchiment de capitaux ou financement du terrorisme",
+          "child_labour_human_trafficking": "Travail des enfants et autres formes de traite des êtres humains"
+        },
+        "b": {
+          "payment_of_taxes": "Manquement à l’obligation relative au paiement d’impôts et taxes",
+          "payment_of_social_security": "Manquement à l’obligation relative au paiement de cotisations de sécurité sociale"
+        },
+        "c": {
+          "breach_environmental_obligations": "Manquement aux obligations dans le domaine du droit environnemental",
+          "breach_social_obligations": "Manquement aux obligations dans le domaine du droit social",
+          "breach_labour_obligations": "Manquement aux obligations dans le domaine du droit du travail",
+          "bankruptcy": "Faillite",
+          "insolvency": "Insolvabilité",
+          "arrangement_with_creditors": "Concordat",
+          "analogous_situation": "Situation analogue à la faillite prévue dans la législation nationale",
+          "assets_administered_by_liquidator": "Biens administrés par un liquidateur",
+          "business_activities_suspended": "État de cessation d’activités",
+          "grave_professional_misconduct": "Faute professionnelle grave",
+          "agreements_distorting_competition": "Accords avec d’autres opérateurs économiques en vue de fausser la concurrence",
+          "conflict_of_interest": "Conflit d’intérêt créé par sa participation à la procédure de passation de marché",
+          "involvement_in_preparation": "Association directe ou indirecte à la préparation de cette procédure de passation de marché",
+          "early_termination": "Résiliation, dommages et intérêts ou autres sanctions comparables",
+          "misrepresentation": "Fausses déclarations, dissimulation d'informations, incapacité de présenter les documents requis ou obtention d'informations confidentielles sur cette procédure"
+        },
+        "d": {
+          "purely_national_grounds": "Motifs d’exclusion purement nationaux"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Motifs liés à des condamnations pénales",
+        "B": "Motifs liés au paiement d’impôts et taxes ou de cotisations de sécurité sociale",
+        "C": "Motifs liés à l’insolvabilité, aux conflits d’intérêts ou à une faute professionnelle"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Connexion",

@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Your DGUE",
+      "progress": "{{ready}} of {{total}} fields ready",
+      "ready": "Ready to export. Nothing is missing.",
+      "companyTodo": "Fix once — closes for every tender",
+      "companyTodoHint": "These are facts about your company. Answer them once and they carry to the next tender.",
+      "bidTodo": "For this tender",
+      "noneLeft": "Nothing left here.",
+      "reviewDeclarations": "Review your declarations",
+      "confirmDeclarations": "Confirm your declarations",
+      "export": "Export",
+      "exportHint": "The export unlocks when nothing is missing."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Nobody has answered this yet.",
+        "not_authoritative": "We hold a value, but nobody stated it — this document only carries facts a person confirmed.",
+        "stale": "Answered, but not re-confirmed for this tender since it last changed."
+      },
+      "openDossier": "Open the dossier",
+      "openBid": "Fill it in for this tender"
+    },
+    "declarations": {
+      "title": "Part III — exclusion grounds",
+      "incomplete": "Some grounds have never been answered. Answer them in the company dossier — once, for every tender.",
+      "openDossier": "Open the dossier",
+      "declaredOn": "Confirmed for this tender on {{when}}.",
+      "neverConfirmed": "These answers have not been confirmed for this tender yet.",
+      "stale": "An answer changed after the last confirmation. Read them again and confirm.",
+      "appliesTitle": "Grounds you declared as applying",
+      "selfCleaning": "Measures taken",
+      "allTitle": "All grounds",
+      "applies": "Applies",
+      "doesNotApply": "Does not apply",
+      "unanswered": "Unanswered",
+      "confirm": "Yes — still true for this tender",
+      "confirming": "Confirming…",
+      "changed": "Something has changed",
+      "error": "Could not confirm — try again."
+    },
+    "export": {
+      "title": "Export",
+      "notReadyHint": "The export unlocks once nothing is missing and your declarations are confirmed for this tender.",
+      "exporting": "Preparing…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — the document to sign",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Complete, in your language",
+        "xml": "For reuse and import where supported"
+      },
+      "nextStep": "Next: your legal representative signs it electronically, then you upload it to the contracting authority’s portal before {{when}}.",
+      "nextStepNoDeadline": "Next: your legal representative signs it electronically, then you upload it to the contracting authority’s portal.",
+      "history": "Previous exports",
+      "historyHint": "We record that you exported, never the file itself. Exporting again rebuilds it from today’s dossier.",
+      "notEntitled": "The DGUE export is part of the Pro plan. Everything you see above stays free.",
+      "notReady": "Something is still missing, or your declarations need re-confirming for this tender.",
+      "error": "Could not export — try again."
+    },
+    "dossier": {
+      "title": "Exclusion grounds (DGUE Part III)",
+      "progress": "{{answered}} of {{total}} answered",
+      "intro": "Answer these once. Every tender reuses them — you only re-confirm that they are still true.",
+      "applies": "Applies to us",
+      "doesNotApply": "Does not apply to us",
+      "unanswered": "Not answered yet",
+      "selfCleaning": "Measures taken (self-cleaning)",
+      "selfCleaningHint": "What you did about it — Article 57(6). A contracting authority reads this before deciding whether to exclude you.",
+      "statedAt": "Declared on {{when}}",
+      "error": "Could not save — try again."
+    },
+    "fields": {
+      "is_sme": "SME status",
+      "representative": "Legal representative",
+      "buyer_name": "Contracting authority",
+      "reference": "Procedure reference",
+      "lot_ref": "Lot",
+      "confirmation": "Confirmation for this tender",
+      "criterion": "Requested by the buyer"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "The procedure",
+        "lots": "Lots you are tendering for"
+      },
+      "ii": {
+        "a": {
+          "identity": "Company identification"
+        },
+        "b": {
+          "representatives": "Legal representatives"
+        },
+        "c": {
+          "reliance": "Relying on other entities"
+        },
+        "d": {
+          "subcontracting": "Subcontracting"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "SOA attestation (official list)",
+          "references": "References on specified works",
+          "average_annual_manpower": "Average yearly manpower"
+        },
+        "a": {
+          "enrolment_professional_register": "Enrolment in a relevant professional register",
+          "enrolment_trade_register": "Enrolment in a trade register",
+          "other_registration": "Authorisation or membership of a particular organisation needed for service contracts"
+        },
+        "b": {
+          "general_yearly_turnover": "General yearly turnover",
+          "specific_yearly_turnover": "Specific yearly turnover"
+        },
+        "d": {
+          "quality_assurance_certificates": "Certificates by independent bodies about quality assurance standards",
+          "environmental_management_certificates": "Certificates by independent bodies about environmental management systems or standards"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Participation in a criminal organisation",
+          "corruption": "Corruption",
+          "fraud": "Fraud",
+          "terrorist_offences": "Terrorist offences or offences linked to terrorist activities",
+          "money_laundering": "Money laundering or terrorist financing",
+          "child_labour_human_trafficking": "Child labour and including other forms of trafficking in human beings"
+        },
+        "b": {
+          "payment_of_taxes": "Breaching obligation relating to payment of taxes",
+          "payment_of_social_security": "Breaching obligation relating to payment of social security contributions"
+        },
+        "c": {
+          "breach_environmental_obligations": "Breaching of obligations in the fields of environmental law",
+          "breach_social_obligations": "Breaching of obligations in the fields of social law",
+          "breach_labour_obligations": "Breaching of obligations in the fields of labour law",
+          "bankruptcy": "Bankruptcy",
+          "insolvency": "Insolvency",
+          "arrangement_with_creditors": "Arrangement with creditors",
+          "analogous_situation": "Analogous situation like bankruptcy, insolvency or arrangement with creditors under national law",
+          "assets_administered_by_liquidator": "Assets being administered by liquidator",
+          "business_activities_suspended": "Business activities are suspended",
+          "grave_professional_misconduct": "Grave professional misconduct",
+          "agreements_distorting_competition": "Agreements with other economic operators aimed at distorting competition",
+          "conflict_of_interest": "Conflict of interest due to its participation in the procurement procedure",
+          "involvement_in_preparation": "Direct or indirect involvement in the preparation of this procurement procedure",
+          "early_termination": "Early termination, damages, or other comparable sanctions",
+          "misrepresentation": "Misrepresentation, withheld information, unable to provide required documents or obtained confidential information of this procedure"
+        },
+        "d": {
+          "purely_national_grounds": "Purely national exclusion grounds"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Grounds relating to criminal convictions",
+        "B": "Grounds relating to the payment of taxes or social security contributions",
+        "C": "Grounds relating to insolvency, conflicts of interests or professional misconduct"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Log in",

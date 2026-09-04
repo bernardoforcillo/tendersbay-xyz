@@ -318,6 +318,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "DUAE-ul dumneavoastră",
+      "progress": "{{ready}} din {{total}} câmpuri gata",
+      "ready": "Gata de export. Nu lipsește nimic.",
+      "companyTodo": "Se completează o dată — valabil pentru fiecare licitație",
+      "companyTodoHint": "Sunt date despre firma dumneavoastră. Răspundeți o dată și se transferă la licitația următoare.",
+      "bidTodo": "Pentru această licitație",
+      "noneLeft": "Aici nu mai lipsește nimic.",
+      "reviewDeclarations": "Revizuiți declarațiile",
+      "confirmDeclarations": "Confirmați declarațiile",
+      "export": "Exportă",
+      "exportHint": "Exportul se deblochează când nu mai lipsește nimic."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Nimeni nu a răspuns încă la aceasta.",
+        "not_authoritative": "Există o valoare, dar nimeni nu a declarat-o — acest document conține doar fapte confirmate de o persoană.",
+        "stale": "Răspuns, dar neconfirmat din nou pentru această licitație după ultima modificare."
+      },
+      "openDossier": "Deschide dosarul firmei",
+      "openBid": "Completează pentru această licitație"
+    },
+    "declarations": {
+      "title": "Partea III — motive de excludere",
+      "incomplete": "La unele motive nu s-a răspuns niciodată. Răspundeți în dosarul firmei — o dată, pentru toate licitațiile.",
+      "openDossier": "Deschide dosarul firmei",
+      "declaredOn": "Confirmate pentru această licitație la {{when}}.",
+      "neverConfirmed": "Aceste răspunsuri nu au fost încă confirmate pentru această licitație.",
+      "stale": "Un răspuns s-a schimbat după ultima confirmare. Citiți-le din nou și confirmați.",
+      "appliesTitle": "Motive pe care le-ați declarat aplicabile",
+      "selfCleaning": "Măsuri luate",
+      "allTitle": "Toate motivele",
+      "applies": "Se aplică",
+      "doesNotApply": "Nu se aplică",
+      "unanswered": "Fără răspuns",
+      "confirm": "Da — încă valabil pentru această licitație",
+      "confirming": "Se confirmă…",
+      "changed": "S-a schimbat ceva",
+      "error": "Confirmarea a eșuat — încercați din nou."
+    },
+    "export": {
+      "title": "Export",
+      "notReadyHint": "Exportul se deblochează când nu mai lipsește nimic și declarațiile sunt confirmate pentru această licitație.",
+      "exporting": "Se pregătește…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — documentul de semnat",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Complet, în limba dumneavoastră",
+        "xml": "Pentru reutilizare și import unde este acceptat"
+      },
+      "nextStep": "Urmează: reprezentantul legal îl semnează electronic, apoi îl încărcați pe portalul autorității contractante înainte de {{when}}.",
+      "nextStepNoDeadline": "Urmează: reprezentantul legal îl semnează electronic, apoi îl încărcați pe portalul autorității contractante.",
+      "history": "Exporturi anterioare",
+      "historyHint": "Înregistrăm faptul că ați exportat, niciodată fișierul. Un nou export se reconstruiește din dosarul de astăzi.",
+      "notEntitled": "Exportul DUAE face parte din planul Pro. Tot ce vedeți mai sus rămâne gratuit.",
+      "notReady": "Mai lipsește ceva sau declarațiile trebuie reconfirmate pentru această licitație.",
+      "error": "Exportul a eșuat — încercați din nou."
+    },
+    "dossier": {
+      "title": "Motive de excludere (DUAE partea III)",
+      "progress": "{{answered}} din {{total}} cu răspuns",
+      "intro": "Răspundeți o singură dată. Fiecare licitație le reutilizează — doar confirmați că sunt încă valabile.",
+      "applies": "Ni se aplică",
+      "doesNotApply": "Nu ni se aplică",
+      "unanswered": "Încă fără răspuns",
+      "selfCleaning": "Măsuri luate (self-cleaning)",
+      "selfCleaningHint": "Ce ați făcut în această privință — articolul 57 alineatul (6). Autoritatea contractantă citește acest text înainte de a decide excluderea.",
+      "statedAt": "Declarat la {{when}}",
+      "error": "Salvarea a eșuat — încercați din nou."
+    },
+    "fields": {
+      "is_sme": "Calitatea de IMM",
+      "representative": "Reprezentant legal",
+      "buyer_name": "Autoritate contractantă",
+      "reference": "Referința procedurii",
+      "lot_ref": "Lot",
+      "confirmation": "Confirmare pentru această licitație",
+      "criterion": "Solicitat de autoritatea contractantă"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "Procedura",
+        "lots": "Loturile pentru care depuneți ofertă"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identificarea firmei"
+        },
+        "b": {
+          "representatives": "Reprezentanți legali"
+        },
+        "c": {
+          "reliance": "Utilizarea capacităților altor entități"
+        },
+        "d": {
+          "subcontracting": "Subcontractare"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Atestat SOA (listă oficială)",
+          "references": "Referințe privind lucrări specifice",
+          "average_annual_manpower": "Efectivele medii anuale de personal"
+        },
+        "a": {
+          "enrolment_professional_register": "Înscrierea într-un registru profesional relevant",
+          "enrolment_trade_register": "Înscrierea într-un registru al comerțului",
+          "other_registration": "Autorizarea sau apartenența la o anumită organizație necesară pentru contractele de servicii"
+        },
+        "b": {
+          "general_yearly_turnover": "Cifra de afaceri anuală generală",
+          "specific_yearly_turnover": "Specificați cifra de afaceri medie anuală"
+        },
+        "d": {
+          "quality_assurance_certificates": "Certificate emise de organisme independente cu privire la standardele de asigurare a calității",
+          "environmental_management_certificates": "Certificate emise de organisme independente cu privire la sistemele sau standardele de management de mediu"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Participarea la o organizație criminală",
+          "corruption": "Corupție",
+          "fraud": "Frauda",
+          "terrorist_offences": "Infracțiuni teroriste sau infracțiuni legate de activități teroriste",
+          "money_laundering": "Combaterea spălării banilor sau a finanțării terorismului",
+          "child_labour_human_trafficking": "Munca copiilor și alte forme de trafic de persoane"
+        },
+        "b": {
+          "payment_of_taxes": "Încălcarea obligației de plată a impozitelor",
+          "payment_of_social_security": "Încălcarea obligației de plată a contribuțiilor la asigurările sociale"
+        },
+        "c": {
+          "breach_environmental_obligations": "Încălcarea obligațiilor în domeniile legislației de mediu",
+          "breach_social_obligations": "Încălcarea obligațiilor în domeniile legislației sociale",
+          "breach_labour_obligations": "Încălcarea obligațiilor în domeniile legislației muncii",
+          "bankruptcy": "Faliment",
+          "insolvency": "Insolvență",
+          "arrangement_with_creditors": "Concordat",
+          "analogous_situation": "Situații similare, în temeiul legislației naționale, cum ar fi falimentul",
+          "assets_administered_by_liquidator": "Active administrate de lichidator",
+          "business_activities_suspended": "Activitățile economice sunt suspendate",
+          "grave_professional_misconduct": "Abaterea profesională gravă",
+          "agreements_distorting_competition": "Acorduri cu alți operatori economici care vizează denaturarea concurenței",
+          "conflict_of_interest": "Conflict de interese care decurge din participarea la procedura de achiziții publice",
+          "involvement_in_preparation": "Implicare directă sau indirectă în pregătirea acestei proceduri de achiziții publice",
+          "early_termination": "Încetare anticipată, daune-interese sau alte sancțiuni comparabile",
+          "misrepresentation": "Interpretare eronată, nedivulgare de informații, incapacitate de a furniza documentele necesare sau obținere de informații confidențiale referitoare la această procedură"
+        },
+        "d": {
+          "purely_national_grounds": "Motive de excludere pur naționale"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Motive referitoare la condamnările penale",
+        "B": "Motive legate de plata impozitelor sau a contribuțiilor la asigurările sociale",
+        "C": "Motive legate de insolvență, conflicte de interese sau abateri profesionale"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Autentificare",

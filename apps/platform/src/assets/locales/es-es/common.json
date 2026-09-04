@@ -314,6 +314,172 @@
       }
     }
   },
+  "espd": {
+    "readiness": {
+      "title": "Su DEUC",
+      "progress": "{{ready}} de {{total}} campos listos",
+      "ready": "Listo para exportar. No falta nada.",
+      "companyTodo": "Se rellena una vez — vale para cada licitación",
+      "companyTodoHint": "Son datos sobre su empresa. Respóndalos una vez y valdrán para la siguiente licitación.",
+      "bidTodo": "Para esta licitación",
+      "noneLeft": "Aquí no falta nada.",
+      "reviewDeclarations": "Revisar sus declaraciones",
+      "confirmDeclarations": "Confirmar sus declaraciones",
+      "export": "Exportar",
+      "exportHint": "La exportación se desbloquea cuando no falta nada."
+    },
+    "gap": {
+      "reason": {
+        "missing": "Todavía nadie ha respondido a esto.",
+        "not_authoritative": "Existe un valor, pero nadie lo ha declarado: este documento solo recoge hechos confirmados por una persona.",
+        "stale": "Respondido, pero no reconfirmado para esta licitación desde el último cambio."
+      },
+      "openDossier": "Abrir el expediente",
+      "openBid": "Rellenar para esta licitación"
+    },
+    "declarations": {
+      "title": "Parte III — motivos de exclusión",
+      "incomplete": "Algunos motivos nunca se han respondido. Respóndalos en el expediente de empresa: una vez, para todas las licitaciones.",
+      "openDossier": "Abrir el expediente",
+      "declaredOn": "Confirmadas para esta licitación el {{when}}.",
+      "neverConfirmed": "Estas respuestas aún no se han confirmado para esta licitación.",
+      "stale": "Una respuesta cambió después de la última confirmación. Vuelva a leerlas y confirme.",
+      "appliesTitle": "Motivos que ha declarado aplicables",
+      "selfCleaning": "Medidas adoptadas",
+      "allTitle": "Todos los motivos",
+      "applies": "Se aplica",
+      "doesNotApply": "No se aplica",
+      "unanswered": "Sin responder",
+      "confirm": "Sí — sigue siendo cierto para esta licitación",
+      "confirming": "Confirmando…",
+      "changed": "Algo ha cambiado",
+      "error": "No se pudo confirmar: inténtelo de nuevo."
+    },
+    "export": {
+      "title": "Exportar",
+      "notReadyHint": "La exportación se desbloquea cuando no falta nada y sus declaraciones están confirmadas para esta licitación.",
+      "exporting": "Preparando…",
+      "choice": {
+        "edm_2_1_1_pdf": "PDF — el documento que se firma",
+        "edm_2_1_1_xml": "XML — ESPD 2.1.1 (eDGUE-IT)",
+        "edm_4_xml": "XML — ESPD 4.x (eForms)",
+        "edm_4_pdf": "PDF — ESPD 4.x"
+      },
+      "hint": {
+        "pdf": "Completo, en su idioma",
+        "xml": "Para reutilización e importación donde se admita"
+      },
+      "nextStep": "Siguiente paso: su representante legal lo firma electrónicamente y luego lo sube al portal del poder adjudicador antes del {{when}}.",
+      "nextStepNoDeadline": "Siguiente paso: su representante legal lo firma electrónicamente y luego lo sube al portal del poder adjudicador.",
+      "history": "Exportaciones anteriores",
+      "historyHint": "Registramos que ha exportado, nunca el archivo. Al exportar de nuevo se reconstruye a partir del expediente de hoy.",
+      "notEntitled": "La exportación del DEUC forma parte del plan Pro. Todo lo que ve arriba sigue siendo gratuito.",
+      "notReady": "Todavía falta algo, o sus declaraciones deben reconfirmarse para esta licitación.",
+      "error": "No se pudo exportar: inténtelo de nuevo."
+    },
+    "dossier": {
+      "title": "Motivos de exclusión (DEUC parte III)",
+      "progress": "{{answered}} de {{total}} respondidos",
+      "intro": "Respóndalos una vez. Cada licitación los reutiliza: solo confirmará que siguen siendo ciertos.",
+      "applies": "Se nos aplica",
+      "doesNotApply": "No se nos aplica",
+      "unanswered": "Aún sin responder",
+      "selfCleaning": "Medidas adoptadas (self-cleaning)",
+      "selfCleaningHint": "Qué hicieron al respecto — artículo 57, apartado 6. El poder adjudicador lo lee antes de decidir si les excluye.",
+      "statedAt": "Declarado el {{when}}",
+      "error": "No se pudo guardar: inténtelo de nuevo."
+    },
+    "fields": {
+      "is_sme": "Condición de pyme",
+      "representative": "Representante legal",
+      "buyer_name": "Poder adjudicador",
+      "reference": "Referencia del procedimiento",
+      "lot_ref": "Lote",
+      "confirmation": "Confirmación para esta licitación",
+      "criterion": "Solicitado por el poder adjudicador"
+    },
+    "criteria": {
+      "i": {
+        "procedure": "El procedimiento",
+        "lots": "Lotes a los que se presenta"
+      },
+      "ii": {
+        "a": {
+          "identity": "Identificación de la empresa"
+        },
+        "b": {
+          "representatives": "Representantes legales"
+        },
+        "c": {
+          "reliance": "Recurso a las capacidades de otras entidades"
+        },
+        "d": {
+          "subcontracting": "Subcontratación"
+        }
+      },
+      "iv": {
+        "c": {
+          "soa_attestation": "Certificación SOA (lista oficial)",
+          "references": "Referencias sobre obras específicas",
+          "average_annual_manpower": "Plantilla media anual"
+        },
+        "a": {
+          "enrolment_professional_register": "Inscripción en un registro profesional pertinente",
+          "enrolment_trade_register": "Inscripción en un registro mercantil",
+          "other_registration": "Autorización o afiliación a una determinada organización necesaria para los contratos de servicios"
+        },
+        "b": {
+          "general_yearly_turnover": "Volumen de negocios anual general",
+          "specific_yearly_turnover": "Volumen de negocios anual específico"
+        },
+        "d": {
+          "quality_assurance_certificates": "Certificados expedidos por organismos independientes sobre las normas de aseguramiento de la calidad",
+          "environmental_management_certificates": "Certificados expedidos por organismos independientes acerca de sistemas o normas de gestión medioambiental"
+        }
+      },
+      "iii": {
+        "a": {
+          "participation_criminal_organisation": "Participación en una organización delictiva",
+          "corruption": "Corrupción",
+          "fraud": "Fraude",
+          "terrorist_offences": "Delitos de terrorismo o delitos ligados a las actividades terroristas",
+          "money_laundering": "Blanqueo de capitales o financiación del terrorismo",
+          "child_labour_human_trafficking": "Trabajo infantil y otras formas de trata de seres humanos"
+        },
+        "b": {
+          "payment_of_taxes": "Incumplimiento de la obligación de pago de impuestos",
+          "payment_of_social_security": "Incumplimiento de la obligación de pago de cotizaciones a la seguridad social"
+        },
+        "c": {
+          "breach_environmental_obligations": "Incumplimiento de obligaciones en materia de Derecho medioambiental",
+          "breach_social_obligations": "Incumplimiento de obligaciones en materia de Derecho social",
+          "breach_labour_obligations": "Incumplimiento de obligaciones en materia de Derecho laboral",
+          "bankruptcy": "Quiebra",
+          "insolvency": "Insolvencia",
+          "arrangement_with_creditors": "Convenio con los acreedores",
+          "analogous_situation": "Situación análoga a la quiebra con arreglo al Derecho nacional",
+          "assets_administered_by_liquidator": "Activos que están siendo administrados por un liquidador",
+          "business_activities_suspended": "Las actividades empresariales han sido suspendidas",
+          "grave_professional_misconduct": "Falta profesional grave",
+          "agreements_distorting_competition": "Acuerdos con otros operadores económicos destinados a falsear la competencia",
+          "conflict_of_interest": "Conflicto de intereses debido a su participación en el procedimiento de contratación",
+          "involvement_in_preparation": "Participación, directa o indirecta, en la preparación del presente procedimiento de contratación",
+          "early_termination": "Rescisión anticipada, imposición de daños y perjuicios u otras sanciones comparables",
+          "misrepresentation": "Declaración falsa, ocultación de información, incapacidad de presentar los documentos exigidos u obtención de información confidencial del presente procedimiento"
+        },
+        "d": {
+          "purely_national_grounds": "Motivos de exclusión puramente nacionales"
+        }
+      }
+    },
+    "parts": {
+      "III": {
+        "A": "Motivos referidos a condenas penales",
+        "B": "Motivos referidos al pago de impuestos o de cotizaciones a la seguridad social",
+        "C": "Motivos referidos a la insolvencia, los conflictos de intereses o la falta profesional"
+      }
+    }
+  },
   "landing": {
     "header": {
       "login": "Iniciar sesión",
