@@ -28,7 +28,7 @@
     "react-aria-components": "^1.19.0",
     "react-dom": "^19.0.0",
     "typescript": "^5.7.0",
-    "vitest": "^4.1.9"
+    "vitest": "^4.1.11"
   },
   "dependencies": {
     "clsx": "^2.1.1",
